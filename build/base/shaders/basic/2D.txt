@@ -1,0 +1,2 @@
+shader = shaders/basic/2D.fs
+shader = shaders/basic/2D.vs

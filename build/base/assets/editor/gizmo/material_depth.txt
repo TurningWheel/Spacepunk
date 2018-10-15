@@ -1,0 +1,3 @@
+shader = assets/editor/gizmo/depthfail.fs
+shader = shaders/actor/std.vs
+texture = assets/editor/gizmo/texture.png

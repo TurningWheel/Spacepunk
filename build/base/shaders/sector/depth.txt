@@ -1,0 +1,2 @@
+shader = shaders/sector/depth.vs
+shader = shaders/sector/depth.fs

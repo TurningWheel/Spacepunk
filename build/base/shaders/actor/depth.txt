@@ -1,0 +1,2 @@
+shader = shaders/actor/depth.fs
+shader = shaders/actor/depth.vs

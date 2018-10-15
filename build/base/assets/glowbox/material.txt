@@ -1,0 +1,5 @@
+shader = shaders/actor/std_bump_nofresnel.fs
+shader = shaders/actor/std_bump_nofresnel.vs
+texture = assets/glowbox/diffuse.png
+texture = assets/glowbox/normal.png
+glow = assets/glowbox/glow.png

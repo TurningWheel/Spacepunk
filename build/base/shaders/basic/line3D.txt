@@ -1,0 +1,2 @@
+shader = shaders/basic/line3D.fs
+shader = shaders/basic/line3D.vs

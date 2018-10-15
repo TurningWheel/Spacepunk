@@ -1,0 +1,2 @@
+shader = shaders/basic/grid.fs
+shader = shaders/basic/grid.vs

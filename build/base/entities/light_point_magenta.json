@@ -1,0 +1,63 @@
+{
+    "Entity::def_t::version": 0,
+    "entity": {
+        "Entity::version": 1,
+        "name": "Point Light (Magenta)",
+        "pos": {
+            "x": 768.0,
+            "y": 1408.0,
+            "z": 0.0
+        },
+        "ang": {
+            "yaw": 0.0,
+            "pitch": 0.0,
+            "roll": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "scriptStr": "",
+        "flags": 385,
+        "falling": false,
+        "sort": 0,
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 3,
+                "data": {
+                    "Component::version": 0,
+                    "name": "light",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "lAng": {
+                        "yaw": 0.0,
+                        "pitch": 0.0,
+                        "roll": 0.0
+                    },
+                    "lScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [],
+                    "Light::version": 1,
+                    "color": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 1.0
+                    },
+                    "intensity": 1.0,
+                    "radius": 512.0,
+                    "shape": 0
+                }
+            }
+        ]
+    }
+}

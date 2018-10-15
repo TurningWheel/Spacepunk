@@ -1,0 +1,305 @@
+{
+    "Entity::def_t::version": 0,
+    "entity": {
+        "Entity::version": 1,
+        "name": "Player Start",
+        "pos": {
+            "x": 864.0,
+            "y": 1760.0,
+            "z": 0.0
+        },
+        "ang": {
+            "yaw": 0.0,
+            "pitch": 0.0,
+            "roll": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "scriptStr": "PlayerStart",
+        "flags": 1286,
+        "falling": false,
+        "sort": 0,
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 0,
+                "data": {
+                    "Component::version": 0,
+                    "name": "models",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "lAng": {
+                        "yaw": 0.0,
+                        "pitch": 0.0,
+                        "roll": 0.0
+                    },
+                    "lScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [
+                        {
+                            "type": 2,
+                            "data": {
+                                "Component::version": 0,
+                                "name": "Head",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "yaw": 0.0,
+                                    "pitch": 0.0,
+                                    "roll": 0.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [],
+                                "Model::version": 0,
+                                "meshStr": "assets/spacepunk/head/spacepunk_c_head.fbx",
+                                "materialStr": "assets/generic_material/glow_material.txt",
+                                "depthfailStr": "",
+                                "animationStr": "assets/spacepunk/head/animation.txt",
+                                "shaderVars": {
+                                    "Mesh::version": 0,
+                                    "customColorEnabled": true,
+                                    "customColorR": [
+                                        0.699999988079071,
+                                        0.5,
+                                        0.20000000298023225,
+                                        1.0
+                                    ],
+                                    "customColorG": [
+                                        1.0,
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "customColorB": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.5,
+                                        1.0
+                                    ],
+                                    "customColorA": [
+                                        0.0,
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "type": 2,
+                            "data": {
+                                "Component::version": 0,
+                                "name": "Torso",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "yaw": 0.0,
+                                    "pitch": 0.0,
+                                    "roll": 0.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [],
+                                "Model::version": 0,
+                                "meshStr": "assets/spacepunk/torso/spacepunk_c_torso.fbx",
+                                "materialStr": "assets/generic_material/glow_material.txt",
+                                "depthfailStr": "",
+                                "animationStr": "assets/spacepunk/torso/animation.txt",
+                                "shaderVars": {
+                                    "Mesh::version": 0,
+                                    "customColorEnabled": true,
+                                    "customColorR": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.5,
+                                        1.0
+                                    ],
+                                    "customColorG": [
+                                        0.5,
+                                        0.5,
+                                        0.5,
+                                        1.0
+                                    ],
+                                    "customColorB": [
+                                        0.20000000298023225,
+                                        0.20000000298023225,
+                                        0.20000000298023225,
+                                        1.0
+                                    ],
+                                    "customColorA": [
+                                        0.0,
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "type": 2,
+                            "data": {
+                                "Component::version": 0,
+                                "name": "Arms",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "yaw": 0.0,
+                                    "pitch": 0.0,
+                                    "roll": 0.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [],
+                                "Model::version": 0,
+                                "meshStr": "assets/spacepunk/arms/spacepunk_c_arms.fbx",
+                                "materialStr": "assets/generic_material/glow_material.txt",
+                                "depthfailStr": "",
+                                "animationStr": "assets/spacepunk/arms/animation.txt",
+                                "shaderVars": {
+                                    "Mesh::version": 0,
+                                    "customColorEnabled": true,
+                                    "customColorR": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.5,
+                                        1.0
+                                    ],
+                                    "customColorG": [
+                                        0.5,
+                                        0.5,
+                                        0.5,
+                                        1.0
+                                    ],
+                                    "customColorB": [
+                                        0.20000000298023225,
+                                        0.20000000298023225,
+                                        0.20000000298023225,
+                                        1.0
+                                    ],
+                                    "customColorA": [
+                                        0.0,
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "type": 2,
+                            "data": {
+                                "Component::version": 0,
+                                "name": "Feet",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "yaw": 0.0,
+                                    "pitch": 0.0,
+                                    "roll": 0.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [],
+                                "Model::version": 0,
+                                "meshStr": "assets/spacepunk/feet/spacepunk_c_feet.fbx",
+                                "materialStr": "assets/generic_material/glow_material.txt",
+                                "depthfailStr": "",
+                                "animationStr": "assets/spacepunk/feet/animation.txt",
+                                "shaderVars": {
+                                    "Mesh::version": 0,
+                                    "customColorEnabled": true,
+                                    "customColorR": [
+                                        0.10000000149011612,
+                                        0.10000000149011612,
+                                        0.5,
+                                        1.0
+                                    ],
+                                    "customColorG": [
+                                        0.5,
+                                        0.5,
+                                        0.5,
+                                        1.0
+                                    ],
+                                    "customColorB": [
+                                        0.20000000298023225,
+                                        0.20000000298023225,
+                                        0.20000000298023225,
+                                        1.0
+                                    ],
+                                    "customColorA": [
+                                        0.0,
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "type": 1,
+                "data": {
+                    "Component::version": 0,
+                    "name": "bbox",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -64.0
+                    },
+                    "lAng": {
+                        "yaw": 0.0,
+                        "pitch": 0.0,
+                        "roll": 0.0
+                    },
+                    "lScale": {
+                        "x": 32.0,
+                        "y": 32.0,
+                        "z": 64.0
+                    },
+                    "components": [],
+                    "BBox::version": 0,
+                    "shape": 0,
+                    "enabled": true
+                }
+            }
+        ]
+    }
+}

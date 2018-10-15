@@ -1,0 +1,6 @@
+shader = shaders/sector/std.vs
+shader = shaders/sector/std.fs
+texture = images/tile/diffuse/null.png
+texture = images/tile/normal/null.png
+texture = images/tile/fx/empty.png
+cubemap = images/cubemap/mp_blood/cubemap.txt

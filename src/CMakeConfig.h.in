@@ -1,0 +1,28 @@
+#ifndef CMAKECONFIG_H
+#define CMAKECONFIG_H
+
+#if @ARCH_X64@
+	#define ARCH_X64
+#else
+	#define ARCH_X86
+#endif
+
+#if @WINDOWS@
+	#define PLATFORM_WINDOWS
+
+	/*
+	 * https://msdn.microsoft.com/en-us/library/cc230318.aspx
+	 * A DWORD is a 32-bit unsigned integer (range: 0 through 4294967295 decimal). Because a DWORD is unsigned, its first bit (Most Significant Bit (MSB)) is not reserved for signing. 
+	 * This type is declared as follows:
+	 * typedef unsigned long DWORD, *PDWORD, *LPDWORD;
+	 */
+	typedef unsigned long DWORD;
+#else
+	#if @APPLE@
+		#define PLATFORM_APPLE
+	#else
+		#define PLATFORM_LINUX
+	#endif
+#endif
+
+#endif
