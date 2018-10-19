@@ -393,7 +393,7 @@ Mesh::SubMesh::SubMesh(const char* name, const VoxelMeshData& data) {
 	// positions
 	{
 		vertices = new float[numVertices * 3];
-		memcpy(vertices, data.positions.get(), numVertices * 3);
+		memcpy(vertices, data.positions.get(), sizeof(float) * numVertices * 3);
 
 		glGenBuffers(1, &vbo[VERTEX_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
@@ -405,6 +405,9 @@ Mesh::SubMesh::SubMesh(const char* name, const VoxelMeshData& data) {
 
 	// colors
 	{
+		colors = new float[numVertices * 3];
+		memcpy(colors, data.colors.get(), sizeof(float) * numVertices * 3);
+
 		glGenBuffers(1, &vbo[COLOR_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[COLOR_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, data.size * sizeof(GLfloat), data.colors.get(), GL_STATIC_DRAW);
@@ -415,6 +418,9 @@ Mesh::SubMesh::SubMesh(const char* name, const VoxelMeshData& data) {
 
 	// normals
 	{
+		normals = new float[numVertices * 3];
+		memcpy(normals, data.normals.get(), sizeof(float) * numVertices * 3);
+
 		glGenBuffers(1, &vbo[NORMAL_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[NORMAL_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, data.size * sizeof(GLfloat), data.normals.get(), GL_STATIC_DRAW);
@@ -425,6 +431,9 @@ Mesh::SubMesh::SubMesh(const char* name, const VoxelMeshData& data) {
 
 	// indices
 	{
+		indices = new GLuint[elementCount];
+		memcpy(indices, data.indices.get(), sizeof(GLuint) * elementCount);
+
 		glGenBuffers(1, &vbo[INDEX_BUFFER]);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.indexCount * sizeof(GLuint), data.indices.get(), GL_STATIC_DRAW);

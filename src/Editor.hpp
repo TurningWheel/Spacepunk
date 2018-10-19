@@ -126,6 +126,9 @@ public:
 	// @param flag: the flag to toggle
 	void entitiesFlag(const Uint32 flag);
 
+	// exports each selected entity to a separate json file
+	void entitiesSave();
+
 	// set a key value pair on an entity
 	// @param pair: the encoded pair
 	void entityKeyValueEnter(const char* pair);

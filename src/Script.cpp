@@ -305,6 +305,7 @@ void Script::exposeEditor(Editor& _editor) {
 		.addFunction("entitiesName", &Editor::entitiesName)
 		.addFunction("entitiesScript", &Editor::entitiesScript)
 		.addFunction("entitiesFlag", &Editor::entitiesFlag)
+		.addFunction("entitiesSave", &Editor::entitiesSave)
 		.addFunction("entityKeyValueEnter", &Editor::entityKeyValueEnter)
 		.addFunction("entityKeyValueRemove", &Editor::entityKeyValueRemove)
 		.addFunction("entityKeyValueSelect", &Editor::entityKeyValueSelect)

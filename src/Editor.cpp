@@ -2556,25 +2556,48 @@ void Editor::selectEntityForSpawn(const char* name) {
 void Editor::entitiesName(const char* name) {
 	LinkedList<Entity*> selectedEntities;
 	world->findSelectedEntities(selectedEntities);
-	for( Node<Entity*>* node=selectedEntities.getFirst(); node!=nullptr; node=node->getNext() ) {
-		node->getData()->setName(name);
+	for( auto entity : selectedEntities ) {
+		entity->setName(name);
 	}
 }
 
 void Editor::entitiesScript(const char* script) {
 	LinkedList<Entity*> selectedEntities;
 	world->findSelectedEntities(selectedEntities);
-	for( Node<Entity*>* node=selectedEntities.getFirst(); node!=nullptr; node=node->getNext() ) {
-		node->getData()->setScriptStr(script);
+	for( auto entity : selectedEntities ) {
+		entity->setScriptStr(script);
 	}
 }
 
 void Editor::entitiesFlag(const Uint32 flag) {
 	LinkedList<Entity*> selectedEntities;
 	world->findSelectedEntities(selectedEntities);
-	for( Node<Entity*>* node=selectedEntities.getFirst(); node!=nullptr; node=node->getNext() ) {
-		node->getData()->toggleFlag(flag);
+	for( auto entity : selectedEntities ) {
+		entity->toggleFlag(flag);
 	}
+}
+
+void Editor::entitiesSave() {
+	// so the engine timer doesn't go nuts in the background
+	mainEngine->setPaused(true);
+
+	LinkedList<Entity*> selectedEntities;
+	world->findSelectedEntities(selectedEntities);
+	for( auto entity : selectedEntities ) {
+		nfdchar_t* resultPath = nullptr;
+		nfdresult_t result = NFD_SaveDialog( "json", nullptr, &resultPath );
+		if( result == NFD_CANCEL ) {
+			mainEngine->setPaused(false);
+			return;
+		} else if( result == NFD_ERROR ) {
+			mainEngine->fmsg(Engine::MSG_ERROR,"failed to open save dialog: %s",NFD_GetError());
+			mainEngine->setPaused(false);
+			return;
+		}
+
+		entity->saveDef(resultPath);
+	}
+	mainEngine->setPaused(false);
 }
 
 void Editor::entityKeyValueEnter(const char* pair) {
@@ -8677,9 +8700,23 @@ void Editor::updateGUI(Frame& gui) {
 							size.x = border*2 + x; size.w = 30;
 							size.y = y; size.h = 30;
 							button->setSize(size);
-
-							y += size.h + border;
 						}
+
+						// save entity definition button
+						{
+							Button* button = properties->addButton("buttonSave");
+							button->setIcon("images/gui/save.png");
+							button->setStyle(Button::STYLE_NORMAL);
+							button->setBorder(2);
+							button->setTooltip("Export an entity definition.");
+
+							Rect<int> size;
+							size.x = border*2 + x + 30 + 2; size.w = 30;
+							size.y = y; size.h = 30;
+							button->setSize(size);
+						}
+
+						y += 30 + border;
 					}
 
 					const Rect<int>& propSize = properties->getSize();

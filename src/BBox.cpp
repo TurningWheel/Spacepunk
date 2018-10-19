@@ -194,7 +194,7 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 					Model* model = static_cast<Model*>(parent);
 					conformToModel(*model);
 				}
-				if( triMesh ) {
+				if( triMesh && triMesh->getNumTriangles() > 0 ) {
 					collisionShapePtr = new btBvhTriangleMeshShape(triMesh,true,true);
 				} else {
 					shape = SHAPE_CYLINDER;

@@ -17,6 +17,7 @@ vs.2015/spacepunk/Debug/*
 vs.2015/spacepunk/Release/*
 vs.2015/spacepunk/Hybrid/*
 vs.2015/spacepunk/spacepunk.VC.VC.opendb
+vs.2015/spacepunk/No
 vs.2017/spacepunk/x64/Debug/*
 vs.2017/spacepunk/x64/Release/*
 vs.2017/spacepunk/x64/Hybrid/*
@@ -25,6 +26,7 @@ vs.2017/spacepunk/Release/*
 vs.2017/spacepunk/Hybrid/*
 vs.2017/spacepunk/spacepunk.VC.VC.opendb
 vs.2017/spacepunk/.vs/*
+vs.2017/spacepunk/No
 spacepunk.VC.db
 build/base/default.cfg
 build/*.iobj

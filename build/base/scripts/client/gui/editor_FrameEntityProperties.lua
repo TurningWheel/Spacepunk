@@ -5,6 +5,10 @@ function buttonFlag(flag)
 	editor:entitiesFlag(flag)
 end
 
+function buttonSave()
+	editor:entitiesSave()
+end
+
 -- General component buttons:
 
 function buttonCollapse(uid)

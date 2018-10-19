@@ -636,4 +636,5 @@ void SectorWorld::generateObstacleCache()
 std::future<PathFinder::Path*> SectorWorld::findAPath(int startX, int startY, int endX, int endY) {
 	//TODO:
 	//return pathFinder.generateAStarPath(startX, startY, endX, endY);
+	return std::future<PathFinder::Path*>();
 }
