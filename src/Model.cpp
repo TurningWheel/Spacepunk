@@ -268,7 +268,7 @@ void Model::draw(Camera& camera, Light* light) {
 		return;
 
 	// don't render models marked genius
-	if( entity->isFlag(Entity::flag_t::FLAG_GENIUS) && camera.getEntity() == entity && genius ) {
+	if( entity->isFlag(Entity::flag_t::FLAG_GENIUS) || ( camera.getEntity() == entity && genius ) ) {
 		if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
 			return;
 		}

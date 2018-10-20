@@ -37,11 +37,9 @@ public:
 	// static properties
 	static const Uint32 invalidID = UINT32_MAX;
 	static const char* defaultName;
-	static const float standCameraHeight;
 	static const float standFeetHeight;
 	static const Vector standScale;
 	static const Vector standOrigin;
-	static const float crouchCameraHeight;
 	static const float crouchFeetHeight;
 	static const Vector crouchScale;
 	static const Vector crouchOrigin;

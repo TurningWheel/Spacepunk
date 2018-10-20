@@ -1349,7 +1349,7 @@ bool Engine::addMod(const char* name) {
 	// check that we have not already added the mod
 	bool foundMod = false;
 	for( mod_t& mod : mods ) {
-		if( mod.path.get() == name ) {
+		if( mod.path == name ) {
 			foundMod = true;
 			break;
 		}

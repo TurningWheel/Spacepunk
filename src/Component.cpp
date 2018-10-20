@@ -544,7 +544,7 @@ void Component::copyComponents(Component& dest) {
 			BBox* bbox0 = static_cast<BBox*>(components[c]);
 			BBox* bbox1 = static_cast<BBox*>(component);
 			bbox1->setShape(bbox0->getShape());
-			bbox1->updateRigidBody(bbox1->getGlobalScale());
+			//bbox1->updateRigidBody(bbox1->getGlobalScale());
 			break;
 		}
 		case Component::COMPONENT_MODEL:
@@ -638,7 +638,7 @@ void Component::copyComponents(Component& dest) {
 			component->setName(components[c]->getName());
 
 			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
-			component->copyComponents(*components[c]);
+			components[c]->copyComponents(*component);
 		}
 	}
 }

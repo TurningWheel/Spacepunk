@@ -14,11 +14,9 @@
 #include "Camera.hpp"
 
 const char* Player::defaultName = "Player";
-const float Player::standCameraHeight = 104.f;
 const float Player::standFeetHeight = 48.f;
 const Vector Player::standOrigin( 0.f, 0.f, -80.f );
 const Vector Player::standScale( 24.f, 24.f, 32.f );
-const float Player::crouchCameraHeight = 48.f;
 const float Player::crouchFeetHeight = 16.f;
 const Vector Player::crouchOrigin( 0.f, 0.f, -40.f );
 const Vector Player::crouchScale( 24.f, 24.f, 24.f );
@@ -83,7 +81,7 @@ void Player::setEntity(Entity* _entity) {
 		feet = entity->findComponentByName<Model>("Feet");
 		bbox = entity->findComponentByName<BBox>("BBox");
 		camera = entity->findComponentByName<Camera>("Camera");
-		if( !models || !head || !torso || !arms || !feet || !bbox || !camera ) {
+		if( !models || !bbox || !camera ) {
 			mainEngine->fmsg(Engine::MSG_WARN,"failed to setup player for third party client: missing bodypart");
 		}
 	}
@@ -126,7 +124,7 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	feet = entity->findComponentByName<Model>("Feet");
 	bbox = entity->findComponentByName<BBox>("BBox");
 	camera = entity->findComponentByName<Camera>("Camera");
-	if( !models || !head || !torso || !arms || !feet || !bbox || !camera ) {
+	if( !models || !bbox || !camera ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: missing bodypart");
 		entity->remove();
 		entity = nullptr;
@@ -170,11 +168,6 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 void Player::updateColors(const colors_t& _colors) {
 	colors = _colors;
 
-	assert(head);
-	assert(torso);
-	assert(arms);
-	assert(feet);
-
 	Mesh::shadervars_t shaderVars;
 
 	// load head colors
@@ -183,7 +176,9 @@ void Player::updateColors(const colors_t& _colors) {
 	shaderVars.customColorG = colors.headGChannel;
 	shaderVars.customColorB = colors.headBChannel;
 	shaderVars.customColorA = colors.headGChannel;
-	head->setShaderVars(shaderVars);
+	if (head) {
+		head->setShaderVars(shaderVars);
+	}
 
 	// load torso colors
 	shaderVars.customColorEnabled = GL_TRUE;
@@ -191,7 +186,9 @@ void Player::updateColors(const colors_t& _colors) {
 	shaderVars.customColorG = colors.torsoGChannel;
 	shaderVars.customColorB = colors.torsoBChannel;
 	shaderVars.customColorA = colors.headGChannel;
-	torso->setShaderVars(shaderVars);
+	if (torso) {
+		torso->setShaderVars(shaderVars);
+	}
 
 	// load arm colors
 	shaderVars.customColorEnabled = GL_TRUE;
@@ -199,7 +196,9 @@ void Player::updateColors(const colors_t& _colors) {
 	shaderVars.customColorG = colors.armsGChannel;
 	shaderVars.customColorB = colors.armsBChannel;
 	shaderVars.customColorA = colors.headGChannel;
-	arms->setShaderVars(shaderVars);
+	if (arms) {
+		arms->setShaderVars(shaderVars);
+	}
 
 	// load feet colors
 	shaderVars.customColorEnabled = GL_TRUE;
@@ -207,7 +206,9 @@ void Player::updateColors(const colors_t& _colors) {
 	shaderVars.customColorG = colors.feetGChannel;
 	shaderVars.customColorB = colors.feetBChannel;
 	shaderVars.customColorA = colors.headGChannel;
-	feet->setShaderVars(shaderVars);
+	if (feet) {
+		feet->setShaderVars(shaderVars);
+	}
 }
 
 void Player::putInCrouch(bool crouch) {
@@ -419,7 +420,7 @@ void Player::updateCamera() {
 	Input& input = mainEngine->getInput(localID);
 
 	// move camera
-	if( camera ) {
+	if( camera && head ) {
 		head->updateSkin();
 		Model::bone_t bone = head->findBone("Bone_Head");
 		if( bone.valid ) {

@@ -769,7 +769,7 @@ void BBox::update() {
 	Component::update();
 
 	// hack to "rotate" aabb
-	if( shape == SHAPE_BOX && gScale.x != gScale.y ) {
+	if( shape == SHAPE_BOX && lScale.x != lScale.y ) {
 		glm::mat4 m = glm::mat4( 1.f );
 		m = glm::rotate(m, (float)(gAng.radiansPitch()), glm::vec3(1.f, 0.f, 0.f));
 		m = glm::rotate(m, (float)(gAng.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
