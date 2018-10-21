@@ -95,6 +95,31 @@ public:
 	void		setCharisma(Sint32 charisma)			{ this->charisma = charisma; }
 	void		setLuck(Sint32 luck)					{ this->luck = luck; }
 
+	Character& operator=(const Character& src) {
+		hp = src.hp;
+		mp = src.mp;
+		sex = src.sex;
+		level = src.level;
+		xp = src.xp;
+		hunger = src.hunger;
+
+		nanoMatter = src.nanoMatter;
+		bioMatter = src.bioMatter;
+		neuroThread = src.neuroThread;
+		gold = src.gold;
+
+		strength = src.strength;
+		dexterity = src.dexterity;
+		intelligence = src.intelligence;
+		constitution = src.constitution;
+		perception = src.perception;
+		charisma = src.charisma;
+		luck = src.luck;
+
+		updateNeeded = true;
+		return *this;
+	}
+
 private:
 	//General
 	Sint32 hp;

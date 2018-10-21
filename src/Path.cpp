@@ -45,7 +45,7 @@ std::future<PathFinder::Path*> PathFinder::generateAStarPath(Sint32 startX, Sint
 		return std::future<Path*>(); // return invalid future
 	}
 
-	if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX > world.getWidth() || startY > world.getHeight() || endX > world.getWidth() || endY > world.getHeight()) {
+	if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX > (Sint32)world.getWidth() || startY > (Sint32)world.getHeight() || endX > (Sint32)world.getWidth() || endY > (Sint32)world.getHeight()) {
 		mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder is returning an invalid path future due to invalid pathing bounds!");
 		return std::future<Path*>(); // return invalid future
 	}
@@ -106,7 +106,7 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 				{
 					continue; //Don't look off the left edge of the map.
 				}
-				if (currentNode->x >= mapWidth - 1 && x > 0)
+				if (currentNode->x >= (Sint32)mapWidth - 1 && x > 0)
 				{
 					continue; //Don't look off the right edge of the map.
 				}
@@ -114,7 +114,7 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 				{
 					continue; //Don't look off the top edge of the map.
 				}
-				if (currentNode->y >= mapHeight - 1 && y > 0)
+				if (currentNode->y >= (Sint32)mapHeight - 1 && y > 0)
 				{
 					continue; //Don't look off the bottom edge of the map.
 				}

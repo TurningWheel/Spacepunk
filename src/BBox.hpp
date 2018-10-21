@@ -102,6 +102,14 @@ public:
 	void		setShape(shape_t _shape)			{ shape = _shape; }
 	void		setEnabled(bool _enabled)			{ if( _enabled != enabled ) { enabled = _enabled; updateNeeded = true; } }
 
+	BBox& operator=(const BBox& src) {
+		enabled = src.enabled;
+		shape = src.shape;
+		meshName = src.meshName;
+		updateNeeded = true;
+		return *this;
+	}
+
 private:
 	bool enabled = true;
 	shape_t shape = SHAPE_BOX;

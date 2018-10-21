@@ -120,6 +120,19 @@ public:
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface* file) override;
 
+	Camera& operator=(const Camera& src) {
+		projMatrix = src.projMatrix;
+		viewMatrix = src.viewMatrix;
+		projViewMatrix = src.projViewMatrix;
+		clipNear = src.clipNear;
+		clipFar = src.clipFar;
+		win = src.win;
+		fov = src.fov;
+		ortho = src.ortho;
+		updateNeeded = true;
+		return *this;
+	}
+
 protected:
 	Renderer* renderer = nullptr;
 

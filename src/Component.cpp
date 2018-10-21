@@ -533,112 +533,71 @@ void Component::copyComponents(Component& dest) {
 	Component* component = nullptr;
 	for( size_t c = 0; c < components.getSize(); ++c ) {
 		switch( components[c]->getType() ) {
-		case Component::COMPONENT_BASIC:
-		{
-			component = dest.addComponent<Component>();
-			break;
-		}
-		case Component::COMPONENT_BBOX:
-		{
-			component = dest.addComponent<BBox>();
-			BBox* bbox0 = static_cast<BBox*>(components[c]);
-			BBox* bbox1 = static_cast<BBox*>(component);
-			bbox1->setShape(bbox0->getShape());
-			//bbox1->updateRigidBody(bbox1->getGlobalScale());
-			break;
-		}
-		case Component::COMPONENT_MODEL:
-		{
-			component = dest.addComponent<Model>();
-			Model* model0 = static_cast<Model*>(components[c]);
-			Model* model1 = static_cast<Model*>(component);
-			model1->setAnimation(model0->getAnimation());
-			model1->setDepthFailMat(model0->getDepthFailMat());
-			model1->setMaterial(model0->getMaterial());
-			model1->setMesh(model0->getMesh());
-			model1->setShaderVars(model0->getShaderVars());
-			break;
-		}
-		case Component::COMPONENT_LIGHT:
-		{
-			component = dest.addComponent<Light>();
-			Light* light0 = static_cast<Light*>(components[c]);
-			Light* light1 = static_cast<Light*>(component);
-			light1->setColor(light0->getColor());
-			light1->setIntensity(light0->getIntensity());
-			light1->setRadius(light0->getRadius());
-			break;
-		}
-		case Component::COMPONENT_CAMERA:
-		{
-			component = dest.addComponent<Camera>();
-			Camera* camera0 = static_cast<Camera*>(components[c]);
-			Camera* camera1 = static_cast<Camera*>(component);
-			camera1->setClipFar(camera0->getClipFar());
-			camera1->setClipNear(camera0->getClipNear());
-			camera1->setFov(camera0->getFov());
-			camera1->setOrtho(camera0->isOrtho());
-			camera1->setWin(camera0->getWin());
-			break;
-		}
-		case Component::COMPONENT_SPEAKER:
-		{
-			component = dest.addComponent<Speaker>();
-			Speaker* speaker0 = static_cast<Speaker*>(components[c]);
-			Speaker* speaker1 = static_cast<Speaker*>(component);
-			speaker1->setDefaultLoop(speaker0->isDefaultLoop());
-			speaker1->setDefaultSound(speaker0->getDefaultSound());
-			speaker1->setDefaultRange(speaker0->getDefaultRange());
-			speaker1->playSound(speaker0->getDefaultSound(),speaker0->isDefaultLoop(),speaker0->getDefaultRange());
-			break;
-		}
-		case Component::COMPONENT_CHARACTER:
-		{
-			component = dest.addComponent<Character>();
-			Character* character0 = static_cast<Character*>(components[c]);
-			Character* character1 = static_cast<Character*>(component);
-
-			//Copy general.
-			character1->setHp(character0->getHp());
-			character1->setMp(character0->getMp());
-			character1->setSex(character0->getSex());
-			character1->setLevel(character0->getLevel());
-			character1->setXp(character0->getXp());
-			character1->setHunger(character0->getHunger());
-
-			//Copy resources.
-			character1->setNanoMatter(character0->getNanoMatter());
-			character1->setBioMatter(character0->getBioMatter());
-			character1->setNeuroThread(character0->getNeuroThread());
-			character1->setGold(character0->getGold());
-
-			//Copy attributes.
-			character1->setStrength(character0->getStrength());
-			character1->setDexterity(character0->getDexterity());
-			character1->setIntelligence(character0->getIntelligence());
-			character1->setConstitution(character0->getConstitution());
-			character1->setPerception(character0->getPerception());
-			character1->setCharisma(character0->getCharisma());
-			character1->setLuck(character0->getLuck());
-			break;
-		}
-		default:
-		{
-			mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
-			break;
-		}
+			case Component::COMPONENT_BASIC:
+			{
+				component = dest.addComponent<Component>();
+				break;
+			}
+			case Component::COMPONENT_BBOX:
+			{
+				component = dest.addComponent<BBox>();
+				BBox* bbox0 = static_cast<BBox*>(components[c]);
+				BBox* bbox1 = static_cast<BBox*>(component);
+				*bbox1 = *bbox0;
+				break;
+			}
+			case Component::COMPONENT_MODEL:
+			{
+				component = dest.addComponent<Model>();
+				Model* model0 = static_cast<Model*>(components[c]);
+				Model* model1 = static_cast<Model*>(component);
+				*model1 = *model0;
+				break;
+			}
+			case Component::COMPONENT_LIGHT:
+			{
+				component = dest.addComponent<Light>();
+				Light* light0 = static_cast<Light*>(components[c]);
+				Light* light1 = static_cast<Light*>(component);
+				*light1 = *light0;
+				break;
+			}
+			case Component::COMPONENT_CAMERA:
+			{
+				component = dest.addComponent<Camera>();
+				Camera* camera0 = static_cast<Camera*>(components[c]);
+				Camera* camera1 = static_cast<Camera*>(component);
+				*camera1 = *camera0;
+				break;
+			}
+			case Component::COMPONENT_SPEAKER:
+			{
+				component = dest.addComponent<Speaker>();
+				Speaker* speaker0 = static_cast<Speaker*>(components[c]);
+				Speaker* speaker1 = static_cast<Speaker*>(component);
+				*speaker1 = *speaker0;
+				break;
+			}
+			case Component::COMPONENT_CHARACTER:
+			{
+				component = dest.addComponent<Character>();
+				Character* character0 = static_cast<Character*>(components[c]);
+				Character* character1 = static_cast<Character*>(component);
+				*character1 = *character0;
+				break;
+			}
+			default:
+			{
+				mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
+				break;
+			}
 		}
 		if( !component ) {
 			mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from entity '%s'", entity->getName());
 		} else {
-			component->setEditorOnly(components[c]->isEditorOnly());
-			component->setLocalAng(components[c]->getLocalAng());
-			component->setLocalPos(components[c]->getLocalPos());
-			component->setLocalScale(components[c]->getLocalScale());
-			component->setName(components[c]->getName());
-
-			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
+			*component = *components[c];
 			components[c]->copyComponents(*component);
+			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
 		}
 	}
 }

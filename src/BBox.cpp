@@ -492,6 +492,10 @@ bool BBox::checkCollision() const {
 		return true;
 	}
 
+	if( editorOnly && !mainEngine->isEditorRunning() ) {
+		return false;
+	}
+
 	if( !enabled ) {
 		return false;
 	}
@@ -557,6 +561,8 @@ bool BBox::checkCollision() const {
 	return false;
 }
 
+static Cvar cvar_showBBoxes("showbboxes", "Makes bboxes visible", "0");
+
 void BBox::draw(Camera& camera, Light* light) {
 	Component::draw(camera,light);
 
@@ -570,8 +576,10 @@ void BBox::draw(Camera& camera, Light* light) {
 	}
 
 	// only render in the editor!
-	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
-		return;
+	if( !cvar_showBBoxes.toInt() ) {
+		if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
+			return;
+		}
 	}
 
 	// do not render for these fx passes

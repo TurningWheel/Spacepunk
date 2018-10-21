@@ -110,6 +110,7 @@ public:
 	unsigned int						getNumActiveAnimations() const		{ return (unsigned int)animations.getSize(); }
 	float								getAnimationSpeed() const			{ return animationSpeed; }
 	bool								isSkinUpdateNeeded() const			{ return skinUpdateNeeded; }
+	bool								isGenius() const					{ return genius; }
 
 	void	setMesh(const char* _mesh)										{ meshStr = _mesh; updateNeeded = true; }
 	void	setMaterial(const char* _material)								{ materialStr = _material; }
@@ -117,6 +118,21 @@ public:
 	void	setAnimation(const char* _animation)							{ animationStr = _animation; }
 	void	setShaderVars(const Mesh::shadervars_t& _shaderVars)			{ shaderVars = _shaderVars; }
 	void	setAnimationSpeed(const float _animationSpeed)					{ animationSpeed = _animationSpeed; }
+	void	setGenius(const bool _genius)									{ genius = _genius; }
+
+	Model& operator=(const Model& src) {
+		genius = src.genius;
+		meshStr = src.meshStr;
+		materialStr = src.materialStr;
+		depthfailStr = src.depthfailStr;
+		animationStr = src.animationStr;
+		shaderVars = src.shaderVars;
+		animationSpeed = src.animationSpeed;
+		animations.copy(src.animations);
+		skinUpdateNeeded = true;
+		updateNeeded = true;
+		return *this;
+	}
 
 private:
 	bool genius = false;				// if true, and camera belongs to same entity as model, model is not rendered

@@ -221,6 +221,18 @@ public:
 	void				setLocalScale(const Vector& _scale)		{ lScale = _scale; updateNeeded = true; }
 	void				setCollapsed(bool _collapsed)			{ collapsed = _collapsed; }
 
+	Component& operator=(const Component& src) {
+		toBeDeleted = src.toBeDeleted;
+		editorOnly = src.editorOnly;
+		name = src.name;
+		lPos = src.lPos;
+		lAng = src.lAng;
+		lScale = src.lScale;
+		lMat = src.lMat;
+		updateNeeded = true;
+		return *this;
+	}
+
 protected:
 	Entity* entity = nullptr;
 	Component* parent = nullptr;

@@ -69,6 +69,15 @@ public:
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
+	Light& operator=(const Light& src) {
+		color = src.color;
+		intensity = src.intensity;
+		radius = src.radius;
+		shape = src.shape;
+		updateNeeded = true;
+		return *this;
+	}
+
 protected:
 	ArrayList<Chunk*> chunksLit;
 	ArrayList<Chunk*> chunksShadow;

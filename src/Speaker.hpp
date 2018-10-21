@@ -61,6 +61,16 @@ public:
 	void		setDefaultLoop(const bool b)			{ defaultLoop = b; }
 	void		setDefaultRange(const float _range)		{ defaultRange = _range; }
 
+	Speaker& operator=(const Speaker& src) {
+		defaultSound = src.defaultSound;
+		defaultLoop = src.defaultLoop;
+		defaultRange = src.defaultRange;
+		stopAllSounds();
+		playSound(defaultSound.get(), defaultLoop, defaultRange);
+		updateNeeded = true;
+		return *this;
+	}
+
 private:
 	ALuint sources[maxSources];
 	String defaultSound;

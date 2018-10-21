@@ -27,6 +27,7 @@ static Cvar cvar_gravity("player.gravity", "gravity that players are subjected t
 static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_crouchSpeed("player.crouchspeed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
+static Cvar cvar_jumpPower("player.jumppower", "player jump strength", "4.0");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -154,7 +155,7 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 			rect.h = mainEngine->getYres();
 			camera->setWin(rect);
 
-			entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_GENIUS)); // not sure why this isn't getting set???
+			//entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_GENIUS)); // not sure why this isn't getting set???
 		}
 
 		mainEngine->fmsg(Engine::MSG_INFO,"Client spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
@@ -171,42 +172,42 @@ void Player::updateColors(const colors_t& _colors) {
 	Mesh::shadervars_t shaderVars;
 
 	// load head colors
-	shaderVars.customColorEnabled = GL_TRUE;
-	shaderVars.customColorR = colors.headRChannel;
-	shaderVars.customColorG = colors.headGChannel;
-	shaderVars.customColorB = colors.headBChannel;
-	shaderVars.customColorA = colors.headGChannel;
 	if (head) {
+		shaderVars = head->getShaderVars();
+		shaderVars.customColorR = colors.headRChannel;
+		shaderVars.customColorG = colors.headGChannel;
+		shaderVars.customColorB = colors.headBChannel;
+		shaderVars.customColorA = colors.headGChannel;
 		head->setShaderVars(shaderVars);
 	}
 
 	// load torso colors
-	shaderVars.customColorEnabled = GL_TRUE;
-	shaderVars.customColorR = colors.torsoRChannel;
-	shaderVars.customColorG = colors.torsoGChannel;
-	shaderVars.customColorB = colors.torsoBChannel;
-	shaderVars.customColorA = colors.headGChannel;
 	if (torso) {
+		shaderVars = torso->getShaderVars();
+		shaderVars.customColorR = colors.torsoRChannel;
+		shaderVars.customColorG = colors.torsoGChannel;
+		shaderVars.customColorB = colors.torsoBChannel;
+		shaderVars.customColorA = colors.headGChannel;
 		torso->setShaderVars(shaderVars);
 	}
 
 	// load arm colors
-	shaderVars.customColorEnabled = GL_TRUE;
-	shaderVars.customColorR = colors.armsRChannel;
-	shaderVars.customColorG = colors.armsGChannel;
-	shaderVars.customColorB = colors.armsBChannel;
-	shaderVars.customColorA = colors.headGChannel;
 	if (arms) {
+		shaderVars = arms->getShaderVars();
+		shaderVars.customColorR = colors.armsRChannel;
+		shaderVars.customColorG = colors.armsGChannel;
+		shaderVars.customColorB = colors.armsBChannel;
+		shaderVars.customColorA = colors.headGChannel;
 		arms->setShaderVars(shaderVars);
 	}
 
 	// load feet colors
-	shaderVars.customColorEnabled = GL_TRUE;
-	shaderVars.customColorR = colors.feetRChannel;
-	shaderVars.customColorG = colors.feetGChannel;
-	shaderVars.customColorB = colors.feetBChannel;
-	shaderVars.customColorA = colors.headGChannel;
 	if (feet) {
+		shaderVars = feet->getShaderVars();
+		shaderVars.customColorR = colors.feetRChannel;
+		shaderVars.customColorG = colors.feetGChannel;
+		shaderVars.customColorB = colors.feetBChannel;
+		shaderVars.customColorA = colors.headGChannel;
 		feet->setShaderVars(shaderVars);
 	}
 }
@@ -322,7 +323,7 @@ void Player::control() {
 			entity->setFalling(true);
 			pos.z = nearestFloor;
 			distToFloor = feetHeight;
-			vel.z = -4.f;
+			vel.z = -cvar_jumpPower.toFloat();
 		} else {
 			if( distToFloor > feetHeight+16 ) {
 				entity->setFalling(true);
