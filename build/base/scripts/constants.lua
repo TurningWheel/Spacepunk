@@ -152,7 +152,14 @@ BINDING = {
 }
 BINDING = protect(BINDING)
 
+-- Tile size
 TILE = {
 	SIZE = 128,
 }
 TILE = protect(TILE)
+
+-- Math
+MATH = {
+	PI = 3.14159265358979323,
+}
+MATH = protect(MATH)
