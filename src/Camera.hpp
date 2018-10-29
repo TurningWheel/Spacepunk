@@ -39,6 +39,14 @@ public:
 	struct point_t {
 		unsigned int x;
 		unsigned int y;
+		glm::vec4 color;
+	};
+
+	// line type
+	struct line_t {
+		Vector start;
+		Vector end;
+		glm::vec4 color;
 	};
 
 	Camera(Entity& _entity, Component* _parent);
@@ -102,15 +110,27 @@ public:
 	// marks a spot on the screen to draw a point
 	// @param x: the x-coord of the point
 	// @param y: the y-coord of the point
-	void markPoint( unsigned int x, unsigned int y );
+	// @param color: the color of the point
+	void markPoint( unsigned int x, unsigned int y, const glm::vec4& color );
+
+	// marks a spot on the screen to draw a point
+	// @param pos: the 3d coordinates of the point
+	// @param color: the color of the point
+	void markPoint( const Vector& pos, const glm::vec4& color );
+
+	// marks a spot on the screen to draw a line
+	// @param start: the 3d coordinates of the line start
+	// @param end: the 3d coordinates of the line end
+	// @param color: the color of the point
+	void markLine( const Vector& start, const Vector& end, const glm::vec4& color );
 
 	// draws the camera
 	// @param camera: the camera through which to draw the camera
 	// @param light: the light by which the camera should be illuminated (or nullptr for no illumination)
 	virtual void draw(Camera& camera, Light* light) override;
 
-	// draws all marked points
-	void drawPoints();
+	// draws all marked points, lines, etc.
+	void drawDebug();
 
 	// load the component from a file
 	// @param fp: the file to read from
@@ -155,4 +175,5 @@ protected:
 	Cube cube;
 	Line3D line3D;
 	LinkedList<point_t> points;
+	LinkedList<line_t> lines;
 };

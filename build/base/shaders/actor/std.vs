@@ -33,7 +33,7 @@ void main() {
 		animFactor = 16384.f;
 	}
 	
-	vec4 lPos    = gModel * lBoneTransform * vec4(iPosition, 1.0) / animFactor;
+	vec4 lPos    = gModel * (lBoneTransform / animFactor) * vec4(iPosition, 1.0);
 	gl_Position  = gView * lPos;
 	
 	mat4 lNormalTransform = gNormalTransform * lBoneTransform;

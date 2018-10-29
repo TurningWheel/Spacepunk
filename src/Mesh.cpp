@@ -40,6 +40,8 @@ Mesh::Mesh(const char* _name) : Asset(_name) {
 		// load standard mesh
 		importer = new Assimp::Importer();
 		unsigned int flags = 0;
+		flags |= aiProcess_SplitByBoneCount;
+		flags |= aiProcess_SplitLargeMeshes;
 		flags |= aiProcess_CalcTangentSpace;
 		flags |= aiProcess_GenSmoothNormals;
 		flags |= aiProcess_Triangulate;
@@ -302,8 +304,6 @@ ShaderProgram* Mesh::loadShader(Component& component, Camera& camera, Light* lig
 	}
 }
 
-static Cvar cvar_ShowBones("showbones", "displays bones in animated models as dots for debug purposes", "0");
-
 void Mesh::skin( ArrayList<animframes_t,0,1>& animations, ArrayList<skincache_t,0>& skincache ) {
 	if( !hasAnimations() ) {
 		return;
@@ -315,14 +315,17 @@ void Mesh::skin( ArrayList<animframes_t,0,1>& animations, ArrayList<skincache_t,
 	Uint32 index = 0;
 	for( auto& entry : subMeshes ) {
 		if( hasAnimations() && animations.getSize() > 0 ) {
-			if( skincache[index].transforms.empty() ) {
-				entry->boneTransform(animations, skincache[index].transforms);
+			if( skincache[index].anims.empty() ) {
+				entry->boneTransform(animations, skincache[index]);
 			}
 		}
 
 		++index;
 	}
 }
+
+static Cvar cvar_showBones("showbones", "displays bones in animated models as dots for debug purposes", "0");
+static Cvar cvar_findBone("findbone", "used with showbones, displays only the bone with the given name", "");
 
 void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache_t,0>& skincache, ShaderProgram* shader ) {
 	if( skincache.getSize() < subMeshes.getSize() ) {
@@ -335,29 +338,26 @@ void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache
 			if( hasAnimations() ) {
 				glUniform1i(shader->getUniformLocation("gAnimated"), GL_TRUE);
 
-				unsigned int numBones = min( (unsigned int)skincache[index].transforms.getSize(), (unsigned int)SubMesh::maxBones );
+				unsigned int numBones = std::min( (unsigned int)skincache[index].anims.getSize(), (unsigned int)SubMesh::maxBones );
 
 				for( unsigned int i=0; i<numBones; ++i ) {
 					char name[128];
 					snprintf(name,128,"gBones[%d]",i);
-					glUniformMatrix4fv(shader->getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(skincache[index].transforms[i]));
+					glUniformMatrix4fv(shader->getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(skincache[index].anims[i]));
 
-					// following block is debug stuff
-					if( cvar_ShowBones.toInt() && component ) {
-						glm::mat4 mat = component->getGlobalMat() * (skincache[index].transforms[i] / 16384.f);
-						Vector pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
-						Vector scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
-
-						Vector diff = pos - camera.getGlobalPos();
-						float dot = diff.dot(camera.getGlobalAng().toVector());
-						if( dot > 0 ) {
-							Vector proj = camera.worldPosToScreenPos(pos);
-							Rect<int> src;
-							src.x = proj.x-4; src.y = proj.y-4;
-							src.w = 8; src.h = 8;
-							if( camera.getWin().containsPoint(src.x,src.y) ) {
-								camera.markPoint(src.x,src.y);
-							}
+					// debug stuff
+					if( cvar_showBones.toInt() && component ) {
+						String findBone = cvar_findBone.toStr();
+						if (findBone == "" || findBone == entry->getBones()[i].name) {
+							glm::mat4 mat = component->getGlobalMat() * skincache[index].offsets[i];
+							Vector pos0 = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+							Vector pos1 = pos0 + Vector( mat[0][0], mat[0][2], -mat[0][1] ).normal() * 10.f;
+							Vector pos2 = pos0 + Vector( mat[1][0], mat[1][2], -mat[1][1] ).normal() * 10.f;
+							Vector pos3 = pos0 + Vector( mat[2][0], mat[2][2], -mat[2][1] ).normal() * 10.f;
+							camera.markPoint(pos0, glm::vec4(.5f, .5f, .5f, 1.f));
+							camera.markLine(pos0, pos1, glm::vec4(.5f, 0.f, 0.f, 1.f));
+							camera.markLine(pos0, pos2, glm::vec4(0.f, .5f, 0.f, 1.f));
+							camera.markLine(pos0, pos3, glm::vec4(0.f, 0.f, .5f, 1.f));
 						}
 					}
 				}
@@ -669,19 +669,20 @@ void Mesh::SubMesh::VertexBoneData::addBoneData(unsigned int boneID, float weigh
     assert(0);
 }
 
-void Mesh::SubMesh::boneTransform(ArrayList<animframes_t,0,1>& animations, ArrayList<glm::mat4,0>& transforms) {
+void Mesh::SubMesh::boneTransform(ArrayList<animframes_t,0,1>& animations, skincache_t& skin) {
 	if( !scene || !scene->HasAnimations() )
 		return;
 	const glm::mat4 identity( 1.f );
 
-	transforms.resize(numBones);
-	readNodeHierarchy(animations, transforms, scene->mRootNode, identity);
+	skin.anims.resize(numBones);
+	skin.offsets.resize(numBones);
+	readNodeHierarchy(animations, skin, scene->mRootNode, identity);
 }
 
-void Mesh::SubMesh::readNodeHierarchy(ArrayList<animframes_t,0,1>& animations, ArrayList<glm::mat4,0>& transforms, const aiNode* node, const glm::mat4& parentTransform) {
-	const char* nodeName = node->mName.data;
-
+void Mesh::SubMesh::readNodeHierarchy(ArrayList<animframes_t,0,1>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform) {
 	aiMatrix4x4 nodeTransform = node->mTransformation;
+
+	const char* nodeName = node->mName.data;
 	const aiNodeAnim* nodeAnim = findNodeAnim(scene->mAnimations[0], nodeName);
 
 	if( nodeAnim ) {
@@ -707,15 +708,16 @@ void Mesh::SubMesh::readNodeHierarchy(ArrayList<animframes_t,0,1>& animations, A
 	}
 
 	glm::mat4 glmTransform = glm::transpose(glm::make_mat4(&nodeTransform.a1));
-	glm::mat4 globalTransform = parentTransform * glmTransform;
+	glm::mat4 globalTransform = rootTransform * glmTransform;
 
 	if( boneMapping.exists(nodeName) ) {
 		unsigned int boneIndex = *boneMapping[nodeName];
-		transforms[boneIndex] = (globalTransform * bones[boneIndex].offset) * 16384.f;
+		skin.offsets[boneIndex] = globalTransform;
+		skin.anims[boneIndex] = globalTransform * bones[boneIndex].offset * 16384.f;
 	}
 
 	for( unsigned int i=0; i < node->mNumChildren; ++i ) {
-		readNodeHierarchy(animations, transforms, node->mChildren[i], globalTransform);
+		readNodeHierarchy(animations, skin, node->mChildren[i], globalTransform);
 	}
 }
 

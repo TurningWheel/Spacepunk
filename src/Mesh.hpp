@@ -32,7 +32,8 @@ public:
 
 	// skin cache
 	struct skincache_t {
-		ArrayList<glm::mat4,0> transforms;
+		ArrayList<glm::mat4,0> anims;
+		ArrayList<glm::mat4,0> offsets;
 	};
 
 	// animation
@@ -162,8 +163,8 @@ public:
 
 		GLuint findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3);
 
-		void boneTransform(ArrayList<animframes_t,0,1>& animations, ArrayList<glm::mat4,0>& transforms);
-		void readNodeHierarchy(ArrayList<animframes_t,0,1>& animations, ArrayList<glm::mat4,0>& transforms, const aiNode* node, const glm::mat4& parentTransform);
+		void boneTransform(ArrayList<animframes_t,0,1>& animations, skincache_t& skin);
+		void readNodeHierarchy(ArrayList<animframes_t,0,1>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
 		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str);
 
 		void calcInterpolatedPosition(aiVector3D& out, ArrayList<animframes_t,0,1>& animations, const aiNodeAnim* nodeAnim);
@@ -175,15 +176,16 @@ public:
 		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim);
 
 		// getters & setters
-		virtual const type_t	getType() const				{ return ASSET_MESH; }
-		const unsigned int		getNumVertices() const		{ return numVertices; }
-		const unsigned int		getNumIndices() const		{ return elementCount; }
-		const unsigned int		getNumBones() const			{ return numBones; }
-		const float*			getVertices() const			{ return vertices; }
-		const float*			getTexCoords() const		{ return texCoords; }
-		const float*			getNormals() const			{ return normals; }
-		const float*			getColors() const			{ return colors; }
-		const GLuint*			getIndices() const			{ return indices; }
+		virtual const type_t				getType() const				{ return ASSET_MESH; }
+		const unsigned int					getNumVertices() const		{ return numVertices; }
+		const unsigned int					getNumIndices() const		{ return elementCount; }
+		const unsigned int					getNumBones() const			{ return numBones; }
+		const float*						getVertices() const			{ return vertices; }
+		const float*						getTexCoords() const		{ return texCoords; }
+		const float*						getNormals() const			{ return normals; }
+		const float*						getColors() const			{ return colors; }
+		const GLuint*						getIndices() const			{ return indices; }
+		const ArrayList<boneinfo_t,0>&		getBones() const			{ return bones; }
 
 	private:
 		Map<unsigned int> boneMapping; // maps a bone name to its index

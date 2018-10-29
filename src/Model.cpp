@@ -25,6 +25,7 @@
 #include "BBox.hpp"
 #include "String.hpp"
 #include "Speaker.hpp"
+#include "Console.hpp"
 
 const int Model::maxAnimations = 8;
 const char* Model::defaultMesh = "assets/block/block.FBX";
@@ -71,6 +72,8 @@ bool Model::isAnimDone() const {
 	}
 }
 
+static Cvar cvar_pauseAnimation("anim.rate", "controls rate of model anims", "1.0");
+
 void Model::process() {
 	Component::process();
 
@@ -101,7 +104,7 @@ void Model::process() {
 		// step animation
 		float step = ((float)Engine::defaultTickRate / (float)mainEngine->getTicksPerSecond()) * animationSpeed;
 		float oldAnimTicks = anim.ticks;
-		anim.ticks += step;
+		anim.ticks += step * cvar_pauseAnimation.toFloat();
 
 		// calculate animation length
 		float animLength = anim.end - anim.begin;
@@ -143,8 +146,8 @@ Model::bone_t Model::findBone(const char* name) const {
 		if( bone != UINT32_MAX ) {
 			size_t c = 0;
 			for( ; c < skincache.getSize(); ++c ) {
-				if( bone >= skincache[c].transforms.getSize() ) {
-					bone -= (unsigned int)skincache[c].transforms.getSize();
+				if( bone >= skincache[c].anims.getSize() ) {
+					bone -= (unsigned int)skincache[c].anims.getSize();
 				} else {
 					break;
 				}
@@ -152,24 +155,13 @@ Model::bone_t Model::findBone(const char* name) const {
 			if( c >= skincache.getSize() ) {
 				return bone_t();
 			} else {
-				glm::mat4 mat = skincache[c].transforms[bone] / 16384.f;
+				glm::mat4 mat = skincache[c].offsets[bone];
 
 				bone_t bone;
+				glm::extractEulerAngleXYZ(mat, bone.ang.roll, bone.ang.pitch, bone.ang.yaw);
 				bone.valid = true;
 				bone.name = name;
 				bone.mat = mat;
-				glm::extractEulerAngleXYZ(mat, bone.ang.roll, bone.ang.pitch, bone.ang.yaw);
-
-				//glm::vec3 scale;
-				//glm::quat rotation;
-				//glm::vec3 translation;
-				//glm::vec3 skew;
-				//glm::vec4 perspective;
-				//glm::decompose(mat, scale, rotation, translation, skew, perspective);
-
-				//bone.pos = Vector(translation.x, translation.y, translation.z);
-				//bone.scale = Vector(scale.x, scale.y, scale.z);
-
 				bone.pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
 				bone.scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
 

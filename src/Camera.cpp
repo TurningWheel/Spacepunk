@@ -220,27 +220,66 @@ void Camera::serialize(FileInterface* file) {
 	file->property("ortho", ortho);
 }
 
-void Camera::markPoint(unsigned int x, unsigned int y) {
+void Camera::markPoint(unsigned int x, unsigned int y, const glm::vec4& color) {
 	point_t point;
 	point.x = x;
 	point.y = y;
+	point.color = color;
 	points.addNodeLast(point);
 }
 
-void Camera::drawPoints() {
-	Node<point_t>* node = points.getFirst();
-	Node<point_t>* nextnode = nullptr;
-	for( ; node != nullptr; node = nextnode ) {
-		point_t& point = node->getData();
-		nextnode = node->getNext();
+void Camera::markPoint(const Vector& pos, const glm::vec4& color) {
+	Vector diff = pos - gPos;
+	float dot = diff.dot(gAng.toVector());
+	if( dot > 0 ) {
+		Vector proj = worldPosToScreenPos(pos);
+		Rect<int> src;
+		src.x = proj.x-4; src.y = proj.y-4;
+		src.w = 8; src.h = 8;
+		if( win.containsPoint(src.x,src.y) ) {
+			markPoint(src.x, src.y, color);
+		}
+	}
+}
 
-		Rect<Sint32> src;
-		src.x = point.x - 4;
-		src.y = point.y - 4;
-		src.w = 8;
-		src.h = 8;
+void Camera::markLine(const Vector& start, const Vector& end, const glm::vec4& color) {
+	line_t line;
+	line.start = start;
+	line.end = end;
+	line.color = color;
+	lines.addNodeLast(line);
+}
 
-		renderer->drawRect(&src, glm::vec4(1.f, 1.f, 0.f, 1.f));
-		points.removeNode(node);
+void Camera::drawDebug() {
+	// draw points
+	{
+		Node<point_t>* node = points.getFirst();
+		Node<point_t>* nextnode = nullptr;
+		for( ; node != nullptr; node = nextnode ) {
+			point_t& point = node->getData();
+			nextnode = node->getNext();
+
+			Rect<Sint32> src;
+			src.x = point.x - 2;
+			src.y = point.y - 2;
+			src.w = 4;
+			src.h = 4;
+
+			renderer->drawRect(&src, point.color);
+			points.removeNode(node);
+		}
+	}
+
+	// draw lines
+	{
+		Node<line_t>* node = lines.getFirst();
+		Node<line_t>* nextnode = nullptr;
+		for( ; node != nullptr; node = nextnode ) {
+			line_t& line = node->getData();
+			nextnode = node->getNext();
+
+			drawLine3D(2, line.start, line.end, line.color);
+			lines.removeNode(node);
+		}
 	}
 }

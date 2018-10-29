@@ -551,6 +551,7 @@ void Script::exposeComponent() {
 		.addFunction("setLocalPos", &Component::setLocalPos)
 		.addFunction("setLocalAng", &Component::setLocalAng)
 		.addFunction("setLocalScale", &Component::setLocalScale)
+		.addFunction("setLocalMat", &Component::setLocalMat)
 		.addFunction("update", &Component::update)
 		.addFunction("remove", &Component::remove)
 		.addFunction("checkCollision", &Component::checkCollision)
@@ -571,6 +572,9 @@ void Script::exposeComponent() {
 		.addFunction("findCameraByName", &Component::findComponentByName<Camera>)
 		.addFunction("findSpeakerByName", &Component::findComponentByName<Speaker>)
 		.addFunction("findCharacterByName", &Component::findComponentByName<Character>)
+		.addFunction("rotate", &Component::rotate)
+		.addFunction("translate", &Component::translate)
+		.addFunction("scale", &Component::scale)
 		.endClass()
 	;
 
@@ -625,9 +629,15 @@ void Script::exposeModel() {
 	;
 
 	luabridge::getGlobalNamespace(lua)
+		.beginClass<glm::mat4>("matrix4x4")
+		.endClass()
+	;
+
+	luabridge::getGlobalNamespace(lua)
 		.beginClass<Model::bone_t>("bone_t")
 		.addData("valid", &Model::bone_t::valid, true)
 		.addData("name", &Model::bone_t::name, true)
+		.addData("mat", &Model::bone_t::mat, true)
 		.addData("pos", &Model::bone_t::pos, true)
 		.addData("ang", &Model::bone_t::ang, true)
 		.addData("scale", &Model::bone_t::scale, true)

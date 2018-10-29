@@ -86,11 +86,6 @@ public:
 	// @param color: the 32-bit color of the rectangle
 	void drawRect( const Rect<int>* src, const glm::vec4& color );
 
-	// draws a 2D line in screen space
-	// @param src: the position and length of the line on the two axes
-	// @param color: the 32-bit color value of the line
-	void drawLine( const Rect<int>& src, const glm::vec4& color );
-
 	// writes utf-8 text using a ttf font at the given screen coordinates
 	// @param rect: the position and size of the text image to use
 	// @param str: the str to print

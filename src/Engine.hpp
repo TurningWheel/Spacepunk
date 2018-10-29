@@ -401,7 +401,7 @@ private:
 	bool inputAllowed = true;
 	const char* lastkeypressed = nullptr;
 	char lastInput[SDL_TEXTINPUTEVENT_TEXT_SIZE] = { 0 };
-	bool keystatus[256];
+	bool keystatus[SDL_NUM_SCANCODES];
 	bool anykeystatus = false;
 	char keypressed = 0;
 	bool mousestatus[8];

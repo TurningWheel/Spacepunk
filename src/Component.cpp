@@ -464,18 +464,38 @@ bool Component::hasComponent(type_t type) const {
 	return false;
 }
 
+void Component::rotate(const Angle& ang) {
+	lMat *= glm::eulerAngleYXZ(ang.yaw, ang.pitch, ang.roll);
+	updateNeeded = true;
+	lMatSet = true;
+}
+
+void Component::translate(const Vector& vec) {
+	lMat = glm::translate(lMat, glm::vec3(vec.x, vec.y, vec.z));
+	updateNeeded = true;
+	lMatSet = true;
+}
+
+void Component::scale(const Vector& vec) {
+	lMat = glm::scale(lMat, glm::vec3(vec.x, vec.y, vec.z));
+	updateNeeded = true;
+	lMatSet = true;
+}
+
 void Component::update() {
 	updateNeeded = false;
 	
 	deleteVisMaps();
 
-	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
-	glm::mat4 rotationM = glm::mat4( 1.f );
-	rotationM = glm::rotate(rotationM, (float)(lAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-	rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-	rotationM = glm::rotate(rotationM, (float)(lAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-	glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
-	lMat = translationM * rotationM * scaleM;
+	if (!lMatSet) {
+		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
+		glm::mat4 rotationM = glm::mat4( 1.f );
+		rotationM = glm::rotate(rotationM, (float)(lAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
+		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
+		rotationM = glm::rotate(rotationM, (float)(lAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
+		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
+		lMat = translationM * rotationM * scaleM;
+	}
 
 	if( parent ) {
 		gMat = parent->getGlobalMat() * lMat;

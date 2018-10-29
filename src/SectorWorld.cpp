@@ -399,6 +399,9 @@ void SectorWorld::draw() {
 			}
 		}
 
+		// draw debug stuff
+		camera->drawDebug();
+
 		// reset selected cam in editor
 		if( editor && editor->isInitialized() ) {
 			if( camera != editor->getEditingCamera() &&
@@ -415,12 +418,6 @@ void SectorWorld::draw() {
 		glScissor( 0, 0, xres, yres );
 		glEnable( GL_SCISSOR_TEST );
 		ShaderProgram::unmount();
-	}
-
-	// draw points
-	for( Node<Camera*>* node=cameras.getFirst(); node!=nullptr; node=node->getNext() ) {
-		Camera* camera = node->getData();
-		camera->drawPoints();
 	}
 }
 

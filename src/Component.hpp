@@ -190,6 +190,18 @@ public:
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface* file);
 
+	// rotate the component by a given amount
+	// @param ang: the amount to rotate
+	void rotate(const Angle& ang);
+
+	// translate the component by a given amount
+	// @param vec: the amount to translate
+	void translate(const Vector& vec);
+
+	// scale the component by a given amount
+	// @param vec: the amount to scale
+	void scale(const Vector& vec);
+
 	// getters & setters
 	virtual type_t				getType() const							{ return COMPONENT_BASIC; }
 	const Entity*				getEntity() const						{ return entity; }
@@ -213,12 +225,14 @@ public:
 	const bool*					getTilesVisible() const					{ return tilesVisible; }
 	const bool*					getChunksVisible() const				{ return chunksVisible; }
 	const ArrayList<Chunk*>&	getVisibleChunks() const				{ return visibleChunks; }
+	bool						isLocalMatSet() const					{ return lMatSet; }
 
 	void				setEditorOnly(bool _editorOnly)			{ editorOnly = _editorOnly; }
 	void				setName(const char* _name)				{ name = _name; }
-	void				setLocalPos(const Vector& _pos)			{ lPos = _pos; updateNeeded = true; }
-	void				setLocalAng(const Angle& _ang)			{ lAng = _ang; updateNeeded = true; }
-	void				setLocalScale(const Vector& _scale)		{ lScale = _scale; updateNeeded = true; }
+	void				setLocalPos(const Vector& _pos)			{ lPos = _pos; updateNeeded = true; lMatSet = false; }
+	void				setLocalAng(const Angle& _ang)			{ lAng = _ang; updateNeeded = true; lMatSet = false; }
+	void				setLocalScale(const Vector& _scale)		{ lScale = _scale; updateNeeded = true; lMatSet = false; }
+	void				setLocalMat(const glm::mat4& _mat)		{ lMat = _mat; updateNeeded = true; lMatSet = true; }
 	void				setCollapsed(bool _collapsed)			{ collapsed = _collapsed; }
 
 	Component& operator=(const Component& src) {
@@ -243,10 +257,6 @@ protected:
 	bool updateNeeded = true;
 	bool collapsed = true;
 
-	// save sub-components to a file
-	// @param fp: the file to write to
-	void saveSubComponents(FILE* fp);
-
 	// load sub-components from a file
 	// @param fp: the file to read from
 	void loadSubComponents(FILE* fp);
@@ -265,6 +275,7 @@ protected:
 	Angle		lAng;		// angle
 	Vector		lScale;		// scale
 	glm::mat4	lMat;		// matrix (position * angle * scale)
+	bool		lMatSet = false;
 
 	// global space
 	Vector		gPos;		// position

@@ -2233,6 +2233,9 @@ void TileWorld::draw() {
 			}
 		}
 
+		// draw debug stuff
+		camera->drawDebug();
+
 		// reset GL state
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		int xres = renderer->getXres();
@@ -2243,12 +2246,6 @@ void TileWorld::draw() {
 		ShaderProgram::unmount();
 
 		cameraLightList.clear();
-	}
-
-	// draw points
-	for( Node<Camera*>* node=cameras.getFirst(); node!=nullptr; node=node->getNext() ) {
-		Camera* camera = node->getData();
-		camera->drawPoints();
 	}
 }
 
