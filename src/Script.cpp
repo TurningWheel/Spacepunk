@@ -575,6 +575,10 @@ void Script::exposeComponent() {
 		.addFunction("rotate", &Component::rotate)
 		.addFunction("translate", &Component::translate)
 		.addFunction("scale", &Component::scale)
+		.addFunction("revertRotation", &Component::revertRotation)
+		.addFunction("revertTranslation", &Component::revertTranslation)
+		.addFunction("revertScale", &Component::revertScale)
+		.addFunction("revertToIdentity", &Component::revertToIdentity)
 		.endClass()
 	;
 

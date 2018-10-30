@@ -202,6 +202,18 @@ public:
 	// @param vec: the amount to scale
 	void scale(const Vector& vec);
 
+	// reverts rotation to 0, 0, 0
+	void revertRotation();
+
+	// reverts translation to 0, 0, 0
+	void revertTranslation();
+
+	// reverts the scale to 1:1:1
+	void revertScale();
+
+	// resets rotation, translation, and scale at once
+	void revertToIdentity();
+
 	// getters & setters
 	virtual type_t				getType() const							{ return COMPONENT_BASIC; }
 	const Entity*				getEntity() const						{ return entity; }

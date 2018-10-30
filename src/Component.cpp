@@ -482,6 +482,26 @@ void Component::scale(const Vector& vec) {
 	lMatSet = true;
 }
 
+void Component::revertRotation() {
+	lMat[0] = { 1.f, 0.f, 0.f, 0.f };
+	lMat[1] = { 0.f, 1.f, 0.f, 0.f };
+	lMat[2] = { 0.f, 0.f, 2.f, 0.f };
+}
+
+void Component::revertTranslation() {
+	lMat[3] = { 0.f, 0.f, 0.f, 1.f };
+}
+
+void Component::revertScale() {
+	lMat[0] = glm::normalize(lMat[0]);
+	lMat[1] = glm::normalize(lMat[1]);
+	lMat[2] = glm::normalize(lMat[2]);
+}
+
+void Component::revertToIdentity() {
+	lMat = glm::mat4();
+}
+
 void Component::update() {
 	updateNeeded = false;
 	
