@@ -438,6 +438,13 @@ void Entity::draw(Camera& camera, Light* light) const {
 		return;
 	}
 
+	// in editor, skip entities at too great a distance
+	if( editorRunning && world->isShowTools() ) {
+		if( (camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() ) {
+			return;
+		}
+	}
+
 	// setup overdraw characteristics
 	if( isFlag(Entity::flag_t::FLAG_OVERDRAW) ) {
 		glDepthRange(0.f, .01f);
@@ -471,12 +478,11 @@ bool Entity::checkCollision(const Vector& newPos) {
 	return false;
 }
 
-void Entity::animate(const char* name, bool blend, bool loop) {
+void Entity::animate(const char* name) {
 	LinkedList<Model*> models;
 	findAllComponents<Model>(Component::COMPONENT_MODEL, models);
-	for( Node<Model*>* node = models.getFirst(); node != nullptr; node = node->getNext() ) {
-		Model* model = node->getData();
-		model->animate(name, blend, loop);
+	for( auto& model : models ) {
+		model->animate(name);
 	}
 }
 
@@ -613,7 +619,7 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 	Entity* entity = new Entity(world, uid);
 	def.entity.copy(world, entity);
 	entity->defIndex = def.index;
-	entity->animate("idle", false, true);
+	entity->animate("idle");
 
 	entity->setPos(pos);
 	entity->setNewPos(pos);
@@ -729,7 +735,7 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	}
 
 	entity->update();
-	entity->animate("idle", false, true);
+	entity->animate("idle");
 
 	return entity;
 }

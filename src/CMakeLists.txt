@@ -6,6 +6,7 @@ endif()
 
 list(APPEND GAME_SOURCES
 	"${CMAKE_CURRENT_SOURCE_DIR}/Animation.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/AnimationState.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Asset.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Atlas.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/BBox.cpp"

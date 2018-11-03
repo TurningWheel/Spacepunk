@@ -141,17 +141,19 @@ public:
 		String path;
 		TileWorld* angles[4];
 
-		virtual void serialize(FileInterface * file);
+		void serialize(FileInterface * file);
 	};
 
 	// Library
 	struct lib_t {
+		virtual ~lib_t() {}
 		void loadPieces(ArrayList<piece_t>& pieces, bool clientObj);
 		void freePieces(ArrayList<piece_t>& pieces);
 	};
 
 	// Room library
 	struct roomlib_t : public lib_t {
+		virtual ~roomlib_t() {}
 		ArrayList<piece_t> corners;
 		ArrayList<piece_t> cornersInner;
 		ArrayList<piece_t> tunnelDoors;
@@ -160,18 +162,19 @@ public:
 		ArrayList<piece_t> largeWalls;
 		ArrayList<piece_t> doors;
 
-		virtual void serialize(FileInterface * file);
+		void serialize(FileInterface * file);
 	};
 
 	// Tunnel library
 	struct tunnellib_t : public lib_t {
+		virtual ~tunnellib_t() {}
 		ArrayList<piece_t> corners;
 		ArrayList<piece_t> deadEnds;
 		ArrayList<piece_t> intersections;
 		ArrayList<piece_t> straights;
 		ArrayList<piece_t> tJunctions;
 
-		virtual void serialize(FileInterface * file);
+		void serialize(FileInterface * file);
 	};
 
 	// Cell bits
@@ -232,7 +235,7 @@ public:
 
 		// save/load this object to a file
 		// @param file interface to serialize with
-		virtual void serialize(FileInterface * file);
+		void serialize(FileInterface * file);
 	};
 
 	Generator(bool _clientObj);
@@ -247,7 +250,7 @@ public:
 
 	// save/load this object to a file
 	// @param file interface to serialize with
-	virtual void serialize(FileInterface * file);
+	void serialize(FileInterface * file);
 
 	// getters & setters
 	const char*						getName() const					{ return name; }

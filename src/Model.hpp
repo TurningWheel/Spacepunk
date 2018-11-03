@@ -21,6 +21,8 @@
 #include "String.hpp"
 #include "Mesh.hpp"
 #include "Material.hpp"
+#include "Map.hpp"
+#include "AnimationState.hpp"
 
 class Engine;
 class Script;
@@ -42,7 +44,6 @@ public:
 		Vector scale;
 	};
 
-	typedef ArrayList<Mesh::animframes_t,0,1> AnimationList;
 	typedef ArrayList<Mesh::skincache_t,0> SkinCache;
 
 	Model(Entity& _entity, Component* _parent);
@@ -62,12 +63,6 @@ public:
 	// update the component
 	virtual void process() override;
 
-	// plays an animation
-	// @param name: the name of the animation to play
-	// @param blend: if true, blends from the old animation to the new
-	// @param loop: if true, the animation will loop; otherwise it will stop at the last frame
-	void animate(const char* name, bool blend, bool loop);
-
 	// finds a bone with the given name
 	// @param name: the name of the bone to search for
 	// @return a struct containing bone position, orientation, etc.
@@ -84,6 +79,19 @@ public:
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
+	// updates skin if necessary
+	void updateSkin();
+
+	// find and return the animation state with the given name
+	// @param name The name of the animation state
+	// @return The animation state with the given name, if any
+	AnimationState* findAnimation(const char* name);
+
+	// cancel all other animations on the mesh and use only the given one
+	// @param name The name of the animation to play
+	// @return true if the animation was found, otherwise false (and do nothing)
+	bool animate(const char* name);
+
 	// get the name of the currently playing animation
 	const char* getAnimName() const;
 
@@ -95,19 +103,16 @@ public:
 	// @return true if the animation has wrapped, otherwise false
 	bool isAnimDone() const;
 
-	// updates skin if necessary
-	void updateSkin();
-
 	// getters & setters
 	virtual type_t						getType() const override			{ return COMPONENT_MODEL; }
 	const char*							getMesh() const						{ return meshStr.get(); }
 	const char*							getMaterial() const					{ return materialStr.get(); }
 	const char*							getDepthFailMat() const				{ return depthfailStr.get(); }
 	const char*							getAnimation() const				{ return animationStr.get(); }
+	const Map<AnimationState>&			getAnimations() const				{ return animations; }
+	Map<AnimationState>&				getAnimations()						{ return animations; }
 	const Mesh::shadervars_t&			getShaderVars() const				{ return shaderVars; }
-	const AnimationList&				getAnimations() const				{ return animations; }
 	const SkinCache&					getSkinCache() const				{ return skincache; }
-	unsigned int						getNumActiveAnimations() const		{ return (unsigned int)animations.getSize(); }
 	float								getAnimationSpeed() const			{ return animationSpeed; }
 	bool								isSkinUpdateNeeded() const			{ return skinUpdateNeeded; }
 	bool								isGenius() const					{ return genius; }
@@ -115,7 +120,7 @@ public:
 	void	setMesh(const char* _mesh)										{ meshStr = _mesh; updateNeeded = true; }
 	void	setMaterial(const char* _material)								{ materialStr = _material; }
 	void	setDepthFailMat(const char* _depthfailmat)						{ depthfailStr = _depthfailmat; }
-	void	setAnimation(const char* _animation)							{ animationStr = _animation; }
+	void	setAnimation(const char* _animation)							{ animationStr = _animation; loadAnimations(); }
 	void	setShaderVars(const Mesh::shadervars_t& _shaderVars)			{ shaderVars = _shaderVars; }
 	void	setAnimationSpeed(const float _animationSpeed)					{ animationSpeed = _animationSpeed; }
 	void	setGenius(const bool _genius)									{ genius = _genius; }
@@ -144,6 +149,10 @@ private:
 
 	bool skinUpdateNeeded = false;		// if true, skin will get tossed on next draw call
 	SkinCache skincache;				// bone transforms
-	AnimationList animations;			// animation list
+	Map<AnimationState> animations;		// animation states
 	float animationSpeed = 1.f;			// anim speed factor
+	String currentAnimation;			// currently playing animation (deprecated)
+
+	// loads all animations from the current animation manifest
+	void loadAnimations();
 };

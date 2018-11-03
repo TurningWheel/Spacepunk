@@ -16,7 +16,7 @@
 #include "Node.hpp"
 #include "Vector.hpp"
 #include "String.hpp"
-#include "Animation.hpp"
+#include "AnimationState.hpp"
 #include "Map.hpp"
 #include "Voxel.hpp"
 
@@ -34,20 +34,6 @@ public:
 	struct skincache_t {
 		ArrayList<glm::mat4,0> anims;
 		ArrayList<glm::mat4,0> offsets;
-	};
-
-	// animation
-	struct animframes_t {
-		String name;
-		float ticks;
-		float begin;
-		float end;
-		float blend;
-		float blendRate;
-		unsigned int beginLastSoundFrame;
-		unsigned int endLastSoundFrame;
-		bool loop;
-		ArrayList<Animation::sound_t> sounds;
 	};
 
 	// shader vars
@@ -104,9 +90,9 @@ public:
 	void draw( Camera& camera, const Component* component, ArrayList<skincache_t,0>& skincache, ShaderProgram* shader );
 
 	// skins the mesh
-	// @param animations: list of animations to skin with
+	// @param animations: animations to skin with
 	// @param skincache: where to store resulting skin
-	void skin( ArrayList<animframes_t,0,1>& animations, ArrayList<skincache_t,0>& skincache );
+	void skin( Map<AnimationState>& animations, ArrayList<skincache_t,0>& skincache );
 
 	// find the bone with the given name
 	// @param name: the name of the bone to search for
@@ -163,13 +149,13 @@ public:
 
 		GLuint findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3);
 
-		void boneTransform(ArrayList<animframes_t,0,1>& animations, skincache_t& skin);
-		void readNodeHierarchy(ArrayList<animframes_t,0,1>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
+		void boneTransform(Map<AnimationState>& animations, skincache_t& skin);
+		void readNodeHierarchy(Map<AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
 		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str);
 
-		void calcInterpolatedPosition(aiVector3D& out, ArrayList<animframes_t,0,1>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedRotation(aiQuaternion& out, ArrayList<animframes_t,0,1>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedScaling(aiVector3D& out, ArrayList<animframes_t,0,1>& animations, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedPosition(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedRotation(aiQuaternion& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
 
 		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim);
 		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim);

@@ -211,9 +211,7 @@ public:
 
 	// animates all the entity's meshes in unison
 	// @param name: the name of the animation to play
-	// @param blend: if true, blends from the old animations to the new
-	// @param loop: if true, the animation will loop; otherwise it will stop at the last frame
-	void animate(const char* name, bool blend, bool loop);
+	void animate(const char* name);
 
 	// move the entity by its translational and rotational velocity
 	// @return true if we moved without hitting any obstacles, otherwise false
@@ -383,7 +381,7 @@ public:
 
 	// save/load this object to a file
 	// @param file interface to serialize with
-	virtual void serialize(FileInterface * file);
+	void serialize(FileInterface * file);
 
 	// kicks off an async pathfinding task
 	// @param goalX: target x coordinate
@@ -454,7 +452,7 @@ struct Entity::def_t {
 
 	// save/load this object to a file
 	// @param file interface to serialize with
-	virtual void serialize(FileInterface * file);
+	void serialize(FileInterface * file);
 
 	bool exposedInEditor = true;	// whether it is accessible by editor 
 	Uint32 index = 0;				// uid for the definition, set by the engine

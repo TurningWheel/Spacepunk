@@ -221,7 +221,7 @@ public:
 
 	// save/load this object to a file
 	// @param file interface to serialize with
-	virtual void serialize(FileInterface * file);
+	void serialize(FileInterface * file);
 
 private:
 	TileWorld* world = nullptr; // the parent world object

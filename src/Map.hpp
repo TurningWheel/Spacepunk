@@ -47,7 +47,7 @@ public:
 	bool exists(const char* key) const {
 		assert(key != nullptr);
 		auto& list = hash[djb2Hash(key) % numBuckets];
-		for( auto pair : list ) {
+		for( auto& pair : list ) {
 			if( strcmp(pair.a.get(), key) == 0 ) {
 				return true;
 			}
@@ -105,9 +105,18 @@ public:
 		return result;
 	}
 
+	// replace the contents of this map with those of another
+	// @param src The map to copy
+	void copy(const Map<T>& src) {
+		for (size_t c = 0; c < numBuckets; ++c) {
+			hash[c].removeAll();
+			hash[c].copy(src.getHash((int)c));
+		}
+	}
+
 	// save/load this object to a file
 	// @param file interface to serialize with
-	virtual void serialize(FileInterface * file) {
+	void serialize(FileInterface * file) {
 		if (file->isReading()) {
 			Uint32 keyCount = 0;
 			file->propertyName("data");

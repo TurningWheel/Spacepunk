@@ -27,6 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\AnimationState.cpp" />
     <ClCompile Include="..\..\src\Asset.cpp" />
     <ClCompile Include="..\..\src\Character.cpp" />
     <ClCompile Include="..\..\src\Cubemap.cpp" />
@@ -85,6 +86,7 @@
     <ClCompile Include="..\..\src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\AnimationState.hpp" />
     <ClInclude Include="..\..\src\Character.hpp" />
     <ClInclude Include="..\..\src\Cubemap.hpp" />
     <ClInclude Include="..\..\src\Dictionary.hpp" />

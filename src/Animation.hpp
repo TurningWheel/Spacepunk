@@ -5,6 +5,7 @@
 #include "Asset.hpp"
 #include "String.hpp"
 #include "LinkedList.hpp"
+#include "File.hpp"
 
 class Animation : public Asset {
 public:
@@ -14,15 +15,20 @@ public:
 
 	// animation entry
 	struct entry_t {
-		String name;
-		unsigned int begin;
-		unsigned int end;
+		String name = "unknown";
+		unsigned int begin = 0;
+		unsigned int end = 1;
+		bool loop = false;
+
+		void serialize(FileInterface * file);
 	};
 
 	// sound trigger
 	struct sound_t {
-		unsigned int frame;
+		unsigned int frame = UINT32_MAX;
 		ArrayList<String> files;
+
+		void serialize(FileInterface * file);
 	};
 
 	// find the animation with the given name
@@ -35,12 +41,16 @@ public:
 	// @return a pointer to the trigger, or nullptr if it could not be found
 	const sound_t* findSound(unsigned int frame) const;
 
+	// save/load this object to a file
+	// @param file interface to serialize with
+	virtual void serialize(FileInterface * file);
+
 	// getters & setters
 	virtual const type_t		getType() const			{ return ASSET_ANIMATION; }
-	const LinkedList<entry_t>&	getEntries() const		{ return entries; }
-	const LinkedList<sound_t>&	getSounds() const		{ return sounds; }
+	const ArrayList<entry_t>&	getEntries() const		{ return entries; }
+	const ArrayList<sound_t>&	getSounds() const		{ return sounds; }
 
 private:
-	LinkedList<entry_t> entries;
-	LinkedList<sound_t> sounds;
+	ArrayList<entry_t> entries;
+	ArrayList<sound_t> sounds;
 };

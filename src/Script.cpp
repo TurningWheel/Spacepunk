@@ -18,6 +18,7 @@
 #include "Angle.hpp"
 #include "Editor.hpp"
 #include "Path.hpp"
+#include "AnimationState.hpp"
 
 //Component headers
 #include "Component.hpp"
@@ -175,6 +176,11 @@ void Script::exposeEngine() {
 		.addFunction("editorPlaytest", &Engine::editorPlaytest)
 		.addFunction("smsg", &Engine::smsg)
 		.addFunction("msg", &Engine::msg)
+		.endClass()
+	;
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<glm::mat4>("matrix4x4")
 		.endClass()
 	;
 
@@ -610,6 +616,7 @@ void Script::exposeModel() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Model, Component>("Model")
 		.addFunction("findBone", &Model::findBone)
+		.addFunction("findAnimation", &Model::findAnimation)
 		.addFunction("animate", &Model::animate)
 		.addFunction("hasAnimations", &Model::hasAnimations)
 		.addFunction("getMesh", &Model::getMesh)
@@ -617,7 +624,6 @@ void Script::exposeModel() {
 		.addFunction("getDepthFailMat", &Model::getDepthFailMat)
 		.addFunction("getAnimation", &Model::getAnimation)
 		.addFunction("getShaderVars", &Model::getShaderVars)
-		.addFunction("getNumActiveAnimations", &Model::getNumActiveAnimations)
 		.addFunction("getAnimName", &Model::getAnimName)
 		.addFunction("getAnimTicks", &Model::getAnimTicks)
 		.addFunction("isAnimDone", &Model::isAnimDone)
@@ -633,7 +639,21 @@ void Script::exposeModel() {
 	;
 
 	luabridge::getGlobalNamespace(lua)
-		.beginClass<glm::mat4>("matrix4x4")
+		.beginClass<AnimationState>("AnimationState")
+		.addFunction("getName", &AnimationState::getName)
+		.addFunction("getTicks", &AnimationState::getTicks)
+		.addFunction("getTicksRate", &AnimationState::getTicksRate)
+		.addFunction("getBegin", &AnimationState::getBegin)
+		.addFunction("getEnd", &AnimationState::getEnd)
+		.addFunction("getLength", &AnimationState::getLength)
+		.addFunction("getWeight", &AnimationState::getWeight)
+		.addFunction("getWeightRate", &AnimationState::getWeightRate)
+		.addFunction("isLoop", &AnimationState::isLoop)
+		.addFunction("isFinished", &AnimationState::isFinished)
+		.addFunction("setTicks", &AnimationState::setTicks)
+		.addFunction("setTicksRate", &AnimationState::setTicksRate)
+		.addFunction("setWeight", &AnimationState::setWeight)
+		.addFunction("setWeightRate", &AnimationState::setWeightRate)
 		.endClass()
 	;
 

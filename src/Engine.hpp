@@ -62,7 +62,7 @@ public:
 		String author;
 		bool loaded = false;
 
-		virtual void serialize(FileInterface * file);
+		void serialize(FileInterface * file);
 	};
 
 	// default ticks per second

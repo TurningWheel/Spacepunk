@@ -49,30 +49,26 @@ Model::~Model() {
 }
 
 const char* Model::getAnimName() const {
-	if( animations.getSize() > 0 ) {
-		return animations.peek().name;
-	} else {
-		return "";
-	}
+	return currentAnimation.get();
 }
 
 float Model::getAnimTicks() const {
-	if( animations.getSize() > 0 ) {
-		return animations.peek().ticks;
+	const AnimationState* animation = animations.find(currentAnimation.get());
+	if (animation) {
+		return animation->getTicks();
 	} else {
 		return 0.f;
 	}
 }
 
 bool Model::isAnimDone() const {
-	if( animations.getSize() > 0 ) {
-		return animations.peek().ticks >= animations.peek().end - animations.peek().begin;
-	} else {
+	const AnimationState* animation = animations.find(currentAnimation.get());
+	if (animation && animation->isFinished()) {
 		return true;
+	} else {
+		return false;
 	}
 }
-
-static Cvar cvar_pauseAnimation("anim.rate", "controls rate of model anims", "1.0");
 
 void Model::process() {
 	Component::process();
@@ -80,62 +76,9 @@ void Model::process() {
 	// find speaker
 	Speaker* speaker = findComponentByName<Speaker>("animSpeaker");
 
-	// cycle animations
-	for( Uint32 animIndex = max(0, (Sint32)animations.getSize() - 2); animIndex < animations.getSize(); ++animIndex ) {
-		Mesh::animframes_t& anim = animations[animIndex];
-
-		if( !skinUpdateNeeded ) {
-			if( anim.blend < 1.f || anim.ticks == 0.f || anim.begin + anim.ticks <= anim.end || (anim.loop && anim.end - anim.begin > 0.f) ) {
-				skinUpdateNeeded = true;
-			}
-		}
-
-		// animation blending
-		anim.blend += anim.blendRate;
-		if( anim.blend > 1.f ) {
-			anim.blend = 1.f;
-		}
-		if( anim.blend <= 0.f ) {
-			animations.remove(animIndex);
-			--animIndex;
-			continue;
-		}
-
-		// step animation
-		float step = ((float)Engine::defaultTickRate / (float)mainEngine->getTicksPerSecond()) * animationSpeed;
-		float oldAnimTicks = anim.ticks;
-		anim.ticks += step * cvar_pauseAnimation.toFloat();
-
-		// calculate animation length
-		float animLength = anim.end - anim.begin;
-		while( anim.ticks < 0.f ) {
-			anim.ticks += animLength;
-		}
-
-		// play animation sound trigger
-		if( speaker ) {
-			if( animLength > 1.f ) {
-				unsigned int oFrame = (unsigned int) fmod(oldAnimTicks, animLength);
-				unsigned int nFrame = (unsigned int) fmod(anim.ticks, animLength);
-				unsigned int sFrame = step > 0.f ? oFrame : nFrame;
-				unsigned int eFrame = step > 0.f ? nFrame : oFrame;
-				for( unsigned int c = 0; c < anim.sounds.getSize(); ++c ) {
-					const Animation::sound_t& sound = anim.sounds[c];
-					if( sound.files.getSize() ) {
-						if( (sound.frame >= sFrame && sound.frame <= eFrame) &&
-							(sound.frame < anim.beginLastSoundFrame || sound.frame > anim.endLastSoundFrame) ) {
-							Random& rand = mainEngine->getRandom();
-							Uint32 fileIndex = rand.getUint32() % sound.files.getSize();
-							const char* file = sound.files[fileIndex].get();
-							speaker->playSound(file, false, speaker->getDefaultRange());
-							break;
-						}
-					}
-				}
-				anim.beginLastSoundFrame = sFrame;
-				anim.endLastSoundFrame = eFrame;
-			}
-		}
+	// update animations
+	for( auto& pair : animations ) {
+		skinUpdateNeeded = pair.b.update(speaker) ? true : skinUpdateNeeded;
 	}
 }
 
@@ -174,63 +117,51 @@ Model::bone_t Model::findBone(const char* name) const {
 	return bone_t();
 }
 
-void Model::animate(const char* name, bool blend, bool loop) {
-	if( animations.getSize() >= maxAnimations ) {
-		mainEngine->fmsg(Engine::MSG_WARN,"Model '%s' tried to play '%s', but we have reached the limit (%d)", this->name.get(), name, maxAnimations);
-		return;
+AnimationState* Model::findAnimation(const char* name) {
+	return animations.find(name);
+}
+
+bool Model::animate(const char* name) {
+	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
+	if (!mesh || !animations.exists(name)) {
+		return false;
 	}
-
-	Animation* animation = mainEngine->getAnimationResource().dataForString(animationStr.get());
-	if( !animation ) {
-		mainEngine->fmsg(Engine::MSG_DEBUG,"Model '%s' tried to play '%s', but has no animation key file", this->name.get(), name);
-		return;
-	}
-
-	const Animation::entry_t* entry = animation->findEntry(name);
-	if( !entry ) {
-		mainEngine->fmsg(Engine::MSG_WARN,"Model '%s' tried to play '%s', but the specified animation was not found", this->name.get(), name);
-		return;
-	}
-
-	Mesh::animframes_t anim;
-	anim.name = name;
-	anim.begin = entry->begin;
-	anim.ticks = 0.f;
-	anim.end = entry->end;
-	anim.loop = loop;
-	
-	// copy sound triggers
-	const LinkedList<Animation::sound_t>& sounds = animation->getSounds();
-	for( const Node<Animation::sound_t>* node = sounds.getFirst(); node != nullptr; node = node->getNext() ) {
-		const Animation::sound_t& sound = node->getData();
-
-		if( sound.frame >= entry->begin && sound.frame < entry->end ) {
-			Animation::sound_t newSound;
-			newSound.frame = sound.frame - anim.begin;
-			newSound.files = sound.files;
-			anim.sounds.push(newSound);
-		}
-	}
-
-	if( animations.getSize() > 0 ) {
-		if( blend ) {
-			float blendRate = 3.75f / mainEngine->getTicksPerSecond();
-
-			anim.blend = 0.f;
-			anim.blendRate = blendRate;
-			animations[animations.getSize()-1].blendRate = -blendRate;
+	for (auto& pair : animations) {
+		if (pair.a == name) {
+			for (auto& subMesh : mesh->getSubMeshes()) {
+				for (auto& bone : subMesh->getBones()) {
+					pair.b.setWeight(bone.name.get(), 1.f);
+					pair.b.setWeightRate(bone.name.get(), 0.f);
+				}
+			}
 		} else {
-			anim.blend = 1.f;
-			anim.blendRate = 0;
-			animations.clear();
+			pair.b.clearWeights();
 		}
-	} else {
-		anim.blend = 1.f;
-		anim.blendRate = 0;
 	}
-	anim.beginLastSoundFrame = UINT32_MAX;
-	anim.endLastSoundFrame = UINT32_MAX;
-	animations.push(anim);
+	currentAnimation = name;
+	return true;
+}
+
+void Model::loadAnimations() {
+	animations.clear();
+	Animation* animation = mainEngine->getAnimationResource().dataForString(animationStr.get());
+	if (animation) {
+		for (auto& entry : animation->getEntries()) {
+			animations.insert(entry.name.get(), AnimationState(entry, animation->getSounds()));
+		}
+	}
+
+	// insert default animation
+	Animation::entry_t tPose;
+	tPose.begin = 0;
+	tPose.end = 1;
+	tPose.loop = false;
+	tPose.name = "__tpose";
+	animations.insert("__tpose", AnimationState(tPose, ArrayList<Animation::sound_t>()));
+
+	if (!animate("idle")) {
+		animate("__tpose");
+	}
 }
 
 void Model::updateSkin() {
@@ -396,9 +327,7 @@ void Model::load(FILE* fp) {
 	Uint32 reserved = 0;
 	Engine::freadl(&reserved, sizeof(Uint32), 1, fp, nullptr, "Model::load()");
 
-	if( hasAnimations() ) {
-		animate("idle", false, true);
-	}
+	loadAnimations();
 
 	loadSubComponents(fp);
 }
@@ -416,7 +345,7 @@ void Model::serialize(FileInterface * file) {
 	file->property("shaderVars", shaderVars);
 
 	if (file->isReading() && hasAnimations()) {
-		animate("idle", false, true);
+		loadAnimations();
 	}
 
 	if (version >= 1) {
