@@ -55,6 +55,7 @@ public:
 			pos(_pos) {}
 
 		T& operator*() {
+			assert(pos >= 0 && pos < arr.getSize());
 			return arr[pos];
 		}
 		Iterator& operator++() {
@@ -77,6 +78,7 @@ public:
 			pos(_pos) {}
 
 		const T& operator*() const {
+			assert(pos >= 0 && pos < arr.getSize());
 			return arr[pos];
 		}
 		ConstIterator& operator++() {

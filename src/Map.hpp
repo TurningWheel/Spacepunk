@@ -13,24 +13,27 @@
 template <typename T>
 class Map {
 public:
-	static const int numBuckets = 128;
+	static const size_t maxBucketSize = 1;
 
-	Map() {}
+	Map() {
+		hash.resize(numBuckets);
+	}
 	~Map() {
 		clear();
 	}
 
 	// getters & setters
-	LinkedList<OrderedPair<String, T>>&				getHash(int index)				{ return hash[index]; }
-	const LinkedList<OrderedPair<String, T>>&		getHash(int index) const		{ return hash[index]; }
+	ArrayList<OrderedPair<String, T>>&				getHash(size_t index)			{ return hash[index]; }
+	const ArrayList<OrderedPair<String, T>>&		getHash(size_t index) const		{ return hash[index]; }
+	size_t											getNumBuckets() const			{ return numBuckets; }
+	size_t											getSize() const					{ return size; }
 
 	// clears the map of all key/value pairs
 	void clear() {
-		for( int c = 0; c < numBuckets; ++c ) {
-			while( hash[c].getFirst() ) {
-				hash[c].removeNode(hash[c].getFirst());
-			}
-		}
+		hash.clear();
+		size = 0;
+		numBuckets = 4;
+		hash.resize(numBuckets);
 	}
 
 	// inserts a key/value pair into the Map
@@ -38,15 +41,36 @@ public:
 	// @param value The value associated with the key
 	void insert(const char* key, const T& value) {
 		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) % numBuckets];
-		list.addNodeLast(OrderedPair<String, T>(String(key), value));
+
+		if (size + 1 >= numBuckets * maxBucketSize) {
+			rehash(numBuckets * 2);
+		}
+
+		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
+		list.push(OrderedPair<String, T>(String(key), value));
+		++size;
+	}
+
+	// resize and rebuild the hash map
+	// @param newBucketCount Updated number of buckets in the map
+	void rehash(size_t newBucketCount) {
+		ArrayList<OrderedPair<String, T>> list;
+		for (auto& it : *this) {
+			list.push(it);
+		}
+		clear();
+		numBuckets = newBucketCount;
+		hash.resize(numBuckets);
+		for (auto& it : list) {
+			insert(it.a.get(), it.b);
+		}
 	}
 
 	// determine if the key with the given name exists
 	// @return true if key/value pair exists, false otherwise
 	bool exists(const char* key) const {
 		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) % numBuckets];
+		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
 		for( auto& pair : list ) {
 			if( strcmp(pair.a.get(), key) == 0 ) {
 				return true;
@@ -60,11 +84,12 @@ public:
 	// @return true if the key/value pair was removed, otherwise false
 	bool remove(const char* key) {
 		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) % numBuckets];
-		for( auto node = list.getFirst(); node != nullptr; node = node->getNext() ) {
-			auto& pair = node->getData();
+		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
+		for( size_t c = 0; c < list.getSize(); ++c ) {
+			auto& pair = list[c];
 			if( strcmp(pair.a.get(), key) == 0 ) {
-				list.removeNode(node);
+				list.remove(c);
+				--size;
 				return true;
 			}
 		}
@@ -76,7 +101,7 @@ public:
 	// @return the value associated with the key, or nullptr if it could not be found
 	T* find(const char* key) {
 		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) % numBuckets];
+		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
 		for( auto& pair : list ) {
 			if( strcmp(pair.a.get(), key) == 0 ) {
 				return &pair.b;
@@ -86,7 +111,7 @@ public:
 	}
 	const T* find(const char* key) const {
 		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) % numBuckets];
+		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
 		for( auto& pair : list ) {
 			if( strcmp(pair.a.get(), key) == 0 ) {
 				return &pair.b;
@@ -95,22 +120,13 @@ public:
 		return nullptr;
 	}
 
-	// get the size of the map
-	// @return the number of entries in the map
-	size_t size() const {
-		size_t result = 0;
-		for( int i = 0; i < numBuckets; ++i ) {
-			result += hash[i].getSize();
-		}
-		return result;
-	}
-
 	// replace the contents of this map with those of another
 	// @param src The map to copy
 	void copy(const Map<T>& src) {
-		for (size_t c = 0; c < numBuckets; ++c) {
-			hash[c].removeAll();
-			hash[c].copy(src.getHash((int)c));
+		clear();
+		rehash(src.getNumBuckets());
+		for (auto& it : src) {
+			insert(it.a.get(), it.b);
 		}
 	}
 
@@ -135,7 +151,7 @@ public:
 			file->endArray();
 		} else {
 			Uint32 keyCount = 0;
-			for (Uint32 c = 0; c < Map<String>::numBuckets; ++c) {
+			for (Uint32 c = 0; c < numBuckets; ++c) {
 				keyCount += static_cast<Uint32>(hash[c].getSize());
 			}
 
@@ -164,27 +180,21 @@ public:
 	// Iterator
 	class Iterator {
 	public:
-		Iterator(Map& _map, Node<OrderedPair<String, T>>* _position, int _bucket) :
+		Iterator(Map& _map, size_t _position, size_t _bucket) :
 			map(_map),
 			position(_position),
 			bucket(_bucket) {}
 
 		OrderedPair<String, T>& operator*() {
-			assert(position != nullptr);
-			return position->getData();
+			assert(bucket >= 0 && bucket < map.getNumBuckets());
+			assert(position >= 0 && position < map.getHash(bucket).getSize());
+			return map.getHash(bucket)[position];
 		}
 		Iterator& operator++() {
-			assert(position != nullptr);
-			position = position->getNext();
-			while( position == nullptr ) {
-				if( bucket < numBuckets-1 ) {
-					++bucket;
-					position = map.getHash(bucket).getFirst();
-				} else {
-					++bucket;
-					position = nullptr;
-					break;
-				}
+			++position;
+			while( bucket < map.getNumBuckets() && position >= map.getHash(bucket).getSize() ) {
+				++bucket;
+				position = 0;
 			}
 			return *this;
 		}
@@ -193,34 +203,28 @@ public:
 		}
 	private:
 		Map& map;
-		Node<OrderedPair<String, T>>* position;
-		int bucket;
+		size_t position;
+		size_t bucket;
 	};
 
 	// ConstIterator
 	class ConstIterator {
 	public:
-		ConstIterator(const Map& _map, const Node<OrderedPair<String, T>>* _position, int _bucket) :
+		ConstIterator(const Map& _map, size_t _position, size_t _bucket) :
 			map(_map),
 			position(_position),
 			bucket(_bucket) {}
 
 		const OrderedPair<String, T>& operator*() const {
-			assert(position != nullptr);
-			return position->getData();
+			assert(bucket >= 0 && bucket < map.getNumBuckets());
+			assert(position >= 0 && position < map.getHash(bucket).getSize());
+			return map.getHash(bucket)[position];
 		}
 		ConstIterator& operator++() {
-			assert(position != nullptr);
-			position = position->getNext();
-			while( position == nullptr ) {
-				if( bucket < numBuckets-1 ) {
-					++bucket;
-					position = map.getHash(bucket).getFirst();
-				} else {
-					++bucket;
-					position = nullptr;
-					break;
-				}
+			++position;
+			while( bucket < map.getNumBuckets() && position >= map.getHash(bucket).getSize() ) {
+				++bucket;
+				position = 0;
 			}
 			return *this;
 		}
@@ -229,38 +233,42 @@ public:
 		}
 	private:
 		const Map& map;
-		const Node<OrderedPair<String, T>>* position;
-		int bucket;
+		size_t position;
+		size_t bucket;
 	};
 
 	// begin()
 	Iterator begin() {
-		for (int c = 0; c < numBuckets; ++c) {
-			if (hash[c].getFirst()) {
-				return Iterator(*this, hash[c].getFirst(), c);
+		size_t c = 0;
+		for (; c < numBuckets; ++c) {
+			if (hash[c].getSize()) {
+				return Iterator(*this, 0, c);
 			}
 		}
-		return Iterator(*this, nullptr, numBuckets);
+		return Iterator(*this, 0, c);
 	}
 	const ConstIterator begin() const {
-		for (int c = 0; c < numBuckets; ++c) {
-			if (hash[c].getFirst()) {
-				return ConstIterator(*this, hash[c].getFirst(), c);
+		size_t c = 0;
+		for (; c < numBuckets; ++c) {
+			if (hash[c].getSize()) {
+				return ConstIterator(*this, 0, c);
 			}
 		}
-		return ConstIterator(*this, nullptr, numBuckets);
+		return ConstIterator(*this, 0, c);
 	}
 
 	// end()
 	Iterator end() {
-		return Iterator(*this, nullptr, numBuckets);
+		return Iterator(*this, 0, numBuckets);
 	}
 	const ConstIterator end() const {
-		return ConstIterator(*this, nullptr, numBuckets);
+		return ConstIterator(*this, 0, numBuckets);
 	}
 
 private:
-	LinkedList<OrderedPair<String, T>> hash[numBuckets];
+	ArrayList<ArrayList<OrderedPair<String, T>>> hash;
+	size_t numBuckets = 4;
+	size_t size = 0;
 
 	unsigned long djb2Hash(const char* str) const {
 		unsigned long hash = 5381;

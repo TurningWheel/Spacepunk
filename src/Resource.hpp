@@ -20,7 +20,7 @@ public:
 	// number of items in the resource
 	// @return the number of cached items in the resource
 	size_t size() const {
-		return cache.size();
+		return cache.getSize();
 	}
 
 	// finds and returns the data with the given name from the cache

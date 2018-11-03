@@ -187,6 +187,9 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 			collisionShapePtr = new btConeShapeZ(max(gScale.x,gScale.y),gScale.z);
 			break;
 		case SHAPE_MESH:
+			if( editorOnly && !mainEngine->isEditorRunning() ) {
+				return;
+			}
 			if( triMesh ) {
 				collisionShapePtr = new btBvhTriangleMeshShape(triMesh,true,true);
 			} else {

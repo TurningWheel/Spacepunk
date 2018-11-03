@@ -55,7 +55,7 @@ public:
 	void	setTicks(float _ticks)											{ ticks = _ticks; }
 	void	setTicksRate(float _ticksRate)									{ ticksRate = _ticksRate; }
 	void	setWeight(const char* bone, float _weight)						{ if (float *weight = weights[bone]) { *weight = _weight; } else { weights.insert(bone, _weight); } }
-	void	setWeightRate(const char* bone, float _weightRate)				{ if (float *rate = weightRates[bone]) { *rate = _weightRate; } else { weights.insert(bone, _weightRate); } }
+	void	setWeightRate(const char* bone, float _weightRate)				{ if (float *rate = weightRates[bone]) { *rate = _weightRate; } else { weightRates.insert(bone, _weightRate); } }
 
 private:
 	String name;				// animation name

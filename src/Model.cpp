@@ -121,6 +121,14 @@ AnimationState* Model::findAnimation(const char* name) {
 	return animations.find(name);
 }
 
+void Model::setWeightOnChildren(const aiNode* root, AnimationState& animation) {
+	animation.setWeight(root->mName.data, 1.f);
+	animation.setWeightRate(root->mName.data, 0.f);
+	for (unsigned int c = 0; c < root->mNumChildren; ++c) {
+		setWeightOnChildren(root->mChildren[c], animation);
+	}
+}
+
 bool Model::animate(const char* name) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	if (!mesh || !animations.exists(name)) {
@@ -129,16 +137,18 @@ bool Model::animate(const char* name) {
 	for (auto& pair : animations) {
 		if (pair.a == name) {
 			for (auto& subMesh : mesh->getSubMeshes()) {
-				for (auto& bone : subMesh->getBones()) {
-					pair.b.setWeight(bone.name.get(), 1.f);
-					pair.b.setWeightRate(bone.name.get(), 0.f);
-				}
+				setWeightOnChildren(subMesh->getRootNode(), pair.b);
 			}
+			pair.b.setTicks(0.f);
+			pair.b.setTicksRate(1.f);
 		} else {
 			pair.b.clearWeights();
+			pair.b.setTicks(0.f);
+			pair.b.setTicksRate(0.f);
 		}
 	}
 	currentAnimation = name;
+	updateSkin();
 	return true;
 }
 

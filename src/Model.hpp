@@ -155,4 +155,5 @@ private:
 
 	// loads all animations from the current animation manifest
 	void loadAnimations();
+	void setWeightOnChildren(const aiNode* root, AnimationState& animation);
 };

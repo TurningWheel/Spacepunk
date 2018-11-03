@@ -172,6 +172,7 @@ public:
 		const float*						getColors() const			{ return colors; }
 		const GLuint*						getIndices() const			{ return indices; }
 		const ArrayList<boneinfo_t,0>&		getBones() const			{ return bones; }
+		const aiNode*						getRootNode() const			{ return scene->mRootNode; }
 
 	private:
 		Map<unsigned int> boneMapping; // maps a bone name to its index
