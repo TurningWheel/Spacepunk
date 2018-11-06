@@ -182,7 +182,7 @@ public:
 	// @param val: the value to push
 	void push(const T& val) {
 		if( size==maxSize ) {
-			alloc(size*2);
+			alloc(std::max((unsigned int)size*2U, 4U));
 		}
 		++size;
 		arr[size-1] = val;
@@ -193,7 +193,7 @@ public:
 	// @param pos: the index to displace (move to the end of the list)
 	void insert(const T& val, size_t pos) {
 		if( size==maxSize ) {
-			alloc(size*2);
+			alloc(std::max((unsigned int)size*2U, 4U));
 		}
 		++size;
 		arr[size-1] = arr[pos];
@@ -348,5 +348,5 @@ public:
 private:
 	T* arr = nullptr;		// array data
 	size_t size = 0;		// current array capacity
-	size_t maxSize = 4;		// maximum array capacity
+	size_t maxSize = 0;		// maximum array capacity
 };
