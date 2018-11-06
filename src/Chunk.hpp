@@ -93,13 +93,13 @@ private:
 	EdgeList edges;
 
 	glm::mat3x3 colorChannels[size*size];
-	ArrayList<glm::vec3,0> vertexBuffer;
-	ArrayList<glm::vec3,0> normalBuffer;
-	ArrayList<glm::vec3,0> tangentBuffer;
-	ArrayList<glm::vec3,0> diffuseMapBuffer;
-	ArrayList<glm::vec3,0> normalMapBuffer;
-	ArrayList<glm::vec3,0> effectsMapBuffer;
-	ArrayList<GLuint,0> indexBuffer;
+	ArrayList<glm::vec3> vertexBuffer;
+	ArrayList<glm::vec3> normalBuffer;
+	ArrayList<glm::vec3> tangentBuffer;
+	ArrayList<glm::vec3> diffuseMapBuffer;
+	ArrayList<glm::vec3> normalMapBuffer;
+	ArrayList<glm::vec3> effectsMapBuffer;
+	ArrayList<GLuint> indexBuffer;
 
 	// build tangent buffers
 	void buildTangents();

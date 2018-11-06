@@ -15,18 +15,18 @@ class Camera;
 class Player {
 public:
 	struct colors_t {
-		ArrayList<GLfloat,4,4> headRChannel;
-		ArrayList<GLfloat,4,4> headGChannel;
-		ArrayList<GLfloat,4,4> headBChannel;
-		ArrayList<GLfloat,4,4> armsRChannel;
-		ArrayList<GLfloat,4,4> armsGChannel;
-		ArrayList<GLfloat,4,4> armsBChannel;
-		ArrayList<GLfloat,4,4> feetRChannel;
-		ArrayList<GLfloat,4,4> feetGChannel;
-		ArrayList<GLfloat,4,4> feetBChannel;
-		ArrayList<GLfloat,4,4> torsoRChannel;
-		ArrayList<GLfloat,4,4> torsoGChannel;
-		ArrayList<GLfloat,4,4> torsoBChannel;
+		ArrayList<GLfloat> headRChannel;
+		ArrayList<GLfloat> headGChannel;
+		ArrayList<GLfloat> headBChannel;
+		ArrayList<GLfloat> armsRChannel;
+		ArrayList<GLfloat> armsGChannel;
+		ArrayList<GLfloat> armsBChannel;
+		ArrayList<GLfloat> feetRChannel;
+		ArrayList<GLfloat> feetGChannel;
+		ArrayList<GLfloat> feetBChannel;
+		ArrayList<GLfloat> torsoRChannel;
+		ArrayList<GLfloat> torsoGChannel;
+		ArrayList<GLfloat> torsoBChannel;
 	};
 
 	Player();

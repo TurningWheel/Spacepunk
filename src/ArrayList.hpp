@@ -4,20 +4,17 @@
 
 #include "Main.hpp"
 
+#include <luajit-2.0/lua.hpp>
+#include <LuaBridge/LuaBridge.h>
+
 // templated ArrayList (similar to std::vector)
 // adding or removing elements can unsort the list.
 // @param T: generic type that the list will contain
-// @param initialSize: initial storage to reserve in the list (# elements)
-// @param growSize: when the list runs out of space, maxSize is incremented by this value
-#ifdef ARCH_X86
-template <typename T, size_t initialSize = 4, size_t growSize = 4>
-#else
-template <typename T, size_t initialSize = 8, size_t growSize = 8>
-#endif
+template <typename T>
 class ArrayList {
 public:
 	ArrayList() {
-		alloc(initialSize);
+		alloc(4);
 	}
 
 	ArrayList(const ArrayList& src) {
@@ -40,7 +37,6 @@ public:
 	T*				getArray()				{ return arr; }
 	size_t			getSize() const			{ return size; }
 	size_t			getMaxSize() const		{ return maxSize; }
-	static size_t	getInitialSize()		{ return initialSize; }
 
 	// @return true if list is empty
 	bool empty() const {
@@ -50,7 +46,7 @@ public:
 	// Iterator
 	class Iterator {
 	public:
-		Iterator(ArrayList<T, initialSize, growSize>& _arr, size_t _pos) :
+		Iterator(ArrayList<T>& _arr, size_t _pos) :
 			arr(_arr),
 			pos(_pos) {}
 
@@ -66,14 +62,14 @@ public:
 			return pos != it.pos;
 		}
 	private:
-		ArrayList<T, initialSize, growSize>& arr;
+		ArrayList<T>& arr;
 		size_t pos;
 	};
 
 	// ConstIterator
 	class ConstIterator {
 	public:
-		ConstIterator(const ArrayList<T, initialSize, growSize>& _arr, size_t _pos) :
+		ConstIterator(const ArrayList<T>& _arr, size_t _pos) :
 			arr(_arr),
 			pos(_pos) {}
 
@@ -89,7 +85,7 @@ public:
 			return pos != it.pos;
 		}
 	private:
-		const ArrayList<T, initialSize, growSize>& arr;
+		const ArrayList<T>& arr;
 		size_t pos;
 	};
 
@@ -186,7 +182,7 @@ public:
 	// @param val: the value to push
 	void push(const T& val) {
 		if( size==maxSize ) {
-			alloc(size+growSize);
+			alloc(size*2);
 		}
 		++size;
 		arr[size-1] = val;
@@ -197,7 +193,7 @@ public:
 	// @param pos: the index to displace (move to the end of the list)
 	void insert(const T& val, size_t pos) {
 		if( size==maxSize ) {
-			alloc(size+growSize);
+			alloc(size*2);
 		}
 		++size;
 		arr[size-1] = arr[pos];
@@ -270,6 +266,22 @@ public:
 	// get list contents at specified index
 	// @param pos: index value
 	// @return a reference to the list at this index
+	const T& get(size_t pos) const {
+		assert(pos < size);
+		return arr[pos];
+	}
+
+	// get list contents at specified index
+	// @param pos: index value
+	// @return a reference to the list at this index
+	T& get(size_t pos) {
+		assert(pos < size);
+		return arr[pos];
+	}
+
+	// get list contents at specified index
+	// @param pos: index value
+	// @return a reference to the list at this index
 	const T& operator[](size_t pos) const {
 		assert(pos < size);
 		return arr[pos];
@@ -282,10 +294,59 @@ public:
 		assert(pos < size);
 		return arr[pos];
 	}
+	// exposes this list type to a script
+	// @param lua The script engine to expose to
+	// @param name The type name in lua
+	static void exposeToScript(lua_State* lua, const char* name) {
+		typedef T* (ArrayList<T>::*ArrayFn)();
+		ArrayFn getArray = static_cast<ArrayFn>(&ArrayList<T>::getArray);
+
+		typedef const T* (ArrayList<T>::*ArrayConstFn)() const;
+		ArrayConstFn getArrayConst = static_cast<ArrayConstFn>(&ArrayList<T>::getArray);
+
+		typedef ArrayList<T>& (ArrayList<T>::*CopyFn)(const ArrayList<T>&);
+		CopyFn copy = static_cast<CopyFn>(&ArrayList<T>::copy);
+
+		typedef T& (ArrayList<T>::*PeekFn)();
+		PeekFn peek = static_cast<PeekFn>(&ArrayList<T>::peek);
+
+		typedef const T& (ArrayList<T>::*PeekConstFn)() const;
+		PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
+
+		typedef T& (ArrayList<T>::*GetFn)(size_t);
+		GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
+
+		typedef const T& (ArrayList<T>::*GetConstFn)(size_t) const;
+		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
+
+		luabridge::getGlobalNamespace(lua)
+			.beginClass<ArrayList<T>>(name)
+			.addConstructor<void (*)()>()
+			.addConstructor<void (*)(const ArrayList& src)>()
+			.addFunction("getArray", getArray)
+			.addFunction("getArrayConst", getArrayConst)
+			.addFunction("getSize", &ArrayList<T>::getSize)
+			.addFunction("getMaxSize", &ArrayList<T>::getMaxSize)
+			.addFunction("empty", &ArrayList<T>::empty)
+			.addFunction("alloc", &ArrayList<T>::alloc)
+			.addFunction("resize", &ArrayList<T>::resize)
+			.addFunction("clear", &ArrayList<T>::clear)
+			.addFunction("copy", copy)
+			.addFunction("push", &ArrayList<T>::push)
+			.addFunction("insert", &ArrayList<T>::insert)
+			.addFunction("pop", &ArrayList<T>::pop)
+			.addFunction("peek", peek)
+			.addFunction("peekConst", peekConst)
+			.addFunction("remove", &ArrayList<T>::remove)
+			.addFunction("removeAndRearrange", &ArrayList<T>::removeAndRearrange)
+			.addFunction("get", get)
+			.addFunction("getConst", getConst)
+			.endClass()
+		;
+	}
 
 private:
-	T* arr = nullptr;				// array data
-
-	size_t size = 0;				// current array capacity
-	size_t maxSize = initialSize;	// maximum array capacity
+	T* arr = nullptr;		// array data
+	size_t size = 0;		// current array capacity
+	size_t maxSize = 4;		// maximum array capacity
 };

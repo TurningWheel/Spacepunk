@@ -114,11 +114,11 @@ private:
 	GLuint vbo[BUFFER_TYPE_LENGTH];
 	GLuint vao = 0;
 
-	ArrayList<glm::vec3,0> positionBuffer;
-	ArrayList<glm::vec2,0> texcoordBuffer;
-	ArrayList<glm::vec3,0> normalBuffer;
-	ArrayList<glm::vec3,0> tangentBuffer;
-	ArrayList<GLuint,0> indexBuffer;
+	ArrayList<glm::vec3> positionBuffer;
+	ArrayList<glm::vec2> texcoordBuffer;
+	ArrayList<glm::vec3> normalBuffer;
+	ArrayList<glm::vec3> tangentBuffer;
+	ArrayList<GLuint> indexBuffer;
 
 	// bullet physics objects
 	btDiscreteDynamicsWorld* dynamicsWorld = nullptr;

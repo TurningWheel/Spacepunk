@@ -4312,7 +4312,7 @@ void Editor::entityModelCustomColorChannel(unsigned int uid, int channel, int co
 				return;
 			}
 
-			ArrayList<GLfloat,4,4>* vector = nullptr;
+			ArrayList<GLfloat>* vector = nullptr;
 			Mesh::shadervars_t shaderVars = model->getShaderVars();
 			switch( channel ) {
 				case 0:
@@ -6135,7 +6135,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 					// custom color
 					for( int color=0; color<3; ++color ) {
-						const ArrayList<GLfloat,4,4>* vector = nullptr;
+						const ArrayList<GLfloat>* vector = nullptr;
 						switch( channel ) {
 							case 0:
 								vector = &model->getShaderVars().customColorR;

@@ -304,7 +304,7 @@ ShaderProgram* Mesh::loadShader(Component& component, Camera& camera, Light* lig
 	}
 }
 
-void Mesh::skin( Map<AnimationState>& animations, ArrayList<skincache_t,0>& skincache ) {
+void Mesh::skin( Map<AnimationState>& animations, ArrayList<skincache_t>& skincache ) {
 	if( !hasAnimations() ) {
 		return;
 	}
@@ -327,7 +327,7 @@ void Mesh::skin( Map<AnimationState>& animations, ArrayList<skincache_t,0>& skin
 static Cvar cvar_showBones("showbones", "displays bones in animated models as dots for debug purposes", "0");
 static Cvar cvar_findBone("findbone", "used with showbones, displays only the bone with the given name", "");
 
-void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache_t,0>& skincache, ShaderProgram* shader ) {
+void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache_t>& skincache, ShaderProgram* shader ) {
 	if( skincache.getSize() < subMeshes.getSize() ) {
 		skincache.resize(subMeshes.getSize());
 	}
@@ -372,7 +372,7 @@ void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache
 }
 
 void Mesh::draw(Camera& camera, const Component* component, ShaderProgram* shader) {
-	ArrayList<skincache_t,0> skincache;
+	ArrayList<skincache_t> skincache;
 	for( Uint32 c=0; c<subMeshes.getSize(); ++c ) {
 		skincache.push(skincache_t());
 	}

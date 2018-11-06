@@ -32,17 +32,17 @@ public:
 
 	// skin cache
 	struct skincache_t {
-		ArrayList<glm::mat4,0> anims;
-		ArrayList<glm::mat4,0> offsets;
+		ArrayList<glm::mat4> anims;
+		ArrayList<glm::mat4> offsets;
 	};
 
 	// shader vars
 	struct shadervars_t {
 		GLboolean customColorEnabled = GL_FALSE;
-		ArrayList<GLfloat,4,4> customColorR = { 1.f, 0.f, 0.f, 1.f };
-		ArrayList<GLfloat,4,4> customColorG = { 0.f, 1.f, 0.f, 1.f };
-		ArrayList<GLfloat,4,4> customColorB = { 0.f, 0.f, 1.f, 1.f };
-		ArrayList<GLfloat,4,4> customColorA = { 1.f, 0.f, 0.f, 1.f };
+		ArrayList<GLfloat> customColorR = { 1.f, 0.f, 0.f, 1.f };
+		ArrayList<GLfloat> customColorG = { 0.f, 1.f, 0.f, 1.f };
+		ArrayList<GLfloat> customColorB = { 0.f, 0.f, 1.f, 1.f };
+		ArrayList<GLfloat> customColorA = { 1.f, 0.f, 0.f, 1.f };
 		glm::vec4 highlightColor = { 1.f, 1.f, 0.f, 1.f };
 		GLfloat lineWidth = 4.f;
 
@@ -87,12 +87,12 @@ public:
 	// @param component: optional component tied to the mesh
 	// @param skincache: skincache to render with
 	// @param shader: the shader program to draw the mesh with
-	void draw( Camera& camera, const Component* component, ArrayList<skincache_t,0>& skincache, ShaderProgram* shader );
+	void draw( Camera& camera, const Component* component, ArrayList<skincache_t>& skincache, ShaderProgram* shader );
 
 	// skins the mesh
 	// @param animations: animations to skin with
 	// @param skincache: where to store resulting skin
-	void skin( Map<AnimationState>& animations, ArrayList<skincache_t,0>& skincache );
+	void skin( Map<AnimationState>& animations, ArrayList<skincache_t>& skincache );
 
 	// find the bone with the given name
 	// @param name: the name of the bone to search for
@@ -171,12 +171,12 @@ public:
 		const float*						getNormals() const			{ return normals; }
 		const float*						getColors() const			{ return colors; }
 		const GLuint*						getIndices() const			{ return indices; }
-		const ArrayList<boneinfo_t,0>&		getBones() const			{ return bones; }
+		const ArrayList<boneinfo_t>&		getBones() const			{ return bones; }
 		const aiNode*						getRootNode() const			{ return scene->mRootNode; }
 
 	private:
 		Map<unsigned int> boneMapping; // maps a bone name to its index
-		ArrayList<boneinfo_t,0> bones;
+		ArrayList<boneinfo_t> bones;
     	unsigned int numBones = 0;
 		unsigned int numVertices = 0;
 		GLuint vao = 0;

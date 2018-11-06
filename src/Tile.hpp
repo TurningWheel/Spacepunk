@@ -65,9 +65,9 @@ public:
 
 	// shader vars
 	struct shadervars_t {
-		ArrayList<GLfloat,3,4> customColorR = { 1.f, 0.f, 0.f };
-		ArrayList<GLfloat,3,4> customColorG = { 0.f, 1.f, 0.f };
-		ArrayList<GLfloat,3,4> customColorB = { 0.f, 0.f, 1.f };
+		ArrayList<GLfloat> customColorR = { 1.f, 0.f, 0.f };
+		ArrayList<GLfloat> customColorG = { 0.f, 1.f, 0.f };
+		ArrayList<GLfloat> customColorB = { 0.f, 0.f, 1.f };
 	};
 
 	// geometry vertex

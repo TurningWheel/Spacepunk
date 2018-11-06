@@ -44,7 +44,7 @@ public:
 		Vector scale;
 	};
 
-	typedef ArrayList<Mesh::skincache_t,0> SkinCache;
+	typedef ArrayList<Mesh::skincache_t> SkinCache;
 
 	Model(Entity& _entity, Component* _parent);
 	virtual ~Model();

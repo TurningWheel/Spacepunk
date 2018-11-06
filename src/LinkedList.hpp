@@ -61,7 +61,7 @@ public:
 	// @param node: the node for whom you wish to retrieve the index
 	// @return the index for the given node, or -1 if the node does not exist in the list
 	size_t indexForNode(const Node<T>* node) const {
-		if( node->list != this )
+		if( node->getList() != this )
 			return -1;
 		if( node==last )
 			return size-1;
@@ -253,33 +253,57 @@ public:
 	const ConstIterator end() const {
 		return ConstIterator(nullptr);
 	}
+	
+	// exposes this list type to a script
+	// @param lua The script engine to expose to
+	// @param listName The type name for the list in lua
+	// @param nodeName The type name for the node in lua
+	static void exposeToScript(lua_State* lua, const char* listName, const char* nodeName) {
+		typedef Node<T>* (LinkedList<T>::*NodeFn)();
+		NodeFn getFirst = static_cast<NodeFn>(&LinkedList<T>::getFirst);
+		NodeFn getLast = static_cast<NodeFn>(&LinkedList<T>::getLast);
 
-	// expose this list instance to script
-	// @param lua: the script we are being exposed to
-	// @param name: the name of the type in the script
-	static void exposeToScript(lua_State* lua, const char* name) {
-		/*luabridge::getGlobalNamespace(lua)
-			.beginClass<LinkedList<T>>(name)
-			.addConstructor<void (*) ()>()
-			.addFunction("getFirst", &LinkedList::getFirst)
-			.addFunction("getLast", &LinkedList::getLast)
-			.addFunction("getSize", &LinkedList::getSize)
-			.addFunction("setFirst", &LinkedList::setFirst)
-			.addFunction("setLast", &LinkedList::setLast)
-			.addFunction("nodeForIndex", &LinkedList::nodeForIndex)
-			.addFunction("indexForNode", &LinkedList::indexForNode)
-			.addFunction("addNode", &LinkedList::addNode)
-			.addFunction("addNodeFirst", &LinkedList::addNodeFirst)
-			.addFunction("addNodeLast", &LinkedList::addNodeLast)
-			.addFunction("removeNode", &LinkedList::removeNode)
-			.addFunction("removeAll", &LinkedList::removeAll)
-			.addFunction("copy", &LinkedList::copy)
-			.addFunction("sort", &LinkedList::sort)
+		typedef const Node<T>* (LinkedList<T>::*NodeConstFn)() const;
+		NodeConstFn getFirstConst = static_cast<NodeConstFn>(&LinkedList<T>::getFirst);
+		NodeConstFn getLastConst = static_cast<NodeConstFn>(&LinkedList<T>::getLast);
+
+		typedef Node<T>* (LinkedList<T>::*NodeIndexFn)(const size_t);
+		NodeIndexFn nodeForIndex = static_cast<NodeIndexFn>(&LinkedList<T>::nodeForIndex);
+
+		typedef const Node<T>* (LinkedList<T>::*NodeIndexConstFn)(const size_t) const;
+		NodeIndexConstFn nodeForIndexConst = static_cast<NodeIndexConstFn>(&LinkedList<T>::nodeForIndex);
+
+		typedef void (LinkedList<T>::*NodeRemoveFn)(Node<T>*);
+		NodeRemoveFn removeNode = static_cast<NodeRemoveFn>(&LinkedList<T>::removeNode);
+
+		typedef void (LinkedList<T>::*NodeRemoveIndexFn)(const size_t);
+		NodeRemoveIndexFn removeNodeIndex = static_cast<NodeRemoveIndexFn>(&LinkedList<T>::removeNode);
+
+		luabridge::getGlobalNamespace(lua)
+			.beginClass<LinkedList<T>>(listName)
+			.addConstructor<void (*)()>()
+			.addFunction("getFirst", getFirst)
+			.addFunction("getFirstConst", getFirstConst)
+			.addFunction("getLast", getLast)
+			.addFunction("getLastConst", getLastConst)
+			.addFunction("getSize", &LinkedList<T>::getSize)
+			.addFunction("setFirst", &LinkedList<T>::setFirst)
+			.addFunction("setLast", &LinkedList<T>::setLast)
+			.addFunction("nodeForIndex", nodeForIndex)
+			.addFunction("nodeForIndexConst", nodeForIndexConst)
+			.addFunction("indexForNode", &LinkedList<T>::indexForNode)
+			.addFunction("addNode", &LinkedList<T>::addNode)
+			.addFunction("addNodeFirst", &LinkedList<T>::addNodeFirst)
+			.addFunction("addNodeLast", &LinkedList<T>::addNodeLast)
+			.addFunction("removeNode", removeNode)
+			.addFunction("removeNodeIndex", removeNodeIndex)
+			.addFunction("removeAll", &LinkedList<T>::removeAll)
+			.addFunction("copy", &LinkedList<T>::copy)
 			.endClass()
-			;*/
-	}
+		;
 
-	//LinkedList<int>::exposeToScript(lua, "LinkedListInt");
+		Node<T>::exposeToScript(lua, nodeName);
+	}
 
 private:
 	Node<T>* first	= nullptr;

@@ -2,6 +2,7 @@
 
 #include <luajit-2.0/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
+#include <functional>
 
 #include "Main.hpp"
 #include "Engine.hpp"
@@ -242,8 +243,10 @@ void Script::exposeAngle() {
 		.endClass()
 	;
 
-	LinkedList<Angle>::exposeToScript(lua, "ListAngle");
-	LinkedList<Angle*>::exposeToScript(lua, "ListAnglePtr");
+	LinkedList<Angle>::exposeToScript(lua, "LinkedListAngle", "NodeAngle");
+	LinkedList<Angle*>::exposeToScript(lua, "LinkedListAnglePtr", "NodeAnglePtr");
+	ArrayList<Angle>::exposeToScript(lua, "ArrayListAngle");
+	ArrayList<Angle*>::exposeToScript(lua, "ArrayListAnglePtr");
 }
 
 void Script::exposeVector() {
@@ -263,8 +266,10 @@ void Script::exposeVector() {
 		.endClass()
 	;
 
-	LinkedList<Vector>::exposeToScript(lua, "ListVector");
-	LinkedList<Vector*>::exposeToScript(lua, "ListVectorPtr");
+	LinkedList<Vector>::exposeToScript(lua, "LinkedListVector", "NodeVector");
+	LinkedList<Vector*>::exposeToScript(lua, "LinkedListVectorPtr", "NodeVectorPtr");
+	ArrayList<Vector>::exposeToScript(lua, "ArrayListVector");
+	ArrayList<Vector*>::exposeToScript(lua, "ArrayListVectorPtr");
 }
 
 void Script::exposeGame() {
@@ -439,8 +444,8 @@ void Script::exposeWorld() {
 		lua_setglobal(lua, "world");
 	}
 
-	LinkedList<World>::exposeToScript(lua, "ListWorld");
-	LinkedList<World*>::exposeToScript(lua, "ListWorldPtr");
+	LinkedList<World*>::exposeToScript(lua, "LinkedListWorldPtr", "NodeWorldPtr");
+	ArrayList<World*>::exposeToScript(lua, "ArrayListWorldPtr");
 }
 
 void Script::exposeEntity() {
@@ -533,8 +538,8 @@ void Script::exposeEntity() {
 		lua_setglobal(lua, "entity");
 	}
 
-	LinkedList<Entity>::exposeToScript(lua, "ListEntity");
-	LinkedList<Entity*>::exposeToScript(lua, "ListEntityPtr");
+	LinkedList<Entity*>::exposeToScript(lua, "LinkedListEntityPtr", "NodeEntityPtr");
+	ArrayList<Entity*>::exposeToScript(lua, "ArrayListEntityPtr");
 }
 
 void Script::exposeComponent() {
@@ -588,8 +593,8 @@ void Script::exposeComponent() {
 		.endClass()
 	;
 
-	LinkedList<Component>::exposeToScript(lua, "ListComponent");
-	LinkedList<Component*>::exposeToScript(lua, "ListComponentPtr");
+	LinkedList<Component*>::exposeToScript(lua, "LinkedListComponentPtr", "NodeComponentPtr");
+	ArrayList<Component*>::exposeToScript(lua, "ArrayListComponentPtr");
 }
 
 void Script::exposeBBox() {
@@ -608,8 +613,8 @@ void Script::exposeBBox() {
 		.endClass()
 	;
 
-	LinkedList<BBox>::exposeToScript(lua, "ListBBox");
-	LinkedList<BBox*>::exposeToScript(lua, "ListBBoxPtr");
+	LinkedList<BBox*>::exposeToScript(lua, "LinkedListBBoxPtr", "NodeBBoxPtr");
+	ArrayList<BBox*>::exposeToScript(lua, "ArrayListBBoxPtr");
 }
 
 void Script::exposeModel() {
@@ -668,8 +673,8 @@ void Script::exposeModel() {
 		.endClass()
 	;
 
-	LinkedList<Model>::exposeToScript(lua, "ListModel");
-	LinkedList<Model*>::exposeToScript(lua, "ListModelPtr");
+	LinkedList<Model*>::exposeToScript(lua, "LinkedListModelPtr", "NodeModelPtr");
+	ArrayList<Model*>::exposeToScript(lua, "ArrayListModelPtr");
 }
 
 void Script::exposeLight() {
@@ -685,8 +690,8 @@ void Script::exposeLight() {
 		.endClass()
 	;
 
-	LinkedList<Light>::exposeToScript(lua, "ListLight");
-	LinkedList<Light*>::exposeToScript(lua, "ListLightPtr");
+	LinkedList<Light*>::exposeToScript(lua, "LinkedListLightPtr", "NodeLightPtr");
+	ArrayList<Light*>::exposeToScript(lua, "ArrayListLightPtr");
 }
 
 void Script::exposeCamera() {
@@ -708,8 +713,8 @@ void Script::exposeCamera() {
 		.endClass()
 	;
 
-	LinkedList<Camera>::exposeToScript(lua, "ListCamera");
-	LinkedList<Camera*>::exposeToScript(lua, "ListCameraPtr");
+	LinkedList<Camera*>::exposeToScript(lua, "LinkedListCameraPtr", "NodeCameraPtr");
+	ArrayList<Camera*>::exposeToScript(lua, "ArrayListCameraPtr");
 }
 
 void Script::exposeSpeaker() {
@@ -724,8 +729,8 @@ void Script::exposeSpeaker() {
 		.endClass()
 	;
 
-	LinkedList<Speaker>::exposeToScript(lua, "ListSpeaker");
-	LinkedList<Speaker*>::exposeToScript(lua, "ListSpeakerPtr");
+	LinkedList<Speaker*>::exposeToScript(lua, "LinkedListSpeakerPtr", "NodeSpeakerPtr");
+	ArrayList<Speaker*>::exposeToScript(lua, "ArrayListSpeakerPtr");
 }
 
 void Script::exposeCharacter() {
@@ -768,8 +773,8 @@ void Script::exposeCharacter() {
 		.endClass()
 	;
 
-	LinkedList<Character>::exposeToScript(lua, "ListCharacter");
-	LinkedList<Character*>::exposeToScript(lua, "ListCharacterPtr");
+	LinkedList<Character*>::exposeToScript(lua, "LinkedListCharacterPtr", "NodeCharacterPtr");
+	ArrayList<Character*>::exposeToScript(lua, "ArrayListCharacterPtr");
 }
 
 void Script::exposeEmitter() {

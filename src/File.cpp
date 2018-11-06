@@ -237,7 +237,7 @@ protected:
 
 	rapidjson::Document doc;
 	const char * propName = nullptr;
-	ArrayList<DocIterator, 32> stack;
+	ArrayList<DocIterator> stack;
 };
 
 class BinaryFileWriter : public FileInterface {
