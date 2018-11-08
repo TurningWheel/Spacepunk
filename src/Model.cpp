@@ -35,6 +35,7 @@ Model::Model(Entity& _entity, Component* _parent) :
 
 	name = typeStr[COMPONENT_MODEL];
 	meshStr = defaultMesh;
+	loadAnimations();
 
 	// add a bbox for editor usage
 	if( mainEngine->isEditorRunning() ) {
@@ -143,8 +144,6 @@ bool Model::animate(const char* name) {
 			pair.b.setTicksRate(1.f);
 		} else {
 			pair.b.clearWeights();
-			pair.b.setTicks(0.f);
-			pair.b.setTicksRate(0.f);
 		}
 	}
 	currentAnimation = name;

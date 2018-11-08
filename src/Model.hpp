@@ -116,8 +116,9 @@ public:
 	float								getAnimationSpeed() const			{ return animationSpeed; }
 	bool								isSkinUpdateNeeded() const			{ return skinUpdateNeeded; }
 	bool								isGenius() const					{ return genius; }
+	const char*							getCurrentAnimation() const			{ return currentAnimation.get(); }
 
-	void	setMesh(const char* _mesh)										{ meshStr = _mesh; updateNeeded = true; }
+	void	setMesh(const char* _mesh)										{ meshStr = _mesh; loadAnimations(); updateNeeded = true; }
 	void	setMaterial(const char* _material)								{ materialStr = _material; }
 	void	setDepthFailMat(const char* _depthfailmat)						{ depthfailStr = _depthfailmat; }
 	void	setAnimation(const char* _animation)							{ animationStr = _animation; loadAnimations(); }

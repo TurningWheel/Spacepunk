@@ -235,6 +235,7 @@ private:
 	void exposeFrame();
 	void exposeAngle();
 	void exposeVector();
+	void exposeString();
 	void exposeGame();
 	void exposeClient();
 	void exposeServer();

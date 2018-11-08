@@ -33,6 +33,16 @@ public:
 	// @param file interface to serialize with
 	void serialize(FileInterface * file);
 
+	// set weight on several bones at once
+	// @param bones A list of bones to affect
+	// @param weight The weight to set on the bones
+	void setWeights(const ArrayList<String>& bones, float weight);
+
+	// set weight rates on several bones at once
+	// @param bones A list of bones to affect
+	// @param rate The rate to set on the bones
+	void setWeightRates(const ArrayList<String>& bones, float rate);
+
 	// clears all weights associated with this animation
 	void clearWeights();
 
@@ -52,9 +62,9 @@ public:
 	ArrayList<sound_t>&			getSounds()									{ return sounds; }
 	bool						isFinished() const							{ return ticks >= (end - begin) && !loop; }
 
-	void	setTicks(float _ticks)											{ ticks = _ticks; }
+	void	setTicks(float _ticks)											{ ticks = _ticks; updated = true; }
 	void	setTicksRate(float _ticksRate)									{ ticksRate = _ticksRate; }
-	void	setWeight(const char* bone, float _weight)						{ if (float *weight = weights[bone]) { *weight = _weight; } else { weights.insert(bone, _weight); } }
+	void	setWeight(const char* bone, float _weight)						{ if (float *weight = weights[bone]) { *weight = _weight; } else { weights.insert(bone, _weight); } updated = true; }
 	void	setWeightRate(const char* bone, float _weightRate)				{ if (float *rate = weightRates[bone]) { *rate = _weightRate; } else { weightRates.insert(bone, _weightRate); } }
 
 private:
@@ -67,6 +77,7 @@ private:
 	Map<float> weights;			// influences, or "blending" on bones
 	Map<float> weightRates;		// rate of change on blending
 	bool loop;					// if true, animation loops when ticks > end
+	bool updated = false;		// if true, forces the skin to update
 
 	unsigned int beginLastSoundFrame = UINT32_MAX;	// start of range of sound triggers activated last frame
 	unsigned int endLastSoundFrame = UINT32_MAX;	// end of range of sound triggers activated last frame

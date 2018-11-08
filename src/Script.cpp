@@ -189,6 +189,8 @@ void Script::exposeEngine() {
 		luabridge::push(lua, engine);
 		lua_setglobal(lua, "engine");
 	}
+
+	exposeString();
 }
 
 void Script::exposeFrame() {
@@ -223,6 +225,37 @@ void Script::exposeFrame() {
 		luabridge::push(lua, frame);
 		lua_setglobal(lua, "frame");
 	}
+}
+
+void Script::exposeString() {
+	typedef size_t (String::*FindFn)(const char*, size_t) const;
+	FindFn find = static_cast<FindFn>(&String::find);
+
+	typedef size_t (String::*FindCharFn)(const char, size_t) const;
+	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<String>("String")
+		.addConstructor<void (*) (const char*)>()
+		.addFunction("get", &String::get)
+		.addFunction("getSize", &String::getSize)
+		.addFunction("alloc", &String::alloc)
+		.addFunction("empty", &String::empty)
+		.addFunction("length", &String::length)
+		.addFunction("assign", &String::assign)
+		.addFunction("append", &String::append)
+		.addFunction("substr", &String::substr)
+		.addFunction("find", find)
+		.addFunction("findChar", findChar)
+		.addFunction("toInt", &String::toInt)
+		.addFunction("toFloat", &String::toFloat)
+		.endClass()
+	;
+
+	LinkedList<String>::exposeToScript(lua, "LinkedListString", "NodeString");
+	LinkedList<String*>::exposeToScript(lua, "LinkedListStringPtr", "NodeStringPtr");
+	ArrayList<String>::exposeToScript(lua, "ArrayListString");
+	ArrayList<String*>::exposeToScript(lua, "ArrayListStringPtr");
 }
 
 void Script::exposeAngle() {
@@ -659,6 +692,8 @@ void Script::exposeModel() {
 		.addFunction("setTicksRate", &AnimationState::setTicksRate)
 		.addFunction("setWeight", &AnimationState::setWeight)
 		.addFunction("setWeightRate", &AnimationState::setWeightRate)
+		.addFunction("setWeights", &AnimationState::setWeights)
+		.addFunction("setWeightRates", &AnimationState::setWeightRates)
 		.endClass()
 	;
 

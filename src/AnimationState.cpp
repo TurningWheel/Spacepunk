@@ -36,7 +36,12 @@ AnimationState::~AnimationState() {
 static Cvar cvar_animRate("anim.rate", "controls rate of model anims", "1.0");
 
 bool AnimationState::update(Speaker* speaker) {
-	bool changed = false;
+	bool changed = updated;
+	updated = false;
+
+	if (weights.getSize() == 0) {
+		return changed;
+	}
 
 	// ticks
 	if( length > 1.f ) {
@@ -106,6 +111,18 @@ bool AnimationState::update(Speaker* speaker) {
 	}
 
 	return changed;
+}
+
+void AnimationState::setWeights(const ArrayList<String>& bones, float weight) {
+	for (auto& bone : bones) {
+		setWeight(bone.get(), weight);
+	}
+}
+
+void AnimationState::setWeightRates(const ArrayList<String>& bones, float rate) {
+	for (auto& bone : bones) {
+		setWeightRate(bone.get(), rate);
+	}
 }
 
 void AnimationState::serialize(FileInterface* file) {
