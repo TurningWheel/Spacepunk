@@ -4209,7 +4209,7 @@ void Editor::entityModelLoadMesh(unsigned int uid, const char* name) {
 
 			model->setMesh(name);
 			if( model->hasAnimations() ) {
-				entity->animate("idle");
+				entity->animate("idle", false);
 			}
 			return;
 		}

@@ -89,11 +89,9 @@ public:
 
 	// cancel all other animations on the mesh and use only the given one
 	// @param name The name of the animation to play
+	// @param blend Blend from the previous animation to the new one
 	// @return true if the animation was found, otherwise false (and do nothing)
-	bool animate(const char* name);
-
-	// get the name of the currently playing animation
-	const char* getAnimName() const;
+	bool animate(const char* name, bool blend = true);
 
 	// get the duration of the currently playing animation
 	// @return the amount of time the current animation has been playing
@@ -117,6 +115,7 @@ public:
 	bool								isSkinUpdateNeeded() const			{ return skinUpdateNeeded; }
 	bool								isGenius() const					{ return genius; }
 	const char*							getCurrentAnimation() const			{ return currentAnimation.get(); }
+	const char*							getPreviousAnimation() const		{ return previousAnimation.get(); }
 
 	void	setMesh(const char* _mesh)										{ meshStr = _mesh; loadAnimations(); updateNeeded = true; }
 	void	setMaterial(const char* _material)								{ materialStr = _material; }
@@ -153,8 +152,9 @@ private:
 	Map<AnimationState> animations;		// animation states
 	float animationSpeed = 1.f;			// anim speed factor
 	String currentAnimation;			// currently playing animation (deprecated)
+	String previousAnimation;			// previously playing animation (deprecated)
 
 	// loads all animations from the current animation manifest
 	void loadAnimations();
-	void setWeightOnChildren(const aiNode* root, AnimationState& animation);
+	void setWeightOnChildren(const aiNode* root, AnimationState& animation, float rate, float weight);
 };

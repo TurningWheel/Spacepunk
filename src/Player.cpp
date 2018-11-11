@@ -225,6 +225,9 @@ void Player::putInCrouch(bool crouch) {
 	}
 }
 
+Cvar cvar_maxHTurn("player.turn.horizontal", "maximum turn range for player, horizontal", "45.0");
+Cvar cvar_maxVTurn("player.turn.vertical", "maximum turn range for player, vertical", "90.0");
+
 void Player::control() {
 	Client* client = mainEngine->getLocalClient();
 	if( !entity || !client ) {
@@ -367,7 +370,32 @@ void Player::control() {
 		rot.pitch += (input.analog(Input::LOOK_DOWN) - input.analog(Input::LOOK_UP)) * timeFactor * 2.f;
 	}
 	rot.wrapAngles();
-	cameraRot = Angle( 0.f, rot.pitch, 0.f );
+
+	// change look dir
+	float hLimit = cvar_maxHTurn.toFloat() * PI / 180.f;
+	float vLimit = cvar_maxVTurn.toFloat() * PI / 180.f;
+	lookDir.yaw += rot.yaw;
+	lookDir.yaw = fmod(lookDir.yaw, PI);
+	if (lookDir.yaw > hLimit) {
+		float diff = lookDir.yaw - hLimit;
+		lookDir.yaw = hLimit;
+		rot.yaw = diff;
+	} else if (lookDir.yaw < -hLimit) {
+		float diff = lookDir.yaw + hLimit;
+		lookDir.yaw = -hLimit;
+		rot.yaw = diff;
+	} else {
+		rot.yaw = 0.f;
+	}
+	lookDir.pitch += rot.pitch;
+	lookDir.pitch = fmod(lookDir.pitch, PI);
+	if (lookDir.pitch > vLimit) {
+		lookDir.pitch = vLimit;
+	} else if (lookDir.pitch < -vLimit) {
+		lookDir.pitch = -vLimit;
+	}
+
+	// don't actually turn the entity vertically
 	rot.pitch = 0.f;
 
 	//Interacting with entities.
@@ -425,13 +453,13 @@ void Player::updateCamera() {
 		head->updateSkin();
 		Model::bone_t bone = head->findBone("Bone_Head");
 		if( bone.valid ) {
-			Vector pos = bone.pos;
-			pos.x -= 16.f;
-			camera->setLocalPos(pos);
+			camera->setLocalPos(bone.pos);
+			camera->update();
 		}
 
 		Angle ang = camera->getLocalAng();
-		ang += cameraRot;
+		ang += lookDir - oldLookDir;
+		oldLookDir = lookDir;
 		camera->setLocalAng(ang);
 
 		/*if( !client->isConsoleActive() ) {
@@ -447,16 +475,6 @@ void Player::updateCamera() {
 
 		if( localID == 0 ) {
 			client->getMixer()->setListener(*camera);
-		}
-
-		if( camera->getLocalAng().pitch>PI/2.f ) {
-			Angle ang = camera->getLocalAng();
-			ang.pitch=PI/2.f;
-			camera->setLocalAng(ang);
-		} if( camera->getLocalAng().pitch<-PI/2.f ) {
-			Angle ang = camera->getLocalAng();
-			ang.pitch=-PI/2.f;
-			camera->setLocalAng(ang);
 		}
 
 		int localPlayerCount = client->numLocalPlayers();
@@ -479,9 +497,10 @@ void Player::updateCamera() {
 			rect.h = mainEngine->getYres() / 2;
 		}
 		camera->setWin(rect);
+		camera->translate(Vector(16.f, 4.f, 0.f));
 		camera->update();
 
-		if( bone.valid ) {
+		/*if( bone.valid ) {
 			World* world = entity->getWorld();
 
 			Vector start = camera->getGlobalPos();
@@ -513,7 +532,7 @@ void Player::updateCamera() {
 				models->setLocalPos(Vector(0.f));
 				models->update();
 			}
-		}
+		}*/
 	}
 }
 

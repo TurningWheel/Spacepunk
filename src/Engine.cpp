@@ -991,7 +991,7 @@ bool Engine::lineIntersectPlane( const Vector& lineStart, const Vector& lineEnd,
 
 	// check that the line isn't parallel to the plane
 	if( fabs(d) <= 0.f ) {
-		if( n == 0 ) {
+		if( n == 0.f ) {
 			// the line is in the plane
 			outIntersection = lineStart;
 			return true;
@@ -1011,7 +1011,7 @@ bool Engine::lineIntersectPlane( const Vector& lineStart, const Vector& lineEnd,
 	return true;
 }
 
-bool Engine::pointInTriangle( const Vector& a, const Vector& b, const Vector& c, const Vector& p ) {
+Vector Engine::triangleCoords(const Vector& a, const Vector& b, const Vector& c, const Vector& p) {
 	Vector v0 = c - a;
 	Vector v1 = b - a;
 	Vector v2 = p - a;
@@ -1027,6 +1027,13 @@ bool Engine::pointInTriangle( const Vector& a, const Vector& b, const Vector& c,
 	float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
 	float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
 
+	return Vector(u, v, 0.f);
+}
+
+bool Engine::pointInTriangle( const Vector& a, const Vector& b, const Vector& c, const Vector& p ) {
+	Vector result = triangleCoords(a, b, c, p);
+	float u = result.x;
+	float v = result.y;
 	return (u >= 0) && (v >= 0) && (u + v < 1.f);
 }
 

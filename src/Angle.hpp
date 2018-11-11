@@ -63,6 +63,23 @@ public:
 		return *this;
 	}
 
+	// subtract one angle from another
+	Angle operator-(const Angle& src) const {
+		Angle result;
+		result.yaw = yaw-src.yaw;
+		result.pitch = pitch-src.pitch;
+		result.roll = roll-src.roll;
+		return result;
+	}
+
+	// subtract one angle from another
+	Angle& operator-=(const Angle& src) {
+		yaw -= src.yaw;
+		pitch -= src.pitch;
+		roll -= src.roll;
+		return *this;
+	}
+
 	// formats the values of yaw, pitch, and roll so they lie between -PI*2 (exclusive) and PI*2 (exclusive)
 	void wrapAngles() {
 		yaw		= fmod(yaw,		PI*2);

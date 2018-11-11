@@ -266,6 +266,14 @@ public:
 	// @return true if the line intersects with the plane, false otherwise
 	static bool lineIntersectPlane( const Vector& lineStart, const Vector& lineEnd, const Vector& planeOrigin, const Vector& planeNormal, Vector& outIntersection );
 
+	// determines where in the triangle defined by a, b, c, that the point p lies (does not use Z coord)
+	// @param a: point A on the triangle
+	// @param b: point B on the triangle
+	// @param c: point C on the triangle
+	// @param p: the point to test
+	// @return a pair of coordinates that define where the point is in the triangle
+	static Vector triangleCoords( const Vector& a, const Vector& b, const Vector& c, const Vector& p );
+
 	// determines if the given point p lies in the triangle defined by a, b, c (does not use Z coord)
 	// @param a: point A on the triangle
 	// @param b: point B on the triangle

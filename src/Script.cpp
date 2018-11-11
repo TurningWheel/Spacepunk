@@ -177,6 +177,8 @@ void Script::exposeEngine() {
 		.addFunction("editorPlaytest", &Engine::editorPlaytest)
 		.addFunction("smsg", &Engine::smsg)
 		.addFunction("msg", &Engine::msg)
+		.addStaticFunction("triangleCoords", &Engine::triangleCoords)
+		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
 		.endClass()
 	;
 
@@ -528,6 +530,7 @@ void Script::exposeEntity() {
 		.addFunction("isCrouching", &Entity::isCrouching)
 		.addFunction("isMoving", &Entity::isMoving)
 		.addFunction("hasJumped", &Entity::hasJumped)
+		.addFunction("getLookDir", &Entity::getLookDir)
 		.addFunction("checkCollision", &Entity::checkCollision)
 		.addFunction("copy", &Entity::copy)
 		.addFunction("update", &Entity::update)
@@ -662,7 +665,6 @@ void Script::exposeModel() {
 		.addFunction("getDepthFailMat", &Model::getDepthFailMat)
 		.addFunction("getAnimation", &Model::getAnimation)
 		.addFunction("getShaderVars", &Model::getShaderVars)
-		.addFunction("getAnimName", &Model::getAnimName)
 		.addFunction("getAnimTicks", &Model::getAnimTicks)
 		.addFunction("isAnimDone", &Model::isAnimDone)
 		.addFunction("getAnimationSpeed", &Model::getAnimationSpeed)
@@ -673,6 +675,8 @@ void Script::exposeModel() {
 		.addFunction("setShaderVars", &Model::setShaderVars)
 		.addFunction("setAnimationSpeed", &Model::setAnimationSpeed)
 		.addFunction("updateSkin", &Model::updateSkin)
+		.addFunction("getCurrentAnimation", &Model::getCurrentAnimation)
+		.addFunction("getPreviousAnimation", &Model::getPreviousAnimation)
 		.endClass()
 	;
 
@@ -694,6 +698,7 @@ void Script::exposeModel() {
 		.addFunction("setWeightRate", &AnimationState::setWeightRate)
 		.addFunction("setWeights", &AnimationState::setWeights)
 		.addFunction("setWeightRates", &AnimationState::setWeightRates)
+		.addFunction("clearWeights", &AnimationState::clearWeights)
 		.endClass()
 	;
 

@@ -39,7 +39,8 @@ bool AnimationState::update(Speaker* speaker) {
 	bool changed = updated;
 	updated = false;
 
-	if (weights.getSize() == 0) {
+	if (weights.getSize() == 0 &&
+		weightRates.getSize() == 0) {
 		return changed;
 	}
 

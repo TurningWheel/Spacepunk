@@ -210,8 +210,9 @@ public:
 	virtual void draw(Camera& camera, Light* light) const;
 
 	// animates all the entity's meshes in unison
-	// @param name: the name of the animation to play
-	void animate(const char* name);
+	// @param name The name of the animation to play
+	// @param blend If true, blend to the new animation
+	void animate(const char* name, bool blend = true);
 
 	// move the entity by its translational and rotational velocity
 	// @return true if we moved without hitting any obstacles, otherwise false
@@ -262,6 +263,10 @@ public:
 	// only valid for player entities, determine if entity is jumping or not
 	// @return true if jumping, otherwise false
 	bool hasJumped() const;
+
+	// only valid for player entities, get the looking direction offset from the entity
+	// @return the look direction of the entity
+	Angle getLookDir() const;
 
 	// check whether the entity collides with anything at the given location
 	// @param newPos: the position to test

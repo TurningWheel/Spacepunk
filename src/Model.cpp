@@ -49,10 +49,6 @@ Model::Model(Entity& _entity, Component* _parent) :
 Model::~Model() {
 }
 
-const char* Model::getAnimName() const {
-	return currentAnimation.get();
-}
-
 float Model::getAnimTicks() const {
 	const AnimationState* animation = animations.find(currentAnimation.get());
 	if (animation) {
@@ -122,30 +118,42 @@ AnimationState* Model::findAnimation(const char* name) {
 	return animations.find(name);
 }
 
-void Model::setWeightOnChildren(const aiNode* root, AnimationState& animation) {
-	animation.setWeight(root->mName.data, 1.f);
-	animation.setWeightRate(root->mName.data, 0.f);
+void Model::setWeightOnChildren(const aiNode* root, AnimationState& animation, float rate, float weight) {
+	animation.setWeight(root->mName.data, weight);
+	animation.setWeightRate(root->mName.data, rate);
 	for (unsigned int c = 0; c < root->mNumChildren; ++c) {
-		setWeightOnChildren(root->mChildren[c], animation);
+		setWeightOnChildren(root->mChildren[c], animation, rate, weight);
 	}
 }
 
-bool Model::animate(const char* name) {
+bool Model::animate(const char* name, bool blend) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	if (!mesh || !animations.exists(name)) {
 		return false;
 	}
 	for (auto& pair : animations) {
 		if (pair.a == name) {
-			for (auto& subMesh : mesh->getSubMeshes()) {
-				setWeightOnChildren(subMesh->getRootNode(), pair.b);
+			if (currentAnimation.empty() || !blend) {
+				for (auto& subMesh : mesh->getSubMeshes()) {
+					setWeightOnChildren(subMesh->getRootNode(), pair.b, 0.f, 1.f);
+				}
+			} else {
+				for (auto& subMesh : mesh->getSubMeshes()) {
+					setWeightOnChildren(subMesh->getRootNode(), pair.b, 0.1f, 0.f);
+				}
 			}
 			pair.b.setTicks(0.f);
 			pair.b.setTicksRate(1.f);
+		} else if (pair.a == currentAnimation && !currentAnimation.empty() && blend) {
+			for (auto& subMesh : mesh->getSubMeshes()) {
+				setWeightOnChildren(subMesh->getRootNode(), pair.b, -0.1f, 1.f);
+			}
+			pair.b.setTicksRate(0.f);
 		} else {
 			pair.b.clearWeights();
 		}
 	}
+	previousAnimation = currentAnimation;
 	currentAnimation = name;
 	updateSkin();
 	return true;
@@ -168,18 +176,16 @@ void Model::loadAnimations() {
 	tPose.name = "__tpose";
 	animations.insert("__tpose", AnimationState(tPose, ArrayList<Animation::sound_t>()));
 
-	if (!animate("idle")) {
-		animate("__tpose");
+	if (!animate("idle", false)) {
+		animate("__tpose", false);
 	}
 }
 
 void Model::updateSkin() {
-	if( skinUpdateNeeded ) {
-		skinUpdateNeeded = false;
-		Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
-		if( mesh ) {
-			mesh->skin(animations, skincache);
-		}
+	skinUpdateNeeded = false;
+	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
+	if( mesh ) {
+		mesh->skin(animations, skincache);
 	}
 }
 

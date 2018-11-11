@@ -265,6 +265,14 @@ bool Entity::hasJumped() const {
 	}
 }
 
+Angle Entity::getLookDir() const {
+	if( player ) {
+		return player->getLookDir();
+	} else {
+		return Angle();
+	}
+}
+
 void Entity::findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) const {
 	if( !world ) {
 		return;
@@ -323,6 +331,7 @@ void Entity::process() {
 	ang.wrapAngles();
 
 	// run entity script
+	bool processed = false;
 	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
 		if( script && !scriptStr.empty() && world ) {
 			StringBuf<128> path;
@@ -339,6 +348,7 @@ void Entity::process() {
 				script->dispatch("init");
 			} else {
 				script->dispatch("process");
+				processed = true;
 			}
 		}
 
@@ -425,6 +435,20 @@ void Entity::process() {
 			}
 		}
 	}
+
+	// run post process script
+	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
+		if( script && !scriptStr.empty() && world && processed ) {
+			StringBuf<128> path;
+			if( world->isClientObj() && mainEngine->isRunningClient() ) {
+				path.format("scripts/client/entities/%s.lua", scriptStr.get());
+			} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
+				path.format("scripts/server/entities/%s.lua", scriptStr.get());
+			}
+
+			script->dispatch("postprocess");
+		}
+	}
 }
 
 void Entity::draw(Camera& camera, Light* light) const {
@@ -478,11 +502,11 @@ bool Entity::checkCollision(const Vector& newPos) {
 	return false;
 }
 
-void Entity::animate(const char* name) {
+void Entity::animate(const char* name, bool blend) {
 	LinkedList<Model*> models;
 	findAllComponents<Model>(Component::COMPONENT_MODEL, models);
 	for( auto& model : models ) {
-		model->animate(name);
+		model->animate(name, blend);
 	}
 }
 
@@ -619,7 +643,7 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 	Entity* entity = new Entity(world, uid);
 	def.entity.copy(world, entity);
 	entity->defIndex = def.index;
-	entity->animate("idle");
+	entity->animate("idle", false);
 
 	entity->setPos(pos);
 	entity->setNewPos(pos);
@@ -735,7 +759,7 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	}
 
 	entity->update();
-	entity->animate("idle");
+	entity->animate("idle", false);
 
 	return entity;
 }

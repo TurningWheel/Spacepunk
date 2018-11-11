@@ -63,9 +63,9 @@ public:
 	bool						isFinished() const							{ return ticks >= (end - begin) && !loop; }
 
 	void	setTicks(float _ticks)											{ ticks = _ticks; updated = true; }
-	void	setTicksRate(float _ticksRate)									{ ticksRate = _ticksRate; }
+	void	setTicksRate(float _ticksRate)									{ ticksRate = _ticksRate; updated = true; }
 	void	setWeight(const char* bone, float _weight)						{ if (float *weight = weights[bone]) { *weight = _weight; } else { weights.insert(bone, _weight); } updated = true; }
-	void	setWeightRate(const char* bone, float _weightRate)				{ if (float *rate = weightRates[bone]) { *rate = _weightRate; } else { weightRates.insert(bone, _weightRate); } }
+	void	setWeightRate(const char* bone, float _weightRate)				{ if (float *rate = weightRates[bone]) { *rate = _weightRate; } else { weightRates.insert(bone, _weightRate); } updated = true; }
 
 private:
 	String name;				// animation name

@@ -318,6 +318,14 @@ void Server::handleNetMessages() {
 									Uint8 jumped;
 									packet.read8(jumped);
 									player->setJumped((jumped == 1) ? true : false);
+
+									// read look direction
+									Uint32 lookDirInt[3];
+									packet.read32(lookDirInt[0]);
+									packet.read32(lookDirInt[1]);
+									packet.read32(lookDirInt[2]);
+									Angle lookDir( (((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f );
+									player->setLookDir(lookDir);
 								}
 							}
 						}
@@ -528,6 +536,9 @@ void Server::postProcess() {
 								Packet packet;
 
 								if( player ) {
+									packet.write32((Sint32)(entity->getLookDir().degreesRoll() * 32));
+									packet.write32((Sint32)(entity->getLookDir().degreesPitch() * 32));
+									packet.write32((Sint32)(entity->getLookDir().degreesYaw() * 32));
 									packet.write8(player->hasJumped() ? 1 : 0);
 									packet.write8(player->isMoving() ? 1 : 0);
 									packet.write8(player->isCrouching() ? 1 : 0);

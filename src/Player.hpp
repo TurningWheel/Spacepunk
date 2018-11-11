@@ -88,6 +88,7 @@ public:
 	bool					isCrouching() const		{ return crouching; }
 	bool					isMoving() const		{ return moving; }
 	bool					hasJumped() const		{ return jumped; }
+	const Angle&			getLookDir() const		{ return lookDir; }
 
 	void	setName(const char* _name)				{ name = _name; }
 	void	setServerID(Uint32 id)					{ serverID = id; }
@@ -95,6 +96,7 @@ public:
 	void	setClientID(Uint32 id)					{ clientID = id; }
 	void	setMoving(bool b)						{ moving = b; }
 	void	setJumped(bool b)						{ jumped = b; }
+	void	setLookDir(const Angle& ang)			{ lookDir = ang; }
 
 private:
 	StringBuf<64> name = defaultName;	// the player's name
@@ -124,5 +126,6 @@ private:
 	bool moving = false;
 	bool crouching = false;
 	bool jumped = false;
-	Angle cameraRot;
+	Angle lookDir;
+	Angle oldLookDir;
 };

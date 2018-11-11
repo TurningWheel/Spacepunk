@@ -30,6 +30,14 @@ public:
 
 	// clears the map of all key/value pairs
 	void clear() {
+		for (auto& bucket : hash) {
+			bucket.clear();
+		}
+		size = 0;
+	}
+
+	// not only clears the map, but also resets its size
+	void reset() {
 		hash.clear();
 		size = 0;
 		numBuckets = 4;
