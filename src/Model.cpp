@@ -192,6 +192,11 @@ void Model::updateSkin() {
 void Model::draw(Camera& camera, Light* light) {
 	Component::draw(camera, light);
 
+	// don't draw the model if its assets are missing
+	if (broken) {
+		return;
+	}
+
 	// prevents editor widgets from drawing for non-editor cameras
 	if( camera.getEntity()->isShouldSave() && !entity->isShouldSave() ) {
 		return;
@@ -216,20 +221,12 @@ void Model::draw(Camera& camera, Light* light) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	Material* mat = mainEngine->getMaterialResource().dataForString(materialStr.get());
 	Material* depthfailmat = mainEngine->getMaterialResource().dataForString(depthfailStr.get());
-	Animation* animation = mainEngine->getAnimationResource().dataForString(animationStr.get());
 
-	// clear invalid data
-	if( !mesh ) {
-		meshStr = "";
-	}
-	if( !mat ) {
-		materialStr = "";
-	}
-	if( !depthfailmat ) {
-		depthfailStr = "";
-	}
-	if( !animation ) {
-		animationStr = "";
+	// mark model as "broken"
+	if( (!mesh && !meshStr.empty()) ||
+		(!mat && !materialStr.empty()) ||
+		(!depthfailmat && !depthfailStr.empty()) ) {
+		broken = true;
 	}
 
 	if( mesh ) {

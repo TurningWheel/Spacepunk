@@ -58,7 +58,7 @@ public:
 
 	// input mapping
 	struct binding_t {
-		StringBuf<32> input;
+		String input = "";
 		float analog = 0.f;
 		bool binary = false;
 		bool consumed = false;

@@ -117,9 +117,9 @@ public:
 	const char*							getCurrentAnimation() const			{ return currentAnimation.get(); }
 	const char*							getPreviousAnimation() const		{ return previousAnimation.get(); }
 
-	void	setMesh(const char* _mesh)										{ meshStr = _mesh; loadAnimations(); updateNeeded = true; }
-	void	setMaterial(const char* _material)								{ materialStr = _material; }
-	void	setDepthFailMat(const char* _depthfailmat)						{ depthfailStr = _depthfailmat; }
+	void	setMesh(const char* _mesh)										{ meshStr = _mesh; loadAnimations(); updateNeeded = true; broken = false; }
+	void	setMaterial(const char* _material)								{ materialStr = _material; broken = false; }
+	void	setDepthFailMat(const char* _depthfailmat)						{ depthfailStr = _depthfailmat; broken = false; }
 	void	setAnimation(const char* _animation)							{ animationStr = _animation; loadAnimations(); }
 	void	setShaderVars(const Mesh::shadervars_t& _shaderVars)			{ shaderVars = _shaderVars; }
 	void	setAnimationSpeed(const float _animationSpeed)					{ animationSpeed = _animationSpeed; }
@@ -146,6 +146,7 @@ private:
 	String depthfailStr;				// depth fail material
 	String animationStr;				// animation keyframe file
 	Mesh::shadervars_t shaderVars;		// colors
+	bool broken = false;				// if true, assets were not found and the model won't be drawn
 
 	bool skinUpdateNeeded = false;		// if true, skin will get tossed on next draw call
 	SkinCache skincache;				// bone transforms
