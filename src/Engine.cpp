@@ -784,27 +784,25 @@ Uint32 Engine::timerCallback(Uint32 interval, void *param) {
 }
 
 void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
-
-	// wait for current log to finish
-	while( 1 ) {
-		SDL_LockMutex(logLock);
-		if( logging ) {
-			SDL_UnlockMutex(logLock);
-		} else {
-			logging = true;
-			SDL_UnlockMutex(logLock);
-			break;
-		}
-	}
-
-	#ifdef NDEBUG
+#ifdef NDEBUG
 	if( msgType==Engine::MSG_DEBUG ) {
-		SDL_LockMutex(logLock);
-		logging = false;
-		SDL_UnlockMutex(logLock);
 		return;
 	}
-	#endif
+#endif
+
+	// wait for current log to finish
+	if (!logLock) {
+		while( 1 ) {
+			SDL_LockMutex(logLock);
+			if( logging ) {
+				SDL_UnlockMutex(logLock);
+			} else {
+				logging = true;
+				SDL_UnlockMutex(logLock);
+				break;
+			}
+		}
+	}
 
 	char str[1024];
 	str[1024-1] = '\0';
@@ -822,22 +820,26 @@ void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
 			str[c]=0;
 
 			// disable lock temporarily
-			SDL_LockMutex(logLock);
-			logging = false;
-			SDL_UnlockMutex(logLock);
+			if (logLock) {
+				SDL_LockMutex(logLock);
+				logging = false;
+				SDL_UnlockMutex(logLock);
+			}
 
 			// write second line
 			fmsg(msgType,(const char *)(str+c+1));
 
 			// reactivate log lock
-			while( 1 ) {
-				SDL_LockMutex(logLock);
-				if( logging ) {
-					SDL_UnlockMutex(logLock);
-				} else {
-					logging = true;
-					SDL_UnlockMutex(logLock);
-					break;
+			if (logLock) {
+				while( 1 ) {
+					SDL_LockMutex(logLock);
+					if( logging ) {
+						SDL_UnlockMutex(logLock);
+					} else {
+						logging = true;
+						SDL_UnlockMutex(logLock);
+						break;
+					}
 				}
 			}
 		}
@@ -898,9 +900,11 @@ void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
 	logList.addNodeLast(logMsg);
 
 	// unlock log stuff
-	SDL_LockMutex(logLock);
-	logging = false;
-	SDL_UnlockMutex(logLock);
+	if (logLock) {
+		SDL_LockMutex(logLock);
+		logging = false;
+		SDL_UnlockMutex(logLock);
+	}
 }
 
 void Engine::smsg(const Uint32 msgType, const String& str) {

@@ -357,6 +357,8 @@ private:
 	LinkedList<logmsg_t> logList;
 	LinkedList<String> commandHistory;
 	unsigned int logUids = 0;
+	SDL_mutex* logLock = nullptr;
+	bool logging = false;
 
 	// local client and server data
 	bool runningClient = true;
@@ -439,8 +441,4 @@ private:
 	// load a map on the client
 	// @param path: the pathname of the world to load
 	void loadMapClient(const char* path);
-
-	// threading
-	SDL_mutex* logLock = nullptr;
-	bool logging = false;
 };
