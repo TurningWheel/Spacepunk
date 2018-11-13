@@ -23,7 +23,7 @@ const char* BBox::meshCapsuleHalfSphereStr = "assets/editor/bbox/CapsuleHalfSphe
 const char* BBox::meshConeStr = "assets/editor/bbox/Cone.fbx";
 const char* BBox::meshCylinderStr = "assets/editor/bbox/Cylinder.fbx";
 const char* BBox::meshSphereStr = "assets/editor/bbox/Sphere.fbx";
-const char* BBox::materialStr = "assets/editor/bbox/material.txt";
+const char* BBox::materialStr = "assets/editor/bbox/material.json";
 
 const char* BBox::shapeStr[SHAPE_MAX] = {
 	"box",

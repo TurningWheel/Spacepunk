@@ -43,7 +43,7 @@ public:
 
 	// save/load this object to a file
 	// @param file interface to serialize with
-	virtual void serialize(FileInterface * file);
+	virtual void serialize(FileInterface * file) override;
 
 	// getters & setters
 	virtual const type_t		getType() const			{ return ASSET_ANIMATION; }

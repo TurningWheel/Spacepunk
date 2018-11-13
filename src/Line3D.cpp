@@ -77,9 +77,9 @@ void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const
 	const glm::mat4 viewMatrix = camera.getProjViewMatrix() * modelMatrix;
 
 	// load shader
-	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/line3D.txt");
+	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/line3D.json");
 	if( mat ) {
-		ShaderProgram& shader = mat->getShader();
+		const ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 

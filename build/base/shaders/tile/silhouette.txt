@@ -1,3 +1,0 @@
-shader = shaders/tile/silhouette.gs
-shader = shaders/tile/silhouette.vs
-shader = shaders/tile/silhouette.fs

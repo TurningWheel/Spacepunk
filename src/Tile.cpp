@@ -27,7 +27,7 @@ using namespace std;
 #include "Camera.hpp"
 #include "Material.hpp"
 
-const char* Tile::defaultTexture = "images/tile/null.txt";
+const char* Tile::defaultTexture = "images/tile/null.json";
 
 Tile::Tile() {
 	// default texture for ceiling
@@ -68,19 +68,19 @@ ShaderProgram* Tile::loadShader(TileWorld& world, Camera& camera, Light* light) 
 	const char* materialName = nullptr;
 	switch( camera.getDrawMode() ) {
 		case Camera::DRAW_DEPTH:
-			materialName = "shaders/tile/depth.txt";
+			materialName = "shaders/tile/depth.json";
 			break;
 		case Camera::DRAW_SILHOUETTE:
-			materialName = "shaders/tile/silhouette.txt";
+			materialName = "shaders/tile/silhouette.json";
 			break;
 		case Camera::DRAW_STENCIL:
-			materialName = "shaders/tile/stencil.txt";
+			materialName = "shaders/tile/stencil.json";
 			break;
 		case Camera::DRAW_TRIANGLES:
-			materialName = "shaders/tile/triangles.txt";
+			materialName = "shaders/tile/triangles.json";
 			break;
 		default:
-			materialName = "shaders/tile/std.txt";
+			materialName = "shaders/tile/std.json";
 			break;
 	}
 	Material* mat = mainEngine->getMaterialResource().dataForString(materialName);
@@ -163,7 +163,7 @@ ShaderProgram* Tile::loadShader(TileWorld& world, Camera& camera, Light* light) 
 		}
 
 		// get cubemap
-		static const char* path = "images/cubemap/tile/cubemap.txt";
+		static const char* path = "images/cubemap/tile/cubemap.json";
 		Cubemap* cubemap = mainEngine->getCubemapResource().dataForString(path);
 		assert(cubemap);
 

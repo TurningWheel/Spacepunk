@@ -1,2 +1,0 @@
-shader = shaders/tile/depth.vs
-shader = shaders/tile/depth.fs

@@ -1877,9 +1877,9 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 	const glm::mat4 viewMatrix = camera.getProjViewMatrix() * modelMatrix;
 
 	// load shader
-	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/grid.txt");
+	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/grid.json");
 	if( mat ) {
-		ShaderProgram& shader = mat->getShader();
+		const ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 

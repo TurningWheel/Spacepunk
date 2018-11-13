@@ -1,3 +1,0 @@
-shader = shaders/sector/triangles.gs
-shader = shaders/sector/triangles.vs
-shader = shaders/sector/triangles.fs

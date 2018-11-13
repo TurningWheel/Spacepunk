@@ -1,3 +1,0 @@
-shader = shaders/sector/silhouette.gs
-shader = shaders/sector/silhouette.vs
-shader = shaders/sector/silhouette.fs

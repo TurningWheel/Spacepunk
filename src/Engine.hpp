@@ -101,7 +101,6 @@ public:
 	const Uint32						getTicks() const								{ return ticks; }
 	const unsigned int					getTicksPerSecond() const						{ return ticksPerSecond; }
 	Resource<Mesh>&						getMeshResource()								{ return meshResource; }
-	Resource<Shader>&					getShaderResource()								{ return shaderResource; }
 	Resource<Image>&					getImageResource()								{ return imageResource; }
 	Resource<Material>&					getMaterialResource()							{ return materialResource; }
 	Resource<Texture>&					getTextureResource()							{ return textureResource; }
@@ -372,7 +371,6 @@ private:
 	Resource<Texture> textureResource;
 	Resource<Text> textResource;
 	Resource<Sound> soundResource;
-	Resource<Shader> shaderResource;
 	Resource<Animation> animationResource;
 	Resource<Cubemap> cubemapResource;
 

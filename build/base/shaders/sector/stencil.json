@@ -1,0 +1,31 @@
+{
+	"Material::version": 0,
+	"transparent": false,
+	"shadow": true,
+	"program": {
+		"ShaderProgram::version": 0,
+		"shaders": [
+			{
+				"Shader::version": 0,
+				"type": 0,
+				"path": "shaders/sector/stencil_v.glsl",
+				"defines": []
+			},
+			{
+				"Shader::version": 0,
+				"type": 1,
+				"path": "shaders/sector/stencil_g.glsl",
+				"defines": []
+			},
+			{
+				"Shader::version": 0,
+				"type": 2,
+				"path": "shaders/sector/stencil_f.glsl",
+				"defines": []
+			}
+		]
+	},
+	"textures": [],
+	"glowTextures": [],
+	"cubemaps": []
+}

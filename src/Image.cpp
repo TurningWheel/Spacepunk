@@ -121,11 +121,11 @@ void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::v
 	int xres = mainEngine->getXres();
 
 	// load shader
-	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/2D.txt");
+	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/2D.json");
 	if( !mat ) {
 		return;
 	}
-	ShaderProgram& shader = mat->getShader();
+	const ShaderProgram& shader = mat->getShader();
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();
 	}

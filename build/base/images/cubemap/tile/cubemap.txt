@@ -1,6 +1,0 @@
-images/cubemap/tile/metallic_ft.png
-images/cubemap/tile/metallic_bk.png
-images/cubemap/tile/metallic_up.png
-images/cubemap/tile/metallic_dn.png
-images/cubemap/tile/metallic_rt.png
-images/cubemap/tile/metallic_lf.png

@@ -1,3 +1,0 @@
-shader = shaders/tile/triangles.gs
-shader = shaders/tile/triangles.vs
-shader = shaders/tile/triangles.fs

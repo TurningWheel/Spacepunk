@@ -1518,8 +1518,8 @@ void Editor::initWidgets() {
 		Model* model = widget->addComponent<Model>();
 		model->setName("model");
 		model->setMesh("assets/editor/gizmo/gizmo_scale_3-axis.fbx");
-		model->setMaterial("assets/editor/gizmo/material.txt");
-		model->setDepthFailMat("assets/editor/gizmo/material_depth.txt");
+		model->setMaterial("assets/editor/gizmo/material.json");
+		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
 
 		BBox* bbox = model->addComponent<BBox>();
@@ -1545,8 +1545,8 @@ void Editor::initWidgets() {
 		Model* model = widgetX->addComponent<Model>();
 		model->setName("model");
 		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.fbx");
-		model->setMaterial("assets/editor/gizmo/material.txt");
-		model->setDepthFailMat("assets/editor/gizmo/material_depth.txt");
+		model->setMaterial("assets/editor/gizmo/material.json");
+		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
 
 		BBox* bbox = model->addComponent<BBox>();
@@ -1572,8 +1572,8 @@ void Editor::initWidgets() {
 		Model* model = widgetXY->addComponent<Model>();
 		model->setName("model");
 		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.fbx");
-		model->setMaterial("assets/editor/gizmo/material.txt");
-		model->setDepthFailMat("assets/editor/gizmo/material_depth.txt");
+		model->setMaterial("assets/editor/gizmo/material.json");
+		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
 
 		BBox* bbox = model->addComponent<BBox>();
@@ -1599,8 +1599,8 @@ void Editor::initWidgets() {
 		Model* model = widgetY->addComponent<Model>();
 		model->setName("model");
 		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.fbx");
-		model->setMaterial("assets/editor/gizmo/material.txt");
-		model->setDepthFailMat("assets/editor/gizmo/material_depth.txt");
+		model->setMaterial("assets/editor/gizmo/material.json");
+		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
 
 		BBox* bbox = model->addComponent<BBox>();
@@ -1626,8 +1626,8 @@ void Editor::initWidgets() {
 		Model* model = widgetYZ->addComponent<Model>();
 		model->setName("model");
 		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.fbx");
-		model->setMaterial("assets/editor/gizmo/material.txt");
-		model->setDepthFailMat("assets/editor/gizmo/material_depth.txt");
+		model->setMaterial("assets/editor/gizmo/material.json");
+		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
 
 		BBox* bbox = model->addComponent<BBox>();
@@ -1653,8 +1653,8 @@ void Editor::initWidgets() {
 		Model* model = widgetZ->addComponent<Model>();
 		model->setName("model");
 		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.fbx");
-		model->setMaterial("assets/editor/gizmo/material.txt");
-		model->setDepthFailMat("assets/editor/gizmo/material_depth.txt");
+		model->setMaterial("assets/editor/gizmo/material.json");
+		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
 
 		BBox* bbox = model->addComponent<BBox>();
@@ -1680,8 +1680,8 @@ void Editor::initWidgets() {
 		Model* model = widgetZX->addComponent<Model>();
 		model->setName("model");
 		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.fbx");
-		model->setMaterial("assets/editor/gizmo/material.txt");
-		model->setDepthFailMat("assets/editor/gizmo/material_depth.txt");
+		model->setMaterial("assets/editor/gizmo/material.json");
+		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
 
 		BBox* bbox = model->addComponent<BBox>();

@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "ArrayList.hpp"
 #include "Asset.hpp"
 #include "Image.hpp"
 #include "Cubemap.hpp"
@@ -24,15 +25,15 @@ public:
 	// @param textureKind: the kind of textures you wish to load
 	void bindTextures(texturekind_t textureKind);
 
+	// save/load this object to a file
+	// @param file interface to serialize with
+	virtual void serialize(FileInterface * file) override;
+
 	// getters & setters
 	virtual const type_t		getType() const				{ return ASSET_MATERIAL; }
 	const ShaderProgram&		getShader() const			{ return shader; }
-	const LinkedList<Image*>&	getStdTextures() const		{ return stdTextures; }
-	const LinkedList<Image*>&	getGlowTextures() const		{ return glowTextures; }
-	const bool					isGlowing() const			{ return glowTextures.getSize()>0; }
 	ShaderProgram&				getShader()					{ return shader; }
-	LinkedList<Image*>&			getStdTextures()			{ return stdTextures; }
-	LinkedList<Image*>&			getGlowTextures()			{ return glowTextures; }
+	const bool					isGlowing() const			{ return glowTextures.getSize()>0; }
 	const bool					isTransparent()				{ return transparent; }
 	const bool					isShadowing()				{ return shadow; }
 
@@ -40,10 +41,13 @@ public:
 	void	setShadowing(bool _shadow)					{ shadow = _shadow; }
 
 private:
-	LinkedList<Image*> stdTextures;
-	LinkedList<Image*> glowTextures;
-	LinkedList<Cubemap*> cubemaps;
 	ShaderProgram shader;
+	ArrayList<Image*> stdTextures;
+	ArrayList<Image*> glowTextures;
+	ArrayList<Cubemap*> cubemaps;
+	ArrayList<String> stdTextureStrs;
+	ArrayList<String> glowTextureStrs;
+	ArrayList<String> cubemapStrs;
 	bool transparent = false;
 	bool shadow = true;
 };

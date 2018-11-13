@@ -19,7 +19,7 @@
 #include "Mesh.hpp"
 
 const char* Camera::meshStr = "assets/editor/camera/camera.fbx";
-const char* Camera::materialStr = "assets/editor/camera/material.txt";
+const char* Camera::materialStr = "assets/editor/camera/material.json";
 
 Camera::Camera(Entity& _entity, Component* _parent) :
 	Component(_entity, _parent) {

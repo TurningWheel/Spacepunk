@@ -1,2 +1,0 @@
-shader = shaders/basic/cube.fs
-shader = shaders/basic/cube.vs

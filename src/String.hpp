@@ -124,9 +124,10 @@ public:
 		if( len >= size-1 ) {
 			return str;
 		}
+		size_t last = std::min(len + strlen(src), size-1);
 
-		strncpy((char *)(str + len), src, size-len);
-		str[size-1] = '\0';
+		strncpy((char *)(str + len), src, last-len);
+		str[last] = '\0';
 		return str;
 	}
 
@@ -254,9 +255,11 @@ public:
 	// access char data
 	// @return the char at the given index
 	char& operator[](const size_t index) {
+		assert(index >= 0 && index < size);
 		return str[index];
 	}
 	const char& operator[](const size_t index) const {
+		assert(index >= 0 && index < size);
 		return str[index];
 	}
 

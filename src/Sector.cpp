@@ -479,19 +479,19 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 	if( !material ) {
 		switch( camera.getDrawMode() ) {
 		case Camera::DRAW_DEPTH:
-			material = mainEngine->getMaterialResource().dataForString("shaders/sector/depth.txt");
+			material = mainEngine->getMaterialResource().dataForString("shaders/sector/depth.json");
 			break;
 		case Camera::DRAW_SILHOUETTE:
-			material = mainEngine->getMaterialResource().dataForString("shaders/sector/silhouette.txt");
+			material = mainEngine->getMaterialResource().dataForString("shaders/sector/silhouette.json");
 			break;
 		case Camera::DRAW_STENCIL:
-			material = mainEngine->getMaterialResource().dataForString("shaders/sector/stencil.txt");
+			material = mainEngine->getMaterialResource().dataForString("shaders/sector/stencil.json");
 			break;
 		case Camera::DRAW_TRIANGLES:
-			material = mainEngine->getMaterialResource().dataForString("shaders/sector/triangles.txt");
+			material = mainEngine->getMaterialResource().dataForString("shaders/sector/triangles.json");
 			break;
 		default:
-			material = mainEngine->getMaterialResource().dataForString("shaders/sector/std.txt");
+			material = mainEngine->getMaterialResource().dataForString("shaders/sector/std.json");
 			break;
 		}
 		if( !material ) {
@@ -500,7 +500,7 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 		}
 	}
 
-	ShaderProgram& shader = material->getShader();
+	const ShaderProgram& shader = material->getShader();
 	glLineWidth(1);
 
 	if( &shader != ShaderProgram::getCurrentShader() ) {

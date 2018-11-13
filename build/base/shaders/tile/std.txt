@@ -1,2 +1,0 @@
-shader = shaders/tile/std.vs
-shader = shaders/tile/std.fs

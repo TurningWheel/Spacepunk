@@ -1,0 +1,9 @@
+{
+	"Cubemap::version": 0,
+	"front": "images/cubemap/tile/metallic_ft.png",
+	"back": "images/cubemap/tile/metallic_bk.png",
+	"up": "images/cubemap/tile/metallic_up.png",
+	"down": "images/cubemap/tile/metallic_dn.png",
+	"right": "images/cubemap/tile/metallic_rt.png",
+	"left": "images/cubemap/tile/metallic_lf.png"
+}

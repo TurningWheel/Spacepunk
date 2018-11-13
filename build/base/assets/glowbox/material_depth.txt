@@ -1,3 +1,0 @@
-shader = assets/glowbox/glow.fs
-shader = shaders/actor/std_nofresnel.vs
-texture = assets/glowbox/depth.png

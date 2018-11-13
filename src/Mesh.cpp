@@ -154,23 +154,23 @@ ShaderProgram* Mesh::loadShader(Component& component, Camera& camera, Light* lig
 	Material* mat = nullptr;
 	switch( camera.getDrawMode() ) {
 		case Camera::DRAW_DEPTH:
-			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/depth.txt");
+			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/depth.json");
 			break;
 		case Camera::DRAW_SILHOUETTE:
-			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/silhouette.txt");
+			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/silhouette.json");
 			break;
 		case Camera::DRAW_STENCIL:
-			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/stencil.txt");
+			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/stencil.json");
 			break;
 		case Camera::DRAW_DEPTHFAIL:
 			mat = material;
 			break;
 		case Camera::DRAW_TRIANGLES:
-			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/triangles.txt");
+			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/triangles.json");
 			break;
 		default:
 			if( material == nullptr ) {
-				mat = mainEngine->getMaterialResource().dataForString("shaders/actor/std.txt");
+				mat = mainEngine->getMaterialResource().dataForString("shaders/actor/std.json");
 			} else {
 				mat = material;
 			}
@@ -251,9 +251,9 @@ ShaderProgram* Mesh::loadShader(Component& component, Camera& camera, Light* lig
 
 			// load light data into shader
 			if( component.getEntity()->isFlag(Entity::flag_t::FLAG_FULLYLIT) || camera.getDrawMode() == Camera::DRAW_GLOW || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
-				glUniform1i(shader.getUniformLocation("gFullbright"), 1);
+				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_FALSE);
 			} else {
-				glUniform1i(shader.getUniformLocation("gFullbright"), 0);
+				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
 				if( light ) {
 					Vector lightAng = light->getGlobalAng().toVector();
 					glm::vec3 lightDir( lightAng.x, -lightAng.z, lightAng.y );

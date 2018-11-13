@@ -581,7 +581,7 @@ void Engine::loadResources(const char* folder) {
 		for( Node<String>* node = textureDir.getList().getFirst(); node!=nullptr; node=node->getNext() ) {
 			String& str = node->getData();
 
-			if( str.length() >= 4 && str.get()[str.length()-4] == '.' ) {
+			if( str.length() >= 5 && str.substr(str.length()-5) == ".json" ) {
 				StringBuf<64> name("images/tile/");
 				name.append(str.get());
 				textureResource.dataForString(name.get());
@@ -597,7 +597,7 @@ void Engine::loadResources(const char* folder) {
 		for( Node<String>* node = textureDir.getList().getFirst(); node!=nullptr; node=node->getNext() ) {
 			String& str = node->getData();
 
-			if( str.get()[str.length()-4] == '.' ) {
+			if( str.length() >= 4 && str.get()[str.length()-4] == '.' ) {
 				StringBuf<64> name("images/tile/diffuse/");
 				name.append(str.get());
 				tileDiffuseTextures.loadImage(name.get());
@@ -613,7 +613,7 @@ void Engine::loadResources(const char* folder) {
 		for( Node<String>* node = textureDir.getList().getFirst(); node!=nullptr; node=node->getNext() ) {
 			String& str = node->getData();
 
-			if( str.get()[str.length()-4] == '.' ) {
+			if( str.length() >= 4 && str.get()[str.length()-4] == '.' ) {
 				StringBuf<64> name("images/tile/normal/");
 				name.append(str.get());
 				tileNormalTextures.loadImage(name.get());
@@ -629,7 +629,7 @@ void Engine::loadResources(const char* folder) {
 		for( Node<String>* node = textureDir.getList().getFirst(); node!=nullptr; node=node->getNext() ) {
 			String& str = node->getData();
 
-			if( str.get()[str.length()-4] == '.' ) {
+			if( str.length() >= 4 && str.get()[str.length()-4] == '.' ) {
 				StringBuf<64> name("images/tile/fx/");
 				name.append(str.get());
 				tileEffectsTextures.loadImage(name.get());
@@ -748,7 +748,6 @@ void Engine::dumpResources() {
 	textureResource.dumpCache();
 	textResource.dumpCache();
 	soundResource.dumpCache();
-	shaderResource.dumpCache();
 	animationResource.dumpCache();
 	cubemapResource.dumpCache();
 

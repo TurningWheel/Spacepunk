@@ -6,7 +6,11 @@
 
 Animation::Animation(const char* _name) : Asset(_name) {
 	path = mainEngine->buildPath(_name).get();
+	mainEngine->fmsg(Engine::MSG_DEBUG,"loading animation manifest '%s'...",_name);
 	loaded = FileHelper::readObject(path.get(), *this);
+	if (!loaded) {
+		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load animation manifest '%s'",_name);
+	}
 }
 
 const Animation::entry_t* Animation::findEntry(const char* name) const {

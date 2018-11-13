@@ -20,6 +20,10 @@ public:
 	static const char* defaultNormal;
 	static const char* defaultEffects;
 
+	// save/load this object to a file
+	// @param file interface to serialize with
+	virtual void serialize(FileInterface * file) override;
+
 	// getters & setters
 	virtual const type_t		getType() const			{ return ASSET_TEXTURE; }
 	const ArrayList<Image*>&	getTextures() const		{ return textures; }
@@ -27,4 +31,5 @@ public:
 
 private:
 	ArrayList<Image*> textures;
+	ArrayList<String> textureStrs;
 };

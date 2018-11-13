@@ -1,3 +1,0 @@
-shader = shaders/sector/stencil.gs
-shader = shaders/sector/stencil.vs
-shader = shaders/sector/stencil.fs

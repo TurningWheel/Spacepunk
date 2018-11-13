@@ -11,6 +11,10 @@ public:
 	Cubemap(const char* _name);
 	virtual ~Cubemap();
 
+	// save/load this object to a file
+	// @param file interface to serialize with
+	virtual void serialize(FileInterface * file) override;
+
 	// getters & setters
 	virtual const type_t	getType() const		{ return ASSET_CUBEMAP; }
 	const GLuint			getTexID() const	{ return texid; }
@@ -18,4 +22,7 @@ public:
 private:
 	GLuint texid = 0;
 	SDL_Surface* surfs[6] = { nullptr };
+	String front, back, up, down, right, left;
+
+	bool init();
 };

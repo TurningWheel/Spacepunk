@@ -1,3 +1,0 @@
-shader = shaders/tile/stencil.gs
-shader = shaders/tile/stencil.vs
-shader = shaders/tile/stencil.fs

@@ -8,94 +8,47 @@
 #include "Image.hpp"
 #include "Cubemap.hpp"
 
-Material::Material(const char* _name) : Asset(_name), shader(_name) {
+Material::Material(const char* _name) : Asset(_name) {
 	path = mainEngine->buildPath(_name).get();
-
-	FILE* fp = NULL;
-	mainEngine->fmsg(Engine::MSG_DEBUG,"loading material '%s'...",_name);
-	if( (fp=fopen(path.get(),"rb"))==NULL ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load material '%s'",_name);
-		return;
-	}
-	clearerr(fp);
-
-	for( int line=1; !feof(fp); ++line ) {
-		char buf[1024] = { 0 };
-		if( fgets(buf,1024,fp)==NULL ) {
-			break;
-		}
-
-		// skip empty lines
-		if( buf[0] == '#' || buf[0]=='\n' || buf[0]=='\r' ) {
-			continue;
-		}
-
-		// null terminate the end of the string
-		size_t len = strlen(buf)-1;
-		if( buf[len] == '\n' || buf[len] == '\r' ) {
-			buf[len] = 0;
-			if( len>=1 ) {
-				if( buf[len-1] == '\n' || buf[len-1] == '\r' ) {
-					buf[len-1] = 0;
-				}
-			}
-		}
-
-		// shader
-		if( strncmp( buf, "shader = ", 9 )==0 ) {
-			String filename((char *)(buf+9));
-			shader.addShader(filename.get());
-
-			continue;
-		}
-
-		// standard texture
-		else if( strncmp( buf, "texture = ", 10 )==0 ) {
-			String filename((char *)(buf+10));
-			Image* image = mainEngine->getImageResource().dataForString(filename.get());
-			if( image ) {
-				stdTextures.addNodeLast(image);
-			}
-
-			continue;
-		}
-
-		// glow texture
-		else if( strncmp( buf, "glow = ", 7 )==0 ) {
-			String filename((char *)(buf+7));
-			Image* image = mainEngine->getImageResource().dataForString(filename.get());
-			if( image ) {
-				glowTextures.addNodeLast(image);
-			}
-
-			continue;
-		}
-
-		// cubemap texture
-		else if( strncmp( buf, "cubemap = ", 10 )==0 ) {
-			String filename((char *)(buf+10));
-			Cubemap* cubemap = mainEngine->getCubemapResource().dataForString(filename.get());
-			if( cubemap ) {
-				cubemaps.addNodeLast(cubemap);
-			}
-
-			continue;
-		}
-	}
-
-	fclose(fp);
-
-	shader.link();
-	loaded = true;
+	loaded = FileHelper::readObject(path.get(), *this);
 }
 
 Material::~Material() {
-	stdTextures.removeAll();
-	glowTextures.removeAll();
+}
+
+void Material::serialize(FileInterface* file) {
+	int version = 0;
+	file->property("Material::version", version);
+	file->property("transparent", transparent);
+	file->property("shadow", shadow);
+	file->property("program", shader);
+	file->property("textures", stdTextureStrs);
+	file->property("glowTextures", glowTextureStrs);
+	file->property("cubemaps", cubemapStrs);
+	if (file->isReading()) {
+		for (auto& path : stdTextureStrs) {
+			Image* image = mainEngine->getImageResource().dataForString(path.get());
+			if (image) {
+				stdTextures.push(image);
+			}
+		}
+		for (auto& path : glowTextureStrs) {
+			Image* image = mainEngine->getImageResource().dataForString(path.get());
+			if (image) {
+				glowTextures.push(image);
+			}
+		}
+		for (auto& path : cubemapStrs) {
+			Cubemap* cubemap = mainEngine->getCubemapResource().dataForString(path.get());
+			if (cubemap) {
+				cubemaps.push(cubemap);
+			}
+		}
+	}
 }
 
 void Material::bindTextures(texturekind_t textureKind) {
-	LinkedList<Image*>& images = (textureKind==STANDARD) ? stdTextures : glowTextures;
+	ArrayList<Image*>& images = (textureKind==STANDARD) ? stdTextures : glowTextures;
 	unsigned int textureNum = 0;
 
 	// bind normal textures
@@ -118,15 +71,14 @@ void Material::bindTextures(texturekind_t textureKind) {
 	} else if( images.getSize()==1 ) {
 		glUniform1i(shader.getUniformLocation("gTexture"), 0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D,images.getFirst()->getData()->getTexID());
+		glBindTexture(GL_TEXTURE_2D,images[0]->getTexID());
 		++textureNum;
 	} else if( images.getSize()>1 ) {
-		Node<Image*>* node;
-		for( node=images.getFirst(); node!=nullptr && textureNum < 32; node=node->getNext(), ++textureNum ) {
-			Image* image = node->getData();
+		for( size_t index = 0; index < images.getSize() && textureNum < 32; ++index, ++textureNum ) {
+			Image* image = images[index];
 
 			char buf[32] = { 0 };
-			snprintf(buf,32,"gTexture[%d]",textureNum);
+			snprintf(buf,32,"gTexture[%d]",(int)index);
 
 			glUniform1i(shader.getUniformLocation(buf), textureNum);
 			glActiveTexture(GL_TEXTURE0+textureNum);
@@ -138,14 +90,13 @@ void Material::bindTextures(texturekind_t textureKind) {
 	if( cubemaps.getSize() == 1 ) {
 		glUniform1i(shader.getUniformLocation("gCubemap"), textureNum);
 		glActiveTexture(GL_TEXTURE0 + std::min(textureNum, 31U));
-		glBindTexture(GL_TEXTURE_CUBE_MAP,cubemaps.getFirst()->getData()->getTexID());
+		glBindTexture(GL_TEXTURE_CUBE_MAP,cubemaps[0]->getTexID());
 	} else if( cubemaps.getSize() > 1 ) {
-		Node<Cubemap*>* node;
-		for( node=cubemaps.getFirst(); node!=nullptr && textureNum < 32; node=node->getNext(), ++textureNum ) {
-			Cubemap* cubemap = node->getData();
+		for( size_t index = 0; index < cubemaps.getSize() && textureNum < 32; ++index, ++textureNum ) {
+			Cubemap* cubemap = cubemaps[index];
 
 			char buf[32] = { 0 };
-			snprintf(buf,32,"gCubemap[%d]",textureNum);
+			snprintf(buf,32,"gCubemap[%d]",(int)index);
 
 			glUniform1i(shader.getUniformLocation(buf), textureNum);
 			glActiveTexture(GL_TEXTURE0+textureNum);
