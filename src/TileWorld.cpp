@@ -1895,7 +1895,7 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 	}
 }
 
-static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","0");
+static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","1");
 static Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "2");
 static Cvar cvar_renderCull("render.cull", "accuracy for occlusion culling", "7");
 

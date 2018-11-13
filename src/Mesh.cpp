@@ -713,7 +713,7 @@ void Mesh::SubMesh::readNodeHierarchy(Map<AnimationState>& animations, skincache
 	if( boneMapping.exists(nodeName) ) {
 		unsigned int boneIndex = *boneMapping[nodeName];
 		skin.offsets[boneIndex] = globalTransform;
-		skin.anims[boneIndex] = globalTransform * bones[boneIndex].offset * 16384.f;
+		skin.anims[boneIndex] = globalTransform * bones[boneIndex].offset;
 	}
 
 	for( unsigned int i=0; i < node->mNumChildren; ++i ) {
