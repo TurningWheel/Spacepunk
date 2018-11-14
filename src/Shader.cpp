@@ -170,7 +170,7 @@ void Shader::serialize(FileInterface* file) {
 	file->property("path", name);
 	file->property("defines", defines);
 	if (file->isReading()) {
-		path = path = mainEngine->buildPath(name.get()).get();
+		path = mainEngine->buildPath(name.get()).get();
 		loaded = init();
 	}
 }

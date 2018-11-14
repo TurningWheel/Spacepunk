@@ -286,6 +286,7 @@ else()
 	else()
 		# linux sources
 		add_executable(spacepunk ${GAME_SOURCES})
+		set_target_properties(spacepunk PROPERTIES SUFFIX ".bin")
 
 		target_link_libraries(spacepunk ${SDL2_LIBRARIES} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDLMIXER_LIBRARY} ${SDL2_NET_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2TTF_LIBRARY})
 

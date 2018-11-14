@@ -48,5 +48,6 @@ CMakeFiles/*
 CMakeCache.txt
 Makefile
 *.x86_64
+*.bin
 cmake_install.cmake
 src/CMakeFiles/*

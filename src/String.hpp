@@ -80,6 +80,9 @@ public:
 				return "";
 			}
 		} else {
+			if( str == src || *this == src ) {
+				return str;
+			}
 			size_t srcLen = strlen(src)+1;
 			if( srcLen > size || str == nullptr ) {
 				alloc(srcLen);
