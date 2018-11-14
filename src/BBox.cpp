@@ -18,11 +18,11 @@
 
 const float BBox::collisionEpsilon = .01f;
 
-const char* BBox::meshCapsuleCylinderStr = "assets/editor/bbox/CapsuleCylinder.fbx";
-const char* BBox::meshCapsuleHalfSphereStr = "assets/editor/bbox/CapsuleHalfSphere.fbx";
-const char* BBox::meshConeStr = "assets/editor/bbox/Cone.fbx";
-const char* BBox::meshCylinderStr = "assets/editor/bbox/Cylinder.fbx";
-const char* BBox::meshSphereStr = "assets/editor/bbox/Sphere.fbx";
+const char* BBox::meshCapsuleCylinderStr = "assets/editor/bbox/CapsuleCylinder.FBX";
+const char* BBox::meshCapsuleHalfSphereStr = "assets/editor/bbox/CapsuleHalfSphere.FBX";
+const char* BBox::meshConeStr = "assets/editor/bbox/Cone.FBX";
+const char* BBox::meshCylinderStr = "assets/editor/bbox/Cylinder.FBX";
+const char* BBox::meshSphereStr = "assets/editor/bbox/Sphere.FBX";
 const char* BBox::materialStr = "assets/editor/bbox/material.json";
 
 const char* BBox::shapeStr[SHAPE_MAX] = {

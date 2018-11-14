@@ -17,7 +17,7 @@
 #include "Client.hpp"
 #include "Mixer.hpp"
 
-const char* Speaker::meshStr = "assets/editor/speaker/speaker.fbx";
+const char* Speaker::meshStr = "assets/editor/speaker/speaker.FBX";
 const char* Speaker::materialStr = "assets/editor/speaker/material.json";
 
 Speaker::Speaker(Entity& _entity, Component* _parent) :

@@ -18,7 +18,7 @@
 #include "BBox.hpp"
 #include "Mesh.hpp"
 
-const char* Camera::meshStr = "assets/editor/camera/camera.fbx";
+const char* Camera::meshStr = "assets/editor/camera/camera.FBX";
 const char* Camera::materialStr = "assets/editor/camera/material.json";
 
 Camera::Camera(Entity& _entity, Component* _parent) :

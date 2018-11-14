@@ -1517,7 +1517,7 @@ void Editor::initWidgets() {
 
 		Model* model = widget->addComponent<Model>();
 		model->setName("model");
-		model->setMesh("assets/editor/gizmo/gizmo_scale_3-axis.fbx");
+		model->setMesh("assets/editor/gizmo/gizmo_scale_3-axis.FBX");
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
@@ -1544,7 +1544,7 @@ void Editor::initWidgets() {
 
 		Model* model = widgetX->addComponent<Model>();
 		model->setName("model");
-		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.fbx");
+		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.FBX");
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
@@ -1571,7 +1571,7 @@ void Editor::initWidgets() {
 
 		Model* model = widgetXY->addComponent<Model>();
 		model->setName("model");
-		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.fbx");
+		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.FBX");
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
@@ -1598,7 +1598,7 @@ void Editor::initWidgets() {
 
 		Model* model = widgetY->addComponent<Model>();
 		model->setName("model");
-		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.fbx");
+		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.FBX");
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
@@ -1625,7 +1625,7 @@ void Editor::initWidgets() {
 
 		Model* model = widgetYZ->addComponent<Model>();
 		model->setName("model");
-		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.fbx");
+		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.FBX");
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
@@ -1652,7 +1652,7 @@ void Editor::initWidgets() {
 
 		Model* model = widgetZ->addComponent<Model>();
 		model->setName("model");
-		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.fbx");
+		model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.FBX");
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
@@ -1679,7 +1679,7 @@ void Editor::initWidgets() {
 
 		Model* model = widgetZX->addComponent<Model>();
 		model->setName("model");
-		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.fbx");
+		model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.FBX");
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
@@ -8949,8 +8949,8 @@ void Editor::updateGUI(Frame& gui) {
 				if( entity->getName().length() == 7 ) {
 					const String str = model->getMesh();
 
-					if( str != "assets/editor/gizmo/gizmo_translate_1-axis.fbx" ) {
-						model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.fbx");
+					if( str != "assets/editor/gizmo/gizmo_translate_1-axis.FBX" ) {
+						model->setMesh("assets/editor/gizmo/gizmo_translate_1-axis.FBX");
 					}
 				}
 
@@ -8958,8 +8958,8 @@ void Editor::updateGUI(Frame& gui) {
 				if( entity->getName().length() == 8 ) {
 					const String str = model->getMesh();
 
-					if( str != "assets/editor/gizmo/gizmo_translate_2-axis.fbx" ) {
-						model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.fbx");
+					if( str != "assets/editor/gizmo/gizmo_translate_2-axis.FBX" ) {
+						model->setMesh("assets/editor/gizmo/gizmo_translate_2-axis.FBX");
 					}
 				}
 			}
@@ -8972,8 +8972,8 @@ void Editor::updateGUI(Frame& gui) {
 				if( entity->getName().length() == 7 ) {
 					const String str = model->getMesh();
 
-					if( str != "assets/editor/gizmo/gizmo_rotate_1-axis.fbx" ) {
-						model->setMesh("assets/editor/gizmo/gizmo_rotate_1-axis.fbx");
+					if( str != "assets/editor/gizmo/gizmo_rotate_1-axis.FBX" ) {
+						model->setMesh("assets/editor/gizmo/gizmo_rotate_1-axis.FBX");
 					}
 				}
 			}
@@ -8984,8 +8984,8 @@ void Editor::updateGUI(Frame& gui) {
 				if( entity->getName().length() == 6 ) {
 					const String str = model->getMesh();
 
-					if( str != "assets/editor/gizmo/gizmo_scale_3-axis.fbx" ) {
-						model->setMesh("assets/editor/gizmo/gizmo_scale_3-axis.fbx");
+					if( str != "assets/editor/gizmo/gizmo_scale_3-axis.FBX" ) {
+						model->setMesh("assets/editor/gizmo/gizmo_scale_3-axis.FBX");
 					}
 				}
 
@@ -8993,8 +8993,8 @@ void Editor::updateGUI(Frame& gui) {
 				if( entity->getName().length() == 7 ) {
 					const String str = model->getMesh();
 
-					if( str != "assets/editor/gizmo/gizmo_scale_1-axis.fbx" ) {
-						model->setMesh("assets/editor/gizmo/gizmo_scale_1-axis.fbx");
+					if( str != "assets/editor/gizmo/gizmo_scale_1-axis.FBX" ) {
+						model->setMesh("assets/editor/gizmo/gizmo_scale_1-axis.FBX");
 					}
 				}
 
@@ -9002,8 +9002,8 @@ void Editor::updateGUI(Frame& gui) {
 				if( entity->getName().length() == 8 ) {
 					const String str = model->getMesh();
 
-					if( str != "assets/editor/gizmo/gizmo_scale_2-axis.fbx" ) {
-						model->setMesh("assets/editor/gizmo/gizmo_scale_2-axis.fbx");
+					if( str != "assets/editor/gizmo/gizmo_scale_2-axis.FBX" ) {
+						model->setMesh("assets/editor/gizmo/gizmo_scale_2-axis.FBX");
 					}
 				}
 			}

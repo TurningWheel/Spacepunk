@@ -44,3 +44,9 @@ gmon.out
 *.vspx
 *.psess
 *.etl
+CMakeFiles/*
+CMakeCache.txt
+Makefile
+*.x86_64
+cmake_install.cmake
+src/CMakeFiles/*

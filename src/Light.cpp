@@ -19,7 +19,7 @@
 #include "Tile.hpp"
 #include "TileWorld.hpp"
 
-const char* Light::meshStr = "assets/editor/light/light.fbx";
+const char* Light::meshStr = "assets/editor/light/light.FBX";
 const char* Light::materialStr = "assets/editor/light/material.json";
 
 const char* Light::shapeStr[SHAPE_NUM] = {
