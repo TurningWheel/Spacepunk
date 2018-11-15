@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Main.hpp"
-#include "LinkedList.hpp"
 #include "String.hpp"
+#include "Map.hpp"
 
 class Input {
 public:
@@ -62,6 +62,29 @@ public:
 		float analog = 0.f;
 		bool binary = false;
 		bool consumed = false;
+
+		// bind type
+		enum bindtype_t {
+			INVALID,
+			KEYBOARD,
+			CONTROLLER_AXIS,
+			CONTROLLER_BUTTON,
+			MOUSE_BUTTON,
+			NUM
+		};
+		bindtype_t type = INVALID;
+
+		// keyboard binding info
+		SDL_Scancode scancode = SDL_Scancode::SDL_SCANCODE_UNKNOWN;
+
+		// gamepad binding info
+		SDL_GameController* pad = nullptr;
+		SDL_GameControllerAxis padAxis = SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_INVALID;
+		SDL_GameControllerButton padButton = SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_INVALID;
+		bool padAxisNegative = false;
+
+		// mouse button info
+		int mouseButton = 0;
 	};
 
 	// gets the analog value of a particular input binding
@@ -111,9 +134,13 @@ private:
 
 	// converts the given input to a boolean value
 	// @return the converted value
-	static bool binaryOf(const char* input);
+	static bool binaryOf(binding_t& binding);
 
 	// converts the given input to a float value
 	// @return the converted value
-	static float analogOf(const char* input);
+	static float analogOf(binding_t& binding);
+
+	// map of scancodes to input names
+	static Map<SDL_Scancode> scancodeNames;
+	static SDL_Scancode getScancodeFromName(const char* name);
 };

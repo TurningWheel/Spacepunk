@@ -244,16 +244,24 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	}
 
 	// render list entries
-	int i;
-	Node<entry_t*>* node;
-	for( node=list.getFirst(), i=0; node!=nullptr; node=node->getNext(), ++i ) {
+	int listStart = std::min( std::max( 0, actualSize.y / entrySize ), (int)list.getSize() - 1 );
+	int i = listStart;
+	Node<entry_t*>* node = node=list.nodeForIndex(listStart);
+	for( ; node!=nullptr; node=node->getNext(), ++i ) {
 		entry_t& entry = *node->getData();
+		if (entry.text.empty()) {
+			continue;
+		}
+
+		// get rendered text
+		Text* text = mainEngine->getTextResource().dataForString(entry.text.get());
+		if (text == nullptr) {
+			continue;
+		}
 
 		// get the size of the rendered text
-		int textSizeW, textSizeH;
-		TTF_SizeUTF8(renderer.getMonoFont(),entry.text.get(),&textSizeW,&textSizeH);
-		textSizeW += Text::outlineSize*2;
-		textSizeH += Text::outlineSize*2;
+		int textSizeW = text->getWidth();
+		int textSizeH = text->getHeight();
 
 		Rect<int> pos;
 		pos.x = _size.x + border - actualSize.x;
@@ -274,7 +282,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _size.y + _size.h ) );
 
 		if( src.w<=0 || src.h<=0 || dest.w<=0 || dest.h<=0 )
-			continue;
+			break;
 
 		if( entry.pressed ) {
 			renderer.drawRect( &dest, color*2.f );
@@ -282,12 +290,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			renderer.drawRect( &dest, color*1.5f );
 		}
 
-		if( !entry.text.empty() ) {
-			Text* text = mainEngine->getTextResource().dataForString(entry.text.get());
-			if( text ) {
-				text->drawColor( src, dest, entry.color );
-			}
-		}
+		text->drawColor( src, dest, entry.color );
 	}
 
 	// draw buttons
