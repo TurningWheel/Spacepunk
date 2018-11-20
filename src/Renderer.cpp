@@ -135,7 +135,9 @@ int Renderer::initVideo() {
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-	clearBuffers();
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	swapWindow();
 
 	mainEngine->fmsg(Engine::MSG_INFO,"display changed successfully.");

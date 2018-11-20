@@ -153,20 +153,17 @@ void Light::load(FILE* fp) {
 void Light::serialize(FileInterface * file) {
 	Component::serialize(file);
 
-	Uint32 version = 1;
+	Uint32 version = 2;
 	file->property("Light::version", version);
 
-	switch( version ) {
-	case 0:
-		file->property("color", color);
-		file->property("intensity", intensity);
-		file->property("radius", radius);
-		break;
-	default:
-		file->property("color", color);
-		file->property("intensity", intensity);
-		file->property("radius", radius);
+	file->property("color", color);
+	file->property("intensity", intensity);
+	file->property("radius", radius);
+	if (version >= 1) {
 		file->property("shape", shape);
-		break;
+	}
+	if (version >= 2) {
+		file->property("shadow", shadow);
+		file->property("arc", arc);
 	}
 }

@@ -156,7 +156,11 @@ void Camera::drawCube( const glm::mat4& transform, const glm::vec4& color ) {
 }
 
 void Camera::drawLine3D( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
-	line3D.draw(*this,width,src,dest,color);
+	line3D.drawLine(*this,width,src,dest,color);
+}
+
+void Camera::drawLaser( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
+	line3D.drawLaser(*this,width,src,dest,color);
 }
 
 void Camera::draw(Camera& camera, Light* light) {

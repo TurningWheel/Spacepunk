@@ -46,12 +46,16 @@ public:
 	ArrayList<Chunk*>&	getChunksShadow()			{ return chunksShadow; }
 	const shape_t&		getShape() const			{ return shape; }
 	const bool			isChosen() const			{ return chosen; }
+	const float			getArc() const				{ return arc; }
+	const bool			isShadow() const			{ return shadow; }
 
 	void	setColor(const Vector& _color)			{ color = _color; }
 	void	setIntensity(const float _intensity)	{ intensity = _intensity; }
 	void	setRadius(const float _radius)			{ radius = _radius; updateNeeded = true; }
 	void	setChosen(const bool _chosen)			{ chosen = _chosen; }
 	void	setShape(const shape_t& _shape)			{ shape = _shape; }
+	void	setArc(const float _arc)				{ arc = _arc; }
+	void	setShadow(const bool _shadow)			{ shadow = _shadow; }
 
 	// updates matrices
 	virtual void update() override;
@@ -88,5 +92,7 @@ protected:
 	Vector color = Vector(1.f);
 	float intensity = 1.f;
 	float radius = 512.f;
+	float arc = 70.f;
+	bool shadow = true;
 	shape_t shape = SHAPE_SPHERE;
 };

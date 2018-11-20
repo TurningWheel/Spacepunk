@@ -588,9 +588,7 @@ static int console_serverDisconnect(int argc, const char** argv) {
 static int console_serverReset(int argc, const char** argv) {
 	Server* server = mainEngine->getLocalServer();
 	if( server ) {
-		mainEngine->setInputStr(nullptr);
 		mainEngine->setPlayTest(false);
-		mainEngine->dumpResources();
 		server->reset();
 		return 0;
 	} else {

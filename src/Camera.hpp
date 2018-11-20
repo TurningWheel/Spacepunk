@@ -107,6 +107,13 @@ public:
 	// @param color: the color of the line to draw
 	void drawLine3D( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color );
 
+	// draws a laser in the current camera view
+	// @param width: the width of the laser in pixels
+	// @param src: the starting point of the laser in world space
+	// @param dest: the ending point of the laser in world space
+	// @param color: the color of the laser to draw
+	void drawLaser( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color );
+
 	// marks a spot on the screen to draw a point
 	// @param x: the x-coord of the point
 	// @param y: the y-coord of the point

@@ -146,16 +146,20 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_UPDATE));
 	if( _world.isClientObj() ) {
 		if( clientID == invalidID ) {
-			// this means the player belongs to us.
-
 			Rect<Sint32> rect;
 			rect.x = 0;
 			rect.y = 0;
 			rect.w = mainEngine->getXres();
 			rect.h = mainEngine->getYres();
 			camera->setWin(rect);
-
-			//entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_GENIUS)); // not sure why this isn't getting set???
+		} else {
+			// we don't own this player and shouldn't see their camera
+			Rect<Sint32> rect;
+			rect.x = 0;
+			rect.y = 0;
+			rect.w = 0;
+			rect.h = 0;
+			camera->setWin(rect);
 		}
 
 		mainEngine->fmsg(Engine::MSG_INFO,"Client spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
@@ -225,7 +229,7 @@ void Player::putInCrouch(bool crouch) {
 	}
 }
 
-Cvar cvar_maxHTurn("player.turn.horizontal", "maximum turn range for player, horizontal", "45.0");
+Cvar cvar_maxHTurn("player.turn.horizontal", "maximum turn range for player, horizontal", "0.0");
 Cvar cvar_maxVTurn("player.turn.vertical", "maximum turn range for player, vertical", "90.0");
 
 void Player::control() {
@@ -497,7 +501,9 @@ void Player::updateCamera() {
 			rect.h = mainEngine->getYres() / 2;
 		}
 		camera->setWin(rect);
-		camera->translate(Vector(16.f, 4.f, 0.f));
+		if( bone.valid ) {
+			camera->translate(Vector(16.f, 4.f, 0.f));
+		}
 		camera->update();
 
 		/*if( bone.valid ) {

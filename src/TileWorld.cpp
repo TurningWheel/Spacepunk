@@ -2057,6 +2057,11 @@ void TileWorld::draw() {
 			continue;
 		}
 
+		// skip cameras whose window is too small
+		if( camera->getWin().w <= 0 || camera->getWin().h <= 0 ) {
+			continue;
+		}
+
 		// clear the window area
 		glClear(GL_DEPTH_BUFFER_BIT);
 		Rect<int> backgroundRect = camera->getWin();
@@ -2136,7 +2141,7 @@ void TileWorld::draw() {
 				glDepthFunc(GL_LESS);
 				glDrawBuffer(GL_NONE);
 				if( cvar_shadowsEnabled.toInt() ) {
-					if( light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) ) {
+					if( light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow() ) {
 						camera->setDrawMode(Camera::DRAW_STENCIL);
 						if( light->getChunksShadow().getSize() > 0 ) {
 							drawSceneObjects(*camera,light,light->getChunksShadow());

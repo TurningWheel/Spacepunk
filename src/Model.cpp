@@ -201,9 +201,11 @@ void Model::draw(Camera& camera, Light* light) {
 	bool silhouette = false;
 	if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
 		camera.setDrawMode(Camera::DRAW_DEPTH);
-		glClearStencil(0);
-		glClear(GL_STENCIL_BUFFER_BIT);
 		glEnable(GL_STENCIL_TEST);
+		glDisable(GL_DEPTH_TEST);
+		glDepthMask(GL_FALSE);
+		glDrawBuffer(GL_NONE);
+		glClear(GL_STENCIL_BUFFER_BIT);
 		glStencilFunc(GL_ALWAYS, 1, -1);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		silhouette = true;
@@ -279,6 +281,8 @@ void Model::draw(Camera& camera, Light* light) {
 
 		// silhouette requires a second pass after the stencil op
 		if (silhouette) {
+			glDrawBuffer(GL_BACK);
+			glEnable(GL_DEPTH_TEST);
 			glStencilFunc(GL_NOTEQUAL, 1, -1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			camera.setDrawMode(Camera::DRAW_SILHOUETTE);
@@ -287,6 +291,9 @@ void Model::draw(Camera& camera, Light* light) {
 			if( shader ) {
 				mesh->draw(camera, this, skincache, shader);
 			}
+			glDepthMask(GL_TRUE);
+			glDisable(GL_STENCIL_TEST);
+			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
 		}
 	}
 }
