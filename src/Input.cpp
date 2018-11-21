@@ -259,9 +259,8 @@ void Input::rebind(Input::bindingenum_t binding, const char* input) {
 	}
 	else if( len >= 5 && strncmp(input, "Mouse", 5) == 0 ) {
 		// mouse
-		char* button = nullptr;
-		Uint32 index = strtol((const char*)(input+5), &button, 10);
-		int result = min( max( 0, (int)strtol(button, nullptr, 10) ), 4 );
+		Uint32 index = strtol((const char*)(input+5), nullptr, 10);
+		int result = min( max( 0U, index ), 4U );
 
 		bindings[binding].type = binding_t::MOUSE_BUTTON;
 		bindings[binding].mouseButton = result;

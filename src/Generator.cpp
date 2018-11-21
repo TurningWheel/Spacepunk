@@ -165,7 +165,11 @@ void Generator::initCells() {
 	Sint32 size = width * height;
 
 	tiles.resize(size);
-	rand.seedValue(options.seed);
+	if (options.seed) {
+		rand.seedValue(options.seed);
+	} else {
+		rand.seedTime();
+	}
 
 	if (options.dungeonLayout == "Round") {
 		roundMask();

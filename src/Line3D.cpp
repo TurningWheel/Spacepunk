@@ -71,6 +71,10 @@ void Line3D::drawLaser(Camera& camera, const float width, const glm::vec3& src, 
 }
 
 void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color, const char* material) {
+	if (width < 0.f) {
+		return;
+	}
+
 	// get difference of vectors
 	glm::vec3 diff(0.f);
 	diff.x = dest.x-src.x;
@@ -81,7 +85,7 @@ void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const
 	const glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(src.x,-src.z,src.y));
 
 	// setup viewproj matrix
-	const glm::mat4 viewProjMatrix = camera.getProjViewMatrix() * modelMatrix;
+	const glm::mat4 viewProjMatrix = camera.getProjViewMatrix();
 
 	// setup modelview matrix
 	const glm::mat4 modelViewMatrix = camera.getViewMatrix() * modelMatrix;

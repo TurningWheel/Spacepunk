@@ -27,7 +27,8 @@
 	},
 	"textures": [],
 	"glowTextures": [
-		"images/system/laser.png"
+		"#images/system/laser.png",
+		"#images/system/laserCap.png"
 	],
 	"cubemaps": []
 }

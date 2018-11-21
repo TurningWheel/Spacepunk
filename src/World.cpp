@@ -178,6 +178,7 @@ void World::selectEntities(const bool b) {
 
 const World::hit_t World::lineTrace( const Vector& origin, const Vector& dest ) {
 	hit_t emptyResult;
+	emptyResult.pos = dest;
 
 	LinkedList<hit_t> list;
 	lineTraceList(origin, dest, list);
@@ -324,6 +325,18 @@ void World::process() {
 		}
 	}
 
+	// update lasers
+	for (size_t c = 0; c < lasers.getSize(); ++c) {
+		auto& laser = lasers[c];
+		if (laser.life > 0.f) {
+			laser.life -= 1.f;
+			if (laser.life <= 0.f) {
+				lasers.remove(c);
+				--c;
+			}
+		}
+	}
+
 	// iterate through entities
 	for( Uint32 c=0; c<World::numBuckets; ++c ) {
 		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
@@ -365,4 +378,16 @@ void World::process() {
 	//if( !mainEngine->isEditorRunning() ) {
 	//	bulletDynamicsWorld->stepSimulation(1.f / 60.f, 1);
 	//}
+}
+
+World::laser_t& World::addLaser(const Vector& start, const Vector& end, const glm::vec4& color, float size, float life) {
+	laser_t laser;
+	laser.start = start;
+	laser.end = end;
+	laser.color = color;
+	laser.size = size;
+	laser.life = life;
+	laser.maxLife = life;
+	lasers.push(laser);
+	return lasers.peek();
 }

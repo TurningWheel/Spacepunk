@@ -82,6 +82,8 @@ void Player::setEntity(Entity* _entity) {
 		feet = entity->findComponentByName<Model>("Feet");
 		bbox = entity->findComponentByName<BBox>("BBox");
 		camera = entity->findComponentByName<Camera>("Camera");
+		rTool = entity->findComponentByName<Model>("RightTool");
+		lTool = entity->findComponentByName<Model>("LeftTool");
 		if( !models || !bbox || !camera ) {
 			mainEngine->fmsg(Engine::MSG_WARN,"failed to setup player for third party client: missing bodypart");
 		}
@@ -125,6 +127,8 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	feet = entity->findComponentByName<Model>("Feet");
 	bbox = entity->findComponentByName<BBox>("BBox");
 	camera = entity->findComponentByName<Camera>("Camera");
+	rTool = entity->findComponentByName<Model>("RightTool");
+	lTool = entity->findComponentByName<Model>("LeftTool");
 	if( !models || !bbox || !camera ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: missing bodypart");
 		entity->remove();
@@ -442,6 +446,16 @@ void Player::control() {
 	entity->setVel(vel);
 	entity->setRot(rot);
 	entity->update();
+
+	// using hand items (shooting)
+	if (input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
+		lTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 0.f);
+	}
+	if (input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
+		rTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 0.f);
+	}
+	input.consumeBinaryToggle(Input::bindingenum_t::HAND_LEFT);
+	input.consumeBinaryToggle(Input::bindingenum_t::HAND_RIGHT);
 }
 
 void Player::updateCamera() {

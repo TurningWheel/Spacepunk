@@ -1033,3 +1033,12 @@ void Entity::def_t::serialize(FileInterface * file) {
 		file->property("editor", exposedInEditor);
 	file->property("entity", entity);
 }
+
+bool Entity::isLocalPlayer() {
+	if (player) {
+		if (player->getClientID() == Player::invalidID) {
+			return true;
+		}
+	}
+	return false;
+}

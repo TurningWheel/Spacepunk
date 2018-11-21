@@ -397,6 +397,10 @@ public:
 	// @return true if the async pathfinding task has finished yet, false if the pathfinding task has not finished yet
 	bool pathFinished();
 
+	// check if this entity is a player owned by this client
+	// @return true if the entity is a player from this client, otherwise false
+	bool isLocalPlayer();
+
 protected:
 	Node<Entity*>* node			= nullptr;	// node to the world entity list
 	World* world				= nullptr;	// parent world object

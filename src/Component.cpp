@@ -750,7 +750,7 @@ void Component::serialize(FileInterface * file) {
 	file->property("lAng", lAng);
 	file->property("lScale", lScale);
 	serializeComponents(file);
-}	
+}
 
 void Component::serializeComponents(FileInterface* file) {
 	if (file->isReading()) {
@@ -797,4 +797,15 @@ void Component::serializeComponents(FileInterface* file) {
 		}
 		file->endArray();
 	}
+}
+
+void Component::shootLaser(const WideVector& color, float size, float life) {
+	glm::mat4 mat = gMat;
+	Vector start = Vector(mat[3].x, mat[3].z, -mat[3].y);
+	mat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
+	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 1000.f;
+	World* world = entity->getWorld();
+	World::hit_t hit = world->lineTrace(start, end);
+	end = hit.pos;
+	world->addLaser(start, end, color, size, life);
 }

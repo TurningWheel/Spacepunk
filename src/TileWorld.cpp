@@ -2172,6 +2172,17 @@ void TileWorld::draw() {
 		glDepthFunc(GL_LEQUAL);
 		drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
 
+		// render lasers
+		for (auto& laser : lasers) {
+			if (laser.maxLife > 0.f) {
+				glm::vec4 color = laser.color;
+				color.a *= laser.life / laser.maxLife;
+				camera->drawLaser(laser.size, laser.start, laser.end, color);
+			} else {
+				camera->drawLaser(laser.size, laser.start, laser.end, laser.color);
+			}
+		}
+
 		// render triangle lines
 		if( cvar_showVerts.toInt() ) {
 			camera->setDrawMode(Camera::DRAW_TRIANGLES);
