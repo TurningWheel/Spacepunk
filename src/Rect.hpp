@@ -50,4 +50,20 @@ struct Rect {
 		file->property("w", x);
 		file->property("h", x);
 	}
+
+	// exposes this rect type to a script
+	// @param lua The script engine to expose to
+	// @param name The type name in lua
+	static void exposeToScript(lua_State* lua, const char* name) {
+		luabridge::getGlobalNamespace(lua)
+			.beginClass<Rect<T>>(name)
+			.addConstructor<void (*)(T, T, T, T)>()
+			.addData("x", &Rect<T>::x, true)
+			.addData("y", &Rect<T>::y, true)
+			.addData("w", &Rect<T>::w, true)
+			.addData("h", &Rect<T>::h, true)
+			.addFunction("containsPoint", &Rect<T>::containsPoint)
+			.endClass()
+		;
+	}
 };

@@ -195,6 +195,9 @@ void Script::exposeEngine() {
 	}
 
 	exposeString();
+
+	Rect<Sint32>::exposeToScript(lua, "RectSint32");
+	Rect<Uint32>::exposeToScript(lua, "RectUint32");
 }
 
 void Script::exposeFrame() {
@@ -588,6 +591,7 @@ void Script::exposeEntity() {
 		.addFunction("getCurrentTileX", &Entity::getCurrentTileX)
 		.addFunction("getCurrentTileY", &Entity::getCurrentTileY)
 		.addFunction("getCurrentTileZ", &Entity::getCurrentTileZ)
+		.addFunction("isLocalPlayer", &Entity::isLocalPlayer)
 		.endClass()
 	;
 
