@@ -4,7 +4,7 @@
 
 #include "Main.hpp"
 #include "String.hpp"
-#include "LinkedList.hpp"
+#include "Map.hpp"
 
 // console variable
 struct Cvar {
@@ -12,7 +12,7 @@ public:
 	Cvar(const char* _name, const char* _desc, const char* _value);
 	virtual ~Cvar() {}
 
-	static LinkedList<Cvar*>& getList();
+	static Map<Cvar*>& getMap();
 
 	int toInt() {
 		return strtol(value.get(), nullptr, 10);
@@ -35,7 +35,7 @@ public:
 	Ccmd(const char* _name, const char* _desc, int (*_func)(int, const char**));
 	virtual ~Ccmd() {}
 
-	static LinkedList<Ccmd*>& getList();
+	static Map<Ccmd*>& getMap();
 
 	String name;
 	String desc;

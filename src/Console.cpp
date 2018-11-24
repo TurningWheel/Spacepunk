@@ -7,21 +7,21 @@
 #pragma warning(disable: 4073) // initializers put in library initialization area
 #endif
 #pragma init_seg(lib)
-static LinkedList<Cvar*> cvars;
-static LinkedList<Ccmd*> ccmds;
+static Map<Cvar*> cvars;
+static Map<Ccmd*> ccmds;
 #else
-static LinkedList<Cvar*> cvars __attribute__ ((init_priority (101)));
-static LinkedList<Ccmd*> ccmds __attribute__ ((init_priority (102)));
+static Map<Cvar*> cvars __attribute__ ((init_priority (101)));
+static Map<Ccmd*> ccmds __attribute__ ((init_priority (102)));
 #endif
 
 Cvar::Cvar(const char* _name, const char* _desc, const char* _value) {
 	name = _name;
 	desc = _desc;
 	value = _value;
-	cvars.addNodeLast(this);
+	cvars.insert(_name, this);
 }
 
-LinkedList<Cvar*>& Cvar::getList() {
+Map<Cvar*>& Cvar::getMap() {
 	return cvars;
 }
 
@@ -29,9 +29,9 @@ Ccmd::Ccmd(const char* _name, const char* _desc, int (*_func)(int, const char**)
 	name = _name;
 	desc = _desc;
 	func = _func;
-	ccmds.addNodeLast(this);
+	ccmds.insert(_name, this);
 }
 
-LinkedList<Ccmd*>& Ccmd::getList() {
+Map<Ccmd*>& Ccmd::getMap() {
 	return ccmds;
 }

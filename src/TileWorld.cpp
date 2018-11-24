@@ -1895,8 +1895,8 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 	}
 }
 
-static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","1");
-static Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "2");
+static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","0");
+static Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "3");
 static Cvar cvar_renderCull("render.cull", "accuracy for occlusion culling", "7");
 
 void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<Chunk*>& chunkDrawList) {
@@ -1966,18 +1966,20 @@ void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<C
 	}
 
 	// draw entities
-	if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
-		for( auto chunk : chunkDrawList ) {
-			for( auto entity : chunk->getEPopulation() ) {
-				// in silhouette mode, skip unhighlighted or unselected actors
-				if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
-					if( !entity->isHighlighted() && entity->getUID() != highlightedObj ) {
-						continue;
+	if( camera.getDrawMode() != Camera::DRAW_STENCIL || cvar_shadowsEnabled.toInt()&1 ) {
+		if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
+			for( auto chunk : chunkDrawList ) {
+				for( auto entity : chunk->getEPopulation() ) {
+					// in silhouette mode, skip unhighlighted or unselected actors
+					if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
+						if( !entity->isHighlighted() && entity->getUID() != highlightedObj ) {
+							continue;
+						}
 					}
-				}
 
-				// draw the entity
-				entity->draw(camera,light);
+					// draw the entity
+					entity->draw(camera,light);
+				}
 			}
 		}
 	}
@@ -1991,6 +1993,8 @@ void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<C
 	glActiveTexture(GL_TEXTURE0);
 	ShaderProgram::unmount();
 }
+
+Cvar cvar_renderFullbright("render.fullbright", "replaces all lights with camera-based illumination", "0");
 
 void TileWorld::draw() {
 	Client* client = mainEngine->getLocalClient();
@@ -2119,7 +2123,7 @@ void TileWorld::draw() {
 		glDrawBuffer(GL_NONE);
 		drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
 
-		if( client->isEditorActive() && showTools ) {
+		if( (client->isEditorActive() && showTools) || cvar_renderFullbright.toInt() ) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
 			glDrawBuffer(GL_BACK);

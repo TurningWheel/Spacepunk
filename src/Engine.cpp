@@ -134,14 +134,14 @@ static int console_help(int argc, const char** argv) {
 	}
 	size_t len = strlen(search);
 
-	for( Node<Cvar*>* node = Cvar::getList().getFirst(); node != nullptr; node = node->getNext() ) {
-		Cvar* cvar = node->getData();
+	for( auto& pair : Cvar::getMap() ) {
+		Cvar* cvar = pair.b;
 		if( strncmp(search, cvar->name, len) == 0 ) {
 			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", cvar->name.get(), cvar->desc.get());
 		}
 	}
-	for( Node<Ccmd*>* node = Ccmd::getList().getFirst(); node != nullptr; node = node->getNext() ) {
-		Ccmd* ccmd = node->getData();
+	for( auto& pair : Ccmd::getMap() ) {
+		Ccmd* ccmd = pair.b;
 		if( strncmp(search, ccmd->name, len) == 0 ) {
 			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", ccmd->name.get(), ccmd->desc.get());
 		}
@@ -278,41 +278,29 @@ void Engine::commandLine(const int argc, const char **argv) {
 				fmsg(MSG_WARN,"unknown command: '%s'", arg);
 			} else {
 				// search ccmds for a match
-				bool foundCcmd = false;
-				for( auto& ccmd : Ccmd::getList() ) {
-					if( strncmp(ccmd->name, token, 128) == 0 ) {
-						int argc = 0;
-						const char** argv = new const char*[10];
-						while( token && argc<10 ) {
-							token = strtok(nullptr, " ");
-							if( token ) {
-								argv[argc] = token;
-								++argc;
-							}
+				Ccmd** ccmd = Ccmd::getMap().find(token);
+				if( ccmd ) {
+					int argc = 0;
+					const char** argv = new const char*[10];
+					while( token && argc<10 ) {
+						token = strtok(nullptr, " ");
+						if( token ) {
+							argv[argc] = token;
+							++argc;
 						}
-						ccmd->func(argc, argv);
-						delete[] argv;
-						foundCcmd = true;
-						break;
 					}
-				}
-				if( foundCcmd ) {
+					(*ccmd)->func(argc, argv);
+					delete[] argv;
 					continue;
 				}
 
 				// search cvars for a match
-				bool foundCvar = false;
-				for( auto& cvar : Cvar::getList() ) {
-					if( strncmp(cvar->name, token, 128) == 0 ) {
-						foundCvar = true;
-						if( strlen(arg) > strlen(token) ) {
-							cvar->value = (const char*)(arg + strlen(token) + 1);
-						}
-						fmsg(MSG_NOTE,"%s = %s",cvar->name.get(),cvar->value.get());
-						break;
+				Cvar** cvar = Cvar::getMap().find(token);
+				if (cvar) {
+					if( strlen(arg) > strlen(token) ) {
+						(*cvar)->value = (const char*)(arg + strlen(token) + 1);
 					}
-				}
-				if( foundCvar ) {
+					fmsg(MSG_NOTE,"%s = %s",(*cvar)->name.get(),(*cvar)->value.get());
 					continue;
 				}
 			}
