@@ -748,34 +748,25 @@ void Mesh::SubMesh::calcInterpolatedPosition(aiVector3D& out, Map<AnimationState
 
 		if( anim.getLength() > 1.f ) {
 			if( anim.isLoop() || anim.getTicks() < anim.getLength() ) {
-				float timeBeg = anim.getBegin();
-				float timeCur = anim.getBegin() + fmod(anim.getTicks(), anim.getLength());
-				float timeEnd = anim.getEnd();
-				unsigned int indexBeg = findPosition(timeBeg, nodeAnim);
-				unsigned int indexCur = findPosition(timeCur, nodeAnim);
-				unsigned int indexEnd = findPosition(timeEnd, nodeAnim);
-				unsigned int indexNext = indexCur;
-				if( indexCur == indexEnd ) {
-					indexNext = indexBeg;
-				} else {
-					++indexNext;
-				}
-
-				float deltaTime = (float)(nodeAnim->mPositionKeys[indexNext].mTime - nodeAnim->mPositionKeys[indexCur].mTime);
-				float factor = (timeCur - (float)nodeAnim->mPositionKeys[indexCur].mTime) / deltaTime;
+				float timeCur = anim.getBegin() + anim.getTicks();
+				float timeNext = anim.isLoop() ?
+					anim.getBegin() + fmod(anim.getTicks() + anim.getTicksRate(), anim.getLength()) :
+					anim.getBegin() + anim.getTicks() + anim.getTicksRate();
+				unsigned int indexCur = (unsigned int)(timeCur / 2.f);
+				unsigned int indexNext = (unsigned int)(timeNext / 2.f);
 				const aiVector3D& start = nodeAnim->mPositionKeys[indexCur].mValue;
 				const aiVector3D& end = nodeAnim->mPositionKeys[indexNext].mValue;
 				aiVector3D delta = end - start;
-				out += (start + factor * delta) * weight;
+				out += (start + delta * 0.5f) * weight;
 			} else {
 				float timeEnd = anim.getEnd();
-				unsigned int indexCur = findPosition(timeEnd, nodeAnim);
+				unsigned int indexCur = (unsigned int)(timeEnd / 2.f);
 				const aiVector3D& end = nodeAnim->mPositionKeys[indexCur].mValue;
 				out += end * weight;
 			}
 		} else {
 			float timeBeg = anim.getBegin();
-			unsigned int indexCur = findPosition(timeBeg, nodeAnim);
+			unsigned int indexCur = (unsigned int)(timeBeg / 2.f);
 			const aiVector3D& start = nodeAnim->mPositionKeys[indexCur].mValue;
 			out += start * weight;
 		}
@@ -799,46 +790,40 @@ void Mesh::SubMesh::calcInterpolatedRotation(aiQuaternion& out, Map<AnimationSta
 
 		if( anim.getLength() > 1.f ) {
 			if( anim.isLoop() || anim.getTicks() < anim.getLength() ) {
-				float timeBeg = anim.getBegin();
-				float timeCur = anim.getBegin() + fmod(anim.getTicks(), anim.getLength());
-				float timeEnd = anim.getEnd();
-				unsigned int indexBeg = findRotation(timeBeg, nodeAnim);
-				unsigned int indexCur = findRotation(timeCur, nodeAnim);
-				unsigned int indexEnd = findRotation(timeEnd, nodeAnim);
-				unsigned int indexNext = indexCur;
-				if( indexCur == indexEnd ) {
-					indexNext = indexBeg;
-				} else {
-					++indexNext;
-				}
-
-				float deltaTime = (float)(nodeAnim->mRotationKeys[indexNext].mTime - nodeAnim->mRotationKeys[indexCur].mTime);
-				float factor = (timeCur - (float)nodeAnim->mRotationKeys[indexCur].mTime) / deltaTime;
+				float timeCur = anim.getBegin() + anim.getTicks();
+				float timeNext = anim.isLoop() ?
+					anim.getBegin() + fmod(anim.getTicks() + anim.getTicksRate(), anim.getLength()) :
+					anim.getBegin() + anim.getTicks() + anim.getTicksRate();
+				unsigned int indexCur = (unsigned int)(timeCur / 2.f);
+				unsigned int indexNext = (unsigned int)(timeNext / 2.f);
 				const aiQuaternion& startRotationQ = nodeAnim->mRotationKeys[indexCur].mValue;
-				const aiQuaternion& endRotationQ   = nodeAnim->mRotationKeys[indexNext].mValue;
-				aiQuaternion interpolatedQ;
-				aiQuaternion::Interpolate(interpolatedQ, startRotationQ, endRotationQ, factor);
-				if( first ) {
-					out = interpolatedQ;
+				const aiQuaternion& endRotationQ = nodeAnim->mRotationKeys[indexNext].mValue;
+				aiQuaternion rotationQ;
+				aiQuaternion::Interpolate(rotationQ, startRotationQ, endRotationQ, 0.5f);
+				if (first) {
+					out = rotationQ;
+				} else {
+					aiQuaternion::Interpolate(out, aiQuaternion(out), rotationQ, weight);
 				}
-				aiQuaternion::Interpolate(out, out, interpolatedQ, weight);
 			} else {
 				float timeEnd = anim.getEnd();
-				unsigned int indexCur = findPosition(timeEnd, nodeAnim);
+				unsigned int indexCur = (unsigned int)(timeEnd / 2.f);
 				const aiQuaternion& endRotationQ = nodeAnim->mRotationKeys[indexCur].mValue;
-				if( first ) {
+				if (first) {
 					out = endRotationQ;
+				} else {
+					aiQuaternion::Interpolate(out, aiQuaternion(out), endRotationQ, weight);
 				}
-				aiQuaternion::Interpolate(out, out, endRotationQ, weight);
 			}
 		} else {
 			float timeBeg = anim.getBegin();
-			unsigned int indexCur = findPosition(timeBeg, nodeAnim);
+			unsigned int indexCur = (unsigned int)(timeBeg / 2.f);
 			const aiQuaternion& startRotationQ = nodeAnim->mRotationKeys[indexCur].mValue;
-			if( first ) {
+			if (first) {
 				out = startRotationQ;
+			} else {
+				aiQuaternion::Interpolate(out, aiQuaternion(out), startRotationQ, weight);
 			}
-			aiQuaternion::Interpolate(out, out, startRotationQ, weight);
 		}
 		first = false;
 	}
@@ -860,72 +845,29 @@ void Mesh::SubMesh::calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>
 
 		if( anim.getLength() > 1.f ) {
 			if( anim.isLoop() || anim.getTicks() < anim.getLength() ) {
-				float timeBeg = anim.getBegin();
-				float timeCur = anim.getBegin() + fmod(anim.getTicks(), anim.getLength());
-				float timeEnd = anim.getEnd();
-				unsigned int indexBeg = findRotation(timeBeg, nodeAnim);
-				unsigned int indexCur = findRotation(timeCur, nodeAnim);
-				unsigned int indexEnd = findRotation(timeEnd, nodeAnim);
-				unsigned int indexNext = indexCur;
-				if( indexCur == indexEnd ) {
-					indexNext = indexBeg;
-				} else {
-					++indexNext;
-				}
-
-				float deltaTime = (float)(nodeAnim->mScalingKeys[indexNext].mTime - nodeAnim->mScalingKeys[indexCur].mTime);
-				float factor = (timeCur - (float)nodeAnim->mScalingKeys[indexCur].mTime) / deltaTime;
+				float timeCur = anim.getBegin() + anim.getTicks();
+				float timeNext = anim.isLoop() ?
+					anim.getBegin() + fmod(anim.getTicks() + anim.getTicksRate(), anim.getLength()) :
+					anim.getBegin() + anim.getTicks() + anim.getTicksRate();
+				unsigned int indexCur = (unsigned int)(timeCur / 2.f);
+				unsigned int indexNext = (unsigned int)(timeNext / 2.f);
 				const aiVector3D& start = nodeAnim->mScalingKeys[indexCur].mValue;
 				const aiVector3D& end = nodeAnim->mScalingKeys[indexNext].mValue;
 				aiVector3D delta = end - start;
-				out += (start + factor * delta) * weight;
+				out += (start + delta * 0.5f) * weight;
 			} else {
 				float timeEnd = anim.getEnd();
-				unsigned int indexCur = findPosition(timeEnd, nodeAnim);
+				unsigned int indexCur = (unsigned int)(timeEnd / 2.f);
 				const aiVector3D& end = nodeAnim->mScalingKeys[indexCur].mValue;
 				out += end * weight;
 			}
 		} else {
 			float timeBeg = anim.getBegin();
-			unsigned int indexCur = findPosition(timeBeg, nodeAnim);
+			unsigned int indexCur = (unsigned int)(timeBeg / 2.f);
 			const aiVector3D& start = nodeAnim->mScalingKeys[indexCur].mValue;
 			out += start * weight;
 		}
 	}
-}
-
-unsigned int Mesh::SubMesh::findPosition(float animationTime, const aiNodeAnim* nodeAnim) {
-	for( unsigned int i=0; i < nodeAnim->mNumPositionKeys - 1; ++i ) {
-		if( animationTime < (float)nodeAnim->mPositionKeys[i + 1].mTime ) {
-			return i;
-		}
-	}
-
-	return nodeAnim->mNumPositionKeys - 1;
-}
-
-unsigned int Mesh::SubMesh::findRotation(float animationTime, const aiNodeAnim* nodeAnim) {
-	assert(nodeAnim->mNumRotationKeys > 0);
-
-	for( unsigned int i=0; i < nodeAnim->mNumRotationKeys - 1; ++i ) {
-		if( animationTime < (float)nodeAnim->mRotationKeys[i + 1].mTime ) {
-			return i;
-		}
-	}
-
-	return nodeAnim->mNumRotationKeys - 1;
-}
-
-unsigned int Mesh::SubMesh::findScaling(float animationTime, const aiNodeAnim* nodeAnim) {
-	assert(nodeAnim->mNumScalingKeys > 0);
-
-	for( unsigned int i=0; i < nodeAnim->mNumScalingKeys - 1; ++i ) {
-		if( animationTime < (float)nodeAnim->mScalingKeys[i + 1].mTime ) {
-			return i;
-		}
-	}
-
-	return nodeAnim->mNumScalingKeys - 1;
 }
 
 Mesh::SubMesh::~SubMesh() {

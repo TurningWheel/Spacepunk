@@ -157,10 +157,6 @@ public:
 		void calcInterpolatedRotation(aiQuaternion& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
 		void calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
 
-		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim);
-		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim);
-		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim);
-
 		// getters & setters
 		virtual const type_t				getType() const				{ return ASSET_MESH; }
 		const unsigned int					getNumVertices() const		{ return numVertices; }

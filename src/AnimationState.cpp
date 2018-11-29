@@ -14,8 +14,8 @@ AnimationState::AnimationState():
 
 AnimationState::AnimationState(const Animation::entry_t& entry, const ArrayList<Animation::sound_t>& sounds):
 	name(entry.name),
-	begin(entry.begin),
-	end(entry.end),
+	begin(entry.begin + 1),
+	end(max(entry.begin, entry.end)),
 	length(end - begin),
 	loop(entry.loop)
 {
@@ -54,11 +54,9 @@ bool AnimationState::update(Speaker* speaker) {
 
 			ticks += step * cvar_animRate.toFloat();
 			if (loop) {
-				while (ticks < 0.f) {
+				ticks = fmod(ticks, length);
+				if (ticks < 0.f) {
 					ticks += length;
-				}
-				while (ticks > length) {
-					ticks -= length;
 				}
 			} else {
 				if (ticks < 0.f) {
