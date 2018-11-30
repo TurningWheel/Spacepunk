@@ -210,7 +210,7 @@ public:
 	// draws the entity
 	// @param camera: the camera through which to draw the entity
 	// @param light: the light by which the entity should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light) const;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) const;
 
 	// animates all the entity's meshes in unison
 	// @param name The name of the animation to play

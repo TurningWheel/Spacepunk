@@ -135,7 +135,7 @@ void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::v
 	if( !mat ) {
 		return;
 	}
-	const ShaderProgram& shader = mat->getShader();
+	ShaderProgram& shader = mat->getShader();
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();
 	}

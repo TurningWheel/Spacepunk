@@ -131,7 +131,7 @@ private:
 	// @param camera: the camera through which to draw the scene
 	// @param light: the light by which the scene should be illuminated (or nullptr for no illumination)
 	// @param chunkDrawList: a list of chunks to draw
-	void drawSceneObjects(Camera& camera, Light* light, const ArrayList<Chunk*>& chunkDrawList);
+	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList);
 		
 	// populate list of exits
 	void findExits();

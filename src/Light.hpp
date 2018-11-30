@@ -63,7 +63,7 @@ public:
 	// draws the light as a bounded cube (generally for editing purposes)
 	// @param camera: the camera to draw the light from
 	// @param light: the light to light the light with (whew) (unused)
-	virtual void draw(Camera& camera, Light* light) override;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// load the component from a file
 	// @param fp: the file to read from

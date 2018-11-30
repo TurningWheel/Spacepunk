@@ -14,13 +14,17 @@ out vec4 FragColor;
 
 uniform bool gActiveLight;
 uniform vec3 gCameraPos;
-uniform vec3 gLightPos;
-uniform vec4 gLightColor;
-uniform float gLightIntensity;
-uniform float gLightRadius;
-uniform vec3 gLightScale;
-uniform vec3 gLightDirection;
-uniform int gLightShape;
+
+const int MAX_LIGHTS = 50;
+uniform vec3 gLightPos[MAX_LIGHTS];
+uniform vec4 gLightColor[MAX_LIGHTS];
+uniform float gLightIntensity[MAX_LIGHTS];
+uniform float gLightRadius[MAX_LIGHTS];
+uniform vec3 gLightScale[MAX_LIGHTS];
+uniform vec3 gLightDirection[MAX_LIGHTS];
+uniform int gLightShape[MAX_LIGHTS];
+uniform int gNumLights;
+
 uniform sampler2DArray gDiffuseMap;
 uniform sampler2DArray gNormalMap;
 uniform sampler2DArray gEffectsMap;
@@ -77,89 +81,97 @@ void main() {
 	vec4  lEffectFrag   = texture(gEffectsMap, EffectsMap);
 	float lReflectPower = lEffectFrag.a;
 	vec3  lNormal       = CalcBumpedNormal();
-	if( gActiveLight ) {
-		vec3  lLightDirection = normalize(gLightPos - WorldPos);
 
-		// stops stencil shadow z-fighting
-		if( dot(Normal, lLightDirection) <= 0.0 ) {
-			discard;
-		}
-
-		float lDiffuseFactor  = dot(lNormal, lLightDirection);
-
-		vec4 lDiffuseColor  = vec4(0.0);
-		vec4 lSpecularColor = vec4(0.0);
-
-		// calculate diffuse color
-		if( lDiffuseFactor > 0.0 ) {
-			lDiffuseColor = gLightColor * max(gLightIntensity, 1.f) * lDiffuseFactor;
-
-			// calculate specular color
-			vec3  lFragToEye       = normalize(WorldPos - gCameraPos);
-			vec3  lLightReflect    = normalize(reflect(lLightDirection, lNormal));
-			float lSpecularFactor  = dot(lFragToEye, lLightReflect);
-
-			if( lSpecularFactor > 0.0 ) {
-				float lSpecularIntensity  = lEffectFrag.r * 255.0;
-				float lSpecularPower      = pow(lSpecularFactor, max(lEffectFrag.g * 255.0, 1.f));
-
-				lSpecularColor = gLightColor * lSpecularIntensity * lSpecularPower;
-			}
-
-			// apply lighting
-			FragColor = MapDiffuseTexture(lNormal, lReflectPower) * (lDiffuseColor + lSpecularColor);
-
-			// apply falloff
-			if( gLightShape == 0 ) {
-				// sphere
-				vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-				float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
-				float  lLightRadius    = gLightRadius * gLightRadius;
-				float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-				FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.f), 1.f);
-			} else if( gLightShape == 1 ) {
-				// box
-				vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-				float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
-				float  lLightRadius    = gLightRadius * gLightRadius;
-				float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-				FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.f), 1.f);
-			} else if( gLightShape == 2 ) {
-				// capsule
-			} else if( gLightShape == 3 ) {
-				// cylinder
-			} else if( gLightShape == 4 ) {
-				// cone
-				float  lSpotFactor = dot(-lLightDirection, gLightDirection);
-				if( lSpotFactor > 0.0 ) {
-					lSpotFactor = pow(lSpotFactor, 10);
-					vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-					float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
-					float  lLightRadius    = gLightRadius * gLightRadius;
-					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.0) / lLightRadius;
-					FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.0), 1.0) * lSpotFactor;
-				} else {
-					FragColor.a = 0.0;
-				}
-			} else if( gLightShape == 5 ) {
-				// pyramid
-				float  lSpotFactor = dot(-lLightDirection, gLightDirection);
-				if( lSpotFactor > 0.0 ) {
-					lSpotFactor = pow(lSpotFactor, 10);
-					vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-					float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
-					float  lLightRadius    = gLightRadius * gLightRadius;
-					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-					FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.0), 1.0) * lSpotFactor;
-				} else {
-					FragColor.a = 0.0;
-				}
-			}
-		} else {
-			FragColor = vec4(0.0);
-		}
-	} else {
+	if( !gActiveLight ) {
 		float lGlowFactor = lEffectFrag.b;
 		FragColor = MapDiffuseTexture(lNormal, lReflectPower) * lGlowFactor;
+	} else {
+		FragColor = MapDiffuseTexture(lNormal, lReflectPower);
+
+		vec4 lTotalLightColor = vec4(0.f);
+		for( int c = 0; c < gNumLights; ++c ) {
+			vec3  lLightDirection = normalize(gLightPos[c] - WorldPos);
+
+			// stops stencil shadow z-fighting
+			if( dot(Normal, lLightDirection) <= 0.0 ) {
+				continue;
+			}
+
+			float lDiffuseFactor  = dot(lNormal, lLightDirection);
+
+			vec4 lDiffuseColor  = vec4(0.0);
+			vec4 lSpecularColor = vec4(0.0);
+
+			// calculate diffuse color
+			if( lDiffuseFactor <= 0.0 ) {
+				continue;
+			} else {
+				lDiffuseColor = gLightColor[c] * max(gLightIntensity[c], 1.f) * lDiffuseFactor;
+
+				// calculate specular color
+				vec3  lFragToEye       = normalize(WorldPos - gCameraPos);
+				vec3  lLightReflect    = normalize(reflect(lLightDirection, lNormal));
+				float lSpecularFactor  = dot(lFragToEye, lLightReflect);
+
+				if( lSpecularFactor > 0.0 ) {
+					float lSpecularIntensity  = lEffectFrag.r * 255.0;
+					float lSpecularPower      = pow(lSpecularFactor, max(lEffectFrag.g * 255.0, 1.f));
+
+					lSpecularColor = gLightColor[c] * lSpecularIntensity * lSpecularPower;
+				}
+
+				// apply lighting
+				vec4 lLightColor = (lDiffuseColor + lSpecularColor);
+
+				// apply falloff
+				if( gLightShape[c] == 0 ) {
+					// sphere
+					vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
+					float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
+					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
+					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+				} else if( gLightShape[c] == 1 ) {
+					// box
+					vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
+					float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
+					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
+					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+				} else if( gLightShape[c] == 2 ) {
+					// capsule
+				} else if( gLightShape[c] == 3 ) {
+					// cylinder
+				} else if( gLightShape[c] == 4 ) {
+					// cone
+					float  lSpotFactor = dot(-lLightDirection, gLightDirection[c]);
+					if( lSpotFactor > 0.0 ) {
+						lSpotFactor = pow(lSpotFactor, 10);
+						vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
+						float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
+						float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+						float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.0) / lLightRadius;
+						lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+					} else {
+						lLightColor.a = 0.0;
+					}
+				} else if( gLightShape[c] == 5 ) {
+					// pyramid
+					float  lSpotFactor = dot(-lLightDirection, gLightDirection[c]);
+					if( lSpotFactor > 0.0 ) {
+						lSpotFactor = pow(lSpotFactor, 10);
+						vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
+						float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
+						float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+						float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
+						lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+					} else {
+						lLightColor.a = 0.0;
+					}
+				}
+				lTotalLightColor += vec4(lLightColor.xyz * lLightColor.a, lLightColor.a);
+			}
+		}
+		FragColor *= lTotalLightColor;
 	}
 }

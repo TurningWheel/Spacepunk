@@ -189,8 +189,8 @@ void Model::updateSkin() {
 	}
 }
 
-void Model::draw(Camera& camera, Light* light) {
-	Component::draw(camera, light);
+void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
+	Component::draw(camera, lights);
 
 	// don't draw the model if its assets are missing
 	if (broken) {
@@ -263,9 +263,9 @@ void Model::draw(Camera& camera, Light* light) {
 		// load shader
 		ShaderProgram* shader = nullptr;
 		if( camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
-			shader = mesh->loadShader(*this, camera, light, depthfailmat, shaderVars, gMat);
+			shader = mesh->loadShader(*this, camera, lights, depthfailmat, shaderVars, gMat);
 		} else {
-			shader = mesh->loadShader(*this, camera, light, mat, shaderVars, gMat);
+			shader = mesh->loadShader(*this, camera, lights, mat, shaderVars, gMat);
 		}
 
 		// update skin
@@ -287,7 +287,7 @@ void Model::draw(Camera& camera, Light* light) {
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			camera.setDrawMode(Camera::DRAW_SILHOUETTE);
 			ShaderProgram* shader = nullptr;
-			shader = mesh->loadShader(*this, camera, light, mat, shaderVars, gMat);
+			shader = mesh->loadShader(*this, camera, lights, mat, shaderVars, gMat);
 			if( shader ) {
 				mesh->draw(camera, this, skincache, shader);
 			}

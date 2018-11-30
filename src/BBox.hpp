@@ -84,7 +84,7 @@ public:
 	// draws the component
 	// @param camera: the camera through which to draw the component
 	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light) override;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// load the component from a file
 	// @param fp: the file to read from

@@ -1,9 +1,15 @@
 // ShaderProgram.cpp
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "Main.hpp"
 #include "Engine.hpp"
 #include "ShaderProgram.hpp"
 #include "Shader.hpp"
+#include "Light.hpp"
+#include "Camera.hpp"
 
 const ShaderProgram* ShaderProgram::currentShader = nullptr;
 
@@ -64,7 +70,7 @@ int ShaderProgram::link() {
 	}
 }
 
-void ShaderProgram::mount() const {
+void ShaderProgram::mount() {
 	glUseProgram(programObject);
 	currentShader = this;
 }
@@ -84,4 +90,34 @@ void ShaderProgram::serialize(FileInterface* file) {
 		}
 		loaded = (link() == 0);
 	}
+}
+
+void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights) {
+	if (lastFrameDrawn == camera.getFramesDrawn()) {
+		return;
+	} else {
+		lastFrameDrawn = camera.getFramesDrawn();
+	}
+
+	Uint32 index = 0;
+	StringBuf<32> buf;
+	for (auto light : lights) {
+		Vector lightAng = light->getGlobalAng().toVector();
+		glm::vec3 lightDir( lightAng.x, -lightAng.z, lightAng.y );
+		glm::vec3 lightPos( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
+		glm::vec3 lightScale( light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y );
+
+		glUniform3fv(getUniformLocation(buf.format("gLightPos[%d]",index)), 1, glm::value_ptr(lightPos));
+		glUniform4fv(getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
+		glUniform1f(getUniformLocation(buf.format("gLightIntensity[%d]",index)), light->getIntensity());
+		glUniform1f(getUniformLocation(buf.format("gLightRadius[%d]",index)), light->getRadius());
+		glUniform3fv(getUniformLocation(buf.format("gLightScale[%d]",index)), 1, glm::value_ptr(lightScale));
+		glUniform3fv(getUniformLocation(buf.format("gLightDirection[%d]",index)), 1, glm::value_ptr(lightDir));
+		glUniform1i(getUniformLocation(buf.format("gLightShape[%d]",index)), static_cast<GLint>(light->getShape()));
+		++index;
+		if (index >= maxLights) {
+			break;
+		}
+	}
+	glUniform1i(getUniformLocation("gNumLights"), (GLint)lights.getSize());
 }

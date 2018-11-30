@@ -7,6 +7,8 @@
 #include "Node.hpp"
 #include "Shader.hpp"
 
+class Light;
+
 class ShaderProgram : public Asset {
 public:
 	ShaderProgram();
@@ -27,12 +29,18 @@ public:
 	// @param name the name of the variable to bind the attribute to
 	void bindAttribLocation(GLuint index, const GLchar* name);
 
+	// uploads light data to the shader, if it hasn't already been uploaded
+	// @param camera The camera that the scene is being drawn from
+	// @param lights The lights to upload
+	// @param maxLights Maximum number of lights that can be uploaded
+	void uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights);
+
 	// links all of the shader objects
 	// @return 0 on success, or non-zero on error
 	int link();
 
 	// mounts the shader program into the gl context
-	void mount() const;
+	void mount();
 
 	// unmounts the current shader program from the gl context
 	static void unmount();
@@ -45,4 +53,5 @@ private:
 	static const ShaderProgram* currentShader;
 	ArrayList<Shader> shaders;
 	GLuint programObject = 0;
+	Uint32 lastFrameDrawn = UINT32_MAX;
 };

@@ -128,7 +128,7 @@ bool Speaker::stopAllSounds() {
 	return result;
 }
 
-void Speaker::draw(Camera& camera, Light* light) {
+void Speaker::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
 	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
 		return;
@@ -142,7 +142,7 @@ void Speaker::draw(Camera& camera, Light* light) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
-		ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, gMat);
+		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat);
 		if( shader ) {
 			mesh->draw(camera, this, shader);
 		}

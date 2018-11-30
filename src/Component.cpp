@@ -446,9 +446,9 @@ bool Component::checkCollision() const {
 	return false;
 }
 
-void Component::draw(Camera& camera, Light* light) {
+void Component::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	for( size_t c = 0; c < components.getSize(); ++c ) {
-		components[c]->draw(camera, light);
+		components[c]->draw(camera, lights);
 	}
 }
 
@@ -803,7 +803,7 @@ void Component::shootLaser(const WideVector& color, float size, float life) {
 	glm::mat4 mat = gMat;
 	Vector start = Vector(mat[3].x, mat[3].z, -mat[3].y);
 	mat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
-	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 1000.f;
+	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 10000.f;
 	World* world = entity->getWorld();
 	World::hit_t hit = world->lineTrace(start, end);
 	end = hit.pos;

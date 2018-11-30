@@ -134,13 +134,17 @@ float Mesh::getAnimLength() const {
 	return 0.f;
 }
 
-ShaderProgram* Mesh::loadShader(Component& component, Camera& camera, Light* light, Material* material, const Mesh::shadervars_t& shaderVars, const glm::mat4& matrix) {
+ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, const ArrayList<Light*>& lights, Material* material, const Mesh::shadervars_t& shaderVars, const glm::mat4& matrix) {
 	Client* client = mainEngine->getLocalClient();
 	if( !client )
 		return nullptr;
 	Renderer* renderer = camera.getRenderer();
 	if( !renderer )
 		return nullptr;
+	bool editor = false;
+	if( mainEngine->isEditorRunning() && component.getEntity()->getWorld() ) {
+		editor = component.getEntity()->getWorld()->isShowTools();
+	}
 
 	// don't highlight if lineWidth == 0
 	if( camera.getDrawMode() == Camera::DRAW_SILHOUETTE ||
@@ -219,8 +223,8 @@ ShaderProgram* Mesh::loadShader(Component& component, Camera& camera, Light* lig
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 
 			// load light data into shader
-			if( light ) {
-				glm::vec3 lightPos( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
+			if( lights.getSize() ) {
+				glm::vec3 lightPos( lights[0]->getGlobalPos().x, -lights[0]->getGlobalPos().z, lights[0]->getGlobalPos().y );
 				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
 			} else {
 				glm::vec3 lightPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
@@ -240,40 +244,27 @@ ShaderProgram* Mesh::loadShader(Component& component, Camera& camera, Light* lig
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 
 			// load camera position into shader
-			glm::vec3 cameraPos;
-			if( !camera.isOrtho() || !light ) {
-				cameraPos = glm::vec3( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
-				glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
-			} else {
-				cameraPos = glm::vec3( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
-				glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
-			}
+			glm::vec3 cameraPos = glm::vec3( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+			glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
 
 			// load light data into shader
 			if( component.getEntity()->isFlag(Entity::flag_t::FLAG_FULLYLIT) || camera.getDrawMode() == Camera::DRAW_GLOW || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_FALSE);
+				glUniform1i(shader.getUniformLocation("gNumLights"), 0);
 			} else {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
-				if( light ) {
-					Vector lightAng = light->getGlobalAng().toVector();
-					glm::vec3 lightDir( lightAng.x, -lightAng.z, lightAng.y );
-					glm::vec3 lightPos( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
-					glm::vec3 lightScale( light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y );
-
-					glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
-					glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec3(light->getColor())));
-					glUniform1f(shader.getUniformLocation("gLightIntensity"), light->getIntensity());
-					glUniform1f(shader.getUniformLocation("gLightRadius"), light->getRadius());
-					glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(lightScale));
-					glUniform3fv(shader.getUniformLocation("gLightDirection"), 1, glm::value_ptr(lightDir));
-					glUniform1i(shader.getUniformLocation("gLightShape"), static_cast<GLint>(light->getShape()));
+				if( lights.getSize() ) {
+					shader.uploadLights(camera, lights, maxLights);
+				} else if( editor ) {
+					glUniform3fv(shader.getUniformLocation("gLightPos[0]"), 1, glm::value_ptr(cameraPos));
+					glUniform4fv(shader.getUniformLocation("gLightColor[0]"), 1, glm::value_ptr(glm::vec4(1,1,1,1)));
+					glUniform1f(shader.getUniformLocation("gLightIntensity[0]"), 1);
+					glUniform1f(shader.getUniformLocation("gLightRadius[0]"), 16384.f);
+					glUniform3fv(shader.getUniformLocation("gLightScale[0]"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));
+					glUniform1i(shader.getUniformLocation("gLightShape[0]"), 0);
+					glUniform1i(shader.getUniformLocation("gNumLights"), 1);
 				} else {
-					glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(cameraPos));
-					glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec4(1,1,1,1)));
-					glUniform1f(shader.getUniformLocation("gLightIntensity"), 1);
-					glUniform1f(shader.getUniformLocation("gLightRadius"), 16384.f);
-					glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));
-					glUniform1i(shader.getUniformLocation("gLightShape"), 0);
+					glUniform1i(shader.getUniformLocation("gNumLights"), 0);
 				}
 			}
 		}
@@ -752,21 +743,21 @@ void Mesh::SubMesh::calcInterpolatedPosition(aiVector3D& out, Map<AnimationState
 				float timeNext = anim.isLoop() ?
 					anim.getBegin() + fmod(anim.getTicks() + anim.getTicksRate(), anim.getLength()) :
 					anim.getBegin() + anim.getTicks() + anim.getTicksRate();
-				unsigned int indexCur = (unsigned int)(timeCur / 2.f);
-				unsigned int indexNext = (unsigned int)(timeNext / 2.f);
+				unsigned int indexCur = findPosition(timeCur, nodeAnim);
+				unsigned int indexNext = timeCur == timeNext ? indexCur : findPosition(timeNext, nodeAnim);
 				const aiVector3D& start = nodeAnim->mPositionKeys[indexCur].mValue;
 				const aiVector3D& end = nodeAnim->mPositionKeys[indexNext].mValue;
 				aiVector3D delta = end - start;
 				out += (start + delta * 0.5f) * weight;
 			} else {
 				float timeEnd = anim.getEnd();
-				unsigned int indexCur = (unsigned int)(timeEnd / 2.f);
+				unsigned int indexCur = findPosition(timeEnd, nodeAnim);
 				const aiVector3D& end = nodeAnim->mPositionKeys[indexCur].mValue;
 				out += end * weight;
 			}
 		} else {
 			float timeBeg = anim.getBegin();
-			unsigned int indexCur = (unsigned int)(timeBeg / 2.f);
+			unsigned int indexCur = findPosition(timeBeg, nodeAnim);
 			const aiVector3D& start = nodeAnim->mPositionKeys[indexCur].mValue;
 			out += start * weight;
 		}
@@ -794,8 +785,8 @@ void Mesh::SubMesh::calcInterpolatedRotation(aiQuaternion& out, Map<AnimationSta
 				float timeNext = anim.isLoop() ?
 					anim.getBegin() + fmod(anim.getTicks() + anim.getTicksRate(), anim.getLength()) :
 					anim.getBegin() + anim.getTicks() + anim.getTicksRate();
-				unsigned int indexCur = (unsigned int)(timeCur / 2.f);
-				unsigned int indexNext = (unsigned int)(timeNext / 2.f);
+				unsigned int indexCur = findRotation(timeCur, nodeAnim);
+				unsigned int indexNext = timeCur == timeNext ? indexCur : findRotation(timeNext, nodeAnim);
 				const aiQuaternion& startRotationQ = nodeAnim->mRotationKeys[indexCur].mValue;
 				const aiQuaternion& endRotationQ = nodeAnim->mRotationKeys[indexNext].mValue;
 				aiQuaternion rotationQ;
@@ -807,7 +798,7 @@ void Mesh::SubMesh::calcInterpolatedRotation(aiQuaternion& out, Map<AnimationSta
 				}
 			} else {
 				float timeEnd = anim.getEnd();
-				unsigned int indexCur = (unsigned int)(timeEnd / 2.f);
+				unsigned int indexCur = findRotation(timeEnd, nodeAnim);
 				const aiQuaternion& endRotationQ = nodeAnim->mRotationKeys[indexCur].mValue;
 				if (first) {
 					out = endRotationQ;
@@ -817,7 +808,7 @@ void Mesh::SubMesh::calcInterpolatedRotation(aiQuaternion& out, Map<AnimationSta
 			}
 		} else {
 			float timeBeg = anim.getBegin();
-			unsigned int indexCur = (unsigned int)(timeBeg / 2.f);
+			unsigned int indexCur = findRotation(timeBeg, nodeAnim);
 			const aiQuaternion& startRotationQ = nodeAnim->mRotationKeys[indexCur].mValue;
 			if (first) {
 				out = startRotationQ;
@@ -849,25 +840,52 @@ void Mesh::SubMesh::calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>
 				float timeNext = anim.isLoop() ?
 					anim.getBegin() + fmod(anim.getTicks() + anim.getTicksRate(), anim.getLength()) :
 					anim.getBegin() + anim.getTicks() + anim.getTicksRate();
-				unsigned int indexCur = (unsigned int)(timeCur / 2.f);
-				unsigned int indexNext = (unsigned int)(timeNext / 2.f);
+				unsigned int indexCur = findScaling(timeCur, nodeAnim);
+				unsigned int indexNext = timeCur == timeNext ? indexCur : findScaling(timeNext, nodeAnim);
 				const aiVector3D& start = nodeAnim->mScalingKeys[indexCur].mValue;
 				const aiVector3D& end = nodeAnim->mScalingKeys[indexNext].mValue;
 				aiVector3D delta = end - start;
 				out += (start + delta * 0.5f) * weight;
 			} else {
 				float timeEnd = anim.getEnd();
-				unsigned int indexCur = (unsigned int)(timeEnd / 2.f);
+				unsigned int indexCur = findScaling(timeEnd, nodeAnim);
 				const aiVector3D& end = nodeAnim->mScalingKeys[indexCur].mValue;
 				out += end * weight;
 			}
 		} else {
 			float timeBeg = anim.getBegin();
-			unsigned int indexCur = (unsigned int)(timeBeg / 2.f);
+			unsigned int indexCur = findScaling(timeBeg, nodeAnim);
 			const aiVector3D& start = nodeAnim->mScalingKeys[indexCur].mValue;
 			out += start * weight;
 		}
 	}
+}
+
+unsigned int Mesh::SubMesh::findPosition(float animationTime, const aiNodeAnim* nodeAnim) {
+	for( unsigned int i=0; i < nodeAnim->mNumPositionKeys - 1; ++i ) {
+		if( animationTime < (float)nodeAnim->mPositionKeys[i + 1].mTime ) {
+			return i;
+		}
+	}
+	return nodeAnim->mNumPositionKeys - 1;
+}
+unsigned int Mesh::SubMesh::findRotation(float animationTime, const aiNodeAnim* nodeAnim) {
+	assert(nodeAnim->mNumRotationKeys > 0);
+	for( unsigned int i=0; i < nodeAnim->mNumRotationKeys - 1; ++i ) {
+		if( animationTime < (float)nodeAnim->mRotationKeys[i + 1].mTime ) {
+			return i;
+		}
+	}
+	return nodeAnim->mNumRotationKeys - 1;
+}
+unsigned int Mesh::SubMesh::findScaling(float animationTime, const aiNodeAnim* nodeAnim) {
+	assert(nodeAnim->mNumScalingKeys > 0);
+	for( unsigned int i=0; i < nodeAnim->mNumScalingKeys - 1; ++i ) {
+		if( animationTime < (float)nodeAnim->mScalingKeys[i + 1].mTime ) {
+			return i;
+		}
+	}
+	return nodeAnim->mNumScalingKeys - 1;
 }
 
 Mesh::SubMesh::~SubMesh() {

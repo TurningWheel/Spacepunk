@@ -48,7 +48,7 @@ public:
 	// draws the component
 	// @param camera: the camera through which to draw the component
 	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light);
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights);
 
 	// update the component
 	virtual void process();

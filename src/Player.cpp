@@ -449,10 +449,10 @@ void Player::control() {
 
 	// using hand items (shooting)
 	if (input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
-		lTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 0.f);
+		lTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
 	}
 	if (input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
-		rTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 0.f);
+		rTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
 	}
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_LEFT);
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_RIGHT);

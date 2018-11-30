@@ -500,7 +500,7 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 		}
 	}
 
-	const ShaderProgram& shader = material->getShader();
+	ShaderProgram& shader = material->getShader();
 	glLineWidth(1);
 
 	if( &shader != ShaderProgram::getCurrentShader() ) {

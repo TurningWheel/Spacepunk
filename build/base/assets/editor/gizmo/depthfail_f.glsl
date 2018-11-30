@@ -7,12 +7,6 @@ in vec4 Colors;
 
 out vec4 FragColor;
 
-uniform int gFullbright;
-uniform vec3 gCameraPos;
-uniform vec3 gLightPos;
-uniform vec4 gLightColor;
-uniform float gLightIntensity;
-uniform float gLightRadius;
 uniform sampler2D gTexture;
 
 // colormapped texture
@@ -27,14 +21,6 @@ void main() {
 		FragColor = vec4( .5f, .5f, .5f, 1.f );
 	} else {
 		vec2 lTexCoord = TexCoord;
-		vec3 lNormal   = Normal;
-
-		vec3   cameraDir  = normalize(gCameraPos - WorldPos);
-		vec3   lightDir   = normalize(gLightPos - WorldPos);
-		float  radius     = gLightRadius * gLightRadius;
-		vec3   diff       = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-		float  dist       = diff.x + diff.y + diff.z;
-		float  falloff    = max(radius - dist, 0.f) / radius;
 
 		// do custom colors
 		if( gCustomColorEnabled ) {
@@ -45,13 +31,6 @@ void main() {
 			FragColor += gCustomColorA * TexColor.a;
 		} else {
 			FragColor = texture2D(gTexture, lTexCoord);
-		}
-
-		// light properties
-		if( gFullbright==0 ) {
-			FragColor *= gLightColor * gLightIntensity;
-			FragColor.a = dot(lNormal, lightDir) * falloff;
-			FragColor /= dot(lNormal, cameraDir);
 		}
 	}
 }

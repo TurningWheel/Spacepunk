@@ -93,7 +93,7 @@ void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString(material);
 	if( mat ) {
-		const ShaderProgram& shader = mat->getShader();
+		ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 

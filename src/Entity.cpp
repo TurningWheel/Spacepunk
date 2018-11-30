@@ -441,7 +441,7 @@ void Entity::process() {
 	}
 }
 
-void Entity::draw(Camera& camera, Light* light) const {
+void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 	bool editorRunning = mainEngine->isEditorRunning();
 	if( !isFlag(flag_t::FLAG_VISIBLE) && (!editorRunning || !shouldSave) ) {
 		return;
@@ -466,7 +466,7 @@ void Entity::draw(Camera& camera, Light* light) const {
 
 	// draw components
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		components[c]->draw(camera, light);
+		components[c]->draw(camera, lights);
 	}
 
 	// reset overdraw characteristics

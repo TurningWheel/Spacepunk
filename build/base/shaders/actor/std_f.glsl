@@ -11,13 +11,17 @@ out vec4 FragColor;
 uniform bool gAnimated;
 uniform bool gActiveLight;
 uniform vec3 gCameraPos;
-uniform vec3 gLightPos;
-uniform vec4 gLightColor;
-uniform float gLightIntensity;
-uniform float gLightRadius;
-uniform vec3 gLightScale;
-uniform vec3 gLightDirection;
-uniform int gLightShape;
+
+const int MAX_LIGHTS = 50;
+uniform vec3 gLightPos[MAX_LIGHTS];
+uniform vec4 gLightColor[MAX_LIGHTS];
+uniform float gLightIntensity[MAX_LIGHTS];
+uniform float gLightRadius[MAX_LIGHTS];
+uniform vec3 gLightScale[MAX_LIGHTS];
+uniform vec3 gLightDirection[MAX_LIGHTS];
+uniform int gLightShape[MAX_LIGHTS];
+uniform int gNumLights;
+
 #ifdef BUMPMAP
 uniform sampler2D gTexture[2]; // 1st = diffuse, 2nd = normals
 #else
@@ -56,7 +60,6 @@ void main() {
 	vec3   lNormal    = Normal;
 #endif
 	vec3   lWorldPos  = WorldPos;
-	vec3   lLightPos  = gLightPos;
 
 	// do custom colors
 	if( gCustomColorEnabled ) {
@@ -82,64 +85,72 @@ void main() {
 
 	// light properties
 	if( gActiveLight ) {
-		vec3 lLightDirection = normalize(gLightPos - WorldPos);
+		vec4 lTotalLightColor = vec4(0.f);
+		for( int c = 0; c < gNumLights; ++c ) {
+			vec3 lLightDirection = normalize(gLightPos[c] - WorldPos);
+			vec4 lLightColor = vec4(0.f);
 
-		// stops stencil shadow z-fighting
-		if( dot(Normal, lLightDirection) <= 0.0 ) {
-			discard;
-		}
+			// stops stencil shadow z-fighting
+			if( dot(Normal, lLightDirection) <= 0.0 ) {
+				continue;
+			}
 
-		FragColor *= gLightColor;
+			lLightColor = gLightColor[c];
 
-		if( gLightShape == 0 ) {
-			// sphere
-			vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-			float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
-			float  lLightRadius    = gLightRadius * gLightRadius;
-			float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-			FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.f), 1.f);
-		} else if( gLightShape == 1 ) {
-			// box
-			vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-			float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
-			float  lLightRadius    = gLightRadius * gLightRadius;
-			float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-			FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.f), 1.f);
-		} else if( gLightShape == 2 ) {
-			// capsule
-		} else if( gLightShape == 3 ) {
-			// cylinder
-		} else if( gLightShape == 4 ) {
-			// cone
-			float  lSpotFactor = dot(-lLightDirection, gLightDirection);
-			if( lSpotFactor > 0.0 ) {
-				lSpotFactor = pow(lSpotFactor, 10);
-				vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
+			if( gLightShape[c] == 0 ) {
+				// sphere
+				vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
 				float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
-				float  lLightRadius    = gLightRadius * gLightRadius;
-				float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.0) / lLightRadius;
-				FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.0), 1.0) * lSpotFactor;
-			} else {
-				FragColor.a = 0.0;
-			}
-		} else if( gLightShape == 5 ) {
-			// pyramid
-			float  lSpotFactor = dot(-lLightDirection, gLightDirection);
-			if( lSpotFactor > 0.0 ) {
-				lSpotFactor = pow(lSpotFactor, 10);
-				vec3   lLightFragDiff  = (WorldPos - gLightPos) * (WorldPos - gLightPos);
-				float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
-				float  lLightRadius    = gLightRadius * gLightRadius;
+				float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
 				float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-				FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.0), 1.0) * lSpotFactor;
-			} else {
-				FragColor.a = 0.0;
+				lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+			} else if( gLightShape[c] == 1 ) {
+				// box
+				vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
+				float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
+				float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+				float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
+				lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+			} else if( gLightShape[c] == 2 ) {
+				// capsule
+			} else if( gLightShape[c] == 3 ) {
+				// cylinder
+			} else if( gLightShape[c] == 4 ) {
+				// cone
+				float  lSpotFactor = dot(-lLightDirection, gLightDirection[c]);
+				if( lSpotFactor > 0.0 ) {
+					lSpotFactor = pow(lSpotFactor, 10);
+					vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
+					float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
+					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.0) / lLightRadius;
+					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+				} else {
+					lLightColor.a = 0.0;
+				}
+			} else if( gLightShape[c] == 5 ) {
+				// pyramid
+				float  lSpotFactor = dot(-lLightDirection, gLightDirection[c]);
+				if( lSpotFactor > 0.0 ) {
+					lSpotFactor = pow(lSpotFactor, 10);
+					vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
+					float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
+					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
+					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+				} else {
+					lLightColor.a = 0.0;
+				}
 			}
-		}
 
 #ifndef NONORMALS
-		FragColor.a *= dot(lNormal, lLightDirection);
+			lLightColor.a *= dot(lNormal, lLightDirection);
 #endif
+			lTotalLightColor += vec4(lLightColor.xyz * lLightColor.a, lLightColor.a);
+		}
+
+		FragColor *= lTotalLightColor;
+
 #ifdef FRESNEL
 		vec3 cameraDir = normalize(gCameraPos - lWorldPos);
 		FragColor /= dot(lNormal, cameraDir);

@@ -197,7 +197,7 @@ void SectorWorld::drawSceneObjects(Camera& camera, Light* light) {
 				}
 
 				// draw the entity
-				entity->draw(camera,light);
+				entity->draw(camera,ArrayList<Light*>({light}));
 			}
 		}
 	}
@@ -561,7 +561,7 @@ void SectorWorld::drawGrid(Camera& camera, float z) {
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/grid.json");
 	if( mat ) {
-		const ShaderProgram& shader = mat->getShader();
+		ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 

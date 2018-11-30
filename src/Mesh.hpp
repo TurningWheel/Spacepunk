@@ -30,6 +30,9 @@ public:
 	Mesh(const char* _name);
 	virtual ~Mesh();
 
+	// maximum number of lights that will fit in the tile shader
+	static const Uint32 maxLights = 50;
+
 	// skin cache
 	struct skincache_t {
 		ArrayList<glm::mat4> anims;
@@ -74,7 +77,7 @@ public:
 	// @param material: path to the material asset used to render the mesh
 	// @return the ShaderProgram object with the given name, or nullptr if no shader was loaded
 	// @param matrix: model matrix
-	ShaderProgram* loadShader(Component& component, Camera& camera, Light* light, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
+	ShaderProgram* loadShader(const Component& component, Camera& camera, const ArrayList<Light*>& lights, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
 
 	// draws the mesh without animating it
 	// @param camera: the camera to render the mesh through
@@ -156,6 +159,10 @@ public:
 		void calcInterpolatedPosition(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
 		void calcInterpolatedRotation(aiQuaternion& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
 		void calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
+
+		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim);
+		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim);
+		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim);
 
 		// getters & setters
 		virtual const type_t				getType() const				{ return ASSET_MESH; }

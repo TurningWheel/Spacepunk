@@ -905,7 +905,7 @@ void Chunk::draw(Camera& camera) const {
 
 	// draw edges
 	if( cvar_showChunkEdges.toInt() ) {
-		const ShaderProgram* shader = ShaderProgram::getCurrentShader();
+		ShaderProgram* shader = const_cast<ShaderProgram*>(ShaderProgram::getCurrentShader()); // purely for debug
 		for( size_t c = 0; c < edges.getSize(); ++c ) {
 			glm::vec3 a = vertexBuffer[edges[c].a] - normalBuffer[edges[c].a];
 			glm::vec3 b = vertexBuffer[edges[c].b] - normalBuffer[edges[c].b];

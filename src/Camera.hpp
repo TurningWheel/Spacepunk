@@ -69,6 +69,7 @@ public:
 	const glm::mat4&	getProjViewMatrix() const	{ return projViewMatrix; }
 	const drawmode_t	getDrawMode() const			{ return drawMode; }
 	const bool&			isOrtho() const				{ return ortho; }
+	const Uint32		getFramesDrawn() const		{ return framesDrawn; }
 
 	void	setClipNear(float _clipNear)		{ clipNear = _clipNear; }
 	void	setClipFar(float _clipFar)			{ clipFar = _clipFar; }
@@ -134,7 +135,7 @@ public:
 	// draws the camera
 	// @param camera: the camera through which to draw the camera
 	// @param light: the light by which the camera should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light) override;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// draws all marked points, lines, etc.
 	void drawDebug();
@@ -146,6 +147,9 @@ public:
 	// save/load this object to a file
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface* file) override;
+
+	// called when a frame is finished drawing from the camera
+	void onFrameDrawn();
 
 	Camera& operator=(const Camera& src) {
 		projMatrix = src.projMatrix;
@@ -183,4 +187,7 @@ protected:
 	Line3D line3D;
 	LinkedList<point_t> points;
 	LinkedList<line_t> lines;
+
+	// frame draw counter
+	Uint32 framesDrawn = 0;
 };

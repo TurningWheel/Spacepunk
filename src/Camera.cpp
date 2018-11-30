@@ -163,7 +163,7 @@ void Camera::drawLaser( const float width, const glm::vec3& src, const glm::vec3
 	line3D.drawLaser(*this,width,src,dest,color);
 }
 
-void Camera::draw(Camera& camera, Light* light) {
+void Camera::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
 	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
 		return;
@@ -187,7 +187,7 @@ void Camera::draw(Camera& camera, Light* light) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
-		ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, gMat);
+		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat);
 		if( shader ) {
 			mesh->draw(camera, this, shader);
 		}
@@ -286,4 +286,8 @@ void Camera::drawDebug() {
 			lines.removeNode(node);
 		}
 	}
+}
+
+void Camera::onFrameDrawn() {
+	++framesDrawn;
 }
