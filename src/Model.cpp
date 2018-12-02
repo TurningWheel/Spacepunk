@@ -215,11 +215,13 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	if( camera.getEntity()->isShouldSave() && !entity->isShouldSave() ) {
 		return;
 	}
-	if( camera.getDrawMode() == Camera::DRAW_SHADOW && !entity->isShouldSave() ) {
+	if( camera.getDrawMode() == Camera::DRAW_SHADOW && (!entity->isShouldSave() && entity->getScriptStr() == "") ) {
 		return;
 	}
 
 	// skip certain passes if necessary
+	if( camera.getDrawMode()==Camera::DRAW_SHADOW && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)) )
+		return;
 	if( camera.getDrawMode()==Camera::DRAW_STENCIL && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)) )
 		return;
 	if( camera.getDrawMode()==Camera::DRAW_GLOW && !(entity->isFlag(Entity::flag_t::FLAG_GLOWING)) )
@@ -228,8 +230,8 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		return;
 
 	// don't render models marked genius
-	if( ( entity->isFlag(Entity::flag_t::FLAG_GENIUS) || genius ) && camera.getEntity() == entity ) {
-		if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
+	if( ( entity->isFlag(Entity::flag_t::FLAG_GENIUS) || genius ) ) {
+		if( camera.getEntity() == entity && camera.getDrawMode() != Camera::DRAW_STENCIL ) {
 			return;
 		}
 	}
