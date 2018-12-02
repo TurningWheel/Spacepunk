@@ -50,7 +50,7 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 Camera::~Camera() {
 }
 
-void Camera::setupProjection() {
+void Camera::setupProjection(bool scissor) {
 	World* world = entity->getWorld();
 	if( !renderer ) {
 		return;
@@ -87,11 +87,14 @@ void Camera::setupProjection() {
 		projMatrix = glm::perspective( glm::radians((float)fov), (float)win.w/win.h, clipNear, clipFar );
 	}
 
-	if( renderer ) {
+	if( renderer && scissor ) {
 		int yres = renderer->getYres();
 		glViewport( win.x, yres-win.h-win.y, win.w, win.h );
 		glScissor( win.x, yres-win.h-win.y, win.w, win.h );
 		glEnable(GL_SCISSOR_TEST);
+	} else {
+		glViewport( win.x, -win.y, win.w, win.h );
+		glDisable(GL_SCISSOR_TEST);
 	}
 
 	// get combination of the two

@@ -54,59 +54,12 @@ static Cvar cvar_lightCull("light.cull", "accuracy for lights' occlusion culling
 void Light::update() {
 	Component::update();
 
+	// occlusion test
 	World* world = entity->getWorld();
 	if( world && world->isLoaded() ) {
 		if( lastUpdate != entity->getTicks() || !chunksVisible ) {
 			occlusionTest(radius, cvar_lightCull.toInt());
 			lastUpdate = entity->getTicks();
-			chunksShadow.clear();
-
-			// get all chunks in a radius
-			if( world->getType() == World::WORLD_TILES && entity->isFlag(Entity::FLAG_SHADOW) ) {
-				TileWorld* tileworld = static_cast<TileWorld*>(world);
-
-				Sint32 worldW = (Sint32)tileworld->getWidth() / Chunk::size;
-				Sint32 worldH = (Sint32)tileworld->getHeight() / Chunk::size;
-				Sint32 chunkSize = (Chunk::size * Tile::size);
-				Sint32 chunkRadius = floor(radius / chunkSize);
-				Sint32 midX = floor(gPos.x / chunkSize);
-				Sint32 midY = floor(gPos.y / chunkSize);
-				Sint32 startX = min( max( 0, midX - chunkRadius ), worldW - 1 );
-				Sint32 startY = min( max( 0, midY - chunkRadius ), worldH - 1 );
-				Sint32 endX = min( max( 0, midX + chunkRadius ), worldW - 1 );
-				Sint32 endY = min( max( 0, midY + chunkRadius ), worldH - 1 );
-
-				for( Sint32 x = startX; x <= endX; ++x ) {
-					for( Sint32 y = startY; y <= endY; ++y ) {
-						Chunk& chunk = tileworld->getChunks()[y + x * worldH];
-
-						float lightX = gPos.x;
-						float lightY = gPos.y;
-						float chunkX = x * chunkSize;
-						float chunkY = y * chunkSize;
-						if( lightX>=chunkX && lightX<chunkX+chunkSize ) {
-							chunkX = lightX;
-						}
-						if( lightY>=chunkY && lightY<chunkY+chunkSize ) {
-							chunkY = lightY;
-						}
-						if( lightX != chunkX || lightY != chunkY ) {
-							if( lightX>chunkX )
-								chunkX += chunkSize;
-							if( lightY>chunkY )
-								chunkY += chunkSize;
-							float diffX = (chunkX-lightX)*(chunkX-lightX);
-							float diffY = (chunkY-lightY)*(chunkY-lightY);
-							float dist = diffX+diffY;
-							if( dist <= radius * radius ) {
-								chunksShadow.push(&chunk);
-							}
-						} else {
-							chunksShadow.push(&chunk);
-						}
-					}
-				}
-			}
 		}
 	}
 }
@@ -166,4 +119,40 @@ void Light::serialize(FileInterface * file) {
 		file->property("shadow", shadow);
 		file->property("arc", arc);
 	}
+}
+
+void Light::createShadowMap() {
+	if (!entity || !entity->getWorld()) {
+		return;
+	}
+	TileWorld* world = static_cast<TileWorld*>(entity->getWorld());
+	if (!world) {
+		return;
+	}
+	//if (strcmp(entity->getScriptStr(), "") == 0 && shadowMapDrawn == true) {
+	//	return;
+	//}
+
+	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
+	Camera* camera = shadowCamera->findComponentByUID<Camera>(1); assert(camera);
+	camera->setDrawMode(Camera::DRAW_SHADOW);
+	shadowCamera->setPos(gPos);
+
+	for (size_t c = 0; c < 6; ++c) {
+		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
+		glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glCullFace(GL_FRONT);
+		shadowCamera->setAng(Shadow::cameraInfo[c].dir);
+		shadowCamera->update();
+		camera->setClipFar(radius);
+		camera->setupProjection(false);
+		world->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
+	}
+	glCullFace(GL_BACK);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	shadowMapDrawn = true;
 }

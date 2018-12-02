@@ -288,7 +288,7 @@ void SectorWorld::draw() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 		// setup projection
-		camera->setupProjection();
+		camera->setupProjection(true);
 
 		// render scene into depth buffer
 		camera->setDrawMode(Camera::DRAW_DEPTH);
@@ -378,7 +378,7 @@ void SectorWorld::draw() {
 			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
 
 			// render state gets messed up after this, so reinit
-			camera->setupProjection();
+			camera->setupProjection(true);
 		} else {
 			// render silhouettes
 			camera->setDrawMode(Camera::DRAW_SILHOUETTE);

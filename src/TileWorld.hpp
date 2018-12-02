@@ -93,6 +93,12 @@ public:
 	// @param floorDiff: the floor height difference between the two rooms, if any
 	void placeRoom(const TileWorld& world, Uint32 pickedExitIndex, Uint32 x, Uint32 y, Sint32 floorDiff = 0);
 
+	// draws all tiles and entities in the world
+	// @param camera: the camera through which to draw the scene
+	// @param light: the light by which the scene should be illuminated (or nullptr for no illumination)
+	// @param chunkDrawList: a list of chunks to draw
+	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList);
+
 	// getters & setters
 	virtual const type_t		getType() const						{ return WORLD_TILES; }
 	const Uint32				getWidth() const					{ return width; }
@@ -126,12 +132,6 @@ private:
 
 	// destroys rendering objects for the world grid
 	void destroyGrid();
-
-	// draws all tiles and entities in the world
-	// @param camera: the camera through which to draw the scene
-	// @param light: the light by which the scene should be illuminated (or nullptr for no illumination)
-	// @param chunkDrawList: a list of chunks to draw
-	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList);
 		
 	// populate list of exits
 	void findExits();

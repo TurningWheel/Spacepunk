@@ -3,6 +3,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Main.hpp"
 #include "Engine.hpp"
@@ -92,7 +93,7 @@ void ShaderProgram::serialize(FileInterface* file) {
 	}
 }
 
-void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights) {
+void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights, Uint32 textureUnit) {
 	if (lastFrameDrawn == camera.getFramesDrawn()) {
 		return;
 	} else {
@@ -114,10 +115,23 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 		glUniform3fv(getUniformLocation(buf.format("gLightScale[%d]",index)), 1, glm::value_ptr(lightScale));
 		glUniform3fv(getUniformLocation(buf.format("gLightDirection[%d]",index)), 1, glm::value_ptr(lightDir));
 		glUniform1i(getUniformLocation(buf.format("gLightShape[%d]",index)), static_cast<GLint>(light->getShape()));
+		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW)) {
+			glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
+			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_TRUE);
+			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit);
+		} else {
+			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+		}
+
 		++index;
-		if (index >= maxLights) {
+		++textureUnit;
+		if (index >= maxLights || textureUnit >= GL_MAX_TEXTURE_IMAGE_UNITS) {
 			break;
 		}
 	}
 	glUniform1i(getUniformLocation("gNumLights"), (GLint)lights.getSize());
+
+	// upload light matrix
+	glm::mat4 lightProjMatrix = glm::perspective( glm::radians(90.f), 1.f, Shadow::camerainfo_t::clipNear, Shadow::camerainfo_t::clipFar );
+	glUniform4fv(getUniformLocation("gLightProj"), 1, glm::value_ptr(lightProjMatrix));
 }

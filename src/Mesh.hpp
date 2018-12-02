@@ -31,7 +31,7 @@ public:
 	virtual ~Mesh();
 
 	// maximum number of lights that will fit in the tile shader
-	static const Uint32 maxLights = 50;
+	static const Uint32 maxLights = 32;
 
 	// skin cache
 	struct skincache_t {

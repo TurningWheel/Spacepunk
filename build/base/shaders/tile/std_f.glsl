@@ -15,7 +15,8 @@ out vec4 FragColor;
 uniform bool gActiveLight;
 uniform vec3 gCameraPos;
 
-const int MAX_LIGHTS = 50;
+#define MAX_LIGHTS 32
+uniform mat4 gLightProj;
 uniform vec3 gLightPos[MAX_LIGHTS];
 uniform vec4 gLightColor[MAX_LIGHTS];
 uniform float gLightIntensity[MAX_LIGHTS];
@@ -23,6 +24,8 @@ uniform float gLightRadius[MAX_LIGHTS];
 uniform vec3 gLightScale[MAX_LIGHTS];
 uniform vec3 gLightDirection[MAX_LIGHTS];
 uniform int gLightShape[MAX_LIGHTS];
+uniform samplerCube gShadowmap[MAX_LIGHTS];
+uniform bool gShadowmapEnabled[MAX_LIGHTS];
 uniform int gNumLights;
 
 uniform sampler2DArray gDiffuseMap;
@@ -31,19 +34,72 @@ uniform sampler2DArray gEffectsMap;
 uniform samplerCube gCubeMap;
 uniform mat3 gTileColors[CHUNK_SIZE * CHUNK_SIZE];
 
+#define EPSILON 0.01
+bool IsInShadow(int shadow, vec3 lightDirection)
+{
+	if (gShadowmapEnabled[shadow] == false) {
+		return false;
+	}
+
+	float lDist = length(lightDirection);
+	float lSample = 0.f;
+
+	// glsl does not let you index a sampler
+	switch (shadow) {
+		case 0: lSample = texture(gShadowmap[0], -normalize(lightDirection)).r; break;
+		case 1: lSample = texture(gShadowmap[1], -normalize(lightDirection)).r; break;
+		case 2: lSample = texture(gShadowmap[2], -normalize(lightDirection)).r; break;
+		case 3: lSample = texture(gShadowmap[3], -normalize(lightDirection)).r; break;
+		case 4: lSample = texture(gShadowmap[4], -normalize(lightDirection)).r; break;
+		case 5: lSample = texture(gShadowmap[5], -normalize(lightDirection)).r; break;
+		case 6: lSample = texture(gShadowmap[6], -normalize(lightDirection)).r; break;
+		case 7: lSample = texture(gShadowmap[7], -normalize(lightDirection)).r; break;
+		case 8: lSample = texture(gShadowmap[8], -normalize(lightDirection)).r; break;
+		case 9: lSample = texture(gShadowmap[9], -normalize(lightDirection)).r; break;
+		case 10: lSample = texture(gShadowmap[10], -normalize(lightDirection)).r; break;
+		case 11: lSample = texture(gShadowmap[11], -normalize(lightDirection)).r; break;
+		case 12: lSample = texture(gShadowmap[12], -normalize(lightDirection)).r; break;
+		case 13: lSample = texture(gShadowmap[13], -normalize(lightDirection)).r; break;
+		case 14: lSample = texture(gShadowmap[14], -normalize(lightDirection)).r; break;
+		case 15: lSample = texture(gShadowmap[15], -normalize(lightDirection)).r; break;
+		case 16: lSample = texture(gShadowmap[16], -normalize(lightDirection)).r; break;
+		case 17: lSample = texture(gShadowmap[17], -normalize(lightDirection)).r; break;
+		case 18: lSample = texture(gShadowmap[18], -normalize(lightDirection)).r; break;
+		case 19: lSample = texture(gShadowmap[19], -normalize(lightDirection)).r; break;
+		case 20: lSample = texture(gShadowmap[20], -normalize(lightDirection)).r; break;
+		case 21: lSample = texture(gShadowmap[21], -normalize(lightDirection)).r; break;
+		case 22: lSample = texture(gShadowmap[22], -normalize(lightDirection)).r; break;
+		case 23: lSample = texture(gShadowmap[23], -normalize(lightDirection)).r; break;
+		case 24: lSample = texture(gShadowmap[24], -normalize(lightDirection)).r; break;
+		case 25: lSample = texture(gShadowmap[25], -normalize(lightDirection)).r; break;
+		case 26: lSample = texture(gShadowmap[26], -normalize(lightDirection)).r; break;
+		case 27: lSample = texture(gShadowmap[27], -normalize(lightDirection)).r; break;
+		case 28: lSample = texture(gShadowmap[28], -normalize(lightDirection)).r; break;
+		case 29: lSample = texture(gShadowmap[29], -normalize(lightDirection)).r; break;
+		case 30: lSample = texture(gShadowmap[30], -normalize(lightDirection)).r; break;
+		case 31: lSample = texture(gShadowmap[31], -normalize(lightDirection)).r; break;
+	}
+
+	if (lDist < lSample) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
 vec3 CalcBumpedNormal() {
-    vec3 lNormal = normalize(Normal);
-    vec3 lTangent = normalize(Tangent);
-    lTangent = normalize(lTangent - dot(lTangent, lNormal) * lNormal);
-    vec3 lBitangent = cross(lTangent, lNormal);
+	vec3 lNormal = normalize(Normal);
+	vec3 lTangent = normalize(Tangent);
+	lTangent = normalize(lTangent - dot(lTangent, lNormal) * lNormal);
+	vec3 lBitangent = cross(lTangent, lNormal);
 
-    vec3 lBumpMapNormal = texture(gNormalMap, NormalMap).xyz;
-    lBumpMapNormal = 2.0 * lBumpMapNormal - vec3(1.0, 1.0, 1.0);
+	vec3 lBumpMapNormal = texture(gNormalMap, NormalMap).xyz;
+	lBumpMapNormal = 2.0 * lBumpMapNormal - vec3(1.0, 1.0, 1.0);
 
-    mat3 lTBN = mat3(lTangent, lBitangent, lNormal);
-    vec3 lNewNormal = lTBN * lBumpMapNormal;
-    lNewNormal = normalize(lNewNormal);
-    return lNewNormal;
+	mat3 lTBN = mat3(lTangent, lBitangent, lNormal);
+	vec3 lNewNormal = lTBN * lBumpMapNormal;
+	lNewNormal = normalize(lNewNormal);
+	return lNewNormal;
 }
 
 vec4 MapDiffuseTexture(vec3 lNormal, float lReflectPower) {
@@ -51,7 +107,7 @@ vec4 MapDiffuseTexture(vec3 lNormal, float lReflectPower) {
 
 	float size  = CHUNK_SIZE * TILE_SIZE;
 	int index   = int(mod(floor(WorldPos.z + Normal.z), size) / TILE_SIZE);
-	index      += int(mod(floor(WorldPos.x + Normal.x), size) / TILE_SIZE) * CHUNK_SIZE;
+	index	  += int(mod(floor(WorldPos.x + Normal.x), size) / TILE_SIZE) * CHUNK_SIZE;
 
 	vec4 lFinalColor;
 	lFinalColor  = vec4(gTileColors[index][0], 0.0) * lTexColor.r;
@@ -60,9 +116,9 @@ vec4 MapDiffuseTexture(vec3 lNormal, float lReflectPower) {
 	lFinalColor += vec4(0.0, 0.0, 0.0, 1.0) * lTexColor.a;
 	lFinalColor  = lFinalColor * (1.0 - lReflectPower);
 
-	vec3 cameraDir    = normalize(gCameraPos - WorldPos);
+	vec3 cameraDir	= normalize(gCameraPos - WorldPos);
 	vec3 lReflection  = reflect(normalize(cameraDir), lNormal) * -1;
-	lFinalColor      += texture(gCubeMap, lReflection) * lReflectPower;
+	lFinalColor	  += texture(gCubeMap, lReflection) * lReflectPower;
 
 	return lFinalColor;
 }
@@ -70,7 +126,7 @@ vec4 MapDiffuseTexture(vec3 lNormal, float lReflectPower) {
 vec4 MapDiffuseTextureOLD(vec3 lNormal, float lReflectPower) {
 	vec4 lTexColor   = texture(gDiffuseMap, DiffuseMap) * (1.0 - lReflectPower);
 
-	vec3 cameraDir     = normalize(gCameraPos - WorldPos);
+	vec3 cameraDir	 = normalize(gCameraPos - WorldPos);
 	vec3 lReflection   = reflect(normalize(cameraDir), lNormal) * -1;
 	vec4 lReflectColor = texture(gCubeMap, lReflection) * lReflectPower;
 
@@ -80,7 +136,7 @@ vec4 MapDiffuseTextureOLD(vec3 lNormal, float lReflectPower) {
 void main() {
 	vec4  lEffectFrag   = texture(gEffectsMap, EffectsMap);
 	float lReflectPower = lEffectFrag.a;
-	vec3  lNormal       = CalcBumpedNormal();
+	vec3  lNormal	   = CalcBumpedNormal();
 
 	if( !gActiveLight ) {
 		float lGlowFactor = lEffectFrag.b;
@@ -97,6 +153,11 @@ void main() {
 				continue;
 			}
 
+			// this texel is shadowed
+			if( IsInShadow(c, gLightPos[c] - WorldPos) == true) {
+				continue;
+			}
+
 			float lDiffuseFactor  = dot(lNormal, lLightDirection);
 
 			vec4 lDiffuseColor  = vec4(0.0);
@@ -109,13 +170,13 @@ void main() {
 				lDiffuseColor = gLightColor[c] * max(gLightIntensity[c], 1.f) * lDiffuseFactor;
 
 				// calculate specular color
-				vec3  lFragToEye       = normalize(WorldPos - gCameraPos);
-				vec3  lLightReflect    = normalize(reflect(lLightDirection, lNormal));
+				vec3  lFragToEye	   = normalize(WorldPos - gCameraPos);
+				vec3  lLightReflect	= normalize(reflect(lLightDirection, lNormal));
 				float lSpecularFactor  = dot(lFragToEye, lLightReflect);
 
 				if( lSpecularFactor > 0.0 ) {
 					float lSpecularIntensity  = lEffectFrag.r * 255.0;
-					float lSpecularPower      = pow(lSpecularFactor, max(lEffectFrag.g * 255.0, 1.f));
+					float lSpecularPower	  = pow(lSpecularFactor, max(lEffectFrag.g * 255.0, 1.f));
 
 					lSpecularColor = gLightColor[c] * lSpecularIntensity * lSpecularPower;
 				}
@@ -128,14 +189,14 @@ void main() {
 					// sphere
 					vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
 					float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
-					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+					float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
 					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
 				} else if( gLightShape[c] == 1 ) {
 					// box
 					vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
 					float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
-					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+					float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
 					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
 				} else if( gLightShape[c] == 2 ) {
@@ -149,7 +210,7 @@ void main() {
 						lSpotFactor = pow(lSpotFactor, 10);
 						vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
 						float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
-						float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+						float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 						float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.0) / lLightRadius;
 						lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
 					} else {
@@ -162,7 +223,7 @@ void main() {
 						lSpotFactor = pow(lSpotFactor, 10);
 						vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
 						float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
-						float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
+						float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 						float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
 						lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
 					} else {

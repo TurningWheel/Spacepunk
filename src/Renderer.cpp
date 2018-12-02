@@ -129,7 +129,6 @@ int Renderer::initVideo() {
 	glLoadIdentity();
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	glClearColor( 0.f, 0.f, 0.f, 0.f );
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_MULTISAMPLE);
@@ -137,6 +136,7 @@ int Renderer::initVideo() {
 
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
+	glClearColor( 0.f, 0.f, 0.f, 0.f );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	swapWindow();
 
@@ -577,6 +577,7 @@ void Renderer::printTextColor( const Rect<int>& rect, const glm::vec4& color, co
 void Renderer::clearBuffers() {
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
+	glClearColor( 0.f, 0.f, 0.f, 0.f );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	drawRect(nullptr,glm::vec4(0.f,0.f,0.f,1.f));
 }

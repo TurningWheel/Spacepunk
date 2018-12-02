@@ -172,6 +172,9 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 		case Camera::DRAW_TRIANGLES:
 			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/triangles.json");
 			break;
+		case Camera::DRAW_SHADOW:
+			mat = mainEngine->getMaterialResource().dataForString("shaders/actor/shadow.json");
+			break;
 		default:
 			if( material == nullptr ) {
 				mat = mainEngine->getMaterialResource().dataForString("shaders/actor/std.json");
@@ -194,6 +197,31 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 			glLineWidth(shaderVars.lineWidth);
 		}
 
+		// load highlight color into shader
+		glUniform4fv(shader.getUniformLocation("gHighlightColor"), 1, glm::value_ptr(shaderVars.highlightColor));
+
+		// load textures, if necessary
+		unsigned int textureUnit = 0;
+		if( camera.getDrawMode() == Camera::DRAW_STANDARD || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL || camera.getDrawMode() == Camera::DRAW_GLOW ) {
+			// load per-mesh shader vars
+			glUniform1i(shader.getUniformLocation("gCustomColorEnabled"), shaderVars.customColorEnabled);
+			if( shaderVars.customColorEnabled == GL_TRUE ) {
+				glUniform4fv(shader.getUniformLocation("gCustomColorR"), 1, &shaderVars.customColorR[0]);
+				glUniform4fv(shader.getUniformLocation("gCustomColorG"), 1, &shaderVars.customColorG[0]);
+				glUniform4fv(shader.getUniformLocation("gCustomColorB"), 1, &shaderVars.customColorB[0]);
+				glUniform4fv(shader.getUniformLocation("gCustomColorA"), 1, &shaderVars.customColorA[0]);
+			}
+
+			// bind textures
+			if( mat ) {
+				if( camera.getDrawMode() == Camera::DRAW_GLOW ) {
+					textureUnit = mat->bindTextures(Material::GLOW);
+				} else {
+					textureUnit = mat->bindTextures(Material::STANDARD);
+				}
+			}
+		}
+
 		// load common shader vars
 		if( camera.getDrawMode() == Camera::DRAW_DEPTH ) {
 
@@ -202,6 +230,22 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		} else if( camera.getDrawMode() == Camera::DRAW_SHADOW ) {
+
+			// load model matrix into shader
+			glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
+
+			// load projection matrix into shader
+			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+
+			// load light data into shader
+			if( lights.getSize() ) {
+				glm::vec3 lightPos( lights[0]->getGlobalPos().x, -lights[0]->getGlobalPos().z, lights[0]->getGlobalPos().y );
+				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
+			} else {
+				glm::vec3 lightPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
+			}
 		} else if( camera.getDrawMode() == Camera::DRAW_SILHOUETTE || camera.getDrawMode() == Camera::DRAW_TRIANGLES ) {
 
 			// load model matrix into shader
@@ -254,7 +298,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 			} else {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
 				if( lights.getSize() ) {
-					shader.uploadLights(camera, lights, maxLights);
+					shader.uploadLights(camera, lights, maxLights, textureUnit);
 				} else if( editor ) {
 					glUniform3fv(shader.getUniformLocation("gLightPos[0]"), 1, glm::value_ptr(cameraPos));
 					glUniform4fv(shader.getUniformLocation("gLightColor[0]"), 1, glm::value_ptr(glm::vec4(1,1,1,1)));
@@ -262,31 +306,10 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 					glUniform1f(shader.getUniformLocation("gLightRadius[0]"), 16384.f);
 					glUniform3fv(shader.getUniformLocation("gLightScale[0]"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));
 					glUniform1i(shader.getUniformLocation("gLightShape[0]"), 0);
+					glUniform1i(shader.getUniformLocation("gShadowmapEnabled[0]"), GL_FALSE);
 					glUniform1i(shader.getUniformLocation("gNumLights"), 1);
 				} else {
 					glUniform1i(shader.getUniformLocation("gNumLights"), 0);
-				}
-			}
-		}
-
-		// load highlight color into shader
-		glUniform4fv(shader.getUniformLocation("gHighlightColor"), 1, glm::value_ptr(shaderVars.highlightColor));
-
-		if( camera.getDrawMode() == Camera::DRAW_STANDARD || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL || camera.getDrawMode() == Camera::DRAW_GLOW ) {
-			// load per-mesh shader vars
-			glUniform1i(shader.getUniformLocation("gCustomColorEnabled"), shaderVars.customColorEnabled);
-			if( shaderVars.customColorEnabled == GL_TRUE ) {
-				glUniform4fv(shader.getUniformLocation("gCustomColorR"), 1, &shaderVars.customColorR[0]);
-				glUniform4fv(shader.getUniformLocation("gCustomColorG"), 1, &shaderVars.customColorG[0]);
-				glUniform4fv(shader.getUniformLocation("gCustomColorB"), 1, &shaderVars.customColorB[0]);
-				glUniform4fv(shader.getUniformLocation("gCustomColorA"), 1, &shaderVars.customColorA[0]);
-			}
-
-			if( mat ) {
-				if( camera.getDrawMode() == Camera::DRAW_GLOW ) {
-					mat->bindTextures(Material::GLOW);
-				} else {
-					mat->bindTextures(Material::STANDARD);
 				}
 			}
 		}

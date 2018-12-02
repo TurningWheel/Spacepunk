@@ -11,6 +11,7 @@
 #include "Entity.hpp"
 #include "ArrayList.hpp"
 #include "Model.hpp"
+#include "Shadow.hpp"
 
 class World;
 class Camera;
@@ -43,11 +44,11 @@ public:
 	const float&		getIntensity() const		{ return intensity; }
 	const float&		getRadius() const			{ return radius; }
 	ArrayList<Chunk*>&	getChunksLit()				{ return chunksLit; }
-	ArrayList<Chunk*>&	getChunksShadow()			{ return chunksShadow; }
 	const shape_t&		getShape() const			{ return shape; }
 	const bool			isChosen() const			{ return chosen; }
 	const float			getArc() const				{ return arc; }
 	const bool			isShadow() const			{ return shadow; }
+	Shadow&				getShadowMap()				{ return shadowMap; }
 
 	void	setColor(const Vector& _color)			{ color = _color; }
 	void	setIntensity(const float _intensity)	{ intensity = _intensity; }
@@ -64,6 +65,9 @@ public:
 	// @param camera: the camera to draw the light from
 	// @param light: the light to light the light with (whew) (unused)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
+
+	// creates a shadow map from the light source
+	void createShadowMap();
 
 	// load the component from a file
 	// @param fp: the file to read from
@@ -84,7 +88,8 @@ public:
 
 protected:
 	ArrayList<Chunk*> chunksLit;
-	ArrayList<Chunk*> chunksShadow;
+	Shadow shadowMap;
+	bool shadowMapDrawn = false;
 
 	Uint32 lastUpdate = 0;
 	bool chosen = false;

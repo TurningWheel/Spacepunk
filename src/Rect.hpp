@@ -46,9 +46,9 @@ struct Rect {
 	// @param file interface to serialize with
 	void serialize(FileInterface * file) {
 		file->property("x", x);
-		file->property("y", x);
-		file->property("w", x);
-		file->property("h", x);
+		file->property("y", y);
+		file->property("w", w);
+		file->property("h", h);
 	}
 
 	// exposes this rect type to a script

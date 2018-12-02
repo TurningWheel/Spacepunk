@@ -166,6 +166,7 @@ public:
 	const String&				getZone() const							{ return zone; }
 	Uint32						getID() const							{ return id; }
 	const filetype_t			getFiletype() const						{ return filetype; }
+	Entity*						getShadowCamera()						{ return shadowCamera; }
 
 	// editing properties
 	bool				isPointerActive() const				{ return pointerActive; }
@@ -204,6 +205,7 @@ protected:
 	// entities
 	Uint32 uids=0;
 	LinkedList<Entity*> entities[numBuckets];
+	Entity* shadowCamera = nullptr;
 
 	// lasers
 	ArrayList<laser_t> lasers;

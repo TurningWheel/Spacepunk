@@ -66,6 +66,11 @@ void World::initialize(bool empty) {
 	// the world
 	bulletDynamicsWorld = new btDiscreteDynamicsWorld(bulletDispatcher,bulletBroadphase,bulletSolver,bulletCollisionConfiguration);
 	bulletDynamicsWorld->setGravity(btVector3(0,-9.81f,0));
+
+	// create shadow camera
+	const Entity::def_t* def = Entity::findDef("Shadow Camera");
+	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Angle());
+	shadowCamera->setShouldSave(false);
 }
 
 void World::getSelectedEntities(LinkedList<Entity*>& outResult) {
@@ -238,6 +243,9 @@ void World::lineTraceList( const Vector& origin, const Vector& dest, LinkedList<
 				Entity* entity;
 				if( (entity=uidToEntity(hit.index)) != nullptr ) {
 					if( !entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE) && (!mainEngine->isEditorRunning() || !entity->isShouldSave()) ) {
+						continue;
+					}
+					if( entity==shadowCamera ) {
 						continue;
 					}
 				}

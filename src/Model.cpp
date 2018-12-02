@@ -215,6 +215,9 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	if( camera.getEntity()->isShouldSave() && !entity->isShouldSave() ) {
 		return;
 	}
+	if( camera.getDrawMode() == Camera::DRAW_SHADOW && !entity->isShouldSave() ) {
+		return;
+	}
 
 	// skip certain passes if necessary
 	if( camera.getDrawMode()==Camera::DRAW_STENCIL && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)) )

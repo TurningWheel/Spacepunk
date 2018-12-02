@@ -1844,7 +1844,6 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	}
 	for (auto light : lights) {
 		light->getChunksLit().clear();
-		light->getChunksShadow().clear();
 	}
 
 	// move entities, if necessary
@@ -2021,6 +2020,11 @@ void TileWorld::draw() {
 			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
 		}
 	}
+	for (auto light : lights) {
+		if (!light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) || !light->isShadow())
+			continue;
+		light->createShadowMap();
+	}
 
 	// cull unselected cameras (editor)
 	if( editor && editor->isInitialized() ) {
@@ -2042,6 +2046,11 @@ void TileWorld::draw() {
 	for( Node<Camera*>* node=cameras.getFirst(); node!=nullptr; node=node->getNext() ) {
 		Camera* camera = node->getData();
 
+		// skip deactivated cameras
+		if( !camera->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || !camera->isEnabled() ) {
+			continue;
+		}
+
 		// in editor, skip minimap if any other cameras are selected
 		// replace it with our selected camera(s)
 		Rect<Sint32> oldWin;
@@ -2053,11 +2062,6 @@ void TileWorld::draw() {
 			} else if( camera == editor->getMinimapCamera() && cameras.getSize() > 2 ) {
 				continue;
 			}
-		}
-
-		// skip deactivated cameras
-		if( !camera->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) ) {
-			continue;
 		}
 
 		// skip cameras whose window is too small
@@ -2074,7 +2078,7 @@ void TileWorld::draw() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 		// setup projection
-		camera->setupProjection();
+		camera->setupProjection(true);
 
 		// occlusion test
 		if( !camera->getChunksVisible() ) {
@@ -2129,39 +2133,17 @@ void TileWorld::draw() {
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
+			glDepthFunc(GL_LEQUAL);
 			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 		} else {
-			// render stencil shadows
-			glEnable(GL_STENCIL_TEST);
-			glDepthMask(GL_FALSE);
-			glEnable(GL_DEPTH_CLAMP);
-			glDisable(GL_CULL_FACE);
-			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
-			glStencilOpSeparate(GL_BACK, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
-			glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
-			glClear(GL_STENCIL_BUFFER_BIT);
-			glDepthFunc(GL_LESS);
-			glDrawBuffer(GL_NONE);
-			/*if( cvar_shadowsEnabled.toInt() ) {
-				if( light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow() ) {
-					camera->setDrawMode(Camera::DRAW_STENCIL);
-					if( light->getChunksShadow().getSize() > 0 ) {
-						drawSceneObjects(*camera,cameraLightList,light->getChunksShadow());
-					}
-				}
-			}*/
-			glDisable(GL_DEPTH_CLAMP);
-			glEnable(GL_CULL_FACE);
-
 			// render shadowed scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
 			glDrawBuffer(GL_BACK);
-			glStencilFunc(GL_EQUAL, 0x00, 0xFF);
-			glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
-			glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
+			glDisable(GL_STENCIL_TEST);
+			glEnable(GL_DEPTH_TEST);
+			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_LEQUAL);
 			drawSceneObjects(*camera,cameraLightList,camera->getVisibleChunks());
-			glDisable(GL_STENCIL_TEST);
 		}
 
 		// render scene with glow textures
@@ -2214,7 +2196,7 @@ void TileWorld::draw() {
 			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
 
 			// render state gets messed up after this, so reinit
-			camera->setupProjection();
+			camera->setupProjection(true);
 		} else {
 			// render silhouettes
 			camera->setDrawMode(Camera::DRAW_SILHOUETTE);

@@ -24,6 +24,7 @@ public:
 
 		// these two for each light in a scene
 		DRAW_STENCIL,
+		DRAW_SHADOW,
 		DRAW_STANDARD,
 			
 		// additional fx passes
@@ -70,6 +71,7 @@ public:
 	const drawmode_t	getDrawMode() const			{ return drawMode; }
 	const bool&			isOrtho() const				{ return ortho; }
 	const Uint32		getFramesDrawn() const		{ return framesDrawn; }
+	const bool&			isEnabled() const			{ return enabled; }
 
 	void	setClipNear(float _clipNear)		{ clipNear = _clipNear; }
 	void	setClipFar(float _clipFar)			{ clipFar = _clipFar; }
@@ -77,9 +79,11 @@ public:
 	void	setFov(Sint32 _fov)					{ fov = _fov; }
 	void	setDrawMode(drawmode_t _drawMode)	{ drawMode = _drawMode; }
 	void	setOrtho(const bool _ortho)			{ ortho = _ortho; }
+	void	setEnabled(const bool _enabled)		{ enabled = _enabled; }
 
 	// sets up the 3D projection for drawing
-	void setupProjection();
+	// @param scissor True if you want scissoring
+	void setupProjection(bool scissor);
 
 	// resets the drawing matrices
 	void resetMatrices();
@@ -181,6 +185,7 @@ protected:
 	Rect<Sint32> win;
 	Sint32 fov = 70;
 	bool ortho = false;
+	bool enabled = true;
 
 	// built-in basic objects
 	Cube cube;
