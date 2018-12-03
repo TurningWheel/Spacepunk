@@ -129,9 +129,11 @@ void Light::createShadowMap() {
 	if (!world) {
 		return;
 	}
-	//if (strcmp(entity->getScriptStr(), "") == 0 && shadowMapDrawn == true) {
-	//	return;
-	//}
+	if (entity->getTicks() == shadowTicks) {
+		return;
+	} else {
+		shadowTicks = entity->getTicks();
+	}
 
 	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
 	Camera* camera = shadowCamera->findComponentByUID<Camera>(1); assert(camera);

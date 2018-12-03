@@ -8,5 +8,6 @@ out vec4 FragColor;
 
 void main() {
 	vec3 lLightToVertex = WorldPos - gLightPos;
-	FragColor = vec4(length(lLightToVertex), 0.f, 0.f, 1.f);
+	float lDist = lLightToVertex.x*lLightToVertex.x + lLightToVertex.y*lLightToVertex.y + lLightToVertex.z*lLightToVertex.z;
+	FragColor = vec4(lDist, 0.f, 0.f, 1.f);
 }

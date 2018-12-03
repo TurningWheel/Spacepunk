@@ -2020,11 +2020,6 @@ void TileWorld::draw() {
 			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
 		}
 	}
-	for (auto light : lights) {
-		if (!light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) || !light->isShadow())
-			continue;
-		light->createShadowMap();
-	}
 
 	// cull unselected cameras (editor)
 	if( editor && editor->isInitialized() ) {
@@ -2069,17 +2064,6 @@ void TileWorld::draw() {
 			continue;
 		}
 
-		// clear the window area
-		glClear(GL_DEPTH_BUFFER_BIT);
-		Rect<int> backgroundRect = camera->getWin();
-		renderer->drawRect(&backgroundRect,glm::vec4(0.f,0.f,0.f,1.f));
-
-		// set proper light blending function
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-		// setup projection
-		camera->setupProjection(true);
-
 		// occlusion test
 		if( !camera->getChunksVisible() ) {
 			camera->occlusionTest(camera->getClipFar(), cvar_renderCull.toInt());
@@ -2114,10 +2098,24 @@ void TileWorld::draw() {
 					if( !light->isChosen() ) {
 						light->setChosen(true);
 						cameraLightList.push(light);
+						if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
+							light->createShadowMap();
+						}
 					}
 				}
 			}
 		}
+
+		// clear the window area
+		glClear(GL_DEPTH_BUFFER_BIT);
+		Rect<int> backgroundRect = camera->getWin();
+		renderer->drawRect(&backgroundRect,glm::vec4(0.f,0.f,0.f,1.f));
+
+		// set proper light blending function
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		// setup projection
+		camera->setupProjection(true);
 
 		// render scene into depth buffer
 		camera->setDrawMode(Camera::DRAW_DEPTH);

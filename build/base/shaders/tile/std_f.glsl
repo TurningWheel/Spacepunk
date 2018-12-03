@@ -41,43 +41,44 @@ bool IsInShadow(int shadow, vec3 lightDirection)
 		return false;
 	}
 
-	float lDist = length(lightDirection);
+	vec3 lLightDirNormal = normalize(lightDirection);
+	float lDist = lightDirection.x*lightDirection.x + lightDirection.y*lightDirection.y + lightDirection.z*lightDirection.z;
 	float lSample = 0.f;
 
 	// glsl does not let you index a sampler
 	switch (shadow) {
-		case 0: lSample = texture(gShadowmap[0], -normalize(lightDirection)).r; break;
-		case 1: lSample = texture(gShadowmap[1], -normalize(lightDirection)).r; break;
-		case 2: lSample = texture(gShadowmap[2], -normalize(lightDirection)).r; break;
-		case 3: lSample = texture(gShadowmap[3], -normalize(lightDirection)).r; break;
-		case 4: lSample = texture(gShadowmap[4], -normalize(lightDirection)).r; break;
-		case 5: lSample = texture(gShadowmap[5], -normalize(lightDirection)).r; break;
-		case 6: lSample = texture(gShadowmap[6], -normalize(lightDirection)).r; break;
-		case 7: lSample = texture(gShadowmap[7], -normalize(lightDirection)).r; break;
-		case 8: lSample = texture(gShadowmap[8], -normalize(lightDirection)).r; break;
-		case 9: lSample = texture(gShadowmap[9], -normalize(lightDirection)).r; break;
-		case 10: lSample = texture(gShadowmap[10], -normalize(lightDirection)).r; break;
-		case 11: lSample = texture(gShadowmap[11], -normalize(lightDirection)).r; break;
-		case 12: lSample = texture(gShadowmap[12], -normalize(lightDirection)).r; break;
-		case 13: lSample = texture(gShadowmap[13], -normalize(lightDirection)).r; break;
-		case 14: lSample = texture(gShadowmap[14], -normalize(lightDirection)).r; break;
-		case 15: lSample = texture(gShadowmap[15], -normalize(lightDirection)).r; break;
-		case 16: lSample = texture(gShadowmap[16], -normalize(lightDirection)).r; break;
-		case 17: lSample = texture(gShadowmap[17], -normalize(lightDirection)).r; break;
-		case 18: lSample = texture(gShadowmap[18], -normalize(lightDirection)).r; break;
-		case 19: lSample = texture(gShadowmap[19], -normalize(lightDirection)).r; break;
-		case 20: lSample = texture(gShadowmap[20], -normalize(lightDirection)).r; break;
-		case 21: lSample = texture(gShadowmap[21], -normalize(lightDirection)).r; break;
-		case 22: lSample = texture(gShadowmap[22], -normalize(lightDirection)).r; break;
-		case 23: lSample = texture(gShadowmap[23], -normalize(lightDirection)).r; break;
-		case 24: lSample = texture(gShadowmap[24], -normalize(lightDirection)).r; break;
-		case 25: lSample = texture(gShadowmap[25], -normalize(lightDirection)).r; break;
-		case 26: lSample = texture(gShadowmap[26], -normalize(lightDirection)).r; break;
-		case 27: lSample = texture(gShadowmap[27], -normalize(lightDirection)).r; break;
-		case 28: lSample = texture(gShadowmap[28], -normalize(lightDirection)).r; break;
-		case 29: lSample = texture(gShadowmap[29], -normalize(lightDirection)).r; break;
-		case 30: lSample = texture(gShadowmap[30], -normalize(lightDirection)).r; break;
-		case 31: lSample = texture(gShadowmap[31], -normalize(lightDirection)).r; break;
+		case 0: lSample = texture(gShadowmap[0], -lLightDirNormal).r; break;
+		case 1: lSample = texture(gShadowmap[1], -lLightDirNormal).r; break;
+		case 2: lSample = texture(gShadowmap[2], -lLightDirNormal).r; break;
+		case 3: lSample = texture(gShadowmap[3], -lLightDirNormal).r; break;
+		case 4: lSample = texture(gShadowmap[4], -lLightDirNormal).r; break;
+		case 5: lSample = texture(gShadowmap[5], -lLightDirNormal).r; break;
+		case 6: lSample = texture(gShadowmap[6], -lLightDirNormal).r; break;
+		case 7: lSample = texture(gShadowmap[7], -lLightDirNormal).r; break;
+		case 8: lSample = texture(gShadowmap[8], -lLightDirNormal).r; break;
+		case 9: lSample = texture(gShadowmap[9], -lLightDirNormal).r; break;
+		case 10: lSample = texture(gShadowmap[10], -lLightDirNormal).r; break;
+		case 11: lSample = texture(gShadowmap[11], -lLightDirNormal).r; break;
+		case 12: lSample = texture(gShadowmap[12], -lLightDirNormal).r; break;
+		case 13: lSample = texture(gShadowmap[13], -lLightDirNormal).r; break;
+		case 14: lSample = texture(gShadowmap[14], -lLightDirNormal).r; break;
+		case 15: lSample = texture(gShadowmap[15], -lLightDirNormal).r; break;
+		case 16: lSample = texture(gShadowmap[16], -lLightDirNormal).r; break;
+		case 17: lSample = texture(gShadowmap[17], -lLightDirNormal).r; break;
+		case 18: lSample = texture(gShadowmap[18], -lLightDirNormal).r; break;
+		case 19: lSample = texture(gShadowmap[19], -lLightDirNormal).r; break;
+		case 20: lSample = texture(gShadowmap[20], -lLightDirNormal).r; break;
+		case 21: lSample = texture(gShadowmap[21], -lLightDirNormal).r; break;
+		case 22: lSample = texture(gShadowmap[22], -lLightDirNormal).r; break;
+		case 23: lSample = texture(gShadowmap[23], -lLightDirNormal).r; break;
+		case 24: lSample = texture(gShadowmap[24], -lLightDirNormal).r; break;
+		case 25: lSample = texture(gShadowmap[25], -lLightDirNormal).r; break;
+		case 26: lSample = texture(gShadowmap[26], -lLightDirNormal).r; break;
+		case 27: lSample = texture(gShadowmap[27], -lLightDirNormal).r; break;
+		case 28: lSample = texture(gShadowmap[28], -lLightDirNormal).r; break;
+		case 29: lSample = texture(gShadowmap[29], -lLightDirNormal).r; break;
+		case 30: lSample = texture(gShadowmap[30], -lLightDirNormal).r; break;
+		case 31: lSample = texture(gShadowmap[31], -lLightDirNormal).r; break;
 	}
 
 	if (lDist < lSample) {
