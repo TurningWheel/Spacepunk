@@ -37,7 +37,6 @@ public:
 private:
 	GLuint fbo = 0;
 	GLuint shadowMap = 0;
-	GLuint depth = 0;
 
 	bool init();
 };

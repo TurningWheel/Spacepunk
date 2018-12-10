@@ -112,6 +112,7 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 		glUniform4fv(getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
 		glUniform1f(getUniformLocation(buf.format("gLightIntensity[%d]",index)), light->getIntensity());
 		glUniform1f(getUniformLocation(buf.format("gLightRadius[%d]",index)), light->getRadius());
+		glUniform1f(getUniformLocation(buf.format("gLightArc[%d]",index)), light->getArc() * PI / 180.f);
 		glUniform3fv(getUniformLocation(buf.format("gLightScale[%d]",index)), 1, glm::value_ptr(lightScale));
 		glUniform3fv(getUniformLocation(buf.format("gLightDirection[%d]",index)), 1, glm::value_ptr(lightDir));
 		glUniform1i(getUniformLocation(buf.format("gLightShape[%d]",index)), static_cast<GLint>(light->getShape()));
@@ -119,6 +120,8 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 			glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
 			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_TRUE);
 			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit);
+			glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
+			glUniformMatrix4fv(getUniformLocation(buf.format("gLightProj[%d]",(int)(index))), 1, GL_FALSE, glm::value_ptr(lightProj));
 		} else {
 			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
 		}

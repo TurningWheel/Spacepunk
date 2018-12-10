@@ -11,8 +11,6 @@ uniform mat4 gBones[lMaxBones];
 uniform mat4 gModel;
 uniform mat4 gView;
 
-out vec3 WorldPos;
-
 void main() {
 	mat4 lBoneTransform = mat4(1.f);
 	if( gAnimated ) {
@@ -24,5 +22,4 @@ void main() {
 	
 	vec4 lPos = lBoneTransform * vec4(iPosition, 1.0);
 	gl_Position = gView * gModel * lPos;
-	WorldPos = (gModel * lPos).xyz;
 }

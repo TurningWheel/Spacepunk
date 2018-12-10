@@ -121,6 +121,8 @@ void Light::serialize(FileInterface * file) {
 	}
 }
 
+static Cvar cvar_shadowDepthOffset("render.shadowdepthoffset","shadow depth buffer adjustment","2");
+
 void Light::createShadowMap() {
 	if (!entity || !entity->getWorld()) {
 		return;
@@ -140,20 +142,20 @@ void Light::createShadowMap() {
 	camera->setDrawMode(Camera::DRAW_SHADOW);
 	shadowCamera->setPos(gPos);
 
+	glPolygonOffset(1.f, cvar_shadowDepthOffset.toFloat());
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
 	for (size_t c = 0; c < 6; ++c) {
 		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
-		glClearColor(FLT_MAX, FLT_MAX, FLT_MAX, FLT_MAX);
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
-		glCullFace(GL_FRONT);
+		glClear(GL_DEPTH_BUFFER_BIT);
 		shadowCamera->setAng(Shadow::cameraInfo[c].dir);
 		shadowCamera->update();
 		camera->setClipFar(radius);
 		camera->setupProjection(false);
 		world->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
 	}
-	glCullFace(GL_BACK);
-	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glEnable(GL_CULL_FACE);
+	glPolygonOffset(1.f, 0.f);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	shadowMapDrawn = true;

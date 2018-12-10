@@ -404,6 +404,8 @@ void Script::exposeEditor(Editor& _editor) {
 		.addFunction("entityLightColorB", &Editor::entityLightColorB)
 		.addFunction("entityLightIntensity", &Editor::entityLightIntensity)
 		.addFunction("entityLightRadius", &Editor::entityLightRadius)
+		.addFunction("entityLightArc", &Editor::entityLightArc)
+		.addFunction("entityLightShadow", &Editor::entityLightShadow)
 		.addFunction("entityLightShape", &Editor::entityLightShape)
 		.addFunction("entityCameraClipNear", &Editor::entityCameraClipNear)
 		.addFunction("entityCameraClipFar", &Editor::entityCameraClipFar)
@@ -759,10 +761,14 @@ void Script::exposeLight() {
 		.addFunction("getColor", &Light::getColor)
 		.addFunction("getIntensity", &Light::getIntensity)
 		.addFunction("getRadius", &Light::getRadius)
+		.addFunction("getArc", &Light::getArc)
+		.addFunction("isShadow", &Light::isShadow)
 		.addFunction("setColor", &Light::setColor)
 		.addFunction("setIntensity", &Light::setIntensity)
 		.addFunction("setRadius", &Light::setRadius)
 		.addFunction("setShape", &Light::setShape)
+		.addFunction("setArc", &Light::setArc)
+		.addFunction("setShadow", &Light::setShadow)
 		.endClass()
 	;
 

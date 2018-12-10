@@ -286,6 +286,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+			glUniform2fv(shader.getUniformLocation("gClipPlanes"), 1, glm::value_ptr(glm::vec2(camera.getClipNear(), camera.getClipFar())));
 
 			// load camera position into shader
 			glm::vec3 cameraPos = glm::vec3( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
@@ -724,11 +725,23 @@ void Mesh::SubMesh::readNodeHierarchy(Map<AnimationState>& animations, skincache
 	glm::mat4 glmTransform = glm::transpose(glm::make_mat4(&nodeTransform.a1));
 	glm::mat4 globalTransform = rootTransform * glmTransform;
 
-	if( boneMapping.exists(nodeName) ) {
-		unsigned int boneIndex = *boneMapping[nodeName];
-		skin.offsets[boneIndex] = globalTransform;
-		skin.anims[boneIndex] = globalTransform * bones[boneIndex].offset;
+	unsigned int boneIndex = 0;
+	unsigned int* boneIndexPtr = boneMapping[nodeName];
+	if( !boneIndexPtr ) {
+		boneIndex = numBones;
+		skin.offsets.resize(numBones+1);
+		skin.anims.resize(numBones+1);
+		boneMapping.insert(nodeName, numBones);
+		boneinfo_t bi;
+		bi.name = nodeName;
+		bi.offset = glm::mat4();
+		bones.push(bi);
+		++numBones;
+	} else {
+		boneIndex = *boneIndexPtr;
 	}
+	skin.offsets[boneIndex] = globalTransform;
+	skin.anims[boneIndex] = globalTransform * bones[boneIndex].offset;
 
 	for( unsigned int i=0; i < node->mNumChildren; ++i ) {
 		readNodeHierarchy(animations, skin, node->mChildren[i], globalTransform);

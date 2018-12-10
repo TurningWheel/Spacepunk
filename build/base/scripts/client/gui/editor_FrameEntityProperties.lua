@@ -39,6 +39,12 @@ function buttonModelCustomColor(uid)
 	editor:entityModelCustomColor(uid)
 end
 
+-- Light component:
+
+function buttonLightShadowEnabled(uid)
+	editor:entityLightShadow(uid)
+end
+
 -- Camera component:
 
 function buttonCameraOrtho(uid)

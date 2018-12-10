@@ -145,6 +145,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 
 		// load projection matrix into shader
 		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		glUniform2fv(shader.getUniformLocation("gClipPlanes"), 1, glm::value_ptr(glm::vec2(camera.getClipNear(), camera.getClipFar())));
 
 		glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
 		glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
@@ -169,6 +170,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 				glUniform4fv(shader.getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
 				glUniform1f(shader.getUniformLocation(buf.format("gLightIntensity[%d]",index)), light->getIntensity());
 				glUniform1f(shader.getUniformLocation(buf.format("gLightRadius[%d]",index)), light->getRadius());
+				glUniform1f(shader.getUniformLocation(buf.format("gLightArc[%d]",index)), light->getArc() * PI / 180.f);
 				glUniform3fv(shader.getUniformLocation(buf.format("gLightScale[%d]",index)), 1, glm::value_ptr(lightScale));
 				glUniform3fv(shader.getUniformLocation(buf.format("gLightDirection[%d]",index)), 1, glm::value_ptr(lightDir));
 				glUniform1i(shader.getUniformLocation(buf.format("gLightShape[%d]",index)), static_cast<GLint>(light->getShape()));
@@ -177,6 +179,8 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), 4 + index);
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_TRUE);
 					light->getShadowMap().bindForReading(GL_TEXTURE0+4+index);
+					glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
+					glUniformMatrix4fv(shader.getUniformLocation(buf.format("gLightProj[%d]",(int)(index))), 1, GL_FALSE, glm::value_ptr(lightProj));
 				} else {
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
 				}
