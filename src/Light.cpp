@@ -143,7 +143,6 @@ void Light::createShadowMap() {
 	shadowCamera->setPos(gPos);
 
 	glPolygonOffset(1.f, cvar_shadowDepthOffset.toFloat());
-	glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	for (size_t c = 0; c < 6; ++c) {
 		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
@@ -154,7 +153,6 @@ void Light::createShadowMap() {
 		camera->setupProjection(false);
 		world->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
 	}
-	glEnable(GL_CULL_FACE);
 	glPolygonOffset(1.f, 0.f);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
