@@ -14,7 +14,6 @@ out vec4 FragColor;
 
 uniform bool gActiveLight;
 uniform vec3 gCameraPos;
-uniform vec2 gClipPlanes;
 
 #define MAX_LIGHTS 32
 uniform vec3 gLightPos[MAX_LIGHTS];

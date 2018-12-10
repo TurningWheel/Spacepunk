@@ -286,7 +286,6 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
-			glUniform2fv(shader.getUniformLocation("gClipPlanes"), 1, glm::value_ptr(glm::vec2(camera.getClipNear(), camera.getClipFar())));
 
 			// load camera position into shader
 			glm::vec3 cameraPos = glm::vec3( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );

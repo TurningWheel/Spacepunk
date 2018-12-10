@@ -82,6 +82,8 @@ public:
 		intensity = src.intensity;
 		radius = src.radius;
 		shape = src.shape;
+		arc = src.arc;
+		shadow = src.shadow;
 		updateNeeded = true;
 		return *this;
 	}

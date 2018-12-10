@@ -145,7 +145,6 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 
 		// load projection matrix into shader
 		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
-		glUniform2fv(shader.getUniformLocation("gClipPlanes"), 1, glm::value_ptr(glm::vec2(camera.getClipNear(), camera.getClipFar())));
 
 		glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
 		glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
