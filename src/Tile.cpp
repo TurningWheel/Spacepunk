@@ -190,10 +190,6 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 				}
 			}
 			glUniform1i(shader.getUniformLocation("gNumLights"), (GLint)lights.getSize());
-
-			// upload light matrix
-			glm::mat4 lightProjMatrix = glm::perspective( glm::radians(90.f), 1.f, Shadow::camerainfo_t::clipNear, Shadow::camerainfo_t::clipFar );
-			glUniform4fv(shader.getUniformLocation("gLightProj"), 1, glm::value_ptr(lightProjMatrix));
 		} else if (mainEngine->isEditorRunning() && world.isShowTools()) {
 			glUniform3fv(shader.getUniformLocation("gLightPos[0]"), 1, glm::value_ptr(cameraPos));
 			glUniform4fv(shader.getUniformLocation("gLightColor[0]"), 1, glm::value_ptr(glm::vec4(1,1,1,1)));

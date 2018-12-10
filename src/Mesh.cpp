@@ -354,11 +354,37 @@ void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache
 
 				unsigned int numBones = std::min( (unsigned int)skincache[index].anims.getSize(), (unsigned int)SubMesh::maxBones );
 
+				char name[16] = "gBones[";
+				ArrayList<char> chars;
 				for( unsigned int i=0; i<numBones; ++i ) {
-					char name[128];
-					snprintf(name,128,"gBones[%d]",i);
-					glUniformMatrix4fv(shader->getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(skincache[index].anims[i]));
+					if (entry->getBones()[i].real == false) {
+						break;
+					}
 
+					// build string
+					int len = 7;
+					if (i == 0) {
+						name[len] = '0';
+						name[len+1] = ']';
+						name[len+2] = '\0';
+					} else {
+						unsigned int a = i;
+						while (a != 0) {
+							chars.push('0' + a % 10);
+							a /= 10;
+						}
+						for (size_t c = chars.getSize()-1; c < chars.getSize(); --c) {
+							name[len] = chars[c];
+							++len;
+						}
+						name[len] = ']';
+						name[len+1] = '\0';
+					}
+					glUniformMatrix4fv(shader->getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(skincache[index].anims[i]));
+					name[7] = '\0';
+					chars.resize(0);
+
+#ifndef NDEBUG
 					// debug stuff
 					if( cvar_showBones.toInt() && component ) {
 						String findBone = cvar_findBone.toStr();
@@ -374,6 +400,7 @@ void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache
 							camera.markLine(pos0, pos3, glm::vec4(0.f, 0.f, .5f, 1.f));
 						}
 					}
+#endif
 				}
 			} else {
 				glUniform1i(shader->getUniformLocation("gAnimated"), GL_FALSE);
@@ -571,6 +598,7 @@ Mesh::SubMesh::SubMesh(const char* name, const aiScene& _scene, aiMesh* mesh) {
 				boneinfo_t bi;
 				bi.name = boneName;
 				bi.offset = glm::mat4();
+				bi.real = true;
 				bones.push(bi);
 
 				boneMapping.insert(boneName, boneIndex);
@@ -734,6 +762,7 @@ void Mesh::SubMesh::readNodeHierarchy(Map<AnimationState>& animations, skincache
 		boneinfo_t bi;
 		bi.name = nodeName;
 		bi.offset = glm::mat4();
+		bi.real = false;
 		bones.push(bi);
 		++numBones;
 	} else {

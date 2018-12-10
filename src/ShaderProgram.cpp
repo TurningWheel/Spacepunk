@@ -133,8 +133,4 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 		}
 	}
 	glUniform1i(getUniformLocation("gNumLights"), (GLint)lights.getSize());
-
-	// upload light matrix
-	glm::mat4 lightProjMatrix = glm::perspective( glm::radians(90.f), 1.f, Shadow::camerainfo_t::clipNear, Shadow::camerainfo_t::clipFar );
-	glUniform4fv(getUniformLocation("gLightProj"), 1, glm::value_ptr(lightProjMatrix));
 }

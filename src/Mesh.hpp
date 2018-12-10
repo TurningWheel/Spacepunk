@@ -146,6 +146,7 @@ public:
 		struct boneinfo_t {
 			glm::mat4 offset;
 			String name;
+			bool real;
 		};
 
 		unsigned int boneIndexForName( const char* name ) const;
