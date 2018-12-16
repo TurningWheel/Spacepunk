@@ -225,10 +225,11 @@ void main() {
 		}
 
 		FragColor *= lTotalLightColor;
-
-#ifdef FRESNEL
-		vec3 cameraDir = normalize(gCameraPos - lWorldPos);
-		FragColor /= dot(lNormal, cameraDir);
-#endif
 	}
+#ifdef FRESNEL
+	vec3 cameraDir = normalize(gCameraPos - lWorldPos);
+	float fresnelPower = pow(dot(lNormal, cameraDir), 2);
+	FragColor = FragColor / fresnelPower;
+	FragColor = clamp(FragColor, 0.f, 1.f);
+#endif
 }

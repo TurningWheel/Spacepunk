@@ -1540,10 +1540,12 @@ void TileWorld::destroyGrid() {
 		buffer_t buffer = static_cast<buffer_t>(i);
 		if( vbo[buffer] ) {
 			glDeleteBuffers(1,&vbo[buffer]);
+			vbo[buffer] = 0;
 		}
 	}
 	if( vao ) {
 		glDeleteVertexArrays(1,&vao);
+		vao = 0;
 	}
 }
 
@@ -1893,7 +1895,7 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 }
 
 static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","0");
-static Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "3");
+Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "3");
 static Cvar cvar_renderCull("render.cull", "accuracy for occlusion culling", "7");
 
 void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList) {
@@ -2077,6 +2079,7 @@ void TileWorld::draw() {
 
 		// build relevant light list
 		// this could be done better
+		bool shadowsEnabled = (!client->isEditorActive() || !showTools) && !cvar_renderFullbright.toInt() && cvar_shadowsEnabled.toInt();
 		for( Node<Light*>* node=lights.getFirst(); node!=nullptr; node=node->getNext() ) {
 			Light* light = node->getData();
 
@@ -2098,8 +2101,10 @@ void TileWorld::draw() {
 					if( !light->isChosen() ) {
 						light->setChosen(true);
 						cameraLightList.push(light);
-						if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
-							light->createShadowMap();
+						if (shadowsEnabled) {
+							if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
+								light->createShadowMap();
+							}
 						}
 					}
 				}

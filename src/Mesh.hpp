@@ -157,9 +157,9 @@ public:
 		void readNodeHierarchy(Map<AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
 		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str);
 
-		void calcInterpolatedPosition(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedRotation(aiQuaternion& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedPosition(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedRotation(aiQuaternion& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim, bool& first);
+		void calcInterpolatedScaling(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim);
 
 		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim);
 		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim);
