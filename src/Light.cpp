@@ -31,6 +31,8 @@ const char* Light::shapeStr[SHAPE_NUM] = {
 	"pyramid"
 };
 
+Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "3");
+
 Light::Light(Entity& _entity, Component* _parent) :
 	Component(_entity, _parent) {
 	name = typeStr[COMPONENT_LIGHT];

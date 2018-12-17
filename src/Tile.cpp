@@ -174,7 +174,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 				glUniform3fv(shader.getUniformLocation(buf.format("gLightDirection[%d]",index)), 1, glm::value_ptr(lightDir));
 				glUniform1i(shader.getUniformLocation(buf.format("gLightShape[%d]",index)), static_cast<GLint>(light->getShape()));
 
-				if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW)) {
+				if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), 4 + index);
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_TRUE);
 					light->getShadowMap().bindForReading(GL_TEXTURE0+4+index);

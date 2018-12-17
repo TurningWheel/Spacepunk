@@ -492,7 +492,7 @@ void Player::updateCamera() {
 		}*/
 
 		if( localID == 0 ) {
-			client->getMixer()->setListener(*camera);
+			client->getMixer()->setListener(camera);
 		}
 
 		int localPlayerCount = client->numLocalPlayers();

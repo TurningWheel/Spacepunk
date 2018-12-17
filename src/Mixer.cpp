@@ -73,25 +73,27 @@ void Mixer::listDevices() {
 	mainEngine->fmsg(Engine::MSG_INFO,"selected audio device: %s",defaultDevice);
 }
 
-void Mixer::setListener(Camera& camera) {
+void Mixer::setListener(Camera* camera) {
+	listener = camera;
+	if (!camera) {
+		return;
+	}
+
 	float f = 2.f / Tile::size;
 
 	// find orientation
-	Angle ang = camera.getGlobalAng();
+	Angle ang = camera->getGlobalAng();
 	Vector forward = ang.toVector();
 	ang.pitch -= PI/2;
 	Vector up = ang.toVector();
 	ALfloat orientation[6] = { -forward.x, -forward.z, -forward.y, up.x, up.z, up.y };
 
 	// set listener
-	const Vector& pos = camera.getGlobalPos();
-	const Vector& vel = camera.getEntity()->getVel();
+	const Vector& pos = camera->getGlobalPos();
+	const Vector& vel = camera->getEntity()->getVel();
 	alListener3f(AL_POSITION, pos.x*f, -pos.z*f, pos.y*f);
 	alListener3f(AL_VELOCITY, vel.x*f, -vel.z*f, vel.y*f);
 	alListenerfv(AL_ORIENTATION, orientation);
-
-	// record last listener
-	listener = &camera;
 }
 
 int Mixer::playSound(const char* name, const bool loop) {

@@ -17,6 +17,7 @@
 #include "Script.hpp"
 #include "BBox.hpp"
 #include "Mesh.hpp"
+#include "Mixer.hpp"
 
 const char* Camera::meshStr = "assets/editor/camera/camera.FBX";
 const char* Camera::materialStr = "assets/editor/camera/material.json";
@@ -48,6 +49,15 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 }
 
 Camera::~Camera() {
+	Client* client = mainEngine->getLocalClient();
+	if (client) {
+		Mixer* mixer = client->getMixer();
+		if (mixer) {
+			if (mixer->getListener() == this) {
+				mixer->setListener(nullptr);
+			}
+		}
+	}
 }
 
 void Camera::setupProjection(bool scissor) {

@@ -804,7 +804,7 @@ void Editor::buttonEditorSettingsApply() {
 		Button* button = frame->findButton("buttonSnapEnabled");
 		assert(button);
 
-		cvar_snapEnabled.value = button->isPressed() ? "1" : "0";
+		cvar_snapEnabled.set(button->isPressed() ? "1" : "0");
 	}
 
 	// collect translate snap
@@ -815,7 +815,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapTranslate.value = field->getText();
+		cvar_snapTranslate.set(field->getText());
 	}
 
 	// collect rotate snap
@@ -826,7 +826,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapRotate.value = field->getText();
+		cvar_snapRotate.set(field->getText());
 	}
 
 	// collect scale snap
@@ -837,7 +837,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapScale.value = field->getText();
+		cvar_snapScale.set(field->getText());
 	}
 }
 
@@ -1457,7 +1457,7 @@ void Editor::initWidgets() {
 	entity->setFlags(static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_VISIBLE));
 	editingCamera = entity->addComponent<Camera>();
 	editingCamera->setClipFar(10240.f);
-	client->getMixer()->setListener(*editingCamera);
+	client->getMixer()->setListener(editingCamera);
 
 	// set camera window
 	Rect<int> camRect;
@@ -3829,7 +3829,7 @@ void Editor::process(const bool usable) {
 				camera->getEntity()->setAng(ang);
 			}
 			camera->getEntity()->update();
-			client->getMixer()->setListener(*camera);
+			client->getMixer()->setListener(camera);
 
 			// move selector (mouse pointer)
 			if( !usable ) {

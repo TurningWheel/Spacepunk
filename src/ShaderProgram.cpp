@@ -116,7 +116,7 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 		glUniform3fv(getUniformLocation(buf.format("gLightScale[%d]",index)), 1, glm::value_ptr(lightScale));
 		glUniform3fv(getUniformLocation(buf.format("gLightDirection[%d]",index)), 1, glm::value_ptr(lightDir));
 		glUniform1i(getUniformLocation(buf.format("gLightShape[%d]",index)), static_cast<GLint>(light->getShape()));
-		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW)) {
+		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
 			glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
 			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_TRUE);
 			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit);

@@ -257,4 +257,10 @@ void Speaker::serialize(FileInterface * file) {
 	file->property("defaultSound", defaultSound);
 	file->property("defaultLoop", defaultLoop);
 	file->property("defaultRange", defaultRange);
+
+	if( file->isReading() ) {
+		if( !defaultSound.empty() ) {
+			playSound(defaultSound,defaultLoop,defaultRange);
+		}
+	}
 }

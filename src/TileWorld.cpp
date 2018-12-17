@@ -1895,7 +1895,6 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 }
 
 static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","0");
-Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "3");
 static Cvar cvar_renderCull("render.cull", "accuracy for occlusion culling", "7");
 
 void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList) {
@@ -1916,7 +1915,7 @@ void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights
 		editingMode = static_cast<Editor::editingmode_t>(editor->getEditingMode());
 	}
 
-	if( camera.getDrawMode() != Camera::DRAW_STENCIL || cvar_shadowsEnabled.toInt()&2 ) {
+	if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
 		if( camera.getDrawMode() <= Camera::DRAW_GLOW ||
 			camera.getDrawMode() == Camera::DRAW_TRIANGLES ||
 			(camera.getDrawMode() == Camera::DRAW_SILHOUETTE && cvar_showEdges.toInt()) ) {
@@ -1965,7 +1964,7 @@ void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights
 	}
 
 	// draw entities
-	if( camera.getDrawMode() != Camera::DRAW_STENCIL || cvar_shadowsEnabled.toInt()&1 ) {
+	if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
 		if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
 			for( auto chunk : chunkDrawList ) {
 				for( auto entity : chunk->getEPopulation() ) {

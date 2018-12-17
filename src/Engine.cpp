@@ -136,13 +136,13 @@ static int console_help(int argc, const char** argv) {
 
 	for( auto& pair : Cvar::getMap() ) {
 		Cvar* cvar = pair.b;
-		if( strncmp(search, cvar->name, len) == 0 ) {
-			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", cvar->name.get(), cvar->desc.get());
+		if( strncmp(search, cvar->getName(), len) == 0 ) {
+			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", cvar->getName(), cvar->getDesc());
 		}
 	}
 	for( auto& pair : Ccmd::getMap() ) {
 		Ccmd* ccmd = pair.b;
-		if( strncmp(search, ccmd->name, len) == 0 ) {
+		if( strncmp(search, ccmd->name.get(), len) == 0 ) {
 			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", ccmd->name.get(), ccmd->desc.get());
 		}
 	}
@@ -298,9 +298,9 @@ void Engine::commandLine(const int argc, const char **argv) {
 				Cvar** cvar = Cvar::getMap().find(token);
 				if (cvar) {
 					if( strlen(arg) > strlen(token) ) {
-						(*cvar)->value = (const char*)(arg + strlen(token) + 1);
+						(*cvar)->set((const char*)(arg + strlen(token) + 1));
 					}
-					fmsg(MSG_NOTE,"%s = %s",(*cvar)->name.get(),(*cvar)->value.get());
+					fmsg(MSG_NOTE,"%s = %s",(*cvar)->getName(),(*cvar)->toStr());
 					continue;
 				}
 			}

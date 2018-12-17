@@ -17,6 +17,8 @@ class World;
 class Camera;
 class Chunk;
 
+extern Cvar cvar_shadowsEnabled;
+
 class Light : public Component {
 public:
 	// light volume shape
