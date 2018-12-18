@@ -11,10 +11,13 @@
 #include "Entity.hpp"
 #include "ArrayList.hpp"
 #include "Model.hpp"
+#include "Shadow.hpp"
 
 class World;
 class Camera;
 class Chunk;
+
+extern Cvar cvar_shadowsEnabled;
 
 class Light : public Component {
 public:
@@ -43,15 +46,19 @@ public:
 	const float&		getIntensity() const		{ return intensity; }
 	const float&		getRadius() const			{ return radius; }
 	ArrayList<Chunk*>&	getChunksLit()				{ return chunksLit; }
-	ArrayList<Chunk*>&	getChunksShadow()			{ return chunksShadow; }
 	const shape_t&		getShape() const			{ return shape; }
 	const bool			isChosen() const			{ return chosen; }
+	const float			getArc() const				{ return arc; }
+	const bool			isShadow() const			{ return shadow; }
+	Shadow&				getShadowMap()				{ return shadowMap; }
 
 	void	setColor(const Vector& _color)			{ color = _color; }
 	void	setIntensity(const float _intensity)	{ intensity = _intensity; }
 	void	setRadius(const float _radius)			{ radius = _radius; updateNeeded = true; }
 	void	setChosen(const bool _chosen)			{ chosen = _chosen; }
 	void	setShape(const shape_t& _shape)			{ shape = _shape; }
+	void	setArc(const float _arc)				{ arc = _arc; }
+	void	setShadow(const bool _shadow)			{ shadow = _shadow; }
 
 	// updates matrices
 	virtual void update() override;
@@ -59,7 +66,10 @@ public:
 	// draws the light as a bounded cube (generally for editing purposes)
 	// @param camera: the camera to draw the light from
 	// @param light: the light to light the light with (whew) (unused)
-	virtual void draw(Camera& camera, Light* light) override;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
+
+	// creates a shadow map from the light source
+	void createShadowMap();
 
 	// load the component from a file
 	// @param fp: the file to read from
@@ -74,13 +84,17 @@ public:
 		intensity = src.intensity;
 		radius = src.radius;
 		shape = src.shape;
+		arc = src.arc;
+		shadow = src.shadow;
 		updateNeeded = true;
 		return *this;
 	}
 
 protected:
 	ArrayList<Chunk*> chunksLit;
-	ArrayList<Chunk*> chunksShadow;
+	Shadow shadowMap;
+	bool shadowMapDrawn = false;
+	Uint32 shadowTicks = 0;
 
 	Uint32 lastUpdate = 0;
 	bool chosen = false;
@@ -88,5 +102,7 @@ protected:
 	Vector color = Vector(1.f);
 	float intensity = 1.f;
 	float radius = 512.f;
+	float arc = 70.f;
+	bool shadow = true;
 	shape_t shape = SHAPE_SPHERE;
 };

@@ -30,6 +30,11 @@ const GLuint Image::indices[6] {
 };
 
 Image::Image(const char* _name) : Asset(_name) {
+	bool clamp = false;
+	if (_name && _name[0] == '#') {
+		clamp = true;
+		++_name;
+	}
 	path = mainEngine->buildPath(_name).get();
 	
 	mainEngine->fmsg(Engine::MSG_DEBUG,"loading image '%s'...",_name);
@@ -50,8 +55,13 @@ Image::Image(const char* _name) : Asset(_name) {
 	glBindTexture(GL_TEXTURE_2D, texid);
 	glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, surf->w, surf->h);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	if (!clamp) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.f);
@@ -125,7 +135,7 @@ void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::v
 	if( !mat ) {
 		return;
 	}
-	const ShaderProgram& shader = mat->getShader();
+	ShaderProgram& shader = mat->getShader();
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();
 	}

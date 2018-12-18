@@ -17,6 +17,7 @@
 #include "Script.hpp"
 #include "BBox.hpp"
 #include "Mesh.hpp"
+#include "Mixer.hpp"
 
 const char* Camera::meshStr = "assets/editor/camera/camera.FBX";
 const char* Camera::materialStr = "assets/editor/camera/material.json";
@@ -48,9 +49,18 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 }
 
 Camera::~Camera() {
+	Client* client = mainEngine->getLocalClient();
+	if (client) {
+		Mixer* mixer = client->getMixer();
+		if (mixer) {
+			if (mixer->getListener() == this) {
+				mixer->setListener(nullptr);
+			}
+		}
+	}
 }
 
-void Camera::setupProjection() {
+void Camera::setupProjection(bool scissor) {
 	World* world = entity->getWorld();
 	if( !renderer ) {
 		return;
@@ -87,11 +97,14 @@ void Camera::setupProjection() {
 		projMatrix = glm::perspective( glm::radians((float)fov), (float)win.w/win.h, clipNear, clipFar );
 	}
 
-	if( renderer ) {
+	if( renderer && scissor ) {
 		int yres = renderer->getYres();
 		glViewport( win.x, yres-win.h-win.y, win.w, win.h );
 		glScissor( win.x, yres-win.h-win.y, win.w, win.h );
 		glEnable(GL_SCISSOR_TEST);
+	} else {
+		glViewport( win.x, -win.y, win.w, win.h );
+		glDisable(GL_SCISSOR_TEST);
 	}
 
 	// get combination of the two
@@ -156,10 +169,14 @@ void Camera::drawCube( const glm::mat4& transform, const glm::vec4& color ) {
 }
 
 void Camera::drawLine3D( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
-	line3D.draw(*this,width,src,dest,color);
+	line3D.drawLine(*this,width,src,dest,color);
 }
 
-void Camera::draw(Camera& camera, Light* light) {
+void Camera::drawLaser( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
+	line3D.drawLaser(*this,width,src,dest,color);
+}
+
+void Camera::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
 	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
 		return;
@@ -183,7 +200,7 @@ void Camera::draw(Camera& camera, Light* light) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
-		ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, gMat);
+		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat);
 		if( shader ) {
 			mesh->draw(camera, this, shader);
 		}
@@ -282,4 +299,8 @@ void Camera::drawDebug() {
 			lines.removeNode(node);
 		}
 	}
+}
+
+void Camera::onFrameDrawn() {
+	++framesDrawn;
 }

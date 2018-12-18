@@ -186,7 +186,7 @@ void Cube::draw(Camera& camera, const glm::mat4& transform, const glm::vec4& col
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/cube.json");
 	if( mat ) {
-		const ShaderProgram& shader = mat->getShader();
+		ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 

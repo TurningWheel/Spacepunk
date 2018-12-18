@@ -99,9 +99,6 @@ Entity::Entity(World* _world, Uint32 _uid) {
 	snprintf(newName, 32, "Entity #%d", uid);
 	name = newName;
 
-	// create script engine
-	script = new Script(*this);
-
 	//pathTask = nullptr;
 	pathRequested = false;
 	path = nullptr;
@@ -330,6 +327,47 @@ void Entity::process() {
 	// correct orientations
 	ang.wrapAngles();
 
+	// update path request
+	if ( pathRequested && pathFinished() && path ) {
+		pathRequested = false;
+		if (path->getSize() == 0) {
+			delete path;
+			path = nullptr;
+		} else {
+			const PathFinder::PathWaypoint& node = path->getFirst()->getData();
+
+			if (world->getType() != World::type_t::WORLD_TILES) {
+				TileWorld* tileWorld = static_cast<TileWorld*>(world);
+
+				// place dest coordinates in the middle of the tile
+				pathNode.x = node.x * Tile::size + Tile::size / 2.f; float& x = pathNode.x;
+				pathNode.y = node.y * Tile::size + Tile::size / 2.f; float& y = pathNode.y;
+				pathNode.z = tileWorld->getTiles()[y + x * tileWorld->getHeight()].getFloorHeight(); float& z = pathNode.z;
+				float epsilon = Tile::size / 4.f;
+
+				if (pos.x >= x-epsilon && pos.x <= x-epsilon &&
+					pos.y >= y-epsilon && pos.y <= y-epsilon) {
+					path->removeNode(path->getFirst());
+
+					//Finished pathfinding.
+					if (path->getSize() == 0) {
+						mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' reached goal tile (%d, %d)!", getName().get(), node.x, node.y);
+						pathNode = Vector(0.f);
+						pathDir = Vector(0.f);
+
+						delete path;
+						path = nullptr;
+					}
+				}
+				else {
+					//Move to the target tile.
+					//Stop moving once reached destination.
+					Vector pathDir = (pathNode - pos).normal();
+				}
+			}
+		}
+	}
+
 	// run entity script
 	bool processed = false;
 	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
@@ -388,54 +426,6 @@ void Entity::process() {
 		components[c]->process();
 	}
 
-	if ( (pathRequested && pathFinished()) || nullptr != path )
-	{
-		pathRequested = false;
-		if (nullptr == path)
-		{
-			mainEngine->fmsg(Engine::MSG_WARN, "Entity %s is pathing but path is nullptr! Removing path request...", getName().get());
-			//Stop moving once reached destination.
-			Vector moveVel = Vector(0, 0, 0);
-			setVel(moveVel);
-		}
-		else if (path->getSize() == 0)
-		{
-			delete path;
-			path = nullptr;
-			//Stop moving once reached destination.
-			Vector moveVel = Vector(0, 0, 0);
-			setVel(moveVel);
-		}
-		else
-		{
-			//mainEngine->fmsg(Engine::MSG_WARN, "Entity %s is pathing!", getName().get());
-			PathFinder::PathWaypoint node = path->getFirst()->getData();
-			if (getCurrentTileX() == node.x && getCurrentTileY() == node.y)
-			{
-				mainEngine->fmsg(Engine::MSG_WARN, "Entity %s reached goal tile (%d, %d)!", getName().get(), node.x, node.y);
-				//Reached the goal tile!
-				path->removeNode(static_cast<size_t>(0));
-
-				if (path->getSize() == 0)
-				{
-					//Finished pathfinding.
-					delete path;
-					path = nullptr;
-					Vector moveVel = Vector(0, 0, 0);
-					setVel(moveVel);
-				}
-			}
-			else
-			{
-				//Move to the target tile.
-				//Stop moving once reached destination.
-				Vector moveVel = Vector((node.x - getCurrentTileX()), (node.y - getCurrentTileY()), 0);
-				setVel(moveVel);
-				//mainEngine->fmsg(Engine::MSG_WARN, "Entity %s is moving towards (%d, %d) and is on (%d, %d)!", getName().get(), node.x, node.y, getCurrentTileX(), getCurrentTileY());
-			}
-		}
-	}
-
 	// run post process script
 	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
 		if( script && !scriptStr.empty() && world && processed ) {
@@ -451,7 +441,7 @@ void Entity::process() {
 	}
 }
 
-void Entity::draw(Camera& camera, Light* light) const {
+void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 	bool editorRunning = mainEngine->isEditorRunning();
 	if( !isFlag(flag_t::FLAG_VISIBLE) && (!editorRunning || !shouldSave) ) {
 		return;
@@ -476,7 +466,7 @@ void Entity::draw(Camera& camera, Light* light) const {
 
 	// draw components
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		components[c]->draw(camera, light);
+		components[c]->draw(camera, lights);
 	}
 
 	// reset overdraw characteristics
@@ -820,7 +810,7 @@ const World::hit_t Entity::lineTrace( const Vector& origin, const Vector& dest )
 
 bool Entity::interact(Entity& user)
 {
-	if ( !isFlag(flag_t::FLAG_INTERACTABLE) )
+	if ( !isFlag(flag_t::FLAG_INTERACTABLE) || !script )
 	{
 		return false;
 	}
@@ -863,6 +853,9 @@ void Entity::serialize(FileInterface * file) {
 			file->endObject();
 		}
 		file->endArray();
+
+		// important to init script engine
+		setScriptStr(scriptStr.get());
 		
 		// post
 		setNewPos(pos);
@@ -984,15 +977,15 @@ void Entity::listener_t::onChangeName(const char* name) {
 void Entity::findAPath(int endX, int endY) {
 	if (!world)
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s attempted to path without world object.", getName().get());
+		mainEngine->fmsg(Engine::MSG_WARN, "Entity '%s' attempted to path without world object.", getName().get());
 		return;
 	}
 	if (pathRequested)
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s cannot calculate more than one path at a time! Please wait for previous request to complete.", getName().get());
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' cannot calculate more than one path at a time! Please wait for previous request to complete.", getName().get());
 		return; //Can only do one path at a time!
 	}
-	mainEngine->fmsg(Engine::MSG_WARN, "Entity %s requested a path from (%d, %d) to (%d, %d)!", getName().get(), getCurrentTileX(), getCurrentTileY(), endX, endY);
+	mainEngine->fmsg(Engine::MSG_WARN, "Entity '%s' requested a path from (%d, %d) to (%d, %d)!", getName().get(), getCurrentTileX(), getCurrentTileY(), endX, endY);
 	pathRequested = true;
 
 	pathTask = world->findAPath(getCurrentTileX(), getCurrentTileY(), endX, endY);
@@ -1006,7 +999,7 @@ bool Entity::pathFinished() {
 
 	if (!pathTask.valid())
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s received invalid future pathtask!", getName().get());
+		mainEngine->fmsg(Engine::MSG_WARN, "Entity '%s' received invalid future pathtask!", getName().get());
 		if (nullptr != path)
 		{
 			delete path;
@@ -1016,9 +1009,9 @@ bool Entity::pathFinished() {
 	}
 	if (pathTask.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s finished pathing!", getName().get());
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' finished pathing!", getName().get());
 		path = pathTask.get();
-		mainEngine->fmsg(Engine::MSG_WARN, "Path size is %d", path->getSize());
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Path size is %d", path->getSize());
 		return true;
 	}
 
@@ -1032,4 +1025,24 @@ void Entity::def_t::serialize(FileInterface * file) {
 	if (version >= 1)
 		file->property("editor", exposedInEditor);
 	file->property("entity", entity);
+}
+
+bool Entity::isLocalPlayer() {
+	if (player) {
+		if (player->getClientID() == Player::invalidID) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Entity::setScriptStr(const char* _scriptStr) {
+	scriptStr = _scriptStr;
+	if (script) {
+		delete script;
+	}
+	if (!scriptStr.empty() && world) {
+		script = new Script(*this);
+	}
+	ranScript = false;
 }

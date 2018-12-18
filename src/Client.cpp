@@ -936,7 +936,9 @@ static int console_clientDisconnect(int argc, const char** argv) {
 static int console_clientReset(int argc, const char** argv) {
 	Client* client = mainEngine->getLocalClient();
 	if( client ) {
+		mainEngine->setInputStr(nullptr);
 		mainEngine->setPlayTest(false);
+		mainEngine->dumpResources();
 		client->reset();
 		return 0;
 	} else {

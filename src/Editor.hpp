@@ -206,6 +206,15 @@ public:
 	// @param radius: the value to use
 	void entityLightRadius(unsigned int uid, float radius);
 
+	// sets the arc of a light
+	// @param uid: the uid of the component to change
+	// @param arc: the value to use
+	void entityLightArc(unsigned int uid, float arc);
+
+	// enables/disables shadow on a light
+	// @param uid: the uid of the component to change
+	void entityLightShadow(unsigned int uid);
+
 	// set a shape on a light
 	// @param uid: the uid of the component
 	// @param shape: the new shape

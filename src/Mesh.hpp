@@ -30,6 +30,9 @@ public:
 	Mesh(const char* _name);
 	virtual ~Mesh();
 
+	// maximum number of lights that will fit in the tile shader
+	static const Uint32 maxLights = 32;
+
 	// skin cache
 	struct skincache_t {
 		ArrayList<glm::mat4> anims;
@@ -74,7 +77,7 @@ public:
 	// @param material: path to the material asset used to render the mesh
 	// @return the ShaderProgram object with the given name, or nullptr if no shader was loaded
 	// @param matrix: model matrix
-	ShaderProgram* loadShader(Component& component, Camera& camera, Light* light, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
+	ShaderProgram* loadShader(const Component& component, Camera& camera, const ArrayList<Light*>& lights, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
 
 	// draws the mesh without animating it
 	// @param camera: the camera to render the mesh through
@@ -143,6 +146,7 @@ public:
 		struct boneinfo_t {
 			glm::mat4 offset;
 			String name;
+			bool real;
 		};
 
 		unsigned int boneIndexForName( const char* name ) const;
@@ -153,9 +157,9 @@ public:
 		void readNodeHierarchy(Map<AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
 		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str);
 
-		void calcInterpolatedPosition(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedRotation(aiQuaternion& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedPosition(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedRotation(aiQuaternion& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim, bool& first);
+		void calcInterpolatedScaling(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim);
 
 		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim);
 		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim);

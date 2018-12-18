@@ -114,6 +114,8 @@ private:
 	Model* feet = nullptr;
 	BBox* bbox = nullptr;
 	Camera* camera = nullptr;
+	Model* lTool = nullptr;
+	Model* rTool = nullptr;
 
 	// player controller vars
 	float buttonRight = 0.f;

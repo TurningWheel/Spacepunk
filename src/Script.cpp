@@ -20,6 +20,8 @@
 #include "Editor.hpp"
 #include "Path.hpp"
 #include "AnimationState.hpp"
+#include "Vector.hpp"
+#include "WideVector.hpp"
 
 //Component headers
 #include "Component.hpp"
@@ -193,6 +195,9 @@ void Script::exposeEngine() {
 	}
 
 	exposeString();
+
+	Rect<Sint32>::exposeToScript(lua, "RectSint32");
+	Rect<Uint32>::exposeToScript(lua, "RectUint32");
 }
 
 void Script::exposeFrame() {
@@ -291,6 +296,9 @@ void Script::exposeVector() {
 		.addData("x", &Vector::x, true)
 		.addData("y", &Vector::y, true)
 		.addData("z", &Vector::z, true)
+		.addData("r", &Vector::x, true)
+		.addData("g", &Vector::y, true)
+		.addData("b", &Vector::z, true)
 		.addFunction("hasVolume", &Vector::hasVolume)
 		.addFunction("dot", &Vector::dot)
 		.addFunction("cross", &Vector::cross)
@@ -305,6 +313,32 @@ void Script::exposeVector() {
 	LinkedList<Vector*>::exposeToScript(lua, "LinkedListVectorPtr", "NodeVectorPtr");
 	ArrayList<Vector>::exposeToScript(lua, "ArrayListVector");
 	ArrayList<Vector*>::exposeToScript(lua, "ArrayListVectorPtr");
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<WideVector>("WideVector")
+		.addConstructor<void (*) (float, float, float, float)>()
+		.addData("x", &WideVector::x, true)
+		.addData("y", &WideVector::y, true)
+		.addData("z", &WideVector::z, true)
+		.addData("w", &WideVector::w, true)
+		.addData("r", &WideVector::x, true)
+		.addData("g", &WideVector::y, true)
+		.addData("b", &WideVector::z, true)
+		.addData("a", &WideVector::w, true)
+		.addFunction("hasVolume", &WideVector::hasVolume)
+		.addFunction("dot", &WideVector::dot)
+		.addFunction("cross", &WideVector::cross)
+		.addFunction("length", &WideVector::length)
+		.addFunction("lengthSquared", &WideVector::lengthSquared)
+		.addFunction("normal", &WideVector::normal)
+		.addFunction("normalize", &WideVector::normalize)
+		.endClass()
+	;
+
+	LinkedList<WideVector>::exposeToScript(lua, "LinkedListWideVector", "NodeWideVector");
+	LinkedList<WideVector*>::exposeToScript(lua, "LinkedListWideVectorPtr", "NodeWideVectorPtr");
+	ArrayList<WideVector>::exposeToScript(lua, "ArrayListWideVector");
+	ArrayList<WideVector*>::exposeToScript(lua, "ArrayListWideVectorPtr");
 }
 
 void Script::exposeGame() {
@@ -370,6 +404,8 @@ void Script::exposeEditor(Editor& _editor) {
 		.addFunction("entityLightColorB", &Editor::entityLightColorB)
 		.addFunction("entityLightIntensity", &Editor::entityLightIntensity)
 		.addFunction("entityLightRadius", &Editor::entityLightRadius)
+		.addFunction("entityLightArc", &Editor::entityLightArc)
+		.addFunction("entityLightShadow", &Editor::entityLightShadow)
 		.addFunction("entityLightShape", &Editor::entityLightShape)
 		.addFunction("entityCameraClipNear", &Editor::entityCameraClipNear)
 		.addFunction("entityCameraClipFar", &Editor::entityCameraClipFar)
@@ -557,6 +593,7 @@ void Script::exposeEntity() {
 		.addFunction("getCurrentTileX", &Entity::getCurrentTileX)
 		.addFunction("getCurrentTileY", &Entity::getCurrentTileY)
 		.addFunction("getCurrentTileZ", &Entity::getCurrentTileZ)
+		.addFunction("isLocalPlayer", &Entity::isLocalPlayer)
 		.endClass()
 	;
 
@@ -626,6 +663,7 @@ void Script::exposeComponent() {
 		.addFunction("revertTranslation", &Component::revertTranslation)
 		.addFunction("revertScale", &Component::revertScale)
 		.addFunction("revertToIdentity", &Component::revertToIdentity)
+		.addFunction("shootLaser", &Component::shootLaser)
 		.endClass()
 	;
 
@@ -723,10 +761,14 @@ void Script::exposeLight() {
 		.addFunction("getColor", &Light::getColor)
 		.addFunction("getIntensity", &Light::getIntensity)
 		.addFunction("getRadius", &Light::getRadius)
+		.addFunction("getArc", &Light::getArc)
+		.addFunction("isShadow", &Light::isShadow)
 		.addFunction("setColor", &Light::setColor)
 		.addFunction("setIntensity", &Light::setIntensity)
 		.addFunction("setRadius", &Light::setRadius)
 		.addFunction("setShape", &Light::setShape)
+		.addFunction("setArc", &Light::setArc)
+		.addFunction("setShadow", &Light::setShadow)
 		.endClass()
 	;
 

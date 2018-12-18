@@ -24,6 +24,7 @@ public:
 
 		// these two for each light in a scene
 		DRAW_STENCIL,
+		DRAW_SHADOW,
 		DRAW_STANDARD,
 			
 		// additional fx passes
@@ -69,6 +70,8 @@ public:
 	const glm::mat4&	getProjViewMatrix() const	{ return projViewMatrix; }
 	const drawmode_t	getDrawMode() const			{ return drawMode; }
 	const bool&			isOrtho() const				{ return ortho; }
+	const Uint32		getFramesDrawn() const		{ return framesDrawn; }
+	const bool&			isEnabled() const			{ return enabled; }
 
 	void	setClipNear(float _clipNear)		{ clipNear = _clipNear; }
 	void	setClipFar(float _clipFar)			{ clipFar = _clipFar; }
@@ -76,9 +79,11 @@ public:
 	void	setFov(Sint32 _fov)					{ fov = _fov; }
 	void	setDrawMode(drawmode_t _drawMode)	{ drawMode = _drawMode; }
 	void	setOrtho(const bool _ortho)			{ ortho = _ortho; }
+	void	setEnabled(const bool _enabled)		{ enabled = _enabled; }
 
 	// sets up the 3D projection for drawing
-	void setupProjection();
+	// @param scissor True if you want scissoring
+	void setupProjection(bool scissor);
 
 	// resets the drawing matrices
 	void resetMatrices();
@@ -107,6 +112,13 @@ public:
 	// @param color: the color of the line to draw
 	void drawLine3D( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color );
 
+	// draws a laser in the current camera view
+	// @param width: the width of the laser in pixels
+	// @param src: the starting point of the laser in world space
+	// @param dest: the ending point of the laser in world space
+	// @param color: the color of the laser to draw
+	void drawLaser( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color );
+
 	// marks a spot on the screen to draw a point
 	// @param x: the x-coord of the point
 	// @param y: the y-coord of the point
@@ -127,7 +139,7 @@ public:
 	// draws the camera
 	// @param camera: the camera through which to draw the camera
 	// @param light: the light by which the camera should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light) override;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// draws all marked points, lines, etc.
 	void drawDebug();
@@ -139,6 +151,9 @@ public:
 	// save/load this object to a file
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface* file) override;
+
+	// called when a frame is finished drawing from the camera
+	void onFrameDrawn();
 
 	Camera& operator=(const Camera& src) {
 		projMatrix = src.projMatrix;
@@ -170,10 +185,14 @@ protected:
 	Rect<Sint32> win;
 	Sint32 fov = 70;
 	bool ortho = false;
+	bool enabled = true;
 
 	// built-in basic objects
 	Cube cube;
 	Line3D line3D;
 	LinkedList<point_t> points;
 	LinkedList<line_t> lines;
+
+	// frame draw counter
+	Uint32 framesDrawn = 0;
 };

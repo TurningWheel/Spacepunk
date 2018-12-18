@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\src\Sector.cpp" />
     <ClCompile Include="..\..\src\SectorVertex.cpp" />
     <ClCompile Include="..\..\src\SectorWorld.cpp" />
+    <ClCompile Include="..\..\src\Shadow.cpp" />
     <ClCompile Include="..\..\src\Texture.cpp" />
     <ClCompile Include="..\..\src\Tile.cpp" />
     <ClCompile Include="..\..\src\Server.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="..\..\src\Sector.hpp" />
     <ClInclude Include="..\..\src\SectorVertex.hpp" />
     <ClInclude Include="..\..\src\SectorWorld.hpp" />
+    <ClInclude Include="..\..\src\Shadow.hpp" />
     <ClInclude Include="..\..\src\Texture.hpp" />
     <ClInclude Include="..\..\src\Tile.hpp" />
     <ClInclude Include="..\..\src\Server.hpp" />

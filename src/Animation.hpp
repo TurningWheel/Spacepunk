@@ -16,8 +16,8 @@ public:
 	// animation entry
 	struct entry_t {
 		String name = "unknown";
-		unsigned int begin = 0;
-		unsigned int end = 1;
+		Uint32 begin = 0;
+		Uint32 end = 1;
 		bool loop = false;
 
 		void serialize(FileInterface * file);

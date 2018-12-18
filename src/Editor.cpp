@@ -804,7 +804,7 @@ void Editor::buttonEditorSettingsApply() {
 		Button* button = frame->findButton("buttonSnapEnabled");
 		assert(button);
 
-		cvar_snapEnabled.value = button->isPressed() ? "1" : "0";
+		cvar_snapEnabled.set(button->isPressed() ? "1" : "0");
 	}
 
 	// collect translate snap
@@ -815,7 +815,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapTranslate.value = field->getText();
+		cvar_snapTranslate.set(field->getText());
 	}
 
 	// collect rotate snap
@@ -826,7 +826,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapRotate.value = field->getText();
+		cvar_snapRotate.set(field->getText());
 	}
 
 	// collect scale snap
@@ -837,7 +837,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapScale.value = field->getText();
+		cvar_snapScale.set(field->getText());
 	}
 }
 
@@ -1457,7 +1457,7 @@ void Editor::initWidgets() {
 	entity->setFlags(static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_VISIBLE));
 	editingCamera = entity->addComponent<Camera>();
 	editingCamera->setClipFar(10240.f);
-	client->getMixer()->setListener(*editingCamera);
+	client->getMixer()->setListener(editingCamera);
 
 	// set camera window
 	Rect<int> camRect;
@@ -3829,7 +3829,7 @@ void Editor::process(const bool usable) {
 				camera->getEntity()->setAng(ang);
 			}
 			camera->getEntity()->update();
-			client->getMixer()->setListener(*camera);
+			client->getMixer()->setListener(camera);
 
 			// move selector (mouse pointer)
 			if( !usable ) {
@@ -4436,6 +4436,46 @@ void Editor::entityLightRadius(unsigned int uid, float radius) {
 			}
 
 			light->setRadius(radius);
+			return;
+		}
+	}
+}
+
+void Editor::entityLightArc(unsigned int uid, float arc) {
+	for( Uint32 c=0; c<world->numBuckets; ++c ) {
+		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
+			Entity* entity = node->getData();
+
+			if( !entity->isSelected() ) {
+				continue;
+			}
+			Component* component = entity->findComponentByUID<Component>(uid);
+			Light* light = dynamic_cast<Light*>(component);
+			if( !light ) {
+				return;
+			}
+
+			light->setArc(arc);
+			return;
+		}
+	}
+}
+
+void Editor::entityLightShadow(unsigned int uid) {
+	for( Uint32 c=0; c<world->numBuckets; ++c ) {
+		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
+			Entity* entity = node->getData();
+
+			if( !entity->isSelected() ) {
+				continue;
+			}
+			Component* component = entity->findComponentByUID<Component>(uid);
+			Light* light = dynamic_cast<Light*>(component);
+			if( !light ) {
+				return;
+			}
+
+			light->setShadow(light->isShadow() == false);
 			return;
 		}
 	}
@@ -6434,6 +6474,87 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					}
 
 					y += size.h + border*3;
+				}
+
+				// arc
+				{
+					Frame* frame = properties.addFrame("editor_FrameLightArc");
+
+					Rect<int> size;
+					size.x = 0;
+					size.w = (width - x)/3 - border*2;
+					size.y = 0;
+					size.h = 30;
+					frame->setActualSize(size);
+					size.x = x + border*2;
+					size.w = (width - x)/3 - border*2;
+					size.y = y;
+					size.h = 30;
+					frame->setSize(size);
+					frame->setColor(glm::vec4(.25,.25,.25,1.0));
+					frame->setHigh(false);
+
+					Field* field = frame->addField("field",9);
+					size.x = border; size.w = frame->getSize().w-border*2;
+					size.y = border; size.h = frame->getSize().h-border*2;
+					field->setSize(size);
+					field->setEditable(true);
+					field->setNumbersOnly(true);
+					field->setJustify(Field::RIGHT);
+					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
+
+					field->getParams().addInt(component->getUID());
+
+					char r[16];
+					snprintf(r,16,"%.1f",light->getArc());
+					field->setText(r);
+
+					// label
+					{
+						Field* label = properties.addField("labelLightArc",16);
+
+						Rect<int> size;
+						size.x = x + border + width/3;
+						size.w = width - border*4 - 30 - border - x;
+						size.y = y + 5;
+						size.h = 30;
+						label->setSize(size);
+						label->setText("Arc");
+					}
+
+					y += size.h + border*3;
+				}
+
+				// enabled flag
+				{
+					Button* button = properties.addButton("buttonLightShadowEnabled");
+					button->setBorder(1);
+					button->setIcon("images/gui/checkmark.png");
+					button->setStyle(Button::STYLE_CHECKBOX);
+					button->setPressed( light->isShadow() );
+					button->setTooltip("Toggles the light's shadow on and off.");
+
+					button->getParams().addInt(component->getUID());
+
+					Rect<int> size;
+					size.x = x + border*2; size.w = 30;
+					size.y = y; size.h = 30;
+					button->setSize(size);
+
+					// label
+					{
+						Field* label = properties.addField("labelLightShadowEnabled", 16);
+
+						Rect<int> size;
+						size.x = x + border*2 + 30 + border;
+						size.w = width - border*4 - 30 - border - x;
+						size.y = y + 5;
+						size.h = 30;
+						label->setSize(size);
+						label->setText("Shadow");
+					}
+
+					y += size.h + border;
 				}
 
 				// shape label

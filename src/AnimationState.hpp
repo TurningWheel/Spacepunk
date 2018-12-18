@@ -24,6 +24,21 @@ public:
 		void serialize(FileInterface * file);
 	};
 
+	// a state pair
+	struct state_t {
+		state_t() {}
+		state_t(float _value, float _rate) :
+			value(_value),
+			rate(_rate) {}
+
+		float value = 0.f;
+		float rate = 0.f;
+
+		// save/load this object to a file
+		// @param file interface to serialize with
+		void serialize(FileInterface * file);
+	};
+
 	// advance the animation and play sounds
 	// @param speaker: pointer to the speaker used to play animation sounds (if any)
 	// @return true if the animation changed, otherwise false
@@ -53,8 +68,8 @@ public:
 	float						getBegin() const							{ return begin; }
 	float						getEnd() const								{ return end; }
 	float						getLength() const							{ return length; }
-	float						getWeight(const char* bone) const			{ if (const float *weight = weights[bone]) { return *weight; } else { return 0.f; } }
-	float						getWeightRate(const char* bone) const		{ if (const float *rate = weightRates[bone]) { return *rate; } else { return 0.f; } }
+	float						getWeight(const char* bone) const			{ if (const state_t *state = weights[bone]) { return state->value; } else { return 0.f; } }
+	float						getWeightRate(const char* bone) const		{ if (const state_t *state = weights[bone]) { return state->rate; } else { return 0.f; } }
 	bool						isLoop() const								{ return loop; }
 	unsigned int				getBeginLastSoundFrame() const				{ return beginLastSoundFrame; }
 	unsigned int				getEndLastSoundFrame() const				{ return endLastSoundFrame; }
@@ -64,8 +79,8 @@ public:
 
 	void	setTicks(float _ticks)											{ ticks = _ticks; updated = true; }
 	void	setTicksRate(float _ticksRate)									{ ticksRate = _ticksRate; updated = true; }
-	void	setWeight(const char* bone, float _weight)						{ if (float *weight = weights[bone]) { *weight = _weight; } else { weights.insert(bone, _weight); } updated = true; }
-	void	setWeightRate(const char* bone, float _weightRate)				{ if (float *rate = weightRates[bone]) { *rate = _weightRate; } else { weightRates.insert(bone, _weightRate); } updated = true; }
+	void	setWeight(const char* bone, float _weight)						{ if (state_t *state = weights[bone]) { state->value = _weight; } else { weights.insert(bone, state_t(_weight, 0.f)); } updated = true; }
+	void	setWeightRate(const char* bone, float _weightRate)				{ if (state_t *state = weights[bone]) { state->rate = _weightRate; } else { weights.insert(bone, state_t(0.f, _weightRate)); } updated = true; }
 
 private:
 	String name;				// animation name
@@ -74,8 +89,7 @@ private:
 	float begin;				// start frame of the animation
 	float end;					// end frame of the animation
 	float length;				// length of the animation (end - begin)
-	Map<float> weights;			// influences, or "blending" on bones
-	Map<float> weightRates;		// rate of change on blending
+	Map<state_t> weights;		// influences, or "blending" on bones
 	bool loop;					// if true, animation loops when ticks > end
 	bool updated = false;		// if true, forces the skin to update
 

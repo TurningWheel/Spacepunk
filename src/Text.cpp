@@ -169,7 +169,7 @@ void Text::drawColor( Rect<int> src, Rect<int> dest, const glm::vec4& color ) co
 	if( !mat ) {
 		return;
 	}
-	const ShaderProgram& shader = mat->getShader();
+	ShaderProgram& shader = mat->getShader();
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();
 	}

@@ -123,6 +123,9 @@ public:
 	int									getCurrentTileX() const				{ return static_cast<int>(getPos().x) / Tile::size; }
 	int									getCurrentTileY() const				{ return static_cast<int>(getPos().y) / Tile::size; }
 	int									getCurrentTileZ() const				{ return static_cast<int>(getPos().z) / Tile::size; }
+	bool								isPathRequested() const				{ return pathRequested; }
+	const Vector&						getPathNodePosition() const			{ return pathNode; }
+	const Vector&						getPathNodeDir() const				{ return pathDir; }
 
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
 	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; } }
@@ -132,7 +135,7 @@ public:
 	void					setAng(const Angle& _ang)						{ if( ang != _ang ) { ang = _ang; updateNeeded = true; } }
 	void					setRot(const Angle& _rot)						{ rot = _rot; }
 	void					setNewAng(const Angle& _newAng)					{ newAng = _newAng; }
-	void					setScriptStr(const char* _scriptStr)			{ scriptStr = _scriptStr; }
+	void					setScriptStr(const char* _scriptStr);
 	void					setScale(const Vector& _scale)					{ if( scale != _scale ) { scale = _scale; updateNeeded = true; } }
 	void					setFlags(const Uint32 _flags)					{ flags = _flags; }
 	void					setFlag(const Uint32 flag)						{ flags |= flag; }
@@ -207,7 +210,7 @@ public:
 	// draws the entity
 	// @param camera: the camera through which to draw the entity
 	// @param light: the light by which the entity should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light) const;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) const;
 
 	// animates all the entity's meshes in unison
 	// @param name The name of the animation to play
@@ -397,6 +400,10 @@ public:
 	// @return true if the async pathfinding task has finished yet, false if the pathfinding task has not finished yet
 	bool pathFinished();
 
+	// check if this entity is a player owned by this client
+	// @return true if the entity is a player from this client, otherwise false
+	bool isLocalPlayer();
+
 protected:
 	Node<Entity*>* node			= nullptr;	// node to the world entity list
 	World* world				= nullptr;	// parent world object
@@ -443,9 +450,11 @@ protected:
 	bool highlighted = false;
 	std::shared_ptr<Entity::listener_t> listener;
 
+	Vector pathNode;
+	Vector pathDir;
 	std::future<PathFinder::Path*> pathTask;
-	PathFinder::Path* path; //TODO: Need some sort of functionality to make the entity walk the path.
-	bool pathRequested;
+	PathFinder::Path* path = nullptr;
+	bool pathRequested = false;
 };
  
 struct Entity::def_t {

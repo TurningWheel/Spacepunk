@@ -566,8 +566,8 @@ bool BBox::checkCollision() const {
 
 static Cvar cvar_showBBoxes("showbboxes", "Makes bboxes visible", "0");
 
-void BBox::draw(Camera& camera, Light* light) {
-	Component::draw(camera,light);
+void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
+	Component::draw(camera,lights);
 
 	if( editorOnly ) {
 		// don't draw BBoxes that exist only for the editor
@@ -655,7 +655,7 @@ void BBox::draw(Camera& camera, Light* light) {
 					rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
 					glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
 					glm::mat4 matrix = translationM * rotationM * scaleM;
-					ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, matrix);
+					ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 					if( shader ) {
 						mesh->draw(camera, this, shader);
 					}
@@ -675,7 +675,7 @@ void BBox::draw(Camera& camera, Light* light) {
 					rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
 					glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
 					glm::mat4 matrix = translationM * rotationM * scaleM;
-					ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, matrix);
+					ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 					if( shader ) {
 						mesh->draw(camera, this, shader);
 					}
@@ -693,7 +693,7 @@ void BBox::draw(Camera& camera, Light* light) {
 					rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
 					glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
 					glm::mat4 matrix = translationM * rotationM * scaleM;
-					ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, matrix);
+					ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 					if( shader ) {
 						mesh->draw(camera, this, shader);
 					}
@@ -730,7 +730,7 @@ void BBox::draw(Camera& camera, Light* light) {
 
 			Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 			if( mesh && material ) {
-				ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, matrix);
+				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
 					mesh->draw(camera, this, shader);
 				}

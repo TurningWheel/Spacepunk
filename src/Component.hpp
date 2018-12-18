@@ -9,6 +9,7 @@
 #include "String.hpp"
 #include "LinkedList.hpp"
 #include "Rect.hpp"
+#include "WideVector.hpp"
 
 class Chunk;
 class Entity;
@@ -47,7 +48,7 @@ public:
 	// draws the component
 	// @param camera: the camera through which to draw the component
 	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light);
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights);
 
 	// update the component
 	virtual void process();
@@ -92,6 +93,12 @@ public:
 	// @param type: the type to look for
 	// @return true if the component was found, false otherwise
 	bool hasComponent(type_t type) const;
+
+	// shoots a laser forward from the component origin until an obstacle is hit
+	// @param color The laser's color
+	// @param size The laser's size
+	// @param life The laser's lifespan (in ticks, 60 ticks = 1 sec)
+	void shootLaser(const WideVector& color, float size, float life);
 
 	// find all components of a given type
 	// @param type: the type of component to search for

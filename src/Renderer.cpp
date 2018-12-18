@@ -45,7 +45,11 @@ void Renderer::init() {
 int Renderer::initVideo() {
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
+#ifdef NDEBUG
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
+#else
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY );
+#endif
 
 	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
 	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
@@ -129,13 +133,15 @@ int Renderer::initVideo() {
 	glLoadIdentity();
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	glClearColor( 0.f, 0.f, 0.f, 0.f );
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-	clearBuffers();
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glClearColor( 0.f, 0.f, 0.f, 0.f );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	swapWindow();
 
 	mainEngine->fmsg(Engine::MSG_INFO,"display changed successfully.");
@@ -575,6 +581,7 @@ void Renderer::printTextColor( const Rect<int>& rect, const glm::vec4& color, co
 void Renderer::clearBuffers() {
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
+	glClearColor( 0.f, 0.f, 0.f, 0.f );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	drawRect(nullptr,glm::vec4(0.f,0.f,0.f,1.f));
 }

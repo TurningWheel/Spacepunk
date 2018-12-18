@@ -44,6 +44,9 @@ public:
 	// the floor and ceiling height of a completely solid tile
 	static const int solidWallHeight = 0;
 
+	// maximum number of lights that will fit in the tile shader
+	static const Uint32 maxLights = 32;
+
 	// default texture
 	static const char* defaultTexture;
 
@@ -122,7 +125,7 @@ public:
 	// @param camera: the camera object that will be used to render the scene
 	// @param light: the light object to illuminate the scene with, or nullptr for no light
 	// @return the shader program that was loaded, or nullptr if the shader failed to load
-	static ShaderProgram* loadShader(TileWorld& world, Camera& camera, Light* light);
+	static ShaderProgram* loadShader(const TileWorld& world, const Camera& camera, const ArrayList<Light*>& lights);
 
 	// cleans out our vertex lists
 	void cleanVertexBuffers();

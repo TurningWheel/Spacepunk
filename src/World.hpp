@@ -2,6 +2,9 @@
 
 #pragma once
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
 #ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
 #else
@@ -49,6 +52,15 @@ public:
 		FILE_JSON,
 		FILE_WLD,		// deprecated
 		FILE_MAX
+	};
+
+	// laser type
+	struct laser_t {
+		Vector start, end;
+		glm::vec4 color;
+		float size;
+		float life;
+		float maxLife;
 	};
 
 	// const variables
@@ -132,6 +144,14 @@ public:
 	// @param outList: the list to populate
 	void findSelectedEntities(LinkedList<Entity*>& outList);
 
+	// add a laser to this level
+	// @param start The start point of the laser
+	// @param end The end point of the laser
+	// @param color The laser's color
+	// @param size The width of the laser
+	// @param life The lifespan of the laser in ticks (60 = 1sec)
+	laser_t& addLaser(const Vector& start, const Vector& end, const glm::vec4& color, float size, float life);
+
 	// getters & setters
 	virtual const type_t		getType() const = 0;
 	const Uint32				getTicks() const						{ return ticks; }
@@ -146,6 +166,7 @@ public:
 	const String&				getZone() const							{ return zone; }
 	Uint32						getID() const							{ return id; }
 	const filetype_t			getFiletype() const						{ return filetype; }
+	Entity*						getShadowCamera()						{ return shadowCamera; }
 
 	// editing properties
 	bool				isPointerActive() const				{ return pointerActive; }
@@ -184,6 +205,10 @@ protected:
 	// entities
 	Uint32 uids=0;
 	LinkedList<Entity*> entities[numBuckets];
+	Entity* shadowCamera = nullptr;
+
+	// lasers
+	ArrayList<laser_t> lasers;
 
 	// bullet physics handlers
 	btBroadphaseInterface* bulletBroadphase = nullptr;

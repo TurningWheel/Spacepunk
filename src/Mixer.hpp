@@ -17,7 +17,7 @@ public:
 
 	// set the 3D listener properties for the mixer
 	// @param camera: the viewpoint to set the listener properties to
-	void setListener(Camera& camera);
+	void setListener(Camera* camera);
 
 	// play the given sound effect
 	// @param loop: if true, the sound will loop indefinitely; otherwise, it will only play once

@@ -14,8 +14,8 @@ AnimationState::AnimationState():
 
 AnimationState::AnimationState(const Animation::entry_t& entry, const ArrayList<Animation::sound_t>& sounds):
 	name(entry.name),
-	begin(entry.begin),
-	end(entry.end),
+	begin(entry.begin + 1),
+	end(max(entry.begin, entry.end)),
 	length(end - begin),
 	loop(entry.loop)
 {
@@ -39,8 +39,7 @@ bool AnimationState::update(Speaker* speaker) {
 	bool changed = updated;
 	updated = false;
 
-	if (weights.getSize() == 0 &&
-		weightRates.getSize() == 0) {
+	if (weights.getSize() == 0) {
 		return changed;
 	}
 
@@ -55,11 +54,9 @@ bool AnimationState::update(Speaker* speaker) {
 
 			ticks += step * cvar_animRate.toFloat();
 			if (loop) {
-				while (ticks < 0.f) {
+				ticks = fmod(ticks, length);
+				if (ticks < 0.f) {
 					ticks += length;
-				}
-				while (ticks > length) {
-					ticks -= length;
 				}
 			} else {
 				if (ticks < 0.f) {
@@ -98,8 +95,8 @@ bool AnimationState::update(Speaker* speaker) {
 
 	// blending
 	for (auto& pair : weights) {
-		float rate = getWeightRate(pair.a.get());
-		float& weight = pair.b;
+		float& rate = pair.b.rate;
+		float& weight = pair.b.value;
 		if ((weight > 0.f && rate < 0.f) || (weight < 1.f && rate > 0.f)) {
 			weight += rate;
 			if (weight > 1.f) {
@@ -136,7 +133,6 @@ void AnimationState::serialize(FileInterface* file) {
 	file->property("end", end);
 	file->property("length", length);
 	file->property("weights", weights);
-	file->property("weightRates", weightRates);
 	file->property("loop", loop);
 	file->property("beginLastSoundFrame", beginLastSoundFrame);
 	file->property("endLastSoundFrame", endLastSoundFrame);
@@ -150,7 +146,13 @@ void AnimationState::sound_t::serialize(FileInterface* file) {
 	file->property("files", files);
 }
 
+void AnimationState::state_t::serialize(FileInterface* file) {
+	int version = 0;
+	file->property("AnimationState::state_t::version", version);
+	file->property("value", value);
+	file->property("rate", rate);
+}
+
 void AnimationState::clearWeights() {
 	weights.clear();
-	weightRates.clear();
 }

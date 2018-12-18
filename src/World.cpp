@@ -66,6 +66,11 @@ void World::initialize(bool empty) {
 	// the world
 	bulletDynamicsWorld = new btDiscreteDynamicsWorld(bulletDispatcher,bulletBroadphase,bulletSolver,bulletCollisionConfiguration);
 	bulletDynamicsWorld->setGravity(btVector3(0,-9.81f,0));
+
+	// create shadow camera
+	const Entity::def_t* def = Entity::findDef("Shadow Camera");
+	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Angle());
+	shadowCamera->setShouldSave(false);
 }
 
 void World::getSelectedEntities(LinkedList<Entity*>& outResult) {
@@ -178,6 +183,7 @@ void World::selectEntities(const bool b) {
 
 const World::hit_t World::lineTrace( const Vector& origin, const Vector& dest ) {
 	hit_t emptyResult;
+	emptyResult.pos = dest;
 
 	LinkedList<hit_t> list;
 	lineTraceList(origin, dest, list);
@@ -237,6 +243,9 @@ void World::lineTraceList( const Vector& origin, const Vector& dest, LinkedList<
 				Entity* entity;
 				if( (entity=uidToEntity(hit.index)) != nullptr ) {
 					if( !entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE) && (!mainEngine->isEditorRunning() || !entity->isShouldSave()) ) {
+						continue;
+					}
+					if( entity==shadowCamera ) {
 						continue;
 					}
 				}
@@ -324,6 +333,18 @@ void World::process() {
 		}
 	}
 
+	// update lasers
+	for (size_t c = 0; c < lasers.getSize(); ++c) {
+		auto& laser = lasers[c];
+		if (laser.life > 0.f) {
+			laser.life -= 1.f;
+			if (laser.life <= 0.f) {
+				lasers.remove(c);
+				--c;
+			}
+		}
+	}
+
 	// iterate through entities
 	for( Uint32 c=0; c<World::numBuckets; ++c ) {
 		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
@@ -365,4 +386,16 @@ void World::process() {
 	//if( !mainEngine->isEditorRunning() ) {
 	//	bulletDynamicsWorld->stepSimulation(1.f / 60.f, 1);
 	//}
+}
+
+World::laser_t& World::addLaser(const Vector& start, const Vector& end, const glm::vec4& color, float size, float life) {
+	laser_t laser;
+	laser.start = start;
+	laser.end = end;
+	laser.color = color;
+	laser.size = size;
+	laser.life = life;
+	laser.maxLife = life;
+	lasers.push(laser);
+	return lasers.peek();
 }
