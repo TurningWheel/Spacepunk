@@ -92,6 +92,8 @@ int Renderer::initVideo() {
 	int result=0;
 	SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE,&result);
 
+
+#ifndef PLATFORM_LINUX
 	// get opengl extensions
 	if( !glewWasInit ) {
 		glewExperimental=GL_TRUE;
@@ -103,6 +105,7 @@ int Renderer::initVideo() {
 			glewWasInit = true;
 		}
 	}
+#endif
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	Uint32 rmask = 0xff000000;
