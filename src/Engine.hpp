@@ -207,10 +207,9 @@ public:
 	// shutdown the engine safely (perhaps from another class)
 	void shutdown();
 
-	// SDL_Timer callback
-	// @param interval: number of times to call the timer
-	// @return the next timer interval. If the returned value from the callback is 0, the timer is canceled
-	static Uint32 timerCallback(Uint32 interval, void *param);
+	// timer thread function (not actually a callback, name is a holdover)
+	// @param interval The exact time in ms between each heartbeat
+	static void timerCallback(double interval);
 
 	// logs a formatted char string to the console
 	// @param msgType: the type of message to send to the console
@@ -344,8 +343,8 @@ private:
 	String combinedVersion;
 	bool initialized = false;
 	bool running = true;
-	bool paused = false;
 	SDL_Event event;
+	static std::atomic_bool paused;
 	unsigned int ticksPerSecond = defaultTickRate;
 
 	// mod data
@@ -398,7 +397,8 @@ private:
 	static const int fpsAverage = 32;
 	double frameval[fpsAverage];
 	Uint32 ticks=0, cycles=0, lastfpscount=0;
-	SDL_TimerID timer;
+	std::thread timer;
+	static std::atomic_bool timerRunning;
 	bool executedFrames=false;
 
 	// console data

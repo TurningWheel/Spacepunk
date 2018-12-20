@@ -33,14 +33,14 @@ Client::~Client() {
 		script->dispatch("term");
 		delete script;
 	}
-	if( renderer )
-		delete renderer;
-	if( mixer )
-		delete mixer;
 	if( gui )
 		delete gui;
 	if( editor )
 		delete editor;
+	if( renderer )
+		delete renderer;
+	if( mixer )
+		delete mixer;
 }
 
 void Client::init() {

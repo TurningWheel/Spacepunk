@@ -10,6 +10,9 @@
 #include "TileWorld.hpp"
 #include "Console.hpp"
 
+std::atomic_bool Engine::paused = false;
+std::atomic_bool Engine::timerRunning = true;
+
 // log message code strings
 const char* Engine::msgTypeStr[Engine::MSG_TYPE_LENGTH] = {
 	"DEBUG",
@@ -531,7 +534,9 @@ void Engine::init() {
 	}
 
 	// instantiate a timer
-	timer = SDL_AddTimer( 1000 / ticksPerSecond, Engine::timerCallback, (void*)(&paused) );
+	timerRunning = true;
+	timer = std::thread(&Engine::timerCallback, ticksPerSecond);
+	//timer = SDL_AddTimer( 1000 / ticksPerSecond, Engine::timerCallback, (void*)(&paused) );
 	SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH);
 
 	// instantiate local server
@@ -657,7 +662,9 @@ void Engine::term() {
 	// stop engine timer
 	fmsg(MSG_INFO,"closing engine...");
 	fmsg(MSG_INFO,"removing engine timer...");
-	SDL_RemoveTimer(timer);
+	timerRunning = false;
+	if (timer.joinable())
+		timer.join();
 
 	// free sounds
 	Mix_HaltMusic();
@@ -752,23 +759,28 @@ void Engine::dumpResources() {
 	}
 }
 
-Uint32 Engine::timerCallback(Uint32 interval, void *param) {
-	if( *((bool*)param) )
-		return interval;
+#include <chrono>
 
-	SDL_Event event;
-	SDL_UserEvent userevent;
+void Engine::timerCallback(double interval) {
+	std::chrono::duration<double, std::ratio<1, 1>> msInterval( 1.0 / interval);
+	while (timerRunning) {
+		auto start = std::chrono::steady_clock::now();
+		if (!paused) {
+			SDL_Event event;
+			SDL_UserEvent userevent;
 
-	userevent.type = SDL_USEREVENT;
-	userevent.code = 0;
-	userevent.data1 = nullptr;
-	userevent.data2 = nullptr;
+			userevent.type = SDL_USEREVENT;
+			userevent.code = 0;
+			userevent.data1 = nullptr;
+			userevent.data2 = nullptr;
 
-	event.type = SDL_USEREVENT;
-	event.user = userevent;
+			event.type = SDL_USEREVENT;
+			event.user = userevent;
 
-	SDL_PushEvent(&event);
-	return interval;
+			SDL_PushEvent(&event);
+		}
+		while (std::chrono::steady_clock::now() - start < msInterval);
+	}
 }
 
 void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
@@ -1069,8 +1081,11 @@ void Engine::preProcess() {
 	unsigned int newTicksPerSecond = cvar_tickrate.toInt();
 	if( newTicksPerSecond != ticksPerSecond ) {
 		ticksPerSecond = newTicksPerSecond;
-		SDL_RemoveTimer(timer);
-		timer = SDL_AddTimer( 1000 / ticksPerSecond, Engine::timerCallback, (void*)(&paused) );
+		timerRunning = false;
+		if (timer.joinable())
+			timer.join();
+		timerRunning = true;
+		timer = std::thread(&Engine::timerCallback, ticksPerSecond);
 	}
 
 	SDL_GameController* pad = nullptr;
