@@ -99,6 +99,12 @@ public:
 	// @param chunkDrawList: a list of chunks to draw
 	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList);
 
+	// find a random traversible tile. if none are found, outX and outY remain unchanged
+	// @param outX x coordinate of random tile (in tiles)
+	// @param outY y coordinate of random tile (in tiles)
+	// @param height the minimum height of a traversible tile (floor to ceiling)
+	void findRandomTile(float height, int& outX, int& outY);
+
 	// getters & setters
 	virtual const type_t		getType() const						{ return WORLD_TILES; }
 	const Uint32				getWidth() const					{ return width; }

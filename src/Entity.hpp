@@ -126,6 +126,7 @@ public:
 	bool								isPathRequested() const				{ return pathRequested; }
 	const Vector&						getPathNodePosition() const			{ return pathNode; }
 	const Vector&						getPathNodeDir() const				{ return pathDir; }
+	bool								hasPath() const						{ return path != nullptr; }
 
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
 	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; } }
@@ -395,6 +396,9 @@ public:
 	// @param goalX: target x coordinate
 	// @param goalY: target y coordinate
 	void findAPath(int endX, int endY);
+
+	// kicks off an async pathfinding task to a random destination
+	void findRandomPath();
 
 	// checks if the async pathfinding task has finished. This MUST be referenced before making use of Entity::path
 	// @return true if the async pathfinding task has finished yet, false if the pathfinding task has not finished yet

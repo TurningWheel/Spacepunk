@@ -2358,3 +2358,19 @@ void TileWorld::generateObstacleCache()
 std::future<PathFinder::Path*> TileWorld::findAPath(int startX, int startY, int endX, int endY) {
 	return pathFinder.generateAStarPath(startX, startY, endX, endY);
 }
+
+void TileWorld::findRandomTile(float height, int& outX, int& outY) {
+	ArrayList<Tile*> validTiles;
+	for (auto& tile : tiles) {
+		float tileHeight = tile.getFloorHeight() - (tile.getCeilingHeight() + tile.getCeilingSlopeSize());
+		if (height <= tileHeight) {
+			validTiles.push(&tile);
+		}
+	}
+	if (!validTiles.getSize()) {
+		return;
+	}
+	Sint32 rand = mainEngine->getRandom().getSint32() % validTiles.getSize();
+	outX = validTiles[rand]->getX() / Tile::size;
+	outY = validTiles[rand]->getY() / Tile::size;
+}

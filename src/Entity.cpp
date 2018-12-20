@@ -99,7 +99,6 @@ Entity::Entity(World* _world, Uint32 _uid) {
 	snprintf(newName, 32, "Entity #%d", uid);
 	name = newName;
 
-	//pathTask = nullptr;
 	pathRequested = false;
 	path = nullptr;
 }
@@ -328,7 +327,7 @@ void Entity::process() {
 	ang.wrapAngles();
 
 	// update path request
-	if ( pathRequested && pathFinished() && path ) {
+	if( path ) {
 		pathRequested = false;
 		if (path->getSize() == 0) {
 			delete path;
@@ -989,6 +988,20 @@ void Entity::findAPath(int endX, int endY) {
 	pathRequested = true;
 
 	pathTask = world->findAPath(getCurrentTileX(), getCurrentTileY(), endX, endY);
+}
+
+void Entity::findRandomPath() {
+	if (!world || world->getType() != World::WORLD_TILES) {
+		return;
+	}
+	TileWorld* tileWorld = static_cast<TileWorld*>(world);
+
+	Sint32 x = -1;
+	Sint32 y = -1;
+	tileWorld->findRandomTile(Tile::size, x, y);
+	if (x >= 0 && y >= 0) {
+		findAPath(x, y);
+	}
 }
 
 bool Entity::pathFinished() {
