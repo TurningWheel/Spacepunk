@@ -92,10 +92,10 @@ public:
 	const Sint32&			getCeilingSlopeSize() const				{ return ceilingSlopeSize; }
 	const side_t&			getFloorSlopeSide() const				{ return floorSlopeSide; }
 	const Sint32&			getFloorSlopeSize() const				{ return floorSlopeSize; }
-	LinkedList<vertex_t>&			getCeilingVertices()					{ return ceilingVertices; }
-	LinkedList<vertex_t>&			getFloorVertices()						{ return floorVertices; }
-	LinkedList<vertex_t>&			getLowerVertices(const side_t side)		{ return lowerVertices[side]; }
-	LinkedList<vertex_t>&			getUpperVertices(const side_t side)		{ return upperVertices[side]; }
+	LinkedList<vertex_t>&	getCeilingVertices()					{ return ceilingVertices; }
+	LinkedList<vertex_t>&	getFloorVertices()						{ return floorVertices; }
+	LinkedList<vertex_t>&	getLowerVertices(const side_t side)		{ return lowerVertices[side]; }
+	LinkedList<vertex_t>&	getUpperVertices(const side_t side)		{ return upperVertices[side]; }
 	const bool				isChanged() const						{ return changed; }
 	const size_t			getNumVertices() const					{ return numVertices; }
 	bool					isLocked() const						{ return locked; }
@@ -202,6 +202,8 @@ public:
 
 	// conversion to const char*
 	void operator=(const Tile& src) {
+		shaderVars = src.shaderVars;
+
 		// ceiling data
 		ceilingHeight = src.getCeilingHeight();
 		ceilingTexture = src.getCeilingTexture();

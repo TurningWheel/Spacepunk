@@ -16,7 +16,8 @@ class SectorWorld;
 
 class Editor {
 public:
-	Editor() {}
+	Editor();
+	~Editor();
 
 	// editing mode
 	enum editingmode_t {
@@ -534,6 +535,7 @@ private:
 
 	// clipboard
 	LinkedList<Entity*> copiedEntities;
+	TileWorld* copiedTiles = nullptr;
 
 	// for rotating the widget to face the camera
 	static const Angle widgetRot[8][7];
@@ -559,14 +561,18 @@ private:
 	// @param pointerY: pointer Y coord
 	void updateTileFields(TileWorld& world, Sint32 pointerX, Sint32 pointerY);
 
+	// update tiles in the given world
+	// @param world world we are editing
+	void updateTiles(TileWorld& world);
+
 	// edit the tiles in the world
-	void editTiles();
+	void editTiles(bool usable);
 
 	// edit the entities in the world
-	void editEntities();
+	void editEntities(bool usable);
 
 	// edit the sectors in the world
-	void editSectors();
+	void editSectors(bool usable);
 
 	// widget controls
 	// @param world: the world to edit

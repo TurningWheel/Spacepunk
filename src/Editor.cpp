@@ -118,6 +118,16 @@ Cvar cvar_snapRotate("editor.snap.rotate", "Rotate snap", "15.0");
 Cvar cvar_snapScale("editor.snap.scale", "Scale snap", "25.0");
 Cvar cvar_editorSounds("editor.sounds", "Enable editor sound effects", "1");
 
+Editor::Editor() {
+}
+
+Editor::~Editor() {
+	if (copiedTiles) {
+		delete copiedTiles;
+		copiedTiles = 0;
+	}
+}
+
 void Editor::init(Client& _client) {
 	client = &_client;
 
@@ -2721,7 +2731,41 @@ void Editor::updateTileFields(TileWorld& world, Sint32 pointerX, Sint32 pointerY
 	}
 }
 
-void Editor::editTiles() {
+void Editor::updateTiles(TileWorld& world) {
+	ArrayList<Tile>& tiles = world.getTiles();
+	for( Uint32 x=0; x<world.getWidth(); ++x ) {
+		for( Uint32 y=0; y<world.getHeight(); ++y ) {
+			Tile& tile = tiles[y+x*world.getHeight()];
+			if( tile.isChanged() ) {
+				tile.setChanged(false);
+				Tile* neighbor = nullptr;
+
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_EAST)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_EAST);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_EAST);
+				}
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_SOUTH);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_SOUTH);
+				}
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_WEST)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_WEST);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_WEST);
+				}
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_NORTH);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_NORTH);
+				}
+				tile.compileCeilingVertices();
+				tile.compileFloorVertices();
+				tile.buildBuffers();
+				tile.compileBulletPhysicsMesh();
+			}
+		}
+	}
+}
+
+void Editor::editTiles(bool usable) {
 	Camera* camera = editingCamera;
 	if( !camera )
 		return;
@@ -2778,6 +2822,69 @@ void Editor::editTiles() {
 		world.selectEntities(false);
 	}
 
+	// copy/paste
+	if( !mainEngine->getInputStr() ) {
+		if( mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL) ) {
+			bool paste = mainEngine->pressKey(SDL_SCANCODE_V);
+			bool cut = mainEngine->pressKey(SDL_SCANCODE_X);
+			bool copy = mainEngine->pressKey(SDL_SCANCODE_C);
+
+			// paste tiles
+			if( paste && copiedTiles ) {
+				Rect<int> rect = world.getSelectedRect();
+				rect.w = min(copiedTiles->getWidth(), world.getWidth() - rect.x );
+				rect.h = min(copiedTiles->getHeight(), world.getHeight() - rect.y );
+
+				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
+					Sint32 pitch = x * world.getHeight();
+					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
+						tiles[y + pitch] = copiedTiles->getTiles()[(y - rect.y) + (x - rect.x) * copiedTiles->getHeight()];
+					}
+				}
+				rect.x = max(0, rect.x - 1);
+				rect.y = max(0, rect.y - 1);
+				rect.w = min((int)world.getWidth() - 1, rect.w + 2);
+				rect.h = min((int)world.getHeight() - 1, rect.h + 2);
+				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
+					Sint32 pitch = x * world.getHeight();
+					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
+						tiles[y + pitch].setChanged(true);
+						tiles[y + pitch].getChunk()->setChanged(true);
+					}
+				}
+
+				updateTiles(world);
+			}
+
+			// copy/cut tiles
+			if( copy || cut ) {
+				Rect<int> rect = world.getSelectedRect();
+				rect.x += rect.w >= 0 ? 0 : rect.w;
+				rect.y += rect.h >= 0 ? 0 : rect.h;
+				rect.w = abs(rect.w) + 1;
+				rect.h = abs(rect.h) + 1;
+
+				if (copiedTiles) {
+					delete copiedTiles;
+				}
+
+				// create world for copied tiles
+				copiedTiles = new TileWorld(true, true, 0, Tile::side_t::SIDE_EAST, "", rect.w, rect.h, "Copied Tiles");
+				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
+					Sint32 pitch = x * world.getHeight();
+					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
+						copiedTiles->getTiles()[(y - rect.y) + (x - rect.x) * rect.h] = tiles[y + pitch];
+						if (cut) {
+							tiles[y + pitch] = Tile();
+							tiles[y + pitch].setChanged(true);
+							tiles[y + pitch].getChunk()->setChanged(true);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// manipulate tiles
 	bool buttonRight = false;
 	bool buttonDown = false;
@@ -2824,8 +2931,10 @@ void Editor::editTiles() {
 		ceilingPos.y = cameraPos.y;
 		ceilingPos.z = tile.getCeilingHeight();
 		tile.setCeilingSlopeHeightForVec(ceilingPos);
-		buttonPlus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
-		buttonMinus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		if (usable) {
+			buttonPlus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
+			buttonMinus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		}
 	} else {
 		glm::vec3 floorPos;
 		const Vector& cameraPos = camera->getGlobalPos();
@@ -2836,8 +2945,10 @@ void Editor::editTiles() {
 		floorPos.y = cameraPos.y;
 		floorPos.z = tile.getFloorHeight();
 		tile.setFloorSlopeHeightForVec(floorPos);
-		buttonPlus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
-		buttonMinus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		if (usable) {
+			buttonPlus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
+			buttonMinus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		}
 	}
 
 	if( buttonRight || buttonLeft || buttonDown || buttonUp || buttonEnter || buttonPlus || buttonMinus || buttonZero ) {
@@ -3155,37 +3266,8 @@ void Editor::editTiles() {
 				}
 			}
 		}
-		for( Uint32 x=0; x<world.getWidth(); ++x ) {
-			for( Uint32 y=0; y<world.getHeight(); ++y ) {
-				Tile& tile = tiles[y+x*world.getHeight()];
-				if( tile.isChanged() ) {
-					tile.setChanged(false);
-					Tile* neighbor = nullptr;
 
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_EAST)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_EAST);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_EAST);
-					}
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_SOUTH);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_SOUTH);
-					}
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_WEST)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_WEST);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_WEST);
-					}
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_NORTH);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_NORTH);
-					}
-					tile.compileCeilingVertices();
-					tile.compileFloorVertices();
-					tile.buildBuffers();
-					tile.compileBulletPhysicsMesh();
-				}
-			}
-		}
-
+		updateTiles(world);
 		updateTileFields(world, world.getSelectedRect().x, world.getSelectedRect().y);
 	}
 
@@ -3417,7 +3499,7 @@ void Editor::handleWidget(World& world) {
 	}
 }
 
-void Editor::editSectors() {
+void Editor::editSectors(bool usable) {
 	if( world->getType() != World::WORLD_SECTORS ) {
 		return;
 	}
@@ -3499,7 +3581,7 @@ void Editor::editSectors() {
 	}
 }
 
-void Editor::editEntities() {
+void Editor::editEntities(bool usable) {
 	World& world = *this->world;
 
 	// delete
@@ -3985,11 +4067,11 @@ void Editor::process(const bool usable) {
 
 		// main editing functionality
 		if( editingMode==TILES || editingMode==TEXTURES ) {
-			editTiles();
+			editTiles(usable);
 		} else if( editingMode==ENTITIES ) {
-			editEntities();
+			editEntities(usable);
 		} else if( editingMode==SECTORS ) {
-			editSectors();
+			editSectors(usable);
 		}
 
 		// toggle mouselook
