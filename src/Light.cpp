@@ -133,10 +133,14 @@ void Light::createShadowMap() {
 	if (!world) {
 		return;
 	}
-	if (entity->getTicks() == shadowTicks) {
+	if (entity->getTicks() == shadowTicks && shadowMap.isInitialized()) {
 		return;
 	} else {
 		shadowTicks = entity->getTicks();
+	}
+
+	if (shadowMap.isInitialized() && entity->isFlag(Entity::FLAG_STATIC)) {
+		return;
 	}
 
 	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
@@ -146,6 +150,7 @@ void Light::createShadowMap() {
 
 	glPolygonOffset(1.f, cvar_shadowDepthOffset.toFloat());
 	glEnable(GL_DEPTH_TEST);
+	shadowMap.init();
 	for (size_t c = 0; c < 6; ++c) {
 		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -159,4 +164,8 @@ void Light::createShadowMap() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	shadowMapDrawn = true;
+}
+
+void Light::deleteShadowMap() {
+	shadowMap.term();
 }

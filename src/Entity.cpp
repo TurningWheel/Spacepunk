@@ -48,7 +48,8 @@ const char* Entity::flagStr[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
 	"GLOWING",
 	"DEPTHFAIL",
 	"OCCLUDE",
-	"INTERACTABLE"
+	"INTERACTABLE",
+	"STATIC"
 };
 
 const char* Entity::flagDesc[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
@@ -65,7 +66,8 @@ const char* Entity::flagDesc[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
 	"Enables drawing in the glow pass",
 	"Enables drawing in the depth fail pass",
 	"Causes the entity to block occlusion tests",
-	"Indicates to clients whether an entity is interactible"
+	"Indicates to clients whether an entity is interactible",
+	"Heavily optimize the entity but render it immobile"
 };
 
 const char* Entity::sortStr[SORT_MAX] = {
@@ -278,6 +280,11 @@ void Entity::findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) co
 
 void Entity::update() {
 	updateNeeded = false;
+
+	// static entities never update
+	if (ticks && isFlag(Entity::FLAG_STATIC) && !mainEngine->isEditorRunning()) {
+		return;
+	}
 
 	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
 	glm::mat4 rotationM = glm::mat4( 1.f );

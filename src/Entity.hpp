@@ -53,7 +53,8 @@ public:
 		FLAG_DEPTHFAIL = 1 << 11,
 		FLAG_OCCLUDE = 1 << 12,
 		FLAG_INTERACTABLE = 1 << 13,
-		FLAG_NUM = 14
+		FLAG_STATIC = 1 << 14,
+		FLAG_NUM = 15
 	};
 	static const char* flagStr[static_cast<int>(flag_t::FLAG_NUM)];
 	static const char* flagDesc[static_cast<int>(flag_t::FLAG_NUM)];

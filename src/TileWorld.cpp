@@ -2246,6 +2246,12 @@ void TileWorld::draw() {
 
 		cameraLightList.clear();
 	}
+
+	for (auto light : lights) {
+		if (light->getShadowTicks() != light->getEntity()->getTicks()) {
+			light->deleteShadowMap();
+		}
+	}
 }
 
 void TileWorld::findExits() {

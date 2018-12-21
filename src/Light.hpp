@@ -50,6 +50,7 @@ public:
 	const bool			isChosen() const			{ return chosen; }
 	const float			getArc() const				{ return arc; }
 	const bool			isShadow() const			{ return shadow; }
+	Uint32				getShadowTicks() const		{ return shadowTicks; }
 	Shadow&				getShadowMap()				{ return shadowMap; }
 
 	void	setColor(const Vector& _color)			{ color = _color; }
@@ -70,6 +71,9 @@ public:
 
 	// creates a shadow map from the light source
 	void createShadowMap();
+
+	// deletes the shadow map
+	void deleteShadowMap();
 
 	// load the component from a file
 	// @param fp: the file to read from

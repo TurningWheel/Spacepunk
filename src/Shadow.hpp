@@ -22,6 +22,12 @@ public:
 	static const int directions = 6;
 	static const camerainfo_t cameraInfo[directions];
 
+	// create gl data for shadowmap
+	void init();
+
+	// delete gl data for shadowmap
+	void term();
+
 	// binds the shadow map for writing
 	// @param face The face to bind for writing
 	void bindForWriting(GLenum face);
@@ -33,10 +39,9 @@ public:
 	// getters & setters
 	const GLuint	getFBO() const			{ return fbo; }
 	const GLuint	getShadowMap() const	{ return shadowMap; }
+	bool			isInitialized() const	{ return fbo != 0 && shadowMap != 0; }
 
 private:
 	GLuint fbo = 0;
 	GLuint shadowMap = 0;
-
-	bool init();
 };

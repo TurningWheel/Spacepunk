@@ -18,21 +18,16 @@ const Shadow::camerainfo_t Shadow::cameraInfo[Shadow::directions] = {
 };
 
 Shadow::Shadow() {
-	if (!init()) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"Failed to create shadow map object");
-	}
 }
 
 Shadow::~Shadow() {
-	if (fbo) {
-		glDeleteFramebuffers(1, &fbo);
-	}
-	if (shadowMap) {
-		glDeleteTextures(1, &shadowMap);
-	}
+	term();
 }
 
-bool Shadow::init() {
+void Shadow::init() {
+	if (fbo || shadowMap) {
+		return;
+	}
 
 	// Create the cube map
 	glGenTextures(1, &shadowMap);
@@ -61,16 +56,29 @@ bool Shadow::init() {
 	glReadBuffer(GL_NONE);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
-	return true;
+void Shadow::term() {
+	if (fbo) {
+		glDeleteFramebuffers(1, &fbo);
+		fbo = 0;
+	}
+	if (shadowMap) {
+		glDeleteTextures(1, &shadowMap);
+		shadowMap = 0;
+	}
 }
 
 void Shadow::bindForWriting(GLenum face) {
+	if (!fbo || !shadowMap)
+		return;
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, face, shadowMap, 0);
 }
 
 void Shadow::bindForReading(GLenum textureUnit) {
+	if (!shadowMap)
+		return;
 	glActiveTexture(textureUnit);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowMap);
 }
