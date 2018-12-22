@@ -17,7 +17,7 @@ uniform vec3 gCameraPos;
 
 #define MAX_LIGHTS 32
 uniform vec3 gLightPos[MAX_LIGHTS];
-uniform vec4 gLightColor[MAX_LIGHTS];
+uniform vec3 gLightColor[MAX_LIGHTS];
 uniform float gLightIntensity[MAX_LIGHTS];
 uniform float gLightRadius[MAX_LIGHTS];
 uniform float gLightArc[MAX_LIGHTS];
@@ -167,7 +167,7 @@ void main() {
 			if( lDiffuseFactor <= 0.f || lShadowFactor <= 0.f) {
 				continue;
 			} else {
-				lDiffuseColor = gLightColor[c] * max(gLightIntensity[c], 1.f) * lDiffuseFactor;
+				lDiffuseColor = vec4(gLightColor[c], 0.0) * max(gLightIntensity[c], 1.f) * lDiffuseFactor;
 
 				// calculate specular color
 				vec3  lFragToEye	   = normalize(WorldPos - gCameraPos);
@@ -178,7 +178,7 @@ void main() {
 					float lSpecularIntensity  = lEffectFrag.r * 255.0;
 					float lSpecularPower	  = pow(lSpecularFactor, max(lEffectFrag.g * 255.0, 1.f));
 
-					lSpecularColor = gLightColor[c] * lSpecularIntensity * lSpecularPower;
+					lSpecularColor = vec4(gLightColor[c], 0.0) * lSpecularIntensity * lSpecularPower;
 				}
 
 				// apply lighting

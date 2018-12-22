@@ -7,6 +7,7 @@
 #include "Server.hpp"
 #include "Script.hpp"
 #include "Path.hpp"
+#include "Shadow.hpp"
 
 const Uint32 World::nuid = UINT32_MAX;
 const char* World::fileExtensions[World::FILE_MAX] = {

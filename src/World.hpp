@@ -16,6 +16,7 @@
 #include "Vector.hpp"
 #include "Console.hpp"
 #include "Path.hpp"
+#include "Shadow.hpp"
 
 class Script;
 class Entity;
@@ -205,7 +206,6 @@ protected:
 	// entities
 	Uint32 uids=0;
 	LinkedList<Entity*> entities[numBuckets];
-	Entity* shadowCamera = nullptr;
 
 	// lasers
 	ArrayList<laser_t> lasers;
@@ -228,6 +228,9 @@ protected:
 
 	// when a new world is spawned, it generates an obstacle map/cache of all static obstacles.
 	virtual void generateObstacleCache() = 0;
+
+	// shadow map stuff
+	Entity* shadowCamera = nullptr;
 };
 
 extern Cvar cvar_showEdges;

@@ -1,5 +1,9 @@
 // Shadow.hpp
 
+#include "Main.hpp"
+#include "Angle.hpp"
+#include "Rect.hpp"
+
 #pragma once
 
 class Shadow {
@@ -34,7 +38,7 @@ public:
 
 	// binds the shadow map for reading
 	// @param textureUnit The texture unit to bind for reading
-	void bindForReading(GLenum textureUnit);
+	void bindForReading(GLenum textureUnit) const;
 
 	// getters & setters
 	const GLuint	getFBO() const			{ return fbo; }

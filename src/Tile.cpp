@@ -166,7 +166,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 				glm::vec3 lightScale( light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y );
 
 				glUniform3fv(shader.getUniformLocation(buf.format("gLightPos[%d]",index)), 1, glm::value_ptr(lightPos));
-				glUniform4fv(shader.getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
+				glUniform3fv(shader.getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
 				glUniform1f(shader.getUniformLocation(buf.format("gLightIntensity[%d]",index)), light->getIntensity());
 				glUniform1f(shader.getUniformLocation(buf.format("gLightRadius[%d]",index)), light->getRadius());
 				glUniform1f(shader.getUniformLocation(buf.format("gLightArc[%d]",index)), light->getArc() * PI / 180.f);
@@ -192,7 +192,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 			glUniform1i(shader.getUniformLocation("gNumLights"), (GLint)lights.getSize());
 		} else if (mainEngine->isEditorRunning() && world.isShowTools()) {
 			glUniform3fv(shader.getUniformLocation("gLightPos[0]"), 1, glm::value_ptr(cameraPos));
-			glUniform4fv(shader.getUniformLocation("gLightColor[0]"), 1, glm::value_ptr(glm::vec4(1,1,1,1)));
+			glUniform3fv(shader.getUniformLocation("gLightColor[0]"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));
 			glUniform1f(shader.getUniformLocation("gLightIntensity[0]"), 1);
 			glUniform1f(shader.getUniformLocation("gLightRadius[0]"), 16384.f);
 			glUniform3fv(shader.getUniformLocation("gLightScale[0]"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));

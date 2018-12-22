@@ -14,7 +14,7 @@ uniform vec3 gCameraPos;
 
 #define MAX_LIGHTS 32
 uniform vec3 gLightPos[MAX_LIGHTS];
-uniform vec4 gLightColor[MAX_LIGHTS];
+uniform vec3 gLightColor[MAX_LIGHTS];
 uniform float gLightIntensity[MAX_LIGHTS];
 uniform float gLightRadius[MAX_LIGHTS];
 uniform float gLightArc[MAX_LIGHTS];
@@ -167,7 +167,7 @@ void main() {
 #else
 			float lShadowFactor = 1.f;
 #endif
-			lLightColor = gLightColor[c];
+			lLightColor = vec4(gLightColor[c], 0.0);
 
 			if( gLightShape[c] == 0 ) {
 				// sphere

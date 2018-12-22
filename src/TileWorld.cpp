@@ -2109,6 +2109,7 @@ void TileWorld::draw() {
 				}
 			}
 		}
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		// clear the window area
 		glClear(GL_DEPTH_BUFFER_BIT);

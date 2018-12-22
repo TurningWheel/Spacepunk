@@ -109,7 +109,7 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 		glm::vec3 lightScale( light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y );
 
 		glUniform3fv(getUniformLocation(buf.format("gLightPos[%d]",index)), 1, glm::value_ptr(lightPos));
-		glUniform4fv(getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
+		glUniform3fv(getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
 		glUniform1f(getUniformLocation(buf.format("gLightIntensity[%d]",index)), light->getIntensity());
 		glUniform1f(getUniformLocation(buf.format("gLightRadius[%d]",index)), light->getRadius());
 		glUniform1f(getUniformLocation(buf.format("gLightArc[%d]",index)), light->getArc() * PI / 180.f);

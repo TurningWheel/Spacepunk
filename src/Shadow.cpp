@@ -48,6 +48,7 @@ void Shadow::init() {
 	// Create the FBO
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X, shadowMap, 0);
 
 	// Disable writes to the color buffer
 	glDrawBuffer(GL_NONE);
@@ -76,7 +77,7 @@ void Shadow::bindForWriting(GLenum face) {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, face, shadowMap, 0);
 }
 
-void Shadow::bindForReading(GLenum textureUnit) {
+void Shadow::bindForReading(GLenum textureUnit) const {
 	if (!shadowMap)
 		return;
 	glActiveTexture(textureUnit);
