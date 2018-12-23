@@ -1,0 +1,21 @@
+# a single quad
+
+g quad
+
+v -0.5 -0.5 0.0
+v  0.5 -0.5 0.0
+v  0.5  0.5 0.0
+v -0.5  0.5 0.0
+
+vt 0.0 0.0
+vt 1.0 0.0
+vt 1.0 1.0
+vt 0.0 1.0
+
+vn 0.0 0.0 1.0
+vn 0.0 0.0 -1.0
+
+f v1/vt1/vn1 v2/vt2/vn1 v3/vt3/vn1
+f v1/vt1/vn1 v3/vt3/vn1 v4/vt4/vn1
+f v1/vt1/vn2 v3/vt3/vn2 v2/vt2/vn2
+f v1/vt1/vn2 v4/vt4/vn2 v3/vt3/vn2
