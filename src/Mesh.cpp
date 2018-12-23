@@ -47,7 +47,7 @@ Mesh::Mesh(const char* _name) : Asset(_name) {
 		flags |= aiProcess_Triangulate;
 		flags |= aiProcess_FlipUVs;
 		flags |= aiProcess_JoinIdenticalVertices;
-		flags |= aiProcess_FixInfacingNormals;
+		//flags |= aiProcess_FixInfacingNormals;
 		flags |= aiProcess_ValidateDataStructure;
 		flags |= aiProcess_ImproveCacheLocality;
 		flags |= aiProcess_RemoveRedundantMaterials;
