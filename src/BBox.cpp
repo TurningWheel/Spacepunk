@@ -50,7 +50,7 @@ void BBox::beforeWorldInsertion(const World* world) {
 
 void BBox::afterWorldInsertion(const World* world) {
 	Component::afterWorldInsertion(world);
-	updateRigidBody(gScale);
+	createRigidBody();
 }
 
 void BBox::deleteRigidBody() {
@@ -131,46 +131,57 @@ void BBox::conformToModel(const Model& model) {
 	}
 }
 
+btTransform BBox::getPhysicsTransform() const {
+	if (!motionState) {
+		return btTransform();
+	} else {
+		btTransform transform;
+		motionState->getWorldTransform(transform);
+		return transform;
+	}
+}
+
 void BBox::updateRigidBody(const Vector& oldGScale) {
-	if( !enabled ) {
-		deleteRigidBody();
-		return;
-	}
-
-	// delete old rigid mesh
-	if( rigidBody!=nullptr ) {
-		if( dynamicsWorld ) {
-			dynamicsWorld->removeRigidBody(rigidBody);
-		}
-		delete rigidBody;
-		rigidBody = nullptr;
-	}
-
-	// delete motion state
-	if( motionState!=nullptr ) {
-		delete motionState;
-		motionState = nullptr;
-	}
-
-	// delete collision volume
-	if( collisionShapePtr!=nullptr ) {
-		delete collisionShapePtr;
-		collisionShapePtr = nullptr;
-	}
-
-	// delete triangle mesh
-	if( shape == SHAPE_MESH ) {
-		if( parent && parent->getType() == Component::COMPONENT_MODEL ) {
-			Model* model = static_cast<Model*>(parent);
-			if( model ) {
-				if( oldGScale != gScale || meshName != model->getMesh() ) {
-					delete triMesh;
-					triMesh = nullptr;
-					meshName = model->getMesh();
+	if (mainEngine->isEditorRunning() || mass <= 0.f) {
+		dirty = true;
+	} else {
+		float epsilon = 0.1;
+		if( fabs(oldGScale.lengthSquared() - gScale.lengthSquared()) > epsilon) {
+			dirty = true;
+			if( shape == SHAPE_MESH ) {
+				if( parent && parent->getType() == Component::COMPONENT_MODEL ) {
+					Model* model = static_cast<Model*>(parent);
+					if( model ) {
+						meshName = model->getMesh();
+					}
 				}
 			}
 		}
 	}
+
+	if( dirty ) {
+		createRigidBody();
+		dirty = false;
+	} else {
+		if (parent != nullptr || mass <= 0.f) {
+			if (motionState) {
+				if (shape == SHAPE_MESH) {
+					btQuaternion btQuat;
+					btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
+					btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+					motionState->setWorldTransform(btTrans);
+				} else {
+					btTransform btTrans(btQuaternion(0.f, 0.f, 0.f, 1.f), btVector3(gPos.x, gPos.y, gPos.z));
+					motionState->setWorldTransform(btTrans);
+				}
+			}
+		}
+	}
+}
+
+void BBox::createRigidBody() {
+	deleteRigidBody();
 
 	// setup new collision volume
 	switch( shape ) {
@@ -222,12 +233,15 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 	}
 
 	// create rigid body
+	btVector3 inertia;
+	collisionShapePtr->calculateLocalInertia(mass, inertia);
 	btRigidBody::btRigidBodyConstructionInfo
-		rigidBodyCI(0, motionState, collisionShapePtr, btVector3(0.f, 0.f, 0.f));
+		rigidBodyCI(mass, motionState, collisionShapePtr, inertia);
 	rigidBody = new btRigidBody(rigidBodyCI);
 	rigidBody->setUserIndex(entity->getUID());
 	rigidBody->setUserIndex2(World::nuid);
 	rigidBody->setUserPointer(nullptr);
+	rigidBody->setSleepingThresholds(0.f, 0.f);
 
 	// add a new rigid body to the simulation
 	World* world = entity->getWorld();
@@ -820,8 +834,11 @@ void BBox::load(FILE* fp) {
 void BBox::serialize(FileInterface* file) {
 	Component::serialize(file);
 
-	Uint32 version = 0;
+	Uint32 version = 1;
 	file->property("BBox::version", version);
 	file->property("shape", shape);
 	file->property("enabled", enabled);
+	if (version >= 1) {
+		file->property("mass", mass);
+	}
 }

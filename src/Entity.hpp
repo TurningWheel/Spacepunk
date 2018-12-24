@@ -130,15 +130,16 @@ public:
 	bool								hasPath() const						{ return path != nullptr; }
 
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
-	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; } }
+	void					setMat(const glm::mat4& _mat)					{ if( mat != _mat ) { mat = _mat; updateNeeded = true; matSet = true; } }
+	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; matSet = false; } }
 	void					setOldPos(const Vector& _oldPos)				{ oldPos = _oldPos; }
 	void					setVel(const Vector& _vel)						{ vel = _vel; }
 	void					setNewPos(const Vector& _newPos)				{ newPos = _newPos; }
-	void					setAng(const Angle& _ang)						{ if( ang != _ang ) { ang = _ang; updateNeeded = true; } }
+	void					setAng(const Angle& _ang)						{ if( ang != _ang ) { ang = _ang; updateNeeded = true; matSet = false; } }
 	void					setRot(const Angle& _rot)						{ rot = _rot; }
 	void					setNewAng(const Angle& _newAng)					{ newAng = _newAng; }
 	void					setScriptStr(const char* _scriptStr);
-	void					setScale(const Vector& _scale)					{ if( scale != _scale ) { scale = _scale; updateNeeded = true; } }
+	void					setScale(const Vector& _scale)					{ if( scale != _scale ) { scale = _scale; updateNeeded = true; matSet = false; } }
 	void					setFlags(const Uint32 _flags)					{ flags = _flags; }
 	void					setFlag(const Uint32 flag)						{ flags |= flag; }
 	void					resetFlag(const Uint32 flag)					{ flags &= ~flag; }
@@ -428,6 +429,7 @@ protected:
 	Angle rot;						// angular velocity
 	Vector scale;					// visual scale
 	glm::mat4 mat;					// matrix (position * rotation * scale)
+	bool matSet = false;
 	bool updateNeeded = false;		// if true, matrix gets updated, and component matrices get updated
 
 	Sint32 currentCX = INT32_MAX;	// X coord of the chunk we are currently occupying

@@ -286,13 +286,15 @@ void Entity::update() {
 		return;
 	}
 
-	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
-	glm::mat4 rotationM = glm::mat4( 1.f );
-	rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-	rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansPitch()), glm::vec3(0.f, 0.f, 1.f));
-	rotationM = glm::rotate(rotationM, (float)(ang.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-	glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
-	mat = translationM * rotationM * scaleM;
+	if (!matSet) {
+		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
+		glm::mat4 rotationM = glm::mat4( 1.f );
+		rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
+		rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansPitch()), glm::vec3(0.f, 0.f, 1.f));
+		rotationM = glm::rotate(rotationM, (float)(ang.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
+		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
+		mat = translationM * rotationM * scaleM;
+	}
 
 	// update the chunk node
 	if( world && world->getType() == World::WORLD_TILES ) {

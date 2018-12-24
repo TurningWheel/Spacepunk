@@ -34,12 +34,19 @@ public:
 	static const char* meshSphereStr;
 	static const char* materialStr;
 
+	// create the physics body
+	void createRigidBody();
+
 	// removes the physics object from the simulation
 	void deleteRigidBody();
 
 	// update the location, shape, and all other properties of the rigid body
 	// @param oldGScale: the old scale; if this changed, any triangle mesh is invalid
 	void updateRigidBody(const Vector& oldGScale);
+
+	// get the current transform of this bbox in the physics sim
+	// @return The transform from the physics sim
+	btTransform getPhysicsTransform() const;
 
 	// check whether the given point is inside the entity
 	// @param point: the point to test
@@ -98,22 +105,28 @@ public:
 	virtual type_t					getType() const override	{ return COMPONENT_BBOX; }
 	shape_t							getShape() const			{ return shape; }
 	bool							isEnabled() const			{ return enabled; }
+	float							getMass() const				{ return mass; }
 
-	void		setShape(shape_t _shape)			{ shape = _shape; }
-	void		setEnabled(bool _enabled)			{ if( _enabled != enabled ) { enabled = _enabled; updateNeeded = true; } }
+	void		setShape(shape_t _shape)			{ shape = _shape; dirty = true; updateNeeded = true; }
+	void		setEnabled(bool _enabled)			{ enabled = _enabled; dirty = true; updateNeeded = true; }
+	void		setMass(float _mass)				{ mass = _mass; dirty = true; updateNeeded = true; }
 
 	BBox& operator=(const BBox& src) {
 		enabled = src.enabled;
 		shape = src.shape;
 		meshName = src.meshName;
 		updateNeeded = true;
+		dirty = true;
 		return *this;
 	}
 
 private:
 	bool enabled = true;
 	shape_t shape = SHAPE_BOX;
+	float mass = 0.f;
 	String meshName;
+
+	bool dirty = false;
 
 	// bullet physics objects
 	btDiscreteDynamicsWorld* dynamicsWorld = nullptr;

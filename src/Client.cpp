@@ -247,14 +247,14 @@ void Client::handleNetMessages() {
 							packet.read32(posInt[0]);
 							packet.read32(posInt[1]);
 							packet.read32(posInt[2]);
-							Vector pos( posInt[0], posInt[1], posInt[2] );
+							Vector pos( (Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2] );
 
 							// read ang
 							Uint32 angInt[3];
 							packet.read32(angInt[0]);
 							packet.read32(angInt[1]);
 							packet.read32(angInt[2]);
-							Angle ang( angInt[0] * PI / 180.f, angInt[1] * PI / 180.f, angInt[2] * PI / 180.f );
+							Angle ang( (Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f );
 
 							// spawn player
 							if( clientID == net->getLocalID() ) {

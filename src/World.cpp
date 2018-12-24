@@ -8,6 +8,13 @@
 #include "Script.hpp"
 #include "Path.hpp"
 #include "Shadow.hpp"
+#include "Entity.hpp"
+#include "BBox.hpp"
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 const Uint32 World::nuid = UINT32_MAX;
 const char* World::fileExtensions[World::FILE_MAX] = {
@@ -66,7 +73,7 @@ void World::initialize(bool empty) {
 
 	// the world
 	bulletDynamicsWorld = new btDiscreteDynamicsWorld(bulletDispatcher,bulletBroadphase,bulletSolver,bulletCollisionConfiguration);
-	bulletDynamicsWorld->setGravity(btVector3(0,-9.81f,0));
+	bulletDynamicsWorld->setGravity(btVector3(0.f,0.f,9.81 * (Tile::size / 2.f)));
 
 	// create shadow camera
 	const Entity::def_t* def = Entity::findDef("Shadow Camera");
@@ -384,9 +391,37 @@ void World::process() {
 	}
 
 	// step physics
-	//if( !mainEngine->isEditorRunning() ) {
-	//	bulletDynamicsWorld->stepSimulation(1.f / 60.f, 1);
-	//}
+	if( !mainEngine->isEditorRunning() ) {
+		float step = 1.f / (float)mainEngine->getTicksPerSecond();
+		bulletDynamicsWorld->stepSimulation(step, 1, step);
+
+		LinkedList<BBox*> bboxes;
+		for( Uint32 c = 0; c < numBuckets; ++c ) {
+			for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
+				Entity* entity = node->getData();
+				entity->findAllComponents<BBox>(Component::COMPONENT_BBOX, bboxes);
+			}
+		}
+		for (auto bbox : bboxes) {
+			if (!bbox->getParent() && bbox->getMass() > 0.f) {
+				btTransform transform = bbox->getPhysicsTransform();
+
+				Vector pos;
+				pos.x = transform.getOrigin().x();
+				pos.y = transform.getOrigin().y();
+				pos.z = transform.getOrigin().z();
+
+				const btQuaternion& q = transform.getRotation();
+				const Vector& scale = bbox->getEntity()->getScale();
+
+				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
+				glm::mat4 rotationM = glm::mat4_cast(glm::quat(q.w(), q.x(), -q.z(), q.y()));
+				glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
+				glm::mat4 mat = translationM * rotationM * scaleM;
+				bbox->getEntity()->setMat(mat);
+			}
+		}
+	}
 }
 
 World::laser_t& World::addLaser(const Vector& start, const Vector& end, const glm::vec4& color, float size, float life) {
