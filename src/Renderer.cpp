@@ -8,6 +8,48 @@
 #include "savepng.hpp"
 #include "Text.hpp"
 
+// This is a little spammy at the moment
+#define REGISTER_GLDEBUG_CALLBACK 0
+
+#if REGISTER_GLDEBUG_CALLBACK
+
+static void GLAPIENTRY onGlDebugMessageCallback(
+	GLenum source,		// GL_DEBUG_SOURCE_*
+	GLenum type,		// GL_DEBUG_TYPE_*
+	GLuint id,
+	GLenum severity,	// GL_DEBUG_SEVERITY_*
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	Engine::msg_t logType;
+
+	switch (severity) {
+	case GL_DEBUG_SEVERITY_HIGH:
+		logType = Engine::MSG_ERROR;
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		logType = Engine::MSG_WARN;
+		break;
+	case GL_DEBUG_SEVERITY_LOW:
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		logType = Engine::MSG_INFO;
+		break;
+	default:
+		return;
+	}
+
+	mainEngine->fmsg(
+		logType,
+		"GL CALLBACK: type = 0x%x, severity = 0x%x, message = %s",
+		type,
+		severity,
+		message
+	);
+}
+
+#endif
+
 Renderer::Renderer() {
 	xres = mainEngine->getXres();
 	yres = mainEngine->getYres();
@@ -126,6 +168,18 @@ int Renderer::initVideo() {
 		}
 	}
 
+	const GLubyte * verStr = glGetString(GL_VERSION);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_VERSION = %s", verStr);
+	const GLubyte * shVerStr = glGetString(GL_SHADING_LANGUAGE_VERSION);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_SHADING_LANGUAGE_VERSION = %s", shVerStr);
+
+#if REGISTER_GLDEBUG_CALLBACK
+	// During init, enable debug output
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(onGlDebugMessageCallback, 0);
+	// use glDebugMessageControl to filter the callbacks
+#endif
+
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_CULL_FACE);
@@ -140,6 +194,8 @@ int Renderer::initVideo() {
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+
 
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
