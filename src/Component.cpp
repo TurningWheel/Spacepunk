@@ -521,13 +521,13 @@ void Component::update() {
 		gMat = parent->getGlobalMat() * lMat;
 		gAng.yaw = lAng.yaw + parent->getGlobalAng().yaw;
 		gAng.pitch = lAng.pitch + parent->getGlobalAng().pitch;
-		gAng.roll = -(lAng.roll + parent->getGlobalAng().roll);
+		gAng.roll = lAng.roll + parent->getGlobalAng().roll;
 		gAng.wrapAngles();
 	} else {
 		gMat = entity->getMat() * lMat;
 		gAng.yaw = lAng.yaw + entity->getAng().yaw;
 		gAng.pitch = lAng.pitch + entity->getAng().pitch;
-		gAng.roll = -(lAng.roll + entity->getAng().roll);
+		gAng.roll = lAng.roll + entity->getAng().roll;
 		gAng.wrapAngles();
 	}
 	gPos = Vector( gMat[3][0], gMat[3][2], -gMat[3][1] );

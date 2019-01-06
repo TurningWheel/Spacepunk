@@ -195,7 +195,7 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
 				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, -gAng.roll);
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				ghostObject->setWorldTransform(btTrans);
 			} else if (motionState) {
@@ -203,7 +203,7 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
 				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, -gAng.roll);
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				motionState->setWorldTransform(btTrans);
 			}
@@ -272,7 +272,7 @@ void BBox::createRigidBody() {
 			break;
 	}
 
-	if (entity->isFlag(Entity::FLAG_PASSABLE))
+	if (entity->isFlag(Entity::FLAG_PASSABLE) && !mainEngine->isEditorRunning())
 		return;
 
 	World* world = entity->getWorld();
@@ -285,7 +285,7 @@ void BBox::createRigidBody() {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
 				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, -gAng.roll);
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				motionState = new btDefaultMotionState(btTrans);
 
@@ -309,7 +309,7 @@ void BBox::createRigidBody() {
 				// create kinematic body
 				ghostObject = new btPairCachingGhostObject();
 				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, -gAng.roll);
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				ghostObject->setWorldTransform(btTrans);
 				ghostObject->setUserIndex(entity->getUID());
@@ -581,7 +581,7 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		glm::mat4 rotationM = glm::mat4( 1.f );
 		rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
 		rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-		rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(-1.f, 0.f, 0.f));
+		rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 
 		glm::mat4 matrix;
 		Mesh* mesh = nullptr;
