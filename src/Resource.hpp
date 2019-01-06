@@ -28,7 +28,7 @@ public:
 	// if the data does not exist in the cache, the resource creates it anew and error is set to 1
 	// if the data failed to be created then error is set to 2
 	// otherwise, error is set to 0 and the existing data is returned
-	// @param name: the name of the data to load
+	// @param name the name of the data to load
 	// @return the data, or nullptr if the data could not be loaded
 	T* dataForString( const char* name ) {
 		if( name == nullptr || name[0] == '\0' ) {

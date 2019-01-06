@@ -22,7 +22,7 @@ public:
 	};
 
 	// binds all the material textures (should be called after the shader is mounted)
-	// @param textureKind: the kind of textures you wish to load
+	// @param textureKind the kind of textures you wish to load
 	// @return the next unused texture unit
 	unsigned int bindTextures(texturekind_t textureKind);
 

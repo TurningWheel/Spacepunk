@@ -9,7 +9,7 @@
 
 // templated ArrayList (similar to std::vector)
 // adding or removing elements can unsort the list.
-// @param T: generic type that the list will contain
+// @param T generic type that the list will contain
 template <typename T>
 class ArrayList {
 public:
@@ -106,7 +106,7 @@ public:
 	}
 
 	// resize the internal list
-	// @param len: number of elements to size the list for
+	// @param len number of elements to size the list for
 	// @return *this
 	ArrayList& alloc(size_t len) {
 		maxSize = len;
@@ -130,7 +130,7 @@ public:
 	}
 
 	// fill the internal list, resizing if necessary
-	// @param len: number of elements to size the list for
+	// @param len number of elements to size the list for
 	// @return *this
 	ArrayList& resize(size_t len) {
 		if( len > maxSize ) {
@@ -153,7 +153,7 @@ public:
 	}
 
 	// replace list contents with those of another list
-	// @param src: the list to copy into our list
+	// @param src the list to copy into our list
 	// @return *this;
 	ArrayList& copy(const ArrayList& src) {
 		alloc(src.getSize());
@@ -165,7 +165,7 @@ public:
 	}
 
 	// replace list contents with those of an array
-	// @param src: the array to copy into our list
+	// @param src the array to copy into our list
 	// @return *this;
 	ArrayList& copy(const std::initializer_list<T>& src) {
 		alloc(src.size());
@@ -179,7 +179,7 @@ public:
 	}
 
 	// push a value onto the list
-	// @param val: the value to push
+	// @param val the value to push
 	void push(const T& val) {
 		if( size==maxSize ) {
 			alloc(std::max((unsigned int)size*2U, 4U));
@@ -189,8 +189,8 @@ public:
 	}
 
 	// insert a value into the list
-	// @param val: the value to insert
-	// @param pos: the index to displace (move to the end of the list)
+	// @param val the value to insert
+	// @param pos the index to displace (move to the end of the list)
 	void insert(const T& val, size_t pos) {
 		if( size==maxSize ) {
 			alloc(std::max((unsigned int)size*2U, 4U));
@@ -223,7 +223,7 @@ public:
 	}
 
 	// removes and returns an element from the list without moving the rest of the list
-	// @param pos: the index of the element to remove
+	// @param pos the index of the element to remove
 	// @return the value at the given index
 	T remove(size_t pos) {
 		assert(size > pos);
@@ -234,7 +234,7 @@ public:
 	}
 
 	// removes and returns an element from the list, rearranging all elements after it
-	// @param pos: the index of the element to remove
+	// @param pos the index of the element to remove
 	// @return the value at the given index
 	T removeAndRearrange(size_t pos) {
 		assert(size > pos);
@@ -250,21 +250,21 @@ public:
 	}
 
 	// replace list contents with those of another list
-	// @param src: the list to copy into our list
+	// @param src the list to copy into our list
 	// @return *this;
 	ArrayList& operator=(const ArrayList& src) {
 		return copy(src);
 	}
 
 	// replace list contents with those of an array
-	// @param src: the array to copy into our list
+	// @param src the array to copy into our list
 	// @return *this;
 	ArrayList& operator=(const std::initializer_list<T>& src) {
 		return copy(src);
 	}
 
 	// get list contents at specified index
-	// @param pos: index value
+	// @param pos index value
 	// @return a reference to the list at this index
 	const T& get(size_t pos) const {
 		assert(pos < size);
@@ -272,7 +272,7 @@ public:
 	}
 
 	// get list contents at specified index
-	// @param pos: index value
+	// @param pos index value
 	// @return a reference to the list at this index
 	T& get(size_t pos) {
 		assert(pos < size);
@@ -280,7 +280,7 @@ public:
 	}
 
 	// get list contents at specified index
-	// @param pos: index value
+	// @param pos index value
 	// @return a reference to the list at this index
 	const T& operator[](size_t pos) const {
 		assert(pos < size);
@@ -288,7 +288,7 @@ public:
 	}
 
 	// get list contents at specified index
-	// @param pos: index value
+	// @param pos index value
 	// @return a reference to the list at this index
 	T& operator[](size_t pos) {
 		assert(pos < size);

@@ -13,7 +13,7 @@ public:
 	void seedTime();
 
 	// seed the rng based on the given 32-bit seed
-	// @param seed: the seed to use
+	// @param seed the seed to use
 	void seedValue(Uint32 seed);
 
 	// seed the rng based on the given value
@@ -43,15 +43,15 @@ public:
 	// @return a signed long (64-bit)
 	Sint64 getSint64();
 
-	// @return a double (64-bit) (range: 0-1, both inclusive)
+	// @return a double (64-bit) (range 0-1, both inclusive)
 	double getDouble();
 
-	// @return a float (32-bit) (range: 0-1, both inclusive)
+	// @return a float (32-bit) (range 0-1, both inclusive)
 	float getFloat();
 
 	// generate a random value of the given size
-	// @param buffer: the buffer to place the random value in
-	// @param size: the size of the buffer in bytes
+	// @param buffer the buffer to place the random value in
+	// @param size the size of the buffer in bytes
 	// @return a random number
 	void getBytes(Uint8* buffer, size_t size);
 

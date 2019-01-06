@@ -7,11 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #include "LinkedList.hpp"
 #include "Node.hpp"
@@ -289,11 +285,23 @@ void Entity::update() {
 	if (!matSet) {
 		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
 		glm::mat4 rotationM = glm::mat4( 1.f );
-		rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-		rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansPitch()), glm::vec3(0.f, 0.f, 1.f));
+		rotationM = glm::rotate(rotationM, (float)(ang.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
+		rotationM = glm::rotate(rotationM, (float)(ang.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
 		rotationM = glm::rotate(rotationM, (float)(ang.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
 		mat = translationM * rotationM * scaleM;
+	} else {
+		pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+		scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
+		ang.yaw = PI/2.f - atan2f(mat[0][0], mat[0][2]);
+		ang.pitch = asinf(mat[1][1]) - PI/2.f;
+		ang.roll = 0.f;
+		ang.bindAngles();
+		/*glm::extractEulerAngleXYZ(mat, ang.roll, ang.yaw, ang.pitch);
+		ang.yaw *= -1.f;
+		ang.pitch *= -.1f;
+		ang.roll *= -.1f;
+		ang.bindAngles();*/
 	}
 
 	// update the chunk node
@@ -509,98 +517,21 @@ void Entity::animate(const char* name, bool blend) {
 }
 
 bool Entity::move() {
-	if( rot.yaw || rot.pitch || rot.roll ) {
-		updateNeeded = true;
-		ang += rot;
-		ang.wrapAngles();
-	}
-
-	if( vel.lengthSquared() == 0.f ) {
-		return true;
-	}
-
-	// speed limit
-	vel.x = min( max( Tile::size*-16.f, vel.x ), Tile::size*16.f );
-	vel.y = min( max( Tile::size*-16.f, vel.y ), Tile::size*16.f );
-	vel.z = min( max( Tile::size*-16.f, vel.z ), Tile::size*16.f );
-
-	if( flags&static_cast<int>(flag_t::FLAG_PASSABLE) ) {
-		updateNeeded = true;
-		pos += vel;
-		return true;
-	} else {
-		{
-			Vector newPos = pos + vel;
-			if(!checkCollision(newPos)) {
+	if( !isFlag(Entity::FLAG_STATIC) ) {
+		if( rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
+			BBox* bbox = findComponentByName<BBox>("BBox");
+			if (bbox && bbox->getMass() < 0.f && !bbox->getParent()) {
+				bbox->applyForces(vel, rot);
 				updateNeeded = true;
-				pos = newPos;
-				return true;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(0.f, vel.y, vel.z);
-			if(!checkCollision(newPos)) {
+			} else {
+				ang += rot;
+				pos += vel;
+				ang.wrapAngles();
 				updateNeeded = true;
-				vel.x = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(vel.x, 0.f, vel.z);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.y = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(vel.x, vel.y, 0.f);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.z = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(vel.x, 0.f, 0.f);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.y = 0;
-				vel.z = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(0.f, vel.y, 0.f);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.x = 0;
-				vel.z = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(0.f, 0.f, vel.z);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.x = 0;
-				vel.y = 0;
-				pos = newPos;
-				return false;
 			}
 		}
 	}
-
-	// completely blocked
-	vel.x = 0;
-	vel.y = 0;
-	vel.z = 0;
-	return false;
+	return true;
 }
 
 Entity::def_t* Entity::loadDef(const char* filename) {
@@ -647,6 +578,11 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 	entity->setNewPos(pos);
 	entity->setAng(ang);
 	entity->setNewAng(ang);
+
+	BBox* bbox = entity->findComponentByName<BBox>("BBox");
+	if (bbox && bbox->getMass() != 0.f && !bbox->getParent()) {
+		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang - bbox->getLocalAng());
+	}
 
 	mainEngine->fmsg(Engine::MSG_DEBUG, "spawned entity '%s'", entity->getName().get());
 	return entity;

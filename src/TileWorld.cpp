@@ -2,11 +2,7 @@
 
 #include "Main.hpp"
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>

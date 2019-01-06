@@ -511,8 +511,8 @@ void Component::update() {
 		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
 		glm::mat4 rotationM = glm::mat4( 1.f );
 		rotationM = glm::rotate(rotationM, (float)(lAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 		rotationM = glm::rotate(rotationM, (float)(lAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
+		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
 		lMat = translationM * rotationM * scaleM;
 	}

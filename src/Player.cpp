@@ -28,6 +28,7 @@ static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_crouchSpeed("player.crouchspeed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
 static Cvar cvar_jumpPower("player.jumppower", "player jump strength", "4.0");
+static Cvar cvar_canCrouch("player.cancrouch", "whether player can crouch at all or not", "1");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -265,7 +266,7 @@ void Player::control() {
 	buttonForward = 0.f;
 	buttonBackward = 0.f;
 	buttonJump = false;
-	buttonCrouch = distToCeiling < totalHeight;
+	buttonCrouch = cvar_canCrouch.toInt() ? distToCeiling < totalHeight : false;
 	float feetHeight = buttonCrouch ? crouchFeetHeight : standFeetHeight;
 	if( !client->isConsoleActive() ) {
 		if( !entity->isFalling() ) {
@@ -308,6 +309,9 @@ void Player::control() {
 	} else {
 		crouching = false;
 	}
+	if (cvar_canCrouch.toInt() == 0) {
+		crouching = false;
+	}
 
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
@@ -322,26 +326,28 @@ void Player::control() {
 	// set falling state and do attach-to-ground
 	if( entity->isFalling() ) {
 		vel.z += cvar_gravity.toFloat() * timeFactor;
-		if( distToFloor <= feetHeight ) {
+		if( distToFloor <= feetHeight && vel.z >= 0.f ) {
 			entity->setFalling(false);
-			pos.z = nearestFloor;
 			distToFloor = feetHeight;
-			vel.z = 0;
+			//pos.z = nearestFloor;
+			//vel.z = 0;
+			vel.z = (nearestFloor - pos.z) / 10.f;
 		}
 	} else {
 		if( buttonJump && distToFloor <= feetHeight+16 ) {
 			jumped = true;
 			entity->setFalling(true);
-			pos.z = nearestFloor;
+			//pos.z = nearestFloor;
 			distToFloor = feetHeight;
 			vel.z = -cvar_jumpPower.toFloat();
 		} else {
 			if( distToFloor > feetHeight+16 ) {
 				entity->setFalling(true);
 			} else {
-				pos.z = nearestFloor;
 				distToFloor = feetHeight;
-				vel.z = 0.f;
+				//pos.z = nearestFloor;
+				//vel.z = 0.f;
+				vel.z = (nearestFloor - pos.z) / 10.f;
 			}
 		}
 	}
@@ -436,13 +442,10 @@ void Player::control() {
 		}
 	}
 
-	// speed limit
-	vel.x = min( max( -64.f, vel.x ), 64.f );
-	vel.y = min( max( -64.f, vel.y ), 64.f );
-	vel.z = min( max( -64.f, vel.z ), 64.f );
-
 	// update entity vectors
-	entity->setPos(pos);
+	if (bbox->getMass() == 0.f) {
+		entity->setPos(pos);
+	}
 	entity->setVel(vel);
 	entity->setRot(rot);
 	entity->update();

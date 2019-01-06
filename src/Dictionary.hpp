@@ -19,14 +19,14 @@ public:
 	const ArrayList<String>&		getWords() const				{ return words; }
 
 	// insert a word into the tree
-	// @param word: the word to insert
+	// @param word the word to insert
 	void insert(const char* word);
 
 	// @return true if this tree node is a leaf
 	bool isLeaf() const;
 
 	// find the given word in the dictionary tree
-	// @param word: the word to locate
+	// @param word the word to locate
 	// @return the index of the word in the dictionary, or nindex if it was not found
 	size_t find(const char* word) const;
 

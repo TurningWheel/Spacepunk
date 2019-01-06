@@ -36,11 +36,11 @@ public:
 	static const char* fileMagicNumberSaveOut;
 
 	// post-load world initialization
-	// @param empty: if the world is empty
+	// @param empty if the world is empty
 	virtual void initialize(bool empty) override;
 
 	// rotate the whole world. orientation is always assumed to be SIDE_EAST
-	// @param orientation: the direction to rotate it to
+	// @param orientation the direction to rotate it to
 	void rotate(Tile::side_t orientation);
 
 	// calculate the width (columns) in the chunks array
@@ -53,10 +53,10 @@ public:
 	virtual void deselectGeometry();
 
 	// finds all entities within a given radius of the provided point
-	// @param origin: position to search from
-	// @param radius: the radius to search in
-	// @param outList: the list to populate
-	// @param flat: if true, the search radius is 2-dimensional
+	// @param origin position to search from
+	// @param radius the radius to search in
+	// @param outList the list to populate
+	// @param flat if true, the search radius is 2-dimensional
 	virtual void findEntitiesInRadius( const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false );
 
 	// optimizes all the chunks in the world
@@ -69,8 +69,8 @@ public:
 	virtual void draw();
 
 	// writes the world contents to a file
-	// @param _filename: the filename to write to, or blank to use our last filename
-	// @param updateFilename: if true, our current filename is changed, otherwise, it is not
+	// @param _filename the filename to write to, or blank to use our last filename
+	// @param updateFilename if true, our current filename is changed, otherwise, it is not
 	// @return true on success, false on failure
 	virtual bool saveFile(const char* _filename="", bool updateFilename = false);
 
@@ -79,24 +79,24 @@ public:
 	virtual void serialize(FileInterface * file);
 
 	// change the map's dimensions
-	// @param left: amount of tiles to increase (+) or decrease (-) to the west/left
-	// @param right: amount of tiles to increase (+) or decrease (-) to the east/right
-	// @param up: amount of tiles to increase (+) or decrease (-) to the north/up
-	// @param down: amount of tiles to increase (+) or decrease (-) to the south/down
+	// @param left amount of tiles to increase (+) or decrease (-) to the west/left
+	// @param right amount of tiles to increase (+) or decrease (-) to the east/right
+	// @param up amount of tiles to increase (+) or decrease (-) to the north/up
+	// @param down amount of tiles to increase (+) or decrease (-) to the south/down
 	void resize(int left, int right, int up, int down);
 
 	// copies a room (world) into this world
-	// @param world: the world to copy
-	// @param pickedExitIndex: index of the exit we're joining
-	// @param x: x-coord to place the room
-	// @param y: y-coord to place the room
-	// @param floorDiff: the floor height difference between the two rooms, if any
+	// @param world the world to copy
+	// @param pickedExitIndex index of the exit we're joining
+	// @param x x-coord to place the room
+	// @param y y-coord to place the room
+	// @param floorDiff the floor height difference between the two rooms, if any
 	void placeRoom(const TileWorld& world, Uint32 pickedExitIndex, Uint32 x, Uint32 y, Sint32 floorDiff = 0);
 
 	// draws all tiles and entities in the world
-	// @param camera: the camera through which to draw the scene
-	// @param light: the light by which the scene should be illuminated (or nullptr for no illumination)
-	// @param chunkDrawList: a list of chunks to draw
+	// @param camera the camera through which to draw the scene
+	// @param light the light by which the scene should be illuminated (or nullptr for no illumination)
+	// @param chunkDrawList a list of chunks to draw
 	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList);
 
 	// find a random traversible tile. if none are found, outX and outY remain unchanged
@@ -129,8 +129,8 @@ protected:
 
 private:
 	// draws the editing grid
-	// @param camera: the camera through which to draw the grid
-	// @param z: the height of the grid in the world
+	// @param camera the camera through which to draw the grid
+	// @param z the height of the grid in the world
 	void drawGrid(Camera& camera, float z);
 
 	// creates rendering objects for the world grid

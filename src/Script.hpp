@@ -152,7 +152,7 @@ public:
 		const size_t					getSize() const		{ return list.getSize(); }
 
 		// push all args onto the lua stack
-		// @param lua: the lua stack to push args into
+		// @param lua the lua stack to push args into
 		void push(lua_State* lua) {
 			for (size_t c = 0; c < list.getSize(); ++c) {
 				param_t* param = list[c];
@@ -164,31 +164,31 @@ public:
 		}
 		
 		// add a bool to the args list
-		// @param value: the value to init with
+		// @param value the value to init with
 		void addBool(const bool value) {
 			list.push(new param_bool_t(value));
 		}
 
 		// add an int to the args list
-		// @param value: the value to init with
+		// @param value the value to init with
 		void addInt(const int value) {
 			list.push(new param_int_t(value));
 		}
 
 		// add a float to the args list
-		// @param value: the value to init with
+		// @param value the value to init with
 		void addFloat(const float value) {
 			list.push(new param_float_t(value));
 		}
 
 		// add a string to the args list
-		// @param value: the value to init with
+		// @param value the value to init with
 		void addString(const String& value) {
 			list.push(new param_string_t(value));
 		}
 
 		// add a pointer to the args list
-		// @param value: the value to init with
+		// @param value the value to init with
 		void addPointer(void* value) {
 			list.push(new param_pointer_t(value));
 		}
@@ -203,13 +203,13 @@ public:
 	};
 
 	// load and evaluate the given script
-	// @param filename: filename of the script to run
+	// @param filename filename of the script to run
 	// @return 0 on success, nonzero on failure
 	int load(const char* filename);
 
 	// evaluate a function. args are discarded after use
-	// @param function: name of the function to execute
-	// @param args: a list of args to pass to the function
+	// @param function name of the function to execute
+	// @param args a list of args to pass to the function
 	// @return 0 on success, nonzero on failure
 	int dispatch(const char* function, Args* args = nullptr);
 
