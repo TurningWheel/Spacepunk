@@ -298,8 +298,10 @@ void BBox::createRigidBody() {
 				rigidBody->setUserIndex(entity->getUID());
 				rigidBody->setUserIndex2(World::nuid);
 				rigidBody->setUserPointer(nullptr);
-				rigidBody->setActivationState( DISABLE_DEACTIVATION );
-				rigidBody->setSleepingThresholds(0.f, 0.f);
+				if (mass > 0.f) {
+					rigidBody->setActivationState( DISABLE_DEACTIVATION );
+					rigidBody->setSleepingThresholds(0.f, 0.f);
+				}
 
 				// add a new rigid body to the simulation
 				dynamicsWorld->addRigidBody(rigidBody);
@@ -315,7 +317,7 @@ void BBox::createRigidBody() {
 				ghostObject->setUserPointer(nullptr);
 				ghostObject->setActivationState( DISABLE_DEACTIVATION );
 				ghostObject->setCollisionShape(collisionShapePtr);
-				ghostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+				ghostObject->setCollisionFlags(btCollisionObject::CollisionFlags::CF_CHARACTER_OBJECT);
 				dynamicsWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
 				//dynamicsWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
 
@@ -361,7 +363,7 @@ float BBox::nearestFloor() {
 	// perform sweep
 	LinkedList<World::hit_t> hits;
 	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
-	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, gScale.z + 32.f), gAng, hits);
+	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, gScale.z + 128.f), gAng, hits);
 	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
 		nearestFloor = hits.getFirst()->getData().pos.z - lPos.z / 2.f;
@@ -385,7 +387,7 @@ float BBox::nearestCeiling() {
 	// perform sweep
 	LinkedList<World::hit_t> hits;
 	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
-	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, -gScale.z - 32.f), gAng, hits);
+	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, -gScale.z - 128.f), gAng, hits);
 	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
 		nearestCeiling = hits.getFirst()->getData().pos.z - lPos.z / 2.f;

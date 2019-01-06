@@ -300,7 +300,7 @@ void World::convexSweepList( const btConvexShape* shape, const Vector& originPos
 			if( hit.hitEntity ) {
 				Entity* entity;
 				if( (entity=uidToEntity(hit.index)) != nullptr ) {
-					if( !mainEngine->isEditorRunning() || !entity->isShouldSave() ) {
+					if( !entity->isShouldSave() ) {
 						continue;
 					}
 					if( entity==shadowCamera ) {
