@@ -82,8 +82,13 @@ public:
 	// @return the distance to the nearest ceiling tile above the entity
 	float distToCeiling(float ceilingHeight);
 
-	// apply forces to bbox's physics component
-	void applyForces(const Vector& vel, const Angle& rot);
+	// apply movement forces (velocity and rotation) to bbox's physics component
+	void applyMoveForces(const Vector& vel, const Angle& rot);
+
+	// apply a force to the bbox's physics component
+	// @param force the force to apply in world coordinates
+	// @param origin point of origin for the force in world space
+	void applyForce(const Vector& force, const Vector& origin);
 
 	// called just before the parent is inserted into a new world
 	// @param world the world we will be placed into, if any

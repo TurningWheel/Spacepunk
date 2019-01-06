@@ -521,7 +521,7 @@ bool Entity::move() {
 		if( rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
 			BBox* bbox = findComponentByName<BBox>("physics");
 			if (bbox && bbox->getMass() < 0.f && !bbox->getParent()) {
-				bbox->applyForces(vel, rot);
+				bbox->applyMoveForces(vel, rot);
 				updateNeeded = true;
 			} else {
 				ang += rot;
@@ -532,6 +532,13 @@ bool Entity::move() {
 		}
 	}
 	return true;
+}
+
+void Entity::applyForce(const Vector& force, const Vector& origin) {
+	BBox* bbox = findComponentByName<BBox>("physics");
+	if (bbox) {
+		bbox->applyForce(force, origin);
+	}
 }
 
 Entity::def_t* Entity::loadDef(const char* filename) {

@@ -220,6 +220,11 @@ public:
 	// @return true if we moved without hitting any obstacles, otherwise false
 	bool move();
 
+	// apply a force to the entity's rigid body (if any)
+	// @param force the force to apply in world coordinates
+	// @param origin point of origin for the force in world space
+	void applyForce(const Vector& force, const Vector& origin);
+
 	// loads an entity definition from a json file
 	// @param filename the file to load
 	// @return a newly created def_t struct

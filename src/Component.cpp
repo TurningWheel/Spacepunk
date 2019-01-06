@@ -799,13 +799,18 @@ void Component::serializeComponents(FileInterface* file) {
 	}
 }
 
-void Component::shootLaser(const WideVector& color, float size, float life) {
-	glm::mat4 mat = gMat;
+void Component::shootLaser(const glm::mat4& mat, WideVector& color, float size, float life) {
 	Vector start = Vector(mat[3].x, mat[3].z, -mat[3].y);
-	mat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
+	//glm::mat4 endMat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
 	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 10000.f;
 	World* world = entity->getWorld();
 	World::hit_t hit = world->lineTrace(start, end);
 	end = hit.pos;
+	if (hit.hitEntity) {
+		Entity* hitEntity = entity->getWorld()->uidToEntity(hit.index);
+		if (hitEntity) {
+			hitEntity->applyForce((hit.pos - entity->getPos()).normal() * 1000.f, hit.pos);
+		}
+	}
 	world->addLaser(start, end, color, size, life);
 }

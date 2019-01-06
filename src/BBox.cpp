@@ -333,7 +333,7 @@ void BBox::createRigidBody() {
 	}
 }
 
-void BBox::applyForces(const Vector& vel, const Angle& ang) {
+void BBox::applyMoveForces(const Vector& vel, const Angle& ang) {
 	if (ghostObject && controller) {
 		ghostObject->activate();
 		Vector newVel = vel;
@@ -343,6 +343,13 @@ void BBox::applyForces(const Vector& vel, const Angle& ang) {
 	} else if (rigidBody) {
 		rigidBody->activate(true);
 		rigidBody->applyCentralForce(vel);
+	}
+}
+
+void BBox::applyForce(const Vector& force, const Vector& origin) {
+	if (rigidBody) {
+		rigidBody->activate(true);
+		rigidBody->applyForce(force, origin - gPos);
 	}
 }
 
