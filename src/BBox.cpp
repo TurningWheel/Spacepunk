@@ -520,8 +520,6 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		if( material ) {
 			Mesh* mesh = nullptr;
 
-			scale.z -= radius * 2.f;
-
 			// draw capsule part
 			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleCylinderStr);
 			if( mesh ) {
@@ -530,7 +528,7 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
+				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z - radius * 2.f, scale.y));
 				glm::mat4 matrix = translationM * rotationM * scaleM;
 				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
@@ -538,38 +536,34 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 				}
 			}
 
-			float cylinderHeight = lScale.z;
-			scale.z = radius * 2.f;
-			pos.z -= cylinderHeight - radius;
+			float cylinderHeight = scale.z - radius * 2.f;
 
 			// draw first half-sphere
 			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
 			if( mesh ) {
-				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x + pos.x, -gPos.z - pos.z, gPos.y + pos.y));
+				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x, -gPos.z, gPos.y));
 				glm::mat4 rotationM = glm::mat4( 1.f );
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
-				glm::mat4 matrix = translationM * rotationM * scaleM;
+				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, radius * 2.f, scale.y));
+				glm::mat4 matrix = translationM * rotationM * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * .5f, 0.f)) * scaleM;
 				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
 					mesh->draw(camera, this, shader);
 				}
 			}
 
-			pos.z += (cylinderHeight - radius) * 2;
-
 			// draw second half-sphere
 			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
 			if( mesh ) {
-				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x + pos.x, -gPos.z - pos.z, gPos.y + pos.y));
+				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x, -gPos.z, gPos.y));
 				glm::mat4 rotationM = glm::mat4( 1.f );
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
 				rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
-				glm::mat4 matrix = translationM * rotationM * scaleM;
+				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, radius * 2.f, scale.y));
+				glm::mat4 matrix = translationM * rotationM * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * -.5f, 0.f)) * glm::rotate(glm::mat4(), PI, glm::vec3(0.f, 0.f, 1.f)) * scaleM;
 				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
 					mesh->draw(camera, this, shader);
