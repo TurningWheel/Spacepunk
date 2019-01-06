@@ -516,6 +516,8 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		}
 	}
 
+	glm::mat4 undoScale = glm::scale(glm::mat4(1.f), glm::vec3(1.f / gScale.x, 1.f / gScale.z, 1.f / gScale.y));
+
 	if( shape == SHAPE_CAPSULE && lScale.z > lScale.x && lScale.z > lScale.y ) {
 		float radius = max(gScale.x,gScale.y);
 
@@ -529,13 +531,8 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 			// draw capsule part
 			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleCylinderStr);
 			if( mesh ) {
-				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x, -gPos.z, gPos.y));
-				glm::mat4 rotationM = glm::mat4( 1.f );
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z - radius * 2.f, scale.y));
-				glm::mat4 matrix = translationM * rotationM * scaleM;
+				glm::mat4 matrix = gMat * undoScale * scaleM;
 				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
 					mesh->draw(camera, this, shader);
@@ -547,13 +544,8 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 			// draw first half-sphere
 			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
 			if( mesh ) {
-				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x, -gPos.z, gPos.y));
-				glm::mat4 rotationM = glm::mat4( 1.f );
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, radius * 2.f, scale.y));
-				glm::mat4 matrix = translationM * rotationM * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * .5f, 0.f)) * scaleM;
+				glm::mat4 matrix = gMat * undoScale * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * .5f, 0.f)) * scaleM;
 				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
 					mesh->draw(camera, this, shader);
@@ -563,13 +555,8 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 			// draw second half-sphere
 			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
 			if( mesh ) {
-				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x, -gPos.z, gPos.y));
-				glm::mat4 rotationM = glm::mat4( 1.f );
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-				rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, radius * 2.f, scale.y));
-				glm::mat4 matrix = translationM * rotationM * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * -.5f, 0.f)) * glm::rotate(glm::mat4(), PI, glm::vec3(0.f, 0.f, 1.f)) * scaleM;
+				glm::mat4 matrix = gMat * undoScale * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * -.5f, 0.f)) * glm::rotate(glm::mat4(), PI, glm::vec3(0.f, 0.f, 1.f)) * scaleM;
 				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
 					mesh->draw(camera, this, shader);
@@ -577,37 +564,31 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 			}
 		}
 	} else {
-		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x,-gPos.z,gPos.y));
-		glm::mat4 rotationM = glm::mat4( 1.f );
-		rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-		rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-		rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-
 		glm::mat4 matrix;
 		Mesh* mesh = nullptr;
 		if( shape == SHAPE_BOX ) {
 			mesh = mainEngine->getMeshResource().dataForString(meshBoxStr);
 
 			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(gScale.x, gScale.z, gScale.y));
-			matrix = translationM * rotationM * scaleM;
+			matrix = gMat * undoScale * scaleM;
 		} else if( shape == SHAPE_SPHERE || shape == SHAPE_CAPSULE ) {
 			mesh = mainEngine->getMeshResource().dataForString(meshSphereStr);
 				
 			float size = max(max(gScale.x,gScale.y),gScale.z) * 2.f;
 			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, size, size));
-			matrix = translationM * rotationM * scaleM;
+			matrix = gMat * undoScale * scaleM;
 		} else if ( shape == SHAPE_CYLINDER ) {
 			mesh = mainEngine->getMeshResource().dataForString(meshCylinderStr);
 
 			float size = max(gScale.x,gScale.y) * 2.f;
 			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, gScale.z * 2.f, size));
-			matrix = translationM * rotationM * scaleM;
+			matrix = gMat * undoScale * scaleM;
 		} else if ( shape == SHAPE_CONE ) {
 			mesh = mainEngine->getMeshResource().dataForString(meshConeStr);
 
 			float size = max(gScale.x,gScale.y) * 2.f;
 			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, gScale.z * 2.f, size));
-			matrix = translationM * rotationM * scaleM;
+			matrix = gMat * undoScale * scaleM;
 		}
 
 		Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
