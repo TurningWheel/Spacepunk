@@ -81,7 +81,7 @@ void Player::setEntity(Entity* _entity) {
 		torso = entity->findComponentByName<Model>("Torso");
 		arms = entity->findComponentByName<Model>("Arms");
 		feet = entity->findComponentByName<Model>("Feet");
-		bbox = entity->findComponentByName<BBox>("BBox");
+		bbox = entity->findComponentByName<BBox>("physics");
 		camera = entity->findComponentByName<Camera>("Camera");
 		rTool = entity->findComponentByName<Model>("RightTool");
 		lTool = entity->findComponentByName<Model>("LeftTool");
@@ -126,7 +126,7 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	torso = entity->findComponentByName<Model>("Torso");
 	arms = entity->findComponentByName<Model>("Arms");
 	feet = entity->findComponentByName<Model>("Feet");
-	bbox = entity->findComponentByName<BBox>("BBox");
+	bbox = entity->findComponentByName<BBox>("physics");
 	camera = entity->findComponentByName<Camera>("Camera");
 	rTool = entity->findComponentByName<Model>("RightTool");
 	lTool = entity->findComponentByName<Model>("LeftTool");

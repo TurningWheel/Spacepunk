@@ -503,7 +503,7 @@ void World::process() {
 			}
 		}
 		for (auto bbox : bboxes) {
-			if (!bbox->getParent() && bbox->getMass() != 0.f) {
+			if (!bbox->getParent() && bbox->getMass() != 0.f && strcmp(bbox->getName(), "physics") == 0) {
 				btTransform transform = bbox->getPhysicsTransform();
 
 				Vector pos = -bbox->getLocalPos();

@@ -519,7 +519,7 @@ void Entity::animate(const char* name, bool blend) {
 bool Entity::move() {
 	if( !isFlag(Entity::FLAG_STATIC) ) {
 		if( rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
-			BBox* bbox = findComponentByName<BBox>("BBox");
+			BBox* bbox = findComponentByName<BBox>("physics");
 			if (bbox && bbox->getMass() < 0.f && !bbox->getParent()) {
 				bbox->applyForces(vel, rot);
 				updateNeeded = true;
@@ -579,7 +579,7 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 	entity->setAng(ang);
 	entity->setNewAng(ang);
 
-	BBox* bbox = entity->findComponentByName<BBox>("BBox");
+	BBox* bbox = entity->findComponentByName<BBox>("physics");
 	if (bbox && bbox->getMass() != 0.f && !bbox->getParent()) {
 		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang - bbox->getLocalAng());
 	}

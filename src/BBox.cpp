@@ -318,8 +318,7 @@ void BBox::createRigidBody() {
 				ghostObject->setActivationState( DISABLE_DEACTIVATION );
 				ghostObject->setCollisionShape(collisionShapePtr);
 				ghostObject->setCollisionFlags(btCollisionObject::CollisionFlags::CF_CHARACTER_OBJECT);
-				dynamicsWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
-				//dynamicsWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
+				dynamicsWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
 
 				auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
 				if (convexShape) {
