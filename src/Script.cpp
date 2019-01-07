@@ -1,8 +1,10 @@
 // Script.cpp
 
-#include <luajit-2.0/lua.hpp>
-#include <LuaBridge/LuaBridge.h>
+//#include <luajit-2.0/lua.hpp>
+//#include <LuaBridge/LuaBridge.h>
+
 #include <functional>
+#include <assert.h>
 
 #include "Main.hpp"
 #include "Engine.hpp"
@@ -10,7 +12,6 @@
 #include "Server.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
-#include "Script.hpp"
 #include "Tile.hpp"
 #include "Chunk.hpp"
 #include "Frame.hpp"
@@ -23,6 +24,15 @@
 #include "Vector.hpp"
 #include "WideVector.hpp"
 
+#include "Script.hpp" //Must include before sol because reasons...
+#include "sol.hpp"
+
+//Includes bindings for these modules.
+#include "Node.hpp"
+#include "LinkedList.hpp"
+#include "ArrayList.hpp"
+#include "Rect.hpp"
+
 //Component headers
 #include "Component.hpp"
 #include "BBox.hpp"
@@ -32,837 +42,1328 @@
 #include "Speaker.hpp"
 #include "Character.hpp"
 
-int Script::load(const char* _filename) {
-	filename = mainEngine->buildPath(_filename);
+struct SolScriptArgs
+{
+	std::vector<sol::object> params;
+};
 
-	int result = luaL_dofile(lua, filename.get());
-	if( result ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load script '%s':", filename.get());
-		mainEngine->fmsg(Engine::MSG_ERROR," %s", lua_tostring(lua, -1));
-		broken = true;
-		return 1;
-	} else {
-		broken = false;
-		return 0;
-	}
-}
+// Implementation provider of the script class.
+class SolScript
+{
+public:
+	SolScript(Client& _client);
+	SolScript(Server& _server);
+	SolScript(World& _world);
+	SolScript(Entity& _entity);
+	SolScript(Frame& _frame);
+	~SolScript();
 
-int Script::dispatch(const char* function, Args* args) {
-	if (broken) {
-		return -1;
-	}
-	lua_getglobal(lua, function);
+	// load and evaluate the given script
+	// @param filename: filename of the script to run
+	// @return 0 on success, nonzero on failure
+	bool load(const char* filename);
 
-	size_t numArgs = 0;
-	if (args)
+	template<typename...Args>
+	bool dispatchFunction(const char* functionName, Args&&...args);
+
+	bool dispatchFunction(const char* functionName, SolScriptArgs* params);
+
+	template<typename...Args>
+	bool dispatchFunction(const char* functionName, SolScriptArgs* params, Args&&...args);
+
+	template <typename T>
+	sol::object makeObject(T&& obj)
 	{
-		numArgs = args->getSize();
-		args->push(lua);
+		return sol::make_object(lua, obj);
 	}
 
-	int status = lua_pcall(lua, (int)numArgs, 0, 0);
-	if (status) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"script error in '%s' (dispatch '%s'):", filename.get(), function);
-		mainEngine->fmsg(Engine::MSG_ERROR," %s", lua_tostring(lua, -1));
-		broken = true;
-		return -2;
-	}
+private:
+	sol::state lua;
 
-	return 0;
+	// class pointers:
+	// if these are set, this script engine reliably owns that object's functionality
+	Engine* engine = nullptr;
+	Client* client = nullptr;
+	Editor* editor = nullptr;
+	Server* server = nullptr;
+	World*  world  = nullptr;
+	Entity* entity = nullptr;
+	Frame*  frame  = nullptr;
+
+	// script filename
+	String filename;
+
+	// if an error occurs, this flag will raise, then no more dispatches will work
+	bool broken = false;
+
+	// common constructor that initializes all universal base data.
+	SolScript();
+};
+
+
+Script::Script(Client& client)
+{
+	pImpl = new SolScript(client);
 }
 
-Script::Script(Client& _client) {
+Script::Script(Server& server)
+{
+	pImpl = new SolScript(server);
+}
+
+Script::Script(World& world)
+{
+	pImpl = new SolScript(world);
+}
+
+Script::Script(Entity& entity)
+{
+	pImpl = new SolScript(entity);
+}
+
+Script::Script(Frame& frame)
+{
+	pImpl = new SolScript(frame);
+}
+
+Script::~Script()
+{
+	if (nullptr != pImpl)
+	{
+		delete pImpl;
+		pImpl = nullptr;
+	}
+}
+
+bool Script::load(const char* filename)
+{
+	if (!pImpl)
+	{
+		assert(0);
+		return false;
+	}
+
+	return pImpl->load(filename);
+}
+
+template<typename...Args>
+bool Script::dispatchFunction(const char* functionName, Args&&...args)
+{
+	if (!pImpl)
+	{
+		assert(0);
+		return false;
+	}
+
+	return pImpl->dispatchFunction(functionName, args...);
+}
+
+bool Script::dispatchFunction(const char* functionName, SolScriptArgs* params)
+{
+	if (!pImpl)
+	{
+		assert(0);
+		return false;
+	}
+
+	return pImpl->dispatchFunction(functionName, params);
+}
+
+template<typename...Args>
+bool Script::dispatchFunction(const char* functionName, SolScriptArgs* params, Args&&...args)
+{
+	if (!pImpl)
+	{
+		assert(0);
+		return false;
+	}
+
+	return pImpl->dispatchFunction(functionName, params, args...);
+}
+
+template <typename T>
+void Script::addParam(T&& obj, SolScriptArgs& params)
+{
+	if (!pImpl)
+	{
+		assert(0);
+		return;
+	}
+
+	params.params.push_back(pImpl->makeObject(obj));
+}
+
+
+
+
+
+
+bool SolScript::load(const char* _filename) {
+	//TODO: Rewrite this function for Sol2.
+	// filename = mainEngine->buildPath(_filename);
+
+	// int result = luaL_dofile(lua, filename.get());
+	// if( result ) {
+	// 	mainEngine->fmsg(Engine::MSG_ERROR,"failed to load script '%s':", filename.get());
+	// 	mainEngine->fmsg(Engine::MSG_ERROR," %s", lua_tostring(lua, -1));
+	// 	broken = true;
+	// 	return false;
+	// } else {
+	// 	broken = false;
+	// 	return true;
+	// }
+
+	return true;
+}
+
+// template<typename A, typename B, typename...C>
+// bool SolScript::dispatchFunction(const char* functionName, A arg1, B arg2, C...arg3)
+// {
+// 	if (broken)
+// 	{
+// 		return false;
+// 	}
+
+// 	sol::protected_function func = lua[functionName];
+
+// 	auto result = myFunc(arg1, arg2, arg3...);
+// 	if (!result.valid())
+// 	{
+// 		sol::error err = result;
+// 		mainEngine->fmsg(Engine::MSG_ERROR, "script error in '%s' (dispatch '%s'):", filename.get(), functionName);
+// 		mainEngine->fmsg(Engine::MSG_ERROR," %s", err.what());
+// 		broken = true;
+// 		return false;
+// 	}
+
+// 	return true;
+// }
+
+
+
+template<typename...Args>
+bool SolScript::dispatchFunction(const char* functionName, Args&&...args)
+{
+	if (broken)
+	{
+		return false;
+	}
+
+	sol::protected_function func = lua[functionName];
+
+	auto result = myFunc(args...);
+	if (!result.valid())
+	{
+		sol::error err = result;
+		mainEngine->fmsg(Engine::MSG_ERROR, "script error in '%s' (dispatch '%s'):", filename.get(), functionName);
+		mainEngine->fmsg(Engine::MSG_ERROR," %s", err.what());
+		broken = true;
+		return false;
+	}
+
+	return true;
+}
+
+bool SolScript::dispatchFunction(const char* functionName, SolScriptArgs* params)
+{
+	if (broken)
+	{
+		return false;
+	}
+
+	sol::protected_function myFunc = lua[functionName];
+
+	sol::protected_function_result result;
+	if (nullptr != params)
+	{
+		result = myFunc(sol::as_args(params->params));
+	}
+	else
+	{
+		result = myFunc();
+	}
+
+	if (!result.valid())
+	{
+		sol::error err = result;
+		mainEngine->fmsg(Engine::MSG_ERROR, "script error in '%s' (dispatch '%s'):", filename.get(), functionName);
+		mainEngine->fmsg(Engine::MSG_ERROR," %s", err.what());
+		broken = true;
+		return false;
+	}
+
+	return true;
+}
+
+template<typename...Args>
+bool SolScript::dispatchFunction(const char* functionName, SolScriptArgs* params, Args&&...args)
+{
+	if (broken)
+	{
+		return false;
+	}
+
+	sol::protected_function myFunc = lua[functionName];
+
+	sol::protected_function_result result;
+	if (nullptr != params)
+	{
+		result = myFunc(sol::as_args(params->params), args...);
+	}
+	else
+	{
+		result = myFunc(args...);
+	}
+
+	if (!result.valid())
+	{
+		sol::error err = result;
+		mainEngine->fmsg(Engine::MSG_ERROR, "script error in '%s' (dispatch '%s'):", filename.get(), functionName);
+		mainEngine->fmsg(Engine::MSG_ERROR," %s", err.what());
+		broken = true;
+		return false;
+	}
+
+	return true;
+}
+
+// int SolScript::dispatch(const char* function, Args* args) {
+// 	if (broken) {
+// 		return -1;
+// 	}
+// 	lua_getglobal(lua, function);
+
+// 	size_t numArgs = 0;
+// 	if (args)
+// 	{
+// 		numArgs = args->getSize();
+// 		args->push(lua);
+// 	}
+
+// 	int status = lua_pcall(lua, (int)numArgs, 0, 0);
+// 	if (status) {
+// 		mainEngine->fmsg(Engine::MSG_ERROR,"script error in '%s' (dispatch '%s'):", filename.get(), function);
+// 		mainEngine->fmsg(Engine::MSG_ERROR," %s", lua_tostring(lua, -1));
+// 		broken = true;
+// 		return -2;
+// 	}
+
+// 	return 0;
+// }
+
+SolScript::SolScript()
+{
+	lua.open_libraries(sol::lib::base, sol::lib::io);
+}
+
+SolScript::SolScript(Client& _client) //TODO: Continue from here, and fix the arguments' naming.
+					:	SolScript()
+{
 	client = &_client;
 	engine = mainEngine;
 
-	lua = luaL_newstate();
-	luaL_openlibs(lua);
-
 	// expose functions
-	exposeEngine();
-	exposeClient();
+	// exposeEngine();
+	// exposeClient();
 }
 
-Script::Script(Server& _server) {
+SolScript::SolScript(Server& _server)
+					:	SolScript()
+{
 	server = &_server;
 	engine = mainEngine;
 
-	lua = luaL_newstate();
-	luaL_openlibs(lua);
-
 	// expose functions
-	exposeEngine();
-	exposeServer();
+	// exposeEngine();
+	// exposeServer();
 }
 
-Script::Script(World& _world) {
+SolScript::SolScript(World& _world)
+					:	SolScript()
+{
 	world = &_world;
 	engine = mainEngine;
 
-	lua = luaL_newstate();
-	luaL_openlibs(lua);
-
 	// expose functions
-	exposeEngine();
-	exposeAngle();
-	exposeVector();
-	exposeWorld();
+	// exposeEngine();
+	// exposeAngle();
+	// exposeVector();
+	// exposeWorld();
 }
 
-Script::Script(Entity& _entity) {
+SolScript::SolScript(Entity& _entity)
+					:	SolScript()
+{
 	entity = &_entity;
 	engine = mainEngine;
 
-	lua = luaL_newstate();
-	luaL_openlibs(lua);
-
 	// expose functions
-	exposeEngine();
-	exposeAngle();
-	exposeVector();
-	exposeEntity();
+	// exposeEngine();
+	// exposeAngle();
+	// exposeVector();
+	// exposeEntity();
 }
 
-Script::Script(Frame& _frame) {
+SolScript::SolScript(Frame& _frame)
+					:	SolScript()
+{
 	frame = &_frame;
 	engine = mainEngine;
 	client = engine->getLocalClient();
 
-	lua = luaL_newstate();
-	luaL_openlibs(lua);
-
 	// expose functions
-	exposeEngine();
-	exposeClient();
-	if( client->getEditor() ) {
-		exposeEditor(*client->getEditor());
-		exposeEntity();
+	// exposeEngine();
+	// exposeClient();
+	// if( client->getEditor() ) {
+	// 	exposeEditor(*client->getEditor());
+	// 	exposeEntity();
+	// }
+	// exposeFrame();
+	// exposeWorld();
+}
+
+SolScript::~SolScript() {
+}
+
+// void SolScript::exposeEngine() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Engine>("Engine")
+// 		.addFunction("isInitialized", &Engine::isInitialized)
+// 		.addFunction("isRunning", &Engine::isRunning)
+// 		.addFunction("isPaused", &Engine::isPaused)
+// 		.addFunction("isFullscreen", &Engine::isFullscreen)
+// 		.addFunction("isRunningClient", &Engine::isRunningClient)
+// 		.addFunction("isRunningServer", &Engine::isRunningServer)
+// 		.addFunction("getGameTitle", &Engine::getGameTitle)
+// 		.addFunction("getLocalClient", &Engine::getLocalClient)
+// 		.addFunction("getLocalServer", &Engine::getLocalServer)
+// 		.addFunction("getXres", &Engine::getXres)
+// 		.addFunction("getYres", &Engine::getYres)
+// 		.addFunction("getKeyStatus", &Engine::getKeyStatus)
+// 		.addFunction("getMouseStatus", &Engine::getMouseStatus)
+// 		.addFunction("getMouseX", &Engine::getMouseX)
+// 		.addFunction("getMouseY", &Engine::getMouseY)
+// 		.addFunction("getMouseMoveX", &Engine::getMouseMoveX)
+// 		.addFunction("getMouseMoveY", &Engine::getMouseMoveY)
+// 		.addFunction("getFPS", &Engine::getFPS)
+// 		.addFunction("getTimeSync", &Engine::getTimeSync)
+// 		.addFunction("getTicksPerSecond", &Engine::getTicksPerSecond)
+// 		.addFunction("random", &Engine::random)
+// 		.addFunction("playSound", &Engine::playSound)
+// 		.addFunction("commandLine", &Engine::commandLine)
+// 		.addFunction("shutdown", &Engine::shutdown)
+// 		.addFunction("editorPlaytest", &Engine::editorPlaytest)
+// 		.addFunction("smsg", &Engine::smsg)
+// 		.addFunction("msg", &Engine::msg)
+// 		.addStaticFunction("triangleCoords", &Engine::triangleCoords)
+// 		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
+// 		.endClass()
+// 	;
+
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<glm::mat4>("matrix4x4")
+// 		.endClass()
+// 	;
+
+// 	if( engine ) {
+// 		luabridge::push(lua, engine);
+// 		lua_setglobal(lua, "engine");
+// 	}
+
+// 	exposeString();
+
+// 	Rect<Sint32>::exposeToScript(lua, "RectSint32");
+// 	Rect<Uint32>::exposeToScript(lua, "RectUint32");
+// }
+
+// void SolScript::exposeFrame() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Frame>("Frame")
+// 		.addFunction("getBorder", &Frame::getBorder)
+// 		.addFunction("getSize", &Frame::getSize)
+// 		.addFunction("getActualSize", &Frame::getActualSize)
+// 		.addFunction("isHigh", &Frame::isHigh)
+// 		.addFunction("getFrames", &Frame::getFrames)
+// 		.addFunction("getButtons", &Frame::getButtons)
+// 		.addFunction("setBorder", &Frame::setBorder)
+// 		.addFunction("setSize", &Frame::setSize)
+// 		.addFunction("setActualSize", &Frame::setActualSize)
+// 		.addFunction("setHigh", &Frame::setHigh)
+// 		.addFunction("setColor", &Frame::setColor)
+// 		.addFunction("addFrame", &Frame::addFrame)
+// 		.addFunction("addButton", &Frame::addButton)
+// 		.addFunction("addField", &Frame::addField)
+// 		.addFunction("addImage", &Frame::addImage)
+// 		.addFunction("addEntry", &Frame::addEntry)
+// 		.addFunction("clear", &Frame::clear)
+// 		.addFunction("removeSelf", &Frame::removeSelf)
+// 		.addFunction("remove", &Frame::remove)
+// 		.addFunction("removeEntry", &Frame::removeEntry)
+// 		.addFunction("findEntry", &Frame::findEntry)
+// 		.addFunction("findFrame", &Frame::findFrame)
+// 		.endClass()
+// 	;
+
+// 	if( frame ) {
+// 		luabridge::push(lua, frame);
+// 		lua_setglobal(lua, "frame");
+// 	}
+// }
+
+// void SolScript::exposeString() {
+// 	typedef size_t (String::*FindFn)(const char*, size_t) const;
+// 	FindFn find = static_cast<FindFn>(&String::find);
+
+// 	typedef size_t (String::*FindCharFn)(const char, size_t) const;
+// 	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
+
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<String>("String")
+// 		.addConstructor<void (*) (const char*)>()
+// 		.addFunction("get", &String::get)
+// 		.addFunction("getSize", &String::getSize)
+// 		.addFunction("alloc", &String::alloc)
+// 		.addFunction("empty", &String::empty)
+// 		.addFunction("length", &String::length)
+// 		.addFunction("assign", &String::assign)
+// 		.addFunction("append", &String::append)
+// 		.addFunction("substr", &String::substr)
+// 		.addFunction("find", find)
+// 		.addFunction("findChar", findChar)
+// 		.addFunction("toInt", &String::toInt)
+// 		.addFunction("toFloat", &String::toFloat)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<String>::exposeToScript(lua, "LinkedListString", "NodeString");
+// 	LinkedList<String*>::exposeToScript(lua, "LinkedListStringPtr", "NodeStringPtr");
+// 	ArrayList<String>::exposeToScript(lua, "ArrayListString");
+// 	ArrayList<String*>::exposeToScript(lua, "ArrayListStringPtr");
+// }
+
+// void SolScript::exposeAngle() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Angle>("Angle")
+// 		.addConstructor<void (*) (float, float, float)>()
+// 		.addData("yaw", &Angle::yaw, true)
+// 		.addData("pitch", &Angle::pitch, true)
+// 		.addData("roll", &Angle::roll, true)
+// 		.addFunction("radiansYaw", &Angle::radiansYaw)
+// 		.addFunction("radiansPitch", &Angle::radiansPitch)
+// 		.addFunction("radiansRoll", &Angle::radiansRoll)
+// 		.addFunction("degreesYaw", &Angle::degreesYaw)
+// 		.addFunction("degreesPitch", &Angle::degreesPitch)
+// 		.addFunction("degreesRoll", &Angle::degreesRoll)
+// 		.addFunction("wrapAngles", &Angle::wrapAngles)
+// 		.addFunction("toVector", &Angle::toVector)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Angle>::exposeToScript(lua, "LinkedListAngle", "NodeAngle");
+// 	LinkedList<Angle*>::exposeToScript(lua, "LinkedListAnglePtr", "NodeAnglePtr");
+// 	ArrayList<Angle>::exposeToScript(lua, "ArrayListAngle");
+// 	ArrayList<Angle*>::exposeToScript(lua, "ArrayListAnglePtr");
+// }
+
+// void SolScript::exposeVector() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Vector>("Vector")
+// 		.addConstructor<void (*) (float, float, float)>()
+// 		.addData("x", &Vector::x, true)
+// 		.addData("y", &Vector::y, true)
+// 		.addData("z", &Vector::z, true)
+// 		.addData("r", &Vector::x, true)
+// 		.addData("g", &Vector::y, true)
+// 		.addData("b", &Vector::z, true)
+// 		.addFunction("hasVolume", &Vector::hasVolume)
+// 		.addFunction("dot", &Vector::dot)
+// 		.addFunction("cross", &Vector::cross)
+// 		.addFunction("length", &Vector::length)
+// 		.addFunction("lengthSquared", &Vector::lengthSquared)
+// 		.addFunction("normal", &Vector::normal)
+// 		.addFunction("normalize", &Vector::normalize)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Vector>::exposeToScript(lua, "LinkedListVector", "NodeVector");
+// 	LinkedList<Vector*>::exposeToScript(lua, "LinkedListVectorPtr", "NodeVectorPtr");
+// 	ArrayList<Vector>::exposeToScript(lua, "ArrayListVector");
+// 	ArrayList<Vector*>::exposeToScript(lua, "ArrayListVectorPtr");
+
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<WideVector>("WideVector")
+// 		.addConstructor<void (*) (float, float, float, float)>()
+// 		.addData("x", &WideVector::x, true)
+// 		.addData("y", &WideVector::y, true)
+// 		.addData("z", &WideVector::z, true)
+// 		.addData("w", &WideVector::w, true)
+// 		.addData("r", &WideVector::x, true)
+// 		.addData("g", &WideVector::y, true)
+// 		.addData("b", &WideVector::z, true)
+// 		.addData("a", &WideVector::w, true)
+// 		.addFunction("hasVolume", &WideVector::hasVolume)
+// 		.addFunction("dot", &WideVector::dot)
+// 		.addFunction("cross", &WideVector::cross)
+// 		.addFunction("length", &WideVector::length)
+// 		.addFunction("lengthSquared", &WideVector::lengthSquared)
+// 		.addFunction("normal", &WideVector::normal)
+// 		.addFunction("normalize", &WideVector::normalize)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<WideVector>::exposeToScript(lua, "LinkedListWideVector", "NodeWideVector");
+// 	LinkedList<WideVector*>::exposeToScript(lua, "LinkedListWideVectorPtr", "NodeWideVectorPtr");
+// 	ArrayList<WideVector>::exposeToScript(lua, "ArrayListWideVector");
+// 	ArrayList<WideVector*>::exposeToScript(lua, "ArrayListWideVectorPtr");
+// }
+
+// void SolScript::exposeGame() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Game>("Game")
+// 		.addFunction("getWorld", &Game::getWorld)
+// 		.addFunction("worldForName", &Game::worldForName)
+// 		.addFunction("loadWorld", &Game::loadWorld)
+// 		.addFunction("closeAllWorlds", &Game::closeAllWorlds)
+// 		.endClass()
+// 	;
+// }
+
+// void SolScript::exposeClient() {
+// 	exposeGame();
+
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<Client, Game>("Client")
+// 		.addFunction("isConsoleAllowed", &Client::isConsoleAllowed)
+// 		.addFunction("isConsoleActive", &Client::isConsoleActive)
+// 		.addFunction("isEditorActive", &Client::isEditorActive)
+// 		.addFunction("getGUI", &Client::getGUI)
+// 		.addFunction("startEditor", &Client::startEditor)
+// 		.endClass()
+// 	;
+
+// 	if( client ) {
+// 		luabridge::push(lua, client);
+// 		lua_setglobal(lua, "client");
+// 	}
+// }
+
+// void SolScript::exposeEditor(Editor& _editor) {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Editor>("Editor")
+// 		.addFunction("setEditingMode", &Editor::setEditingMode)
+// 		.addFunction("setCeilingMode", &Editor::setCeilingMode)
+// 		.addFunction("setHighlightedObj", &Editor::setHighlightedObj)
+// 		.addFunction("setWidgetMode", &Editor::setWidgetMode)
+// 		.addFunction("selectEntity", &Editor::selectEntity)
+// 		.addFunction("toggleSelectEntity", &Editor::toggleSelectEntity)
+// 		.addFunction("selectAllEntities", &Editor::selectAllEntities)
+// 		.addFunction("selectEntityForSpawn", &Editor::selectEntityForSpawn)
+// 		.addFunction("entitiesName", &Editor::entitiesName)
+// 		.addFunction("entitiesScript", &Editor::entitiesScript)
+// 		.addFunction("entitiesFlag", &Editor::entitiesFlag)
+// 		.addFunction("entitiesSave", &Editor::entitiesSave)
+// 		.addFunction("entityKeyValueEnter", &Editor::entityKeyValueEnter)
+// 		.addFunction("entityKeyValueRemove", &Editor::entityKeyValueRemove)
+// 		.addFunction("entityKeyValueSelect", &Editor::entityKeyValueSelect)
+// 		.addFunction("entityAddComponent", &Editor::entityAddComponent)
+// 		.addFunction("entityRemoveComponent", &Editor::entityRemoveComponent)
+// 		.addFunction("entityBBoxShape", &Editor::entityBBoxShape)
+// 		.addFunction("entityBBoxEnabled", &Editor::entityBBoxEnabled)
+// 		.addFunction("entityModelLoadMesh", &Editor::entityModelLoadMesh)
+// 		.addFunction("entityModelLoadMaterial", &Editor::entityModelLoadMaterial)
+// 		.addFunction("entityModelLoadDepthFailMat", &Editor::entityModelLoadDepthFailMat)
+// 		.addFunction("entityModelLoadAnimation", &Editor::entityModelLoadAnimation)
+// 		.addFunction("entityModelCustomColor", &Editor::entityModelCustomColor)
+// 		.addFunction("entityModelCustomColorChannel", &Editor::entityModelCustomColorChannel)
+// 		.addFunction("entityLightColorR", &Editor::entityLightColorR)
+// 		.addFunction("entityLightColorG", &Editor::entityLightColorG)
+// 		.addFunction("entityLightColorB", &Editor::entityLightColorB)
+// 		.addFunction("entityLightIntensity", &Editor::entityLightIntensity)
+// 		.addFunction("entityLightRadius", &Editor::entityLightRadius)
+// 		.addFunction("entityLightArc", &Editor::entityLightArc)
+// 		.addFunction("entityLightShadow", &Editor::entityLightShadow)
+// 		.addFunction("entityLightShape", &Editor::entityLightShape)
+// 		.addFunction("entityCameraClipNear", &Editor::entityCameraClipNear)
+// 		.addFunction("entityCameraClipFar", &Editor::entityCameraClipFar)
+// 		.addFunction("entityCameraWinX", &Editor::entityCameraWinX)
+// 		.addFunction("entityCameraWinY", &Editor::entityCameraWinY)
+// 		.addFunction("entityCameraWinW", &Editor::entityCameraWinW)
+// 		.addFunction("entityCameraWinH", &Editor::entityCameraWinH)
+// 		.addFunction("entityCameraFOV", &Editor::entityCameraFOV)
+// 		.addFunction("entityCameraOrtho", &Editor::entityCameraOrtho)
+// 		.addFunction("entitySpeakerDefaultSound", &Editor::entitySpeakerDefaultSound)
+// 		.addFunction("entitySpeakerDefaultRange", &Editor::entitySpeakerDefaultRange)
+// 		.addFunction("entitySpeakerDefaultLoop", &Editor::entitySpeakerDefaultLoop)
+// 		.addFunction("entityCharacterHp", &Editor::entityCharacterHp)
+// 		.addFunction("entityCharacterMp", &Editor::entityCharacterMp)
+// 		.addFunction("entityCharacterSex", &Editor::entityCharacterSex)
+// 		.addFunction("entityCharacterLevel", &Editor::entityCharacterLevel)
+// 		.addFunction("entityCharacterXp", &Editor::entityCharacterXp)
+// 		.addFunction("entityCharacterHunger", &Editor::entityCharacterHunger)
+// 		.addFunction("entityCharacterNanoMatter", &Editor::entityCharacterNanoMatter)
+// 		.addFunction("entityCharacterBioMatter", &Editor::entityCharacterBioMatter)
+// 		.addFunction("entityCharacterNeuroThread", &Editor::entityCharacterNeuroThread)
+// 		.addFunction("entityCharacterGold", &Editor::entityCharacterGold)
+// 		.addFunction("entityCharacterStrength", &Editor::entityCharacterStrength)
+// 		.addFunction("entityCharacterDexterity", &Editor::entityCharacterDexterity)
+// 		.addFunction("entityCharacterIntelligence", &Editor::entityCharacterIntelligence)
+// 		.addFunction("entityCharacterConstitution", &Editor::entityCharacterConstitution)
+// 		.addFunction("entityCharacterPerception", &Editor::entityCharacterPerception)
+// 		.addFunction("entityCharacterCharisma", &Editor::entityCharacterCharisma)
+// 		.addFunction("entityCharacterLuck", &Editor::entityCharacterLuck)
+// 		.addFunction("entityComponentExpand", &Editor::entityComponentExpand)
+// 		.addFunction("entityComponentCollapse", &Editor::entityComponentCollapse)
+// 		.addFunction("entityComponentName", &Editor::entityComponentName)
+// 		.addFunction("entityComponentTranslate", &Editor::entityComponentTranslate)
+// 		.addFunction("entityComponentRotate", &Editor::entityComponentRotate)
+// 		.addFunction("entityComponentScale", &Editor::entityComponentScale)
+// 		.addFunction("widgetTranslateX", &Editor::widgetTranslateX)
+// 		.addFunction("widgetTranslateY", &Editor::widgetTranslateY)
+// 		.addFunction("widgetTranslateZ", &Editor::widgetTranslateZ)
+// 		.addFunction("widgetRotateYaw", &Editor::widgetRotateYaw)
+// 		.addFunction("widgetRotatePitch", &Editor::widgetRotatePitch)
+// 		.addFunction("widgetRotateRoll", &Editor::widgetRotateRoll)
+// 		.addFunction("widgetScaleX", &Editor::widgetScaleX)
+// 		.addFunction("widgetScaleY", &Editor::widgetScaleY)
+// 		.addFunction("widgetScaleZ", &Editor::widgetScaleZ)
+// 		.addFunction("getEditingMode", &Editor::getEditingMode)
+// 		.addFunction("getHighlightedObj", &Editor::getHighlightedObj)
+// 		.addFunction("getWidgetMode", &Editor::getWidgetMode)
+// 		.addFunction("buttonEntityProperties", &Editor::buttonEntityProperties)
+// 		.addFunction("buttonEntityAddComponent", &Editor::buttonEntityAddComponent)
+// 		.addFunction("buttonNewConfirm", &Editor::buttonNewConfirm)
+// 		.addFunction("buttonNew", &Editor::buttonNew)
+// 		.addFunction("buttonSave", &Editor::buttonSave)
+// 		.addFunction("buttonLoad", &Editor::buttonLoad)
+// 		.addFunction("buttonEditorSettings", &Editor::buttonEditorSettings)
+// 		.addFunction("buttonEditorSettingsApply", &Editor::buttonEditorSettingsApply)
+// 		.addFunction("buttonMapSettings", &Editor::buttonMapSettings)
+// 		.addFunction("buttonMapSettingsApply", &Editor::buttonMapSettingsApply)
+// 		.addFunction("buttonHelp", &Editor::buttonHelp)
+// 		.addFunction("buttonWorldRotate", &Editor::buttonWorldRotate)
+// 		.addFunction("playSound", &Editor::playSound)
+// 		.addFunction("optimizeChunks", &Editor::optimizeChunks)
+// 		.endClass()
+// 	;
+
+// 	editor = &_editor;
+// 	luabridge::push(lua, editor);
+// 	lua_setglobal(lua, "editor");
+// }
+
+// void SolScript::exposeServer() {
+// 	exposeGame();
+
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<Server, Game>("Server")
+// 		.endClass()
+// 	;
+
+// 	if( server ) {
+// 		luabridge::push(lua, server);
+// 		lua_setglobal(lua, "server");
+// 	}
+// }
+
+// void SolScript::exposeWorld() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<World>("World")
+// 		.addFunction("getTicks", &World::getTicks)
+// 		.addFunction("getFilename", &World::getFilename)
+// 		.addFunction("getNameStr", &World::getNameStr)
+// 		.addFunction("isClientObj", &World::isClientObj)
+// 		.addFunction("isServerObj", &World::isServerObj)
+// 		.addFunction("isShowTools", &World::isShowTools)
+// 		.addFunction("uidToEntity", &World::uidToEntity)
+// 		.addFunction("lineTrace", &World::lineTrace)
+// 		.addFunction("lineTraceList", &World::lineTraceList)
+// 		.addFunction("lineTraceNoEntities", &World::lineTraceNoEntities)
+// 		.addFunction("saveFile", &World::saveFile)
+// 		.addFunction("setShowTools", &World::setShowTools)
+// 		.addFunction("selectEntity", &World::selectEntity)
+// 		.addFunction("selectEntities", &World::selectEntities)
+// 		.addFunction("deselectGeometry", &World::deselectGeometry)
+// 		.endClass()
+// 	;
+
+// 	if( world ) {
+// 		luabridge::push(lua, world);
+// 		lua_setglobal(lua, "world");
+// 	}
+
+// 	LinkedList<World*>::exposeToScript(lua, "LinkedListWorldPtr", "NodeWorldPtr");
+// 	ArrayList<World*>::exposeToScript(lua, "ArrayListWorldPtr");
+// }
+
+// void SolScript::exposeEntity() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Entity>("Entity")
+// 		.addFunction("getName", &Entity::getName)
+// 		.addFunction("getUID", &Entity::getUID)
+// 		.addFunction("getTicks", &Entity::getTicks)
+// 		.addFunction("getPos", &Entity::getPos)
+// 		.addFunction("getVel", &Entity::getVel)
+// 		.addFunction("getAng", &Entity::getAng)
+// 		.addFunction("getRot", &Entity::getRot)
+// 		.addFunction("getScale", &Entity::getScale)
+// 		.addFunction("getScriptStr", &Entity::getScriptStr)
+// 		.addFunction("isToBeDeleted", &Entity::isToBeDeleted)
+// 		.addFunction("getFlags", &Entity::getFlags)
+// 		.addFunction("setKeyValue", &Entity::setKeyValue)
+// 		.addFunction("deleteKeyValue", &Entity::deleteKeyValue)
+// 		.addFunction("getKeyValueAsString", &Entity::getKeyValueAsString)
+// 		.addFunction("getKeyValueAsFloat", &Entity::getKeyValueAsFloat)
+// 		.addFunction("getKeyValueAsInt", &Entity::getKeyValueAsInt)
+// 		.addFunction("getKeyValue", &Entity::getKeyValue)
+// 		.addFunction("isFlag", &Entity::isFlag)
+// 		.addFunction("isFalling", &Entity::isFalling)
+// 		.addFunction("getLastUpdate", &Entity::getLastUpdate)
+// 		.addFunction("getDefName", &Entity::getDefName)
+// 		.addFunction("getSort", &Entity::getSort)
+// 		.addFunction("isSelected", &Entity::isSelected)
+// 		.addFunction("isHighlighted", &Entity::isHighlighted)
+// 		.addFunction("setName", &Entity::setName)
+// 		.addFunction("setFlags", &Entity::setFlags)
+// 		.addFunction("setFlag", &Entity::setFlag)
+// 		.addFunction("resetFlag", &Entity::resetFlag)
+// 		.addFunction("toggleFlag", &Entity::toggleFlag)
+// 		.addFunction("setPos", &Entity::setPos)
+// 		.addFunction("setVel", &Entity::setVel)
+// 		.addFunction("setAng", &Entity::setAng)
+// 		.addFunction("setRot", &Entity::setRot)
+// 		.addFunction("setScale", &Entity::setScale)
+// 		.addFunction("setScriptStr", &Entity::setScriptStr)
+// 		.addFunction("setSelected", &Entity::setSelected)
+// 		.addFunction("setHighlighted", &Entity::setHighlighted)
+// 		.addFunction("setFalling", &Entity::setFalling)
+// 		.addFunction("remove", &Entity::remove)
+// 		.addFunction("animate", &Entity::animate)
+// 		.addFunction("isNearCharacter", &Entity::isNearCharacter)
+// 		.addFunction("isCrouching", &Entity::isCrouching)
+// 		.addFunction("isMoving", &Entity::isMoving)
+// 		.addFunction("hasJumped", &Entity::hasJumped)
+// 		.addFunction("getLookDir", &Entity::getLookDir)
+// 		.addFunction("checkCollision", &Entity::checkCollision)
+// 		.addFunction("copy", &Entity::copy)
+// 		.addFunction("update", &Entity::update)
+// 		.addFunction("hasComponent", &Entity::hasComponent)
+// 		.addFunction("removeComponentByName", &Entity::removeComponentByName)
+// 		.addFunction("removeComponentByUID", &Entity::removeComponentByUID)
+// 		.addFunction("addComponent", &Entity::addComponent<Component>)
+// 		.addFunction("addBBox", &Entity::addComponent<BBox>)
+// 		.addFunction("addModel", &Entity::addComponent<Model>)
+// 		.addFunction("addCamera", &Entity::addComponent<Camera>)
+// 		.addFunction("addLight", &Entity::addComponent<Light>)
+// 		.addFunction("addSpeaker", &Entity::addComponent<Speaker>)
+// 		.addFunction("addCharacter", &Entity::addComponent<Character>)
+// 		.addFunction("findComponentByName", &Entity::findComponentByName<Component>)
+// 		.addFunction("findBBoxByName", &Entity::findComponentByName<BBox>)
+// 		.addFunction("findModelByName", &Entity::findComponentByName<Model>)
+// 		.addFunction("findLightByName", &Entity::findComponentByName<Light>)
+// 		.addFunction("findCameraByName", &Entity::findComponentByName<Camera>)
+// 		.addFunction("findSpeakerByName", &Entity::findComponentByName<Speaker>)
+// 		.addFunction("findCharacterByName", &Entity::findComponentByName<Character>)
+// 		.addFunction("lineTrace", &Entity::lineTrace)
+// 		.addFunction("findAPath", &Entity::findAPath)
+// 		.addFunction("findRandomPath", &Entity::findRandomPath)
+// 		.addFunction("pathFinished", &Entity::pathFinished)
+// 		.addFunction("hasPath", &Entity::hasPath)
+// 		.addFunction("getPathNodePosition", &Entity::getPathNodePosition)
+// 		.addFunction("getPathNodeDir", &Entity::getPathNodeDir)
+// 		.addFunction("getCurrentTileX", &Entity::getCurrentTileX)
+// 		.addFunction("getCurrentTileY", &Entity::getCurrentTileY)
+// 		.addFunction("getCurrentTileZ", &Entity::getCurrentTileZ)
+// 		.addFunction("isLocalPlayer", &Entity::isLocalPlayer)
+// 		.endClass()
+// 	;
+
+// 	// expose components
+// 	exposeComponent();
+// 	exposeBBox();
+// 	exposeModel();
+// 	exposeLight();
+// 	exposeCamera();
+// 	exposeSpeaker();
+// 	exposeCharacter();
+
+// 	if( entity ) {
+// 		luabridge::push(lua, entity);
+// 		lua_setglobal(lua, "entity");
+// 	}
+
+// 	LinkedList<Entity*>::exposeToScript(lua, "LinkedListEntityPtr", "NodeEntityPtr");
+// 	ArrayList<Entity*>::exposeToScript(lua, "ArrayListEntityPtr");
+// }
+
+// void SolScript::exposeComponent() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Component>("Component")
+// 		.addFunction("getType", &Component::getType)
+// 		.addFunction("getParent", &Component::getParent)
+// 		.addFunction("isEditorOnly", &Component::isEditorOnly)
+// 		.addFunction("isUpdateNeeded", &Component::isUpdateNeeded)
+// 		.addFunction("getUID", &Component::getUID)
+// 		.addFunction("getName", &Component::getName)
+// 		.addFunction("getLocalPos", &Component::getLocalPos)
+// 		.addFunction("getLocalAng", &Component::getLocalAng)
+// 		.addFunction("getLocalScale", &Component::getLocalScale)
+// 		.addFunction("getGlobalPos", &Component::getGlobalPos)
+// 		.addFunction("getGlobalAng", &Component::getGlobalAng)
+// 		.addFunction("getGlobalScale", &Component::getGlobalScale)
+// 		.addFunction("setEditorOnly", &Component::setEditorOnly)
+// 		.addFunction("setName", &Component::setName)
+// 		.addFunction("setLocalPos", &Component::setLocalPos)
+// 		.addFunction("setLocalAng", &Component::setLocalAng)
+// 		.addFunction("setLocalScale", &Component::setLocalScale)
+// 		.addFunction("setLocalMat", &Component::setLocalMat)
+// 		.addFunction("update", &Component::update)
+// 		.addFunction("remove", &Component::remove)
+// 		.addFunction("checkCollision", &Component::checkCollision)
+// 		.addFunction("hasComponent", &Component::hasComponent)
+// 		.addFunction("removeComponentByName", &Component::removeComponentByName)
+// 		.addFunction("removeComponentByUID", &Component::removeComponentByUID)
+// 		.addFunction("addComponent", &Component::addComponent<Component>)
+// 		.addFunction("addBBox", &Component::addComponent<BBox>)
+// 		.addFunction("addModel", &Component::addComponent<Model>)
+// 		.addFunction("addCamera", &Component::addComponent<Camera>)
+// 		.addFunction("addLight", &Component::addComponent<Light>)
+// 		.addFunction("addSpeaker", &Component::addComponent<Speaker>)
+// 		.addFunction("addCharacter", &Component::addComponent<Character>)
+// 		.addFunction("findComponentByName", &Component::findComponentByName<Component>)
+// 		.addFunction("findBBoxByName", &Component::findComponentByName<BBox>)
+// 		.addFunction("findModelByName", &Component::findComponentByName<Model>)
+// 		.addFunction("findLightByName", &Component::findComponentByName<Light>)
+// 		.addFunction("findCameraByName", &Component::findComponentByName<Camera>)
+// 		.addFunction("findSpeakerByName", &Component::findComponentByName<Speaker>)
+// 		.addFunction("findCharacterByName", &Component::findComponentByName<Character>)
+// 		.addFunction("rotate", &Component::rotate)
+// 		.addFunction("translate", &Component::translate)
+// 		.addFunction("scale", &Component::scale)
+// 		.addFunction("revertRotation", &Component::revertRotation)
+// 		.addFunction("revertTranslation", &Component::revertTranslation)
+// 		.addFunction("revertScale", &Component::revertScale)
+// 		.addFunction("revertToIdentity", &Component::revertToIdentity)
+// 		.addFunction("shootLaser", &Component::shootLaser)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Component*>::exposeToScript(lua, "LinkedListComponentPtr", "NodeComponentPtr");
+// 	ArrayList<Component*>::exposeToScript(lua, "ArrayListComponentPtr");
+// }
+
+// void SolScript::exposeBBox() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<BBox, Component>("BBox")
+// 		.addFunction("containsPoint", &BBox::containsPoint)
+// 		.addFunction("nearestCeiling", &BBox::nearestCeiling)
+// 		.addFunction("nearestFloor", &BBox::nearestFloor)
+// 		.addFunction("distToCeiling", &BBox::distToCeiling)
+// 		.addFunction("distToFloor", &BBox::distToFloor)
+// 		.addFunction("getShape", &BBox::getShape)
+// 		.addFunction("isEnabled", &BBox::isEnabled)
+// 		.addFunction("setEnabled", &BBox::setEnabled)
+// 		.addFunction("setShape", &BBox::setShape)
+// 		.addFunction("findAllOverlappingEntities", &BBox::findAllOverlappingEntities)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<BBox*>::exposeToScript(lua, "LinkedListBBoxPtr", "NodeBBoxPtr");
+// 	ArrayList<BBox*>::exposeToScript(lua, "ArrayListBBoxPtr");
+// }
+
+// void SolScript::exposeModel() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<Model, Component>("Model")
+// 		.addFunction("findBone", &Model::findBone)
+// 		.addFunction("findAnimation", &Model::findAnimation)
+// 		.addFunction("animate", &Model::animate)
+// 		.addFunction("hasAnimations", &Model::hasAnimations)
+// 		.addFunction("getMesh", &Model::getMesh)
+// 		.addFunction("getMaterial", &Model::getMaterial)
+// 		.addFunction("getDepthFailMat", &Model::getDepthFailMat)
+// 		.addFunction("getAnimation", &Model::getAnimation)
+// 		.addFunction("getShaderVars", &Model::getShaderVars)
+// 		.addFunction("getAnimTicks", &Model::getAnimTicks)
+// 		.addFunction("isAnimDone", &Model::isAnimDone)
+// 		.addFunction("getAnimationSpeed", &Model::getAnimationSpeed)
+// 		.addFunction("setMesh", &Model::setMesh)
+// 		.addFunction("setMaterial", &Model::setMaterial)
+// 		.addFunction("setDepthFailMat", &Model::setDepthFailMat)
+// 		.addFunction("setAnimation", &Model::setAnimation)
+// 		.addFunction("setShaderVars", &Model::setShaderVars)
+// 		.addFunction("setAnimationSpeed", &Model::setAnimationSpeed)
+// 		.addFunction("updateSkin", &Model::updateSkin)
+// 		.addFunction("getCurrentAnimation", &Model::getCurrentAnimation)
+// 		.addFunction("getPreviousAnimation", &Model::getPreviousAnimation)
+// 		.endClass()
+// 	;
+
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<AnimationState>("AnimationState")
+// 		.addFunction("getName", &AnimationState::getName)
+// 		.addFunction("getTicks", &AnimationState::getTicks)
+// 		.addFunction("getTicksRate", &AnimationState::getTicksRate)
+// 		.addFunction("getBegin", &AnimationState::getBegin)
+// 		.addFunction("getEnd", &AnimationState::getEnd)
+// 		.addFunction("getLength", &AnimationState::getLength)
+// 		.addFunction("getWeight", &AnimationState::getWeight)
+// 		.addFunction("getWeightRate", &AnimationState::getWeightRate)
+// 		.addFunction("isLoop", &AnimationState::isLoop)
+// 		.addFunction("isFinished", &AnimationState::isFinished)
+// 		.addFunction("setTicks", &AnimationState::setTicks)
+// 		.addFunction("setTicksRate", &AnimationState::setTicksRate)
+// 		.addFunction("setWeight", &AnimationState::setWeight)
+// 		.addFunction("setWeightRate", &AnimationState::setWeightRate)
+// 		.addFunction("setWeights", &AnimationState::setWeights)
+// 		.addFunction("setWeightRates", &AnimationState::setWeightRates)
+// 		.addFunction("clearWeights", &AnimationState::clearWeights)
+// 		.endClass()
+// 	;
+
+// 	luabridge::getGlobalNamespace(lua)
+// 		.beginClass<Model::bone_t>("bone_t")
+// 		.addData("valid", &Model::bone_t::valid, true)
+// 		.addData("name", &Model::bone_t::name, true)
+// 		.addData("mat", &Model::bone_t::mat, true)
+// 		.addData("pos", &Model::bone_t::pos, true)
+// 		.addData("ang", &Model::bone_t::ang, true)
+// 		.addData("scale", &Model::bone_t::scale, true)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Model*>::exposeToScript(lua, "LinkedListModelPtr", "NodeModelPtr");
+// 	ArrayList<Model*>::exposeToScript(lua, "ArrayListModelPtr");
+// }
+
+// void SolScript::exposeLight() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<Light, Component>("Light")
+// 		.addFunction("getColor", &Light::getColor)
+// 		.addFunction("getIntensity", &Light::getIntensity)
+// 		.addFunction("getRadius", &Light::getRadius)
+// 		.addFunction("getArc", &Light::getArc)
+// 		.addFunction("isShadow", &Light::isShadow)
+// 		.addFunction("setColor", &Light::setColor)
+// 		.addFunction("setIntensity", &Light::setIntensity)
+// 		.addFunction("setRadius", &Light::setRadius)
+// 		.addFunction("setShape", &Light::setShape)
+// 		.addFunction("setArc", &Light::setArc)
+// 		.addFunction("setShadow", &Light::setShadow)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Light*>::exposeToScript(lua, "LinkedListLightPtr", "NodeLightPtr");
+// 	ArrayList<Light*>::exposeToScript(lua, "ArrayListLightPtr");
+// }
+
+// void SolScript::exposeCamera() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<Camera, Component>("Camera")
+// 		.addFunction("setupProjection", &Camera::setupProjection)
+// 		.addFunction("worldPosToScreenPos", &Camera::worldPosToScreenPos)
+// 		.addFunction("screenPosToWorldRay", &Camera::screenPosToWorldRay)
+// 		.addFunction("getClipNear", &Camera::getClipNear)
+// 		.addFunction("getClipFar", &Camera::getClipFar)
+// 		.addFunction("getWin", &Camera::getWin)
+// 		.addFunction("getFov", &Camera::getFov)
+// 		.addFunction("isOrtho", &Camera::isOrtho)
+// 		.addFunction("setClipNear", &Camera::setClipNear)
+// 		.addFunction("setClipFar", &Camera::setClipFar)
+// 		.addFunction("setWin", &Camera::setWin)
+// 		.addFunction("setFov", &Camera::setFov)
+// 		.addFunction("setOrtho", &Camera::setOrtho)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Camera*>::exposeToScript(lua, "LinkedListCameraPtr", "NodeCameraPtr");
+// 	ArrayList<Camera*>::exposeToScript(lua, "ArrayListCameraPtr");
+// }
+
+// void SolScript::exposeSpeaker() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<Speaker, Component>("Speaker")
+// 		.addFunction("playSound", &Speaker::playSound)
+// 		.addFunction("stopSound", &Speaker::stopSound)
+// 		.addFunction("stopAllSounds", &Speaker::stopAllSounds)
+// 		.addFunction("getDefaultSound", &Speaker::getDefaultSound)
+// 		.addFunction("getDefaultRange", &Speaker::getDefaultRange)
+// 		.addFunction("isDefaultLoop", &Speaker::isDefaultLoop)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Speaker*>::exposeToScript(lua, "LinkedListSpeakerPtr", "NodeSpeakerPtr");
+// 	ArrayList<Speaker*>::exposeToScript(lua, "ArrayListSpeakerPtr");
+// }
+
+// void SolScript::exposeCharacter() {
+// 	luabridge::getGlobalNamespace(lua)
+// 		.deriveClass<Character, Component>("Character")
+// 		.addFunction("getHp", &Character::getHp)
+// 		.addFunction("getMp", &Character::getMp)
+// 		.addFunction("getSex", &Character::getSex)
+// 		.addFunction("getLevel", &Character::getLevel)
+// 		.addFunction("getXp", &Character::getXp)
+// 		.addFunction("getHunger", &Character::getHunger)
+// 		.addFunction("getNanoMatter", &Character::getNanoMatter)
+// 		.addFunction("getBioMatter", &Character::getBioMatter)
+// 		.addFunction("getNeuroThread", &Character::getNeuroThread)
+// 		.addFunction("getGold", &Character::getGold)
+// 		.addFunction("getStrength", &Character::getStrength)
+// 		.addFunction("getDexterity", &Character::getDexterity)
+// 		.addFunction("getIntelligence", &Character::getIntelligence)
+// 		.addFunction("getConstitution", &Character::getConstitution)
+// 		.addFunction("getPerception", &Character::getPerception)
+// 		.addFunction("getCharisma", &Character::getCharisma)
+// 		.addFunction("getLuck", &Character::getLuck)
+// 		.addFunction("setHp", &Character::setHp)
+// 		.addFunction("setMp", &Character::setMp)
+// 		.addFunction("setSex", &Character::setSex)
+// 		.addFunction("setLevel", &Character::setLevel)
+// 		.addFunction("setXp", &Character::setXp)
+// 		.addFunction("setHunger", &Character::setHunger)
+// 		.addFunction("setNanoMatter", &Character::setNanoMatter)
+// 		.addFunction("setBioMatter", &Character::setBioMatter)
+// 		.addFunction("setNeuroThread", &Character::setNeuroThread)
+// 		.addFunction("setGold", &Character::setGold)
+// 		.addFunction("setStrength", &Character::setStrength)
+// 		.addFunction("setDexterity", &Character::setDexterity)
+// 		.addFunction("setIntelligence", &Character::setIntelligence)
+// 		.addFunction("setConstitution", &Character::setConstitution)
+// 		.addFunction("setPerception", &Character::setPerception)
+// 		.addFunction("setCharisma", &Character::setCharisma)
+// 		.addFunction("setLuck", &Character::setLuck)
+// 		.endClass()
+// 	;
+
+// 	LinkedList<Character*>::exposeToScript(lua, "LinkedListCharacterPtr", "NodeCharacterPtr");
+// 	ArrayList<Character*>::exposeToScript(lua, "ArrayListCharacterPtr");
+// }
+
+// void SolScript::exposeEmitter() {
+// 	// todo
+// }
+
+template <typename T>
+void Node<T>::exposeToScript(sol::state& lua, const char* name) {
+	// typedef Node<T>* (Node<T>::*NodeFn)();
+	// NodeFn getNext = static_cast<NodeFn>(&Node<T>::getNext);
+	// NodeFn getPrev = static_cast<NodeFn>(&Node<T>::getPrev);
+
+	// typedef const Node<T>* (Node<T>::*NodeConstFn)() const;
+	// NodeConstFn getNextConst = static_cast<NodeConstFn>(&Node<T>::getNext);
+	// NodeConstFn getPrevConst = static_cast<NodeConstFn>(&Node<T>::getPrev);
+
+	// typedef LinkedList<T>* (Node<T>::*ListFn)();
+	// ListFn getList = static_cast<ListFn>(&Node<T>::getList);
+
+	// typedef const LinkedList<T>* (Node<T>::*ListConstFn)() const;
+	// ListConstFn getListConst = static_cast<ListConstFn>(&Node<T>::getList);
+
+	// typedef T& (Node<T>::*DataFn)();
+	// DataFn getData = static_cast<DataFn>(&Node<T>::getData);
+
+	// typedef const T& (Node<T>::*DataConstFn)() const;
+	// DataConstFn getDataConst = static_cast<DataConstFn>(&Node<T>::getData);
+
+	// luabridge::getGlobalNamespace(lua)
+	// 	.beginClass<Node<T>>(name)
+	// 	.addFunction("getNext", getNext)
+	// 	.addFunction("getPrev", getPrev)
+	// 	.addFunction("getList", getList)
+	// 	.addFunction("getData", getData)
+	// 	.addFunction("getNextConst", getNextConst)
+	// 	.addFunction("getPrevConst", getPrevConst)
+	// 	.addFunction("getListConst", getListConst)
+	// 	.addFunction("getDataConst", getDataConst)
+	// 	.addFunction("getSizeOfData", &Node<T>::getSizeOfData)
+	// 	.addFunction("setNext", &Node<T>::setNext)
+	// 	.addFunction("setPrev", &Node<T>::setPrev)
+	// 	.addFunction("setData", &Node<T>::setData)
+	// 	.endClass()
+	// ;
+}
+
+template <typename T>
+void LinkedList<T>::exposeToScript(sol::state& lua, const char* listName, const char* nodeName) {
+	// typedef Node<T>* (LinkedList<T>::*NodeFn)();
+	// NodeFn getFirst = static_cast<NodeFn>(&LinkedList<T>::getFirst);
+	// NodeFn getLast = static_cast<NodeFn>(&LinkedList<T>::getLast);
+
+	// typedef const Node<T>* (LinkedList<T>::*NodeConstFn)() const;
+	// NodeConstFn getFirstConst = static_cast<NodeConstFn>(&LinkedList<T>::getFirst);
+	// NodeConstFn getLastConst = static_cast<NodeConstFn>(&LinkedList<T>::getLast);
+
+	// typedef Node<T>* (LinkedList<T>::*NodeIndexFn)(const size_t);
+	// NodeIndexFn nodeForIndex = static_cast<NodeIndexFn>(&LinkedList<T>::nodeForIndex);
+
+	// typedef const Node<T>* (LinkedList<T>::*NodeIndexConstFn)(const size_t) const;
+	// NodeIndexConstFn nodeForIndexConst = static_cast<NodeIndexConstFn>(&LinkedList<T>::nodeForIndex);
+
+	// typedef void (LinkedList<T>::*NodeRemoveFn)(Node<T>*);
+	// NodeRemoveFn removeNode = static_cast<NodeRemoveFn>(&LinkedList<T>::removeNode);
+
+	// typedef void (LinkedList<T>::*NodeRemoveIndexFn)(const size_t);
+	// NodeRemoveIndexFn removeNodeIndex = static_cast<NodeRemoveIndexFn>(&LinkedList<T>::removeNode);
+
+	// luabridge::getGlobalNamespace(lua)
+	// 	.beginClass<LinkedList<T>>(listName)
+	// 	.addConstructor<void (*)()>()
+	// 	.addFunction("getFirst", getFirst)
+	// 	.addFunction("getFirstConst", getFirstConst)
+	// 	.addFunction("getLast", getLast)
+	// 	.addFunction("getLastConst", getLastConst)
+	// 	.addFunction("getSize", &LinkedList<T>::getSize)
+	// 	.addFunction("setFirst", &LinkedList<T>::setFirst)
+	// 	.addFunction("setLast", &LinkedList<T>::setLast)
+	// 	.addFunction("nodeForIndex", nodeForIndex)
+	// 	.addFunction("nodeForIndexConst", nodeForIndexConst)
+	// 	.addFunction("indexForNode", &LinkedList<T>::indexForNode)
+	// 	.addFunction("addNode", &LinkedList<T>::addNode)
+	// 	.addFunction("addNodeFirst", &LinkedList<T>::addNodeFirst)
+	// 	.addFunction("addNodeLast", &LinkedList<T>::addNodeLast)
+	// 	.addFunction("removeNode", removeNode)
+	// 	.addFunction("removeNodeIndex", removeNodeIndex)
+	// 	.addFunction("removeAll", &LinkedList<T>::removeAll)
+	// 	.addFunction("copy", &LinkedList<T>::copy)
+	// 	.endClass()
+	// ;
+
+	// Node<T>::exposeToScript(lua, nodeName);
+}
+
+template <typename T>
+void ArrayList<T>::exposeToScript(sol::state& lua, const char* name) {
+	// typedef T* (ArrayList<T>::*ArrayFn)();
+	// ArrayFn getArray = static_cast<ArrayFn>(&ArrayList<T>::getArray);
+
+	// typedef const T* (ArrayList<T>::*ArrayConstFn)() const;
+	// ArrayConstFn getArrayConst = static_cast<ArrayConstFn>(&ArrayList<T>::getArray);
+
+	// typedef ArrayList<T>& (ArrayList<T>::*CopyFn)(const ArrayList<T>&);
+	// CopyFn copy = static_cast<CopyFn>(&ArrayList<T>::copy);
+
+	// typedef T& (ArrayList<T>::*PeekFn)();
+	// PeekFn peek = static_cast<PeekFn>(&ArrayList<T>::peek);
+
+	// typedef const T& (ArrayList<T>::*PeekConstFn)() const;
+	// PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
+
+	// typedef T& (ArrayList<T>::*GetFn)(size_t);
+	// GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
+
+	// typedef const T& (ArrayList<T>::*GetConstFn)(size_t) const;
+	// GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
+
+	// luabridge::getGlobalNamespace(lua)
+	// 	.beginClass<ArrayList<T>>(name)
+	// 	.addConstructor<void (*)()>()
+	// 	.addFunction("getArray", getArray)
+	// 	.addFunction("getArrayConst", getArrayConst)
+	// 	.addFunction("getSize", &ArrayList<T>::getSize)
+	// 	.addFunction("getMaxSize", &ArrayList<T>::getMaxSize)
+	// 	.addFunction("empty", &ArrayList<T>::empty)
+	// 	.addFunction("alloc", &ArrayList<T>::alloc)
+	// 	.addFunction("resize", &ArrayList<T>::resize)
+	// 	.addFunction("clear", &ArrayList<T>::clear)
+	// 	.addFunction("copy", copy)
+	// 	.addFunction("push", &ArrayList<T>::push)
+	// 	.addFunction("insert", &ArrayList<T>::insert)
+	// 	.addFunction("pop", &ArrayList<T>::pop)
+	// 	.addFunction("peek", peek)
+	// 	.addFunction("peekConst", peekConst)
+	// 	.addFunction("remove", &ArrayList<T>::remove)
+	// 	.addFunction("removeAndRearrange", &ArrayList<T>::removeAndRearrange)
+	// 	.addFunction("get", get)
+	// 	.addFunction("getConst", getConst)
+	// 	.endClass()
+	// ;
+}
+
+template <typename T>
+void Rect<T>::exposeToScript(sol::state& lua, const char* name) {
+	// luabridge::getGlobalNamespace(lua)
+	// 	.beginClass<Rect<T>>(name)
+	// 	.addConstructor<void (*)(T, T, T, T)>()
+	// 	.addData("x", &Rect<T>::x, true)
+	// 	.addData("y", &Rect<T>::y, true)
+	// 	.addData("w", &Rect<T>::w, true)
+	// 	.addData("h", &Rect<T>::h, true)
+	// 	.addFunction("containsPoint", &Rect<T>::containsPoint)
+	// 	.endClass()
+	// ;
+}
+
+// template <typename T>
+// void Button::addParam(Script& scripter, T param)
+// {
+// 	if (nullptr == lua)
+// 	{
+// 		assert(0);
+// 		return; //Error!
+// 	}
+// 	params.push_back(scripter.makeObject(param));
+// }
+
+template <typename T>
+void Button::addParam(T param)
+{
+	if (nullptr == parent)
+	{
+		assert(0);
+		return;
 	}
-	exposeFrame();
-	exposeWorld();
-}
 
-Script::~Script() {
-	if ( lua ) {
-		lua_close(lua);
-		lua = nullptr;
-	}
-}
-
-void Script::exposeEngine() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Engine>("Engine")
-		.addFunction("isInitialized", &Engine::isInitialized)
-		.addFunction("isRunning", &Engine::isRunning)
-		.addFunction("isPaused", &Engine::isPaused)
-		.addFunction("isFullscreen", &Engine::isFullscreen)
-		.addFunction("isRunningClient", &Engine::isRunningClient)
-		.addFunction("isRunningServer", &Engine::isRunningServer)
-		.addFunction("getGameTitle", &Engine::getGameTitle)
-		.addFunction("getLocalClient", &Engine::getLocalClient)
-		.addFunction("getLocalServer", &Engine::getLocalServer)
-		.addFunction("getXres", &Engine::getXres)
-		.addFunction("getYres", &Engine::getYres)
-		.addFunction("getKeyStatus", &Engine::getKeyStatus)
-		.addFunction("getMouseStatus", &Engine::getMouseStatus)
-		.addFunction("getMouseX", &Engine::getMouseX)
-		.addFunction("getMouseY", &Engine::getMouseY)
-		.addFunction("getMouseMoveX", &Engine::getMouseMoveX)
-		.addFunction("getMouseMoveY", &Engine::getMouseMoveY)
-		.addFunction("getFPS", &Engine::getFPS)
-		.addFunction("getTimeSync", &Engine::getTimeSync)
-		.addFunction("getTicksPerSecond", &Engine::getTicksPerSecond)
-		.addFunction("random", &Engine::random)
-		.addFunction("playSound", &Engine::playSound)
-		.addFunction("commandLine", &Engine::commandLine)
-		.addFunction("shutdown", &Engine::shutdown)
-		.addFunction("editorPlaytest", &Engine::editorPlaytest)
-		.addFunction("smsg", &Engine::smsg)
-		.addFunction("msg", &Engine::msg)
-		.addStaticFunction("triangleCoords", &Engine::triangleCoords)
-		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
-		.endClass()
-	;
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<glm::mat4>("matrix4x4")
-		.endClass()
-	;
-
-	if( engine ) {
-		luabridge::push(lua, engine);
-		lua_setglobal(lua, "engine");
+	Script* scripter = parent->getScriptEngine();
+	if (nullptr == scripter)
+	{
+		assert(0);
+		return;
 	}
 
-	exposeString();
-
-	Rect<Sint32>::exposeToScript(lua, "RectSint32");
-	Rect<Uint32>::exposeToScript(lua, "RectUint32");
-}
-
-void Script::exposeFrame() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Frame>("Frame")
-		.addFunction("getBorder", &Frame::getBorder)
-		.addFunction("getSize", &Frame::getSize)
-		.addFunction("getActualSize", &Frame::getActualSize)
-		.addFunction("isHigh", &Frame::isHigh)
-		.addFunction("getFrames", &Frame::getFrames)
-		.addFunction("getButtons", &Frame::getButtons)
-		.addFunction("setBorder", &Frame::setBorder)
-		.addFunction("setSize", &Frame::setSize)
-		.addFunction("setActualSize", &Frame::setActualSize)
-		.addFunction("setHigh", &Frame::setHigh)
-		.addFunction("setColor", &Frame::setColor)
-		.addFunction("addFrame", &Frame::addFrame)
-		.addFunction("addButton", &Frame::addButton)
-		.addFunction("addField", &Frame::addField)
-		.addFunction("addImage", &Frame::addImage)
-		.addFunction("addEntry", &Frame::addEntry)
-		.addFunction("clear", &Frame::clear)
-		.addFunction("removeSelf", &Frame::removeSelf)
-		.addFunction("remove", &Frame::remove)
-		.addFunction("removeEntry", &Frame::removeEntry)
-		.addFunction("findEntry", &Frame::findEntry)
-		.addFunction("findFrame", &Frame::findFrame)
-		.endClass()
-	;
-
-	if( frame ) {
-		luabridge::push(lua, frame);
-		lua_setglobal(lua, "frame");
+	if (nullptr == params)
+	{
+		params = new SolScriptArgs;
 	}
+	scripter->addParam(param, *params);
 }
 
-void Script::exposeString() {
-	typedef size_t (String::*FindFn)(const char*, size_t) const;
-	FindFn find = static_cast<FindFn>(&String::find);
-
-	typedef size_t (String::*FindCharFn)(const char, size_t) const;
-	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<String>("String")
-		.addConstructor<void (*) (const char*)>()
-		.addFunction("get", &String::get)
-		.addFunction("getSize", &String::getSize)
-		.addFunction("alloc", &String::alloc)
-		.addFunction("empty", &String::empty)
-		.addFunction("length", &String::length)
-		.addFunction("assign", &String::assign)
-		.addFunction("append", &String::append)
-		.addFunction("substr", &String::substr)
-		.addFunction("find", find)
-		.addFunction("findChar", findChar)
-		.addFunction("toInt", &String::toInt)
-		.addFunction("toFloat", &String::toFloat)
-		.endClass()
-	;
-
-	LinkedList<String>::exposeToScript(lua, "LinkedListString", "NodeString");
-	LinkedList<String*>::exposeToScript(lua, "LinkedListStringPtr", "NodeStringPtr");
-	ArrayList<String>::exposeToScript(lua, "ArrayListString");
-	ArrayList<String*>::exposeToScript(lua, "ArrayListStringPtr");
-}
-
-void Script::exposeAngle() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Angle>("Angle")
-		.addConstructor<void (*) (float, float, float)>()
-		.addData("yaw", &Angle::yaw, true)
-		.addData("pitch", &Angle::pitch, true)
-		.addData("roll", &Angle::roll, true)
-		.addFunction("radiansYaw", &Angle::radiansYaw)
-		.addFunction("radiansPitch", &Angle::radiansPitch)
-		.addFunction("radiansRoll", &Angle::radiansRoll)
-		.addFunction("degreesYaw", &Angle::degreesYaw)
-		.addFunction("degreesPitch", &Angle::degreesPitch)
-		.addFunction("degreesRoll", &Angle::degreesRoll)
-		.addFunction("wrapAngles", &Angle::wrapAngles)
-		.addFunction("toVector", &Angle::toVector)
-		.endClass()
-	;
-
-	LinkedList<Angle>::exposeToScript(lua, "LinkedListAngle", "NodeAngle");
-	LinkedList<Angle*>::exposeToScript(lua, "LinkedListAnglePtr", "NodeAnglePtr");
-	ArrayList<Angle>::exposeToScript(lua, "ArrayListAngle");
-	ArrayList<Angle*>::exposeToScript(lua, "ArrayListAnglePtr");
-}
-
-void Script::exposeVector() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Vector>("Vector")
-		.addConstructor<void (*) (float, float, float)>()
-		.addData("x", &Vector::x, true)
-		.addData("y", &Vector::y, true)
-		.addData("z", &Vector::z, true)
-		.addData("r", &Vector::x, true)
-		.addData("g", &Vector::y, true)
-		.addData("b", &Vector::z, true)
-		.addFunction("hasVolume", &Vector::hasVolume)
-		.addFunction("dot", &Vector::dot)
-		.addFunction("cross", &Vector::cross)
-		.addFunction("length", &Vector::length)
-		.addFunction("lengthSquared", &Vector::lengthSquared)
-		.addFunction("normal", &Vector::normal)
-		.addFunction("normalize", &Vector::normalize)
-		.endClass()
-	;
-
-	LinkedList<Vector>::exposeToScript(lua, "LinkedListVector", "NodeVector");
-	LinkedList<Vector*>::exposeToScript(lua, "LinkedListVectorPtr", "NodeVectorPtr");
-	ArrayList<Vector>::exposeToScript(lua, "ArrayListVector");
-	ArrayList<Vector*>::exposeToScript(lua, "ArrayListVectorPtr");
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<WideVector>("WideVector")
-		.addConstructor<void (*) (float, float, float, float)>()
-		.addData("x", &WideVector::x, true)
-		.addData("y", &WideVector::y, true)
-		.addData("z", &WideVector::z, true)
-		.addData("w", &WideVector::w, true)
-		.addData("r", &WideVector::x, true)
-		.addData("g", &WideVector::y, true)
-		.addData("b", &WideVector::z, true)
-		.addData("a", &WideVector::w, true)
-		.addFunction("hasVolume", &WideVector::hasVolume)
-		.addFunction("dot", &WideVector::dot)
-		.addFunction("cross", &WideVector::cross)
-		.addFunction("length", &WideVector::length)
-		.addFunction("lengthSquared", &WideVector::lengthSquared)
-		.addFunction("normal", &WideVector::normal)
-		.addFunction("normalize", &WideVector::normalize)
-		.endClass()
-	;
-
-	LinkedList<WideVector>::exposeToScript(lua, "LinkedListWideVector", "NodeWideVector");
-	LinkedList<WideVector*>::exposeToScript(lua, "LinkedListWideVectorPtr", "NodeWideVectorPtr");
-	ArrayList<WideVector>::exposeToScript(lua, "ArrayListWideVector");
-	ArrayList<WideVector*>::exposeToScript(lua, "ArrayListWideVectorPtr");
-}
-
-void Script::exposeGame() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Game>("Game")
-		.addFunction("getWorld", &Game::getWorld)
-		.addFunction("worldForName", &Game::worldForName)
-		.addFunction("loadWorld", &Game::loadWorld)
-		.addFunction("closeAllWorlds", &Game::closeAllWorlds)
-		.endClass()
-	;
-}
-
-void Script::exposeClient() {
-	exposeGame();
-
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<Client, Game>("Client")
-		.addFunction("isConsoleAllowed", &Client::isConsoleAllowed)
-		.addFunction("isConsoleActive", &Client::isConsoleActive)
-		.addFunction("isEditorActive", &Client::isEditorActive)
-		.addFunction("getGUI", &Client::getGUI)
-		.addFunction("startEditor", &Client::startEditor)
-		.endClass()
-	;
-
-	if( client ) {
-		luabridge::push(lua, client);
-		lua_setglobal(lua, "client");
-	}
-}
-
-void Script::exposeEditor(Editor& _editor) {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Editor>("Editor")
-		.addFunction("setEditingMode", &Editor::setEditingMode)
-		.addFunction("setCeilingMode", &Editor::setCeilingMode)
-		.addFunction("setHighlightedObj", &Editor::setHighlightedObj)
-		.addFunction("setWidgetMode", &Editor::setWidgetMode)
-		.addFunction("selectEntity", &Editor::selectEntity)
-		.addFunction("toggleSelectEntity", &Editor::toggleSelectEntity)
-		.addFunction("selectAllEntities", &Editor::selectAllEntities)
-		.addFunction("selectEntityForSpawn", &Editor::selectEntityForSpawn)
-		.addFunction("entitiesName", &Editor::entitiesName)
-		.addFunction("entitiesScript", &Editor::entitiesScript)
-		.addFunction("entitiesFlag", &Editor::entitiesFlag)
-		.addFunction("entitiesSave", &Editor::entitiesSave)
-		.addFunction("entityKeyValueEnter", &Editor::entityKeyValueEnter)
-		.addFunction("entityKeyValueRemove", &Editor::entityKeyValueRemove)
-		.addFunction("entityKeyValueSelect", &Editor::entityKeyValueSelect)
-		.addFunction("entityAddComponent", &Editor::entityAddComponent)
-		.addFunction("entityRemoveComponent", &Editor::entityRemoveComponent)
-		.addFunction("entityBBoxShape", &Editor::entityBBoxShape)
-		.addFunction("entityBBoxEnabled", &Editor::entityBBoxEnabled)
-		.addFunction("entityModelLoadMesh", &Editor::entityModelLoadMesh)
-		.addFunction("entityModelLoadMaterial", &Editor::entityModelLoadMaterial)
-		.addFunction("entityModelLoadDepthFailMat", &Editor::entityModelLoadDepthFailMat)
-		.addFunction("entityModelLoadAnimation", &Editor::entityModelLoadAnimation)
-		.addFunction("entityModelCustomColor", &Editor::entityModelCustomColor)
-		.addFunction("entityModelCustomColorChannel", &Editor::entityModelCustomColorChannel)
-		.addFunction("entityLightColorR", &Editor::entityLightColorR)
-		.addFunction("entityLightColorG", &Editor::entityLightColorG)
-		.addFunction("entityLightColorB", &Editor::entityLightColorB)
-		.addFunction("entityLightIntensity", &Editor::entityLightIntensity)
-		.addFunction("entityLightRadius", &Editor::entityLightRadius)
-		.addFunction("entityLightArc", &Editor::entityLightArc)
-		.addFunction("entityLightShadow", &Editor::entityLightShadow)
-		.addFunction("entityLightShape", &Editor::entityLightShape)
-		.addFunction("entityCameraClipNear", &Editor::entityCameraClipNear)
-		.addFunction("entityCameraClipFar", &Editor::entityCameraClipFar)
-		.addFunction("entityCameraWinX", &Editor::entityCameraWinX)
-		.addFunction("entityCameraWinY", &Editor::entityCameraWinY)
-		.addFunction("entityCameraWinW", &Editor::entityCameraWinW)
-		.addFunction("entityCameraWinH", &Editor::entityCameraWinH)
-		.addFunction("entityCameraFOV", &Editor::entityCameraFOV)
-		.addFunction("entityCameraOrtho", &Editor::entityCameraOrtho)
-		.addFunction("entitySpeakerDefaultSound", &Editor::entitySpeakerDefaultSound)
-		.addFunction("entitySpeakerDefaultRange", &Editor::entitySpeakerDefaultRange)
-		.addFunction("entitySpeakerDefaultLoop", &Editor::entitySpeakerDefaultLoop)
-		.addFunction("entityCharacterHp", &Editor::entityCharacterHp)
-		.addFunction("entityCharacterMp", &Editor::entityCharacterMp)
-		.addFunction("entityCharacterSex", &Editor::entityCharacterSex)
-		.addFunction("entityCharacterLevel", &Editor::entityCharacterLevel)
-		.addFunction("entityCharacterXp", &Editor::entityCharacterXp)
-		.addFunction("entityCharacterHunger", &Editor::entityCharacterHunger)
-		.addFunction("entityCharacterNanoMatter", &Editor::entityCharacterNanoMatter)
-		.addFunction("entityCharacterBioMatter", &Editor::entityCharacterBioMatter)
-		.addFunction("entityCharacterNeuroThread", &Editor::entityCharacterNeuroThread)
-		.addFunction("entityCharacterGold", &Editor::entityCharacterGold)
-		.addFunction("entityCharacterStrength", &Editor::entityCharacterStrength)
-		.addFunction("entityCharacterDexterity", &Editor::entityCharacterDexterity)
-		.addFunction("entityCharacterIntelligence", &Editor::entityCharacterIntelligence)
-		.addFunction("entityCharacterConstitution", &Editor::entityCharacterConstitution)
-		.addFunction("entityCharacterPerception", &Editor::entityCharacterPerception)
-		.addFunction("entityCharacterCharisma", &Editor::entityCharacterCharisma)
-		.addFunction("entityCharacterLuck", &Editor::entityCharacterLuck)
-		.addFunction("entityComponentExpand", &Editor::entityComponentExpand)
-		.addFunction("entityComponentCollapse", &Editor::entityComponentCollapse)
-		.addFunction("entityComponentName", &Editor::entityComponentName)
-		.addFunction("entityComponentTranslate", &Editor::entityComponentTranslate)
-		.addFunction("entityComponentRotate", &Editor::entityComponentRotate)
-		.addFunction("entityComponentScale", &Editor::entityComponentScale)
-		.addFunction("widgetTranslateX", &Editor::widgetTranslateX)
-		.addFunction("widgetTranslateY", &Editor::widgetTranslateY)
-		.addFunction("widgetTranslateZ", &Editor::widgetTranslateZ)
-		.addFunction("widgetRotateYaw", &Editor::widgetRotateYaw)
-		.addFunction("widgetRotatePitch", &Editor::widgetRotatePitch)
-		.addFunction("widgetRotateRoll", &Editor::widgetRotateRoll)
-		.addFunction("widgetScaleX", &Editor::widgetScaleX)
-		.addFunction("widgetScaleY", &Editor::widgetScaleY)
-		.addFunction("widgetScaleZ", &Editor::widgetScaleZ)
-		.addFunction("getEditingMode", &Editor::getEditingMode)
-		.addFunction("getHighlightedObj", &Editor::getHighlightedObj)
-		.addFunction("getWidgetMode", &Editor::getWidgetMode)
-		.addFunction("buttonEntityProperties", &Editor::buttonEntityProperties)
-		.addFunction("buttonEntityAddComponent", &Editor::buttonEntityAddComponent)
-		.addFunction("buttonNewConfirm", &Editor::buttonNewConfirm)
-		.addFunction("buttonNew", &Editor::buttonNew)
-		.addFunction("buttonSave", &Editor::buttonSave)
-		.addFunction("buttonLoad", &Editor::buttonLoad)
-		.addFunction("buttonEditorSettings", &Editor::buttonEditorSettings)
-		.addFunction("buttonEditorSettingsApply", &Editor::buttonEditorSettingsApply)
-		.addFunction("buttonMapSettings", &Editor::buttonMapSettings)
-		.addFunction("buttonMapSettingsApply", &Editor::buttonMapSettingsApply)
-		.addFunction("buttonHelp", &Editor::buttonHelp)
-		.addFunction("buttonWorldRotate", &Editor::buttonWorldRotate)
-		.addFunction("playSound", &Editor::playSound)
-		.addFunction("optimizeChunks", &Editor::optimizeChunks)
-		.endClass()
-	;
-
-	editor = &_editor;
-	luabridge::push(lua, editor);
-	lua_setglobal(lua, "editor");
-}
-
-void Script::exposeServer() {
-	exposeGame();
-
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<Server, Game>("Server")
-		.endClass()
-	;
-
-	if( server ) {
-		luabridge::push(lua, server);
-		lua_setglobal(lua, "server");
-	}
-}
-
-void Script::exposeWorld() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<World>("World")
-		.addFunction("getTicks", &World::getTicks)
-		.addFunction("getFilename", &World::getFilename)
-		.addFunction("getNameStr", &World::getNameStr)
-		.addFunction("isClientObj", &World::isClientObj)
-		.addFunction("isServerObj", &World::isServerObj)
-		.addFunction("isShowTools", &World::isShowTools)
-		.addFunction("uidToEntity", &World::uidToEntity)
-		.addFunction("lineTrace", &World::lineTrace)
-		.addFunction("lineTraceList", &World::lineTraceList)
-		.addFunction("lineTraceNoEntities", &World::lineTraceNoEntities)
-		.addFunction("saveFile", &World::saveFile)
-		.addFunction("setShowTools", &World::setShowTools)
-		.addFunction("selectEntity", &World::selectEntity)
-		.addFunction("selectEntities", &World::selectEntities)
-		.addFunction("deselectGeometry", &World::deselectGeometry)
-		.endClass()
-	;
-
-	if( world ) {
-		luabridge::push(lua, world);
-		lua_setglobal(lua, "world");
+template <typename T>
+void Field::addParam(T param)
+{
+	if (nullptr == parent)
+	{
+		assert(0);
+		return;
 	}
 
-	LinkedList<World*>::exposeToScript(lua, "LinkedListWorldPtr", "NodeWorldPtr");
-	ArrayList<World*>::exposeToScript(lua, "ArrayListWorldPtr");
-}
-
-void Script::exposeEntity() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Entity>("Entity")
-		.addFunction("getName", &Entity::getName)
-		.addFunction("getUID", &Entity::getUID)
-		.addFunction("getTicks", &Entity::getTicks)
-		.addFunction("getPos", &Entity::getPos)
-		.addFunction("getVel", &Entity::getVel)
-		.addFunction("getAng", &Entity::getAng)
-		.addFunction("getRot", &Entity::getRot)
-		.addFunction("getScale", &Entity::getScale)
-		.addFunction("getScriptStr", &Entity::getScriptStr)
-		.addFunction("isToBeDeleted", &Entity::isToBeDeleted)
-		.addFunction("getFlags", &Entity::getFlags)
-		.addFunction("setKeyValue", &Entity::setKeyValue)
-		.addFunction("deleteKeyValue", &Entity::deleteKeyValue)
-		.addFunction("getKeyValueAsString", &Entity::getKeyValueAsString)
-		.addFunction("getKeyValueAsFloat", &Entity::getKeyValueAsFloat)
-		.addFunction("getKeyValueAsInt", &Entity::getKeyValueAsInt)
-		.addFunction("getKeyValue", &Entity::getKeyValue)
-		.addFunction("isFlag", &Entity::isFlag)
-		.addFunction("isFalling", &Entity::isFalling)
-		.addFunction("getLastUpdate", &Entity::getLastUpdate)
-		.addFunction("getDefName", &Entity::getDefName)
-		.addFunction("getSort", &Entity::getSort)
-		.addFunction("isSelected", &Entity::isSelected)
-		.addFunction("isHighlighted", &Entity::isHighlighted)
-		.addFunction("setName", &Entity::setName)
-		.addFunction("setFlags", &Entity::setFlags)
-		.addFunction("setFlag", &Entity::setFlag)
-		.addFunction("resetFlag", &Entity::resetFlag)
-		.addFunction("toggleFlag", &Entity::toggleFlag)
-		.addFunction("setPos", &Entity::setPos)
-		.addFunction("setVel", &Entity::setVel)
-		.addFunction("setAng", &Entity::setAng)
-		.addFunction("setRot", &Entity::setRot)
-		.addFunction("setScale", &Entity::setScale)
-		.addFunction("setScriptStr", &Entity::setScriptStr)
-		.addFunction("setSelected", &Entity::setSelected)
-		.addFunction("setHighlighted", &Entity::setHighlighted)
-		.addFunction("setFalling", &Entity::setFalling)
-		.addFunction("remove", &Entity::remove)
-		.addFunction("animate", &Entity::animate)
-		.addFunction("isNearCharacter", &Entity::isNearCharacter)
-		.addFunction("isCrouching", &Entity::isCrouching)
-		.addFunction("isMoving", &Entity::isMoving)
-		.addFunction("hasJumped", &Entity::hasJumped)
-		.addFunction("getLookDir", &Entity::getLookDir)
-		.addFunction("checkCollision", &Entity::checkCollision)
-		.addFunction("copy", &Entity::copy)
-		.addFunction("update", &Entity::update)
-		.addFunction("hasComponent", &Entity::hasComponent)
-		.addFunction("removeComponentByName", &Entity::removeComponentByName)
-		.addFunction("removeComponentByUID", &Entity::removeComponentByUID)
-		.addFunction("addComponent", &Entity::addComponent<Component>)
-		.addFunction("addBBox", &Entity::addComponent<BBox>)
-		.addFunction("addModel", &Entity::addComponent<Model>)
-		.addFunction("addCamera", &Entity::addComponent<Camera>)
-		.addFunction("addLight", &Entity::addComponent<Light>)
-		.addFunction("addSpeaker", &Entity::addComponent<Speaker>)
-		.addFunction("addCharacter", &Entity::addComponent<Character>)
-		.addFunction("findComponentByName", &Entity::findComponentByName<Component>)
-		.addFunction("findBBoxByName", &Entity::findComponentByName<BBox>)
-		.addFunction("findModelByName", &Entity::findComponentByName<Model>)
-		.addFunction("findLightByName", &Entity::findComponentByName<Light>)
-		.addFunction("findCameraByName", &Entity::findComponentByName<Camera>)
-		.addFunction("findSpeakerByName", &Entity::findComponentByName<Speaker>)
-		.addFunction("findCharacterByName", &Entity::findComponentByName<Character>)
-		.addFunction("lineTrace", &Entity::lineTrace)
-		.addFunction("findAPath", &Entity::findAPath)
-		.addFunction("findRandomPath", &Entity::findRandomPath)
-		.addFunction("pathFinished", &Entity::pathFinished)
-		.addFunction("hasPath", &Entity::hasPath)
-		.addFunction("getPathNodePosition", &Entity::getPathNodePosition)
-		.addFunction("getPathNodeDir", &Entity::getPathNodeDir)
-		.addFunction("getCurrentTileX", &Entity::getCurrentTileX)
-		.addFunction("getCurrentTileY", &Entity::getCurrentTileY)
-		.addFunction("getCurrentTileZ", &Entity::getCurrentTileZ)
-		.addFunction("isLocalPlayer", &Entity::isLocalPlayer)
-		.endClass()
-	;
-
-	// expose components
-	exposeComponent();
-	exposeBBox();
-	exposeModel();
-	exposeLight();
-	exposeCamera();
-	exposeSpeaker();
-	exposeCharacter();
-
-	if( entity ) {
-		luabridge::push(lua, entity);
-		lua_setglobal(lua, "entity");
+	Script* scripter = parent->getScriptEngine();
+	if (nullptr == scripter)
+	{
+		assert(0);
+		return;
 	}
 
-	LinkedList<Entity*>::exposeToScript(lua, "LinkedListEntityPtr", "NodeEntityPtr");
-	ArrayList<Entity*>::exposeToScript(lua, "ArrayListEntityPtr");
+	if (nullptr == params)
+	{
+		params = new SolScriptArgs;
+	}
+	scripter->addParam(param, *params);
 }
 
-void Script::exposeComponent() {
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Component>("Component")
-		.addFunction("getType", &Component::getType)
-		.addFunction("getParent", &Component::getParent)
-		.addFunction("isEditorOnly", &Component::isEditorOnly)
-		.addFunction("isUpdateNeeded", &Component::isUpdateNeeded)
-		.addFunction("getUID", &Component::getUID)
-		.addFunction("getName", &Component::getName)
-		.addFunction("getLocalPos", &Component::getLocalPos)
-		.addFunction("getLocalAng", &Component::getLocalAng)
-		.addFunction("getLocalScale", &Component::getLocalScale)
-		.addFunction("getGlobalPos", &Component::getGlobalPos)
-		.addFunction("getGlobalAng", &Component::getGlobalAng)
-		.addFunction("getGlobalScale", &Component::getGlobalScale)
-		.addFunction("setEditorOnly", &Component::setEditorOnly)
-		.addFunction("setName", &Component::setName)
-		.addFunction("setLocalPos", &Component::setLocalPos)
-		.addFunction("setLocalAng", &Component::setLocalAng)
-		.addFunction("setLocalScale", &Component::setLocalScale)
-		.addFunction("setLocalMat", &Component::setLocalMat)
-		.addFunction("update", &Component::update)
-		.addFunction("remove", &Component::remove)
-		.addFunction("checkCollision", &Component::checkCollision)
-		.addFunction("hasComponent", &Component::hasComponent)
-		.addFunction("removeComponentByName", &Component::removeComponentByName)
-		.addFunction("removeComponentByUID", &Component::removeComponentByUID)
-		.addFunction("addComponent", &Component::addComponent<Component>)
-		.addFunction("addBBox", &Component::addComponent<BBox>)
-		.addFunction("addModel", &Component::addComponent<Model>)
-		.addFunction("addCamera", &Component::addComponent<Camera>)
-		.addFunction("addLight", &Component::addComponent<Light>)
-		.addFunction("addSpeaker", &Component::addComponent<Speaker>)
-		.addFunction("addCharacter", &Component::addComponent<Character>)
-		.addFunction("findComponentByName", &Component::findComponentByName<Component>)
-		.addFunction("findBBoxByName", &Component::findComponentByName<BBox>)
-		.addFunction("findModelByName", &Component::findComponentByName<Model>)
-		.addFunction("findLightByName", &Component::findComponentByName<Light>)
-		.addFunction("findCameraByName", &Component::findComponentByName<Camera>)
-		.addFunction("findSpeakerByName", &Component::findComponentByName<Speaker>)
-		.addFunction("findCharacterByName", &Component::findComponentByName<Character>)
-		.addFunction("rotate", &Component::rotate)
-		.addFunction("translate", &Component::translate)
-		.addFunction("scale", &Component::scale)
-		.addFunction("revertRotation", &Component::revertRotation)
-		.addFunction("revertTranslation", &Component::revertTranslation)
-		.addFunction("revertScale", &Component::revertScale)
-		.addFunction("revertToIdentity", &Component::revertToIdentity)
-		.addFunction("shootLaser", &Component::shootLaser)
-		.endClass()
-	;
+template <typename T>
+void Frame::entry_t::addParam(T param)
+{
+	Script* scripter = parent.getScriptEngine();
+	if (nullptr == scripter)
+	{
+		assert(0);
+		return;
+	}
 
-	LinkedList<Component*>::exposeToScript(lua, "LinkedListComponentPtr", "NodeComponentPtr");
-	ArrayList<Component*>::exposeToScript(lua, "ArrayListComponentPtr");
+	if (nullptr == params)
+	{
+		params = new SolScriptArgs;
+	}
+	scripter->addParam(param, *params);
 }
 
-void Script::exposeBBox() {
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<BBox, Component>("BBox")
-		.addFunction("containsPoint", &BBox::containsPoint)
-		.addFunction("nearestCeiling", &BBox::nearestCeiling)
-		.addFunction("nearestFloor", &BBox::nearestFloor)
-		.addFunction("distToCeiling", &BBox::distToCeiling)
-		.addFunction("distToFloor", &BBox::distToFloor)
-		.addFunction("getShape", &BBox::getShape)
-		.addFunction("isEnabled", &BBox::isEnabled)
-		.addFunction("setEnabled", &BBox::setEnabled)
-		.addFunction("setShape", &BBox::setShape)
-		.addFunction("findAllOverlappingEntities", &BBox::findAllOverlappingEntities)
-		.endClass()
-	;
-
-	LinkedList<BBox*>::exposeToScript(lua, "LinkedListBBoxPtr", "NodeBBoxPtr");
-	ArrayList<BBox*>::exposeToScript(lua, "ArrayListBBoxPtr");
-}
-
-void Script::exposeModel() {
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<Model, Component>("Model")
-		.addFunction("findBone", &Model::findBone)
-		.addFunction("findAnimation", &Model::findAnimation)
-		.addFunction("animate", &Model::animate)
-		.addFunction("hasAnimations", &Model::hasAnimations)
-		.addFunction("getMesh", &Model::getMesh)
-		.addFunction("getMaterial", &Model::getMaterial)
-		.addFunction("getDepthFailMat", &Model::getDepthFailMat)
-		.addFunction("getAnimation", &Model::getAnimation)
-		.addFunction("getShaderVars", &Model::getShaderVars)
-		.addFunction("getAnimTicks", &Model::getAnimTicks)
-		.addFunction("isAnimDone", &Model::isAnimDone)
-		.addFunction("getAnimationSpeed", &Model::getAnimationSpeed)
-		.addFunction("setMesh", &Model::setMesh)
-		.addFunction("setMaterial", &Model::setMaterial)
-		.addFunction("setDepthFailMat", &Model::setDepthFailMat)
-		.addFunction("setAnimation", &Model::setAnimation)
-		.addFunction("setShaderVars", &Model::setShaderVars)
-		.addFunction("setAnimationSpeed", &Model::setAnimationSpeed)
-		.addFunction("updateSkin", &Model::updateSkin)
-		.addFunction("getCurrentAnimation", &Model::getCurrentAnimation)
-		.addFunction("getPreviousAnimation", &Model::getPreviousAnimation)
-		.endClass()
-	;
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<AnimationState>("AnimationState")
-		.addFunction("getName", &AnimationState::getName)
-		.addFunction("getTicks", &AnimationState::getTicks)
-		.addFunction("getTicksRate", &AnimationState::getTicksRate)
-		.addFunction("getBegin", &AnimationState::getBegin)
-		.addFunction("getEnd", &AnimationState::getEnd)
-		.addFunction("getLength", &AnimationState::getLength)
-		.addFunction("getWeight", &AnimationState::getWeight)
-		.addFunction("getWeightRate", &AnimationState::getWeightRate)
-		.addFunction("isLoop", &AnimationState::isLoop)
-		.addFunction("isFinished", &AnimationState::isFinished)
-		.addFunction("setTicks", &AnimationState::setTicks)
-		.addFunction("setTicksRate", &AnimationState::setTicksRate)
-		.addFunction("setWeight", &AnimationState::setWeight)
-		.addFunction("setWeightRate", &AnimationState::setWeightRate)
-		.addFunction("setWeights", &AnimationState::setWeights)
-		.addFunction("setWeightRates", &AnimationState::setWeightRates)
-		.addFunction("clearWeights", &AnimationState::clearWeights)
-		.endClass()
-	;
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Model::bone_t>("bone_t")
-		.addData("valid", &Model::bone_t::valid, true)
-		.addData("name", &Model::bone_t::name, true)
-		.addData("mat", &Model::bone_t::mat, true)
-		.addData("pos", &Model::bone_t::pos, true)
-		.addData("ang", &Model::bone_t::ang, true)
-		.addData("scale", &Model::bone_t::scale, true)
-		.endClass()
-	;
-
-	LinkedList<Model*>::exposeToScript(lua, "LinkedListModelPtr", "NodeModelPtr");
-	ArrayList<Model*>::exposeToScript(lua, "ArrayListModelPtr");
-}
-
-void Script::exposeLight() {
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<Light, Component>("Light")
-		.addFunction("getColor", &Light::getColor)
-		.addFunction("getIntensity", &Light::getIntensity)
-		.addFunction("getRadius", &Light::getRadius)
-		.addFunction("getArc", &Light::getArc)
-		.addFunction("isShadow", &Light::isShadow)
-		.addFunction("setColor", &Light::setColor)
-		.addFunction("setIntensity", &Light::setIntensity)
-		.addFunction("setRadius", &Light::setRadius)
-		.addFunction("setShape", &Light::setShape)
-		.addFunction("setArc", &Light::setArc)
-		.addFunction("setShadow", &Light::setShadow)
-		.endClass()
-	;
-
-	LinkedList<Light*>::exposeToScript(lua, "LinkedListLightPtr", "NodeLightPtr");
-	ArrayList<Light*>::exposeToScript(lua, "ArrayListLightPtr");
-}
-
-void Script::exposeCamera() {
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<Camera, Component>("Camera")
-		.addFunction("setupProjection", &Camera::setupProjection)
-		.addFunction("worldPosToScreenPos", &Camera::worldPosToScreenPos)
-		.addFunction("screenPosToWorldRay", &Camera::screenPosToWorldRay)
-		.addFunction("getClipNear", &Camera::getClipNear)
-		.addFunction("getClipFar", &Camera::getClipFar)
-		.addFunction("getWin", &Camera::getWin)
-		.addFunction("getFov", &Camera::getFov)
-		.addFunction("isOrtho", &Camera::isOrtho)
-		.addFunction("setClipNear", &Camera::setClipNear)
-		.addFunction("setClipFar", &Camera::setClipFar)
-		.addFunction("setWin", &Camera::setWin)
-		.addFunction("setFov", &Camera::setFov)
-		.addFunction("setOrtho", &Camera::setOrtho)
-		.endClass()
-	;
-
-	LinkedList<Camera*>::exposeToScript(lua, "LinkedListCameraPtr", "NodeCameraPtr");
-	ArrayList<Camera*>::exposeToScript(lua, "ArrayListCameraPtr");
-}
-
-void Script::exposeSpeaker() {
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<Speaker, Component>("Speaker")
-		.addFunction("playSound", &Speaker::playSound)
-		.addFunction("stopSound", &Speaker::stopSound)
-		.addFunction("stopAllSounds", &Speaker::stopAllSounds)
-		.addFunction("getDefaultSound", &Speaker::getDefaultSound)
-		.addFunction("getDefaultRange", &Speaker::getDefaultRange)
-		.addFunction("isDefaultLoop", &Speaker::isDefaultLoop)
-		.endClass()
-	;
-
-	LinkedList<Speaker*>::exposeToScript(lua, "LinkedListSpeakerPtr", "NodeSpeakerPtr");
-	ArrayList<Speaker*>::exposeToScript(lua, "ArrayListSpeakerPtr");
-}
-
-void Script::exposeCharacter() {
-	luabridge::getGlobalNamespace(lua)
-		.deriveClass<Character, Component>("Character")
-		.addFunction("getHp", &Character::getHp)
-		.addFunction("getMp", &Character::getMp)
-		.addFunction("getSex", &Character::getSex)
-		.addFunction("getLevel", &Character::getLevel)
-		.addFunction("getXp", &Character::getXp)
-		.addFunction("getHunger", &Character::getHunger)
-		.addFunction("getNanoMatter", &Character::getNanoMatter)
-		.addFunction("getBioMatter", &Character::getBioMatter)
-		.addFunction("getNeuroThread", &Character::getNeuroThread)
-		.addFunction("getGold", &Character::getGold)
-		.addFunction("getStrength", &Character::getStrength)
-		.addFunction("getDexterity", &Character::getDexterity)
-		.addFunction("getIntelligence", &Character::getIntelligence)
-		.addFunction("getConstitution", &Character::getConstitution)
-		.addFunction("getPerception", &Character::getPerception)
-		.addFunction("getCharisma", &Character::getCharisma)
-		.addFunction("getLuck", &Character::getLuck)
-		.addFunction("setHp", &Character::setHp)
-		.addFunction("setMp", &Character::setMp)
-		.addFunction("setSex", &Character::setSex)
-		.addFunction("setLevel", &Character::setLevel)
-		.addFunction("setXp", &Character::setXp)
-		.addFunction("setHunger", &Character::setHunger)
-		.addFunction("setNanoMatter", &Character::setNanoMatter)
-		.addFunction("setBioMatter", &Character::setBioMatter)
-		.addFunction("setNeuroThread", &Character::setNeuroThread)
-		.addFunction("setGold", &Character::setGold)
-		.addFunction("setStrength", &Character::setStrength)
-		.addFunction("setDexterity", &Character::setDexterity)
-		.addFunction("setIntelligence", &Character::setIntelligence)
-		.addFunction("setConstitution", &Character::setConstitution)
-		.addFunction("setPerception", &Character::setPerception)
-		.addFunction("setCharisma", &Character::setCharisma)
-		.addFunction("setLuck", &Character::setLuck)
-		.endClass()
-	;
-
-	LinkedList<Character*>::exposeToScript(lua, "LinkedListCharacterPtr", "NodeCharacterPtr");
-	ArrayList<Character*>::exposeToScript(lua, "ArrayListCharacterPtr");
-}
-
-void Script::exposeEmitter() {
-	// todo
-}

@@ -158,7 +158,7 @@ void Entity::addToEditorList() {
 
 				Frame::entry_t* entry = levelList->addEntry("entity",true);
 				entry->text = name.get();
-				entry->params.addInt(uid);
+				entry->addParam(uid);
 				if( selected ) {
 					entry->color = glm::vec4(1.f,0.f,0.f,1.f);
 				} else if( highlighted ) {
@@ -209,7 +209,7 @@ void Entity::insertIntoWorld(World* _world) {
 			path.format("scripts/server/entities/%s.lua", scriptStr.get());
 		}
 		script->load(path.get());
-		script->dispatch("init");
+		script->dispatchFunction("init");
 	}
 }
 
@@ -391,9 +391,9 @@ void Entity::process() {
 			if( !ranScript ) {
 				ranScript = true;
 				script->load(path.get());
-				script->dispatch("init");
+				script->dispatchFunction("init");
 			} else {
-				script->dispatch("process");
+				script->dispatchFunction("process");
 				processed = true;
 			}
 		}
@@ -444,7 +444,7 @@ void Entity::process() {
 				path.format("scripts/server/entities/%s.lua", scriptStr.get());
 			}
 
-			script->dispatch("postprocess");
+			script->dispatchFunction("postprocess");
 		}
 	}
 }
@@ -823,10 +823,7 @@ bool Entity::interact(Entity& user)
 		return false;
 	}
 
-	Script::Args args;
-	args.addPointer(&user);
-
-	return (script->dispatch("interact", &args) == 0);
+	return script->dispatchFunction("interact", user);
 }
 
 void Entity::serialize(FileInterface * file) {

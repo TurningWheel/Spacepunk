@@ -4,8 +4,11 @@
 
 #include "Main.hpp"
 
-#include <luajit-2.0/lua.hpp>
-#include <LuaBridge/LuaBridge.h>
+//Forward declare for script engine.
+namespace sol
+{
+	class state;
+}
 
 // templated ArrayList (similar to std::vector)
 // adding or removing elements can unsort the list.
@@ -297,52 +300,7 @@ public:
 	// exposes this list type to a script
 	// @param lua The script engine to expose to
 	// @param name The type name in lua
-	static void exposeToScript(lua_State* lua, const char* name) {
-		typedef T* (ArrayList<T>::*ArrayFn)();
-		ArrayFn getArray = static_cast<ArrayFn>(&ArrayList<T>::getArray);
-
-		typedef const T* (ArrayList<T>::*ArrayConstFn)() const;
-		ArrayConstFn getArrayConst = static_cast<ArrayConstFn>(&ArrayList<T>::getArray);
-
-		typedef ArrayList<T>& (ArrayList<T>::*CopyFn)(const ArrayList<T>&);
-		CopyFn copy = static_cast<CopyFn>(&ArrayList<T>::copy);
-
-		typedef T& (ArrayList<T>::*PeekFn)();
-		PeekFn peek = static_cast<PeekFn>(&ArrayList<T>::peek);
-
-		typedef const T& (ArrayList<T>::*PeekConstFn)() const;
-		PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
-
-		typedef T& (ArrayList<T>::*GetFn)(size_t);
-		GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
-
-		typedef const T& (ArrayList<T>::*GetConstFn)(size_t) const;
-		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
-
-		luabridge::getGlobalNamespace(lua)
-			.beginClass<ArrayList<T>>(name)
-			.addConstructor<void (*)()>()
-			.addFunction("getArray", getArray)
-			.addFunction("getArrayConst", getArrayConst)
-			.addFunction("getSize", &ArrayList<T>::getSize)
-			.addFunction("getMaxSize", &ArrayList<T>::getMaxSize)
-			.addFunction("empty", &ArrayList<T>::empty)
-			.addFunction("alloc", &ArrayList<T>::alloc)
-			.addFunction("resize", &ArrayList<T>::resize)
-			.addFunction("clear", &ArrayList<T>::clear)
-			.addFunction("copy", copy)
-			.addFunction("push", &ArrayList<T>::push)
-			.addFunction("insert", &ArrayList<T>::insert)
-			.addFunction("pop", &ArrayList<T>::pop)
-			.addFunction("peek", peek)
-			.addFunction("peekConst", peekConst)
-			.addFunction("remove", &ArrayList<T>::remove)
-			.addFunction("removeAndRearrange", &ArrayList<T>::removeAndRearrange)
-			.addFunction("get", get)
-			.addFunction("getConst", getConst)
-			.endClass()
-		;
-	}
+	static void exposeToScript(sol::state& lua, const char* name);
 
 private:
 	T* arr = nullptr;		// array data

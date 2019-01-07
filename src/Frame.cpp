@@ -404,8 +404,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 					if( !button.getName() || button.getName()[0] == '\0' ) {
 						mainEngine->fmsg(Engine::MSG_WARN,"unnamed button clicked in '%s' gui",name.get());
 					} else if( script ) {
-						Script::Args args(button.getParams());
-						script->dispatch(button.getName(), &args);
+						script->dispatchFunction(button.getName(), button.getParams());
 					}
 				}
 			}
@@ -414,7 +413,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 	}
 
 	if( script ) {
-		script->dispatch("process");
+		script->dispatchFunction("process");
 
 		Sint32 omousex = mainEngine->getOldMouseX();
 		Sint32 omousey = mainEngine->getOldMouseY();
@@ -449,12 +448,10 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 							if( script ) {
 								if( mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL) ) {
 									StringBuf<64> dispatch("%sCtrlClick", entry.name.get());
-									Script::Args args(entry.params);
-									script->dispatch(dispatch.get(), &args);
+									script->dispatchFunction(dispatch.get(), entry.params);
 								} else {
 									StringBuf<64> dispatch("%sClick", entry.name.get());
-									Script::Args args(entry.params);
-									script->dispatch(dispatch.get(), &args);
+									script->dispatchFunction(dispatch.get(), entry.params);
 								}
 							}
 						}
@@ -462,13 +459,11 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 						entry.pressed = false;
 						if( script ) {
 							StringBuf<64> dispatch("%sHighlighting", entry.name.get());
-							Script::Args args(entry.params);
-							script->dispatch(dispatch.get(), &args);
+							script->dispatchFunction(dispatch.get(), entry.params);
 							if( !entry.highlighted ) {
 								entry.highlighted = true;
 								StringBuf<64> dispatch("%sHighlight", entry.name.get());
-								Script::Args args(entry.params);
-								script->dispatch(dispatch.get(), &args);
+								script->dispatchFunction(dispatch.get(), entry.params);
 							}
 						}
 					}
@@ -526,9 +521,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 					if( !field.getName() || field.getName()[0] == '\0' ) {
 						mainEngine->fmsg(Engine::MSG_WARN,"unnamed field returned in '%s' gui",name.get());
 					} else if( script ) {
-						Script::Args args(field.getParams());
-						args.addString(field.getText());
-						script->dispatch(field.getName(), &args);
+						script->dispatchFunction(field.getName(), field.getParams(), field.getText());
 					}
 				}
 			}
@@ -658,7 +651,7 @@ Frame::image_t* Frame::addImage( int x, int y, const glm::vec4& color, const cha
 }
 
 Frame::entry_t* Frame::addEntry( const char* name, bool resizeFrame ) {
-	entry_t* entry = new entry_t();
+	entry_t* entry = new entry_t(*this);
 	entry->name = name;
 	entry->color = glm::vec4(1.f);
 	entry->image = nullptr;

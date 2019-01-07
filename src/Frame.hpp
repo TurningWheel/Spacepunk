@@ -37,19 +37,26 @@ public:
 
 	// frame list entry
 	struct entry_t {
+		entry_t(Frame& parent)
+				:	parent(parent)
+		{ }
 		~entry_t();
 
 		StringBuf<32> name;
 		String text;
-		Script::Args params;
+		SolScriptArgs* params;
 		glm::vec4 color;
 		Image* image = nullptr;
 		bool pressed = false;
 		bool highlighted = false;
 		Uint32 highlightTime = 0;
 		bool suicide = false;
+		Frame& parent;
 
 		std::shared_ptr<Entity::listener_t> listener;
+
+		template <typename T>
+		void addParam(T param);
 	};
 
 	// frame processing result structure
@@ -187,6 +194,7 @@ public:
 	LinkedList<Field*>&		getFields()				{ return fields; }
 	LinkedList<Button*>&		getButtons()			{ return buttons; }
 	LinkedList<entry_t*>&		getEntries()			{ return list; }
+	Script*				getScriptEngine()		{ return script; }
 	const bool			isDisabled() const		{ return disabled; }
 	const bool			isHollow() const		{ return hollow; }
 

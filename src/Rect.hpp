@@ -5,6 +5,12 @@
 
 #include "File.hpp"
 
+//Forward declare for script engine.
+namespace sol
+{
+	class state;
+}
+
 template <typename T>
 struct Rect {
 	T x=0, y=0, w=0, h=0;
@@ -54,16 +60,5 @@ struct Rect {
 	// exposes this rect type to a script
 	// @param lua The script engine to expose to
 	// @param name The type name in lua
-	static void exposeToScript(lua_State* lua, const char* name) {
-		luabridge::getGlobalNamespace(lua)
-			.beginClass<Rect<T>>(name)
-			.addConstructor<void (*)(T, T, T, T)>()
-			.addData("x", &Rect<T>::x, true)
-			.addData("y", &Rect<T>::y, true)
-			.addData("w", &Rect<T>::w, true)
-			.addData("h", &Rect<T>::h, true)
-			.addFunction("containsPoint", &Rect<T>::containsPoint)
-			.endClass()
-		;
-	}
+	static void exposeToScript(sol::state& lua, const char* name);
 };

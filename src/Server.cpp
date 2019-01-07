@@ -23,7 +23,7 @@ Server::~Server() {
 
 	// free script engine
 	if( script ) {
-		script->dispatch("term");
+		script->dispatchFunction("term");
 		delete script;
 	}
 }
@@ -33,7 +33,7 @@ void Server::init() {
 	net->host(Net::defaultPort);
 
 	script->load("scripts/server/main.lua");
-	script->dispatch("init");
+	script->dispatchFunction("init");
 
 	// start a playtest
 	if( mainEngine->isPlayTest() ) {
@@ -484,7 +484,7 @@ void Server::onDisconnect(Uint32 remoteID) {
 
 void Server::preProcess() {
 	if( framesToRun ) {
-		script->dispatch("preprocess");
+		script->dispatchFunction("preprocess");
 	}
 
 	handleNetMessages();
@@ -496,7 +496,7 @@ void Server::process() {
 	Game::process();
 
 	for( Uint32 frame=0; frame<framesToRun; ++frame ) {
-		script->dispatch("process");
+		script->dispatchFunction("process");
 	}
 }
 
@@ -504,7 +504,7 @@ void Server::postProcess() {
 	Game::postProcess();
 
 	if( framesToRun ) {
-		script->dispatch("postprocess");
+		script->dispatchFunction("postprocess");
 
 		// send entity updates to client
 		if( net->isConnected() ) {

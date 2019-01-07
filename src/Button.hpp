@@ -14,6 +14,8 @@ class Renderer;
 class Frame;
 class Image;
 
+struct SolScriptArgs;
+
 class Button {
 public:
 	Button();
@@ -58,7 +60,7 @@ public:
 	const bool			isHighlighted() const	{ return highlighted; }
 	const bool			isDisabled() const		{ return disabled; }
 	const style_t		getStyle() const		{ return style; }
-	Script::Args&		getParams()				{ return params; }
+	const SolScriptArgs*	getParams() const	{ return params; }
 
 	void	setBorder(const int _border)				{ border = _border; }
 	void	setPos(const int x, const int y)			{ size.x = x; size.y = y; }
@@ -73,23 +75,27 @@ public:
 	void	setStyle(const style_t _style)				{ style = _style; }
 	void	setPressed(const bool _pressed)				{ reallyPressed = _pressed; }
 
-private:
-	Frame* parent = nullptr;		// parent frame
+	template<typename T>
+	void	addParam(T param);
 
-	String name;					// internal button name
-	String text;					// button text, if any
-	String icon;					// icon, if any (supersedes text content)
-	String tooltip;					// if empty, button has no tooltip; otherwise, it does
-	Script::Args params;			// optional function parameters to use when the button function is called	
-	int border = 3;					// size of the button border in pixels
-	Rect<int> size;					// size and position of the button within its parent frame
-	bool pressed = false;			// button pressed state
-	bool reallyPressed = false;		// the "actual" button state, pre-mouse process
-	bool highlighted = true;		// true if mouse is hovering over button; false otherwise
-	glm::vec4 color;				// the button's color
-	glm::vec4 textColor;			// text color
-	style_t style = STYLE_NORMAL;	// button style
-	bool disabled=false;			// if true, the button is invisible and unusable
-	Uint32 highlightTime = 0;		// records the time since the button was highlighted
-	Image* iconImg = nullptr;		// the icon image
+private:
+	Frame* parent = nullptr;			// parent frame
+
+	String name;						// internal button name
+	String text;						// button text, if any
+	String icon;						// icon, if any (supersedes text content)
+	String tooltip;						// if empty, button has no tooltip; otherwise, it does
+	//std::vector<sol::object> params;	// optional function parameters to use when the button function is called.
+	SolScriptArgs* params;				// optional function parameters to use when the button function is called.
+	int border = 3;						// size of the button border in pixels
+	Rect<int> size;						// size and position of the button within its parent frame
+	bool pressed = false;				// button pressed state
+	bool reallyPressed = false;			// the "actual" button state, pre-mouse process
+	bool highlighted = true;			// true if mouse is hovering over button; false otherwise
+	glm::vec4 color;					// the button's color
+	glm::vec4 textColor;				// text color
+	style_t style = STYLE_NORMAL;		// button style
+	bool disabled=false;				// if true, the button is invisible and unusable
+	Uint32 highlightTime = 0;			// records the time since the button was highlighted
+	Image* iconImg = nullptr;			// the icon image
 };

@@ -10,8 +10,8 @@
 #include "TileWorld.hpp"
 #include "Console.hpp"
 
-std::atomic_bool Engine::paused = false;
-std::atomic_bool Engine::timerRunning = true;
+std::atomic_bool Engine::paused(false);
+std::atomic_bool Engine::timerRunning(true);
 
 // log message code strings
 const char* Engine::msgTypeStr[Engine::MSG_TYPE_LENGTH] = {
