@@ -506,7 +506,7 @@ void World::process() {
 			if (!bbox->getParent() && bbox->getMass() != 0.f && strcmp(bbox->getName(), "physics") == 0) {
 				btTransform transform = bbox->getPhysicsTransform();
 
-				Vector pos = -bbox->getLocalPos();
+				Vector pos = static_cast<Vector>(-(bbox->getLocalPos()));
 				pos.x += transform.getOrigin().x();
 				pos.y += transform.getOrigin().y();
 				pos.z += transform.getOrigin().z();
