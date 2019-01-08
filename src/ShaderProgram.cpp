@@ -93,9 +93,9 @@ void ShaderProgram::serialize(FileInterface* file) {
 	}
 }
 
-void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights, Uint32 textureUnit) {
+Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights, Uint32 textureUnit) {
 	if (lastFrameDrawn == camera.getFramesDrawn()) {
-		return;
+		return textureUnit;
 	} else {
 		lastFrameDrawn = camera.getFramesDrawn();
 	}
@@ -123,7 +123,9 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 			glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
 			glUniformMatrix4fv(getUniformLocation(buf.format("gLightProj[%d]",(int)(index))), 1, GL_FALSE, glm::value_ptr(lightProj));
 		} else {
+			glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
 			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 		}
 
 		++index;
@@ -132,5 +134,13 @@ void ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& 
 			break;
 		}
 	}
+	for ( ; index < maxLights; ++index) {
+		glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
+		glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
+		++textureUnit;
+	}
 	glUniform1i(getUniformLocation("gNumLights"), (GLint)lights.getSize());
+
+	return textureUnit;
 }

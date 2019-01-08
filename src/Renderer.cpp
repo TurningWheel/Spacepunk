@@ -9,7 +9,7 @@
 #include "Text.hpp"
 
 // This is a little spammy at the moment
-#define REGISTER_GLDEBUG_CALLBACK 0
+#define REGISTER_GLDEBUG_CALLBACK 1
 
 #if REGISTER_GLDEBUG_CALLBACK
 
@@ -32,18 +32,25 @@ static void GLAPIENTRY onGlDebugMessageCallback(
 		logType = Engine::MSG_WARN;
 		break;
 	case GL_DEBUG_SEVERITY_LOW:
-	case GL_DEBUG_SEVERITY_NOTIFICATION:
 		logType = Engine::MSG_INFO;
 		break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		// we honestly don't care about these
+		return;
 	default:
 		return;
 	}
 
 	mainEngine->fmsg(
 		logType,
-		"GL CALLBACK: type = 0x%x, severity = 0x%x, message = %s",
+		"OpenGL: type = 0x%x, severity = 0x%x",
 		type,
-		severity,
+		severity
+	);
+
+	mainEngine->fmsg(
+		logType,
+		"%s",
 		message
 	);
 }
@@ -87,7 +94,7 @@ void Renderer::init() {
 int Renderer::initVideo() {
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
-#ifdef NDEBUG
+#ifndef BUILD_DEBUG
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
 #else
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY );
@@ -181,15 +188,17 @@ int Renderer::initVideo() {
 #endif
 
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+#ifdef BUILD_DEBUG
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
+#endif
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_MULTISAMPLE);

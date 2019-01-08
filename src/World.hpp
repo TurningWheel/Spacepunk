@@ -182,6 +182,8 @@ public:
 	Uint32						getID() const							{ return id; }
 	const filetype_t			getFiletype() const						{ return filetype; }
 	Entity*						getShadowCamera()						{ return shadowCamera; }
+	Shadow&						getDefaultShadow()						{ return defaultShadow; }
+	const Shadow&				getDefaultShadow() const				{ return defaultShadow; }
 
 	// editing properties
 	bool				isPointerActive() const				{ return pointerActive; }
@@ -245,6 +247,7 @@ protected:
 
 	// shadow map stuff
 	Entity* shadowCamera = nullptr;
+	Shadow defaultShadow;
 };
 
 extern Cvar cvar_showEdges;

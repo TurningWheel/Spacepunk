@@ -80,6 +80,7 @@ void World::initialize(bool empty) {
 	const Entity::def_t* def = Entity::findDef("Shadow Camera");
 	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Angle());
 	shadowCamera->setShouldSave(false);
+	defaultShadow.init();
 }
 
 void World::getSelectedEntities(LinkedList<Entity*>& outResult) {

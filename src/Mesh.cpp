@@ -295,10 +295,17 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 			if( component.getEntity()->isFlag(Entity::flag_t::FLAG_FULLYLIT) || camera.getDrawMode() == Camera::DRAW_GLOW || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_FALSE);
 				glUniform1i(shader.getUniformLocation("gNumLights"), 0);
+				StringBuf<32> buf;
+				for ( int index = 0; index < maxLights; ++textureUnit, ++index) {
+					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
+					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
+				}
 			} else {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
+				int oldTextureUnit = textureUnit;
 				if( lights.getSize() ) {
-					shader.uploadLights(camera, lights, maxLights, textureUnit);
+					textureUnit = shader.uploadLights(camera, lights, maxLights, textureUnit);
 				} else if( editor ) {
 					glUniform3fv(shader.getUniformLocation("gLightPos[0]"), 1, glm::value_ptr(cameraPos));
 					glUniform3fv(shader.getUniformLocation("gLightColor[0]"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));
@@ -310,6 +317,12 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 					glUniform1i(shader.getUniformLocation("gNumLights"), 1);
 				} else {
 					glUniform1i(shader.getUniformLocation("gNumLights"), 0);
+				}
+				StringBuf<32> buf;
+				for ( int index = textureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
+					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
+					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 				}
 			}
 		}

@@ -34,7 +34,8 @@ public:
 	// @param lights The lights to upload
 	// @param maxLights Maximum number of lights that can be uploaded
 	// @param textureUnit First available texture unit for shadow maps
-	void uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights, Uint32 textureUnit);
+	// @return The first available texture unit after shadow maps
+	Uint32 uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights, Uint32 textureUnit);
 
 	// links all of the shader objects
 	// @return 0 on success, or non-zero on error
