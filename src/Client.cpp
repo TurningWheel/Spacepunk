@@ -30,7 +30,7 @@ Client::Client() {
 
 Client::~Client() {
 	if( script ) {
-		script->dispatch("term");
+		script->dispatchFunction("term");
 		delete script;
 	}
 	if( gui ) {
@@ -67,7 +67,7 @@ void Client::init() {
 	}
 
 	script->load("scripts/client/main.lua");
-	script->dispatch("init");
+	script->dispatchFunction("init");
 }
 
 void Client::handleNetMessages() {
@@ -681,7 +681,7 @@ void Client::preProcess() {
 	}
 	if( framesToRun ) {
 		renderer->clearBuffers();
-		script->dispatch("preprocess");
+		script->dispatchFunction("preprocess");
 
 		if( editor ) {
 			editor->preProcess();
@@ -706,7 +706,7 @@ void Client::process() {
 	Game::process();
 
 	for( Uint32 frame=0; frame<framesToRun; ++frame ) {
-		script->dispatch("process");
+		script->dispatchFunction("process");
 
 		// drop down console
 		if( consoleAllowed ) {
@@ -877,7 +877,7 @@ void Client::postProcess() {
 		renderer->swapWindow();
 
 		// run script
-		script->dispatch("postprocess");
+		script->dispatchFunction("postprocess");
 
 		if( editor ) {
 			editor->postProcess();

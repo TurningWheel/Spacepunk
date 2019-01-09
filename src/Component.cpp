@@ -809,3 +809,64 @@ void Component::shootLaser(const WideVector& color, float size, float life) {
 	end = hit.pos;
 	world->addLaser(start, end, color, size, life);
 }
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeComponent() {
+	{
+		auto componentType = lua.create_simple_usertype<Component>(sol::constructors<Component(Entity&, Component*)>());
+
+		//Bind all of the component's member functions.
+		componentType.set("getType", &Component::getType);
+		componentType.set("getParent", &Component::getParent);
+		componentType.set("isEditorOnly", &Component::isEditorOnly);
+		componentType.set("isUpdateNeeded", &Component::isUpdateNeeded);
+		componentType.set("getUID", &Component::getUID);
+		componentType.set("getName", &Component::getName);
+		componentType.set("getLocalPos", &Component::getLocalPos);
+		componentType.set("getLocalAng", &Component::getLocalAng);
+		componentType.set("getLocalScale", &Component::getLocalScale);
+		componentType.set("getGlobalPos", &Component::getGlobalPos);
+		componentType.set("getGlobalAng", &Component::getGlobalAng);
+		componentType.set("getGlobalScale", &Component::getGlobalScale);
+		componentType.set("setEditorOnly", &Component::setEditorOnly);
+		componentType.set("setName", &Component::setName);
+		componentType.set("setLocalPos", &Component::setLocalPos);
+		componentType.set("setLocalAng", &Component::setLocalAng);
+		componentType.set("setLocalScale", &Component::setLocalScale);
+		componentType.set("setLocalMat", &Component::setLocalMat);
+		componentType.set("update", &Component::update);
+		componentType.set("remove", &Component::remove);
+		componentType.set("checkCollision", &Component::checkCollision);
+		componentType.set("hasComponent", &Component::hasComponent);
+		componentType.set("removeComponentByName", &Component::removeComponentByName);
+		componentType.set("removeComponentByUID", &Component::removeComponentByUID);
+		componentType.set("addComponent", &Component::addComponent<Component>);
+		componentType.set("addBBox", &Component::addComponent<BBox>);
+		componentType.set("addModel", &Component::addComponent<Model>);
+		componentType.set("addCamera", &Component::addComponent<Camera>);
+		componentType.set("addLight", &Component::addComponent<Light>);
+		componentType.set("addSpeaker", &Component::addComponent<Speaker>);
+		componentType.set("addCharacter", &Component::addComponent<Character>);
+		componentType.set("findComponentByName", &Component::findComponentByName<Component>);
+		componentType.set("findBBoxByName", &Component::findComponentByName<BBox>);
+		componentType.set("findModelByName", &Component::findComponentByName<Model>);
+		componentType.set("findLightByName", &Component::findComponentByName<Light>);
+		componentType.set("findCameraByName", &Component::findComponentByName<Camera>);
+		componentType.set("findSpeakerByName", &Component::findComponentByName<Speaker>);
+		componentType.set("findCharacterByName", &Component::findComponentByName<Character>);
+		componentType.set("rotate", &Component::rotate);
+		componentType.set("translate", &Component::translate);
+		componentType.set("scale", &Component::scale);
+		componentType.set("revertRotation", &Component::revertRotation);
+		componentType.set("revertTranslation", &Component::revertTranslation);
+		componentType.set("revertScale", &Component::revertScale);
+		componentType.set("revertToIdentity", &Component::revertToIdentity);
+		componentType.set("shootLaser", &Component::shootLaser);
+
+		//Finally register the thing.
+		lua.set_usertype("Component", componentType);
+	}
+
+	LinkedList<Component*>::exposeToScript(lua, "LinkedListComponentPtr", "NodeComponentPtr");
+	ArrayList<Component*>::exposeToScript(lua, "ArrayListComponentPtr");
+}

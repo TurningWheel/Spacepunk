@@ -114,3 +114,54 @@ void Character::serialize(FileInterface * file) {
 	file->property("charisma", charisma);
 	file->property("luck", luck);
 }
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeCharacter() {
+	{
+		auto characterType = lua.create_simple_usertype<Character>(sol::constructors<Character(Entity&, Component*)>(),
+			sol::base_classes, sol::bases<Component>()
+		);
+
+		//Bind all of the editor's member functions.
+		characterType.set("getHp", &Character::getHp);
+		characterType.set("getMp", &Character::getMp);
+		characterType.set("getSex", &Character::getSex);
+		characterType.set("getLevel", &Character::getLevel);
+		characterType.set("getXp", &Character::getXp);
+		characterType.set("getHunger", &Character::getHunger);
+		characterType.set("getNanoMatter", &Character::getNanoMatter);
+		characterType.set("getBioMatter", &Character::getBioMatter);
+		characterType.set("getNeuroThread", &Character::getNeuroThread);
+		characterType.set("getGold", &Character::getGold);
+		characterType.set("getStrength", &Character::getStrength);
+		characterType.set("getDexterity", &Character::getDexterity);
+		characterType.set("getIntelligence", &Character::getIntelligence);
+		characterType.set("getConstitution", &Character::getConstitution);
+		characterType.set("getPerception", &Character::getPerception);
+		characterType.set("getCharisma", &Character::getCharisma);
+		characterType.set("getLuck", &Character::getLuck);
+		characterType.set("setHp", &Character::setHp);
+		characterType.set("setMp", &Character::setMp);
+		characterType.set("setSex", &Character::setSex);
+		characterType.set("setLevel", &Character::setLevel);
+		characterType.set("setXp", &Character::setXp);
+		characterType.set("setHunger", &Character::setHunger);
+		characterType.set("setNanoMatter", &Character::setNanoMatter);
+		characterType.set("setBioMatter", &Character::setBioMatter);
+		characterType.set("setNeuroThread", &Character::setNeuroThread);
+		characterType.set("setGold", &Character::setGold);
+		characterType.set("setStrength", &Character::setStrength);
+		characterType.set("setDexterity", &Character::setDexterity);
+		characterType.set("setIntelligence", &Character::setIntelligence);
+		characterType.set("setConstitution", &Character::setConstitution);
+		characterType.set("setPerception", &Character::setPerception);
+		characterType.set("setCharisma", &Character::setCharisma);
+		characterType.set("setLuck", &Character::setLuck);
+
+		//Finally register the thing.
+		lua.set_usertype("Character", characterType);
+	}
+
+	LinkedList<Character*>::exposeToScript(lua, "LinkedListCharacterPtr", "NodeCharacterPtr");
+	ArrayList<Character*>::exposeToScript(lua, "ArrayListCharacterPtr");
+}

@@ -842,3 +842,32 @@ void BBox::serialize(FileInterface* file) {
 		file->property("mass", mass);
 	}
 }
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeBBox() {
+	{
+		//First identify the constructors.
+		sol::constructors<BBox(Entity&, Component*)> constructors;
+
+		//Then do the thing.
+		sol::usertype<BBox> usertype(constructors,
+			sol::base_classes, sol::bases<Component>(),
+			"containsPoint", &BBox::containsPoint,
+			"nearestCeiling", &BBox::nearestCeiling,
+			"nearestFloor", &BBox::nearestFloor,
+			"distToCeiling", &BBox::distToCeiling,
+			"distToFloor", &BBox::distToFloor,
+			"getShape", &BBox::getShape,
+			"isEnabled", &BBox::isEnabled,
+			"setEnabled", &BBox::setEnabled,
+			"setShape", &BBox::setShape,
+			"findAllOverlappingEntities", &BBox::findAllOverlappingEntities
+		);
+
+		//Finally register the thing.
+		lua.set_usertype("BBox", usertype);
+	}
+
+	LinkedList<BBox*>::exposeToScript(lua, "LinkedListBBoxPtr", "NodeBBoxPtr");
+	ArrayList<BBox*>::exposeToScript(lua, "ArrayListBBoxPtr");
+}

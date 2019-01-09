@@ -304,3 +304,35 @@ void Camera::drawDebug() {
 void Camera::onFrameDrawn() {
 	++framesDrawn;
 }
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeCamera() {
+	{
+		//First identify the constructors.
+		sol::constructors<Camera(Entity&, Component*)> constructors;
+
+		//Then do the thing.
+		sol::usertype<Camera> usertype(constructors,
+			sol::base_classes, sol::bases<Component>(),
+			"setupProjection", &Camera::setupProjection,
+			"worldPosToScreenPos", &Camera::worldPosToScreenPos,
+			"screenPosToWorldRay", &Camera::screenPosToWorldRay,
+			"getClipNear", &Camera::getClipNear,
+			"getClipFar", &Camera::getClipFar,
+			"getWin", &Camera::getWin,
+			"getFov", &Camera::getFov,
+			"isOrtho", &Camera::isOrtho,
+			"setClipNear", &Camera::setClipNear,
+			"setClipFar", &Camera::setClipFar,
+			"setWin", &Camera::setWin,
+			"setFov", &Camera::setFov,
+			"setOrtho", &Camera::setOrtho
+		);
+
+		//Finally register the thing.
+		lua.set_usertype("Camera", usertype);
+	}
+
+	LinkedList<Camera*>::exposeToScript(lua, "LinkedListCameraPtr", "NodeCameraPtr");
+	ArrayList<Camera*>::exposeToScript(lua, "ArrayListCameraPtr");
+}

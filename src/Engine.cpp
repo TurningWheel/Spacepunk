@@ -10,8 +10,8 @@
 #include "TileWorld.hpp"
 #include "Console.hpp"
 
-std::atomic_bool Engine::paused = false;
-std::atomic_bool Engine::timerRunning = true;
+std::atomic_bool Engine::paused(false);
+std::atomic_bool Engine::timerRunning(true);
 
 // log message code strings
 const char* Engine::msgTypeStr[Engine::MSG_TYPE_LENGTH] = {
@@ -1487,4 +1487,61 @@ Engine::mod_t::mod_t(const char* _path):
 void Engine::mod_t::serialize(FileInterface* file) {
 	file->property("name", name);
 	file->property("author", author);
+}
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeEngine() {
+	{
+		//First identify the constructors.
+		sol::constructors<Engine(int, char**)> constructors;
+
+		//Then do the thing.
+		sol::usertype<Engine> usertype(constructors,
+			"isInitialized", &Engine::isInitialized,
+			"isRunning", &Engine::isRunning,
+			"isPaused", &Engine::isPaused,
+			"isFullscreen", &Engine::isFullscreen,
+			"isRunningClient", &Engine::isRunningClient,
+			"isRunningServer", &Engine::isRunningServer,
+			"getGameTitle", &Engine::getGameTitle,
+			"getLocalClient", &Engine::getLocalClient,
+			"getLocalServer", &Engine::getLocalServer,
+			"getXres", &Engine::getXres,
+			"getYres", &Engine::getYres,
+			"getKeyStatus", &Engine::getKeyStatus,
+			"getMouseStatus", &Engine::getMouseStatus,
+			"getMouseX", &Engine::getMouseX,
+			"getMouseY", &Engine::getMouseY,
+			"getMouseMoveX", &Engine::getMouseMoveX,
+			"getMouseMoveY", &Engine::getMouseMoveY,
+			"getFPS", &Engine::getFPS,
+			"getTimeSync", &Engine::getTimeSync,
+			"getTicksPerSecond", &Engine::getTicksPerSecond,
+			"random", &Engine::random,
+			"playSound", &Engine::playSound,
+			"commandLine", &Engine::commandLine,
+			"shutdown", &Engine::shutdown,
+			"editorPlaytest", &Engine::editorPlaytest,
+			"smsg", &Engine::smsg,
+			"msg", &Engine::msg,
+			"triangleCoords", &Engine::triangleCoords,
+			"pointInTriangle", &Engine::pointInTriangle
+		);
+
+		//Finally register the thing.
+		lua.set_usertype("Engine", usertype);
+	}
+
+	{
+		lua.new_usertype<glm::mat4>("matrix4x4");
+	}
+
+	if( engine ) {
+		lua["engine"] = engine; //MUST be a reference (or pointer).
+	}
+
+	exposeString();
+
+	Rect<Sint32>::exposeToScript(lua, "RectSint32");
+	Rect<Uint32>::exposeToScript(lua, "RectUint32");
 }

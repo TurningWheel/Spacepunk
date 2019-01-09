@@ -404,3 +404,81 @@ void Model::serialize(FileInterface * file) {
 		file->property("genius", genius);
 	}
 }
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeModel() {
+	{
+		//First identify the constructors.
+		sol::constructors<Model(Entity&, Component*)> constructors;
+
+		//Then do the thing.
+		sol::usertype<Model> usertype(constructors,
+			sol::base_classes, sol::bases<Component>(),
+			"findBone", &Model::findBone,
+			"findAnimation", &Model::findAnimation,
+			"animate", &Model::animate,
+			"hasAnimations", &Model::hasAnimations,
+			"getMesh", &Model::getMesh,
+			"getMaterial", &Model::getMaterial,
+			"getDepthFailMat", &Model::getDepthFailMat,
+			"getAnimation", &Model::getAnimation,
+			"getShaderVars", &Model::getShaderVars,
+			"getAnimTicks", &Model::getAnimTicks,
+			"isAnimDone", &Model::isAnimDone,
+			"getAnimationSpeed", &Model::getAnimationSpeed,
+			"setMesh", &Model::setMesh,
+			"setMaterial", &Model::setMaterial,
+			"setDepthFailMat", &Model::setDepthFailMat,
+			"setAnimation", &Model::setAnimation,
+			"setShaderVars", &Model::setShaderVars,
+			"setAnimationSpeed", &Model::setAnimationSpeed,
+			"updateSkin", &Model::updateSkin,
+			"getCurrentAnimation", &Model::getCurrentAnimation,
+			"getPreviousAnimation", &Model::getPreviousAnimation
+		);
+
+		//Finally register the thing.
+		lua.set_usertype("Model", usertype);
+	}
+
+	{
+		//First identify the constructors.
+		sol::constructors<AnimationState()> constructors;
+
+		//Then do the thing.
+		sol::usertype<AnimationState> usertype(constructors,
+			"getName", &AnimationState::getName,
+			"getTicks", &AnimationState::getTicks,
+			"getTicksRate", &AnimationState::getTicksRate,
+			"getBegin", &AnimationState::getBegin,
+			"getEnd", &AnimationState::getEnd,
+			"getLength", &AnimationState::getLength,
+			"getWeight", &AnimationState::getWeight,
+			"getWeightRate", &AnimationState::getWeightRate,
+			"isLoop", &AnimationState::isLoop,
+			"isFinished", &AnimationState::isFinished,
+			"setTicks", &AnimationState::setTicks,
+			"setTicksRate", &AnimationState::setTicksRate,
+			"setWeight", &AnimationState::setWeight,
+			"setWeightRate", &AnimationState::setWeightRate,
+			"setWeights", &AnimationState::setWeights,
+			"setWeightRates", &AnimationState::setWeightRates,
+			"clearWeights", &AnimationState::clearWeights
+		);
+
+		//Finally register the thing.
+		lua.set_usertype("AnimationState", usertype);
+	}
+
+	lua.new_usertype<Model::bone_t>("bone_t",
+		"valid", &Model::bone_t::valid,
+		"name", &Model::bone_t::name,
+		"mat", &Model::bone_t::mat,
+		"pos", &Model::bone_t::pos,
+		"ang", &Model::bone_t::ang,
+		"scale", &Model::bone_t::scale
+	);
+
+	LinkedList<Model*>::exposeToScript(lua, "LinkedListModelPtr", "NodeModelPtr");
+	ArrayList<Model*>::exposeToScript(lua, "ArrayListModelPtr");
+}

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <assert.h>
+
 #define GLM_FORCE_RADIANS
 #include <glm/vec4.hpp>
 
@@ -70,7 +72,7 @@ public:
 	const bool				isNumbersOnly() const				{ return numbersOnly; }
 	const char*				getTabDestField() const				{ return tabDestField.get(); }
 	const char*				getTabDestFrame() const				{ return tabDestFrame.get(); }
-	Script::Args&			getParams()							{ return params; }
+	const Script::Args&		getParams()	const					{ return params; }
 
 	void	setName(const char* _name)							{ name = _name; }
 	void	setText(const char* _text)							{ memset(text, '\0', textLen); strncpy(text,_text,textLen); }
@@ -84,11 +86,30 @@ public:
 	void	setTabDestField(const char* _tabDest)				{ tabDestField = _tabDest; }
 	void	setTabDestFrame(const char* _tabDest)				{ tabDestFrame = _tabDest; }
 
+	template<typename T>
+	void	addParam(T param)
+	{
+		if (nullptr == parent)
+		{
+			assert(0);
+			return;
+		}
+
+		Script* scripter = parent->getScriptEngine();
+		if (nullptr == scripter)
+		{
+			assert(0);
+			return;
+		}
+
+		scripter->addParam(param, params);
+	}
+
 private:
-	Frame* parent = nullptr;	// parent frame
+	Frame* parent = nullptr;			// parent frame
 
 	String name;
-	Script::Args params;
+	Script::Args params;				// optional function parameters to use when the field function is called.
 	char* text = nullptr;
 	size_t textLen = 0;
 	glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f);
