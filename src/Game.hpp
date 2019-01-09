@@ -41,46 +41,46 @@ public:
 	size_t numWorlds() const { return worlds.getSize(); }
 
 	// finds the world node with the given name (case sensitive) and returns it
-	// @param name: the name of the world (not the filename, but the title)
+	// @param name the name of the world (not the filename, but the title)
 	// @return the world node with the given name or nullptr if the world node could not be found
 	Node<World*>* worldForName(const char* name);
 
 	// finds the index of the given world
-	// @param world: the world whose index we are looking for
+	// @param world the world whose index we are looking for
 	// @return the index associated by that world or invalidID if it could not be found
 	Uint32 indexForWorld(World* world);
 
 	// loads the world with the given filename
 	// if the given world is already loaded, it is unloaded and then reloaded
-	// @param filename: the filename of the world to load
+	// @param filename the filename of the world to load
 	// @return a pointer to the World, or nullptr on error
 	World* loadWorld(const char* filename, bool buildPath);
 
 	// creates a new sector world
-	// @param name: the world's name
+	// @param name the world's name
 	// @return the newly created world, or nullptr on error
 	SectorWorld* newSectorWorld(const char* name);
 
 	// creates a new tile world with the given attributes
-	// @param name: the world's name
-	// @param width: the width of the world, in tiles
-	// @param height: the height of the world, in tiles
+	// @param name the world's name
+	// @param width the width of the world, in tiles
+	// @param height the height of the world, in tiles
 	// @return the newly created world, or nullptr on error
 	TileWorld* newTileWorld(const char* name, int width, int height);
 
 	// generates a new tile world
-	// @param path: the path to the generator .json
+	// @param path the path to the generator .json
 	// @return the newly generated world, or nullptr on error
 	TileWorld* genTileWorld(const char* path);
 
 	// locate the player with the given id nums
-	// @param clientID: id of the player's client
-	// @param localID: id of the player on the client
+	// @param clientID id of the player's client
+	// @param localID id of the player on the client
 	// @return the associated Player, or nullptr if the Player could not be found
 	Player* findPlayer(Uint32 clientID, Uint32 localID);
 
 	// locate the player with the given server id
-	// @param serverID: canonical player id
+	// @param serverID canonical player id
 	// @return the associated Player, or nullptr if the Player could not be found
 	Player* findPlayer(Uint32 serverID);
 
@@ -88,7 +88,7 @@ public:
 	virtual void onEstablishConnection(Uint32 remoteID) = 0;
 
 	// when a net connection is ended, this function gets called
-	// @param remoteID: index associated with the disconnected host
+	// @param remoteID index associated with the disconnected host
 	virtual void onDisconnect(Uint32 remoteID) = 0;
 
 	// shuts down all world instances

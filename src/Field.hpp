@@ -48,15 +48,15 @@ public:
 	void deselect();
 
 	// draws the field
-	// @param renderer: the renderer object used to draw the field
-	// @param _size: size and position of field's parent frame
-	// @param _actualSize: offset into the parent frame space (scroll)
+	// @param renderer the renderer object used to draw the field
+	// @param _size size and position of field's parent frame
+	// @param _actualSize offset into the parent frame space (scroll)
 	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
 
 	// handles clicks, etc.
-	// @param _size: size and position of field's parent frame
-	// @param _actualSize: offset into the parent frame space (scroll)
-	// @param usable: true if another object doesn't have the mouse's attention, false otherwise
+	// @param _size size and position of field's parent frame
+	// @param _actualSize offset into the parent frame space (scroll)
+	// @param usable true if another object doesn't have the mouse's attention, false otherwise
 	// @return resultant state of the field after processing
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 

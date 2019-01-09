@@ -31,7 +31,7 @@ public:
 	const size_t			getSize() const		{ return size; }
 
 	// allocs / reallocs the string (erases data!)
-	// @param newSize: the size (in chars) of the string to alloc
+	// @param newSize the size (in chars) of the string to alloc
 	// @return the alloc'd string
 	const char* alloc(const size_t newSize) {
 		size = newSize;
@@ -70,7 +70,7 @@ public:
 	}
 
 	// copies src into string. string will always be null-terminated
-	// @param src: the string to copy into our string
+	// @param src the string to copy into our string
 	const char* assign(const char* src) {
 		if( src == nullptr ) {
 			if( str ) {
@@ -95,7 +95,7 @@ public:
 	}
 
 	// copies formatted src string into our string. string will always be null-terminated
-	// @param src: the formatted string to copy
+	// @param src the formatted string to copy
 	const char* format(const char* src, ...) {
 		if( str == nullptr || size==0 ) {
 			return "";
@@ -114,7 +114,7 @@ public:
 	}
 
 	// append formatted string into our string. string will always be null-terminated
-	// @param src: the formatted string to append
+	// @param src the formatted string to append
 	// @return this string
 	const char* append(const char* src) {
 		if( str == nullptr ) {
@@ -135,7 +135,7 @@ public:
 	}
 
 	// append formatted string into our string. string will always be null-terminated
-	// @param src: the formatted string to append
+	// @param src the formatted string to append
 	// @return this string
 	const char* appendf(const char* src, ...) {
 		if( str == nullptr ) {
@@ -167,8 +167,8 @@ public:
 	}
 
 	// build a new string using part of this string
-	// @param start: the index to start at
-	// @param end: the index to end at
+	// @param start the index to start at
+	// @param end the index to end at
 	// @return the resulting substr
 	String substr(const size_t start, size_t end = 0) const {
 		if( end == 0 ) {
@@ -195,8 +195,8 @@ public:
 	}
 
 	// locates the first instance of the key string in our string and returns its location
-	// @param key: the string to locate
-	// @param offset: the index to start looking in our string
+	// @param key the string to locate
+	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
 	size_t find(const char* key, size_t offset = 0) const {
 		if( key == nullptr || str == nullptr ) {
@@ -219,8 +219,8 @@ public:
 	}
 
 	// locates the first instance of the key char in our string and returns its location
-	// @param key: the char to locate
-	// @param offset: the index to start looking in our string
+	// @param key the char to locate
+	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
 	size_t find(const char key, size_t offset = 0) const {
 		if( str == nullptr ) {

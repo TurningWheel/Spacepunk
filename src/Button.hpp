@@ -40,15 +40,15 @@ public:
 	};
 
 	// draws the button
-	// @param renderer: the renderer object used to draw the button
-	// @param _size: size and position of button's parent frame
-	// @param _actualSize: offset into the parent frame space (scroll)
+	// @param renderer the renderer object used to draw the button
+	// @param _size size and position of button's parent frame
+	// @param _actualSize offset into the parent frame space (scroll)
 	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
 
 	// handles button clicks, etc.
-	// @param _size: size and position of button's parent frame
-	// @param _actualSize: offset into the parent frame space (scroll)
-	// @param usable: true if another object doesn't have the mouse's attention, false otherwise
+	// @param _size size and position of button's parent frame
+	// @param _actualSize offset into the parent frame space (scroll)
+	// @param usable true if another object doesn't have the mouse's attention, false otherwise
 	// @return resultant state of the button after processing
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 

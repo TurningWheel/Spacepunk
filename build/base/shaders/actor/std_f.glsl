@@ -148,6 +148,7 @@ void main() {
 	}
 
 	// light properties
+#ifndef NOLIGHTING
 	if( gActiveLight ) {
 		vec4 lTotalLightColor = vec4(0.f);
 		for( int c = 0; c < gNumLights; ++c ) {
@@ -226,10 +227,11 @@ void main() {
 
 		FragColor *= lTotalLightColor;
 	}
+#endif
 #ifdef FRESNEL
 	vec3 cameraDir = normalize(gCameraPos - lWorldPos);
 	float fresnelPower = pow(dot(lNormal, cameraDir), 2);
 	FragColor = FragColor / fresnelPower;
-	FragColor = clamp(FragColor, 0.f, 1.f);
 #endif
+	FragColor = clamp(FragColor, 0.f, 1.f);
 }

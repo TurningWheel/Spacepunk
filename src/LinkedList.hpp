@@ -26,7 +26,7 @@ public:
 	void 				setLast(Node<T> *node)		{ last = node; }
 
 	// returns the node at the given index
-	// @param index: the index of the node to be returned
+	// @param index the index of the node to be returned
 	// @return the Node at the given index, or nullptr if the Node does not exist
 	Node<T>* nodeForIndex(const size_t index) {
 		if( index>=size ) {
@@ -56,7 +56,7 @@ public:
 	}
 
 	// returns the index of the given node in the list
-	// @param node: the node for whom you wish to retrieve the index
+	// @param node the node for whom you wish to retrieve the index
 	// @return the index for the given node, or -1 if the node does not exist in the list
 	size_t indexForNode(const Node<T>* node) const {
 		if( node->getList() != this )
@@ -76,8 +76,8 @@ public:
 	}
 
 	// adds a node to the list
-	// @param index: the position within the list to insert the node
-	// @param data: the data to be assigned to the node
+	// @param index the position within the list to insert the node
+	// @param data the data to be assigned to the node
 	// @return the newly created Node
 	Node<T>* addNode(const size_t index, const T& data) {
 		Node<T>* node = nodeForIndex(index);
@@ -86,7 +86,7 @@ public:
 	}
 
 	// adds a node to the beginning of the list
-	// @param data: the data to be assigned to the node
+	// @param data the data to be assigned to the node
 	// @return the newly created Node
 	Node<T>* addNodeFirst(const T& data) {
 		++size;
@@ -94,7 +94,7 @@ public:
 	}
 
 	// adds a node to the end of the list
-	// @param data: the data to be assigned to the node
+	// @param data the data to be assigned to the node
 	// @return the newly created Node
 	Node<T>* addNodeLast(const T& data) {
 		++size;
@@ -102,7 +102,7 @@ public:
 	}
 
 	// removes a node from the list
-	// @param node: the node to remove from the list
+	// @param node the node to remove from the list
 	void removeNode(Node<T>* node) {
 		if( this != node->getList() )
 		{
@@ -130,7 +130,7 @@ public:
 	}
 
 	// removes a node from the list
-	// @param index: the index of the node to be removed from the list
+	// @param index the index of the node to be removed from the list
 	void removeNode(const size_t index) {
 		removeNode(nodeForIndex(index));
 	}
@@ -183,7 +183,7 @@ public:
 	}
 
 	// linear search for the node with the given index
-	// @param index: the index of the node to be returned
+	// @param index the index of the node to be returned
 	// @return the Node at the given index, or nullptr if the Node does not exist
 	Node<T>* operator[](const size_t index) {
 		return nodeForIndex(index);

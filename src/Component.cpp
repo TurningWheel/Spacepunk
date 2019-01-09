@@ -511,8 +511,8 @@ void Component::update() {
 		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
 		glm::mat4 rotationM = glm::mat4( 1.f );
 		rotationM = glm::rotate(rotationM, (float)(lAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 		rotationM = glm::rotate(rotationM, (float)(lAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
+		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
 		lMat = translationM * rotationM * scaleM;
 	}
@@ -521,13 +521,13 @@ void Component::update() {
 		gMat = parent->getGlobalMat() * lMat;
 		gAng.yaw = lAng.yaw + parent->getGlobalAng().yaw;
 		gAng.pitch = lAng.pitch + parent->getGlobalAng().pitch;
-		gAng.roll = -(lAng.roll + parent->getGlobalAng().roll);
+		gAng.roll = lAng.roll + parent->getGlobalAng().roll;
 		gAng.wrapAngles();
 	} else {
 		gMat = entity->getMat() * lMat;
 		gAng.yaw = lAng.yaw + entity->getAng().yaw;
 		gAng.pitch = lAng.pitch + entity->getAng().pitch;
-		gAng.roll = -(lAng.roll + entity->getAng().roll);
+		gAng.roll = lAng.roll + entity->getAng().roll;
 		gAng.wrapAngles();
 	}
 	gPos = Vector( gMat[3][0], gMat[3][2], -gMat[3][1] );
@@ -799,14 +799,19 @@ void Component::serializeComponents(FileInterface* file) {
 	}
 }
 
-void Component::shootLaser(const WideVector& color, float size, float life) {
-	glm::mat4 mat = gMat;
+void Component::shootLaser(const glm::mat4& mat, WideVector& color, float size, float life) {
 	Vector start = Vector(mat[3].x, mat[3].z, -mat[3].y);
-	mat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
+	//glm::mat4 endMat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
 	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 10000.f;
 	World* world = entity->getWorld();
 	World::hit_t hit = world->lineTrace(start, end);
 	end = hit.pos;
+	if (hit.hitEntity) {
+		Entity* hitEntity = entity->getWorld()->uidToEntity(hit.index);
+		if (hitEntity) {
+			hitEntity->applyForce((hit.pos - entity->getPos()).normal() * 1000.f, hit.pos);
+		}
+	}
 	world->addLaser(start, end, color, size, life);
 }
 

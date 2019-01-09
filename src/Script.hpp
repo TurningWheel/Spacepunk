@@ -27,13 +27,13 @@ public:
 	~Script();
 
 	//NOTE: Every Script::Args is inextricably tied to its respective Script engine instance! You shall never reuse a Script::Args with another Script engine instance.
-	struct Args //TODO: Suspect this is the issue.
+	struct Args
 	{
 		std::vector<sol::object> params;
 	};
 
 	// load and evaluate the given script
-	// @param filename: filename of the script to run
+	// @param filename filename of the script to run
 	// @return 0 on success, nonzero on failure
 	bool load(const char* filename);
 

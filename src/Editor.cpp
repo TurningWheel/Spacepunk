@@ -2983,7 +2983,7 @@ void Editor::editTiles(bool usable) {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (x-world.getSelectedRect().x));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * ((Sint32)x-world.getSelectedRect().x));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3000,7 +3000,7 @@ void Editor::editTiles(bool usable) {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (x-world.getSelectedRect().x));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * ((Sint32)x-world.getSelectedRect().x));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3022,7 +3022,7 @@ void Editor::editTiles(bool usable) {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (y-world.getSelectedRect().y));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * ((Sint32)y-world.getSelectedRect().y));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3039,7 +3039,7 @@ void Editor::editTiles(bool usable) {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (y-world.getSelectedRect().y));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * ((Sint32)y-world.getSelectedRect().y));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3061,7 +3061,7 @@ void Editor::editTiles(bool usable) {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-(x-world.getSelectedRect().x)));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-((Sint32)x-world.getSelectedRect().x)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3078,7 +3078,7 @@ void Editor::editTiles(bool usable) {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-(x-world.getSelectedRect().x)));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-((Sint32)x-world.getSelectedRect().x)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3100,7 +3100,7 @@ void Editor::editTiles(bool usable) {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-(y-world.getSelectedRect().y)));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-((Sint32)y-world.getSelectedRect().y)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3117,7 +3117,7 @@ void Editor::editTiles(bool usable) {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-(y-world.getSelectedRect().y)));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-((Sint32)y-world.getSelectedRect().y)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -4270,6 +4270,26 @@ void Editor::entityBBoxEnabled(unsigned int uid) {
 			}
 
 			bbox->setEnabled(bbox->isEnabled() == false);
+			return;
+		}
+	}
+}
+
+void Editor::entityBBoxMass(unsigned int uid, float mass) {
+	for( Uint32 c=0; c<world->numBuckets; ++c ) {
+		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
+			Entity* entity = node->getData();
+
+			if( !entity->isSelected() ) {
+				continue;
+			}
+			Component* component = entity->findComponentByUID<Component>(uid);
+			BBox* bbox = dynamic_cast<BBox*>(component);
+			if( !bbox ) {
+				return;
+			}
+
+			bbox->setMass(mass);
 			return;
 		}
 	}
@@ -6022,6 +6042,55 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					}
 
 					y += size.h + border;
+				}
+
+				// mass
+				{
+					Frame* frame = properties.addFrame("editor_FrameBBoxMass");
+
+					Rect<int> size;
+					size.x = 0;
+					size.w = (width - x)/3 - border*2;
+					size.y = 0;
+					size.h = 30;
+					frame->setActualSize(size);
+					size.x = x + border*2;
+					size.w = (width - x)/3 - border*2;
+					size.y = y;
+					size.h = 30;
+					frame->setSize(size);
+					frame->setColor(glm::vec4(.25,.25,.25,1.0));
+					frame->setHigh(false);
+
+					Field* field = frame->addField("field",9);
+					size.x = border; size.w = frame->getSize().w-border*2;
+					size.y = border; size.h = frame->getSize().h-border*2;
+					field->setSize(size);
+					field->setEditable(true);
+					field->setNumbersOnly(true);
+					field->setJustify(Field::RIGHT);
+					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
+
+					field->getParams().addInt(component->getUID());
+
+					char i[16];
+					snprintf(i,16,"%.2f",bbox->getMass());
+					field->setText(i);
+
+					// label
+					{
+						Field* label = properties.addField("labelBBoxMass",16);
+
+						Rect<int> size;
+						size.x = x + border + width/3;
+						size.w = width - border*4 - 30 - border - x;
+						size.y = y + 5;
+						size.h = 30;
+						label->setSize(size);
+						label->setText("Mass");
+					}
+
+					y += size.h + border*3;
 				}
 
 				break;
@@ -9394,6 +9463,7 @@ void Script::exposeEditor(Editor& _editor) {
 		editorType.set("entityRemoveComponent", &Editor::entityRemoveComponent);
 		editorType.set("entityBBoxShape", &Editor::entityBBoxShape);
 		editorType.set("entityBBoxEnabled", &Editor::entityBBoxEnabled);
+		editorType.set("entityBBoxMass", &Editor::entityBBoxMass);
 		editorType.set("entityModelLoadMesh", &Editor::entityModelLoadMesh);
 		editorType.set("entityModelLoadMaterial", &Editor::entityModelLoadMaterial);
 		editorType.set("entityModelLoadDepthFailMat", &Editor::entityModelLoadDepthFailMat);

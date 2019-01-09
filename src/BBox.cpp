@@ -5,6 +5,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Main.hpp"
 #include "Engine.hpp"
@@ -16,13 +17,14 @@
 #include "TileWorld.hpp"
 #include "Camera.hpp"
 
-const float BBox::collisionEpsilon = .01f;
+const float BBox::collisionEpsilon = .1f;
 
 const char* BBox::meshCapsuleCylinderStr = "assets/editor/bbox/CapsuleCylinder.FBX";
 const char* BBox::meshCapsuleHalfSphereStr = "assets/editor/bbox/CapsuleHalfSphere.FBX";
 const char* BBox::meshConeStr = "assets/editor/bbox/Cone.FBX";
 const char* BBox::meshCylinderStr = "assets/editor/bbox/Cylinder.FBX";
-const char* BBox::meshSphereStr = "assets/editor/bbox/Sphere.FBX";
+const char* BBox::meshSphereStr = "assets/editor/bbox/Sphere.nff";
+const char* BBox::meshBoxStr = "assets/editor/bbox/Cube.obj";
 const char* BBox::materialStr = "assets/editor/bbox/material.json";
 
 const char* BBox::shapeStr[SHAPE_MAX] = {
@@ -64,6 +66,20 @@ void BBox::deleteRigidBody() {
 	if( motionState!=nullptr ) {
 		delete motionState;
 		motionState = nullptr;
+	}
+	if( controller!=nullptr ) {
+		if( dynamicsWorld ) {
+			dynamicsWorld->removeAction(controller);
+		}
+		delete controller;
+		controller = nullptr;
+	}
+	if( ghostObject!=nullptr ) {
+		if( dynamicsWorld ) {
+			dynamicsWorld->removeCollisionObject(ghostObject);
+		}
+		delete ghostObject;
+		ghostObject = nullptr;
 	}
 	if( collisionShapePtr!=nullptr ) {
 		delete collisionShapePtr;
@@ -132,21 +148,31 @@ void BBox::conformToModel(const Model& model) {
 }
 
 btTransform BBox::getPhysicsTransform() const {
-	if (!motionState) {
-		return btTransform();
-	} else {
-		btTransform transform;
+	btTransform transform = btTransform::getIdentity();
+	if (ghostObject) {
+		transform = ghostObject->getWorldTransform();
+	} else if (motionState) {
 		motionState->getWorldTransform(transform);
-		return transform;
+	}
+	return transform;
+}
+
+void BBox::setPhysicsTransform(const Vector& v, const Angle& a) {
+	btQuaternion btQuat;
+	btQuat.setEulerZYX(a.yaw, -a.pitch, -a.roll);
+	btTransform btTrans(btQuat, btVector3(v.x, v.y, v.z));
+	if (ghostObject) {
+		ghostObject->setWorldTransform(btTrans);
+	} else if (motionState) {
+		motionState->setWorldTransform(btTrans);
 	}
 }
 
 void BBox::updateRigidBody(const Vector& oldGScale) {
-	if (mainEngine->isEditorRunning() || mass <= 0.f) {
+	if (mainEngine->isEditorRunning() || mass == 0.f) {
 		dirty = true;
 	} else {
-		float epsilon = 0.1;
-		if( fabs(oldGScale.lengthSquared() - gScale.lengthSquared()) > epsilon) {
+		if( fabs(oldGScale.lengthSquared() - gScale.lengthSquared()) > collisionEpsilon) {
 			dirty = true;
 			if( shape == SHAPE_MESH ) {
 				if( parent && parent->getType() == Component::COMPONENT_MODEL ) {
@@ -163,28 +189,55 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 		createRigidBody();
 		dirty = false;
 	} else {
-		if (parent != nullptr || mass <= 0.f) {
-			if (motionState) {
+		if (parent != nullptr || mass == 0.f) {
+			if (ghostObject) {
 				if (shape == SHAPE_MESH) {
-					btQuaternion btQuat;
-					btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
-					btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
-					motionState->setWorldTransform(btTrans);
-				} else {
-					btTransform btTrans(btQuaternion(0.f, 0.f, 0.f, 1.f), btVector3(gPos.x, gPos.y, gPos.z));
-					motionState->setWorldTransform(btTrans);
 				}
+				btQuaternion btQuat;
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				ghostObject->setWorldTransform(btTrans);
+			} else if (motionState) {
+				if (shape == SHAPE_MESH) {
+					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
+				}
+				btQuaternion btQuat;
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				motionState->setWorldTransform(btTrans);
 			}
 		}
 	}
 }
 
+class KinematicCharacterController : public btKinematicCharacterController {
+public:
+	KinematicCharacterController(btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, const btVector3& up) :
+		btKinematicCharacterController(ghostObject, convexShape, stepHeight, up)
+	{}
+
+	void setLinearVelocity(const btVector3& velocity) {
+		m_walkDirection = velocity;
+	}
+	btVector3 getLinearVelocity() const {
+		return m_walkDirection;
+	}
+};
+
 void BBox::createRigidBody() {
 	deleteRigidBody();
 
+	if (!enabled && !mainEngine->isEditorRunning()) {
+		return;
+	}
+
 	// setup new collision volume
 	switch( shape ) {
+		default:
+		case SHAPE_BOX:
+			collisionShapePtr = new btBoxShape(btVector3(gScale.x,gScale.y,gScale.z));
+			break;
 		case SHAPE_SPHERE:
 			collisionShapePtr = new btSphereShape(max(max(gScale.x,gScale.y),gScale.z));
 			break;
@@ -217,54 +270,87 @@ void BBox::createRigidBody() {
 				}
 			}
 			break;
-		default:
-			collisionShapePtr = new btBoxShape(btVector3(gScale.x,gScale.y,gScale.z));
-			break;
 	}
 
-	// create motion state
-	if( shape == SHAPE_MESH ) {
-		btQuaternion btQuat;
-		btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
-		collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
-		motionState = new btDefaultMotionState(btTransform(btQuat, btVector3(gPos.x, gPos.y, gPos.z)));
-	} else {
-		motionState = new btDefaultMotionState(btTransform(btQuaternion(0.f, 0.f, 0.f, 1.f), btVector3(gPos.x, gPos.y, gPos.z)));
-	}
+	if (entity->isFlag(Entity::FLAG_PASSABLE) && !mainEngine->isEditorRunning())
+		return;
 
-	// create rigid body
-	btVector3 inertia;
-	collisionShapePtr->calculateLocalInertia(mass, inertia);
-	btRigidBody::btRigidBodyConstructionInfo
-		rigidBodyCI(mass, motionState, collisionShapePtr, inertia);
-	rigidBody = new btRigidBody(rigidBodyCI);
-	rigidBody->setUserIndex(entity->getUID());
-	rigidBody->setUserIndex2(World::nuid);
-	rigidBody->setUserPointer(nullptr);
-	rigidBody->setSleepingThresholds(0.f, 0.f);
-
-	// add a new rigid body to the simulation
 	World* world = entity->getWorld();
-	if( world ) {
+	if (world) {
 		dynamicsWorld = world->getBulletDynamicsWorld();
-		if( dynamicsWorld ) {
-			dynamicsWorld->addRigidBody(rigidBody);
+		if (dynamicsWorld) {
+			if (mass >= 0.f) {
+				// create motion state
+				if( shape == SHAPE_MESH ) {
+					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
+				}
+				btQuaternion btQuat;
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				motionState = new btDefaultMotionState(btTrans);
+
+				// create rigid body
+				btVector3 inertia;
+				collisionShapePtr->calculateLocalInertia(mass, inertia);
+				btRigidBody::btRigidBodyConstructionInfo
+					rigidBodyCI(mass, motionState, collisionShapePtr, inertia);
+				rigidBody = new btRigidBody(rigidBodyCI);
+				rigidBody->setUserIndex(entity->getUID());
+				rigidBody->setUserIndex2(World::nuid);
+				rigidBody->setUserPointer(nullptr);
+				if (mass > 0.f) {
+					rigidBody->setActivationState( DISABLE_DEACTIVATION );
+					rigidBody->setSleepingThresholds(0.f, 0.f);
+				}
+
+				// add a new rigid body to the simulation
+				dynamicsWorld->addRigidBody(rigidBody);
+			} else if (mass < 0.f) {
+				// create kinematic body
+				ghostObject = new btPairCachingGhostObject();
+				btQuaternion btQuat;
+				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				ghostObject->setWorldTransform(btTrans);
+				ghostObject->setUserIndex(entity->getUID());
+				ghostObject->setUserIndex2(World::nuid);
+				ghostObject->setUserPointer(nullptr);
+				ghostObject->setActivationState( DISABLE_DEACTIVATION );
+				ghostObject->setCollisionShape(collisionShapePtr);
+				ghostObject->setCollisionFlags(btCollisionObject::CollisionFlags::CF_CHARACTER_OBJECT);
+				dynamicsWorld->addCollisionObject(ghostObject, btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::AllFilter);
+
+				auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
+				if (convexShape) {
+					controller = new KinematicCharacterController(
+						ghostObject, convexShape, 0.f,
+						btVector3(0.f, 0.f, 1.f));
+					controller->setGravity(btVector3(0.f,0.f,0.f));
+					dynamicsWorld->addAction(controller);
+				}
+			}
 		}
 	}
 }
 
-bool BBox::containsPoint(const Vector& point) const {
-	if( point.x >= gPos.x - gScale.x && 
-		point.x <= gPos.x + gScale.x ) {
-		if( point.y >= gPos.y - gScale.y && 
-			point.y <= gPos.y + gScale.y ) {
-			if( point.z >= gPos.z - gScale.z &&
-				point.z <= gPos.z + gScale.z ) {
-				return true;
-			}
-		}
+void BBox::applyMoveForces(const Vector& vel, const Angle& ang) {
+	if (ghostObject && controller) {
+		ghostObject->activate();
+		Vector newVel = vel;
+		controller->setLinearVelocity(newVel);
+		float degrees = 180.f / PI;
+		controller->setAngularVelocity(btVector3(ang.roll * degrees, ang.pitch * degrees, ang.yaw * degrees));
+	} else if (rigidBody) {
+		rigidBody->activate(true);
+		rigidBody->applyCentralForce(vel);
 	}
-	return false;
+}
+
+void BBox::applyForce(const Vector& force, const Vector& origin) {
+	if (rigidBody) {
+		rigidBody->activate(true);
+		rigidBody->applyForce(force, origin - gPos);
+	}
 }
 
 float BBox::distToFloor(float floorHeight) {
@@ -272,82 +358,22 @@ float BBox::distToFloor(float floorHeight) {
 	return max( 0.f, floorHeight - z );
 }
 
-void BBox::testAgainstComponentForFloor(Component* component, const Vector& start, const Vector& end, float& nearestFloor) const {
-	if( component->getType() == COMPONENT_BBOX ) {
-		BBox* bbox = static_cast<BBox*>(component);
-		if( bbox->isEnabled() ) {
-			const Vector& gPos2 = component->getGlobalPos();
-			const Vector& gScale2 = component->getGlobalScale();
-			float startX2 = gPos2.x - gScale2.x;
-			float endX2 = gPos2.x + gScale2.x;
-			float startY2 = gPos2.y - gScale2.y;
-			float endY2 = gPos2.y + gScale2.y;
-			float startZ2 = gPos2.z - gScale2.z;
-			float endZ2 = gPos2.z + gScale2.z;
-
-			if( start.x < endX2 && end.x > startX2 ) {
-				if( start.y < endY2 && end.y > startY2 ) {
-					if( start.z <= startZ2 ) {
-						nearestFloor = min( startZ2, nearestFloor );
-					}
-				}
-			}
-		}
-	}
-
-	for( Uint32 c = 0; c < component->getComponents().getSize(); ++c ) {
-		Component* sub = component->getComponents()[c];
-		testAgainstComponentForFloor(sub, start, end, nearestFloor);
-	}
-}
-
 float BBox::nearestFloor() {
-	float nearestFloor = (float)(UINT32_MAX);
+	float nearestFloor = (float)(INT32_MAX);
 	World* world = entity->getWorld();
-	if( !world ) {
+	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
+	if( !world && convexShape ) {
 		return nearestFloor;
 	}
 
-	Vector start( ( gPos.x - gScale.x ) + collisionEpsilon, ( gPos.y - gScale.y ) + collisionEpsilon, ( gPos.z - gScale.z ) + collisionEpsilon );
-	Vector end( ( gPos.x + gScale.x ) - collisionEpsilon, ( gPos.y + gScale.y ) - collisionEpsilon, ( gPos.z + gScale.z ) - collisionEpsilon );
-	float xInc = std::min( (float)Tile::size, (end.x - start.x) - collisionEpsilon );
-	float yInc = std::min( (float)Tile::size, (end.y - start.y) - collisionEpsilon );
-
-	// check against entities
-	for( Uint32 c = 0; c < World::numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( entity == this->entity || entity->isFlag(Entity::flag_t::FLAG_PASSABLE) ) {
-				continue;
-			}
-
-			for( Uint32 c = 0; c < entity->getComponents().getSize(); ++c ) {
-				Component* component = entity->getComponents()[c];
-				testAgainstComponentForFloor(component, start, end, nearestFloor);
-			}
-		}
+	// perform sweep
+	LinkedList<World::hit_t> hits;
+	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
+	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, gScale.z + 128.f), gAng, hits);
+	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
+	if (hits.getSize()) {
+		nearestFloor = hits.getFirst()->getData().pos.z - lPos.z / 2.f;
 	}
-
-	// check against tiles
-	if( world->getType() == World::WORLD_TILES ) {
-		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		ArrayList<Tile>& tiles = tileworld->getTiles();
-		for( float x = start.x; x <= end.x; x += std::max(collisionEpsilon, std::min(xInc, end.x - x)) ) {
-			for( float y = start.y; y <= end.y; y += std::max(collisionEpsilon, std::min(yInc, end.y - y)) ) {
-				int sX = min( max( 0, (int)floor(x / (float)Tile::size) ), (int)tileworld->getWidth()-1 );
-				int sY = min( max( 0, (int)floor(y / (float)Tile::size) ), (int)tileworld->getHeight()-1 );
-				Tile& tile = tiles[sY + sX * tileworld->getHeight()];
-
-				// test against floor
-				glm::vec3 floorVec( x, y, (float)tile.getFloorHeight() );
-				tile.setFloorSlopeHeightForVec(floorVec);
-				nearestFloor = min( floorVec.z, nearestFloor);
-			}
-		}
-	}
-
-	// result
 	return nearestFloor;
 }
 
@@ -356,147 +382,50 @@ float BBox::distToCeiling(float ceilingHeight) {
 	return max( 0.f, z - ceilingHeight );
 }
 
-void BBox::testAgainstComponentForCeiling(Component* component, const Vector& start, const Vector& end, float& nearestCeiling) const {
-	if( component->getType() == COMPONENT_BBOX ) {
-		BBox* bbox = static_cast<BBox*>(component);
-		if( bbox->isEnabled() ) {
-			const Vector& gPos2 = component->getGlobalPos();
-			const Vector& gScale2 = component->getGlobalScale();
-			float startX2 = gPos2.x - gScale2.x;
-			float endX2 = gPos2.x + gScale2.x;
-			float startY2 = gPos2.y - gScale2.y;
-			float endY2 = gPos2.y + gScale2.y;
-			float startZ2 = gPos2.z - gScale2.z;
-			float endZ2 = gPos2.z + gScale2.z;
-
-			if( start.x < endX2 && end.x > startX2 ) {
-				if( start.y < endY2 && end.y > startY2 ) {
-					if( end.z >= endZ2 ) {
-						nearestCeiling = max( endZ2, nearestCeiling );
-					}
-				}
-			}
-		}
-	}
-	
-	for( Uint32 c = 0; c < component->getComponents().getSize(); ++c ) {
-		Component* sub = component->getComponents()[c];
-		testAgainstComponentForCeiling(sub, start, end, nearestCeiling);
-	}
-}
-
 float BBox::nearestCeiling() {
 	float nearestCeiling = (float)(INT32_MIN);
 	World* world = entity->getWorld();
-	if( !world ) {
+	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
+	if( !world && convexShape ) {
 		return nearestCeiling;
 	}
 
-	Vector start( ( gPos.x - gScale.x ) + collisionEpsilon, ( gPos.y - gScale.y ) + collisionEpsilon, ( gPos.z - gScale.z ) + collisionEpsilon );
-	Vector end( ( gPos.x + gScale.x ) - collisionEpsilon, ( gPos.y + gScale.y ) - collisionEpsilon, ( gPos.z + gScale.z ) - collisionEpsilon );
-	float xInc = std::min( (float)Tile::size, (end.x - start.x) - collisionEpsilon );
-	float yInc = std::min( (float)Tile::size, (end.y - start.y) - collisionEpsilon );
-
-	// check against entities
-	for( Uint32 c = 0; c < World::numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( entity == this->entity || entity->isFlag(Entity::flag_t::FLAG_PASSABLE) ) {
-				continue;
-			}
-
-			for( Uint32 c = 0; c < entity->getComponents().getSize(); ++c ) {
-				Component* component = entity->getComponents()[c];
-				testAgainstComponentForCeiling(component, start, end, nearestCeiling);
-			}
-		}
+	// perform sweep
+	LinkedList<World::hit_t> hits;
+	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
+	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, -gScale.z - 128.f), gAng, hits);
+	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
+	if (hits.getSize()) {
+		nearestCeiling = hits.getFirst()->getData().pos.z - lPos.z / 2.f;
 	}
-
-	// check against tiles
-	if( world->getType() == World::WORLD_TILES ) {
-		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		ArrayList<Tile>& tiles = tileworld->getTiles();
-		for( float x = start.x; x <= end.x; x += std::max(collisionEpsilon, std::min(xInc, end.x - x)) ) {
-			for( float y = start.y; y <= end.y; y += std::max(collisionEpsilon, std::min(yInc, end.y - y)) ) {
-				int sX = min( max( 0, (int)floor(x / (float)Tile::size) ), (int)tileworld->getWidth()-1 );
-				int sY = min( max( 0, (int)floor(y / (float)Tile::size) ), (int)tileworld->getHeight()-1 );
-				Tile& tile = tiles[sY + sX * tileworld->getHeight()];
-
-				// test against floor
-				glm::vec3 ceilingVec( x, y, (float)tile.getCeilingHeight() );
-				tile.setCeilingSlopeHeightForVec(ceilingVec);
-				nearestCeiling = max( ceilingVec.z, nearestCeiling );
-			}
-		}
-	}
-
-	// result
 	return nearestCeiling;
-}
-
-bool BBox::testAgainstComponentForObstacle(Component* component, const Vector& start, const Vector& end) const {
-	if( component->getType() == COMPONENT_BBOX ) {
-		BBox* bbox = static_cast<BBox*>(component);
-		if( bbox->isEnabled() ) {
-			const Vector& gPos2 = component->getGlobalPos();
-			const Vector& gScale2 = component->getGlobalScale();
-			float startX2 = gPos2.x - gScale2.x;
-			float endX2 = gPos2.x + gScale2.x;
-			float startY2 = gPos2.y - gScale2.y;
-			float endY2 = gPos2.y + gScale2.y;
-			float startZ2 = gPos2.z - gScale2.z;
-			float endZ2 = gPos2.z + gScale2.z;
-
-			if( start.x < endX2 && end.x > startX2 ) {
-				if( start.y < endY2 && end.y > startY2 ) {
-					if( start.z < endZ2 && end.z > startZ2 ) {
-						return true;
-					}
-				}
-			}
-		}
-	}
-
-	for( Uint32 c = 0; c < component->getComponents().getSize(); ++c ) {
-		Component* sub = component->getComponents()[c];
-		if( testAgainstComponentForObstacle(sub, start, end) ) {
-			return true;
-		}
-	}
-	return false;
 }
 
 LinkedList<const Entity*> BBox::findAllOverlappingEntities() const {
 	LinkedList<const Entity*> list;
 
 	World* world = entity->getWorld();
-	if( world ) {
-		Vector start( ( gPos.x - gScale.x ) + collisionEpsilon, ( gPos.y - gScale.y ) + collisionEpsilon, ( gPos.z - gScale.z ) + collisionEpsilon );
-		Vector end( ( gPos.x + gScale.x ) - collisionEpsilon, ( gPos.y + gScale.y ) - collisionEpsilon, ( gPos.z + gScale.z ) - collisionEpsilon );
+	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
+	if( !world && convexShape ) {
+		return list;
+	}
 
-		// check against entities
-		for( Uint32 c = 0; c < World::numBuckets; ++c ) {
-			for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-				Entity* entity = node->getData();
-
-				if( entity == this->entity || entity->isFlag(Entity::flag_t::FLAG_PASSABLE) ) {
-					continue;
+	// perform sweep
+	LinkedList<World::hit_t> hits;
+	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f - collisionEpsilon));
+	world->convexSweepList(convexShape, gPos, gAng, gPos, gAng, hits);
+	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
+	for (auto& hit : hits) {
+		if (hit.hitEntity) {
+			bool found = false;
+			for (auto entity : list) {
+				if (entity->getUID() == hit.index) {
+					found = true;
+					break;
 				}
-
-				bool overlaps = false;
-				for( Uint32 c = 0; c < entity->getComponents().getSize(); ++c ) {
-					Component* component = entity->getComponents()[c];
-					if( testAgainstComponentForObstacle(component, start, end) ) {
-						overlaps = true;
-						break;
-					}
-				}
-
-				if( overlaps ) {
-					list.addNodeLast(entity);
-					continue;
-				}
+			}
+			if (!found) {
+				list.addNodeLast(world->uidToEntity(uid));
 			}
 		}
 	}
@@ -513,7 +442,7 @@ bool BBox::checkCollision() const {
 		return false;
 	}
 
-	if( !enabled ) {
+	if( !enabled || entity->isFlag(Entity::FLAG_PASSABLE) ) {
 		return false;
 	}
 
@@ -522,60 +451,18 @@ bool BBox::checkCollision() const {
 		return false;
 	}
 
-	Vector start( ( gPos.x - gScale.x ) + collisionEpsilon, ( gPos.y - gScale.y ) + collisionEpsilon, ( gPos.z - gScale.z ) + collisionEpsilon );
-	Vector end( ( gPos.x + gScale.x ) - collisionEpsilon, ( gPos.y + gScale.y ) - collisionEpsilon, ( gPos.z + gScale.z ) - collisionEpsilon );
-	float xInc = std::min( (float)Tile::size, (end.x - start.x) - collisionEpsilon );
-	float yInc = std::min( (float)Tile::size, (end.y - start.y) - collisionEpsilon );
-	float zInc = (end.z - start.z) - collisionEpsilon;
-	
-	// check against entities
-	for( Uint32 c = 0; c < World::numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( entity == this->entity || entity->isFlag(Entity::flag_t::FLAG_PASSABLE) ) {
-				continue;
-			}
-
-			for( Uint32 c = 0; c < entity->getComponents().getSize(); ++c ) {
-				Component* component = entity->getComponents()[c];
-				if( testAgainstComponentForObstacle(component, start, end) ) {
-					return true;
-				}
-			}
-		}
+	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
+	if( !convexShape ) {
+		return false;
 	}
 
-	// check against tiles
-	if( world->getType() == World::WORLD_TILES ) {
-		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		ArrayList<Tile>& tiles = tileworld->getTiles();
-		for( float x = start.x; x <= end.x; x += std::max(collisionEpsilon, std::min(xInc, end.x - x)) ) {
-			for( float y = start.y; y <= end.y; y += std::max(collisionEpsilon, std::min(yInc, end.y - y)) ) {
-				for( float z = start.z; z <= end.z; z += zInc ) {
-					int sX = min( max( 0, (int)floor(x / (float)Tile::size) ), (int)tileworld->getWidth()-1 );
-					int sY = min( max( 0, (int)floor(y / (float)Tile::size) ), (int)tileworld->getHeight()-1 );
-					Tile& tile = tiles[sY + sX * tileworld->getHeight()];
+	// perform sweep
+	LinkedList<World::hit_t> hits;
 
-					// test against floor
-					glm::vec3 floorVec( x, y, (float)tile.getFloorHeight() );
-					tile.setFloorSlopeHeightForVec(floorVec);
-					if( z > floorVec.z ) {
-						return true;
-					}
-
-					// test against ceiling
-					glm::vec3 ceilingVec( x, y, (float)tile.getCeilingHeight() );
-					tile.setCeilingSlopeHeightForVec(ceilingVec);
-					if( z < ceilingVec.z ) {
-						return true;
-					}
-				}
-			}
-		}
-	}
-
-	return false;
+	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f - collisionEpsilon));
+	world->convexSweepList(convexShape, gPos, gAng, gPos, gAng, hits);
+	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
+	return hits.getSize() > 0;
 }
 
 static Cvar cvar_showBBoxes("showbboxes", "Makes bboxes visible", "0");
@@ -608,146 +495,107 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	glGetBooleanv(GL_DEPTH_WRITEMASK, &data);
 	glDepthMask(GL_FALSE);
 
-	if( shape == SHAPE_BOX ) {
-		glm::mat4 cubeM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x,-gPos.z,gPos.y));
-		cubeM = glm::scale(cubeM,glm::vec3(gScale.x*2, gScale.z*2, gScale.y*2));
+	// build shader vars
+	Mesh::shadervars_t shaderVars;
+	shaderVars.lineWidth = 0;
+	shaderVars.customColorEnabled = GL_TRUE;
+	shaderVars.customColorR = { 0.f, 0.f, 0.f, 0.f };
+	shaderVars.customColorB = { 0.f, 0.f, 0.f, 0.f };
 
-		if( entity->isSelected() ) {
-			if( entity->isHighlighted() ) {
-				camera.drawCube(cubeM,glm::vec4(1.f,0.f,0.f,1.f));
-			} else {
-				camera.drawCube(cubeM,glm::vec4(1.f,0.f,0.f,.5f));
-			}
+	if( entity->isSelected() ) {
+		if( entity->isHighlighted() ) {
+			shaderVars.customColorA = { 1.f, 0.f, 0.f, 1.f };
 		} else {
-			if( entity->isHighlighted() ) {
-				camera.drawCube(cubeM,glm::vec4(0.f,1.f,0.f,1.f));
-			} else {
-				camera.drawCube(cubeM,glm::vec4(0.f,1.f,0.f,.5f));
-			}
+			shaderVars.customColorA = { .5f, 0.f, 0.f, 1.f };
 		}
 	} else {
-		// build shader vars
-		Mesh::shadervars_t shaderVars;
-		shaderVars.lineWidth = 0;
-		shaderVars.customColorEnabled = GL_TRUE;
-		shaderVars.customColorR = { 0.f, 0.f, 0.f, 0.f };
-		shaderVars.customColorB = { 0.f, 0.f, 0.f, 0.f };
-
-		if( entity->isSelected() ) {
-			if( entity->isHighlighted() ) {
-				shaderVars.customColorA = { 1.f, 0.f, 0.f, 1.f };
-			} else {
-				shaderVars.customColorA = { .5f, 0.f, 0.f, 1.f };
-			}
+		if( entity->isHighlighted() ) {
+			shaderVars.customColorA = { 0.f, 1.f, 0.f, 1.f };
 		} else {
-			if( entity->isHighlighted() ) {
-				shaderVars.customColorA = { 0.f, 1.f, 0.f, 1.f };
-			} else {
-				shaderVars.customColorA = { 0.f, .5f, 0.f, 1.f };
-			}
+			shaderVars.customColorA = { 0.f, .5f, 0.f, 1.f };
 		}
+	}
 
-		if( shape == SHAPE_CAPSULE && lScale.z > lScale.x && lScale.z > lScale.y ) {
-			float radius = max(gScale.x,gScale.y);
+	glm::mat4 undoScale = glm::scale(glm::mat4(1.f), glm::vec3(1.f / gScale.x, 1.f / gScale.z, 1.f / gScale.y));
 
-			Vector pos(0.f);
-			Vector scale(radius * 2.f, radius * 2.f, gScale.z * 2.f);
+	if( shape == SHAPE_CAPSULE && lScale.z > lScale.x && lScale.z > lScale.y ) {
+		float radius = max(gScale.x,gScale.y);
 
-			Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
-			if( material ) {
-				Mesh* mesh = nullptr;
+		Vector pos(0.f);
+		Vector scale(radius * 2.f, radius * 2.f, gScale.z * 2.f);
 
-				scale.z -= radius * 2.f;
-
-				// draw capsule part
-				mesh = mainEngine->getMeshResource().dataForString(meshCapsuleCylinderStr);
-				if( mesh ) {
-					glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x, -gPos.z, gPos.y));
-					glm::mat4 rotationM = glm::mat4( 1.f );
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(1.f, 0.f, 0.f));
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
-					glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
-					glm::mat4 matrix = translationM * rotationM * scaleM;
-					ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
-					if( shader ) {
-						mesh->draw(camera, this, shader);
-					}
-				}
-
-				float cylinderHeight = lScale.z;
-				scale.z = radius * 2.f;
-				pos.z -= cylinderHeight - radius;
-
-				// draw first half-sphere
-				mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
-				if( mesh ) {
-					glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x + pos.x, -gPos.z - pos.z, gPos.y + pos.y));
-					glm::mat4 rotationM = glm::mat4( 1.f );
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(1.f, 0.f, 0.f));
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
-					glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
-					glm::mat4 matrix = translationM * rotationM * scaleM;
-					ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
-					if( shader ) {
-						mesh->draw(camera, this, shader);
-					}
-				}
-
-				pos.z += (cylinderHeight - radius) * 2;
-
-				// draw second half-sphere
-				mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
-				if( mesh ) {
-					glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x + pos.x, -gPos.z - pos.z, gPos.y + pos.y));
-					glm::mat4 rotationM = glm::mat4( 1.f );
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch() + PI), glm::vec3(1.f, 0.f, 0.f));
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-					rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
-					glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
-					glm::mat4 matrix = translationM * rotationM * scaleM;
-					ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
-					if( shader ) {
-						mesh->draw(camera, this, shader);
-					}
-				}
-			}
-		} else {
-			glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(gPos.x,-gPos.z,gPos.y));
-			glm::mat4 rotationM = glm::mat4( 1.f );
-			rotationM = glm::rotate(rotationM, (float)(gAng.radiansPitch()), glm::vec3(1.f, 0.f, 0.f));
-			rotationM = glm::rotate(rotationM, (float)(gAng.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-			rotationM = glm::rotate(rotationM, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
-
-			glm::mat4 matrix;
+		Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
+		if( material ) {
 			Mesh* mesh = nullptr;
-			if( shape == SHAPE_SPHERE || shape == SHAPE_CAPSULE ) {
-				mesh = mainEngine->getMeshResource().dataForString(meshSphereStr);
-				
-				float size = max(max(lScale.x,lScale.y),lScale.z) * 2.f;
-				glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, size, size));
-				matrix = translationM * rotationM * scaleM;
-			} else if ( shape == SHAPE_CYLINDER ) {
-				mesh = mainEngine->getMeshResource().dataForString(meshCylinderStr);
 
-				float size = max(lScale.x,lScale.y) * 2.f;
-				glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, gScale.z * 2.f, size));
-				matrix = translationM * rotationM * scaleM;
-			} else if ( shape == SHAPE_CONE ) {
-				mesh = mainEngine->getMeshResource().dataForString(meshConeStr);
-
-				float size = max(lScale.x,lScale.y) * 2.f;
-				glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, gScale.z * 2.f, size));
-				matrix = translationM * rotationM * scaleM;
-			}
-
-			Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
-			if( mesh && material ) {
+			// draw capsule part
+			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleCylinderStr);
+			if( mesh ) {
+				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z - radius * 2.f, scale.y));
+				glm::mat4 matrix = gMat * undoScale * scaleM;
 				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
 				if( shader ) {
 					mesh->draw(camera, this, shader);
 				}
+			}
+
+			float cylinderHeight = scale.z - radius * 2.f;
+
+			// draw first half-sphere
+			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
+			if( mesh ) {
+				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, radius * 2.f, scale.y));
+				glm::mat4 matrix = gMat * undoScale * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * .5f, 0.f)) * scaleM;
+				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
+				if( shader ) {
+					mesh->draw(camera, this, shader);
+				}
+			}
+
+			// draw second half-sphere
+			mesh = mainEngine->getMeshResource().dataForString(meshCapsuleHalfSphereStr);
+			if( mesh ) {
+				glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, radius * 2.f, scale.y));
+				glm::mat4 matrix = gMat * undoScale * glm::translate(glm::mat4(), glm::vec3(0.f, cylinderHeight * -.5f, 0.f)) * glm::rotate(glm::mat4(), PI, glm::vec3(0.f, 0.f, 1.f)) * scaleM;
+				ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
+				if( shader ) {
+					mesh->draw(camera, this, shader);
+				}
+			}
+		}
+	} else {
+		glm::mat4 matrix;
+		Mesh* mesh = nullptr;
+		if( shape == SHAPE_BOX ) {
+			mesh = mainEngine->getMeshResource().dataForString(meshBoxStr);
+
+			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(gScale.x, gScale.z, gScale.y));
+			matrix = gMat * undoScale * scaleM;
+		} else if( shape == SHAPE_SPHERE || shape == SHAPE_CAPSULE ) {
+			mesh = mainEngine->getMeshResource().dataForString(meshSphereStr);
+				
+			float size = max(max(gScale.x,gScale.y),gScale.z) * 2.f;
+			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, size, size));
+			matrix = gMat * undoScale * scaleM;
+		} else if ( shape == SHAPE_CYLINDER ) {
+			mesh = mainEngine->getMeshResource().dataForString(meshCylinderStr);
+
+			float size = max(gScale.x,gScale.y) * 2.f;
+			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, gScale.z * 2.f, size));
+			matrix = gMat * undoScale * scaleM;
+		} else if ( shape == SHAPE_CONE ) {
+			mesh = mainEngine->getMeshResource().dataForString(meshConeStr);
+
+			float size = max(gScale.x,gScale.y) * 2.f;
+			glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(size, gScale.z * 2.f, size));
+			matrix = gMat * undoScale * scaleM;
+		}
+
+		Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
+		if( mesh && material ) {
+			ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, matrix);
+			if( shader ) {
+				mesh->draw(camera, this, shader);
 			}
 		}
 	}
@@ -755,58 +603,9 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	glDepthMask(data);
 }
 
-static void toEulerAngle(const btQuaternion& q, float& yaw, float& pitch, float& roll)
-{
-	// roll (x-axis rotation)
-	float sinr = 2.f * (q.w() * q.x() + q.y() * q.z());
-	float cosr = 1.f - 2.f * (q.x() * q.x() + q.y() * q.y());
-	roll = atan2(sinr, cosr);
-
-	// pitch (y-axis rotation)
-	float sinp = 2.f * (q.w() * q.y() - q.z() * q.x());
-	if (fabs(sinp) >= 1.f) {
-		pitch = copysign(PI / 2.f, sinp); // use 90 degrees if out of range
-	} else {
-		pitch = asin(sinp);
-	}
-
-	// yaw (z-axis rotation)
-	float siny = +2.f * (q.w() * q.z() + q.x() * q.y());
-	float cosy = +1.f - 2.f * (q.y() * q.y() + q.z() * q.z());  
-	yaw = atan2(siny, cosy);
-}
-
-/*void BBox::process() {
-	if( motionState ) {
-		btTransform btMat;
-		motionState->getWorldTransform(btMat);
-		btQuaternion btQuat = btMat.getRotation();
-		btVector3 btVec = btMat.getOrigin();
-
-		Vector pos = btVec;
-		Angle ang;
-		toEulerAngle(btQuat, ang.yaw, ang.pitch, ang.roll);
-	}
-}*/
-
 void BBox::update() {
 	Vector oldGScale = gScale;
 	Component::update();
-
-	// hack to "rotate" aabb
-	if( shape == SHAPE_BOX && lScale.x != lScale.y ) {
-		glm::mat4 m = glm::mat4( 1.f );
-		m = glm::rotate(m, (float)(gAng.radiansPitch()), glm::vec3(1.f, 0.f, 0.f));
-		m = glm::rotate(m, (float)(gAng.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-		//m = glm::rotate(m, (float)(gAng.radiansRoll()), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
-		glm::vec4 s = glm::vec4(gScale.x, gScale.z, gScale.y, 1.f) * m;
-
-		float min = std::min(gScale.x, std::min(gScale.y, gScale.z));
-		gScale.x = std::max(fabs(s.x), min);
-		gScale.y = std::max(fabs(s.z), min);
-		gScale.z = std::max(fabs(s.y), min);
-	}
-
 	updateRigidBody(oldGScale);
 }
 
@@ -852,15 +651,16 @@ void Script::exposeBBox() {
 		//Then do the thing.
 		sol::usertype<BBox> usertype(constructors,
 			sol::base_classes, sol::bases<Component>(),
-			"containsPoint", &BBox::containsPoint,
 			"nearestCeiling", &BBox::nearestCeiling,
 			"nearestFloor", &BBox::nearestFloor,
 			"distToCeiling", &BBox::distToCeiling,
 			"distToFloor", &BBox::distToFloor,
 			"getShape", &BBox::getShape,
+			"getMass", &BBox::getMass,
 			"isEnabled", &BBox::isEnabled,
 			"setEnabled", &BBox::setEnabled,
 			"setShape", &BBox::setShape,
+			"setMass", &BBox::setMass,
 			"findAllOverlappingEntities", &BBox::findAllOverlappingEntities
 		);
 

@@ -7,11 +7,7 @@
 
 #include "Main.hpp"
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #include "LinkedList.hpp"
 #include "Node.hpp"
@@ -170,36 +166,36 @@ public:
 	void deleteAllVisMaps();
 
 	// finds all entities within a given radius to this entity
-	// @param radius: the radius to search in
-	// @param outList: the list to populate
+	// @param radius the radius to search in
+	// @param outList the list to populate
 	void findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) const;
 
 	// set the specified key value pair
-	// @param key: the key to insert or modify
-	// @param value: the value to set
+	// @param key the key to insert or modify
+	// @param value the value to set
 	void setKeyValue(const char* key, const char* value);
 
 	// remove the specified key value pair
-	// @param key: the key to remove
+	// @param key the key to remove
 	void deleteKeyValue(const char* key);
 
 	// get the specified key value as a string
-	// @param key: the key to search for
+	// @param key the key to search for
 	// @return the value associated with the key, or "" if it could not be found
 	const char* getKeyValueAsString(const char* key) const;
 
 	// get the specified key value as a float
-	// @param key: the key to search for
+	// @param key the key to search for
 	// @return the value associated with the key, or 0.f if it could not be found
 	float getKeyValueAsFloat(const char* key) const;
 
 	// get the specified key value as an int
-	// @param key: the key to search for
+	// @param key the key to search for
 	// @return the value associated with the key, or 0 if it could not be found
 	int getKeyValueAsInt(const char* key) const;
 
 	// same as getKeyValueAsString()
-	// @param key: the key to search for
+	// @param key the key to search for
 	// @return the value associated with the key, or "" if it could not be found
 	const char* getKeyValue(const char* key) const;
 
@@ -207,12 +203,12 @@ public:
 	virtual void process();
 
 	// transfers the object into a new world
-	// @param _world: the world to move the entity into
+	// @param _world the world to move the entity into
 	virtual void insertIntoWorld(World* _world);
 
 	// draws the entity
-	// @param camera: the camera through which to draw the entity
-	// @param light: the light by which the entity should be illuminated (or nullptr for no illumination)
+	// @param camera the camera through which to draw the entity
+	// @param light the light by which the entity should be illuminated (or nullptr for no illumination)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) const;
 
 	// animates all the entity's meshes in unison
@@ -224,37 +220,42 @@ public:
 	// @return true if we moved without hitting any obstacles, otherwise false
 	bool move();
 
+	// apply a force to the entity's rigid body (if any)
+	// @param force the force to apply in world coordinates
+	// @param origin point of origin for the force in world space
+	void applyForce(const Vector& force, const Vector& origin);
+
 	// loads an entity definition from a json file
-	// @param filename: the file to load
+	// @param filename the file to load
 	// @return a newly created def_t struct
 	static def_t* loadDef(const char* filename);
 
 	// saves an entity definition to a json file
-	// @param filename: the file to load
+	// @param filename the file to load
 	// @return true on success, false on failure
 	bool saveDef(const char* filename) const;
 
 	// locates the entity definition with the given name
-	// @param name: the name of the entity to find
+	// @param name the name of the entity to find
 	// @return the entity def, or nullptr if it could not be found
 	static const Entity::def_t* findDef(const char* name);
 
 	// locates the entity definition with the given index
-	// @param index: the index of the definition to find
+	// @param index the index of the definition to find
 	// @return the entity def, or nullptr if it could not be found
 	static const Entity::def_t* findDef(const Uint32 index);
 
 	// spawns an entity using an entity def
-	// @param world: the world to spawn the entity into
-	// @param def: the definition to use
-	// @param pos: where to spawn the entity
-	// @param ang: the new entity's orientation
-	// @param uid: the uid of the entity to be created, if any
+	// @param world the world to spawn the entity into
+	// @param def the definition to use
+	// @param pos where to spawn the entity
+	// @param ang the new entity's orientation
+	// @param uid the uid of the entity to be created, if any
 	// @return the entity, or nullptr if the associated def was not found
 	static Entity* spawnFromDef(World* world, const Entity::def_t& def, const Vector& pos, const Angle& ang, Uint32 uid = UINT32_MAX);
 
 	// determines if we are near a character or not
-	// @param radius: the search radius
+	// @param radius the search radius
 	// @return true if we are near a character, otherwise false
 	bool isNearCharacter(float radius) const;
 
@@ -275,13 +276,13 @@ public:
 	Angle getLookDir() const;
 
 	// check whether the entity collides with anything at the given location
-	// @param newPos: the position to test
+	// @param newPos the position to test
 	// @return true if we collide, false if we do not
 	bool checkCollision(const Vector& newPos);
 
 	// builds a copy of this entity
-	// @param world: the world to place the new entity into
-	// @param entity: a pre-made entity object, or nullptr to make a new one
+	// @param world the world to place the new entity into
+	// @param entity a pre-made entity object, or nullptr to make a new one
 	// @return the copied entity
 	Entity* copy(World* world, Entity* entity = nullptr) const;
 
@@ -299,12 +300,12 @@ public:
 	Uint32 getNewComponentID() { ++componentIDs; return componentIDs; }
 
 	// checks the entity for any components with the given type
-	// @param type: the type to look for
+	// @param type the type to look for
 	// @return true if the component was found, false otherwise
 	bool hasComponent(Component::type_t type) const;
 
 	// find the component with the given name
-	// @param name: the name of the component
+	// @param name the name of the component
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByName(const char* name) {
@@ -325,7 +326,7 @@ public:
 	}
 
 	// find the component with the given uid
-	// @param uid: the uid of the component
+	// @param uid the uid of the component
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByUID(const Uint32 uid) {
@@ -346,12 +347,12 @@ public:
 	}
 
 	// find the component with the given name and remove it
-	// @param uid: the name of the component
+	// @param uid the name of the component
 	// @return true if the component was removed, otherwise false
 	bool removeComponentByName(const char* name);
 
 	// find the component with the given uid and remove it
-	// @param uid: the uid of the component
+	// @param uid the uid of the component
 	// @return true if the component was removed, otherwise false
 	bool removeComponentByUID(const Uint32 uid);
 
@@ -367,8 +368,8 @@ public:
 	}
 
 	// find all components of a given type
-	// @param type: the type of component to search for
-	// @param list: list to populate
+	// @param type the type of component to search for
+	// @param list list to populate
 	template <typename T>
 	void findAllComponents(Component::type_t type, LinkedList<T*>& list) const {
 		for( size_t c = 0; c < components.getSize(); ++c ) {
@@ -380,13 +381,13 @@ public:
 	}
 
 	// perform a line test (raytrace) through the entity's parent world which stops at first hit object
-	// @param origin: the starting point of the ray
-	// @param dest: the ending point of the ray
+	// @param origin the starting point of the ray
+	// @param dest the ending point of the ray
 	// @return a hit_t structure containing information on the hit object
 	const World::hit_t lineTrace( const Vector& origin, const Vector& dest );
 
 	// dispatches the entity's interaction function in LUA.
-	// @param user: the entity that interacted with this entity
+	// @param user the entity that interacted with this entity
 	// @return true if the interaction was successful, false if object is uninteractable or if there were script errors
 	bool interact(Entity& user);
 
@@ -395,8 +396,8 @@ public:
 	void serialize(FileInterface * file);
 
 	// kicks off an async pathfinding task
-	// @param goalX: target x coordinate
-	// @param goalY: target y coordinate
+	// @param goalX target x coordinate
+	// @param goalY target y coordinate
 	void findAPath(int endX, int endY);
 
 	// kicks off an async pathfinding task to a random destination

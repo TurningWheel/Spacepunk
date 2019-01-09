@@ -40,7 +40,7 @@ public:
 	};
 
 	// advance the animation and play sounds
-	// @param speaker: pointer to the speaker used to play animation sounds (if any)
+	// @param speaker pointer to the speaker used to play animation sounds (if any)
 	// @return true if the animation changed, otherwise false
 	bool update(Speaker* speaker);
 

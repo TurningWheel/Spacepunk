@@ -88,36 +88,36 @@ public:
 	};
 
 	// gets the analog value of a particular input binding
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the analog value (range = -1.f : +1.f)
 	float analog(bindingenum_t binding) const;
 
 	// gets the binary value of a particular input binding
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the bool value (false = not pressed, true = pressed)
 	bool binary(bindingenum_t binding) const;
 
 	// gets the binary value of a particular input binding, if it's not been consumed
 	// releasing the input and retriggering it "unconsumes"
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the bool value (false = not pressed, true = pressed)
 	bool binaryToggle(bindingenum_t binding) const;
 
-	// @param binding: the binding to flag consumed
+	// @param binding the binding to flag consumed
 	void consumeBinaryToggle(bindingenum_t binding);
 
 	// gets the input mapped to a particular input binding
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the input mapped to the given binding
 	const char* binding(bindingenum_t binding) const;
 
 	// rebind the given action to the given input
-	// @param name: the action to rebind
-	// @param input: the input to rebind to the action
+	// @param name the action to rebind
+	// @param input the input to rebind to the action
 	void rebind(bindingenum_t binding, const char* input);
 
 	// find the binding with the given name
-	// @param name: the name of the binding
+	// @param name the name of the binding
 	// @return the binding enum
 	static bindingenum_t enumForName(const char* name);
 

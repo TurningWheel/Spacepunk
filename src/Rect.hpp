@@ -31,8 +31,8 @@ struct Rect {
 	}
 
 	// determines if the given point lies within the bounds of the rectangle
-	// @param pointX: the x coordinate of the point to test
-	// @param pointY: the y coordinate of the point to test
+	// @param pointX the x coordinate of the point to test
+	// @param pointY the y coordinate of the point to test
 	// @return true if the point is within the rectangle, and false if it is not
 	bool containsPoint( T pointX, T pointY ) const {
 		if( pointX >= x && pointX < x+w &&

@@ -4,11 +4,7 @@ using namespace std;
 
 #include "Main.hpp"
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -156,9 +152,9 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 		}
 
 		// load light data into shader
+		Uint32 index = 0;
+		StringBuf<32> buf;
 		if( lights.getSize() ) {
-			Uint32 index = 0;
-			StringBuf<32> buf;
 			for (auto light : lights) {
 				Vector lightAng = light->getGlobalAng().toVector();
 				glm::vec3 lightDir( lightAng.x, -lightAng.z, lightAng.y );
@@ -181,7 +177,9 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 					glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
 					glUniformMatrix4fv(shader.getUniformLocation(buf.format("gLightProj[%d]",(int)(index))), 1, GL_FALSE, glm::value_ptr(lightProj));
 				} else {
+					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), 4 + index);
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+4+index);
 				}
 
 				++index;
@@ -201,6 +199,11 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 			glUniform1i(shader.getUniformLocation("gNumLights"), 1);
 		} else {
 			glUniform1i(shader.getUniformLocation("gNumLights"), 0);
+		}
+		for ( ; index < maxLights; ++index) {
+			glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), 4 + index);
+			glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+4+index);
 		}
 
 		// get cubemap

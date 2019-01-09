@@ -65,8 +65,8 @@ public:
 	virtual void update() override;
 
 	// draws the light as a bounded cube (generally for editing purposes)
-	// @param camera: the camera to draw the light from
-	// @param light: the light to light the light with (whew) (unused)
+	// @param camera the camera to draw the light from
+	// @param light the light to light the light with (whew) (unused)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// creates a shadow map from the light source
@@ -76,7 +76,7 @@ public:
 	void deleteShadowMap();
 
 	// load the component from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	virtual void load(FILE* fp) override;
 
 	// save/load this object to a file

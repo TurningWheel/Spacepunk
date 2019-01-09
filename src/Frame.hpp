@@ -87,13 +87,13 @@ public:
 	static const int entrySize = 20;
 
 	// draws the frame and all of its subelements
-	// @param renderer: the renderer object used to draw the frame
+	// @param renderer the renderer object used to draw the frame
 	void draw(Renderer& renderer);
 
 	// draws the frame and all of its subelements
-	// @param renderer: the renderer object used to draw the frame
-	// @param _size: real position of the frame onscreen
-	// @param _actualSize: offset into the frame space (scroll)
+	// @param renderer the renderer object used to draw the frame
+	// @param _size real position of the frame onscreen
+	// @param _actualSize offset into the frame space (scroll)
 	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
 
 	// handle clicks and other events
@@ -101,40 +101,40 @@ public:
 	result_t process();
 
 	// handle clicks and other events
-	// @param _size: real position of the frame onscreen
-	// @param _actualSize: offset into the frame space (scroll)
-	// @param usable: true if another object doesn't have the mouse's attention, false otherwise
+	// @param _size real position of the frame onscreen
+	// @param _actualSize offset into the frame space (scroll)
+	// @param usable true if another object doesn't have the mouse's attention, false otherwise
 	// @return compiled results of frame processing
 	result_t process(Rect<int> _size, Rect<int> actualSize, const bool usable);
 
 	// adds a new frame to the current frame
-	// @param name: internal name of the new frame
-	// @param script: script name of the new frame (sans extension + path)
+	// @param name internal name of the new frame
+	// @param script script name of the new frame (sans extension + path)
 	// @return the newly created frame
 	Frame* addFrame(const char* name="", const char* script="");
 
 	// adds a new button to the current frame
-	// @param name: internal name of the new button
+	// @param name internal name of the new button
 	// @return the newly created button
 	Button* addButton(const char* name);
 
 	// adds a new field to the current frame
-	// @param name: internal name of the new field
-	// @param len: the length of the field in characters
+	// @param name internal name of the new field
+	// @param len the length of the field in characters
 	// @return the newly created field
 	Field* addField(const char* name, const int len);
 
 	// adds a new image object to the current frame
-	// @param x: x coordinate of the text in the frame
-	// @param y: y coordinate of the text in the frame
-	// @param color: the color of the text in the frame
-	// @param name: the filename of the image
+	// @param x x coordinate of the text in the frame
+	// @param y y coordinate of the text in the frame
+	// @param color the color of the text in the frame
+	// @param name the filename of the image
 	// @return the newly created image object
 	image_t* addImage( int x, int y, const glm::vec4& color, const char* name );
 
 	// adds a new entry to the frame's list
-	// @param name: internal name of the new entry
-	// @param resizeFrame: if true, the size of the frame will be reduced after removing the entry
+	// @param name internal name of the new entry
+	// @param resizeFrame if true, the size of the frame will be reduced after removing the entry
 	// @return the newly created entry object
 	entry_t* addEntry( const char* name, bool resizeFrame );
 
@@ -145,38 +145,38 @@ public:
 	void removeSelf();
 
 	// remove an object from the frame
-	// @param name: the name of the object to remove
+	// @param name the name of the object to remove
 	// @return true if the object was successfully removed, false otherwise
 	bool remove( const char* name );
 
 	// remove an entry from the frame list
-	// @param name: the name of the object to remove
-	// @param resizeFrame: if true, the size of the frame will be reduced after removing the entry
+	// @param name the name of the object to remove
+	// @param resizeFrame if true, the size of the frame will be reduced after removing the entry
 	// @return true if the entry was successfully removed, false otherwise
 	bool removeEntry( const char* name, bool resizeFrame );
 
 	// recursively searches all embedded frames for a specific frame
-	// @param name: the name of the frame to find
+	// @param name the name of the frame to find
 	// @return the frame with the given name, or nullptr if the frame could not be found
 	Frame* findFrame( const char* name );
 		
 	// find a button in this frame
-	// @param name: the name of the button to find
+	// @param name the name of the button to find
 	// @return the button, or nullptr if it could not be found
 	Button* findButton( const char* name );
 
 	// find a field in this frame
-	// @param name: the name of the field to find
+	// @param name the name of the field to find
 	// @return the field, or nullptr if it could not be found
 	Field* findField( const char* name );
 
 	// find an image in this frame
-	// @param name: the name of the image to find
+	// @param name the name of the image to find
 	// @return the image, or nullptr if it could not be found
 	image_t* findImage( const char* name );
 
 	// find an entry in this frame
-	// @param name: the name of the entry to find
+	// @param name the name of the entry to find
 	// @return the entry, or nullptr if it could not be found
 	entry_t* findEntry( const char* name );
 
@@ -184,8 +184,8 @@ public:
 	void resizeForEntries();
 
 	// determines if the mouse is currently within the frame or not
-	// @param curSize: used by the recursion algorithm, ignore or always pass nullptr
-	// @param curActualSize: used by the recursion algorithm, ignore or always pass nullptr
+	// @param curSize used by the recursion algorithm, ignore or always pass nullptr
+	// @param curActualSize used by the recursion algorithm, ignore or always pass nullptr
 	// @return true if it is, false otherwise
 	bool capturesMouse(Rect<int>* curSize=nullptr, Rect<int>* curActualSize=nullptr);
 

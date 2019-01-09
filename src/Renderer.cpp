@@ -8,6 +8,55 @@
 #include "savepng.hpp"
 #include "Text.hpp"
 
+// This is a little spammy at the moment
+#define REGISTER_GLDEBUG_CALLBACK 1
+
+#if REGISTER_GLDEBUG_CALLBACK
+
+static void GLAPIENTRY onGlDebugMessageCallback(
+	GLenum source,		// GL_DEBUG_SOURCE_*
+	GLenum type,		// GL_DEBUG_TYPE_*
+	GLuint id,
+	GLenum severity,	// GL_DEBUG_SEVERITY_*
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	Engine::msg_t logType;
+
+	switch (severity) {
+	case GL_DEBUG_SEVERITY_HIGH:
+		logType = Engine::MSG_ERROR;
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		logType = Engine::MSG_WARN;
+		break;
+	case GL_DEBUG_SEVERITY_LOW:
+		logType = Engine::MSG_INFO;
+		break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		// we honestly don't care about these
+		return;
+	default:
+		return;
+	}
+
+	mainEngine->fmsg(
+		logType,
+		"OpenGL: type = 0x%x, severity = 0x%x",
+		type,
+		severity
+	);
+
+	mainEngine->fmsg(
+		logType,
+		"%s",
+		message
+	);
+}
+
+#endif
+
 Renderer::Renderer() {
 	xres = mainEngine->getXres();
 	yres = mainEngine->getYres();
@@ -45,7 +94,7 @@ void Renderer::init() {
 int Renderer::initVideo() {
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
-#ifdef NDEBUG
+#ifndef BUILD_DEBUG
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
 #else
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY );
@@ -126,20 +175,36 @@ int Renderer::initVideo() {
 		}
 	}
 
+	const GLubyte * verStr = glGetString(GL_VERSION);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_VERSION = %s", verStr);
+	const GLubyte * shVerStr = glGetString(GL_SHADING_LANGUAGE_VERSION);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_SHADING_LANGUAGE_VERSION = %s", shVerStr);
+
+#if REGISTER_GLDEBUG_CALLBACK
+	// During init, enable debug output
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(onGlDebugMessageCallback, 0);
+	// use glDebugMessageControl to filter the callbacks
+#endif
+
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+#ifdef BUILD_DEBUG
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
+#endif
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+
 
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);

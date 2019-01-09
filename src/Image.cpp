@@ -142,7 +142,7 @@ void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::v
 
 	glViewport(0, 0, xres, yres);
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
 
 	// for the use of a whole image

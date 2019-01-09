@@ -30,7 +30,7 @@ public:
 	void optimizeBuffers();
 
 	// draws the chunk
-	// @param camera: the camera to render the chunk with
+	// @param camera the camera to render the chunk with
 	void draw(Camera& camera) const;
 
 	// calculates the number of vertices in the chunk
@@ -38,11 +38,11 @@ public:
 	size_t calculateVertices() const;
 
 	// adds an entity component to our population list
-	// @param component: the entity component to add to our list
+	// @param component the entity component to add to our list
 	Node<Component*>* addCPopulation(Component* component);
 
 	// adds an entity to our population list
-	// @param entity: the entity to add to our list
+	// @param entity the entity to add to our list
 	Node<Entity*>* addEPopulation(Entity* entity);
 
 	// getters & setters
