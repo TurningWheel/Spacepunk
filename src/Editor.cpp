@@ -6071,7 +6071,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%.2f",bbox->getMass());
