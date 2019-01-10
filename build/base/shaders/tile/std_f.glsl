@@ -1,4 +1,4 @@
-#version 450
+#version 400
 
 in vec3 DiffuseMap;
 in vec3 NormalMap;
@@ -15,7 +15,7 @@ out vec4 FragColor;
 uniform bool gActiveLight;
 uniform vec3 gCameraPos;
 
-#define MAX_LIGHTS 32
+#define MAX_LIGHTS 12
 uniform vec3 gLightPos[MAX_LIGHTS];
 uniform vec3 gLightColor[MAX_LIGHTS];
 uniform float gLightIntensity[MAX_LIGHTS];
@@ -66,26 +66,6 @@ float ShadowFactor(int light)
 		case 9: lSample = texture(gShadowmap[9], lUVC); break;
 		case 10: lSample = texture(gShadowmap[10], lUVC); break;
 		case 11: lSample = texture(gShadowmap[11], lUVC); break;
-		case 12: lSample = texture(gShadowmap[12], lUVC); break;
-		case 13: lSample = texture(gShadowmap[13], lUVC); break;
-		case 14: lSample = texture(gShadowmap[14], lUVC); break;
-		case 15: lSample = texture(gShadowmap[15], lUVC); break;
-		case 16: lSample = texture(gShadowmap[16], lUVC); break;
-		case 17: lSample = texture(gShadowmap[17], lUVC); break;
-		case 18: lSample = texture(gShadowmap[18], lUVC); break;
-		case 19: lSample = texture(gShadowmap[19], lUVC); break;
-		case 20: lSample = texture(gShadowmap[20], lUVC); break;
-		case 21: lSample = texture(gShadowmap[21], lUVC); break;
-		case 22: lSample = texture(gShadowmap[22], lUVC); break;
-		case 23: lSample = texture(gShadowmap[23], lUVC); break;
-		case 24: lSample = texture(gShadowmap[24], lUVC); break;
-		case 25: lSample = texture(gShadowmap[25], lUVC); break;
-		case 26: lSample = texture(gShadowmap[26], lUVC); break;
-		case 27: lSample = texture(gShadowmap[27], lUVC); break;
-		case 28: lSample = texture(gShadowmap[28], lUVC); break;
-		case 29: lSample = texture(gShadowmap[29], lUVC); break;
-		case 30: lSample = texture(gShadowmap[30], lUVC); break;
-		case 31: lSample = texture(gShadowmap[31], lUVC); break;
 	}
 
 	return lSample;

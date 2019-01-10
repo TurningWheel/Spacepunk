@@ -89,7 +89,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 	}
 	ShaderProgram& shader = mat->getShader();
 
-	glLineWidth(1);
+	//glLineWidth(1);
 
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();

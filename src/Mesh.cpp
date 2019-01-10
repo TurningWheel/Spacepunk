@@ -194,7 +194,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 		// set line width
 		if( shaderVars.lineWidth > 0 ) {
-			glLineWidth(shaderVars.lineWidth);
+			//glLineWidth(shaderVars.lineWidth);
 		}
 
 		// load highlight color into shader

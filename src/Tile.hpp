@@ -41,7 +41,7 @@ public:
 	static const int solidWallHeight = 0;
 
 	// maximum number of lights that will fit in the tile shader
-	static const Uint32 maxLights = 32;
+	static const Uint32 maxLights = 12;
 
 	// default texture
 	static const char* defaultTexture;

@@ -179,6 +179,8 @@ int Renderer::initVideo() {
 	mainEngine->fmsg(Engine::MSG_INFO, "GL_VERSION = %s", verStr);
 	const GLubyte * shVerStr = glGetString(GL_SHADING_LANGUAGE_VERSION);
 	mainEngine->fmsg(Engine::MSG_INFO, "GL_SHADING_LANGUAGE_VERSION = %s", shVerStr);
+	GLint imageUnits = 0; glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &imageUnits);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = %d", imageUnits);
 
 #if REGISTER_GLDEBUG_CALLBACK
 	// During init, enable debug output
