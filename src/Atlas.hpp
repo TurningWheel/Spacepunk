@@ -34,7 +34,7 @@ public:
 	// loads a new image into the atlas ...
 	// after all images are loaded, the atlas must be refreshed or rendering will be messed up
 	// you cannot load two images with the same name
-	// @param _name: the filename of the image to load
+	// @param _name the filename of the image to load
 	// @return true on success, false on failure
 	bool loadImage(const char* _name);
 
@@ -45,7 +45,7 @@ public:
 	void cleanup();
 
 	// find the index of an image
-	// @param _name: the name of the image whose index we are looking for
+	// @param _name the name of the image whose index we are looking for
 	// @return the index of the image with the given name, or nindex if no such image exists
 	const GLuint indexForName(const char* _name) const;
 

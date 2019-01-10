@@ -550,7 +550,7 @@ void SectorWorld::destroyGrid() {
 }
 
 void SectorWorld::drawGrid(Camera& camera, float z) {
-	glLineWidth(2.f);
+	//glLineWidth(2.f);
 
 	// setup model matrix
 	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(pointerPos.x - largeGridSize * tileSize / 2.f,-z,pointerPos.y - largeGridSize * tileSize / 2.f));

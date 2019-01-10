@@ -46,19 +46,19 @@ public:
 	virtual ~Component();
 
 	// draws the component
-	// @param camera: the camera through which to draw the component
-	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
+	// @param camera the camera through which to draw the component
+	// @param light the light by which the component should be illuminated (or nullptr for no illumination)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights);
 
 	// update the component
 	virtual void process();
 
 	// called just before the parent is inserted into a new world
-	// @param world: the world we will be placed into, if any
+	// @param world the world we will be placed into, if any
 	virtual void beforeWorldInsertion(const World* world);
 
 	// called just after the parent is inserted into a new world
-	// @param world: the world we have been placed into, if any
+	// @param world the world we have been placed into, if any
 	virtual void afterWorldInsertion(const World* world);
 
 	// check whether the component collides with anything at the current location
@@ -66,13 +66,13 @@ public:
 	virtual bool checkCollision() const;
 
 	// marks tiles, chunks, and sectors that are visible to the component
-	// @param range: maximum range to test occlusion with
-	// @param accuracy: resolution for the occlusion test
+	// @param range maximum range to test occlusion with
+	// @param accuracy resolution for the occlusion test
 	void occlusionTest(float range, int accuracy);
 
 	// determine if the component has culled the given entity from LOS
-	// @param entity: the entity to test visibility of
-	// @param accuracy: bitfield:
+	// @param entity the entity to test visibility of
+	// @param accuracy bitfield:
 	//		* 1: also cast from immediate neighbors
 	//		* 2: neighbor tiles always visible by extension
 	//		* 4: respect entities with OCCLUDE flag
@@ -90,19 +90,20 @@ public:
 	virtual void update();
 
 	// checks the component for any components with the given type
-	// @param type: the type to look for
+	// @param type the type to look for
 	// @return true if the component was found, false otherwise
 	bool hasComponent(type_t type) const;
 
 	// shoots a laser forward from the component origin until an obstacle is hit
+	// @param mat The start location of the laser
 	// @param color The laser's color
 	// @param size The laser's size
 	// @param life The laser's lifespan (in ticks, 60 ticks = 1 sec)
-	void shootLaser(const WideVector& color, float size, float life);
+	void shootLaser(const glm::mat4& mat, WideVector& color, float size, float life);
 
 	// find all components of a given type
-	// @param type: the type of component to search for
-	// @param list: list to populate
+	// @param type the type of component to search for
+	// @param list list to populate
 	template <typename T>
 	void findAllComponents(Component::type_t type, LinkedList<T*>& list) const {
 		for( size_t c = 0; c < components.getSize(); ++c ) {
@@ -114,7 +115,7 @@ public:
 	}
 
 	// find the component with the given name
-	// @param name: the name of the component
+	// @param name the name of the component
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByName(const char* name) {
@@ -135,7 +136,7 @@ public:
 	}
 
 	// find the component with the given uid
-	// @param uid: the uid of the component
+	// @param uid the uid of the component
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByUID(const Uint32 uid) {
@@ -156,12 +157,12 @@ public:
 	}
 
 	// find the component with the given name and remove it
-	// @param uid: the name of the component
+	// @param uid the name of the component
 	// @return true if the component was removed, otherwise false
 	bool removeComponentByName(const char* name);
 
 	// find the component with the given uid and remove it
-	// @param uid: the uid of the component
+	// @param uid the uid of the component
 	// @return true if the component was removed, otherwise false
 	bool removeComponentByUID(const Uint32 uid);
 
@@ -180,7 +181,7 @@ public:
 	}
 
 	// copy sub-components into another component
-	// @param dest: the component which will contain our copies
+	// @param dest the component which will contain our copies
 	void copyComponents(Component& dest);
 
 	// clears the node pointing to us in the chunk we are occupying
@@ -190,7 +191,7 @@ public:
 	void clearAllChunkNodes();
 
 	// load the component from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	virtual void load(FILE* fp);
 
 	// save/load this object to a file
@@ -198,15 +199,15 @@ public:
 	virtual void serialize(FileInterface* file);
 
 	// rotate the component by a given amount
-	// @param ang: the amount to rotate
+	// @param ang the amount to rotate
 	void rotate(const Angle& ang);
 
 	// translate the component by a given amount
-	// @param vec: the amount to translate
+	// @param vec the amount to translate
 	void translate(const Vector& vec);
 
 	// scale the component by a given amount
-	// @param vec: the amount to scale
+	// @param vec the amount to scale
 	void scale(const Vector& vec);
 
 	// reverts rotation to 0, 0, 0
@@ -277,7 +278,7 @@ protected:
 	bool collapsed = true;
 
 	// load sub-components from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	void loadSubComponents(FILE* fp);
 
 	// save/load this object to a file

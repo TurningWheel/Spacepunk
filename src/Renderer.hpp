@@ -40,22 +40,22 @@ public:
 	void init();
 
 	// gets the pixel at the given coordinates in the given SDL_Surface
-	// @param surface: the SDL_Surface to inspect
-	// @param x: the x coordinate of the pixel to get
-	// @param y: the y coordinate of the pixel to get
+	// @param surface the SDL_Surface to inspect
+	// @param x the x coordinate of the pixel to get
+	// @param y the y coordinate of the pixel to get
 	// @return the 32-bit color value of the pixel
 	static const Uint32 getPixel(const SDL_Surface* surface, const Uint32 x, const Uint32 y);
 
 	// sets a pixel in the given SDL_Surface
-	// @param surface: the SDL_Surface to modify
-	// @param x: the x coordinate of the pixel to set
-	// @param y: the y coordinate of the pixel to set
-	// @param pixel: the 32-bit color value to set the pixel to
+	// @param surface the SDL_Surface to modify
+	// @param x the x coordinate of the pixel to set
+	// @param y the y coordinate of the pixel to set
+	// @param pixel the 32-bit color value to set the pixel to
 	static void setPixel(SDL_Surface* surface, const Uint32 x, const Uint32 y, const Uint32 pixel);
 
 	// flip a surface
-	// @param surface: the SDL_Surface to be flipped
-	// @param flags: the directions to flip the surface in
+	// @param surface the SDL_Surface to be flipped
+	// @param flags the directions to flip the surface in
 	// @return a flipped copy of the given SDL_Surface
 	static SDL_Surface* flipSurface( SDL_Surface* surface, int flags );
 	static const int flipHorizontal = 1;
@@ -68,33 +68,33 @@ public:
 	void drawConsole( const Sint32 height, const char* input, const LinkedList<Engine::logmsg_t>& log, const Node<Engine::logmsg_t>* logStart );
 
 	// draw a raised frame for windows or buttons, etc.
-	// @param src: the size and coordinates of the frame
-	// @param frameSize: the size of the frame border in pixels
-	// @param color: the frame's color
-	// @param hollow: if true, the center of the frame will not be drawn
+	// @param src the size and coordinates of the frame
+	// @param frameSize the size of the frame border in pixels
+	// @param color the frame's color
+	// @param hollow if true, the center of the frame will not be drawn
 	void drawHighFrame( const Rect<int>& src, const int frameSize, const glm::vec4& color, const bool hollow=false );
 
 	// draw a lowered frame for windows or buttons, etc.
-	// @param src: the size and coordinates of the frame
-	// @param frameSize: the size of the frame border in pixels
-	// @param color: the frame's color
-	// @param hollow: if true, the center of the frame will not be drawn
+	// @param src the size and coordinates of the frame
+	// @param frameSize the size of the frame border in pixels
+	// @param color the frame's color
+	// @param hollow if true, the center of the frame will not be drawn
 	void drawLowFrame( const Rect<int>& src, const int frameSize, const glm::vec4& color, const bool hollow=false );
 
 	// draw a filled rectangle in screen space
-	// @param src: the size and coordinates of the rectangle
-	// @param color: the 32-bit color of the rectangle
+	// @param src the size and coordinates of the rectangle
+	// @param color the 32-bit color of the rectangle
 	void drawRect( const Rect<int>* src, const glm::vec4& color );
 
 	// writes utf-8 text using a ttf font at the given screen coordinates
-	// @param rect: the position and size of the text image to use
-	// @param str: the str to print
+	// @param rect the position and size of the text image to use
+	// @param str the str to print
 	void printText( const Rect<int>& rect, const char* str );
 
 	// writes utf-8 text using a ttf font at the given screen coordinates
-	// @param rect: the position and size of the text image to use
-	// @param color: the color to blend the text with
-	// @param str: the str to print
+	// @param rect the position and size of the text image to use
+	// @param color the color to blend the text with
+	// @param str the str to print
 	void printTextColor( const Rect<int>& rect, const glm::vec4& color, const char* str );
 
 	// clears the screen and the z-buffer

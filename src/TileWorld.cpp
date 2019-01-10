@@ -2,11 +2,7 @@
 
 #include "Main.hpp"
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -1869,7 +1865,7 @@ void TileWorld::resize(int left, int right, int up, int down) {
 }
 
 void TileWorld::drawGrid(Camera& camera, float z) {
-	glLineWidth(2.f);
+	//glLineWidth(2.f);
 
 	// setup model matrix
 	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(0,-z,0));

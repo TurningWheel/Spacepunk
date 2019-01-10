@@ -2,11 +2,7 @@
 
 #pragma once
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -28,15 +24,15 @@ public:
 	static const char* materialStr;
 
 	// draws the vertex
-	// @param camera: the camera through which to draw the vertex
+	// @param camera the camera through which to draw the vertex
 	void draw(Camera& camera);
 
 	// move all the vertices to the given location
-	// @param pos: where to move them to
+	// @param pos where to move them to
 	void move(const glm::vec3& pos);
 
 	// assign a vertex to us
-	// @param vertex: vertex to assign
+	// @param vertex vertex to assign
 	void own(Sector::vertex_t& vertex);
 
 	// getters & setters

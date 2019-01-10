@@ -7,11 +7,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/vec4.hpp>
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #include "ArrayList.hpp"
 #include "LinkedList.hpp"
@@ -56,15 +52,15 @@ public:
 	static const char* defaultMesh;
 
 	// draws the component
-	// @param camera: the camera through which to draw the component
-	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
+	// @param camera the camera through which to draw the component
+	// @param light the light by which the component should be illuminated (or nullptr for no illumination)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// update the component
 	virtual void process() override;
 
 	// finds a bone with the given name
-	// @param name: the name of the bone to search for
+	// @param name the name of the bone to search for
 	// @return a struct containing bone position, orientation, etc.
 	bone_t findBone(const char* name) const;
 
@@ -72,7 +68,7 @@ public:
 	bool hasAnimations() const;
 
 	// load the component from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	virtual void load(FILE* fp) override;
 
 	// save/load this object to a file

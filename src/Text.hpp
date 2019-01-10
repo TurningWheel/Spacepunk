@@ -23,13 +23,13 @@ public:
 	const unsigned int		getHeight()	const	{ return height; }
 
 	// draws the text
-	// @param src: defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
-	// @param dest: the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
+	// @param src defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
+	// @param dest the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
 	void draw( Rect<int> src, Rect<int> dest ) const;
 
 	// draws the text with the given color
-	// @param src: defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
-	// @param dest: the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
+	// @param src defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
+	// @param dest the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
 	void drawColor( Rect<int> src, Rect<int> dest, const glm::vec4& color) const;
 
 private:

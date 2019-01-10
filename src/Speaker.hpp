@@ -21,17 +21,17 @@ public:
 	const Mesh::shadervars_t shaderVars;
 
 	// draws the component
-	// @param camera: the camera through which to draw the component
-	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
+	// @param camera the camera through which to draw the component
+	// @param light the light by which the component should be illuminated (or nullptr for no illumination)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// update the component
 	virtual void process() override;
 
 	// plays the given sound
-	// @param name: the filename of the sound
-	// @param loop: if true, the sound will loop when played; otherwise, it will not
-	// @param range: max distance the sound will play over
+	// @param name the filename of the sound
+	// @param loop if true, the sound will loop when played; otherwise, it will not
+	// @param range max distance the sound will play over
 	// @return the sound source index, or -1 for failure
 	int playSound( const char* name, const bool loop, const float range );
 
@@ -44,7 +44,7 @@ public:
 	bool stopAllSounds();
 
 	// load the component from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	virtual void load(FILE* fp) override;
 
 	// save/load this object to a file

@@ -1,4 +1,4 @@
-#version 450
+#version 400
 
 in vec3 WorldPos;
 in vec2 TexCoord;

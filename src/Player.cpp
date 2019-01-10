@@ -28,6 +28,7 @@ static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_crouchSpeed("player.crouchspeed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
 static Cvar cvar_jumpPower("player.jumppower", "player jump strength", "4.0");
+static Cvar cvar_canCrouch("player.cancrouch", "whether player can crouch at all or not", "1");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -80,7 +81,7 @@ void Player::setEntity(Entity* _entity) {
 		torso = entity->findComponentByName<Model>("Torso");
 		arms = entity->findComponentByName<Model>("Arms");
 		feet = entity->findComponentByName<Model>("Feet");
-		bbox = entity->findComponentByName<BBox>("BBox");
+		bbox = entity->findComponentByName<BBox>("physics");
 		camera = entity->findComponentByName<Camera>("Camera");
 		rTool = entity->findComponentByName<Model>("RightTool");
 		lTool = entity->findComponentByName<Model>("LeftTool");
@@ -125,7 +126,7 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	torso = entity->findComponentByName<Model>("Torso");
 	arms = entity->findComponentByName<Model>("Arms");
 	feet = entity->findComponentByName<Model>("Feet");
-	bbox = entity->findComponentByName<BBox>("BBox");
+	bbox = entity->findComponentByName<BBox>("physics");
 	camera = entity->findComponentByName<Camera>("Camera");
 	rTool = entity->findComponentByName<Model>("RightTool");
 	lTool = entity->findComponentByName<Model>("LeftTool");
@@ -265,7 +266,7 @@ void Player::control() {
 	buttonForward = 0.f;
 	buttonBackward = 0.f;
 	buttonJump = false;
-	buttonCrouch = distToCeiling < totalHeight;
+	buttonCrouch = cvar_canCrouch.toInt() ? distToCeiling < totalHeight : false;
 	float feetHeight = buttonCrouch ? crouchFeetHeight : standFeetHeight;
 	if( !client->isConsoleActive() ) {
 		if( !entity->isFalling() ) {
@@ -308,6 +309,9 @@ void Player::control() {
 	} else {
 		crouching = false;
 	}
+	if (cvar_canCrouch.toInt() == 0) {
+		crouching = false;
+	}
 
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
@@ -322,26 +326,28 @@ void Player::control() {
 	// set falling state and do attach-to-ground
 	if( entity->isFalling() ) {
 		vel.z += cvar_gravity.toFloat() * timeFactor;
-		if( distToFloor <= feetHeight ) {
+		if( distToFloor <= feetHeight && vel.z >= 0.f ) {
 			entity->setFalling(false);
-			pos.z = nearestFloor;
 			distToFloor = feetHeight;
-			vel.z = 0;
+			//pos.z = nearestFloor;
+			//vel.z = 0;
+			vel.z = (nearestFloor - pos.z) / 10.f;
 		}
 	} else {
 		if( buttonJump && distToFloor <= feetHeight+16 ) {
 			jumped = true;
 			entity->setFalling(true);
-			pos.z = nearestFloor;
+			//pos.z = nearestFloor;
 			distToFloor = feetHeight;
 			vel.z = -cvar_jumpPower.toFloat();
 		} else {
 			if( distToFloor > feetHeight+16 ) {
 				entity->setFalling(true);
 			} else {
-				pos.z = nearestFloor;
 				distToFloor = feetHeight;
-				vel.z = 0.f;
+				//pos.z = nearestFloor;
+				//vel.z = 0.f;
+				vel.z = (nearestFloor - pos.z) / 10.f;
 			}
 		}
 	}
@@ -436,23 +442,30 @@ void Player::control() {
 		}
 	}
 
-	// speed limit
-	vel.x = min( max( -64.f, vel.x ), 64.f );
-	vel.y = min( max( -64.f, vel.y ), 64.f );
-	vel.z = min( max( -64.f, vel.z ), 64.f );
-
 	// update entity vectors
-	entity->setPos(pos);
+	if (bbox->getMass() == 0.f) {
+		entity->setPos(pos);
+	}
 	entity->setVel(vel);
 	entity->setRot(rot);
 	entity->update();
 
 	// using hand items (shooting)
 	if (input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
-		lTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
+		Model::bone_t bone = lTool->findBone("emitter");
+		glm::mat4 mat = lTool->getGlobalMat();
+		if (bone.valid) {
+			 mat *= bone.mat;
+		}
+		lTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
 	}
 	if (input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
-		rTool->shootLaser(WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
+		Model::bone_t bone = rTool->findBone("emitter");
+		glm::mat4 mat = rTool->getGlobalMat();
+		if (bone.valid) {
+			mat *= bone.mat;
+		}
+		rTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
 	}
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_LEFT);
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_RIGHT);

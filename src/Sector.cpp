@@ -501,7 +501,7 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 	}
 
 	ShaderProgram& shader = material->getShader();
-	glLineWidth(1);
+	//glLineWidth(1);
 
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();

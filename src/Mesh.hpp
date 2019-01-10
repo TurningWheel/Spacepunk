@@ -31,7 +31,7 @@ public:
 	virtual ~Mesh();
 
 	// maximum number of lights that will fit in the tile shader
-	static const Uint32 maxLights = 32;
+	static const Uint32 maxLights = 12;
 
 	// skin cache
 	struct skincache_t {
@@ -71,34 +71,34 @@ public:
 	const bool hasAnimations() const;
 
 	// loads the appropriate shader to draw the mesh
-	// @param component: the component that contains the mesh
-	// @param camera: the camera object to render the scene with
-	// @param light: the light object to light the scene with, or nullptr for no light source
-	// @param material: path to the material asset used to render the mesh
+	// @param component the component that contains the mesh
+	// @param camera the camera object to render the scene with
+	// @param light the light object to light the scene with, or nullptr for no light source
+	// @param material path to the material asset used to render the mesh
 	// @return the ShaderProgram object with the given name, or nullptr if no shader was loaded
-	// @param matrix: model matrix
+	// @param matrix model matrix
 	ShaderProgram* loadShader(const Component& component, Camera& camera, const ArrayList<Light*>& lights, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
 
 	// draws the mesh without animating it
-	// @param camera: the camera to render the mesh through
-	// @param component: optional component tied to the mesh
-	// @param shader: the shader program to draw the mesh with
+	// @param camera the camera to render the mesh through
+	// @param component optional component tied to the mesh
+	// @param shader the shader program to draw the mesh with
 	void draw( Camera& camera, const Component* component, ShaderProgram* shader );
 
 	// draws the mesh
-	// @param camera: the camera to render the mesh through
-	// @param component: optional component tied to the mesh
-	// @param skincache: skincache to render with
-	// @param shader: the shader program to draw the mesh with
+	// @param camera the camera to render the mesh through
+	// @param component optional component tied to the mesh
+	// @param skincache skincache to render with
+	// @param shader the shader program to draw the mesh with
 	void draw( Camera& camera, const Component* component, ArrayList<skincache_t>& skincache, ShaderProgram* shader );
 
 	// skins the mesh
-	// @param animations: animations to skin with
-	// @param skincache: where to store resulting skin
+	// @param animations animations to skin with
+	// @param skincache where to store resulting skin
 	void skin( Map<AnimationState>& animations, ArrayList<skincache_t>& skincache );
 
 	// find the bone with the given name
-	// @param name: the name of the bone to search for
+	// @param name the name of the bone to search for
 	// @return the index of the bone we are searching for, or UINT32_MAX if the bone could not be found
 	unsigned int boneIndexForName( const char* name ) const;
 
@@ -190,12 +190,12 @@ public:
 		Vector minBox, maxBox;
 
 		// raw data
-		float* vertices = nullptr;		// position:  3 floats per vertex
-		float* texCoords = nullptr;		// texCoords: 2 floats per vertex
-		float* normals = nullptr;		// normals:   3 floats per vertex
-		float* colors = nullptr;		// colors:    4 floats per vertex
-		float* tangents = nullptr;		// tangents:  3 floats per vertex
-		GLuint* indices = nullptr;		// indices:   2 uints per vertex (first is vertex, second is adjacent vertex)
+		float* vertices = nullptr;		// position  3 floats per vertex
+		float* texCoords = nullptr;		// texCoords 2 floats per vertex
+		float* normals = nullptr;		// normals   3 floats per vertex
+		float* colors = nullptr;		// colors    4 floats per vertex
+		float* tangents = nullptr;		// tangents  3 floats per vertex
+		GLuint* indices = nullptr;		// indices   2 uints per vertex (first is vertex, second is adjacent vertex)
 	};
 
 	// getters & setters

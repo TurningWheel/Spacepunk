@@ -53,24 +53,24 @@ public:
 	static const float def;
 
 	// find the face with the given normal
-	// @param normal: the normal to look for
+	// @param normal the normal to look for
 	// @return the index of the face with the normal or -1 if it doesn't exist
 	int findFaceWithNormal(const Vector& normal);
 
 	// subdivide a given face into three faces
-	// @param face: the face to split
-	// @param splitPoint: where to split the face
+	// @param face the face to split
+	// @param splitPoint where to split the face
 	void splitFace(int faceIndex, const Vector& splitPoint);
 
 	// build a new sector from an existing face
-	// @param face: the face to split
-	// @param splitPoint: where to split the face
+	// @param face the face to split
+	// @param splitPoint where to split the face
 	// @return a pointer to the new sector
 	Sector* addSector(int faceIndex, const Vector& splitPoint);
 
 	// joins two sectors by the given faces
-	// @param myFace: the face from this sector to join
-	// @param theirFace: the face from the other sector to join
+	// @param myFace the face from this sector to join
+	// @param theirFace the face from the other sector to join
 	void connectSectors(int myFace, int theirFace);
 
 	// uploads vertex data to gpu
@@ -128,9 +128,9 @@ private:
 	btRigidBody* rigidBody = nullptr;
 
 	// loads a shader needed to render this sector
-	// @param camera: the camera to render with
-	// @param light: the light to render with, if any
-	// @param material: the material to render with
+	// @param camera the camera to render with
+	// @param light the light to render with, if any
+	// @param material the material to render with
 	void loadShader(Camera& camera, Light* light, Material* material);
 
 	// update vertex count based on number of faces w/ neighbors

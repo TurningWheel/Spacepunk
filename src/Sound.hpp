@@ -11,7 +11,7 @@ public:
 	virtual ~Sound();
 
 	// plays the sound without any listener (2D)
-	// @param loop: if true, the sound will loop indefinitely; otherwise, it will only play once
+	// @param loop if true, the sound will loop indefinitely; otherwise, it will only play once
 	// @return the SDL_mixer channel that the sound is playing on, or -1 if there were errors
 	int play(const bool loop);
 

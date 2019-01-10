@@ -16,8 +16,10 @@ Shader::Shader(const ArrayList<String>& _defines, shadertype_t _shaderType, cons
 }
 
 Shader::~Shader() {
-	if( shaderObject )
+	if( shaderObject ) {
 		glDeleteShader(shaderObject);
+		shaderObject = 0;
+	}
 }
 
 bool Shader::init() {

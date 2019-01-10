@@ -42,15 +42,15 @@ public:
 	virtual void onEstablishConnection(Uint32 remoteID) override;
 
 	// called when we disconnect from a server
-	// @param remoteID: always zero, since the server is our only remote host
+	// @param remoteID always zero, since the server is our only remote host
 	virtual void onDisconnect(Uint32 remoteID) override;
 
 	// spawns a player on the server
-	// @param localID: the local number of player to spawn
+	// @param localID the local number of player to spawn
 	void spawn(Uint32 localID);
 
 	// starts up the level editor
-	// @param path: optional path to a level to startup
+	// @param path optional path to a level to startup
 	void startEditor(const char* path = "");
 
 	// closes the editor without terminating the client
