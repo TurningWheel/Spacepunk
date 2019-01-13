@@ -133,6 +133,9 @@ bool Model::animate(const char* name, bool blend) {
 	}
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	if (!mesh || !animations.exists(name)) {
+		if (strcmp(name,"__tpose")) {
+			animate("__tpose", false);
+		}
 		return false;
 	}
 	for (auto& pair : animations) {
@@ -180,9 +183,7 @@ void Model::loadAnimations() {
 	tPose.name = "__tpose";
 	animations.insert("__tpose", AnimationState(tPose, ArrayList<Animation::sound_t>()));
 
-	if (!animate("idle", false)) {
-		animate("__tpose", false);
-	}
+	animate("idle", false);
 }
 
 void Model::updateSkin() {
@@ -400,10 +401,8 @@ void Model::serialize(FileInterface * file) {
 
 	file->property("shaderVars", shaderVars);
 
-	if (file->isReading() && !dontLoadMesh) {
-		if (hasAnimations()) {
-			loadAnimations();
-		}
+	if (file->isReading()) {
+		loadAnimations();
 	}
 
 	if (version >= 1) {
