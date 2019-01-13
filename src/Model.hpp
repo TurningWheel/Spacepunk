@@ -135,6 +135,8 @@ public:
 		return *this;
 	}
 
+	static bool dontLoadMesh;
+
 private:
 	bool genius = false;				// if true, and camera belongs to same entity as model, model is not rendered
 	String meshStr;						// mesh filename

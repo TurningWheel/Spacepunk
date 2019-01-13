@@ -696,8 +696,8 @@ GLuint Mesh::SubMesh::findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuin
 		unsigned int*& indices = mesh.mFaces[i].mIndices;
 		for( int edge = 0; edge < 3; ++edge ) {
 			unsigned int v1 = indices[edge]; // first edge index
-			unsigned int v2 = indices[(edge + 1) % 3]; // second edge index
-			unsigned int vOpp = indices[(edge + 2) % 3]; // index of opposite vertex
+			unsigned int v2 = indices[(edge + 1) & 3]; // second edge index
+			unsigned int vOpp = indices[(edge + 2) & 3]; // index of opposite vertex
 
 			// if the edge matches the search edge and the opposite vertex does not match
 			if( ((v1 == index1 && v2 == index2) || (v2 == index1 && v1 == index2)) && vOpp != index3 ) {

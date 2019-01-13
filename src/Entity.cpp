@@ -989,7 +989,9 @@ void Entity::def_t::serialize(FileInterface * file) {
 	file->property("Entity::def_t::version", version);
 	if (version >= 1)
 		file->property("editor", exposedInEditor);
+	Model::dontLoadMesh = true;
 	file->property("entity", entity);
+	Model::dontLoadMesh = false;
 }
 
 bool Entity::isLocalPlayer() {
