@@ -799,7 +799,7 @@ void Component::serializeComponents(FileInterface* file) {
 	}
 }
 
-void Component::shootLaser(const glm::mat4& mat, WideVector color, float size, float life) {
+void Component::shootLaser(const glm::mat4& mat, const WideVector& color, float size, float life) {
 	Vector start = Vector(mat[3].x, mat[3].z, -mat[3].y);
 	//glm::mat4 endMat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
 	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 10000.f;
