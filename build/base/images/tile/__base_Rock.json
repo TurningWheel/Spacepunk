@@ -1,0 +1,8 @@
+{
+	"Texture::version": 0,
+	"textures": [
+		"images/tile/diffuse/Rock_028_COLOR.jpg",
+		"images/tile/normal/Rock_028_NORM.jpg",
+		"images/tile/fx/empty.png"
+	]
+}

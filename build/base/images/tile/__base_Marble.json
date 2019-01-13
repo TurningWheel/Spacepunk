@@ -1,0 +1,8 @@
+{
+	"Texture::version": 0,
+	"textures": [
+		"images/tile/diffuse/Marble_Gray_001_COLOR.jpg",
+		"images/tile/normal/Marble_Gray_001_NORM.jpg",
+		"images/tile/fx/empty.png"
+	]
+}

@@ -111,11 +111,16 @@ void BBox::conformToModel(const Model& model) {
 	for( const Node<Mesh::SubMesh*>* entryNode = mesh->getSubMeshes().getFirst(); entryNode!=nullptr; entryNode=entryNode->getNext() ) {
 		const Mesh::SubMesh* entry = entryNode->getData();
 
-		if (!entry->getVertices())
+		if (!entry->getVertices()) {
 			continue;
+		} else if (entry->getNumVertices() / 3 > 10000) {
+			mainEngine->fmsg(Engine::MSG_WARN, "submesh has an excessive number of faces, no physics mesh has been generated");
+			continue;
+		}
 
-		if (!triMesh)
+		if (!triMesh) {
 			triMesh = new btTriangleMesh();
+		}
 
 		// iterate through each index
 		LinkedList<Vector> vlist;

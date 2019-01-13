@@ -451,7 +451,7 @@ void Player::control() {
 	entity->update();
 
 	// using hand items (shooting)
-	if (input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
+	if (lTool && input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
 		Model::bone_t bone = lTool->findBone("emitter");
 		glm::mat4 mat = lTool->getGlobalMat();
 		if (bone.valid) {
@@ -459,7 +459,7 @@ void Player::control() {
 		}
 		lTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
 	}
-	if (input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
+	if (rTool && input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
 		Model::bone_t bone = rTool->findBone("emitter");
 		glm::mat4 mat = rTool->getGlobalMat();
 		if (bone.valid) {
