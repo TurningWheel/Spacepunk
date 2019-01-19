@@ -62,7 +62,7 @@ public:
 		return true;
 	}
 
-	bool dispatchFunction(const char* functionName, Script::Args& params)
+	bool dispatchFunction(const char* functionName, const Script::Args& params)
 	{
 		if (0 == params.params.size())
 		{

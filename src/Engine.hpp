@@ -222,7 +222,7 @@ public:
 	void smsg(const Uint32 msgType, const String& str);
 
 	// logs a char string to the console
-	// @param msgType the type of message to send to the console
+	// @param msgType the type of message to send to the console, refer to Engine::msg_t enum for valid values
 	// @param str a char string to print to the console
 	void msg(const Uint32 msgType, const char* str);
 
