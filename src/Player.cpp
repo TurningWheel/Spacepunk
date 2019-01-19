@@ -429,16 +429,21 @@ void Player::control() {
 				Entity* hitEntity = nullptr;
 				if ( (hitEntity = world->uidToEntity(hit.index)) != nullptr )
 				{
-					if ( hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE) )
+					auto hitBBox = static_cast<BBox*>(hit.pointer);
+					if ( hitBBox )
 					{
-						mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
-						Packet packet;
-						packet.write32(hitEntity->getUID());
-						packet.write32(client->indexForWorld(world));
-						packet.write32(localID);
-						packet.write("ESEL");
-						client->getNet()->signPacket(packet);
-						client->getNet()->sendPacketSafe(0, packet);
+						if ( hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE) )
+						{
+							mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
+							Packet packet;
+							packet.write32(hitBBox->getUID());
+							packet.write32(hitEntity->getUID());
+							packet.write32(client->indexForWorld(world));
+							packet.write32(localID);
+							packet.write("ESEL");
+							client->getNet()->signPacket(packet);
+							client->getNet()->sendPacketSafe(0, packet);
+						}
 					}
 				}
 			}

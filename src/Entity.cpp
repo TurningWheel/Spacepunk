@@ -759,7 +759,7 @@ const World::hit_t Entity::lineTrace( const Vector& origin, const Vector& dest )
 	return world->lineTrace(origin, dest);
 }
 
-bool Entity::interact(Entity& user)
+bool Entity::interact(Entity& user, BBox& bbox)
 {
 	if ( !isFlag(flag_t::FLAG_INTERACTABLE) || !script )
 	{
@@ -767,7 +767,8 @@ bool Entity::interact(Entity& user)
 	}
 
 	Script::Args args;
-	args.addPointer(&user);
+	args.addInt(user.getUID());
+	args.addString(bbox.getName());
 
 	return (script->dispatch("interact", &args) == 0);
 }

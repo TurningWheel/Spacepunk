@@ -30,6 +30,7 @@ class Light;
 class ShaderProgram;
 class Camera;
 class Player;
+class BBox;
 
 class Entity {
 public:
@@ -388,8 +389,9 @@ public:
 
 	// dispatches the entity's interaction function in LUA.
 	// @param user the entity that interacted with this entity
+	// @param bbox the bbox that got clicked
 	// @return true if the interaction was successful, false if object is uninteractable or if there were script errors
-	bool interact(Entity& user);
+	bool interact(Entity& user, BBox& bbox);
 
 	// save/load this object to a file
 	// @param file interface to serialize with

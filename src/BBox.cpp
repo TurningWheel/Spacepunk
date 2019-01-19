@@ -302,7 +302,7 @@ void BBox::createRigidBody() {
 				rigidBody = new btRigidBody(rigidBodyCI);
 				rigidBody->setUserIndex(entity->getUID());
 				rigidBody->setUserIndex2(World::nuid);
-				rigidBody->setUserPointer(nullptr);
+				rigidBody->setUserPointer(this);
 				if (mass > 0.f) {
 					rigidBody->setActivationState( DISABLE_DEACTIVATION );
 					rigidBody->setSleepingThresholds(0.f, 0.f);
@@ -319,7 +319,7 @@ void BBox::createRigidBody() {
 				ghostObject->setWorldTransform(btTrans);
 				ghostObject->setUserIndex(entity->getUID());
 				ghostObject->setUserIndex2(World::nuid);
-				ghostObject->setUserPointer(nullptr);
+				ghostObject->setUserPointer(this);
 				ghostObject->setActivationState( DISABLE_DEACTIVATION );
 				ghostObject->setCollisionShape(collisionShapePtr);
 				ghostObject->setCollisionFlags(btCollisionObject::CollisionFlags::CF_CHARACTER_OBJECT);
