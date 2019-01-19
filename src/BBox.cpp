@@ -363,7 +363,7 @@ float BBox::distToFloor(float floorHeight) {
 	return max( 0.f, floorHeight - z );
 }
 
-float BBox::nearestFloor() {
+float BBox::nearestFloor(Entity*& outEntity) {
 	float nearestFloor = (float)(INT32_MAX);
 	World* world = entity->getWorld();
 	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
@@ -374,10 +374,12 @@ float BBox::nearestFloor() {
 	// perform sweep
 	LinkedList<World::hit_t> hits;
 	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
-	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, gScale.z + 128.f), gAng, hits);
+	world->lineTraceList(gPos, gPos + Vector(0.f, 0.f, gScale.z + 128.f), hits);
 	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
-		nearestFloor = hits.getFirst()->getData().pos.z - lPos.z / 2.f;
+		auto& hit = hits.getFirst()->getData();
+		nearestFloor = hit.pos.z;
+		outEntity = hit.hitEntity ? world->uidToEntity(hit.index) : nullptr;
 	}
 	return nearestFloor;
 }
@@ -398,10 +400,11 @@ float BBox::nearestCeiling() {
 	// perform sweep
 	LinkedList<World::hit_t> hits;
 	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
-	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, -gScale.z - 128.f), gAng, hits);
+	world->lineTraceList(gPos, gPos - Vector(0.f, 0.f, gScale.z + 128.f), hits);
 	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
-		nearestCeiling = hits.getFirst()->getData().pos.z - lPos.z / 2.f;
+		auto& hit = hits.getFirst()->getData();
+		nearestCeiling = hit.pos.z;
 	}
 	return nearestCeiling;
 }

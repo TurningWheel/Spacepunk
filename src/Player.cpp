@@ -250,12 +250,15 @@ void Player::control() {
 	}
 
 	Angle rot = entity->getRot();
-	Vector vel = entity->getVel();
+	//Vector vel = entity->getVel();
+	Vector vel = originalVel;
 	Vector pos = entity->getPos();
+
+	Entity* entityStandingOn = nullptr;
 
 	float totalHeight = standScale.z - standOrigin.z;
 	float nearestCeiling = bbox->nearestCeiling();
-	float nearestFloor = bbox->nearestFloor();
+	float nearestFloor = bbox->nearestFloor(entityStandingOn);
 	float distToFloor = bbox->distToFloor(nearestFloor);
 	float distToCeiling = max( 0.f, pos.z - nearestCeiling );
 
@@ -446,7 +449,12 @@ void Player::control() {
 	if (bbox->getMass() == 0.f) {
 		entity->setPos(pos);
 	}
-	entity->setVel(vel);
+	Vector standingOnVel;
+	originalVel = vel;
+	if (entityStandingOn) {
+		standingOnVel = entityStandingOn->getVel();
+	}
+	entity->setVel(vel + standingOnVel);
 	entity->setRot(rot);
 	entity->update();
 
