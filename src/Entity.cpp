@@ -627,6 +627,7 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	entity->setScriptStr(scriptStr);
 	entity->setFalling(falling);
 	entity->setSort(sort);
+	entity->keyvalues.copy(keyvalues);
 
 	Component* component = nullptr;
 	for( size_t c = 0; c < components.getSize(); ++c ) {
