@@ -83,15 +83,15 @@ public:
 	void	setWeightRate(const char* bone, float _weightRate)				{ if (state_t *state = weights[bone]) { state->rate = _weightRate; } else { weights.insert(bone, state_t(0.f, _weightRate)); } updated = true; }
 
 private:
-	String name;				// animation name
-	float ticks = 0.f;			// current position in the animation
-	float ticksRate = 0.f;		// animation speed
-	float begin;				// start frame of the animation
-	float end;					// end frame of the animation
-	float length;				// length of the animation (end - begin)
-	Map<state_t> weights;		// influences, or "blending" on bones
-	bool loop;					// if true, animation loops when ticks > end
-	bool updated = false;		// if true, forces the skin to update
+	String name;					// animation name
+	float ticks = 0.f;				// current position in the animation
+	float ticksRate = 0.f;			// animation speed
+	float begin;					// start frame of the animation
+	float end;						// end frame of the animation
+	float length;					// length of the animation (end - begin)
+	Map<String, state_t> weights;	// influences, or "blending" on bones
+	bool loop;						// if true, animation loops when ticks > end
+	bool updated = false;			// if true, forces the skin to update
 
 	unsigned int beginLastSoundFrame = UINT32_MAX;	// start of range of sound triggers activated last frame
 	unsigned int endLastSoundFrame = UINT32_MAX;	// end of range of sound triggers activated last frame

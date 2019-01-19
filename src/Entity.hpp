@@ -103,7 +103,7 @@ public:
 	const bool							isToBeDeleted() const				{ return toBeDeleted; }
 	const Vector&						getScale() const					{ return scale; }
 	const Uint32&						getFlags() const					{ return flags; }
-	const Map<String>&					getKeyValues() const				{ return keyvalues; }
+	const Map<String, String>&			getKeyValues() const				{ return keyvalues; }
 	const bool							isFlag(const flag_t flag) const		{ return ((flags&static_cast<Uint32>(flag))!=0); }
 	const bool							isShouldSave() const				{ return shouldSave; }
 	World*								getWorld()							{ return world; }
@@ -453,7 +453,7 @@ protected:
 	bool shouldSave = true;			// if true, the entity is saved when the world is saved to a file; if false, it is not
 	bool falling = false;			// when true the entity is off the floor, otherwise they are on the floor
 
-	Map<String> keyvalues;
+	Map<String, String> keyvalues;
 
 	// editor variables
 	bool selected = false;

@@ -331,7 +331,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	}
 }
 
-void Mesh::skin( Map<AnimationState>& animations, ArrayList<skincache_t>& skincache ) {
+void Mesh::skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) {
 	if( !hasAnimations() ) {
 		return;
 	}
@@ -724,7 +724,7 @@ void Mesh::SubMesh::VertexBoneData::addBoneData(unsigned int boneID, float weigh
     assert(0);
 }
 
-void Mesh::SubMesh::boneTransform(Map<AnimationState>& animations, skincache_t& skin) {
+void Mesh::SubMesh::boneTransform(Map<String, AnimationState>& animations, skincache_t& skin) {
 	if( !scene || !scene->HasAnimations() )
 		return;
 	const glm::mat4 identity( 1.f );
@@ -734,7 +734,7 @@ void Mesh::SubMesh::boneTransform(Map<AnimationState>& animations, skincache_t& 
 	readNodeHierarchy(animations, skin, scene->mRootNode, identity);
 }
 
-void Mesh::SubMesh::readNodeHierarchy(Map<AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform) {
+void Mesh::SubMesh::readNodeHierarchy(Map<String, AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform) {
 	aiMatrix4x4 nodeTransform = node->mTransformation;
 
 	const char* nodeName = node->mName.data;

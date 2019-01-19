@@ -178,6 +178,22 @@ public:
 		return *this;
 	}
 
+	// quickly swap the internal array of this list with that of another list
+	// @param src the list to swap with
+	void swap(ArrayList& src) {
+		auto tempArr = arr;
+		arr = src.arr;
+		src.arr = tempArr;
+
+		auto tempMaxSize = maxSize;
+		maxSize = src.maxSize;
+		src.maxSize = tempMaxSize;
+
+		auto tempSize = size;
+		size = src.size;
+		src.size = tempSize;
+	}
+
 	// push a value onto the list
 	// @param val the value to push
 	void push(const T& val) {
@@ -192,11 +208,27 @@ public:
 	// @param val the value to insert
 	// @param pos the index to displace (move to the end of the list)
 	void insert(const T& val, size_t pos) {
+		assert(pos <= size);
 		if( size==maxSize ) {
 			alloc(std::max((unsigned int)size*2U, 4U));
 		}
 		++size;
 		arr[size-1] = arr[pos];
+		arr[pos] = val;
+	}
+
+	// insert a value into the list, rearranging all elements after it
+	// @param val the value to insert
+	// @param pos the index to displace (move all elements starting here 1 index forward)
+	void insertAndRearrange(const T& val, size_t pos) {
+		assert(pos <= size);
+		if( size==maxSize ) {
+			alloc(std::max((unsigned int)size*2U, 4U));
+		}
+		++size;
+		for( size_t c = size-1; c > pos; --c ) {
+			arr[c] = arr[c-1];
+		}
 		arr[pos] = val;
 	}
 
@@ -294,6 +326,41 @@ public:
 		assert(pos < size);
 		return arr[pos];
 	}
+
+	// abstract class to define sort function
+	class SortFunction {
+	public:
+		SortFunction() {}
+		virtual ~SortFunction() {}
+
+		// compare a and b
+		// @param a the first element to compare
+		// @param b the second element to compare
+		// @return true if a should be placed before b
+		virtual const bool operator()(const T& a, const T& b) const = 0;
+	};
+
+	// sort the array list using the given function
+	// @param fn The sort function to use
+	void sort(const SortFunction& fn) {
+		ArrayList<T> result;
+		result.alloc(size);
+		for (int c = 0; c < size; ++c) {
+			bool foundPlace = false;
+			for (int i = 0; i < result.getSize(); ++i) {
+				if (fn(arr[c], result[i])) {
+					result.insertAndRearrange(arr[c], i);
+					foundPlace = true;
+					break;
+				}
+			}
+			if (!foundPlace) {
+				result.push(arr[c]);
+			}
+		}
+		swap(result);
+	}
+
 	// exposes this list type to a script
 	// @param lua The script engine to expose to
 	// @param name The type name in lua

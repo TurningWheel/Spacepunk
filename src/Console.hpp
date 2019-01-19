@@ -12,7 +12,7 @@ public:
 	Cvar(const char* _name, const char* _desc, const char* _value);
 	virtual ~Cvar() {}
 
-	static Map<Cvar*>& getMap();
+	static Map<String, Cvar*>& getMap();
 
 	// get the str representation of the cvar
 	// @return The value as a str
@@ -72,7 +72,7 @@ public:
 	Ccmd(const char* _name, const char* _desc, int (*_func)(int, const char**));
 	virtual ~Ccmd() {}
 
-	static Map<Ccmd*>& getMap();
+	static Map<String, Ccmd*>& getMap();
 
 	String name;
 	String desc;

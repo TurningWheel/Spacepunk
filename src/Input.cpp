@@ -50,7 +50,7 @@ const char* Input::bindingName[] = {
 	"MenuPageRight"
 };
 
-Map<SDL_Scancode> Input::scancodeNames;
+Map<String, SDL_Scancode> Input::scancodeNames;
 
 float Input::analog(Input::bindingenum_t binding) const {
 	return bindings[binding].analog;
