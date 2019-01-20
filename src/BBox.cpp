@@ -345,9 +345,6 @@ void BBox::applyMoveForces(const Vector& vel, const Angle& ang) {
 		controller->setLinearVelocity(newVel);
 		float degrees = 180.f / PI;
 		controller->setAngularVelocity(btVector3(ang.roll * degrees, ang.pitch * degrees, ang.yaw * degrees));
-	} else if (rigidBody) {
-		rigidBody->activate(true);
-		rigidBody->applyCentralForce(vel);
 	}
 }
 
