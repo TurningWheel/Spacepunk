@@ -592,14 +592,20 @@ void Renderer::drawConsole( const Sint32 height, const char* input, const Linked
 		const String* str = &logMsg.text;
 		Text* text = mainEngine->getTextResource().dataForString((*str).get());
 		if( text ) {
-			y -= TTF_FontHeight(monoFont);
+			Sint32 h = (Sint32)text->getHeight();
+			y -= h;
 			Rect<int> pos;
 			pos.x = 5; pos.w = 0;
 			pos.y = y; pos.h = 0;
 			text->drawColor(Rect<int>(),pos,glm::vec4(logMsg.color,1.f));
+			if (y < -h) {
+				break;
+			}
 		}
-		if( y < -TTF_FontHeight(monoFont) ) {
-			break;
+		else {
+			if (y < 0) {
+				break;
+			}
 		}
 	}
 	Rect<int> pos;
