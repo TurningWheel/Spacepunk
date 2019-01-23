@@ -345,29 +345,32 @@ void Entity::process() {
 
 	// update path request
 	if( path ) {
+		mainEngine->fmsg(Engine::MSG_INFO, "[PATH] Entity '%s' has path in C++ code...", getName().get());
 		pathRequested = false;
 		if (path->getSize() == 0) {
 			delete path;
 			path = nullptr;
+			mainEngine->fmsg(Engine::MSG_INFO, "Deleted empty path for entity '%s'.", getName().get());
 		} else {
 			const PathFinder::PathWaypoint& node = path->getFirst()->getData();
 
-			if (world->getType() != World::type_t::WORLD_TILES) {
+			if (world->getType() == World::type_t::WORLD_TILES) {
+				mainEngine->fmsg(Engine::MSG_INFO, "[PATH] For entity '%s' Entered main world->getType() if statement...", getName().get());
 				TileWorld* tileWorld = static_cast<TileWorld*>(world);
 
 				// place dest coordinates in the middle of the tile
-				pathNode.x = node.x * Tile::size + Tile::size / 2.f; float& x = pathNode.x;
-				pathNode.y = node.y * Tile::size + Tile::size / 2.f; float& y = pathNode.y;
-				pathNode.z = tileWorld->getTiles()[y + x * tileWorld->getHeight()].getFloorHeight(); float& z = pathNode.z;
+				pathNode.x = node.x * Tile::size + Tile::size / 2.f;
+				pathNode.y = node.y * Tile::size + Tile::size / 2.f;
+				pathNode.z = tileWorld->getTiles()[node.y + node.x * tileWorld->getHeight()].getFloorHeight();
 				float epsilon = Tile::size / 4.f;
 
-				if (pos.x >= x-epsilon && pos.x <= x-epsilon &&
-					pos.y >= y-epsilon && pos.y <= y-epsilon) {
+				if (pos.x >= pathNode.x-epsilon && pos.x <= pathNode.x-epsilon &&
+					pos.y >= pathNode.y-epsilon && pos.y <= pathNode.y-epsilon) {
 					path->removeNode(path->getFirst());
 
 					//Finished pathfinding.
 					if (path->getSize() == 0) {
-						mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' reached goal tile (%d, %d)!", getName().get(), node.x, node.y);
+						mainEngine->fmsg(Engine::MSG_INFO, "Entity '%s' reached goal tile (%d, %d)!", getName().get(), node.x, node.y);
 						pathNode = Vector(0.f);
 						pathDir = Vector(0.f);
 
@@ -380,6 +383,10 @@ void Entity::process() {
 					//Stop moving once reached destination.
 					Vector pathDir = (pathNode - pos).normal();
 				}
+			}
+			else
+			{
+				mainEngine->fmsg(Engine::MSG_INFO, "[PATH] For entity '%s' did not enter main world->getType() if statement...", getName().get());
 			}
 		}
 	}

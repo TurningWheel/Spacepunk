@@ -182,6 +182,7 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 	if ( true == foundPath ) {
 		if (currentNode->parent == nullptr)
 		{
+			mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder found the entity is already on the target tile!");
 			return path; //Already on the goal tile!
 		}
 
