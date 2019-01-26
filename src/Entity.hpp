@@ -413,6 +413,9 @@ public:
 	// @return true if the entity is a player from this client, otherwise false
 	bool isLocalPlayer();
 
+	// updates the physics component of the entity to move it to the current location
+	void warp();
+
 protected:
 	Node<Entity*>* node			= nullptr;	// node to the world entity list
 	World* world				= nullptr;	// parent world object

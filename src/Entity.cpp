@@ -411,18 +411,26 @@ void Entity::process() {
 			Vector vDiff = newPos - pos;
 			pos += vDiff / 4.f;
 
+			/*ang.bindAngles();
+			newAng.bindAngles();
+			ang.yaw = ang.yaw > 180.f ? ang.yaw - 360.f : ang.yaw;
+			ang.pitch = ang.pitch > 180.f ? ang.pitch - 360.f : ang.pitch;
+			ang.roll = ang.roll > 180.f ? ang.roll - 360.f : ang.roll;
+			newAng.yaw = newAng.yaw > 180.f ? newAng.yaw - 360.f : newAng.yaw;
+			newAng.pitch = newAng.pitch > 180.f ? newAng.pitch - 360.f : newAng.pitch;
+			newAng.roll = newAng.roll > 180.f ? newAng.roll - 360.f : newAng.roll;
+
 			Angle aDiff;
 			aDiff.yaw = newAng.yaw - ang.yaw;
 			aDiff.pitch = newAng.pitch - ang.pitch;
 			aDiff.roll = newAng.roll - ang.roll;
-			aDiff.wrapAngles();
 			ang.yaw += aDiff.yaw / 4.f;
 			ang.pitch += aDiff.pitch / 4.f;
-			ang.roll += aDiff.roll / 4.f;
+			ang.roll += aDiff.roll / 4.f;*/
+			ang = newAng;
 
-			if( vDiff.lengthSquared() > 0.f ) {
-				updateNeeded = true;
-			}
+			updateNeeded = true;
+			warp();
 		}
 	}
 
@@ -513,6 +521,13 @@ void Entity::animate(const char* name, bool blend) {
 	findAllComponents<Model>(Component::COMPONENT_MODEL, models);
 	for( auto& model : models ) {
 		model->animate(name, blend);
+	}
+}
+
+void Entity::warp() {
+	BBox* bbox = findComponentByName<BBox>("physics");
+	if (bbox) {
+		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang);
 	}
 }
 
