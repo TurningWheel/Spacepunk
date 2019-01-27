@@ -1045,18 +1045,21 @@ VoxelMeshData VoxelReader::readVoxel(const char* path) {
 }
 
 GLuint VoxelMeshData::findAdjacentIndex(GLuint index1, GLuint index2, GLuint index3) {
-	for( size_t index = 0; index < indexCount; index += 6 ) {
-		GLuint indices[3];
-		indices[0] = this->indices[index    ];
+	GLuint indices[6];
+	for (size_t index = 0; index < indexCount; index += 6) {
+		indices[0] = this->indices[index];
 		indices[1] = this->indices[index + 2];
 		indices[2] = this->indices[index + 4];
-		for( int edge = 0; edge < 3; ++edge ) {
+		indices[3] = this->indices[index];
+		indices[4] = this->indices[index + 2];
+		indices[5] = this->indices[index + 4];
+		for (int edge = 0; edge < 3; ++edge) {
 			GLuint v1 = indices[edge]; // first edge index
-			GLuint v2 = indices[(edge + 1) & 3]; // second edge index
-			GLuint vOpp = indices[(edge + 2) & 3]; // index of opposite vertex
+			GLuint v2 = indices[edge + 1]; // second edge index
+			GLuint vOpp = indices[edge + 2]; // index of opposite vertex
 
 			// if the edge matches the search edge and the opposite vertex does not match
-			if( ((v1 == index1 && v2 == index2) || (v2 == index1 && v1 == index2)) && vOpp != index3 ) {
+			if (((v1 == index1 && v2 == index2) || (v2 == index1 && v1 == index2)) && vOpp != index3) {
 				return vOpp; // we have found the adjacent vertex
 			}
 		}

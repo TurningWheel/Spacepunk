@@ -692,15 +692,22 @@ unsigned int Mesh::SubMesh::boneIndexForName(const char* name) const {
 }
 
 GLuint Mesh::SubMesh::findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3) {
-	for( unsigned int i=0; i<mesh.mNumFaces; ++i ) {
-		unsigned int*& indices = mesh.mFaces[i].mIndices;
-		for( int edge = 0; edge < 3; ++edge ) {
-			unsigned int v1 = indices[edge]; // first edge index
-			unsigned int v2 = indices[(edge + 1) & 3]; // second edge index
-			unsigned int vOpp = indices[(edge + 2) & 3]; // index of opposite vertex
+	GLuint indices[6];
+	for (unsigned int i = 0; i < mesh.mNumFaces; ++i) {
+		unsigned int*& faceIndices = mesh.mFaces[i].mIndices;
+		indices[0] = faceIndices[0];
+		indices[1] = faceIndices[1];
+		indices[2] = faceIndices[2];
+		indices[3] = faceIndices[0];
+		indices[4] = faceIndices[1];
+		indices[5] = faceIndices[2];
+		for (int edge = 0; edge < 3; ++edge) {
+			GLuint v1 = indices[edge]; // first edge index
+			GLuint v2 = indices[edge + 1]; // second edge index
+			GLuint vOpp = indices[edge + 2]; // index of opposite vertex
 
 			// if the edge matches the search edge and the opposite vertex does not match
-			if( ((v1 == index1 && v2 == index2) || (v2 == index1 && v1 == index2)) && vOpp != index3 ) {
+			if (((v1 == index1 && v2 == index2) || (v2 == index1 && v1 == index2)) && vOpp != index3) {
 				return vOpp; // we have found the adjacent vertex
 			}
 		}
