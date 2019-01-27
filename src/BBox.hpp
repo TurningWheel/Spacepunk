@@ -66,10 +66,11 @@ public:
 	// @return true if we collide, false if we do not
 	virtual bool checkCollision() const override;
 
-	// @return the height of the nearest floor tile
-	float nearestFloor();
+	// @param outEntity the entity we are standing on, if any
+	// @return the nearest floor, if any
+	float nearestFloor(Entity*& outEntity);
 
-	// @return the height of the nearest ceiling tile
+	// @return the nearest ceiling, if any
 	float nearestCeiling();
 
 	// get the distance to the floor

@@ -519,6 +519,14 @@ void World::process() {
 				glm::mat4 rotationM = glm::mat4_cast(glm::quat(q.w(), q.x(), -q.z(), q.y()));
 				glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
 				glm::mat4 mat = translationM * rotationM * scaleM;
+
+				if (bbox->getMass() > 0.f) {
+					const glm::mat4& currentMat = bbox->getEntity()->getMat();
+					Vector oldPos(currentMat[3][0], currentMat[3][2], -currentMat[3][1]);
+					Vector vel = pos - oldPos;
+					bbox->getEntity()->setVel(vel);
+				}
+
 				bbox->getEntity()->setMat(mat);
 			}
 		}

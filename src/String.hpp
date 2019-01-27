@@ -88,7 +88,7 @@ public:
 				alloc(srcLen);
 			}
 			assert(str);
-			strncpy(str, src, size);
+			strncpy_s(str, size, src, size-1);
 			str[size-1] = '\0';
 			return str;
 		}
@@ -129,7 +129,7 @@ public:
 		}
 		size_t last = std::min(len + strlen(src), size-1);
 
-		strncpy((char *)(str + len), src, last-len);
+		strncpy_s((char *)(str + len), size-len, src, last-len);
 		str[last] = '\0';
 		return str;
 	}
@@ -159,7 +159,7 @@ public:
 		va_end( argptr );
 		buf[size-len-1] = '\0';
 
-		strncpy((char *)(str + len), buf, size-len-1);
+		strncpy_s((char *)(str + len), size-len, buf, size-len-1);
 		str[size-1] = '\0';
 		free(buf);
 
@@ -253,6 +253,21 @@ public:
 			result = strtof( str, nullptr );
 		}
 		return result;
+	}
+
+	// hash the string
+	// @return a number representation of the string
+	unsigned long hash() const {
+		if (str == nullptr) {
+			return 0;
+		}
+		unsigned long value = 5381;
+		int c;
+		const char* data = str;
+		while((c = *data++)!=0) {
+			value = ((value << 5) + value) + c; // hash * 33 + c
+		}
+		return value;
 	}
 
 	// access char data

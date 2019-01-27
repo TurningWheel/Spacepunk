@@ -1,0 +1,116 @@
+{
+    "Entity::def_t::version": 1,
+    "editor": true,
+    "entity": {
+        "Entity::version": 1,
+        "name": "Man",
+        "pos": {
+            "x": 1128.070556640625,
+            "y": 905.1141357421875,
+            "z": 1280.0
+        },
+        "ang": {
+            "yaw": 0.0,
+            "pitch": 0.0,
+            "roll": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "scriptStr": "",
+        "flags": 385,
+        "falling": false,
+        "sort": 0,
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 0,
+                    "name": "model",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": -64.0,
+                        "z": 0.0
+                    },
+                    "lAng": {
+                        "yaw": 0.0,
+                        "pitch": 0.0,
+                        "roll": 0.0
+                    },
+                    "lScale": {
+                        "x": 64.0,
+                        "y": 64.0,
+                        "z": 64.0
+                    },
+                    "components": [],
+                    "Model::version": 1,
+                    "meshStr": "assets/ted/model.obj",
+                    "materialStr": "assets/ted/material.json",
+                    "depthfailStr": "",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": false,
+                        "customColorR": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            1.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            1.0,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            },
+            {
+                "type": 1,
+                "data": {
+                    "Component::version": 0,
+                    "name": "bbox",
+                    "lPos": {
+                        "x": -8.0,
+                        "y": -8.0,
+                        "z": -56.0
+                    },
+                    "lAng": {
+                        "yaw": 0.0,
+                        "pitch": 0.0,
+                        "roll": 0.0
+                    },
+                    "lScale": {
+                        "x": 16.0,
+                        "y": 16.0,
+                        "z": 56.0
+                    },
+                    "components": [],
+                    "BBox::version": 1,
+                    "shape": 2,
+                    "enabled": true,
+                    "mass": 0.0
+                }
+            }
+        ]
+    }
+}

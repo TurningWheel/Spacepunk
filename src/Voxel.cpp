@@ -1052,8 +1052,8 @@ GLuint VoxelMeshData::findAdjacentIndex(GLuint index1, GLuint index2, GLuint ind
 		indices[2] = this->indices[index + 4];
 		for( int edge = 0; edge < 3; ++edge ) {
 			GLuint v1 = indices[edge]; // first edge index
-			GLuint v2 = indices[(edge + 1) % 3]; // second edge index
-			GLuint vOpp = indices[(edge + 2) % 3]; // index of opposite vertex
+			GLuint v2 = indices[(edge + 1) & 3]; // second edge index
+			GLuint vOpp = indices[(edge + 2) & 3]; // index of opposite vertex
 
 			// if the edge matches the search edge and the opposite vertex does not match
 			if( ((v1 == index1 && v2 == index2) || (v2 == index1 && v1 == index2)) && vOpp != index3 ) {

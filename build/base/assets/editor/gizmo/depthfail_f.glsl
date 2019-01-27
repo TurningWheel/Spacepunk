@@ -1,4 +1,4 @@
-#version 450
+#version 400
 
 in vec2 TexCoord;
 in vec3 Normal;

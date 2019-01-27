@@ -250,12 +250,15 @@ void Player::control() {
 	}
 
 	Angle rot = entity->getRot();
-	Vector vel = entity->getVel();
+	//Vector vel = entity->getVel();
+	Vector vel = originalVel;
 	Vector pos = entity->getPos();
+
+	Entity* entityStandingOn = nullptr;
 
 	float totalHeight = standScale.z - standOrigin.z;
 	float nearestCeiling = bbox->nearestCeiling();
-	float nearestFloor = bbox->nearestFloor();
+	float nearestFloor = bbox->nearestFloor(entityStandingOn);
 	float distToFloor = bbox->distToFloor(nearestFloor);
 	float distToCeiling = max( 0.f, pos.z - nearestCeiling );
 
@@ -426,16 +429,21 @@ void Player::control() {
 				Entity* hitEntity = nullptr;
 				if ( (hitEntity = world->uidToEntity(hit.index)) != nullptr )
 				{
-					if ( hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE) )
+					auto hitBBox = static_cast<BBox*>(hit.pointer);
+					if ( hitBBox )
 					{
-						mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
-						Packet packet;
-						packet.write32(hitEntity->getUID());
-						packet.write32(client->indexForWorld(world));
-						packet.write32(localID);
-						packet.write("ESEL");
-						client->getNet()->signPacket(packet);
-						client->getNet()->sendPacketSafe(0, packet);
+						if ( hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE) )
+						{
+							mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
+							Packet packet;
+							packet.write32(hitBBox->getUID());
+							packet.write32(hitEntity->getUID());
+							packet.write32(client->indexForWorld(world));
+							packet.write32(localID);
+							packet.write("ESEL");
+							client->getNet()->signPacket(packet);
+							client->getNet()->sendPacketSafe(0, packet);
+						}
 					}
 				}
 			}
@@ -446,12 +454,17 @@ void Player::control() {
 	if (bbox->getMass() == 0.f) {
 		entity->setPos(pos);
 	}
-	entity->setVel(vel);
+	Vector standingOnVel;
+	originalVel = vel;
+	if (entityStandingOn) {
+		standingOnVel = entityStandingOn->getVel();
+	}
+	entity->setVel(vel + standingOnVel);
 	entity->setRot(rot);
 	entity->update();
 
 	// using hand items (shooting)
-	if (input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
+	if (lTool && input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
 		Model::bone_t bone = lTool->findBone("emitter");
 		glm::mat4 mat = lTool->getGlobalMat();
 		if (bone.valid) {
@@ -459,7 +472,7 @@ void Player::control() {
 		}
 		lTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
 	}
-	if (input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
+	if (rTool && input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
 		Model::bone_t bone = rTool->findBone("emitter");
 		glm::mat4 mat = rTool->getGlobalMat();
 		if (bone.valid) {
@@ -484,7 +497,9 @@ void Player::updateCamera() {
 		head->updateSkin();
 		Model::bone_t bone = head->findBone("Bone_Head");
 		if( bone.valid ) {
-			camera->setLocalPos(bone.pos);
+			models->setLocalPos(Vector(-bone.pos.x, 0.f, 0.f));
+			models->update();
+			camera->setLocalPos(bone.pos + models->getLocalPos());
 			camera->update();
 		}
 

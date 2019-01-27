@@ -30,6 +30,7 @@ class Light;
 class ShaderProgram;
 class Camera;
 class Player;
+class BBox;
 
 class Entity {
 public:
@@ -102,7 +103,7 @@ public:
 	const bool							isToBeDeleted() const				{ return toBeDeleted; }
 	const Vector&						getScale() const					{ return scale; }
 	const Uint32&						getFlags() const					{ return flags; }
-	const Map<String>&					getKeyValues() const				{ return keyvalues; }
+	const Map<String, String>&			getKeyValues() const				{ return keyvalues; }
 	const bool							isFlag(const flag_t flag) const		{ return ((flags&static_cast<Uint32>(flag))!=0); }
 	const bool							isShouldSave() const				{ return shouldSave; }
 	World*								getWorld()							{ return world; }
@@ -388,8 +389,9 @@ public:
 
 	// dispatches the entity's interaction function in LUA.
 	// @param user the entity that interacted with this entity
+	// @param bbox the bbox that got clicked
 	// @return true if the interaction was successful, false if object is uninteractable or if there were script errors
-	bool interact(Entity& user);
+	bool interact(Entity& user, BBox& bbox);
 
 	// save/load this object to a file
 	// @param file interface to serialize with
@@ -410,6 +412,9 @@ public:
 	// check if this entity is a player owned by this client
 	// @return true if the entity is a player from this client, otherwise false
 	bool isLocalPlayer();
+
+	// updates the physics component of the entity to move it to the current location
+	void warp();
 
 protected:
 	Node<Entity*>* node			= nullptr;	// node to the world entity list
@@ -451,7 +456,7 @@ protected:
 	bool shouldSave = true;			// if true, the entity is saved when the world is saved to a file; if false, it is not
 	bool falling = false;			// when true the entity is off the floor, otherwise they are on the floor
 
-	Map<String> keyvalues;
+	Map<String, String> keyvalues;
 
 	// editor variables
 	bool selected = false;

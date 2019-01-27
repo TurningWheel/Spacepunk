@@ -14,8 +14,8 @@ public:
 	}
 
 	// getters & setters
-	Map<T*>&		getCache()			{ return cache; }
-	const int		getError() const	{ return error; }
+	Map<String, T*>&		getCache()			{ return cache; }
+	const int				getError() const	{ return error; }
 
 	// number of items in the resource
 	// @return the number of cached items in the resource
@@ -64,6 +64,6 @@ public:
 	}
 
 private:
-	Map<T*> cache;
+	Map<String, T*> cache;
 	int error = 0;
 };

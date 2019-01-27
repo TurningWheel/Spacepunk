@@ -111,11 +111,16 @@ void BBox::conformToModel(const Model& model) {
 	for( const Node<Mesh::SubMesh*>* entryNode = mesh->getSubMeshes().getFirst(); entryNode!=nullptr; entryNode=entryNode->getNext() ) {
 		const Mesh::SubMesh* entry = entryNode->getData();
 
-		if (!entry->getVertices())
+		if (!entry->getVertices()) {
 			continue;
+		} else if (entry->getNumVertices() / 3 > 10000) {
+			mainEngine->fmsg(Engine::MSG_WARN, "submesh has an excessive number of faces, no physics mesh has been generated");
+			continue;
+		}
 
-		if (!triMesh)
+		if (!triMesh) {
 			triMesh = new btTriangleMesh();
+		}
 
 		// iterate through each index
 		LinkedList<Vector> vlist;
@@ -165,6 +170,7 @@ void BBox::setPhysicsTransform(const Vector& v, const Angle& a) {
 		ghostObject->setWorldTransform(btTrans);
 	} else if (motionState) {
 		motionState->setWorldTransform(btTrans);
+		rigidBody->setWorldTransform(btTrans);
 	}
 }
 
@@ -297,7 +303,7 @@ void BBox::createRigidBody() {
 				rigidBody = new btRigidBody(rigidBodyCI);
 				rigidBody->setUserIndex(entity->getUID());
 				rigidBody->setUserIndex2(World::nuid);
-				rigidBody->setUserPointer(nullptr);
+				rigidBody->setUserPointer(this);
 				if (mass > 0.f) {
 					rigidBody->setActivationState( DISABLE_DEACTIVATION );
 					rigidBody->setSleepingThresholds(0.f, 0.f);
@@ -314,7 +320,7 @@ void BBox::createRigidBody() {
 				ghostObject->setWorldTransform(btTrans);
 				ghostObject->setUserIndex(entity->getUID());
 				ghostObject->setUserIndex2(World::nuid);
-				ghostObject->setUserPointer(nullptr);
+				ghostObject->setUserPointer(this);
 				ghostObject->setActivationState( DISABLE_DEACTIVATION );
 				ghostObject->setCollisionShape(collisionShapePtr);
 				ghostObject->setCollisionFlags(btCollisionObject::CollisionFlags::CF_CHARACTER_OBJECT);
@@ -340,9 +346,6 @@ void BBox::applyMoveForces(const Vector& vel, const Angle& ang) {
 		controller->setLinearVelocity(newVel);
 		float degrees = 180.f / PI;
 		controller->setAngularVelocity(btVector3(ang.roll * degrees, ang.pitch * degrees, ang.yaw * degrees));
-	} else if (rigidBody) {
-		rigidBody->activate(true);
-		rigidBody->applyCentralForce(vel);
 	}
 }
 
@@ -358,7 +361,7 @@ float BBox::distToFloor(float floorHeight) {
 	return max( 0.f, floorHeight - z );
 }
 
-float BBox::nearestFloor() {
+float BBox::nearestFloor(Entity*& outEntity) {
 	float nearestFloor = (float)(INT32_MAX);
 	World* world = entity->getWorld();
 	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
@@ -369,10 +372,12 @@ float BBox::nearestFloor() {
 	// perform sweep
 	LinkedList<World::hit_t> hits;
 	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
-	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, gScale.z + 128.f), gAng, hits);
+	world->lineTraceList(gPos, gPos + Vector(0.f, 0.f, gScale.z + 128.f), hits);
 	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
-		nearestFloor = hits.getFirst()->getData().pos.z - lPos.z / 2.f;
+		auto& hit = hits.getFirst()->getData();
+		nearestFloor = hit.pos.z;
+		outEntity = hit.hitEntity ? world->uidToEntity(hit.index) : nullptr;
 	}
 	return nearestFloor;
 }
@@ -393,10 +398,11 @@ float BBox::nearestCeiling() {
 	// perform sweep
 	LinkedList<World::hit_t> hits;
 	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
-	world->convexSweepList(convexShape, gPos, gAng, gPos + Vector(0.f, 0.f, -gScale.z - 128.f), gAng, hits);
+	world->lineTraceList(gPos, gPos - Vector(0.f, 0.f, gScale.z + 128.f), hits);
 	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
-		nearestCeiling = hits.getFirst()->getData().pos.z - lPos.z / 2.f;
+		auto& hit = hits.getFirst()->getData();
+		nearestCeiling = hit.pos.z;
 	}
 	return nearestCeiling;
 }

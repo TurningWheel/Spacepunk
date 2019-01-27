@@ -31,7 +31,7 @@ public:
 	virtual ~Mesh();
 
 	// maximum number of lights that will fit in the tile shader
-	static const Uint32 maxLights = 32;
+	static const Uint32 maxLights = 12;
 
 	// skin cache
 	struct skincache_t {
@@ -95,7 +95,7 @@ public:
 	// skins the mesh
 	// @param animations animations to skin with
 	// @param skincache where to store resulting skin
-	void skin( Map<AnimationState>& animations, ArrayList<skincache_t>& skincache );
+	void skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache );
 
 	// find the bone with the given name
 	// @param name the name of the bone to search for
@@ -153,8 +153,8 @@ public:
 
 		GLuint findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3);
 
-		void boneTransform(Map<AnimationState>& animations, skincache_t& skin);
-		void readNodeHierarchy(Map<AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
+		void boneTransform(Map<String, AnimationState>& animations, skincache_t& skin);
+		void readNodeHierarchy(Map<String, AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
 		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str);
 
 		void calcInterpolatedPosition(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim);
@@ -179,7 +179,7 @@ public:
 		const aiNode*						getRootNode() const			{ return scene->mRootNode; }
 
 	private:
-		Map<unsigned int> boneMapping; // maps a bone name to its index
+		Map<String, unsigned int> boneMapping; // maps a bone name to its index
 		ArrayList<boneinfo_t> bones;
     	unsigned int numBones = 0;
 		unsigned int numVertices = 0;

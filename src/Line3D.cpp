@@ -62,7 +62,7 @@ Line3D::~Line3D() {
 }
 
 void Line3D::drawLine(Camera& camera, const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color) {
-	glLineWidth(width);
+	//glLineWidth(width);
 	draw(camera, width, src, dest, color, "shaders/basic/line3D.json");
 }
 

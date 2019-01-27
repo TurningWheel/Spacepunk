@@ -194,7 +194,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 		// set line width
 		if( shaderVars.lineWidth > 0 ) {
-			glLineWidth(shaderVars.lineWidth);
+			//glLineWidth(shaderVars.lineWidth);
 		}
 
 		// load highlight color into shader
@@ -331,7 +331,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	}
 }
 
-void Mesh::skin( Map<AnimationState>& animations, ArrayList<skincache_t>& skincache ) {
+void Mesh::skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) {
 	if( !hasAnimations() ) {
 		return;
 	}
@@ -696,8 +696,8 @@ GLuint Mesh::SubMesh::findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuin
 		unsigned int*& indices = mesh.mFaces[i].mIndices;
 		for( int edge = 0; edge < 3; ++edge ) {
 			unsigned int v1 = indices[edge]; // first edge index
-			unsigned int v2 = indices[(edge + 1) % 3]; // second edge index
-			unsigned int vOpp = indices[(edge + 2) % 3]; // index of opposite vertex
+			unsigned int v2 = indices[(edge + 1) & 3]; // second edge index
+			unsigned int vOpp = indices[(edge + 2) & 3]; // index of opposite vertex
 
 			// if the edge matches the search edge and the opposite vertex does not match
 			if( ((v1 == index1 && v2 == index2) || (v2 == index1 && v1 == index2)) && vOpp != index3 ) {
@@ -724,7 +724,7 @@ void Mesh::SubMesh::VertexBoneData::addBoneData(unsigned int boneID, float weigh
     assert(0);
 }
 
-void Mesh::SubMesh::boneTransform(Map<AnimationState>& animations, skincache_t& skin) {
+void Mesh::SubMesh::boneTransform(Map<String, AnimationState>& animations, skincache_t& skin) {
 	if( !scene || !scene->HasAnimations() )
 		return;
 	const glm::mat4 identity( 1.f );
@@ -734,7 +734,7 @@ void Mesh::SubMesh::boneTransform(Map<AnimationState>& animations, skincache_t& 
 	readNodeHierarchy(animations, skin, scene->mRootNode, identity);
 }
 
-void Mesh::SubMesh::readNodeHierarchy(Map<AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform) {
+void Mesh::SubMesh::readNodeHierarchy(Map<String, AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform) {
 	aiMatrix4x4 nodeTransform = node->mTransformation;
 
 	const char* nodeName = node->mName.data;

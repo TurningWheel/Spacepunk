@@ -27,6 +27,7 @@
 #include "Speaker.hpp"
 #include "Console.hpp"
 
+bool Model::dontLoadMesh = false;
 const int Model::maxAnimations = 8;
 const char* Model::defaultMesh = "assets/block/block.FBX";
 
@@ -38,7 +39,7 @@ Model::Model(Entity& _entity, Component* _parent) :
 	loadAnimations();
 
 	// add a bbox for editor usage
-	if( mainEngine->isEditorRunning() ) {
+	if( mainEngine->isEditorRunning() && !dontLoadMesh ) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_MESH);
 		bbox->setEditorOnly(true);
@@ -127,8 +128,14 @@ void Model::setWeightOnChildren(const aiNode* root, AnimationState& animation, f
 }
 
 bool Model::animate(const char* name, bool blend) {
+	if (dontLoadMesh) {
+		return false;
+	}
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	if (!mesh || !animations.exists(name)) {
+		if (strcmp(name,"__tpose")) {
+			animate("__tpose", false);
+		}
 		return false;
 	}
 	for (auto& pair : animations) {
@@ -176,9 +183,7 @@ void Model::loadAnimations() {
 	tPose.name = "__tpose";
 	animations.insert("__tpose", AnimationState(tPose, ArrayList<Animation::sound_t>()));
 
-	if (!animate("idle", false)) {
-		animate("__tpose", false);
-	}
+	animate("idle", false);
 }
 
 void Model::updateSkin() {
@@ -396,7 +401,7 @@ void Model::serialize(FileInterface * file) {
 
 	file->property("shaderVars", shaderVars);
 
-	if (file->isReading() && hasAnimations()) {
+	if (file->isReading()) {
 		loadAnimations();
 	}
 

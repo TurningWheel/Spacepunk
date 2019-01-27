@@ -261,7 +261,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 		// get the size of the rendered text
 		int textSizeW = text->getWidth();
-		int textSizeH = text->getHeight();
+		int textSizeH = entrySize;
 
 		Rect<int> pos;
 		pos.x = _size.x + border - actualSize.x;

@@ -33,6 +33,9 @@
     <ProjectName>Spacepunk</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -96,7 +99,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -105,7 +108,7 @@
     <OutDir>$(SolutionDir)..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -113,21 +116,21 @@
     <OutDir>$(SolutionDir)..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\build\$(ProjectName)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|Win32'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\build\$(ProjectName)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -135,7 +138,7 @@
     <OutDir>$(SolutionDir)..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -232,6 +235,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
@@ -266,6 +270,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\Angle.hpp" />
     <ClInclude Include="..\..\src\Animation.hpp" />
+    <ClInclude Include="..\..\src\AnimationState.hpp" />
     <ClInclude Include="..\..\src\ArrayList.hpp" />
     <ClInclude Include="..\..\src\Asset.hpp" />
     <ClInclude Include="..\..\src\BBox.hpp" />
@@ -286,6 +291,7 @@
     <ClInclude Include="..\..\src\File.hpp" />
     <ClInclude Include="..\..\src\Frame.hpp" />
     <ClInclude Include="..\..\src\Game.hpp" />
+    <ClInclude Include="..\..\src\Generator.hpp" />
     <ClInclude Include="..\..\src\Image.hpp" />
     <ClInclude Include="..\..\src\Input.hpp" />
     <ClInclude Include="..\..\src\Inventory.hpp" />
@@ -295,6 +301,7 @@
     <ClInclude Include="..\..\src\LinkedList.hpp" />
     <ClInclude Include="..\..\src\List.hpp" />
     <ClInclude Include="..\..\src\Main.hpp" />
+    <ClInclude Include="..\..\src\Map.hpp" />
     <ClInclude Include="..\..\src\Mesh.hpp" />
     <ClInclude Include="..\..\src\Mixer.hpp" />
     <ClInclude Include="..\..\src\Model.hpp" />
@@ -304,6 +311,7 @@
     <ClInclude Include="..\..\src\Chunk.hpp" />
     <ClInclude Include="..\..\src\Packet.hpp" />
     <ClInclude Include="..\..\src\Pair.hpp" />
+    <ClInclude Include="..\..\src\Path.hpp" />
     <ClInclude Include="..\..\src\Physics.hpp" />
     <ClInclude Include="..\..\src\Player.hpp" />
     <ClInclude Include="..\..\src\Random.hpp" />
@@ -319,6 +327,7 @@
     <ClInclude Include="..\..\src\Server.hpp" />
     <ClInclude Include="..\..\src\Shader.hpp" />
     <ClInclude Include="..\..\src\ShaderProgram.hpp" />
+    <ClInclude Include="..\..\src\Shadow.hpp" />
     <ClInclude Include="..\..\src\Sound.hpp" />
     <ClInclude Include="..\..\src\Speaker.hpp" />
     <ClInclude Include="..\..\src\String.hpp" />
@@ -328,11 +337,14 @@
     <ClInclude Include="..\..\src\Tile.hpp" />
     <ClInclude Include="..\..\src\TileWorld.hpp" />
     <ClInclude Include="..\..\src\Vector.hpp" />
+    <ClInclude Include="..\..\src\Voxel.hpp" />
     <ClInclude Include="..\..\src\WideVector.hpp" />
     <ClInclude Include="..\..\src\World.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Animation.cpp" />
+    <ClCompile Include="..\..\src\AnimationState.cpp" />
+    <ClCompile Include="..\..\src\Asset.cpp" />
     <ClCompile Include="..\..\src\BBox.cpp" />
     <ClCompile Include="..\..\src\Button.cpp" />
     <ClCompile Include="..\..\src\Camera.cpp" />
@@ -351,6 +363,7 @@
     <ClCompile Include="..\..\src\File.cpp" />
     <ClCompile Include="..\..\src\Frame.cpp" />
     <ClCompile Include="..\..\src\Game.cpp" />
+    <ClCompile Include="..\..\src\Generator.cpp" />
     <ClCompile Include="..\..\src\Image.cpp" />
     <ClCompile Include="..\..\src\Input.cpp" />
     <ClCompile Include="..\..\src\Light.cpp" />
@@ -363,6 +376,7 @@
     <ClCompile Include="..\..\src\Net.cpp" />
     <ClCompile Include="..\..\src\NetSDL.cpp" />
     <ClCompile Include="..\..\src\Packet.cpp" />
+    <ClCompile Include="..\..\src\Path.cpp" />
     <ClCompile Include="..\..\src\Physics.cpp" />
     <ClCompile Include="..\..\src\Player.cpp" />
     <ClCompile Include="..\..\src\Random.cpp" />
@@ -378,6 +392,7 @@
     <ClCompile Include="..\..\src\Server.cpp" />
     <ClCompile Include="..\..\src\Shader.cpp" />
     <ClCompile Include="..\..\src\ShaderProgram.cpp" />
+    <ClCompile Include="..\..\src\Shadow.cpp" />
     <ClCompile Include="..\..\src\Sound.cpp" />
     <ClCompile Include="..\..\src\Speaker.cpp" />
     <ClCompile Include="..\..\src\Text.cpp" />
@@ -385,6 +400,7 @@
     <ClCompile Include="..\..\src\Texture.cpp" />
     <ClCompile Include="..\..\src\Tile.cpp" />
     <ClCompile Include="..\..\src\TileWorld.cpp" />
+    <ClCompile Include="..\..\src\Voxel.cpp" />
     <ClCompile Include="..\..\src\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

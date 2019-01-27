@@ -130,4 +130,5 @@ private:
 	bool jumped = false;
 	Angle lookDir;
 	Angle oldLookDir;
+	Vector originalVel;
 };

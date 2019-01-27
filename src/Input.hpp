@@ -141,6 +141,6 @@ private:
 	static float analogOf(binding_t& binding);
 
 	// map of scancodes to input names
-	static Map<SDL_Scancode> scancodeNames;
+	static Map<String, SDL_Scancode> scancodeNames;
 	static SDL_Scancode getScancodeFromName(const char* name);
 };

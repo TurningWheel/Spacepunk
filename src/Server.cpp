@@ -12,6 +12,7 @@
 #include "NetSDL.hpp"
 #include "Console.hpp"
 #include "TileWorld.hpp"
+#include "BBox.hpp"
 
 Server::Server() {
 	net = new NetSDL(*this);
@@ -336,9 +337,11 @@ void Server::handleNetMessages() {
 						Uint32 localID;
 						Entity *playerEntity = nullptr;
 						Entity *selectedEntity = nullptr;
+						BBox *selectedBBox = nullptr;
 						Uint32 worldID;
 						Player* player = nullptr;
 						Uint32 selectedEntityUID;
+						Uint32 selectedBBoxUID;
 
 						if( packet.read32(localID) ) {
 							player = findPlayer(id, localID);
@@ -352,14 +355,18 @@ void Server::handleNetMessages() {
 								if ( world && packet.read32(selectedEntityUID) )
 								{
 									selectedEntity = world->uidToEntity(selectedEntityUID);
+									if ( packet.read32(selectedBBoxUID) )
+									{
+										selectedBBox = selectedEntity->findComponentByUID<BBox>(selectedBBoxUID);
+									}
 								}
 							}
 						}
 
-						if ( selectedEntity && playerEntity )
+						if ( selectedEntity && selectedBBox && playerEntity )
 						{
 							mainEngine->fmsg(Engine::MSG_DEBUG, "Client %d selected entity '%s': UID %d", localID, selectedEntity->getName().get(), selectedEntity->getUID());
-							selectedEntity->interact(*playerEntity);
+							selectedEntity->interact(*playerEntity, *selectedBBox);
 
 							Packet packet;
 							packet.write32(selectedEntityUID);
