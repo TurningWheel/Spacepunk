@@ -156,6 +156,7 @@ void Light::createShadowMap() {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		shadowCamera->setAng(Shadow::cameraInfo[c].dir);
 		shadowCamera->update();
+		camera->setClipNear(1.f);
 		camera->setClipFar(radius);
 		camera->setupProjection(false);
 		world->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);

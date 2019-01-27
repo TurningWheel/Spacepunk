@@ -497,7 +497,9 @@ void Player::updateCamera() {
 		head->updateSkin();
 		Model::bone_t bone = head->findBone("Bone_Head");
 		if( bone.valid ) {
-			camera->setLocalPos(bone.pos);
+			models->setLocalPos(Vector(-bone.pos.x, 0.f, 0.f));
+			models->update();
+			camera->setLocalPos(bone.pos + models->getLocalPos());
 			camera->update();
 		}
 

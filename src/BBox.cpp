@@ -170,6 +170,7 @@ void BBox::setPhysicsTransform(const Vector& v, const Angle& a) {
 		ghostObject->setWorldTransform(btTrans);
 	} else if (motionState) {
 		motionState->setWorldTransform(btTrans);
+		rigidBody->setWorldTransform(btTrans);
 	}
 }
 
