@@ -293,8 +293,8 @@ void Editor::buttonEntityAddComponent(unsigned int uid) {
 		rect.x = border * 2 + (30 + border) * (c % 5); rect.w = 30;
 		rect.y = border * 2 + (30 + border) * (c / 5); rect.h = 30;
 
-		button->getParams().addInt(uid);
-		button->getParams().addInt(c);
+		button->addParam(uid);
+		button->addParam(c);
 		button->setTooltip(Component::typeStr[c]);
 		button->setIcon(Component::typeIcon[c]);
 		button->setSize(rect);
@@ -1126,7 +1126,7 @@ void Editor::buttonMapSettings() {
 		buttonRect.y = rect.h - 36 - (36 * (4 - rotate / 90)); buttonRect.h = 30;
 		button->setSize(buttonRect);
 		button->setName("buttonRotate");
-		button->getParams().addInt(rotate);
+		button->addParam(rotate);
 
 		StringBuf<16> text("Rotate %d*", rotate);
 		button->setText(text.get());
@@ -2125,9 +2125,9 @@ void Editor::initGUI(const Rect<int>& camRect) {
 						field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 						break;
 					}
-					//field->getParams().addInt(component->getUID());
-					field->getParams().addInt(channel);
-					field->getParams().addInt(color);
+					// //field->addParam(component->getUID());
+					// field->addParam(channel); //Why are script parameters being added for a field that exists in a frame without a Script engine?
+					// field->addParam(color);
 
 					char f[16];
 					if( color==channel ) {
@@ -2227,7 +2227,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					if( def->exposedInEditor ) {
 						Frame::entry_t* entry = frame->addEntry("spawn",true);
 						entry->text = def->entity.getName();
-						entry->params.addString(def->entity.getName());
+						entry->addParam(def->entity.getName());
 						entry->color = glm::vec4(1.f);
 					}
 				}
@@ -5520,7 +5520,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 		field->setSize(size);
 		field->setEditable(true);
 
-		field->getParams().addInt(component->getUID());
+		field->addParam(component->getUID());
 
 		field->setText(component->getName());
 	}
@@ -5531,7 +5531,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			Button* button = properties.addButton("buttonExpand");
 			button->setIcon("images/gui/arrow_down.png");
 			button->setStyle(Button::STYLE_NORMAL);
-			button->getParams().addInt(component->getUID());
+			button->addParam(component->getUID());
 			button->setBorder(2);
 
 			Rect<int> size;
@@ -5547,7 +5547,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			Button* button = properties.addButton("buttonCollapse");
 			button->setIcon("images/gui/arrow_up.png");
 			button->setStyle(Button::STYLE_NORMAL);
-			button->getParams().addInt(component->getUID());
+			button->addParam(component->getUID());
 			button->setBorder(2);
 
 			Rect<int> size;
@@ -5606,8 +5606,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(0);
-			field->getParams().addInt(component->getUID());
+			field->addParam(0);
+			field->addParam(component->getUID());
 
 			char x[16];
 			snprintf(x,16,"%.1f",component->getLocalPos().x);
@@ -5646,8 +5646,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(1);
-			field->getParams().addInt(component->getUID());
+			field->addParam(1);
+			field->addParam(component->getUID());
 
 			char y[16];
 			snprintf(y,16,"%.1f",component->getLocalPos().y);
@@ -5687,8 +5687,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(2);
-			field->getParams().addInt(component->getUID());
+			field->addParam(2);
+			field->addParam(component->getUID());
 
 			char z[16];
 			snprintf(z,16,"%.1f",component->getLocalPos().z);
@@ -5741,8 +5741,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(0);
-			field->getParams().addInt(component->getUID());
+			field->addParam(0);
+			field->addParam(component->getUID());
 
 			char roll[16];
 			snprintf(roll,16,"%.1f",component->getLocalAng().degreesRoll());
@@ -5781,8 +5781,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(1);
-			field->getParams().addInt(component->getUID());
+			field->addParam(1);
+			field->addParam(component->getUID());
 
 			char pitch[16];
 			snprintf(pitch,16,"%.1f",component->getLocalAng().degreesPitch());
@@ -5822,8 +5822,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(2);
-			field->getParams().addInt(component->getUID());
+			field->addParam(2);
+			field->addParam(component->getUID());
 
 			char yaw[16];
 			snprintf(yaw,16,"%.1f",component->getLocalAng().degreesYaw());
@@ -5876,8 +5876,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(0);
-			field->getParams().addInt(component->getUID());
+			field->addParam(0);
+			field->addParam(component->getUID());
 
 			char x[16];
 			snprintf(x,16,"%.1f",component->getLocalScale().x);
@@ -5916,8 +5916,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(1);
-			field->getParams().addInt(component->getUID());
+			field->addParam(1);
+			field->addParam(component->getUID());
 
 			char y[16];
 			snprintf(y,16,"%.1f",component->getLocalScale().y);
@@ -5957,8 +5957,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
-			field->getParams().addInt(2);
-			field->getParams().addInt(component->getUID());
+			field->addParam(2);
+			field->addParam(component->getUID());
 
 			char z[16];
 			snprintf(z,16,"%.1f",component->getLocalScale().z);
@@ -6006,8 +6006,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					for( Uint32 c = 0; c < BBox::shape_t::SHAPE_MAX; ++c ) {
 						Frame::entry_t* entry = frame->addEntry("entry",true);
 						entry->text = BBox::shapeStr[c];
-						entry->params.addInt(component->getUID());
-						entry->params.addString(BBox::shapeStr[c]);
+						entry->addParam(component->getUID());
+						entry->addParam(BBox::shapeStr[c]);
 						entry->color = glm::vec4(1.f);
 					}
 				}
@@ -6021,7 +6021,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					button->setPressed( bbox->isEnabled() );
 					button->setTooltip("Toggles the BBox's collision on and off.");
 
-					button->getParams().addInt(component->getUID());
+					button->addParam(component->getUID());
 
 					Rect<int> size;
 					size.x = x + border*2; size.w = 30;
@@ -6071,7 +6071,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%.2f",bbox->getMass());
@@ -6135,7 +6135,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setEditable(true);
 
 					field->setText(model->getMesh());
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 				}
 
 				// material label
@@ -6174,7 +6174,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setEditable(true);
 
 					field->setText(model->getMaterial());
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 				}
 
 				// depth fail material label
@@ -6213,7 +6213,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setEditable(true);
 
 					field->setText(model->getDepthFailMat());
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 				}
 
 				// animation label
@@ -6252,7 +6252,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setEditable(true);
 
 					field->setText(model->getAnimation());
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 				}
 
 				// custom color flag
@@ -6263,7 +6263,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					button->setStyle(Button::STYLE_CHECKBOX);
 					button->setPressed( model->getShaderVars().customColorEnabled == GL_TRUE );
 					button->setTooltip("Enables custom color values for each color channel");
-					button->getParams().addInt(component->getUID());
+					button->addParam(component->getUID());
 
 					Rect<int> size;
 					size.x = border*2 + x; size.w = 30;
@@ -6377,9 +6377,9 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 								field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 								break;
 						}
-						field->getParams().addInt(component->getUID());
-						field->getParams().addInt(channel);
-						field->getParams().addInt(color);
+						field->addParam(component->getUID());
+						field->addParam(channel);
+						field->addParam(color);
 
 						char f[16];
 						snprintf(f,16,"%.2f",(*vector)[color]);
@@ -6443,7 +6443,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setTabDestFrame(dest.get());
 					field->setTabDestField("field");
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char r[16];
 					snprintf(r,16,"%.2f",light->getColor().x);
@@ -6482,7 +6482,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setTabDestFrame(dest.get());
 					field->setTabDestField("field");
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char g[16];
 					snprintf(g,16,"%.2f",light->getColor().y);
@@ -6522,7 +6522,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setTabDestFrame(dest.get());
 					field->setTabDestField("field");
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char b[16];
 					snprintf(b,16,"%.2f",light->getColor().z);
@@ -6556,7 +6556,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%.2f",light->getIntensity());
@@ -6605,7 +6605,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char r[16];
 					snprintf(r,16,"%.1f",light->getRadius());
@@ -6654,7 +6654,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char r[16];
 					snprintf(r,16,"%.1f",light->getArc());
@@ -6685,7 +6685,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					button->setPressed( light->isShadow() );
 					button->setTooltip("Toggles the light's shadow on and off.");
 
-					button->getParams().addInt(component->getUID());
+					button->addParam(component->getUID());
 
 					Rect<int> size;
 					size.x = x + border*2; size.w = 30;
@@ -6742,8 +6742,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					for( Uint32 c = 0; c < Light::shape_t::SHAPE_NUM; ++c ) {
 						Frame::entry_t* entry = frame->addEntry("entry",true);
 						entry->text = Light::shapeStr[c];
-						entry->params.addInt(component->getUID());
-						entry->params.addString(Light::shapeStr[c]);
+						entry->addParam(component->getUID());
+						entry->addParam(Light::shapeStr[c]);
 						entry->color = glm::vec4(1.f);
 					}
 				}
@@ -6780,7 +6780,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char f[16];
 					snprintf(f,16,"%.1f",camera->getClipNear());
@@ -6829,7 +6829,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char f[16];
 					snprintf(f,16,"%.1f",camera->getClipFar());
@@ -6878,7 +6878,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%d",camera->getWin().x);
@@ -6927,7 +6927,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%d",camera->getWin().y);
@@ -6976,7 +6976,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%d",camera->getWin().w);
@@ -7025,7 +7025,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%d",camera->getWin().h);
@@ -7074,7 +7074,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i,16,"%d",camera->getFov());
@@ -7105,7 +7105,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					button->setPressed( camera->isOrtho() );
 					button->setTooltip("Causes the camera to use an orthographic projection");
 
-					button->getParams().addInt(component->getUID());
+					button->addParam(component->getUID());
 
 					Rect<int> size;
 					size.x = x + border*2; size.w = 30;
@@ -7169,7 +7169,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setEditable(true);
 
 					field->setText(speaker->getDefaultSound());
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 				}
 
 				// default range label
@@ -7211,7 +7211,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					snprintf(data,16,"%.1f",speaker->getDefaultRange());
 					field->setText(data);
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 				}
 
 				// default loop flag
@@ -7223,7 +7223,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					button->setPressed( speaker->isDefaultLoop() );
 					button->setTooltip("Causes the speaker to loop the default sound effect");
 
-					button->getParams().addInt(component->getUID());
+					button->addParam(component->getUID());
 
 					Rect<int> size;
 					size.x = x + border*2; size.w = 30;
@@ -7294,7 +7294,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getHp());
@@ -7343,7 +7343,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getMp());
@@ -7385,8 +7385,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					for( Uint32 c = 0; c < Character::sex_t::SEX_MAX; ++c ) {
 						Frame::entry_t* entry = frame->addEntry("entry",true);
 						entry->text = Character::sexStr[c];
-						entry->params.addInt(component->getUID());
-						entry->params.addString(Character::sexStr[c]);
+						entry->addParam(component->getUID());
+						entry->addParam(Character::sexStr[c]);
 						entry->color = glm::vec4(1.f);
 					}
 
@@ -7432,7 +7432,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getLevel());
@@ -7481,7 +7481,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getXp());
@@ -7530,7 +7530,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getHunger());
@@ -7594,7 +7594,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getNanoMatter());
@@ -7643,7 +7643,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getBioMatter());
@@ -7692,7 +7692,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getNeuroThread());
@@ -7741,7 +7741,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getGold());
@@ -7805,7 +7805,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getStrength());
@@ -7854,7 +7854,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getDexterity());
@@ -7903,7 +7903,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getIntelligence());
@@ -7952,7 +7952,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getConstitution());
@@ -8001,7 +8001,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getPerception());
@@ -8050,7 +8050,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getCharisma());
@@ -8099,7 +8099,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
 
-					field->getParams().addInt(component->getUID());
+					field->addParam(component->getUID());
 
 					char i[16];
 					snprintf(i, 16, "%d", character->getLuck());
@@ -8138,7 +8138,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			Button* button = properties.addButton("buttonAdd");
 			button->setIcon("images/gui/add.png");
 			button->setStyle(Button::STYLE_NORMAL);
-			button->getParams().addInt(component->getUID());
+			button->addParam(component->getUID());
 			button->setBorder(2);
 			button->setTooltip("Add a sub-component.");
 
@@ -8153,7 +8153,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			Button* button = properties.addButton("buttonDelete");
 			button->setIcon("images/gui/delete.png");
 			button->setStyle(Button::STYLE_NORMAL);
-			button->getParams().addInt(component->getUID());
+			button->addParam(component->getUID());
 			button->setBorder(2);
 			button->setTooltip("Delete this component.");
 
@@ -8849,7 +8849,7 @@ void Editor::updateGUI(Frame& gui) {
 							button->setStyle(Button::STYLE_CHECKBOX);
 							button->setPressed( firstEntity->isFlag( static_cast<Entity::flag_t>( (int)floor(pow(2,c)) ) ) );
 							button->setTooltip(Entity::flagDesc[c]);
-							button->getParams().addInt(1<<c);
+							button->addParam(1<<c);
 
 							Rect<int> size;
 							size.x = border*2; size.w = 30;
@@ -8948,7 +8948,7 @@ void Editor::updateGUI(Frame& gui) {
 								text.format("%s:%s", pair.a.get(), pair.b.get());
 								entry->text = text.get();
 								entry->color = glm::vec4(1.f);
-								entry->params.addString(text);
+								entry->addParam(text);
 							}
 						}
 
@@ -8964,7 +8964,7 @@ void Editor::updateGUI(Frame& gui) {
 							Button* button = properties->addButton("buttonAdd");
 							button->setIcon("images/gui/add.png");
 							button->setStyle(Button::STYLE_NORMAL);
-							button->getParams().addInt(0);
+							button->addParam(0);
 							button->setBorder(2);
 							button->setTooltip("Add a sub-component.");
 
@@ -9435,6 +9435,116 @@ static int console_editor(int argc, const char** argv) {
 	}
 	mainEngine->startEditor(path.get());
 	return 0;
+}
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeEditor(Editor& _editor) {
+	{
+		auto editorType = lua.create_simple_usertype<Editor>(sol::constructors<Editor()>()); //Supposedly this method is faster at compile time? Or at the very least it uses less memory. At any rate, the other method exceeds the maximum default template instantiation depth for G++.
+
+		//Bind all of the editor's member functions.
+		editorType.set("setEditingMode", &Editor::setEditingMode);
+		editorType.set("setEditingMode", &Editor::setEditingMode);
+		editorType.set("setCeilingMode", &Editor::setCeilingMode);
+		editorType.set("setHighlightedObj", &Editor::setHighlightedObj);
+		editorType.set("setWidgetMode", &Editor::setWidgetMode);
+		editorType.set("selectEntity", &Editor::selectEntity);
+		editorType.set("toggleSelectEntity", &Editor::toggleSelectEntity);
+		editorType.set("selectAllEntities", &Editor::selectAllEntities);
+		editorType.set("selectEntityForSpawn", &Editor::selectEntityForSpawn);
+		editorType.set("entitiesName", &Editor::entitiesName);
+		editorType.set("entitiesScript", &Editor::entitiesScript);
+		editorType.set("entitiesFlag", &Editor::entitiesFlag);
+		editorType.set("entitiesSave", &Editor::entitiesSave);
+		editorType.set("entityKeyValueEnter", &Editor::entityKeyValueEnter);
+		editorType.set("entityKeyValueRemove", &Editor::entityKeyValueRemove);
+		editorType.set("entityKeyValueSelect", &Editor::entityKeyValueSelect);
+		editorType.set("entityAddComponent", &Editor::entityAddComponent);
+		editorType.set("entityRemoveComponent", &Editor::entityRemoveComponent);
+		editorType.set("entityBBoxShape", &Editor::entityBBoxShape);
+		editorType.set("entityBBoxEnabled", &Editor::entityBBoxEnabled);
+		editorType.set("entityBBoxMass", &Editor::entityBBoxMass);
+		editorType.set("entityModelLoadMesh", &Editor::entityModelLoadMesh);
+		editorType.set("entityModelLoadMaterial", &Editor::entityModelLoadMaterial);
+		editorType.set("entityModelLoadDepthFailMat", &Editor::entityModelLoadDepthFailMat);
+		editorType.set("entityModelLoadAnimation", &Editor::entityModelLoadAnimation);
+		editorType.set("entityModelCustomColor", &Editor::entityModelCustomColor);
+		editorType.set("entityModelCustomColorChannel", &Editor::entityModelCustomColorChannel);
+		editorType.set("entityLightColorR", &Editor::entityLightColorR);
+		editorType.set("entityLightColorG", &Editor::entityLightColorG);
+		editorType.set("entityLightColorB", &Editor::entityLightColorB);
+		editorType.set("entityLightIntensity", &Editor::entityLightIntensity);
+		editorType.set("entityLightRadius", &Editor::entityLightRadius);
+		editorType.set("entityLightArc", &Editor::entityLightArc);
+		editorType.set("entityLightShadow", &Editor::entityLightShadow);
+		editorType.set("entityLightShape", &Editor::entityLightShape);
+		editorType.set("entityCameraClipNear", &Editor::entityCameraClipNear);
+		editorType.set("entityCameraClipFar", &Editor::entityCameraClipFar);
+		editorType.set("entityCameraWinX", &Editor::entityCameraWinX);
+		editorType.set("entityCameraWinY", &Editor::entityCameraWinY);
+		editorType.set("entityCameraWinW", &Editor::entityCameraWinW);
+		editorType.set("entityCameraWinH", &Editor::entityCameraWinH);
+		editorType.set("entityCameraFOV", &Editor::entityCameraFOV);
+		editorType.set("entityCameraOrtho", &Editor::entityCameraOrtho);
+		editorType.set("entitySpeakerDefaultSound", &Editor::entitySpeakerDefaultSound);
+		editorType.set("entitySpeakerDefaultRange", &Editor::entitySpeakerDefaultRange);
+		editorType.set("entitySpeakerDefaultLoop", &Editor::entitySpeakerDefaultLoop);
+		editorType.set("entityCharacterHp", &Editor::entityCharacterHp);
+		editorType.set("entityCharacterMp", &Editor::entityCharacterMp);
+		editorType.set("entityCharacterSex", &Editor::entityCharacterSex);
+		editorType.set("entityCharacterLevel", &Editor::entityCharacterLevel);
+		editorType.set("entityCharacterXp", &Editor::entityCharacterXp);
+		editorType.set("entityCharacterHunger", &Editor::entityCharacterHunger);
+		editorType.set("entityCharacterNanoMatter", &Editor::entityCharacterNanoMatter);
+		editorType.set("entityCharacterBioMatter", &Editor::entityCharacterBioMatter);
+		editorType.set("entityCharacterNeuroThread", &Editor::entityCharacterNeuroThread);
+		editorType.set("entityCharacterGold", &Editor::entityCharacterGold);
+		editorType.set("entityCharacterStrength", &Editor::entityCharacterStrength);
+		editorType.set("entityCharacterDexterity", &Editor::entityCharacterDexterity);
+		editorType.set("entityCharacterIntelligence", &Editor::entityCharacterIntelligence);
+		editorType.set("entityCharacterConstitution", &Editor::entityCharacterConstitution);
+		editorType.set("entityCharacterPerception", &Editor::entityCharacterPerception);
+		editorType.set("entityCharacterCharisma", &Editor::entityCharacterCharisma);
+		editorType.set("entityCharacterLuck", &Editor::entityCharacterLuck);
+		editorType.set("entityComponentExpand", &Editor::entityComponentExpand);
+		editorType.set("entityComponentCollapse", &Editor::entityComponentCollapse);
+		editorType.set("entityComponentName", &Editor::entityComponentName);
+		editorType.set("entityComponentTranslate", &Editor::entityComponentTranslate);
+		editorType.set("entityComponentRotate", &Editor::entityComponentRotate);
+		editorType.set("entityComponentScale", &Editor::entityComponentScale);
+		editorType.set("widgetTranslateX", &Editor::widgetTranslateX);
+		editorType.set("widgetTranslateY", &Editor::widgetTranslateY);
+		editorType.set("widgetTranslateZ", &Editor::widgetTranslateZ);
+		editorType.set("widgetRotateYaw", &Editor::widgetRotateYaw);
+		editorType.set("widgetRotatePitch", &Editor::widgetRotatePitch);
+		editorType.set("widgetRotateRoll", &Editor::widgetRotateRoll);
+		editorType.set("widgetScaleX", &Editor::widgetScaleX);
+		editorType.set("widgetScaleY", &Editor::widgetScaleY);
+		editorType.set("widgetScaleZ", &Editor::widgetScaleZ);
+		editorType.set("getEditingMode", &Editor::getEditingMode);
+		editorType.set("getHighlightedObj", &Editor::getHighlightedObj);
+		editorType.set("getWidgetMode", &Editor::getWidgetMode);
+		editorType.set("buttonEntityProperties", &Editor::buttonEntityProperties);
+		editorType.set("buttonEntityAddComponent", &Editor::buttonEntityAddComponent);
+		editorType.set("buttonNewConfirm", &Editor::buttonNewConfirm);
+		editorType.set("buttonNew", &Editor::buttonNew);
+		editorType.set("buttonSave", &Editor::buttonSave);
+		editorType.set("buttonLoad", &Editor::buttonLoad);
+		editorType.set("buttonEditorSettings", &Editor::buttonEditorSettings);
+		editorType.set("buttonEditorSettingsApply", &Editor::buttonEditorSettingsApply);
+		editorType.set("buttonMapSettings", &Editor::buttonMapSettings);
+		editorType.set("buttonMapSettingsApply", &Editor::buttonMapSettingsApply);
+		editorType.set("buttonHelp", &Editor::buttonHelp);
+		editorType.set("buttonWorldRotate", &Editor::buttonWorldRotate);
+		editorType.set("playSound", &Editor::playSound);
+		editorType.set("optimizeChunks", &Editor::optimizeChunks);
+
+		//Finally register the thing.
+		lua.set_usertype("Editor", editorType);
+	}
+
+	editor = &_editor;
+	lua["editor"] = editor;
 }
 
 static Ccmd ccmd_editor("editor","closes any running games and starts up the level editor",&console_editor);

@@ -3,9 +3,7 @@
 #pragma once
 
 #include "Main.hpp"
-
-#include <luajit-2.0/lua.hpp>
-#include <LuaBridge/LuaBridge.h>
+#include "sol.hpp"
 
 // templated ArrayList (similar to std::vector)
 // adding or removing elements can unsort the list.
@@ -363,52 +361,39 @@ public:
 
 	// exposes this list type to a script
 	// @param lua The script engine to expose to
-	// @param name The type name in lua
-	static void exposeToScript(lua_State* lua, const char* name) {
-		typedef T* (ArrayList<T>::*ArrayFn)();
-		ArrayFn getArray = static_cast<ArrayFn>(&ArrayList<T>::getArray);
+	// @param luaTypeName The type name in lua
+	static void exposeToScript(sol::state& lua, const char* luaTypeName)
+	{
+		//First identify the constructors.
+		sol::constructors<ArrayList<T>()> constructors;
 
-		typedef const T* (ArrayList<T>::*ArrayConstFn)() const;
-		ArrayConstFn getArrayConst = static_cast<ArrayConstFn>(&ArrayList<T>::getArray);
+		//Then do the thing.
+		sol::usertype<ArrayList<T>> usertype(constructors,
+			//"getArray", sol::resolve<T*()>(&ArrayList<T>::getArray), //This is not exposed because bad juju. GCC will kill you. (When passing in World* type, it hits strange errors for some reason...is it because it's an abstract base class?)
+			//"getArrayConst", sol::resolve<const T*() const>(&ArrayList<T>::getArray),
+			"getSize", &ArrayList<T>::getSize,
+			"getMaxSize", &ArrayList<T>::getMaxSize,
+			"empty", &ArrayList<T>::empty,
+			"alloc", &ArrayList<T>::alloc,
+			"resize", &ArrayList<T>::resize,
+			"clear", &ArrayList<T>::clear,
+			"copy", sol::resolve<ArrayList<T>&(const ArrayList<T>&)>(&ArrayList<T>::copy),
+			"push", &ArrayList<T>::push,
+			"insert", &ArrayList<T>::insert,
+			"pop", &ArrayList<T>::pop,
+			"peek", sol::resolve<T&()>(&ArrayList<T>::peek),
+			"peekConst", sol::resolve<const T&() const>(&ArrayList<T>::peek),
+			"remove", &ArrayList<T>::remove,
+			"removeAndRearrange", &ArrayList<T>::removeAndRearrange,
+			"get", sol::resolve<T&(size_t)>(&ArrayList<T>::get),
+			"getConst", sol::resolve<const T&(size_t) const>(&ArrayList<T>::get)
+		);
 
-		typedef ArrayList<T>& (ArrayList<T>::*CopyFn)(const ArrayList<T>&);
-		CopyFn copy = static_cast<CopyFn>(&ArrayList<T>::copy);
+		//Then do the thing.
+		//sol::usertype<ArrayList<T>> usertype(constructors);
 
-		typedef T& (ArrayList<T>::*PeekFn)();
-		PeekFn peek = static_cast<PeekFn>(&ArrayList<T>::peek);
-
-		typedef const T& (ArrayList<T>::*PeekConstFn)() const;
-		PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
-
-		typedef T& (ArrayList<T>::*GetFn)(size_t);
-		GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
-
-		typedef const T& (ArrayList<T>::*GetConstFn)(size_t) const;
-		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
-
-		luabridge::getGlobalNamespace(lua)
-			.beginClass<ArrayList<T>>(name)
-			.addConstructor<void (*)()>()
-			.addFunction("getArray", getArray)
-			.addFunction("getArrayConst", getArrayConst)
-			.addFunction("getSize", &ArrayList<T>::getSize)
-			.addFunction("getMaxSize", &ArrayList<T>::getMaxSize)
-			.addFunction("empty", &ArrayList<T>::empty)
-			.addFunction("alloc", &ArrayList<T>::alloc)
-			.addFunction("resize", &ArrayList<T>::resize)
-			.addFunction("clear", &ArrayList<T>::clear)
-			.addFunction("copy", copy)
-			.addFunction("push", &ArrayList<T>::push)
-			.addFunction("insert", &ArrayList<T>::insert)
-			.addFunction("pop", &ArrayList<T>::pop)
-			.addFunction("peek", peek)
-			.addFunction("peekConst", peekConst)
-			.addFunction("remove", &ArrayList<T>::remove)
-			.addFunction("removeAndRearrange", &ArrayList<T>::removeAndRearrange)
-			.addFunction("get", get)
-			.addFunction("getConst", getConst)
-			.endClass()
-		;
+		//Finally register the thing.
+		lua.set_usertype(luaTypeName, usertype);
 	}
 
 private:

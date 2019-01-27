@@ -170,3 +170,33 @@ void Light::createShadowMap() {
 void Light::deleteShadowMap() {
 	shadowMap.term();
 }
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeLight() {
+	{
+		//First identify the constructors.
+		sol::constructors<Light(Entity&, Component*)> constructors;
+
+		//Then do the thing.
+		sol::usertype<Light> usertype(constructors,
+			sol::base_classes, sol::bases<Component>(),
+			"getColor", &Light::getColor,
+			"getIntensity", &Light::getIntensity,
+			"getRadius", &Light::getRadius,
+			"getArc", &Light::getArc,
+			"isShadow", &Light::isShadow,
+			"setColor", &Light::setColor,
+			"setIntensity", &Light::setIntensity,
+			"setRadius", &Light::setRadius,
+			"setShape", &Light::setShape,
+			"setArc", &Light::setArc,
+			"setShadow", &Light::setShadow
+		);
+
+		//Finally register the thing.
+		lua.set_usertype("Light", usertype);
+	}
+
+	LinkedList<Light*>::exposeToScript(lua, "LinkedListLightPtr", "NodeLightPtr");
+	ArrayList<Light*>::exposeToScript(lua, "ArrayListLightPtr");
+}

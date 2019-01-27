@@ -159,7 +159,7 @@ protected:
     ArrayList<Uint32> map;
     Uint32 mapWidth = 0;
     Uint32 mapHeight = 0;
-    void generateSimpleMap(); //TODO Make sure accessing this result is threadsafe...every thread should probably get a copy of the map on creation.
+    void generateSimpleMap(); //TODO: Make sure accessing this result is threadsafe...every thread should probably get a copy of the map on creation.
 };
 
 // class pathTask

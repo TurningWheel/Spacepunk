@@ -154,7 +154,7 @@ void Entity::addToEditorList() {
 
 				Frame::entry_t* entry = levelList->addEntry("entity",true);
 				entry->text = name.get();
-				entry->params.addInt(uid);
+				entry->addParam(uid);
 				if( selected ) {
 					entry->color = glm::vec4(1.f,0.f,0.f,1.f);
 				} else if( highlighted ) {
@@ -205,7 +205,7 @@ void Entity::insertIntoWorld(World* _world) {
 			path.format("scripts/server/entities/%s.lua", scriptStr.get());
 		}
 		script->load(path.get());
-		script->dispatch("init");
+		script->dispatchFunction("init");
 	}
 }
 
@@ -399,9 +399,9 @@ void Entity::process() {
 			if( !ranScript ) {
 				ranScript = true;
 				script->load(path.get());
-				script->dispatch("init");
+				script->dispatchFunction("init");
 			} else {
-				script->dispatch("process");
+				script->dispatchFunction("process");
 				processed = true;
 			}
 		}
@@ -460,7 +460,7 @@ void Entity::process() {
 				path.format("scripts/server/entities/%s.lua", scriptStr.get());
 			}
 
-			script->dispatch("postprocess");
+			script->dispatchFunction("postprocess");
 		}
 	}
 }
@@ -782,11 +782,7 @@ bool Entity::interact(Entity& user, BBox& bbox)
 		return false;
 	}
 
-	Script::Args args;
-	args.addInt(user.getUID());
-	args.addString(bbox.getName());
-
-	return (script->dispatch("interact", &args) == 0);
+	return script->dispatchFunction("interact", user, bbox);
 }
 
 void Entity::serialize(FileInterface * file) {
@@ -1029,4 +1025,108 @@ void Entity::setScriptStr(const char* _scriptStr) {
 		script = new Script(*this);
 	}
 	ranScript = false;
+}
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeEntity() {
+	{
+		auto entityType = lua.create_simple_usertype<Entity>(sol::constructors<Entity(World*, Uint32)>());
+
+		//Bind all of the entity's member functions.
+		entityType.set("getName", &Entity::getName);
+		entityType.set("getUID", &Entity::getUID);
+		entityType.set("getTicks", &Entity::getTicks);
+		entityType.set("getPos", &Entity::getPos);
+		entityType.set("getVel", &Entity::getVel);
+		entityType.set("getAng", &Entity::getAng);
+		entityType.set("getRot", &Entity::getRot);
+		entityType.set("getScale", &Entity::getScale);
+		entityType.set("getScriptStr", &Entity::getScriptStr);
+		entityType.set("isToBeDeleted", &Entity::isToBeDeleted);
+		entityType.set("getFlags", &Entity::getFlags);
+		entityType.set("setKeyValue", &Entity::setKeyValue);
+		entityType.set("deleteKeyValue", &Entity::deleteKeyValue);
+		entityType.set("getKeyValueAsString", &Entity::getKeyValueAsString);
+		entityType.set("getKeyValueAsFloat", &Entity::getKeyValueAsFloat);
+		entityType.set("getKeyValueAsInt", &Entity::getKeyValueAsInt);
+		entityType.set("getKeyValue", &Entity::getKeyValue);
+		entityType.set("isFlag", &Entity::isFlag);
+		entityType.set("isFalling", &Entity::isFalling);
+		entityType.set("getLastUpdate", &Entity::getLastUpdate);
+		entityType.set("getDefName", &Entity::getDefName);
+		entityType.set("getSort", &Entity::getSort);
+		entityType.set("isSelected", &Entity::isSelected);
+		entityType.set("isHighlighted", &Entity::isHighlighted);
+		entityType.set("setName", &Entity::setName);
+		entityType.set("setFlags", &Entity::setFlags);
+		entityType.set("setFlag", &Entity::setFlag);
+		entityType.set("resetFlag", &Entity::resetFlag);
+		entityType.set("toggleFlag", &Entity::toggleFlag);
+		entityType.set("setPos", &Entity::setPos);
+		entityType.set("setVel", &Entity::setVel);
+		entityType.set("setAng", &Entity::setAng);
+		entityType.set("setRot", &Entity::setRot);
+		entityType.set("setScale", &Entity::setScale);
+		entityType.set("setScriptStr", &Entity::setScriptStr);
+		entityType.set("setSelected", &Entity::setSelected);
+		entityType.set("setHighlighted", &Entity::setHighlighted);
+		entityType.set("setFalling", &Entity::setFalling);
+		entityType.set("remove", &Entity::remove);
+		entityType.set("animate", &Entity::animate);
+		entityType.set("isNearCharacter", &Entity::isNearCharacter);
+		entityType.set("isCrouching", &Entity::isCrouching);
+		entityType.set("isMoving", &Entity::isMoving);
+		entityType.set("hasJumped", &Entity::hasJumped);
+		entityType.set("getLookDir", &Entity::getLookDir);
+		entityType.set("checkCollision", &Entity::checkCollision);
+		entityType.set("copy", &Entity::copy);
+		entityType.set("update", &Entity::update);
+		entityType.set("hasComponent", &Entity::hasComponent);
+		entityType.set("removeComponentByName", &Entity::removeComponentByName);
+		entityType.set("removeComponentByUID", &Entity::removeComponentByUID);
+		entityType.set("addComponent", &Entity::addComponent<Component>);
+		entityType.set("addBBox", &Entity::addComponent<BBox>);
+		entityType.set("addModel", &Entity::addComponent<Model>);
+		entityType.set("addCamera", &Entity::addComponent<Camera>);
+		entityType.set("addLight", &Entity::addComponent<Light>);
+		entityType.set("addSpeaker", &Entity::addComponent<Speaker>);
+		entityType.set("addCharacter", &Entity::addComponent<Character>);
+		entityType.set("findComponentByName", &Entity::findComponentByName<Component>);
+		entityType.set("findBBoxByName", &Entity::findComponentByName<BBox>);
+		entityType.set("findModelByName", &Entity::findComponentByName<Model>);
+		entityType.set("findLightByName", &Entity::findComponentByName<Light>);
+		entityType.set("findCameraByName", &Entity::findComponentByName<Camera>);
+		entityType.set("findSpeakerByName", &Entity::findComponentByName<Speaker>);
+		entityType.set("findCharacterByName", &Entity::findComponentByName<Character>);
+		entityType.set("lineTrace", &Entity::lineTrace);
+		entityType.set("findAPath", &Entity::findAPath);
+		entityType.set("findRandomPath", &Entity::findRandomPath);
+		entityType.set("pathFinished", &Entity::pathFinished);
+		entityType.set("hasPath", &Entity::hasPath);
+		entityType.set("getPathNodePosition", &Entity::getPathNodePosition);
+		entityType.set("getPathNodeDir", &Entity::getPathNodeDir);
+		entityType.set("getCurrentTileX", &Entity::getCurrentTileX);
+		entityType.set("getCurrentTileY", &Entity::getCurrentTileY);
+		entityType.set("getCurrentTileZ", &Entity::getCurrentTileZ);
+		entityType.set("isLocalPlayer", &Entity::isLocalPlayer);
+
+		//Finally register the thing.
+		lua.set_usertype("Entity", entityType);
+	}
+
+	// expose components
+	exposeComponent();
+	exposeBBox();
+	exposeModel();
+	exposeLight();
+	exposeCamera();
+	exposeSpeaker();
+	exposeCharacter();
+
+	if( entity ) {
+		lua["entity"] = entity;
+	}
+
+	LinkedList<Entity*>::exposeToScript(lua, "LinkedListEntityPtr", "NodeEntityPtr");
+	ArrayList<Entity*>::exposeToScript(lua, "ArrayListEntityPtr");
 }

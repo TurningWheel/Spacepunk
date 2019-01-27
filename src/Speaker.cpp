@@ -264,3 +264,29 @@ void Speaker::serialize(FileInterface * file) {
 		}
 	}
 }
+
+//These functions are not in the script.cpp file since they drastically increase compile time and memory usage due to heavy template usage.
+void Script::exposeSpeaker() {
+	{
+		//First identify the constructors.
+		sol::constructors<Speaker(Entity&, Component*)> constructors;
+
+		//Then do the thing.
+		sol::usertype<Speaker> usertype(constructors,
+			sol::base_classes, sol::bases<Component>(),
+			"playSound", &Speaker::playSound,
+			"stopSound", &Speaker::stopSound,
+			"stopAllSounds", &Speaker::stopAllSounds,
+			"getDefaultSound", &Speaker::getDefaultSound,
+			"getDefaultRange", &Speaker::getDefaultRange,
+			"isDefaultLoop", &Speaker::isDefaultLoop
+		);
+
+		//Finally register the thing.
+		lua.set_usertype("Speaker", usertype);
+	}
+
+	LinkedList<Speaker*>::exposeToScript(lua, "LinkedListSpeakerPtr", "NodeSpeakerPtr");
+	ArrayList<Speaker*>::exposeToScript(lua, "ArrayListSpeakerPtr");
+}
+

@@ -4,9 +4,7 @@
 
 #include "Main.hpp"
 #include "Node.hpp"
-
-#include <luajit-2.0/lua.hpp>
-#include <LuaBridge/LuaBridge.h>
+#include "Script.hpp"
 
 template <typename T>
 class LinkedList {
@@ -256,53 +254,38 @@ public:
 	
 	// exposes this list type to a script
 	// @param lua The script engine to expose to
-	// @param listName The type name for the list in lua
-	// @param nodeName The type name for the node in lua
-	static void exposeToScript(lua_State* lua, const char* listName, const char* nodeName) {
-		typedef Node<T>* (LinkedList<T>::*NodeFn)();
-		NodeFn getFirst = static_cast<NodeFn>(&LinkedList<T>::getFirst);
-		NodeFn getLast = static_cast<NodeFn>(&LinkedList<T>::getLast);
+	// @param luaTypeName The type name for the list in lua
+	// @param nodeLuaTypeName The type name for the node in lua
+	static void exposeToScript(sol::state& lua, const char* luaTypeName, const char* nodeLuaTypeName)
+	{
+		//First identify the constructors.
+		sol::constructors<LinkedList<T>()> constructors;
 
-		typedef const Node<T>* (LinkedList<T>::*NodeConstFn)() const;
-		NodeConstFn getFirstConst = static_cast<NodeConstFn>(&LinkedList<T>::getFirst);
-		NodeConstFn getLastConst = static_cast<NodeConstFn>(&LinkedList<T>::getLast);
+		//Then do the thing.
+		sol::usertype<LinkedList<T>> usertype(constructors,
+			"getFirst", sol::resolve<Node<T>*()>(&LinkedList<T>::getFirst),
+			"getFirstConst", sol::resolve<const Node<T>*() const>(&LinkedList<T>::getFirst),
+			"getLast", sol::resolve<Node<T>*()>(&LinkedList<T>::getLast),
+			"getLastConst", sol::resolve<const Node<T>*() const>(&LinkedList<T>::getLast),
+			"getSize", &LinkedList<T>::getSize,
+			"setFirst", &LinkedList<T>::setFirst,
+			"setLast", &LinkedList<T>::setLast,
+			"nodeForIndex", sol::resolve<Node<T>*(const size_t)>(&LinkedList<T>::nodeForIndex),
+			"nodeForIndexConst", sol::resolve<const Node<T>*(const size_t) const>(&LinkedList<T>::nodeForIndex),
+			"indexForNode", &LinkedList<T>::indexForNode,
+			"addNode", &LinkedList<T>::addNode,
+			"addNodeFirst", &LinkedList<T>::addNodeFirst,
+			"addNodeLast", &LinkedList<T>::addNodeLast,
+			"removeNode", sol::resolve<void(Node<T>*)>(&LinkedList<T>::removeNode),
+			"removeNodeIndex", sol::resolve<void(const size_t)>(&LinkedList<T>::removeNode),
+			"removeAll", &LinkedList<T>::removeAll,
+			"copy", &LinkedList<T>::copy
+		);
 
-		typedef Node<T>* (LinkedList<T>::*NodeIndexFn)(const size_t);
-		NodeIndexFn nodeForIndex = static_cast<NodeIndexFn>(&LinkedList<T>::nodeForIndex);
+		//Finally register the thing.
+		lua.set_usertype(luaTypeName, usertype);
 
-		typedef const Node<T>* (LinkedList<T>::*NodeIndexConstFn)(const size_t) const;
-		NodeIndexConstFn nodeForIndexConst = static_cast<NodeIndexConstFn>(&LinkedList<T>::nodeForIndex);
-
-		typedef void (LinkedList<T>::*NodeRemoveFn)(Node<T>*);
-		NodeRemoveFn removeNode = static_cast<NodeRemoveFn>(&LinkedList<T>::removeNode);
-
-		typedef void (LinkedList<T>::*NodeRemoveIndexFn)(const size_t);
-		NodeRemoveIndexFn removeNodeIndex = static_cast<NodeRemoveIndexFn>(&LinkedList<T>::removeNode);
-
-		luabridge::getGlobalNamespace(lua)
-			.beginClass<LinkedList<T>>(listName)
-			.addConstructor<void (*)()>()
-			.addFunction("getFirst", getFirst)
-			.addFunction("getFirstConst", getFirstConst)
-			.addFunction("getLast", getLast)
-			.addFunction("getLastConst", getLastConst)
-			.addFunction("getSize", &LinkedList<T>::getSize)
-			.addFunction("setFirst", &LinkedList<T>::setFirst)
-			.addFunction("setLast", &LinkedList<T>::setLast)
-			.addFunction("nodeForIndex", nodeForIndex)
-			.addFunction("nodeForIndexConst", nodeForIndexConst)
-			.addFunction("indexForNode", &LinkedList<T>::indexForNode)
-			.addFunction("addNode", &LinkedList<T>::addNode)
-			.addFunction("addNodeFirst", &LinkedList<T>::addNodeFirst)
-			.addFunction("addNodeLast", &LinkedList<T>::addNodeLast)
-			.addFunction("removeNode", removeNode)
-			.addFunction("removeNodeIndex", removeNodeIndex)
-			.addFunction("removeAll", &LinkedList<T>::removeAll)
-			.addFunction("copy", &LinkedList<T>::copy)
-			.endClass()
-		;
-
-		Node<T>::exposeToScript(lua, nodeName);
+		Node<T>::exposeToScript(lua, nodeLuaTypeName);
 	}
 
 private:

@@ -2,7 +2,8 @@
 
 #pragma once
 
-class Engine;
+#include <vector>
+
 class Client;
 class Server;
 class World;
@@ -11,209 +12,128 @@ class Light;
 class Frame;
 class Editor;
 
+//#include "Engine.hpp"
 #include "String.hpp"
-#include <luajit-2.0/lua.hpp>
+#include "sol.hpp"
 
-class Script {
+class Script
+{
 public:
-	Script(Client& _client);
-	Script(Server& _server);
-	Script(World& _world);
-	Script(Entity& _entity);
-	Script(Frame& _frame);
+	Script(Client& client);
+	Script(Server& server);
+	Script(World& world);
+	Script(Entity& entity);
+	Script(Frame& frame);
 	~Script();
 
-	// script variable types
-	enum var_t {
-		TYPE_BOOLEAN,
-		TYPE_INTEGER,
-		TYPE_FLOAT,
-		TYPE_STRING,
-		TYPE_POINTER,
-		TYPE_NIL,
-		TYPE_MAX
-	};
-
-	// script function parameter
-	struct param_t {
-		param_t() {}
-		virtual ~param_t() {}
-
-		virtual var_t getType() = 0;
-		virtual void push(lua_State* lua) = 0;
-		virtual param_t* copy() = 0;
-	};
-
-	// boolean parameter
-	struct param_bool_t : param_t {
-		param_bool_t() {}
-		param_bool_t(const bool _value) : value(_value) {}
-		virtual ~param_bool_t() {}
-		virtual var_t getType() override { return TYPE_BOOLEAN; }
-		virtual void push(lua_State* lua) override {
-			lua_pushboolean(lua, value ? 1 : 0);
-		}
-		virtual param_t* copy() override {
-			return new param_bool_t(value);
-		}
-		bool value = false;
-	};
-
-	// integer parameter
-	struct param_int_t : param_t {
-		param_int_t() {}
-		param_int_t(const int _value) : value(_value) {}
-		virtual ~param_int_t() {}
-		virtual var_t getType() override { return TYPE_INTEGER; }
-		virtual void push(lua_State* lua) override {
-			lua_pushinteger(lua, static_cast<lua_Integer>(value));
-		}
-		virtual param_t* copy() override {
-			return new param_int_t(value);
-		}
-		int value = 0;
-	};
-
-	// float parameter
-	struct param_float_t : param_t {
-		param_float_t() {}
-		param_float_t(const float _value) : value(_value) {}
-		virtual ~param_float_t() {}
-		virtual var_t getType() override { return TYPE_FLOAT; }
-		virtual void push(lua_State* lua) override {
-			lua_pushnumber(lua, static_cast<lua_Number>(value));
-		}
-		virtual param_t* copy() override {
-			return new param_float_t(value);
-		}
-		float value = 0.f;
-	};
-
-	// string parameter
-	struct param_string_t : param_t {
-		param_string_t() {}
-		param_string_t(const String& _value) : value(_value) {}
-		virtual ~param_string_t() {}
-		virtual var_t getType() override { return TYPE_STRING; }
-		virtual void push(lua_State* lua) override {
-			lua_pushlstring(lua, value.get(), value.getSize());
-		}
-		virtual param_t* copy() override {
-			return new param_string_t(value);
-		}
-		String value;
-	};
-
-	// pointer parameter
-	struct param_pointer_t : param_t {
-		param_pointer_t() {}
-		param_pointer_t(void* _value) : value(_value) {}
-		virtual ~param_pointer_t() {}
-		virtual var_t getType() override { return TYPE_POINTER; }
-		virtual void push(lua_State* lua) override {
-			lua_pushlightuserdata(lua, value);
-		}
-		virtual param_t* copy() override {
-			return new param_pointer_t(value);
-		}
-		void* value = nullptr;
-	};
-
-	// nil parameter
-	struct param_nil_t : param_t {
-		param_nil_t() {}
-		virtual ~param_nil_t() {}
-		virtual var_t getType() override { return TYPE_NIL; }
-		virtual void push(lua_State* lua) override {
-			lua_pushnil(lua);
-		}
-		virtual param_t* copy() override {
-			return new param_nil_t();
-		}
-	};
-
-	// script function arguments
-	class Args {
-	public:
-		Args() {}
-		Args(const Args& src) {
-			for (size_t c = 0; c < src.list.getSize(); ++c) {
-				list.push(src.list[c]->copy());
-			}
-		}
-		~Args() {
-			while (list.getSize() > 0) {
-				delete list.pop();
-			}
-		}
-
-		// getters & setters
-		const ArrayList<param_t*>&		getList() const		{ return list; }
-		const size_t					getSize() const		{ return list.getSize(); }
-
-		// push all args onto the lua stack
-		// @param lua the lua stack to push args into
-		void push(lua_State* lua) {
-			for (size_t c = 0; c < list.getSize(); ++c) {
-				param_t* param = list[c];
-				param->push(lua);
-			}
-			while (list.getSize() > 0) {
-				delete list.pop();
-			}
-		}
-		
-		// add a bool to the args list
-		// @param value the value to init with
-		void addBool(const bool value) {
-			list.push(new param_bool_t(value));
-		}
-
-		// add an int to the args list
-		// @param value the value to init with
-		void addInt(const int value) {
-			list.push(new param_int_t(value));
-		}
-
-		// add a float to the args list
-		// @param value the value to init with
-		void addFloat(const float value) {
-			list.push(new param_float_t(value));
-		}
-
-		// add a string to the args list
-		// @param value the value to init with
-		void addString(const String& value) {
-			list.push(new param_string_t(value));
-		}
-
-		// add a pointer to the args list
-		// @param value the value to init with
-		void addPointer(void* value) {
-			list.push(new param_pointer_t(value));
-		}
-
-		// add a nil to the args list
-		void addNil() {
-			list.push(new param_nil_t());
-		}
-
-	private:
-		ArrayList<param_t*> list;
+	//NOTE: Every Script::Args is inextricably tied to its respective Script engine instance! You shall never reuse a Script::Args with another Script engine instance.
+	struct Args
+	{
+		std::vector<sol::object> params;
 	};
 
 	// load and evaluate the given script
 	// @param filename filename of the script to run
 	// @return 0 on success, nonzero on failure
-	int load(const char* filename);
+	bool load(const char* filename);
 
-	// evaluate a function. args are discarded after use
-	// @param function name of the function to execute
-	// @param args a list of args to pass to the function
-	// @return 0 on success, nonzero on failure
-	int dispatch(const char* function, Args* args = nullptr);
+	static void dispatchFunctionErrorMessage(const String& filename, const char* functionName, const sol::error& err);
+
+	template<typename...Args>
+	bool dispatchFunction(const char* functionName, Args&&...args)
+	{
+		if (broken)
+		{
+			return false;
+		}
+
+		sol::protected_function myFunc = lua[functionName];
+
+		sol::protected_function_result result;
+		result = myFunc(args...);
+		if (!result.valid())
+		{
+			sol::error err = result;
+			dispatchFunctionErrorMessage(filename, functionName, err);
+			broken = true;
+			return false;
+		}
+
+		return true;
+	}
+
+	bool dispatchFunction(const char* functionName, const Script::Args& params)
+	{
+		if (0 == params.params.size())
+		{
+			return dispatchFunction(functionName);
+		}
+
+		if (broken)
+		{
+			return false;
+		}
+
+		sol::protected_function myFunc = lua[functionName];
+
+		sol::protected_function_result result;
+		result = myFunc(sol::as_args(params.params));
+
+		if (!result.valid())
+		{
+			sol::error err = result;
+			dispatchFunctionErrorMessage(filename, functionName, err);
+			broken = true;
+			return false;
+		}
+
+		return true;
+	}
+
+	template<typename...Args>
+	bool dispatchFunction(const char* functionName, Script::Args& params, Args&&...args)
+	{
+		if (0 == params.params.size())
+		{
+			return dispatchFunction(functionName, args...);
+		}
+
+		if (broken)
+		{
+			return false;
+		}
+
+		sol::protected_function myFunc = lua[functionName];
+
+		sol::protected_function_result result;
+		result = myFunc(sol::as_args(params.params), args...);
+
+		if (!result.valid())
+		{
+			sol::error err = result;
+			dispatchFunctionErrorMessage(filename, functionName, err);
+			broken = true;
+			return false;
+		}
+
+		return true;
+	}
+
+	template <typename T>
+	void addParam(T&& obj, Script::Args& params)
+	{
+		params.params.push_back(makeObject(obj));
+	}
+
+	template <typename T>
+	sol::object makeObject(T&& obj)
+	{
+		return sol::make_object(lua, obj);
+	}
 
 private:
+	sol::state lua;
+
 	// class pointers:
 	// if these are set, this script engine reliably owns that object's functionality
 	Engine* engine = nullptr;
@@ -229,6 +149,9 @@ private:
 
 	// if an error occurs, this flag will raise, then no more dispatches will work
 	bool broken = false;
+
+	// common constructor that initializes all universal base data.
+	Script();
 
 	// exposition functions
 	void exposeEngine();
@@ -251,5 +174,4 @@ private:
 	void exposeEmitter();
 	void exposeEditor(Editor& _editor);
 
-	lua_State* lua = nullptr;
 };

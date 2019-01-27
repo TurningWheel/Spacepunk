@@ -4,6 +4,7 @@
 #pragma once
 
 #include "File.hpp"
+#include "Script.hpp"
 
 template <typename T>
 struct Rect {
@@ -53,17 +54,22 @@ struct Rect {
 
 	// exposes this rect type to a script
 	// @param lua The script engine to expose to
-	// @param name The type name in lua
-	static void exposeToScript(lua_State* lua, const char* name) {
-		luabridge::getGlobalNamespace(lua)
-			.beginClass<Rect<T>>(name)
-			.addConstructor<void (*)(T, T, T, T)>()
-			.addData("x", &Rect<T>::x, true)
-			.addData("y", &Rect<T>::y, true)
-			.addData("w", &Rect<T>::w, true)
-			.addData("h", &Rect<T>::h, true)
-			.addFunction("containsPoint", &Rect<T>::containsPoint)
-			.endClass()
-		;
+	// @param luaTypeName The type name in lua
+	static void exposeToScript(sol::state& lua, const char* luaTypeName)
+	{
+		//First identify the constructors.
+		sol::constructors<Rect(), Rect(T, T, T, T), Rect(T*), Rect(const Rect<T>&)> constructors;
+
+		//Then do the thing.
+		sol::usertype<Rect<T>> usertype(constructors,
+			"x", &Rect<T>::x,
+			"y", &Rect<T>::y,
+			"w", &Rect<T>::w,
+			"h", &Rect<T>::h,
+			"containsPoint", &Rect<T>::containsPoint
+		);
+
+		//Finally register the thing.
+		lua.set_usertype(luaTypeName, usertype);
 	}
 };

@@ -108,7 +108,7 @@
     <OutDir>$(SolutionDir)..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -130,7 +130,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -138,7 +138,7 @@
     <OutDir>$(SolutionDir)..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;C:\GameLibs\include\luajit-2.0;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>

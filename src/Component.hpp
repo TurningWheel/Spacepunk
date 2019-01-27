@@ -99,7 +99,7 @@ public:
 	// @param color The laser's color
 	// @param size The laser's size
 	// @param life The laser's lifespan (in ticks, 60 ticks = 1 sec)
-	void shootLaser(const glm::mat4& mat, WideVector& color, float size, float life);
+	void shootLaser(const glm::mat4& mat, const WideVector& color, float size, float life);
 
 	// find all components of a given type
 	// @param type the type of component to search for
