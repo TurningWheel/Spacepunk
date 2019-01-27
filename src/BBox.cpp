@@ -658,7 +658,7 @@ void Script::exposeBBox() {
 		sol::usertype<BBox> usertype(constructors,
 			sol::base_classes, sol::bases<Component>(),
 			"nearestCeiling", &BBox::nearestCeiling,
-			"nearestFloor", &BBox::nearestFloor,
+			//"nearestFloor", &BBox::nearestFloor,
 			"distToCeiling", &BBox::distToCeiling,
 			"distToFloor", &BBox::distToFloor,
 			"getShape", &BBox::getShape,
