@@ -366,6 +366,7 @@
     <ClCompile Include="..\..\src\Generator.cpp" />
     <ClCompile Include="..\..\src\Image.cpp" />
     <ClCompile Include="..\..\src\Input.cpp" />
+    <ClCompile Include="..\..\src\Item.cpp" />
     <ClCompile Include="..\..\src\Light.cpp" />
     <ClCompile Include="..\..\src\Line3D.cpp" />
     <ClCompile Include="..\..\src\Main.cpp" />

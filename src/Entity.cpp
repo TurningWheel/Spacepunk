@@ -862,12 +862,9 @@ void Entity::serialize(FileInterface * file) {
 void Entity::setKeyValue(const char* key, const char* value)
 {
 	String* exists = keyvalues[key];
-	if ( exists )
-	{
+	if (exists) {
 		*exists = value;
-	}
-	else
-	{
+	} else {
 		keyvalues.insert(key, value);
 	}
 }

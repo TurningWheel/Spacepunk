@@ -181,6 +181,7 @@ void Script::exposeEngine() {
 		.addFunction("msg", &Engine::msg)
 		.addStaticFunction("triangleCoords", &Engine::triangleCoords)
 		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
+		.addStaticFunction("strcmp", &Engine::strCompare)
 		.endClass()
 	;
 

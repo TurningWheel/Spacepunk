@@ -255,6 +255,12 @@ public:
 	// @return true if the character array has non-numeral characters, false otherwise
 	static bool charsHaveLetters( const char* arr, size_t len );
 
+	// does string comparison (helper function for lua)
+	// @param a the first string
+	// @param b the second string
+	// @return the result of the string comparison
+	static int strCompare(const char* a, const char* b);
+
 	// finds the intersection between a point and a plane in 3D
 	// @param lineStart the start of the line segment
 	// @param lineEnd the end of the line segment

@@ -1071,6 +1071,10 @@ bool Engine::charsHaveLetters(const char *arr, size_t len) {
 	return false;
 }
 
+int Engine::strCompare(const char* a, const char* b) {
+	return strcmp(a, b);
+}
+
 void Engine::preProcess() {
 	anykeystatus = false;
 

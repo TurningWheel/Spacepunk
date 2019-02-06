@@ -275,8 +275,7 @@ private:
 	ArrayList<ArrayList<OrderedPair<K, T>>> data;
 	size_t numBuckets = 4;
 	size_t size = 0;
-
-	template <typename K>
+	
 	typename std::enable_if<std::is_class<K>::value, unsigned long>::type
 	hash(const K& key) const {
 		return key.hash();
