@@ -5,6 +5,15 @@
 #undef min
 #undef max
 
+#ifdef PLATFORM_LINUX
+#include <string.h>
+//Utter bodge to make things work because of Windows.
+inline char* strncpy_s(char *strDest, size_t numberOfElements, const char *strSource, size_t count)
+{
+	return strncpy(strDest, strSource, count);
+}
+#endif
+
 class String {
 public:
 	String() {
