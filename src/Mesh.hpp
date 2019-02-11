@@ -95,7 +95,7 @@ public:
 	// skins the mesh
 	// @param animations animations to skin with
 	// @param skincache where to store resulting skin
-	void skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache );
+	void skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) const;
 
 	// find the bone with the given name
 	// @param name the name of the bone to search for
@@ -152,18 +152,19 @@ public:
 		unsigned int boneIndexForName( const char* name ) const;
 
 		GLuint findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3);
+		void mapBones(const aiNode* node);
 
-		void boneTransform(Map<String, AnimationState>& animations, skincache_t& skin);
-		void readNodeHierarchy(Map<String, AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
-		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str);
+		void boneTransform(const Map<String, AnimationState>& animations, skincache_t& skin) const;
+		void readNodeHierarchy(const Map<String, AnimationState>* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const;
+		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str) const;
 
-		void calcInterpolatedPosition(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedRotation(aiQuaternion& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim, bool& first);
-		void calcInterpolatedScaling(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedPosition(aiVector3D& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) const;
+		void calcInterpolatedRotation(aiQuaternion& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim, bool& first) const;
+		void calcInterpolatedScaling(aiVector3D& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) const;
 
-		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim);
-		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim);
-		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim);
+		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim) const;
+		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
+		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
 
 		// getters & setters
 		virtual const type_t				getType() const				{ return ASSET_MESH; }

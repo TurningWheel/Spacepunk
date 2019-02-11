@@ -201,7 +201,7 @@ public:
 			alloc(std::max((unsigned int)size*2U, 4U));
 		}
 		++size;
-		arr[size-1] = val;
+		arr[size-1] = std::move(val);
 	}
 
 	// insert a value into the list

@@ -295,10 +295,56 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 			if( component.getEntity()->isFlag(Entity::flag_t::FLAG_FULLYLIT) || camera.getDrawMode() == Camera::DRAW_GLOW || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_FALSE);
 				glUniform1i(shader.getUniformLocation("gNumLights"), 0);
-				StringBuf<32> buf;
+
+				char buf[32];
+				ArrayList<char> chars;
+
 				for ( int index = 0; index < maxLights; ++textureUnit, ++index) {
-					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
-					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+					strcpy(buf, "gShadowmap[");
+					size_t len = 11;
+					if (index == 0) {
+						buf[len] = '0';
+						buf[len + 1] = ']';
+						buf[len + 2] = '\0';
+					} else {
+						unsigned int a = index;
+						while (a != 0) {
+							chars.push('0' + a % 10);
+							a /= 10;
+						}
+						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+							buf[len] = chars[c];
+							++len;
+						}
+						buf[len] = ']';
+						buf[len + 1] = '\0';
+					}
+					glUniform1i(shader.getUniformLocation(buf), textureUnit);
+					chars.resize(0);
+
+					strcpy(buf, "gShadowmapEnabled[");
+					len = 18;
+					if (index == 0) {
+						buf[len] = '0';
+						buf[len + 1] = ']';
+						buf[len + 2] = '\0';
+					}
+					else {
+						unsigned int a = index;
+						while (a != 0) {
+							chars.push('0' + a % 10);
+							a /= 10;
+						}
+						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+							buf[len] = chars[c];
+							++len;
+						}
+						buf[len] = ']';
+						buf[len + 1] = '\0';
+					}
+					glUniform1i(shader.getUniformLocation(buf), GL_FALSE);
+					chars.resize(0);
+
 					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 				}
 			} else {
@@ -318,10 +364,57 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				} else {
 					glUniform1i(shader.getUniformLocation("gNumLights"), 0);
 				}
-				StringBuf<32> buf;
+
+				char buf[32];
+				ArrayList<char> chars;
+
 				for ( int index = textureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
-					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
-					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+					strcpy(buf, "gShadowmap[");
+					size_t len = 11;
+					if (index == 0) {
+						buf[len] = '0';
+						buf[len + 1] = ']';
+						buf[len + 2] = '\0';
+					}
+					else {
+						unsigned int a = index;
+						while (a != 0) {
+							chars.push('0' + a % 10);
+							a /= 10;
+						}
+						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+							buf[len] = chars[c];
+							++len;
+						}
+						buf[len] = ']';
+						buf[len + 1] = '\0';
+					}
+					glUniform1i(shader.getUniformLocation(buf), textureUnit);
+					chars.resize(0);
+
+					strcpy(buf, "gShadowmapEnabled[");
+					len = 18;
+					if (index == 0) {
+						buf[len] = '0';
+						buf[len + 1] = ']';
+						buf[len + 2] = '\0';
+					}
+					else {
+						unsigned int a = index;
+						while (a != 0) {
+							chars.push('0' + a % 10);
+							a /= 10;
+						}
+						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+							buf[len] = chars[c];
+							++len;
+						}
+						buf[len] = ']';
+						buf[len + 1] = '\0';
+					}
+					glUniform1i(shader.getUniformLocation(buf), GL_FALSE);
+					chars.resize(0);
+
 					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 				}
 			}
@@ -331,7 +424,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	}
 }
 
-void Mesh::skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) {
+void Mesh::skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) const {
 	if( !hasAnimations() ) {
 		return;
 	}
@@ -629,6 +722,9 @@ Mesh::SubMesh::SubMesh(const char* name, const aiScene& _scene, aiMesh* mesh) {
 			}
 		}
 
+		// maps nodes that might not be considered "bones" per-se
+		mapBones(scene->mRootNode);
+
 		glGenBuffers(1, &vbo[BONE_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[BONE_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * mesh->mNumVertices, vertexbonedata, GL_STATIC_DRAW);
@@ -731,17 +827,38 @@ void Mesh::SubMesh::VertexBoneData::addBoneData(unsigned int boneID, float weigh
     assert(0);
 }
 
-void Mesh::SubMesh::boneTransform(Map<String, AnimationState>& animations, skincache_t& skin) {
+void Mesh::SubMesh::mapBones(const aiNode* node) {
+	const char* nodeName = node->mName.data;
+	if (!boneMapping[nodeName]) {
+		boneMapping.insert(nodeName, numBones);
+		boneinfo_t bi;
+		bi.name = nodeName;
+		bi.offset = glm::mat4();
+		bi.real = false;
+		bones.push(bi);
+		++numBones;
+	}
+	for (unsigned int i = 0; i < node->mNumChildren; ++i) {
+		mapBones(node->mChildren[i]);
+	}
+}
+
+void Mesh::SubMesh::boneTransform(const Map<String, AnimationState>& animations, skincache_t& skin) const {
 	if( !scene || !scene->HasAnimations() )
 		return;
 	const glm::mat4 identity( 1.f );
 
 	skin.anims.resize(numBones);
 	skin.offsets.resize(numBones);
-	readNodeHierarchy(animations, skin, scene->mRootNode, identity);
+
+	readNodeHierarchy(&animations, &skin, scene->mRootNode, &identity);
 }
 
-void Mesh::SubMesh::readNodeHierarchy(Map<String, AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform) {
+#include <future>
+#include <vector>
+#include <mutex>
+
+void Mesh::SubMesh::readNodeHierarchy(const Map<String, AnimationState>* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const {
 	aiMatrix4x4 nodeTransform = node->mTransformation;
 
 	const char* nodeName = node->mName.data;
@@ -754,8 +871,8 @@ void Mesh::SubMesh::readNodeHierarchy(Map<String, AnimationState>& animations, s
 
 		// interpolate scaling, rotation, and position for each animation
 		bool first = true;
-		for( auto& pair : animations ) {
-			AnimationState& anim = pair.b;
+		for( auto& pair : *animations ) {
+			const AnimationState& anim = pair.b;
 			float weight = anim.getWeight(nodeAnim->mNodeName.data);
 
 			calcInterpolatedScaling(scaling, anim, weight, nodeAnim);
@@ -776,33 +893,30 @@ void Mesh::SubMesh::readNodeHierarchy(Map<String, AnimationState>& animations, s
 	}
 
 	glm::mat4 glmTransform = glm::transpose(glm::make_mat4(&nodeTransform.a1));
-	glm::mat4 globalTransform = rootTransform * glmTransform;
-
+	glm::mat4 globalTransform = *rootTransform * glmTransform;
+	
 	unsigned int boneIndex = 0;
-	unsigned int* boneIndexPtr = boneMapping[nodeName];
-	if( !boneIndexPtr ) {
-		boneIndex = numBones;
-		skin.offsets.resize(numBones+1);
-		skin.anims.resize(numBones+1);
-		boneMapping.insert(nodeName, numBones);
-		boneinfo_t bi;
-		bi.name = nodeName;
-		bi.offset = glm::mat4();
-		bi.real = false;
-		bones.push(bi);
-		++numBones;
-	} else {
-		boneIndex = *boneIndexPtr;
-	}
-	skin.offsets[boneIndex] = globalTransform;
-	skin.anims[boneIndex] = globalTransform * bones[boneIndex].offset;
+	const unsigned int* boneIndexPtr = boneMapping[nodeName];
+	assert(boneIndexPtr);
+	boneIndex = *boneIndexPtr;
 
-	for( unsigned int i=0; i < node->mNumChildren; ++i ) {
-		readNodeHierarchy(animations, skin, node->mChildren[i], globalTransform);
+	skin->offsets[boneIndex] = globalTransform;
+	skin->anims[boneIndex] = globalTransform * bones[boneIndex].offset;
+
+	if (node->mNumChildren > 1) {
+		std::vector<std::future<void>> jobs;
+		for (unsigned int i = 0; i < node->mNumChildren; ++i) {
+			jobs.push_back(std::async(std::launch::async, &Mesh::SubMesh::readNodeHierarchy, this, animations, skin, node->mChildren[i], &globalTransform));
+		}
+		for (auto& job : jobs) {
+			job.wait();
+		}
+	} else if (node->mNumChildren == 1) {
+		readNodeHierarchy(animations, skin, node->mChildren[0], &globalTransform);
 	}
 }
 
-const aiNodeAnim* Mesh::SubMesh::findNodeAnim(const aiAnimation* animation, const char* str) {
+const aiNodeAnim* Mesh::SubMesh::findNodeAnim(const aiAnimation* animation, const char* str) const {
 	for( unsigned int i=0; i < animation->mNumChannels; ++i ) {
 		const char* curStr = animation->mChannels[i]->mNodeName.data;
 
@@ -814,7 +928,7 @@ const aiNodeAnim* Mesh::SubMesh::findNodeAnim(const aiAnimation* animation, cons
 	return nullptr;
 }
 
-void Mesh::SubMesh::calcInterpolatedPosition(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) {
+void Mesh::SubMesh::calcInterpolatedPosition(aiVector3D& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) const {
 	if (weight <= 0.f) {
 		return;
 	}
@@ -849,7 +963,7 @@ void Mesh::SubMesh::calcInterpolatedPosition(aiVector3D& out, AnimationState& an
 	}
 }
 
-void Mesh::SubMesh::calcInterpolatedRotation(aiQuaternion& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim, bool& first) {
+void Mesh::SubMesh::calcInterpolatedRotation(aiQuaternion& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim, bool& first) const {
 	if (weight <= 0.f) {
 		return;
 	}
@@ -906,7 +1020,7 @@ void Mesh::SubMesh::calcInterpolatedRotation(aiQuaternion& out, AnimationState& 
 	}
 }
 
-void Mesh::SubMesh::calcInterpolatedScaling(aiVector3D& out, AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) {
+void Mesh::SubMesh::calcInterpolatedScaling(aiVector3D& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) const {
 	if (weight <= 0.f) {
 		return;
 	}
@@ -941,7 +1055,7 @@ void Mesh::SubMesh::calcInterpolatedScaling(aiVector3D& out, AnimationState& ani
 	}
 }
 
-unsigned int Mesh::SubMesh::findPosition(float animationTime, const aiNodeAnim* nodeAnim) {
+unsigned int Mesh::SubMesh::findPosition(float animationTime, const aiNodeAnim* nodeAnim) const {
 	for( unsigned int i=0; i < nodeAnim->mNumPositionKeys - 1; ++i ) {
 		if( animationTime < (float)nodeAnim->mPositionKeys[i + 1].mTime ) {
 			return i;
@@ -949,7 +1063,7 @@ unsigned int Mesh::SubMesh::findPosition(float animationTime, const aiNodeAnim* 
 	}
 	return nodeAnim->mNumPositionKeys - 1;
 }
-unsigned int Mesh::SubMesh::findRotation(float animationTime, const aiNodeAnim* nodeAnim) {
+unsigned int Mesh::SubMesh::findRotation(float animationTime, const aiNodeAnim* nodeAnim) const {
 	assert(nodeAnim->mNumRotationKeys > 0);
 	for( unsigned int i=0; i < nodeAnim->mNumRotationKeys - 1; ++i ) {
 		if( animationTime < (float)nodeAnim->mRotationKeys[i + 1].mTime ) {
@@ -958,7 +1072,7 @@ unsigned int Mesh::SubMesh::findRotation(float animationTime, const aiNodeAnim* 
 	}
 	return nodeAnim->mNumRotationKeys - 1;
 }
-unsigned int Mesh::SubMesh::findScaling(float animationTime, const aiNodeAnim* nodeAnim) {
+unsigned int Mesh::SubMesh::findScaling(float animationTime, const aiNodeAnim* nodeAnim) const {
 	assert(nodeAnim->mNumScalingKeys > 0);
 	for( unsigned int i=0; i < nodeAnim->mNumScalingKeys - 1; ++i ) {
 		if( animationTime < (float)nodeAnim->mScalingKeys[i + 1].mTime ) {
