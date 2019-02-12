@@ -524,9 +524,13 @@ void Script::exposeWorld() {
 }
 
 void Script::exposeEntity() {
+	typedef World* (Entity::*GetWorldFn)();
+	GetWorldFn getWorld = static_cast<GetWorldFn>(&Entity::getWorld);
+
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Entity>("Entity")
 		.addFunction("getGame", &Entity::getGame)
+		.addFunction("getWorld", getWorld)
 		.addFunction("getName", &Entity::getName)
 		.addFunction("getUID", &Entity::getUID)
 		.addFunction("getTicks", &Entity::getTicks)
