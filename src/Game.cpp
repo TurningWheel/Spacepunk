@@ -48,64 +48,47 @@ World* Game::loadWorld(const char* filename, bool buildPath) {
 
 		size_t len = strlen(filename);
 		if( len >= 4 && strcmpi((const char*)(filename + len - 4), ".swd") == 0 ) {
-			world = new SectorWorld(false, isClient(), (Uint32)worlds.getSize(), "Untitled World");
+			world = new SectorWorld(this, false, (Uint32)worlds.getSize(), "Untitled World");
 		} else {
-			world = new TileWorld(false, isClient(), (Uint32)worlds.getSize(), Tile::SIDE_EAST, path.get());
+			world = new TileWorld(this, false, (Uint32)worlds.getSize(), Tile::SIDE_EAST, path.get());
 		}
 		world->initialize(!world->isLoaded());
 	} else {
 		size_t len = strlen(filename);
 		if( len >= 4 && strcmpi((const char*)(filename + len - 4), ".swd") == 0 ) {
-			world = new SectorWorld(false, isClient(), (Uint32)worlds.getSize(), "Untitled World");
+			world = new SectorWorld(this, false, (Uint32)worlds.getSize(), "Untitled World");
 		} else {
-			world = new TileWorld(false, isClient(), (Uint32)worlds.getSize(), Tile::SIDE_EAST, filename);
+			world = new TileWorld(this, false, (Uint32)worlds.getSize(), Tile::SIDE_EAST, filename);
 		}
 		world->initialize(!world->isLoaded());
 	}
 
-	Node<World*>* otherWorldNode = nullptr;
-	if( ( otherWorldNode=worldForName(world->getNameStr().get()) ) != nullptr ) {
-		World* otherWorld = otherWorldNode->getData();
-		delete otherWorld;
-		otherWorldNode->setData(world);
-		return nullptr;
-	} else {
+	// unload our existing copy of the world if we've already loaded it
+	bool alreadyExists = false;
+	for (auto otherWorldNode = worlds.getFirst(); otherWorldNode != nullptr; otherWorldNode = otherWorldNode->getNext()) {
+		auto otherWorld = otherWorldNode->getData();
+		if (otherWorld->getFilename() == world->getFilename()) {
+			delete otherWorld;
+			otherWorldNode->setData(world);
+			alreadyExists = true;
+			break;
+		}
+	}
+	if (!alreadyExists) {
 		worlds.addNodeLast(world);
 	}
 	return world;
 }
 
 SectorWorld* Game::newSectorWorld(const char* name) {
-	SectorWorld* world = new SectorWorld(false, isClient(), (Uint32)worlds.getSize(), name);
+	SectorWorld* world = new SectorWorld(this, false, (Uint32)worlds.getSize(), name);
 	world->initialize(!world->isLoaded());
-
-	Node<World*>* otherWorldNode = nullptr;
-	if( ( otherWorldNode=worldForName(world->getNameStr().get()) ) != nullptr ) {
-		World* otherWorld = otherWorldNode->getData();
-		delete otherWorld;
-		World* temp = static_cast<World*>(world);
-		otherWorldNode->setData(temp);
-		return nullptr;
-	} else {
-		worlds.addNodeLast(world);
-	}
 	return world;
 }
 
 TileWorld* Game::newTileWorld(const char* name, int width, int height) {
-	TileWorld* world = new TileWorld(false, isClient(), (Uint32)worlds.getSize(), Tile::SIDE_EAST, "", width, height, name);
+	TileWorld* world = new TileWorld(this, false, (Uint32)worlds.getSize(), Tile::SIDE_EAST, "", width, height, name);
 	world->initialize(!world->isLoaded());
-
-	Node<World*>* otherWorldNode = nullptr;
-	if( ( otherWorldNode=worldForName(world->getNameStr().get()) ) != nullptr ) {
-		World* otherWorld = otherWorldNode->getData();
-		delete otherWorld;
-		World* temp = static_cast<World*>(world);
-		otherWorldNode->setData(temp);
-		return nullptr;
-	} else {
-		worlds.addNodeLast(world);
-	}
 	return world;
 }
 
@@ -116,18 +99,18 @@ TileWorld* Game::genTileWorld(const char* path) {
 	FileHelper::readObject(fullPath, gen);
 	gen.createDungeon();
 
-	TileWorld* world = new TileWorld(isClient(), (Uint32)worlds.getSize(), path, gen);
+	TileWorld* world = new TileWorld(this, (Uint32)worlds.getSize(), path, gen);
 	world->initialize(!world->isLoaded());
 	worlds.addNodeLast(world);
 
 	return world;
 }
 
-Node<World*>* Game::worldForName(const char* name) {
-	for( Node<World*>* node=worlds.getFirst(); node!=nullptr; node=node->getNext() ) {
-		World* world = node->getData();
-		if( name==world->getNameStr().get() )
-			return node;
+World* Game::worldForName(const char* name) {
+	for (auto world : worlds) {
+		if (world->getNameStr() == name) {
+			return world;
+		}
 	}
 	return nullptr;
 }

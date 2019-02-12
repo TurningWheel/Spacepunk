@@ -16,10 +16,11 @@
 
 class Script;
 class Entity;
+class Game;
 
 class World {
 public:
-	World();
+	World(Game* _game);
 	virtual ~World();
 
 	// world type
@@ -169,6 +170,7 @@ public:
 
 	// getters & setters
 	virtual const type_t		getType() const = 0;
+	Game*						getGame()								{ return game; }
 	const Uint32				getTicks() const						{ return ticks; }
 	const String&				getFilename() const						{ return filename; }
 	const String&				getShortname() const					{ return shortname; }
@@ -203,6 +205,7 @@ public:
 	virtual std::future<PathFinder::Path*> findAPath(int startX, int startY, int endX, int endY) = 0;
 
 protected:
+	Game* game = nullptr;     // the game sim we belong to (if any)
 	Script* script = nullptr; // scripting engine
 
 	bool silent = false;	// if true, disables some logging

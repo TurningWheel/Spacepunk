@@ -49,10 +49,11 @@ int generateThread(void* data) {
 }
 
 // create a world using a generator
-TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, const Generator& gen)
-	: pathFinder(*(new PathFinder(*this)))
+TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator& gen)
+	: World(_game),
+	pathFinder(*(new PathFinder(*this)))
 {
-	clientObj = _clientObj;
+	clientObj = game->isClient();
 	id = _id;
 
 	const Generator::options_t& options = gen.getOptions();
@@ -362,10 +363,11 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, const Gener
 }
 
 // generate a new world
-TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _seed, Uint32 _width, Uint32 _height, const char* _nameStr)
-	: pathFinder(*(new PathFinder(*this)))
+TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, Uint32 _width, Uint32 _height, const char* _nameStr)
+	: World(_game),
+	pathFinder(*(new PathFinder(*this)))
 {
-	clientObj = _clientObj;
+	clientObj = game->isClient();
 	id = _id;
 
 	mainEngine->fmsg(Engine::MSG_INFO, "generating new world from '%s' and seed: %d", _zone, _seed);
@@ -403,7 +405,7 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 
 			StringBuf<128> path("maps/%s/%s", _zone, str.get());
 			path = mainEngine->buildPath(path.get()).get();
-			TileWorld* world = new TileWorld(true, _clientObj, UINT32_MAX, side, path.get());
+			TileWorld* world = new TileWorld(game, true, UINT32_MAX, side, path.get());
 
 			// discard rooms that failed to load or are too big
 			if( !world->isLoaded() ) {
@@ -423,7 +425,7 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 	// load starting room
 	StringBuf<128> sRoomPath("maps/%s/Start", _zone);
 	sRoomPath = mainEngine->buildPath(sRoomPath.get()).get();
-	TileWorld* sRoom = new TileWorld(true, _clientObj, UINT32_MAX, Tile::SIDE_EAST, sRoomPath.get());
+	TileWorld* sRoom = new TileWorld(game, true, UINT32_MAX, Tile::SIDE_EAST, sRoomPath.get());
 
 	if( !sRoom->isLoaded() ) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Can't generate level, start room too big!");
@@ -643,11 +645,12 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 }
 
 // load a world file or create a blank one
-TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width, Uint32 _height, const char* _nameStr)
-	: pathFinder(*(new PathFinder(*this)))
+TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width, Uint32 _height, const char* _nameStr)
+	: World(_game),
+	pathFinder(*(new PathFinder(*this)))
 {
 	silent = _silent;
-	clientObj = _clientObj;
+	clientObj = game->isClient();
 	id = _id;
 	if (_filename && _filename[0] != '\0') {
 		changeFilename(_filename);

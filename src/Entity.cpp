@@ -134,6 +134,14 @@ Entity::~Entity() {
 	}
 }
 
+Game* Entity::getGame() {
+	if (world) {
+		return world->getGame();
+	} else {
+		return nullptr;
+	}
+}
+
 void Entity::clearAllChunkNodes() {
 	clearChunkNode();
 	for( size_t c = 0; c < components.getSize(); ++c ) {

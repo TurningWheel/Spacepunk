@@ -26,8 +26,9 @@ const char* World::fileExtensions[World::FILE_MAX] = {
 Cvar cvar_showEdges("showedges", "highlight chunk silhouettes with visible lines", "0");
 Cvar cvar_showVerts("showverts", "highlight all triangle edges with visible lines", "0");
 
-World::World()
+World::World(Game* _game)
 {
+	game = _game;
 	script = new Script(*this);
 }
 

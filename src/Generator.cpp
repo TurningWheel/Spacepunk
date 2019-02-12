@@ -832,7 +832,7 @@ void Generator::lib_t::loadPieces(ArrayList<piece_t>& pieces, bool clientObj) {
 		for( int sideInt=Tile::SIDE_EAST; sideInt<Tile::SIDE_TYPE_LENGTH; ++sideInt ) {
 			if (piece.angles[sideInt] == nullptr) {
 				Tile::side_t side = static_cast<Tile::side_t>(sideInt);
-				piece.angles[sideInt] = new TileWorld(true, clientObj, UINT32_MAX, side, fullPath.get());
+				piece.angles[sideInt] = new TileWorld(nullptr, true, UINT32_MAX, side, fullPath.get());
 			}
 		}
 	}

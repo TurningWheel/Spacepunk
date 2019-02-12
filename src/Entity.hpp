@@ -157,6 +157,10 @@ public:
 	void	setSelected(const bool _selected)				{ selected = _selected; if(listener) listener->onChangeColor(selected, highlighted); }
 	void	setHighlighted(const bool _highlighted)			{ highlighted = _highlighted; if(listener) listener->onChangeColor(selected, highlighted); }
 
+	// get game sim that we are living in (if any)
+	// @return the Game* that we are in, or nullptr if we aren't in a game
+	Game* getGame();
+
 	// add to level navigator in editor
 	void addToEditorList();
 

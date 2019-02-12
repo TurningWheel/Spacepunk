@@ -9,7 +9,7 @@ class SectorVertex;
 
 class SectorWorld : public World {
 public:
-	SectorWorld(bool _silent, bool _clientObj, Uint32 _id, const char* _name);
+	SectorWorld(Game* _game, bool _silent, Uint32 _id, const char* _name);
 	virtual ~SectorWorld();
 
 	// const variables

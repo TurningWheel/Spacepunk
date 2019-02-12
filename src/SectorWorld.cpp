@@ -24,12 +24,13 @@
 const char* SectorWorld::fileMagicNumber = "SPACEPUNK_SWD_01";
 const char* SectorWorld::fileMagicNumberSaveOut = "SPACEPUNK_SWD_01";
 
-SectorWorld::SectorWorld(bool _silent, bool _clientObj, Uint32 _id, const char* _name)
+SectorWorld::SectorWorld(Game* _game, bool _silent, Uint32 _id, const char* _name)
+	: World(_game)
 //	: pathFinder(*(new PathFinder(*this)))
 {
 	nameStr = _name;
 	silent = _silent;
-	clientObj = _clientObj;
+	clientObj = game->isClient();
 	id = _id;
 }
 

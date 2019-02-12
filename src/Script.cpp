@@ -120,7 +120,9 @@ Script::Script(Entity& _entity) {
 	exposeEngine();
 	exposeAngle();
 	exposeVector();
+	exposeGame();
 	exposeEntity();
+	exposeWorld();
 }
 
 Script::Script(Frame& _frame) {
@@ -524,6 +526,7 @@ void Script::exposeWorld() {
 void Script::exposeEntity() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Entity>("Entity")
+		.addFunction("getGame", &Entity::getGame)
 		.addFunction("getName", &Entity::getName)
 		.addFunction("getUID", &Entity::getUID)
 		.addFunction("getTicks", &Entity::getTicks)

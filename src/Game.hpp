@@ -40,10 +40,10 @@ public:
 	// @return the number of worlds in this sim
 	size_t numWorlds() const { return worlds.getSize(); }
 
-	// finds the world node with the given name (case sensitive) and returns it
+	// finds the world with the given name (case sensitive) and returns it
 	// @param name the name of the world (not the filename, but the title)
-	// @return the world node with the given name or nullptr if the world node could not be found
-	Node<World*>* worldForName(const char* name);
+	// @return the world with the given name or nullptr if the world could not be found
+	World* worldForName(const char* name);
 
 	// finds the index of the given world
 	// @param world the world whose index we are looking for

@@ -11,9 +11,9 @@ class Generator;
 
 class TileWorld : public World {
 public:
-	TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _seed, Uint32 _width, Uint32 _height, const char* _nameStr);
-	TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width=32, Uint32 _height=32, const char* _nameStr="Untitled World");
-	TileWorld(bool _clientObj, Uint32 _id, const char* _zone, const Generator& gen);
+	TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, Uint32 _width, Uint32 _height, const char* _nameStr);
+	TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width=32, Uint32 _height=32, const char* _nameStr="Untitled World");
+	TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator& gen);
 	virtual ~TileWorld();
 
 	// exit structure

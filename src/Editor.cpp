@@ -2869,7 +2869,7 @@ void Editor::editTiles(bool usable) {
 				}
 
 				// create world for copied tiles
-				copiedTiles = new TileWorld(true, true, 0, Tile::side_t::SIDE_EAST, "", rect.w, rect.h, "Copied Tiles");
+				copiedTiles = new TileWorld(nullptr, true, 0, Tile::side_t::SIDE_EAST, "", rect.w, rect.h, "Copied Tiles");
 				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
 					Sint32 pitch = x * world.getHeight();
 					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
