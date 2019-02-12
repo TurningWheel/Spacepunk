@@ -350,9 +350,9 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 			} else {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
 				int oldTextureUnit = textureUnit;
-				if( lights.getSize() ) {
+				if (lights.getSize()) {
 					textureUnit = shader.uploadLights(camera, lights, maxLights, textureUnit);
-				} else if( editor ) {
+				} else if (editor) {
 					glUniform3fv(shader.getUniformLocation("gLightPos[0]"), 1, glm::value_ptr(cameraPos));
 					glUniform3fv(shader.getUniformLocation("gLightColor[0]"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));
 					glUniform1f(shader.getUniformLocation("gLightIntensity[0]"), 1.f);
@@ -368,7 +368,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				char buf[32];
 				ArrayList<char> chars;
 
-				for ( int index = textureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
+				for (int index = textureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
 					strcpy(buf, "gShadowmap[");
 					size_t len = 11;
 					if (index == 0) {

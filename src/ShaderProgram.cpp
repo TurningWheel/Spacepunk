@@ -26,7 +26,7 @@ ShaderProgram::ShaderProgram(const char* _name) : Asset(_name) {
 
 ShaderProgram::~ShaderProgram() {
 	if( programObject ) {
-		for( auto shader : shaders ) {
+		for( auto& shader : shaders ) {
 			glDetachShader(programObject,shader.getShaderObject());
 		}
 		shaders.clear();
