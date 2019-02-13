@@ -260,8 +260,6 @@ void Server::handleNetMessages() {
 
 								// only update the player's position if they are on the world that they say they are.
 								if( world != entity->getWorld() ) {
-									Uint32 worldID = indexForWorld(entity->getWorld());
-
 									Packet packet;
 									packet.write32(entity->getAng().degreesRoll());
 									packet.write32(entity->getAng().degreesPitch());
@@ -270,6 +268,8 @@ void Server::handleNetMessages() {
 									packet.write32(entity->getPos().y);
 									packet.write32(entity->getPos().x);
 
+									World* world = entity->getWorld();
+									assert(world);
 									packet.write(world->getShortname().get());
 									packet.write32((Uint32)world->getShortname().length());
 
@@ -277,7 +277,7 @@ void Server::handleNetMessages() {
 									packet.write32(player->getLocalID());
 									packet.write32(player->getClientID());
 
-									packet.write("SPWN");
+									packet.write("PLVL");
 
 									net->signPacket(packet);
 									net->sendPacket(id,packet);

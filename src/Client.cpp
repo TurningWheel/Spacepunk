@@ -228,8 +228,13 @@ void Client::handleNetMessages() {
 						continue;
 					}
 
-					// server has spawned a player
-					else if( strncmp( (const char*)packetType, "SPWN", 4) == 0 ) {
+					// server has spawned a player (or relocated them to another level)
+					else if (strncmp((const char*)packetType, "SPWN", 4) == 0 || strncmp((const char*)packetType, "PLVL", 4) == 0) {
+						bool forceRelocate = false;
+						if (strncmp((const char*)packetType, "SPWN", 4) == 0) {
+							forceRelocate = true;
+						}
+
 						Uint32 localID, clientID, serverID;
 						packet.read32(clientID);
 						packet.read32(localID);
@@ -248,21 +253,7 @@ void Client::handleNetMessages() {
 						}
 						assert(world);
 
-						// read pos
-						Uint32 posInt[3];
-						packet.read32(posInt[0]);
-						packet.read32(posInt[1]);
-						packet.read32(posInt[2]);
-						Vector pos( (Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2] );
-
-						// read ang
-						Uint32 angInt[3];
-						packet.read32(angInt[0]);
-						packet.read32(angInt[1]);
-						packet.read32(angInt[2]);
-						Angle ang( (Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f );
-
-						// spawn player
+						// get player
 						if( clientID == net->getLocalID() ) {
 							clientID = Player::invalidID;
 						}
@@ -270,12 +261,28 @@ void Client::handleNetMessages() {
 						assert(player);
 						player->setServerID(serverID);
 
-						// only actually spawn the player if they belong to us
-						if( clientID == Player::invalidID ) {
-							player->despawn();
-							player->spawn(*world, pos, ang);
-						}
+						// spawn or relocate player
+						if (forceRelocate || (player->getEntity() && player->getEntity()->getWorld() != world)) {
+							// read pos
+							Uint32 posInt[3];
+							packet.read32(posInt[0]);
+							packet.read32(posInt[1]);
+							packet.read32(posInt[2]);
+							Vector pos((Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2]);
 
+							// read ang
+							Uint32 angInt[3];
+							packet.read32(angInt[0]);
+							packet.read32(angInt[1]);
+							packet.read32(angInt[2]);
+							Angle ang((Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f);
+
+							// only actually spawn the player if they belong to us
+							if (clientID == Player::invalidID) {
+								player->despawn();
+								player->spawn(*world, pos, ang);
+							}
+						}
 						continue;
 					}
 
