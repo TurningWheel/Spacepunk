@@ -130,25 +130,21 @@ void World::changeFilename(const char* _filename) {
 	shortname = filename;
 	size_t i = 0;
 	do {
-		i=shortname.find('/',i);
-		if( i != UINT32_MAX ) {
-			shortname = shortname.substr(i+1);
-		} else {
-			break;
+		i = shortname.find('/',0);
+		if (i != UINT32_MAX) {
+			shortname = shortname.substr(i + 1);
 		}
-	} while( 1 );
+	} while (i != UINT32_MAX);
 
 #ifdef PLATFORM_WINDOWS
 	// windows has to cut out their crazy backward slashes, too.
 	i = 0;
 	do {
-		i=shortname.find('\\',i);
-		if( i != UINT32_MAX ) {
-			shortname = shortname.substr(i+1);
-		} else {
-			break;
+		i = shortname.find('\\',0);
+		if (i != UINT32_MAX) {
+			shortname = shortname.substr(i + 1);
 		}
-	} while( 1 );
+	} while (i != UINT32_MAX);
 #endif
 }
 

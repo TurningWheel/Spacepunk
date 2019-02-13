@@ -110,7 +110,7 @@ TileWorld* Game::genTileWorld(const char* path) {
 
 World* Game::worldForName(const char* name) {
 	for (auto world : worlds) {
-		if (world->getNameStr() == name) {
+		if (world->getShortname() == name) {
 			return world;
 		}
 	}

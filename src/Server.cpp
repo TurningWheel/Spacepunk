@@ -606,6 +606,7 @@ static int console_serverReset(int argc, const char** argv) {
 static int console_serverMap(int argc, const char** argv) {
 	if( argc < 1 ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"A path is needed. ex: server.map TestWorld");
+		return 1;
 	}
 	Server* server = mainEngine->getLocalServer();
 	if( server ) {

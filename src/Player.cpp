@@ -137,6 +137,8 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 		return false;
 	}
 
+	camera->setLocalAng(lookDir);
+
 	// update colors
 	updateColors(colors);
 

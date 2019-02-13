@@ -266,6 +266,7 @@ void Client::handleNetMessages() {
 
 							// only actually spawn the player if they belong to us
 							if( clientID == Player::invalidID ) {
+								player->despawn();
 								player->spawn(world, pos, ang);
 							}
 						}
@@ -957,6 +958,7 @@ static int console_clientReset(int argc, const char** argv) {
 static int console_clientMap(int argc, const char** argv) {
 	if( argc < 1 ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"A path is needed. ex: client.map TestWorld");
+		return 1;
 	}
 	Client* client = mainEngine->getLocalClient();
 	if( client ) {

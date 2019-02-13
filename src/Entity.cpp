@@ -215,6 +215,30 @@ void Entity::insertIntoWorld(World* _world) {
 		script->load(path.get());
 		script->dispatch("init");
 	}
+
+	// if we're moving a player, we need to signal that client
+	if (player) {
+		Game* game = getGame();
+		if (game && game->isServer()) {
+			Packet packet;
+
+			packet.write32(ang.degreesRoll());
+			packet.write32(ang.degreesPitch());
+			packet.write32(ang.degreesYaw());
+			packet.write32(pos.z);
+			packet.write32(pos.y);
+			packet.write32(pos.x);
+
+			packet.write32(world->getID());
+			packet.write32(player->getServerID());
+			packet.write32(player->getLocalID());
+			packet.write32(player->getClientID());
+			packet.write("SPWN");
+
+			game->getNet()->signPacket(packet);
+			game->getNet()->sendPacketSafe(player->getClientID(), packet);
+		}
+	}
 }
 
 void Entity::remove() {
