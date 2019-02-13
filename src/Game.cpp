@@ -83,12 +83,14 @@ World* Game::loadWorld(const char* filename, bool buildPath) {
 SectorWorld* Game::newSectorWorld(const char* name) {
 	SectorWorld* world = new SectorWorld(this, false, (Uint32)worlds.getSize(), name);
 	world->initialize(!world->isLoaded());
+	worlds.addNodeLast(world);
 	return world;
 }
 
 TileWorld* Game::newTileWorld(const char* name, int width, int height) {
 	TileWorld* world = new TileWorld(this, false, (Uint32)worlds.getSize(), Tile::SIDE_EAST, "", width, height, name);
 	world->initialize(!world->isLoaded());
+	worlds.addNodeLast(world);
 	return world;
 }
 
