@@ -269,9 +269,15 @@ void Server::handleNetMessages() {
 									packet.write32(entity->getPos().z);
 									packet.write32(entity->getPos().y);
 									packet.write32(entity->getPos().x);
-									packet.write32(worldID);
-									packet.write32(localID);
-									packet.write("PLVL");
+
+									packet.write(world->getShortname().get());
+									packet.write32((Uint32)world->getShortname().length());
+
+									packet.write32(player->getServerID());
+									packet.write32(player->getLocalID());
+									packet.write32(player->getClientID());
+
+									packet.write("SPWN");
 
 									net->signPacket(packet);
 									net->sendPacket(id,packet);

@@ -608,6 +608,7 @@ void Script::exposeEntity() {
 		.addFunction("getCurrentTileZ", &Entity::getCurrentTileZ)
 		.addFunction("isLocalPlayer", &Entity::isLocalPlayer)
 		.addFunction("insertIntoWorld", &Entity::insertIntoWorld)
+		.addFunction("warp", &Entity::warp)
 		.endClass()
 	;
 
