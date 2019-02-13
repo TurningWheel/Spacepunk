@@ -207,6 +207,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 		}
 
 		// get cubemap
+		glActiveTexture(GL_TEXTURE0);
 		static const char* path = "images/cubemap/tile/cubemap.json";
 		Cubemap* cubemap = mainEngine->getCubemapResource().dataForString(path);
 		assert(cubemap);
