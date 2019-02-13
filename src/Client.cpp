@@ -235,40 +235,45 @@ void Client::handleNetMessages() {
 						packet.read32(localID);
 						packet.read32(serverID);
 
-						// read world
-						Uint32 worldID;
-						packet.read32(worldID);
-						Node<World*>* node = worlds[worldID];
-						if( node ) {
-							World& world = *node->getData();
+						// read world filename
+						Uint32 worldFilenameLen;
+						packet.read32(worldFilenameLen);
+						String worldFilename;
+						worldFilename.alloc(worldFilenameLen + 1);
+						worldFilename[worldFilenameLen] = '\0';
+						packet.read(&worldFilename[0], worldFilenameLen);
+						World* world = worldForName(worldFilename.get());
+						if (!world) {
+							world = loadWorld(worldFilename.get(), true);
+						}
+						assert(world);
 
-							// read pos
-							Uint32 posInt[3];
-							packet.read32(posInt[0]);
-							packet.read32(posInt[1]);
-							packet.read32(posInt[2]);
-							Vector pos( (Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2] );
+						// read pos
+						Uint32 posInt[3];
+						packet.read32(posInt[0]);
+						packet.read32(posInt[1]);
+						packet.read32(posInt[2]);
+						Vector pos( (Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2] );
 
-							// read ang
-							Uint32 angInt[3];
-							packet.read32(angInt[0]);
-							packet.read32(angInt[1]);
-							packet.read32(angInt[2]);
-							Angle ang( (Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f );
+						// read ang
+						Uint32 angInt[3];
+						packet.read32(angInt[0]);
+						packet.read32(angInt[1]);
+						packet.read32(angInt[2]);
+						Angle ang( (Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f );
 
-							// spawn player
-							if( clientID == net->getLocalID() ) {
-								clientID = Player::invalidID;
-							}
-							Player* player = findPlayer(clientID, localID);
-							assert(player);
-							player->setServerID(serverID);
+						// spawn player
+						if( clientID == net->getLocalID() ) {
+							clientID = Player::invalidID;
+						}
+						Player* player = findPlayer(clientID, localID);
+						assert(player);
+						player->setServerID(serverID);
 
-							// only actually spawn the player if they belong to us
-							if( clientID == Player::invalidID ) {
-								player->despawn();
-								player->spawn(world, pos, ang);
-							}
+						// only actually spawn the player if they belong to us
+						if( clientID == Player::invalidID ) {
+							player->despawn();
+							player->spawn(*world, pos, ang);
 						}
 
 						continue;

@@ -211,7 +211,9 @@ void Server::handleNetMessages() {
 									packet.write32(entity->getPos().y);
 									packet.write32(entity->getPos().x);
 
-									packet.write32(worldID);
+									packet.write(world->getShortname().get());
+									packet.write32((Uint32)world->getShortname().length());
+
 									packet.write32(serverID);
 									packet.write32(localID);
 									packet.write32(clientID);

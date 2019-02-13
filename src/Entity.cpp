@@ -229,7 +229,9 @@ void Entity::insertIntoWorld(World* _world) {
 			packet.write32(pos.y);
 			packet.write32(pos.x);
 
-			packet.write32(world->getID());
+			packet.write(world->getShortname().get());
+			packet.write32((Uint32)world->getShortname().length());
+
 			packet.write32(player->getServerID());
 			packet.write32(player->getLocalID());
 			packet.write32(player->getClientID());
@@ -237,6 +239,19 @@ void Entity::insertIntoWorld(World* _world) {
 
 			game->getNet()->signPacket(packet);
 			game->getNet()->sendPacketSafe(player->getClientID(), packet);
+		}
+	}
+
+	// inform all clients that the original entity is toast
+	if (world) {
+		Game* game = getGame();
+		if (game && game->isServer()) {
+			Packet packet;
+			packet.write32(uid);
+			packet.write32(world->getID());
+			packet.write("ENTD");
+			game->getNet()->signPacket(packet);
+			game->getNet()->broadcastSafe(packet);
 		}
 	}
 }
