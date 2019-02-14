@@ -934,10 +934,10 @@ bool Tile::hasVolume() const {
 	return true;
 }
 
-size_t Tile::calculateVertices() const {
+Uint32 Tile::calculateVertices() const {
 	if( !hasVolume() )
 		return 0;
-	size_t result = 0;
+	Uint32 result = 0;
 	for( int i=0; i<10; ++i ) {
 		const LinkedList<Tile::vertex_t>* list = nullptr;
 		switch( i ) {

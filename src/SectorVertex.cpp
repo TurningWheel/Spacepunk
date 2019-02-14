@@ -25,7 +25,7 @@ SectorVertex::~SectorVertex() {
 void SectorVertex::own(Sector::vertex_t& vertex) {
 	if( vertex.joined ) {
 		ArrayList<Sector::vertex_t*> theirVertices = vertex.joined->getVertices();
-		for( size_t c = 0; c < theirVertices.getSize(); ++c ) {
+		for( Uint32 c = 0; c < theirVertices.getSize(); ++c ) {
 			if( theirVertices[c] == &vertex ) {
 				theirVertices.remove(c);
 				--c;
@@ -91,7 +91,7 @@ void SectorVertex::updateRigidBody() {
 }
 
 void SectorVertex::move(const glm::vec3& pos) {
-	for( size_t c = 0; c < vertices.getSize(); ++c ) {
+	for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 		vertices[c]->position = pos;
 		vertices[c]->face->sector->setUpdateNeeded(true);
 	}

@@ -86,7 +86,7 @@ void Server::handleNetMessages() {
 								msgPacket.write("CMSG");
 								net->signPacket(msgPacket);
 
-								for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+								for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 									const Net::remote_t* remote = net->getRemoteHosts()[c];
 									net->sendPacketSafe(remote->id,msgPacket);
 								}
@@ -223,7 +223,7 @@ void Server::handleNetMessages() {
 									net->sendPacketSafe(clientID, packet);
 
 									// update other clients about this player
-									for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+									for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 										Net::remote_t* remote = net->getRemoteHosts()[c];
 										if( remote->id == clientID ) {
 											continue;
@@ -419,7 +419,7 @@ void Server::onEstablishConnection(Uint32 remoteID) {
 }
 
 void Server::updateAllClientsAboutPlayers() {
-	for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+	for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 		Net::remote_t* remote = net->getRemoteHosts()[c];
 		updateClientAboutPlayers(remote->id);
 	}
@@ -538,7 +538,7 @@ void Server::postProcess() {
 								continue;
 							}
 
-							for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+							for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 								const Net::remote_t* remote = net->getRemoteHosts()[c];
 
 								Player* player = entity->getPlayer();

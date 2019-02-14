@@ -60,7 +60,7 @@ public:
 
 	// generate list of all entities whose bboxes overlap this bbox
 	// @return list of entities overlapping this one
-	LinkedList<const Entity*> findAllOverlappingEntities() const;
+	ArrayList<Entity*> findAllOverlappingEntities() const;
 
 	// check whether the component collides with anything at the current location
 	// @return true if we collide, false if we do not

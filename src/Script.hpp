@@ -137,7 +137,7 @@ public:
 	public:
 		Args() {}
 		Args(const Args& src) {
-			for (size_t c = 0; c < src.list.getSize(); ++c) {
+			for (Uint32 c = 0; c < src.list.getSize(); ++c) {
 				list.push(src.list[c]->copy());
 			}
 		}
@@ -149,12 +149,12 @@ public:
 
 		// getters & setters
 		const ArrayList<param_t*>&		getList() const		{ return list; }
-		const size_t					getSize() const		{ return list.getSize(); }
+		const Uint32					getSize() const		{ return list.getSize(); }
 
 		// push all args onto the lua stack
 		// @param lua the lua stack to push args into
 		void push(lua_State* lua) {
-			for (size_t c = 0; c < list.getSize(); ++c) {
+			for (Uint32 c = 0; c < list.getSize(); ++c) {
 				param_t* param = list[c];
 				param->push(lua);
 			}

@@ -234,52 +234,53 @@ public:
 void BBox::createRigidBody() {
 	deleteRigidBody();
 
-	if (!enabled && !mainEngine->isEditorRunning()) {
-		return;
-	}
-
 	// setup new collision volume
-	switch( shape ) {
-		default:
-		case SHAPE_BOX:
-			collisionShapePtr = new btBoxShape(btVector3(gScale.x,gScale.y,gScale.z));
-			break;
-		case SHAPE_SPHERE:
-			collisionShapePtr = new btSphereShape(max(max(gScale.x,gScale.y),gScale.z));
-			break;
-		case SHAPE_CAPSULE:
-			collisionShapePtr = new btCapsuleShapeZ(max(gScale.x,gScale.y),gScale.z);
-			break;
-		case SHAPE_CYLINDER:
-			collisionShapePtr = new btCylinderShapeZ(btVector3(gScale.x,gScale.y,gScale.z));
-			break;
-		case SHAPE_CONE:
-			collisionShapePtr = new btConeShapeZ(max(gScale.x,gScale.y),gScale.z);
-			break;
-		case SHAPE_MESH:
-			if( editorOnly && !mainEngine->isEditorRunning() ) {
-				return;
+	switch (shape) {
+	default:
+	case SHAPE_BOX:
+		collisionShapePtr = new btBoxShape(btVector3(gScale.x, gScale.y, gScale.z));
+		break;
+	case SHAPE_SPHERE:
+		collisionShapePtr = new btSphereShape(max(max(gScale.x, gScale.y), gScale.z));
+		break;
+	case SHAPE_CAPSULE:
+		collisionShapePtr = new btCapsuleShapeZ(max(gScale.x, gScale.y), gScale.z);
+		break;
+	case SHAPE_CYLINDER:
+		collisionShapePtr = new btCylinderShapeZ(btVector3(gScale.x, gScale.y, gScale.z));
+		break;
+	case SHAPE_CONE:
+		collisionShapePtr = new btConeShapeZ(max(gScale.x, gScale.y), gScale.z);
+		break;
+	case SHAPE_MESH:
+		if (editorOnly && !mainEngine->isEditorRunning()) {
+			return;
+		}
+		if (triMesh) {
+			collisionShapePtr = new btBvhTriangleMeshShape(triMesh, true, true);
+		}
+		else {
+			if (parent && parent->getType() == Component::COMPONENT_MODEL) {
+				Model* model = static_cast<Model*>(parent);
+				conformToModel(*model);
 			}
-			if( triMesh ) {
-				collisionShapePtr = new btBvhTriangleMeshShape(triMesh,true,true);
-			} else {
-				if( parent && parent->getType() == Component::COMPONENT_MODEL ) {
-					Model* model = static_cast<Model*>(parent);
-					conformToModel(*model);
-				}
-				if( triMesh && triMesh->getNumTriangles() > 0 ) {
-					collisionShapePtr = new btBvhTriangleMeshShape(triMesh,true,true);
-				} else {
-					shape = SHAPE_CYLINDER;
-					mainEngine->fmsg(Engine::MSG_DEBUG,"mesh shape assigned to bbox, but mesh is unavailable");
-					collisionShapePtr = new btCylinderShapeZ(btVector3(gScale.x,gScale.y,gScale.z));
-				}
+			if (triMesh && triMesh->getNumTriangles() > 0) {
+				collisionShapePtr = new btBvhTriangleMeshShape(triMesh, true, true);
 			}
-			break;
+			else {
+				shape = SHAPE_CYLINDER;
+				mainEngine->fmsg(Engine::MSG_DEBUG, "mesh shape assigned to bbox, but mesh is unavailable");
+				collisionShapePtr = new btCylinderShapeZ(btVector3(gScale.x, gScale.y, gScale.z));
+			}
+		}
+		break;
 	}
 
-	if (entity->isFlag(Entity::FLAG_PASSABLE) && !mainEngine->isEditorRunning())
-		return;
+	if (!mainEngine->isEditorRunning()) {
+		if (entity->isFlag(Entity::FLAG_PASSABLE) || !enabled) {
+			return;
+		}
+	}
 
 	World* world = entity->getWorld();
 	if (world) {
@@ -365,15 +366,13 @@ float BBox::nearestFloor(Entity*& outEntity) {
 	float nearestFloor = (float)(INT32_MAX);
 	World* world = entity->getWorld();
 	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
-	if( !world && convexShape ) {
+	if( !world || !convexShape ) {
 		return nearestFloor;
 	}
 
 	// perform sweep
 	LinkedList<World::hit_t> hits;
-	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
 	world->lineTraceList(gPos, gPos + Vector(0.f, 0.f, gScale.z + 128.f), hits);
-	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
 		auto& hit = hits.getFirst()->getData();
 		nearestFloor = hit.pos.z;
@@ -391,15 +390,13 @@ float BBox::nearestCeiling() {
 	float nearestCeiling = (float)(INT32_MIN);
 	World* world = entity->getWorld();
 	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
-	if( !world && convexShape ) {
+	if( !world || !convexShape ) {
 		return nearestCeiling;
 	}
 
 	// perform sweep
 	LinkedList<World::hit_t> hits;
-	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f));
 	world->lineTraceList(gPos, gPos - Vector(0.f, 0.f, gScale.z + 128.f), hits);
-	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	if (hits.getSize()) {
 		auto& hit = hits.getFirst()->getData();
 		nearestCeiling = hit.pos.z;
@@ -407,36 +404,46 @@ float BBox::nearestCeiling() {
 	return nearestCeiling;
 }
 
-LinkedList<const Entity*> BBox::findAllOverlappingEntities() const {
-	LinkedList<const Entity*> list;
+ArrayList<Entity*> BBox::findAllOverlappingEntities() const {
+	ArrayList<Entity*> outList;
 
 	World* world = entity->getWorld();
-	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
-	if( !world && convexShape ) {
-		return list;
+	if( !world || !collisionShapePtr ) {
+		return outList;
 	}
 
-	// perform sweep
-	LinkedList<World::hit_t> hits;
-	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f - collisionEpsilon));
-	world->convexSweepList(convexShape, gPos, gAng, gPos, gAng, hits);
-	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
-	for (auto& hit : hits) {
-		if (hit.hitEntity) {
+	auto dynamicsWorld = world->getBulletDynamicsWorld();
+	btPairCachingGhostObject* ghost = new btPairCachingGhostObject();
+	glm::quat q = glm::quat_cast(glm::mat3(gMat));
+	ghost->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w), btVector3(gPos.x, gPos.y, gPos.z)));
+	ghost->setCollisionShape(collisionShapePtr);
+	ghost->setCollisionFlags(btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE);
+	dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::SensorTrigger, btBroadphaseProxy::AllFilter);
+
+	for (int i = 0; i < ghost->getNumOverlappingObjects(); i++) {
+		btCollisionObject* obj = ghost->getOverlappingObject(i);
+		Uint32 uid = obj->getUserIndex();
+		if (uid != entity->getUID() && uid != World::nuid) {
 			bool found = false;
-			for (auto entity : list) {
-				if (entity->getUID() == hit.index) {
+			for (auto entity : outList) {
+				if (entity->getUID() == uid) {
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				list.addNodeLast(world->uidToEntity(uid));
+				Entity* entity = world->uidToEntity(uid);
+				if (entity) {
+					outList.push(entity);
+				}
 			}
 		}
 	}
 
-	return list;
+	dynamicsWorld->removeCollisionObject(ghost);
+	delete ghost;
+
+	return outList;
 }
 
 bool BBox::checkCollision() const {
@@ -464,10 +471,7 @@ bool BBox::checkCollision() const {
 
 	// perform sweep
 	LinkedList<World::hit_t> hits;
-
-	collisionShapePtr->setLocalScaling(btVector3(1.f - collisionEpsilon, 1.f - collisionEpsilon, 1.f - collisionEpsilon));
 	world->convexSweepList(convexShape, gPos, gAng, gPos, gAng, hits);
-	collisionShapePtr->setLocalScaling(btVector3(1.f, 1.f, 1.f));
 	return hits.getSize() > 0;
 }
 

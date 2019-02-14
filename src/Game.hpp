@@ -38,7 +38,7 @@ public:
 	void incrementFrame();
 
 	// @return the number of worlds in this sim
-	size_t numWorlds() const { return worlds.getSize(); }
+	Uint32 numWorlds() const { return worlds.getSize(); }
 
 	// finds the world with the given name (case sensitive) and returns it
 	// @param name the name of the world (not the filename, but the title)

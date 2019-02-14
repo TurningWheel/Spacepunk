@@ -77,7 +77,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator
 	const ArrayList<Uint32>& tiles = gen.getTiles();
 	ArrayList<Uint8> placed;
 	placed.resize(tiles.getSize());
-	for (size_t c = 0; c < placed.getSize(); ++c) {
+	for (Uint32 c = 0; c < placed.getSize(); ++c) {
 		placed[c] = 0;
 	}
 
@@ -883,7 +883,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 								Engine::freadl(ceilingTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 								if (ceilingTexture) {
-									size_t index = textureStrings.find(ceilingTexture);
+									Uint32 index = textureStrings.find(ceilingTexture);
 									if (index == Dictionary::nindex) {
 										tile.setCeilingTexture((Uint32)textureStrings.getWords().getSize());
 										textureStrings.insert(ceilingTexture);
@@ -916,7 +916,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 								Engine::freadl(floorTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 								if (floorTexture) {
-									size_t index = textureStrings.find(floorTexture);
+									Uint32 index = textureStrings.find(floorTexture);
 									if (index == Dictionary::nindex) {
 										tile.setFloorTexture((Uint32)textureStrings.getWords().getSize());
 										textureStrings.insert(floorTexture);
@@ -997,7 +997,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 										Engine::freadl(upperTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 										if (upperTexture) {
-											size_t index = textureStrings.find(upperTexture);
+											Uint32 index = textureStrings.find(upperTexture);
 											if (index == Dictionary::nindex) {
 												tile.setUpperTexture(side, (Uint32)textureStrings.getWords().getSize());
 												textureStrings.insert(upperTexture);
@@ -1034,7 +1034,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 										Engine::freadl(lowerTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 										if (lowerTexture) {
-											size_t index = textureStrings.find(lowerTexture);
+											Uint32 index = textureStrings.find(lowerTexture);
 											if (index == Dictionary::nindex) {
 												tile.setLowerTexture(side, (Uint32)textureStrings.getWords().getSize());
 												textureStrings.insert(lowerTexture);

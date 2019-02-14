@@ -53,7 +53,7 @@ int Script::dispatch(const char* function, Args* args) {
 	}
 	lua_getglobal(lua, function);
 
-	size_t numArgs = 0;
+	Uint32 numArgs = 0;
 	if (args)
 	{
 		numArgs = args->getSize();
@@ -238,10 +238,10 @@ void Script::exposeFrame() {
 }
 
 void Script::exposeString() {
-	typedef size_t (String::*FindFn)(const char*, size_t) const;
+	typedef Uint32 (String::*FindFn)(const char*, Uint32) const;
 	FindFn find = static_cast<FindFn>(&String::find);
 
-	typedef size_t (String::*FindCharFn)(const char, size_t) const;
+	typedef Uint32 (String::*FindCharFn)(const char, Uint32) const;
 	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
 
 	luabridge::getGlobalNamespace(lua)

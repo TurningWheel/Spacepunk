@@ -106,7 +106,7 @@ void SectorWorld::initialize(bool empty) {
 	updateGridRigidBody(0.f);
 }
 
-const bool SectorWorld::selectVertex(const size_t index, const bool b) {
+const bool SectorWorld::selectVertex(const Uint32 index, const bool b) {
 	if( index < vertices.getSize() ) {
 		vertices[index]->selected = b;
 		vertices[index]->highlighted = b;
@@ -120,13 +120,13 @@ const bool SectorWorld::selectVertex(const size_t index, const bool b) {
 }
 
 void SectorWorld::selectVertices(const bool b) {
-	for( size_t c = 0; c < vertices.getSize(); ++c ) {
+	for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 		vertices[c]->selected = b;
 		vertices[c]->highlighted = b;
 	}
 }
 
-void SectorWorld::removeSector(size_t index) {
+void SectorWorld::removeSector(Uint32 index) {
 	// todo
 }
 
@@ -141,7 +141,7 @@ void SectorWorld::findEntitiesInRadius( const Vector& origin, float radius, Link
 void SectorWorld::process() {
 	World::process();
 
-	for( size_t c = 0; c < sectors.getSize(); ++c ) {
+	for( Uint32 c = 0; c < sectors.getSize(); ++c ) {
 		sectors[c]->process();
 	}
 }
@@ -166,14 +166,14 @@ void SectorWorld::drawSceneObjects(Camera& camera, Light* light) {
 	if( camera.getDrawMode() <= Camera::DRAW_GLOW ||
 		camera.getDrawMode() == Camera::DRAW_TRIANGLES ||
 		(camera.getDrawMode() == Camera::DRAW_SILHOUETTE && cvar_showEdges.toInt()) ) {
-		for( size_t c = 0; c < sectors.getSize(); ++c ) {
+		for( Uint32 c = 0; c < sectors.getSize(); ++c ) {
 			sectors[c]->draw(camera, light);
 		}
 		ShaderProgram::unmount();
 
 		// sector vertices
 		if( editorActive && showTools ) {
-			for( size_t c = 0; c < vertices.getSize(); ++c ) {
+			for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 				vertices[c]->draw(camera);
 			}
 		}
@@ -186,7 +186,7 @@ void SectorWorld::drawSceneObjects(Camera& camera, Light* light) {
 
 	// draw entities
 	if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
-		for( size_t c = 0; c < numBuckets; ++c ) {
+		for( Uint32 c = 0; c < numBuckets; ++c ) {
 			for( const Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
 				const Entity* entity = node->getData();
 

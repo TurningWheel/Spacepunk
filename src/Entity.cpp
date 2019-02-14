@@ -111,7 +111,7 @@ Entity::~Entity() {
 	}
 
 	// delete components
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c] ) {
 			delete components[c];
 			components[c] = nullptr;
@@ -144,7 +144,7 @@ Game* Entity::getGame() {
 
 void Entity::clearAllChunkNodes() {
 	clearChunkNode();
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->clearAllChunkNodes();
 	}
 }
@@ -180,7 +180,7 @@ void Entity::addToEditorList() {
 
 void Entity::insertIntoWorld(World* _world) {
 	// signal components
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->beforeWorldInsertion(_world);
 	}
 
@@ -200,7 +200,7 @@ void Entity::insertIntoWorld(World* _world) {
 	}
 
 	// signal components again
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->afterWorldInsertion(_world);
 	}
 
@@ -261,7 +261,7 @@ void Entity::remove() {
 }
 
 void Entity::deleteAllVisMaps() {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->deleteAllVisMaps();
 	}
 }
@@ -373,7 +373,7 @@ void Entity::update() {
 		}
 	}
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->isToBeDeleted() ) {
 			delete components[c];
 			components.remove(c);
@@ -493,7 +493,7 @@ void Entity::process() {
 	}
 
 	// process components
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->process();
 	}
 
@@ -551,7 +551,7 @@ bool Entity::checkCollision(const Vector& newPos) {
 	pos = newPos;
 	update();
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->checkCollision() ) {
 			pos = oldPos;
 			update();
@@ -658,7 +658,7 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 }
 
 bool Entity::hasComponent(Component::type_t type) const {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->getType() == type ) {
 			return true;
 		}
@@ -692,7 +692,7 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	entity->keyvalues.copy(keyvalues);
 
 	Component* component = nullptr;
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		switch( components[c]->getType() ) {
 			case Component::COMPONENT_BASIC:
 			{

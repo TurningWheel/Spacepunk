@@ -53,8 +53,8 @@ Chunk::~Chunk() {
 	}
 }
 
-size_t Chunk::calculateVertices() const {
-	size_t result = 0;
+Uint32 Chunk::calculateVertices() const {
+	Uint32 result = 0;
 	for( int i=0; i<size*size; ++i ) {
 		if( tiles[i] ) {
 			result += tiles[i]->getNumVertices();
@@ -626,11 +626,11 @@ void Chunk::optimizeBuffers() {
 
 	// step 3: reduce edge set
 	std::unordered_set<GLuint> minimalIndices;
-	for( size_t c = 0; c < minimal.getSize(); ++c ) {
+	for( Uint32 c = 0; c < minimal.getSize(); ++c ) {
 		minimalIndices.insert(minimal[c].a);
 		minimalIndices.insert(minimal[c].b);
 	}
-	for( size_t c = 0; c < all.getSize(); ++c ) {
+	for( Uint32 c = 0; c < all.getSize(); ++c ) {
 		if( minimalIndices.find(all[c].a) == minimalIndices.end() ||
 			minimalIndices.find(all[c].b) == minimalIndices.end() ) {
 			all.remove(c);
@@ -639,7 +639,7 @@ void Chunk::optimizeBuffers() {
 	}*/
 
 	// step 5: find vertex adjacencies
-	for( size_t i = 0; i < numIndices; i += 6 ) {
+	for( Uint32 i = 0; i < numIndices; i += 6 ) {
 		indexBuffer[i+1] = findAdjacentIndex(indexBuffer[i],indexBuffer[i+2],indexBuffer[i+4]);
 		indexBuffer[i+3] = findAdjacentIndex(indexBuffer[i+2],indexBuffer[i+4],indexBuffer[i]);
 		indexBuffer[i+5] = findAdjacentIndex(indexBuffer[i+4],indexBuffer[i],indexBuffer[i+2]);
@@ -653,18 +653,18 @@ void Chunk::optimizeBuffers() {
 void Chunk::combineVertices() {
 	ArrayList<bool> conjoinedBool;
 	conjoinedBool.resize(numVertices);
-	for( size_t c = 0; c < conjoinedBool.getSize(); ++c ) {
+	for( Uint32 c = 0; c < conjoinedBool.getSize(); ++c ) {
 		conjoinedBool[c] = false;
 	}
 
-	ArrayList<ArrayList<size_t>> conjoinedMem;
-	for( size_t i = 0; i < numVertices; ++i ) {
+	ArrayList<ArrayList<Uint32>> conjoinedMem;
+	for( Uint32 i = 0; i < numVertices; ++i ) {
 		if( conjoinedBool[i] ) {
 			continue;
 		}
-		conjoinedMem.push(ArrayList<size_t>());
+		conjoinedMem.push(ArrayList<Uint32>());
 		conjoinedMem.peek().push(i*2);
-		for( size_t j = i + 1; j < numVertices; ++j ) {
+		for( Uint32 j = i + 1; j < numVertices; ++j ) {
 			if( conjoinedBool[j] ) {
 				continue;
 			}
@@ -678,7 +678,7 @@ void Chunk::combineVertices() {
 			}
 		}
 	}
-	for( size_t j = 0, i = 0; i < numVertices; ++i, ++j ) {
+	for( Uint32 j = 0, i = 0; i < numVertices; ++i, ++j ) {
 		if( conjoinedBool[i] ) {
 			vertexBuffer.removeAndRearrange(j);
 			normalBuffer.removeAndRearrange(j);
@@ -690,10 +690,10 @@ void Chunk::combineVertices() {
 		}
 	}
 	numVertices = vertexBuffer.getSize();
-	for( size_t index = 0; index < numIndices; index += 2 ) {
+	for( Uint32 index = 0; index < numIndices; index += 2 ) {
 		bool found = false;
-		for( size_t i = 0; i < conjoinedMem.getSize(); ++i ) {
-			for( size_t j = 0; j < conjoinedMem[i].getSize(); ++j ) {
+		for( Uint32 i = 0; i < conjoinedMem.getSize(); ++i ) {
+			for( Uint32 j = 0; j < conjoinedMem[i].getSize(); ++j ) {
 				if( conjoinedMem[i][j] == index ) {
 					indexBuffer[index    ] = (GLuint)i;
 					indexBuffer[index + 1] = (GLuint)i;
@@ -713,8 +713,8 @@ void Chunk::combineVertices() {
 }
 
 void Chunk::combineEdges(EdgeList& edges) {
-	for( size_t i = 0; i < edges.getSize(); ++i ) {
-		for( size_t j = 0; j < edges.getSize(); ++j ) {
+	for( Uint32 i = 0; i < edges.getSize(); ++i ) {
+		for( Uint32 j = 0; j < edges.getSize(); ++j ) {
 			if( i == j ) {
 				continue;
 			}
@@ -748,16 +748,16 @@ void Chunk::combineEdges(EdgeList& edges) {
 }
 
 void Chunk::findEdges(EdgeList& edges, bool all) {
-	for( size_t index = 0; index < numIndices; index += 6 ) {
+	for( Uint32 index = 0; index < numIndices; index += 6 ) {
 		findEdge(Edge(indexBuffer[index    ], indexBuffer[index + 2]), index, edges, all);
 		findEdge(Edge(indexBuffer[index + 2], indexBuffer[index + 4]), index, edges, all);
 		findEdge(Edge(indexBuffer[index + 4], indexBuffer[index    ]), index, edges, all);
 	}
 }
 
-void Chunk::findEdge(const Edge& edge, size_t skip, EdgeList& edges, bool all) {
+void Chunk::findEdge(const Edge& edge, Uint32 skip, EdgeList& edges, bool all) {
 	bool foundMatch = false;
-	for( size_t index = all ? skip + 6 : 0; index < numIndices; index += 6 ) {
+	for( Uint32 index = all ? skip + 6 : 0; index < numIndices; index += 6 ) {
 		if( index == skip ) {
 			continue;
 		}
@@ -776,7 +776,7 @@ void Chunk::findEdge(const Edge& edge, size_t skip, EdgeList& edges, bool all) {
 
 GLuint Chunk::findAdjacentIndex(GLuint index1, GLuint index2, GLuint index3) {
 	GLuint indices[6];
-	for (size_t index = 0; index < numIndices; index += 6) {
+	for (Uint32 index = 0; index < numIndices; index += 6) {
 		indices[0] = indexBuffer[index];
 		indices[1] = indexBuffer[index + 2];
 		indices[2] = indexBuffer[index + 4];
@@ -909,7 +909,7 @@ void Chunk::draw(Camera& camera) const {
 	// draw edges
 	if( cvar_showChunkEdges.toInt() ) {
 		ShaderProgram* shader = const_cast<ShaderProgram*>(ShaderProgram::getCurrentShader()); // purely for debug
-		for( size_t c = 0; c < edges.getSize(); ++c ) {
+		for( Uint32 c = 0; c < edges.getSize(); ++c ) {
 			glm::vec3 a = vertexBuffer[edges[c].a] - normalBuffer[edges[c].a];
 			glm::vec3 b = vertexBuffer[edges[c].b] - normalBuffer[edges[c].b];
 			glm::vec3 src(a.x, a.z, -a.y);

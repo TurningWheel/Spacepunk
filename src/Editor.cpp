@@ -3382,7 +3382,7 @@ void Editor::handleWidget(World& world) {
 					}
 				} else if( editingMode == SECTORS ) {
 					SectorWorld& sectorWorld = static_cast<SectorWorld&>(world);
-					for( size_t c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
+					for( Uint32 c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
 						SectorVertex* vertex = sectorWorld.getVertices()[c];
 
 						if( vertex->isSelected() ) {
@@ -3515,7 +3515,7 @@ void Editor::editSectors(bool usable) {
 			if( draggingWidget ) {
 				draggingWidget = false;
 
-				for( size_t c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
+				for( Uint32 c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
 					SectorVertex* vertex = sectorWorld.getVertices()[c];
 					vertex->setOldPos(vertex->getPos());
 				}
@@ -3532,7 +3532,7 @@ void Editor::editSectors(bool usable) {
 	}
 
 	// highlight vertex
-	for( size_t c = 0; c < vertices.getSize(); ++c ) {
+	for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 		SectorVertex* vertex = vertices[c];
 		vertex->setHighlighted(c == highlightedVertex);
 	}
@@ -4105,7 +4105,7 @@ void Editor::process(const bool usable) {
 			leftClicking = false;
 			leftClickLock = true;
 
-			size_t index = 0;
+			Uint32 index = 0;
 			if (textureUnderMouse && textureUnderMouse[0] != '\0' && strcmp(textureUnderMouse, Tile::defaultTexture) != 0) {
 				index = mainEngine->getTextureDictionary().find(textureUnderMouse);
 				if (index == Dictionary::nindex) {
@@ -8128,7 +8128,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 		}
 
 		// sub-components
-		for( size_t c = 0; c < component->getComponents().getSize(); ++c ) {
+		for( Uint32 c = 0; c < component->getComponents().getSize(); ++c ) {
 			Component* curr = component->getComponents()[c];
 			componentGUI(properties, curr, x, y);
 		}
@@ -8954,7 +8954,7 @@ void Editor::updateGUI(Frame& gui) {
 
 						// add sub-components
 						int x = 0;
-						for( size_t c = 0; c < firstEntity->getComponents().getSize(); ++c ) {
+						for( Uint32 c = 0; c < firstEntity->getComponents().getSize(); ++c ) {
 							Component* component = firstEntity->getComponents()[c];
 							componentGUI(*properties, component, x, y);
 						}
@@ -9172,7 +9172,7 @@ void Editor::updateGUI(Frame& gui) {
 			Vector average;
 
 			int numSelected = 0;
-			for( size_t c = 0; c < vertices.getSize(); ++c ) {
+			for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 				SectorVertex* vertex = sectorWorld.getVertices()[c];
 				if( vertex->isSelected() ) {
 					average += vertex->getPos();

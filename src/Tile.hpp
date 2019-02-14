@@ -93,7 +93,7 @@ public:
 	LinkedList<vertex_t>&	getLowerVertices(const side_t side)		{ return lowerVertices[side]; }
 	LinkedList<vertex_t>&	getUpperVertices(const side_t side)		{ return upperVertices[side]; }
 	const bool				isChanged() const						{ return changed; }
-	const size_t			getNumVertices() const					{ return numVertices; }
+	const Uint32			getNumVertices() const					{ return numVertices; }
 	bool					isLocked() const						{ return locked; }
 	const shadervars_t&		getShaderVars() const					{ return shaderVars; }
 
@@ -144,7 +144,7 @@ public:
 
 	// calculates the number of vertices in the tile
 	// @return the number of vertices for all surfaces in the tile
-	size_t calculateVertices() const;
+	Uint32 calculateVertices() const;
 
 	// determines if the tile has any space or not
 	// @return true if the tile has any visible surfaces, false otherwise
@@ -265,7 +265,7 @@ private:
 	btRigidBody* rigidBody = nullptr;
 
 	// vertex lists
-	size_t numVertices = 0;
+	Uint32 numVertices = 0;
 	LinkedList<vertex_t> ceilingVertices;
 	LinkedList<vertex_t> floorVertices;
 	LinkedList<vertex_t> upperVertices[SIDE_TYPE_LENGTH];

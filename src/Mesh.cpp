@@ -301,7 +301,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 				for ( int index = 0; index < maxLights; ++textureUnit, ++index) {
 					strcpy(buf, "gShadowmap[");
-					size_t len = 11;
+					Uint32 len = 11;
 					if (index == 0) {
 						buf[len] = '0';
 						buf[len + 1] = ']';
@@ -312,7 +312,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 							chars.push('0' + a % 10);
 							a /= 10;
 						}
-						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
 							buf[len] = chars[c];
 							++len;
 						}
@@ -335,7 +335,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 							chars.push('0' + a % 10);
 							a /= 10;
 						}
-						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
 							buf[len] = chars[c];
 							++len;
 						}
@@ -370,7 +370,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 				for (int index = textureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
 					strcpy(buf, "gShadowmap[");
-					size_t len = 11;
+					Uint32 len = 11;
 					if (index == 0) {
 						buf[len] = '0';
 						buf[len + 1] = ']';
@@ -382,7 +382,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 							chars.push('0' + a % 10);
 							a /= 10;
 						}
-						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
 							buf[len] = chars[c];
 							++len;
 						}
@@ -405,7 +405,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 							chars.push('0' + a % 10);
 							a /= 10;
 						}
-						for (size_t c = chars.getSize() - 1; c < chars.getSize(); --c) {
+						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
 							buf[len] = chars[c];
 							++len;
 						}
@@ -479,7 +479,7 @@ void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache
 							chars.push('0' + a % 10);
 							a /= 10;
 						}
-						for (size_t c = chars.getSize()-1; c < chars.getSize(); --c) {
+						for (Uint32 c = chars.getSize()-1; c < chars.getSize(); --c) {
 							name[len] = chars[c];
 							++len;
 						}

@@ -30,7 +30,7 @@ void PathFinder::generateSimpleMap() {
 	mapHeight = world.getHeight();
 	map.resize(mapWidth * mapHeight);
 
-	for (size_t index = 0; index < map.getSize(); ++index) {
+	for (Uint32 index = 0; index < map.getSize(); ++index) {
 		map[index] = world.getTiles()[index].hasVolume() ? 1 : 0;
 	}
 }

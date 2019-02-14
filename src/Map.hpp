@@ -12,7 +12,7 @@
 template <typename K, typename T>
 class Map {
 public:
-	static const size_t maxBucketSize = 1;
+	static const Uint32 maxBucketSize = 1;
 
 	Map() {
 		data.resize(numBuckets);
@@ -21,10 +21,10 @@ public:
 	}
 
 	// getters & setters
-	ArrayList<OrderedPair<K, T>>&				getHash(size_t index)			{ return data[index]; }
-	const ArrayList<OrderedPair<K, T>>&			getHash(size_t index) const		{ return data[index]; }
-	size_t										getNumBuckets() const			{ return numBuckets; }
-	size_t										getSize() const					{ return size; }
+	ArrayList<OrderedPair<K, T>>&				getHash(Uint32 index)			{ return data[index]; }
+	const ArrayList<OrderedPair<K, T>>&			getHash(Uint32 index) const		{ return data[index]; }
+	Uint32										getNumBuckets() const			{ return numBuckets; }
+	Uint32										getSize() const					{ return size; }
 
 	// clears the map of all key/value pairs
 	void clear() {
@@ -63,7 +63,7 @@ public:
 
 	// resize and rebuild the hash map
 	// @param newBucketCount Updated number of buckets in the map
-	void rehash(size_t newBucketCount) {
+	void rehash(Uint32 newBucketCount) {
 		ArrayList<OrderedPair<K, T>> list;
 		for (auto& it : *this) {
 			list.push(it);
@@ -93,7 +93,7 @@ public:
 	// @return true if the key/value pair was removed, otherwise false
 	bool remove(const K& key) {
 		auto& list = data[hash(key) & (numBuckets - 1)];
-		for( size_t c = 0; c < list.getSize(); ++c ) {
+		for( Uint32 c = 0; c < list.getSize(); ++c ) {
 			auto& pair = list[c];
 			if( pair.a == key ) {
 				list.remove(c);
@@ -186,7 +186,7 @@ public:
 	// Iterator
 	class Iterator {
 	public:
-		Iterator(Map<K, T>& _map, size_t _position, size_t _bucket) :
+		Iterator(Map<K, T>& _map, Uint32 _position, Uint32 _bucket) :
 			map(_map),
 			position(_position),
 			bucket(_bucket) {}
@@ -209,14 +209,14 @@ public:
 		}
 	private:
 		Map<K, T>& map;
-		size_t position;
-		size_t bucket;
+		Uint32 position;
+		Uint32 bucket;
 	};
 
 	// ConstIterator
 	class ConstIterator {
 	public:
-		ConstIterator(const Map<K, T>& _map, size_t _position, size_t _bucket) :
+		ConstIterator(const Map<K, T>& _map, Uint32 _position, Uint32 _bucket) :
 			map(_map),
 			position(_position),
 			bucket(_bucket) {}
@@ -239,13 +239,13 @@ public:
 		}
 	private:
 		const Map<K, T>& map;
-		size_t position;
-		size_t bucket;
+		Uint32 position;
+		Uint32 bucket;
 	};
 
 	// begin()
 	Iterator begin() {
-		size_t c = 0;
+		Uint32 c = 0;
 		for (; c < numBuckets; ++c) {
 			if (data[c].getSize()) {
 				return Iterator(*this, 0, c);
@@ -254,7 +254,7 @@ public:
 		return Iterator(*this, 0, c);
 	}
 	const ConstIterator begin() const {
-		size_t c = 0;
+		Uint32 c = 0;
 		for (; c < numBuckets; ++c) {
 			if (data[c].getSize()) {
 				return ConstIterator(*this, 0, c);
@@ -273,8 +273,8 @@ public:
 
 private:
 	ArrayList<ArrayList<OrderedPair<K, T>>> data;
-	size_t numBuckets = 4;
-	size_t size = 0;
+	Uint32 numBuckets = 4;
+	Uint32 size = 0;
 	
 	typename std::enable_if<std::is_class<K>::value, unsigned long>::type
 	hash(const K& key) const {

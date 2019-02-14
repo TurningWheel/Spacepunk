@@ -22,7 +22,7 @@ bool Cubemap::init() {
 		&front, &back, &up, &down, &right, &left
 	};
 
-	size_t index = 0;
+	Uint32 index = 0;
 	for( auto& texture : textures ) {
 		String path = mainEngine->buildPath(texture->get());
 

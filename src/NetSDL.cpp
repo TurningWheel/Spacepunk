@@ -142,7 +142,7 @@ void NetSDL::completeConnection(void* data) {
 	}
 
 	// make sure we haven't connected to this person already.
-	for( size_t c = 0; c < SDLremotes.getSize(); ++c ) {
+	for( Uint32 c = 0; c < SDLremotes.getSize(); ++c ) {
 		sdlremote_t* remote = SDLremotes[c];
 		if( remote->gid == request->gid ) {
 			// don't allow the same person to connect more than once.
@@ -192,7 +192,7 @@ void NetSDL::completeConnection(void* data) {
 }
 
 bool NetSDL::disconnect(Uint32 remoteID, bool inform) {
-	size_t index = getRemoteWithID(remoteID);
+	Uint32 index = getRemoteWithID(remoteID);
 	if( index == UINT32_MAX )
 		return false;
 
@@ -233,7 +233,7 @@ bool NetSDL::disconnectHost() {
 	if( !hosting || !connected )
 		return false;
 
-	for( size_t c = 0; c < SDLremotes.getSize(); ++c ) {
+	for( Uint32 c = 0; c < SDLremotes.getSize(); ++c ) {
 		sdlremote_t* remote = SDLremotes[c];
 		disconnect(remote->id);
 	}
@@ -260,7 +260,7 @@ bool NetSDL::disconnectAll() {
 	if( connected ) {
 		mainEngine->fmsg(Engine::MSG_INFO, "closing network connection(s)");
 
-		for( size_t c = 0; c < SDLremotes.getSize(); ++c ) {
+		for( Uint32 c = 0; c < SDLremotes.getSize(); ++c ) {
 			sdlremote_t* remote = SDLremotes[c];
 			if( disconnect(remote->id) ) {
 				result = true;
@@ -276,7 +276,7 @@ bool NetSDL::disconnectAll() {
 }
 
 const char* NetSDL::getHostname(Uint32 remoteID) const {
-	size_t index = getRemoteWithID(remoteID);
+	Uint32 index = getRemoteWithID(remoteID);
 	if( index != UINT32_MAX ) {
 		const sdlremote_t* remote = SDLremotes[index];
 		return remote->address;
@@ -286,7 +286,7 @@ const char* NetSDL::getHostname(Uint32 remoteID) const {
 }
 
 bool NetSDL::sendPacket(Uint32 remoteID, const Packet& packet) {
-	size_t index = getRemoteWithID(remoteID);
+	Uint32 index = getRemoteWithID(remoteID);
 	if( index == UINT32_MAX ) {
 		mainEngine->fmsg(Engine::MSG_WARN,"tried to send packet to invalid remote host! (%d)",remoteID);
 		return false;
@@ -308,7 +308,7 @@ bool NetSDL::sendPacket(Uint32 remoteID, const Packet& packet) {
 }
 
 bool NetSDL::sendPacketSafe(Uint32 remoteID, const Packet& packet) {
-	size_t index = getRemoteWithID(remoteID);
+	Uint32 index = getRemoteWithID(remoteID);
 	if( index == UINT32_MAX ) {
 		mainEngine->fmsg(Engine::MSG_WARN,"tried to send packet to invalid remote host! (%d)",remoteID);
 		return false;
@@ -342,7 +342,7 @@ bool NetSDL::sendPacketSafe(Uint32 remoteID, const Packet& packet) {
 
 bool NetSDL::broadcast(Packet& packet) {
 	bool result = true;
-	for( size_t c = 0; c < SDLremotes.getSize(); ++c ) {
+	for( Uint32 c = 0; c < SDLremotes.getSize(); ++c ) {
 		sdlremote_t* remote = SDLremotes[c];
 		result = sendPacket(remote->id, packet) ? result : false;
 	}
@@ -351,7 +351,7 @@ bool NetSDL::broadcast(Packet& packet) {
 
 bool NetSDL::broadcastSafe(Packet& packet) {
 	bool result = true;
-	for( size_t c = 0; c < SDLremotes.getSize(); ++c ) {
+	for( Uint32 c = 0; c < SDLremotes.getSize(); ++c ) {
 		sdlremote_t* remote = SDLremotes[c];
 		result = sendPacketSafe(remote->id, packet) ? result : false;
 	}
@@ -426,7 +426,7 @@ int NetSDL::runThread(void* data) {
 					break;
 				}
 
-				size_t remoteIndex = UINT32_MAX;
+				Uint32 remoteIndex = UINT32_MAX;
 				Packet* packet = new Packet();
 
 				net->SDLrecvPacket->channel = -1;
@@ -531,7 +531,7 @@ int NetSDL::handleNetworkPacket(Packet& packet, const char* type, Uint32 remoteI
 
 	// safe message -- queue and respond with ack
 	else if( strncmp( type, "SAFE", 4) == 0 ) {
-		size_t remoteIndex = getRemoteWithID(remoteID);
+		Uint32 remoteIndex = getRemoteWithID(remoteID);
 		if( remoteIndex == UINT32_MAX ) {
 			mainEngine->fmsg(Engine::MSG_DEBUG, "message received from client with bad id (%d)", remoteID);
 		} else {
@@ -542,7 +542,7 @@ int NetSDL::handleNetworkPacket(Packet& packet, const char* type, Uint32 remoteI
 			Uint32 hashIndex = packetID%128;
 
 			bool foundPacket = false;
-			for( size_t c = 0; c < remote->safeRcvdHash[hashIndex].getSize(); ++c ) {
+			for( Uint32 c = 0; c < remote->safeRcvdHash[hashIndex].getSize(); ++c ) {
 				Uint32 id = remote->safeRcvdHash[hashIndex][c];
 
 				if( id == packetID ) {
@@ -571,13 +571,13 @@ int NetSDL::handleNetworkPacket(Packet& packet, const char* type, Uint32 remoteI
 
 	// safe message -- ack
 	else if( strncmp( type, "ACKN", 4) == 0 ) {
-		size_t remoteIndex = getRemoteWithID(remoteID);
+		Uint32 remoteIndex = getRemoteWithID(remoteID);
 
 		Uint32 packetID;
 		if( packet.read32(packetID) ) {
 			sdlremote_t* remote = SDLremotes[remoteIndex];
 
-			for( size_t c = 0; c < remote->resendStack.getSize(); ++c ) {
+			for( Uint32 c = 0; c < remote->resendStack.getSize(); ++c ) {
 				safepacket_t* safePacket = remote->resendStack[c];
 
 				if( safePacket->id == packetID ) {

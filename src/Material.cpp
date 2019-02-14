@@ -74,7 +74,7 @@ unsigned int Material::bindTextures(texturekind_t textureKind) {
 		glBindTexture(GL_TEXTURE_2D,images[0]->getTexID());
 		++textureNum;
 	} else if( images.getSize()>1 ) {
-		for( size_t index = 0; index < images.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
+		for( Uint32 index = 0; index < images.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
 			Image* image = images[index];
 
 			char buf[32] = { 0 };
@@ -93,7 +93,7 @@ unsigned int Material::bindTextures(texturekind_t textureKind) {
 		glBindTexture(GL_TEXTURE_CUBE_MAP,cubemaps[0]->getTexID());
 		++textureNum;
 	} else if( cubemaps.getSize() > 1 ) {
-		for( size_t index = 0; index < cubemaps.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
+		for( Uint32 index = 0; index < cubemaps.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
 			Cubemap* cubemap = cubemaps[index];
 
 			char buf[32] = { 0 };

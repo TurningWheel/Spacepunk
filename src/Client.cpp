@@ -651,7 +651,7 @@ void Client::runConsole() {
 				logStart = console.getLast();
 			}
 			for( int c=0; logStart!=console.getFirst() && c<10; logStart=logStart->getPrev(), ++c ) {
-				size_t i=-1;
+				Uint32 i=-1;
 				String* str = &logStart->getData().text;
 				while( (i=str->find('\n',i+1)) != UINT32_MAX ) {
 					++c;
@@ -663,7 +663,7 @@ void Client::runConsole() {
 		if( mainEngine->pressKey(SDL_SCANCODE_PAGEDOWN) ) {
 			if( logStart!=nullptr ) {
 				for( int c=0; logStart!=console.getLast() && c<10; logStart=logStart->getNext(), ++c ) {
-					size_t i=-1;
+					Uint32 i=-1;
 					String* str = &logStart->getData().text;
 					while( (i=str->find('\n',i+1)) != UINT32_MAX ) {
 						++c;

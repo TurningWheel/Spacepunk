@@ -35,8 +35,8 @@ public:
 	// getters & setters
 	const T*		getArray() const		{ return arr; }
 	T*				getArray()				{ return arr; }
-	size_t			getSize() const			{ return size; }
-	size_t			getMaxSize() const		{ return maxSize; }
+	Uint32			getSize() const			{ return size; }
+	Uint32			getMaxSize() const		{ return maxSize; }
 
 	// @return true if list is empty
 	bool empty() const {
@@ -46,7 +46,7 @@ public:
 	// Iterator
 	class Iterator {
 	public:
-		Iterator(ArrayList<T>& _arr, size_t _pos) :
+		Iterator(ArrayList<T>& _arr, Uint32 _pos) :
 			arr(_arr),
 			pos(_pos) {}
 
@@ -63,13 +63,13 @@ public:
 		}
 	private:
 		ArrayList<T>& arr;
-		size_t pos;
+		Uint32 pos;
 	};
 
 	// ConstIterator
 	class ConstIterator {
 	public:
-		ConstIterator(const ArrayList<T>& _arr, size_t _pos) :
+		ConstIterator(const ArrayList<T>& _arr, Uint32 _pos) :
 			arr(_arr),
 			pos(_pos) {}
 
@@ -86,7 +86,7 @@ public:
 		}
 	private:
 		const ArrayList<T>& arr;
-		size_t pos;
+		Uint32 pos;
 	};
 
 	// begin()
@@ -108,15 +108,15 @@ public:
 	// resize the internal list
 	// @param len number of elements to size the list for
 	// @return *this
-	ArrayList& alloc(size_t len) {
+	ArrayList& alloc(Uint32 len) {
 		maxSize = len;
-		size_t newSize = std::min( maxSize, size );
+		Uint32 newSize = std::min( maxSize, size );
 		T* newArr = nullptr;
 		if( len ) {
 			newArr = new T[len];
 			assert(newArr);
-			size_t copyLen = min(size, len);
-			for( size_t c = 0; c < copyLen; ++c ) {
+			Uint32 copyLen = min(size, len);
+			for( Uint32 c = 0; c < copyLen; ++c ) {
 				newArr[c] = std::move(arr[c]);
 			}
 		}
@@ -132,12 +132,12 @@ public:
 	// fill the internal list, resizing if necessary
 	// @param len number of elements to size the list for
 	// @return *this
-	ArrayList& resize(size_t len) {
+	ArrayList& resize(Uint32 len) {
 		if( len > maxSize ) {
 			alloc(len);
 		}
 		if( len > size ) {
-			for( size_t c = size; c < len; ++c ) {
+			for( Uint32 c = size; c < len; ++c ) {
 				arr[c] = T();
 			}
 		}
@@ -158,7 +158,7 @@ public:
 	ArrayList& copy(const ArrayList& src) {
 		alloc(src.getSize());
 		size = src.getSize();
-		for( size_t c = 0; c < src.getSize(); ++c ) {
+		for( Uint32 c = 0; c < src.getSize(); ++c ) {
 			arr[c] = src[c];
 		}
 		return *this;
@@ -168,10 +168,10 @@ public:
 	// @param src the array to copy into our list
 	// @return *this;
 	ArrayList& copy(const std::initializer_list<T>& src) {
-		alloc(src.size());
-		size = src.size();
+		alloc(static_cast<Uint32>(src.size()));
+		size = static_cast<Uint32>(src.size());
 		const T* it;
-		size_t c;
+		Uint32 c;
 		for( c = 0, it = std::begin(src); it != std::end(src); ++it, ++c ) {
 			arr[c] = *it;
 		}
@@ -207,7 +207,7 @@ public:
 	// insert a value into the list
 	// @param val the value to insert
 	// @param pos the index to displace (move to the end of the list)
-	void insert(const T& val, size_t pos) {
+	void insert(const T& val, Uint32 pos) {
 		assert(pos <= size);
 		if( size==maxSize ) {
 			alloc(std::max((unsigned int)size*2U, 4U));
@@ -220,13 +220,13 @@ public:
 	// insert a value into the list, rearranging all elements after it
 	// @param val the value to insert
 	// @param pos the index to displace (move all elements starting here 1 index forward)
-	void insertAndRearrange(const T& val, size_t pos) {
+	void insertAndRearrange(const T& val, Uint32 pos) {
 		assert(pos <= size);
 		if( size==maxSize ) {
 			alloc(std::max((unsigned int)size*2U, 4U));
 		}
 		++size;
-		for( size_t c = size-1; c > pos; --c ) {
+		for( Uint32 c = size-1; c > pos; --c ) {
 			arr[c] = arr[c-1];
 		}
 		arr[pos] = val;
@@ -257,7 +257,7 @@ public:
 	// removes and returns an element from the list without moving the rest of the list
 	// @param pos the index of the element to remove
 	// @return the value at the given index
-	T remove(size_t pos) {
+	T remove(Uint32 pos) {
 		assert(size > pos);
 		T result = arr[pos];
 		--size;
@@ -268,12 +268,12 @@ public:
 	// removes and returns an element from the list, rearranging all elements after it
 	// @param pos the index of the element to remove
 	// @return the value at the given index
-	T removeAndRearrange(size_t pos) {
+	T removeAndRearrange(Uint32 pos) {
 		assert(size > pos);
 		T result = arr[pos];
 
-		size_t newSize = size - 1;
-		for( size_t c = pos; c < newSize; ++c ) {
+		Uint32 newSize = size - 1;
+		for( Uint32 c = pos; c < newSize; ++c ) {
 			arr[c] = arr[c+1];
 		}
 
@@ -298,7 +298,7 @@ public:
 	// get list contents at specified index
 	// @param pos index value
 	// @return a reference to the list at this index
-	const T& get(size_t pos) const {
+	const T& get(Uint32 pos) const {
 		assert(pos < size);
 		return arr[pos];
 	}
@@ -306,7 +306,7 @@ public:
 	// get list contents at specified index
 	// @param pos index value
 	// @return a reference to the list at this index
-	T& get(size_t pos) {
+	T& get(Uint32 pos) {
 		assert(pos < size);
 		return arr[pos];
 	}
@@ -314,7 +314,7 @@ public:
 	// get list contents at specified index
 	// @param pos index value
 	// @return a reference to the list at this index
-	const T& operator[](size_t pos) const {
+	const T& operator[](Uint32 pos) const {
 		assert(pos < size);
 		return arr[pos];
 	}
@@ -322,7 +322,7 @@ public:
 	// get list contents at specified index
 	// @param pos index value
 	// @return a reference to the list at this index
-	T& operator[](size_t pos) {
+	T& operator[](Uint32 pos) {
 		assert(pos < size);
 		return arr[pos];
 	}
@@ -380,10 +380,10 @@ public:
 		typedef const T& (ArrayList<T>::*PeekConstFn)() const;
 		PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
 
-		typedef T& (ArrayList<T>::*GetFn)(size_t);
+		typedef T& (ArrayList<T>::*GetFn)(Uint32);
 		GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
 
-		typedef const T& (ArrayList<T>::*GetConstFn)(size_t) const;
+		typedef const T& (ArrayList<T>::*GetConstFn)(Uint32) const;
 		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
 
 		luabridge::getGlobalNamespace(lua)
@@ -413,6 +413,6 @@ public:
 
 private:
 	T* arr = nullptr;		// array data
-	size_t size = 0;		// current array capacity
-	size_t maxSize = 0;		// maximum array capacity
+	Uint32 size = 0;		// current array capacity
+	Uint32 maxSize = 0;		// maximum array capacity
 };

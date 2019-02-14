@@ -17,7 +17,7 @@ public:
 	void seedValue(Uint32 seed);
 
 	// seed the rng based on the given value
-	void seedBytes(const Uint8* seed, size_t size);
+	void seedBytes(const Uint8* seed, Uint32 size);
 
 	// @return an unsigned int (8-bit)
 	Uint8 getUint8();
@@ -53,12 +53,12 @@ public:
 	// @param buffer the buffer to place the random value in
 	// @param size the size of the buffer in bytes
 	// @return a random number
-	void getBytes(Uint8* buffer, size_t size);
+	void getBytes(Uint8* buffer, Uint32 size);
 
 private:
 	unsigned char s[256];
 	Sint32 s_i, s_j;
 
 	inline void swapByte(Uint8* a, Uint8* b);
-	inline Uint8 getByte(const Uint8* bytes, size_t num, size_t offset);
+	inline Uint8 getByte(const Uint8* bytes, Uint32 num, Uint32 offset);
 };

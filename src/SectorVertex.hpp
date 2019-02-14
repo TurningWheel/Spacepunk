@@ -52,7 +52,7 @@ private:
 	SectorWorld* world = nullptr;
 	bool selected = false;
 	bool highlighted = false;
-	size_t index = 0;
+	Uint32 index = 0;
 
 	ArrayList<Sector::vertex_t*> vertices;
 	Vector pos;

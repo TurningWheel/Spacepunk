@@ -317,7 +317,7 @@ public:
 		if( name == nullptr || strcmp(name,"")==0 ) {
 			return nullptr;
 		}
-		for( size_t c = 0; c < components.getSize(); ++c ) {
+		for( Uint32 c = 0; c < components.getSize(); ++c ) {
 			if( strcmp( components[c]->getName(), name ) == 0 ) {
 				return static_cast<T*>(components[c]);
 			} else {
@@ -338,7 +338,7 @@ public:
 		if( uid == Component::nuid ) {
 			return nullptr;
 		}
-		for( size_t c = 0; c < components.getSize(); ++c ) {
+		for( Uint32 c = 0; c < components.getSize(); ++c ) {
 			if( components[c]->getUID() == uid ) {
 				return static_cast<T*>(components[c]);
 			} else {
@@ -377,7 +377,7 @@ public:
 	// @param list list to populate
 	template <typename T>
 	void findAllComponents(Component::type_t type, LinkedList<T*>& list) const {
-		for( size_t c = 0; c < components.getSize(); ++c ) {
+		for( Uint32 c = 0; c < components.getSize(); ++c ) {
 			if( components[c]->getType() == type ) {
 				list.addNodeLast(dynamic_cast<T*>(components[c]));
 			}

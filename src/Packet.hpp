@@ -72,5 +72,5 @@ public:
 	bool read(char* data, unsigned int len);
 
 	char data[maxLen] = { 0 };
-	size_t offset = 0;
+	Uint32 offset = 0;
 };

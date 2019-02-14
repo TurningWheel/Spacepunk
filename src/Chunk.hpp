@@ -35,7 +35,7 @@ public:
 
 	// calculates the number of vertices in the chunk
 	// @return the number of vertices for all surfaces in the chunk
-	size_t calculateVertices() const;
+	Uint32 calculateVertices() const;
 
 	// adds an entity component to our population list
 	// @param component the entity component to add to our list
@@ -76,8 +76,8 @@ private:
 		BUFFER_TYPE_LENGTH
 	};
 
-	size_t numVertices = 0;
-	size_t numIndices = 0;
+	Uint32 numVertices = 0;
+	Uint32 numIndices = 0;
 	GLuint vbo[BUFFER_TYPE_LENGTH];
 	GLuint vao = 0;
 		
@@ -88,7 +88,7 @@ private:
 	typedef UnorderedPair<GLuint, GLuint> Edge;
 	typedef ArrayList<Edge> EdgeList;
 	void findEdges(EdgeList& edges, bool all);
-	void findEdge(const Edge&, size_t skip, EdgeList& edges, bool all);
+	void findEdge(const Edge&, Uint32 skip, EdgeList& edges, bool all);
 	void combineEdges(EdgeList& edges);
 	EdgeList edges;
 

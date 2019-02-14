@@ -8,7 +8,7 @@
 #ifdef PLATFORM_LINUX
 #include <string.h>
 //Utter bodge to make things work because of Windows.
-inline char* strncpy_s(char *strDest, size_t numberOfElements, const char *strSource, size_t count)
+inline char* strncpy_s(char *strDest, Uint32 numberOfElements, const char *strSource, Uint32 count)
 {
 	return strncpy(strDest, strSource, count);
 }
@@ -33,16 +33,16 @@ public:
 	}
 
 	// represents an invalid position in the string
-	static const size_t npos = UINT32_MAX;
+	static const Uint32 npos = UINT32_MAX;
 
 	// getters & setters
 	const char* const		get() const			{ return str ? str : ""; }
-	const size_t			getSize() const		{ return size; }
+	const Uint32			getSize() const		{ return size; }
 
 	// allocs / reallocs the string (erases data!)
 	// @param newSize the size (in chars) of the string to alloc
 	// @return the alloc'd string
-	const char* alloc(const size_t newSize) {
+	const char* alloc(const Uint32 newSize) {
 		size = newSize;
 		if( str ) {
 			char* result = (char*) realloc(str, size * sizeof(char));
@@ -69,11 +69,11 @@ public:
 
 	// get the length of the string
 	// @return the number of chars in the string
-	size_t length() const {
+	Uint32 length() const {
 		if( str == nullptr || size == 0 ) {
 			return 0;
 		}
-		size_t c = 0;
+		Uint32 c = 0;
 		for( ; c < size && str[c] != '\0'; ++c );
 		return c;
 	}
@@ -92,7 +92,7 @@ public:
 			if( str == src || *this == src ) {
 				return str;
 			}
-			size_t srcLen = strlen(src)+1;
+			Uint32 srcLen = static_cast<Uint32>(strlen(src)) + 1;
 			if( srcLen > size || str == nullptr ) {
 				alloc(srcLen);
 			}
@@ -132,11 +132,11 @@ public:
 		if( src == nullptr ) {
 			return str;
 		}
-		size_t len = length();
+		Uint32 len = length();
 		if( len >= size-1 ) {
 			return str;
 		}
-		size_t last = std::min(len + strlen(src), size-1);
+		Uint32 last = std::min(len + (Uint32)strlen(src), size-1);
 
 		strncpy_s((char *)(str + len), size-len, src, last-len);
 		str[last] = '\0';
@@ -153,7 +153,7 @@ public:
 		if( src == nullptr ) {
 			return str;
 		}
-		size_t len = length();
+		Uint32 len = length();
 		if( len >= size-1 ) {
 			return str;
 		}
@@ -179,7 +179,7 @@ public:
 	// @param start the index to start at
 	// @param end the index to end at
 	// @return the resulting substr
-	String substr(const size_t start, size_t end = 0) const {
+	String substr(const Uint32 start, Uint32 end = 0) const {
 		if( end == 0 ) {
 			end = size;
 		}
@@ -193,7 +193,7 @@ public:
 			return String("");
 		}
 
-		size_t c, i;
+		Uint32 c, i;
 		String result;
 		result.alloc( end - start + 1 );
 		for( i = 0, c = start; c < end; ++c, ++i ) {
@@ -207,14 +207,14 @@ public:
 	// @param key the string to locate
 	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
-	size_t find(const char* key, size_t offset = 0) const {
+	Uint32 find(const char* key, Uint32 offset = 0) const {
 		if( key == nullptr || str == nullptr ) {
 			return npos;
 		}
-		size_t ourLen = length();
-		size_t itsLen = strlen(key);
-		for( size_t c = offset; c < ourLen; ++c ) {
-			size_t i, j;
+		Uint32 ourLen = length();
+		Uint32 itsLen = static_cast<Uint32>(strlen(key));
+		for( Uint32 c = offset; c < ourLen; ++c ) {
+			Uint32 i, j;
 			for( j = 0, i = c; i < ourLen && j < itsLen; ++i, ++j ) {
 				if( str[i] != key[j] ) {
 					break;
@@ -231,12 +231,12 @@ public:
 	// @param key the char to locate
 	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
-	size_t find(const char key, size_t offset = 0) const {
+	Uint32 find(const char key, Uint32 offset = 0) const {
 		if( str == nullptr ) {
 			return npos;
 		}
-		size_t ourLen = length();
-		for( size_t c = offset; c < ourLen; ++c ) {
+		Uint32 ourLen = length();
+		for( Uint32 c = offset; c < ourLen; ++c ) {
 			if( str[c] == key ) {
 				return c;
 			}
@@ -281,11 +281,11 @@ public:
 
 	// access char data
 	// @return the char at the given index
-	char& operator[](const size_t index) {
+	char& operator[](const Uint32 index) {
 		assert(index >= 0 && index < size);
 		return str[index];
 	}
-	const char& operator[](const size_t index) const {
+	const char& operator[](const Uint32 index) const {
 		assert(index >= 0 && index < size);
 		return str[index];
 	}
@@ -361,10 +361,10 @@ public:
 
 protected:
 	char* str = nullptr;
-	size_t size = 0;
+	Uint32 size = 0;
 };
 
-template<size_t defaultSize>
+template<Uint32 defaultSize>
 class StringBuf : public String {
 public:
 	StringBuf() {
@@ -392,5 +392,5 @@ public:
 	}
 
 	// getters & setters
-	static size_t getDefaultSize() { return defaultSize; }
+	static Uint32 getDefaultSize() { return defaultSize; }
 };

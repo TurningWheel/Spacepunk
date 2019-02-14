@@ -18,7 +18,7 @@ public:
 		IPaddress host;
 
 		virtual ~sdlremote_t() {
-			for( size_t c = 0; c < parent->remotes.getSize(); ++c ) {
+			for( Uint32 c = 0; c < parent->remotes.getSize(); ++c ) {
 				if( parent->remotes[c]->id == id ) {
 					parent->remotes.remove(c);
 					break;

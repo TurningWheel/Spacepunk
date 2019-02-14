@@ -985,7 +985,7 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 			polymodel.faces[i].vertex[2] = quad->vertex[3];
 		}
 
-		for (size_t c = 0; c < 3; ++c) {
+		for (Uint32 c = 0; c < 3; ++c) {
 			polymodel.faces[i].normal[c].x = (quad->side == 0 ? 1.f : (quad->side == 1 ? -1.f : 0));
 			polymodel.faces[i].normal[c].y = (quad->side == 2 ? 1.f : (quad->side == 3 ? -1.f : 0));
 			polymodel.faces[i].normal[c].z = (quad->side == 4 ? 1.f : (quad->side == 5 ? -1.f : 0));
@@ -1046,7 +1046,7 @@ VoxelMeshData VoxelReader::readVoxel(const char* path) {
 
 GLuint VoxelMeshData::findAdjacentIndex(GLuint index1, GLuint index2, GLuint index3) {
 	GLuint indices[6];
-	for (size_t index = 0; index < indexCount; index += 6) {
+	for (Uint32 index = 0; index < indexCount; index += 6) {
 		indices[0] = this->indices[index];
 		indices[1] = this->indices[index + 2];
 		indices[2] = this->indices[index + 4];

@@ -8,7 +8,7 @@ Random::Random() {
 	seedTime();
 }
 
-void Random::seedBytes(const Uint8* seed, size_t size) {
+void Random::seedBytes(const Uint8* seed, Uint32 size) {
 	if( !seed || !size )
 		return;
 
@@ -87,7 +87,7 @@ Sint64 Random::getSint64() {
 	return value & INT16_MAX;
 }
 
-void Random::getBytes(Uint8* buffer, size_t size) {
+void Random::getBytes(Uint8* buffer, Uint32 size) {
 	while( size>0 ) {
 		*buffer = getUint8();
 		++buffer;
@@ -109,6 +109,6 @@ inline void Random::swapByte(Uint8* a, Uint8* b) {
 	*b = temp;
 }
 
-inline Uint8 Random::getByte(const Uint8* bytes, size_t num, size_t offset) {
+inline Uint8 Random::getByte(const Uint8* bytes, Uint32 num, Uint32 offset) {
 	return bytes[offset % num];
 }

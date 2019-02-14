@@ -42,13 +42,13 @@ public:
 
 	// remove a sector from the world
 	// @param index the index of the sector to remove
-	void removeSector(size_t index);
+	void removeSector(Uint32 index);
 
 	// selects or deselects the vertex with the given index
 	// @param index the index of the vertex to select
 	// @param b if true, the vertex is selected; if false, it is deselected
 	// @return true if the vertex could be found, false otherwise
-	const bool selectVertex(const size_t index, const bool b);
+	const bool selectVertex(const Uint32 index, const bool b);
 
 	// selects or deselects all vertices in the world
 	// @param b if true, all vertices are selected; if false, they are deselected

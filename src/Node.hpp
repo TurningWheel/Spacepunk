@@ -54,7 +54,7 @@ public:
 	const Node<T>*			getPrev() const						{ return (const Node<T>*)(prev); }
 	const LinkedList<T>*	getList() const						{ return (const LinkedList<T>*)(list); }
 	const T&				getData() const						{ return data; }
-	const size_t			getSizeOfData() const				{ return (const size_t)sizeof(data); }
+	const Uint32			getSizeOfData() const				{ return (const Uint32)sizeof(data); }
 
 	void	setNext(Node<T>* node)		{ next = node; }
 	void	setPrev(Node<T>* node)		{ prev = node; }

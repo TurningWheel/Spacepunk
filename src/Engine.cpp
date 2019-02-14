@@ -135,7 +135,7 @@ static int console_help(int argc, const char** argv) {
 	if( argc > 0 ) {
 		search = argv[0];
 	}
-	size_t len = strlen(search);
+	Uint32 len = static_cast<Uint32>(strlen(search));
 
 	for( auto& pair : Cvar::getMap() ) {
 		Cvar* cvar = pair.b;
@@ -815,7 +815,7 @@ void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
 	str[1024-1] = '\0';
 
 	// bust multi-line strings into individual strings...
-	for( size_t c=0; c<strlen(str); ++c ) {
+	for( Uint32 c=0; c<(Uint32)strlen(str); ++c ) {
 		if( str[c]=='\n' ) {
 			str[c]=0;
 
@@ -915,7 +915,7 @@ void Engine::msg(const Uint32 msgType, const char* str) {
 	fmsg(msgType,str);
 }
 
-void Engine::freadl( void* ptr, size_t size, size_t count, FILE* stream, const char* filename, const char* funcName ) {
+void Engine::freadl( void* ptr, Uint32 size, Uint32 count, FILE* stream, const char* filename, const char* funcName ) {
 	if( fread(ptr, size, count, stream) != count ) {
 		if( filename != nullptr ) {
 			if( funcName != nullptr ) {
@@ -1057,8 +1057,8 @@ void Engine::shutdown() {
 	running = false;
 }
 
-bool Engine::charsHaveLetters(const char *arr, size_t len) {
-	for( int c=0; c<len; ++c ) {
+bool Engine::charsHaveLetters(const char *arr, Uint32 len) {
+	for( Uint32 c=0; c<len; ++c ) {
 		if( arr[c] == 0 ) {
 			return false;
 		}
@@ -1395,7 +1395,7 @@ bool Engine::removeMod(const char* name) {
 		return false;
 
 	// check that we have not already added the mod
-	size_t index = 0;
+	Uint32 index = 0;
 	for( mod_t& mod : mods ) {
 		if( mod.path == name ) {
 			mods.removeNode(index);

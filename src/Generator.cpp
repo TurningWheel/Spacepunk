@@ -93,7 +93,7 @@ Generator::~Generator() {
 
 void Generator::writeFile(const char* path) {
 	Sint32 size = options.dungeonWidth * options.dungeonHeight;
-	size_t count = size + options.dungeonHeight;
+	Uint32 count = size + options.dungeonHeight;
 
 	char* buf = new char[count];
 	for (Sint32 y = 0; y < options.dungeonHeight; ++y) {
@@ -362,7 +362,7 @@ bool Generator::soundRoom(Sint32 r1, Sint32 r2, Sint32 c1, Sint32 c2) {
 }
 
 void Generator::openRooms() {
-	for (size_t c = 0; c < rooms.getSize(); ++c) {
+	for (Uint32 c = 0; c < rooms.getSize(); ++c) {
 		openRoom(rooms[c]);
 	}
 }
@@ -676,14 +676,14 @@ bool Generator::checkTunnel(Sint32 r, Sint32 c, Sint32 dir) {
 void Generator::fixDoors() {
 	ArrayList<bool> fixed;
 	fixed.resize(tiles.getSize());
-	for (size_t c = 0; c < tiles.getSize(); ++c) {
+	for (Uint32 c = 0; c < tiles.getSize(); ++c) {
 		fixed[c] = false;
 	}
 
 	for (auto &room : rooms) {
 		for (Sint32 dir = 0; dir < 4; ++dir) {
 			auto &doors = room.doors[dir];
-			for (size_t c = 0; c < doors.getSize(); ++c) {
+			for (Uint32 c = 0; c < doors.getSize(); ++c) {
 				auto &door = doors[c];
 				Sint32 index = door.row + door.col * options.dungeonHeight;
 				Uint32& doorTile = tiles[index];

@@ -233,7 +233,7 @@ public:
 	// @param stream the file stream to read the data from
 	// @param filename the filename of the file that is being read from
 	// @param funcName the name of the function wherein the file is being read
-	static void freadl( void* ptr, size_t size, size_t count, FILE* stream, const char* filename, const char* funcName );
+	static void freadl( void* ptr, Uint32 size, Uint32 count, FILE* stream, const char* filename, const char* funcName );
 
 	// reads multiple ints from a character string
 	// @param str the string to read the space-separated character-encoded ints from
@@ -253,7 +253,7 @@ public:
 	// @param arr the array of characters to check for letters
 	// @param len the length of the array
 	// @return true if the character array has non-numeral characters, false otherwise
-	static bool charsHaveLetters( const char* arr, size_t len );
+	static bool charsHaveLetters( const char* arr, Uint32 len );
 
 	// does string comparison (helper function for lua)
 	// @param a the first string

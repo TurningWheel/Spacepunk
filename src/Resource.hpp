@@ -19,7 +19,7 @@ public:
 
 	// number of items in the resource
 	// @return the number of cached items in the resource
-	size_t size() const {
+	Uint32 size() const {
 		return cache.getSize();
 	}
 

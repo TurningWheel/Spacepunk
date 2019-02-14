@@ -61,7 +61,7 @@ public:
 	// getters & setters
 	const char*				getName() const						{ return name.get(); }
 	const char*				getText() const						{ return text; }
-	const size_t			getTextLen() const					{ return textLen; }
+	const Uint32			getTextLen() const					{ return textLen; }
 	const glm::vec4&		getColor() const					{ return color; }
 	const Rect<int>			getSize() const						{ return size; }
 	const justify_t			getJustify() const					{ return justify; }
@@ -90,7 +90,7 @@ private:
 	String name;
 	Script::Args params;
 	char* text = nullptr;
-	size_t textLen = 0;
+	Uint32 textLen = 0;
 	glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f);
 	Rect<int> size;
 	justify_t justify = LEFT;

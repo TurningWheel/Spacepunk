@@ -109,7 +109,7 @@ void World::changeFilename(const char* _filename) {
 	filetype = FILE_MAX;
 	for( int c = 0; c < static_cast<int>(World::FILE_MAX); ++c ) {
 		StringBuf<16> fullExtension(".%s", fileExtensions[static_cast<int>(c)]);
-		filename.alloc(strlen(_filename) + fullExtension.length() + 1);
+		filename.alloc((Uint32)strlen(_filename) + fullExtension.length() + 1);
 		filename = _filename;
 
 		// append filetype extension
@@ -128,7 +128,7 @@ void World::changeFilename(const char* _filename) {
 
 	// create shortened filename
 	shortname = filename;
-	size_t i = 0;
+	Uint32 i = 0;
 	do {
 		i = shortname.find('/',0);
 		if (i != UINT32_MAX) {
@@ -477,7 +477,7 @@ void World::process() {
 	}
 
 	// update lasers
-	for (size_t c = 0; c < lasers.getSize(); ++c) {
+	for (Uint32 c = 0; c < lasers.getSize(); ++c) {
 		auto& laser = lasers[c];
 		if (laser.life > 0.f) {
 			laser.life -= 1.f;

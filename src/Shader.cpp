@@ -56,7 +56,7 @@ int Shader::load() {
 	}
 
 	// determine length of file
-	size_t len = 0;
+	Uint32 len = 0;
 	for( ; !feof(fp); ++len )
 		fgetc(fp);
 

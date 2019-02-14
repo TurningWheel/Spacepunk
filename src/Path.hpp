@@ -138,8 +138,8 @@ protected:
 		}
 		~PathNode() {}
 
-		PathNode** add(PathNode& child, size_t pos);
-		PathNode** remove(PathNode& child, size_t pos);
+		PathNode** add(PathNode& child, Uint32 pos);
+		PathNode** remove(PathNode& child, Uint32 pos);
 
 		bool operator==(const PathNode& rhs) const {
 			if ( rhs.x == x && rhs.y == y ) {

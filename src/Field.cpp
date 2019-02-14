@@ -18,7 +18,7 @@ Field::Field(const int _textLen) {
 }
 
 Field::Field(const char* _text) {
-	textLen = strlen(_text)+1;
+	textLen = static_cast<Uint32>(strlen(_text))+1;
 	text = (char*) calloc(textLen,sizeof(char));
 	if( text ) {
 		text[textLen-1] = '\0';
@@ -82,11 +82,11 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 	String str;
 	if( selected && mainEngine->isCursorVisible() ) {
-		str.alloc(strlen(text)+2);
+		str.alloc((Uint32)strlen(text)+2);
 		str.assign(text);
 		str.append("_");
 	} else if( selected ) {
-		str.alloc(strlen(text)+2);
+		str.alloc((Uint32)strlen(text)+2);
 		str.assign(text);
 		str.append(" ");
 	} else {
@@ -206,7 +206,7 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 			if( mainEngine->getAnyKeyStatus() ) {
 				const char* keys = mainEngine->getLastInput();
 				if( keys ) {
-					if( !Engine::charsHaveLetters(keys,strlen(keys)) || !numbersOnly ) {
+					if( !Engine::charsHaveLetters(keys, (Uint32)strlen(keys)) || !numbersOnly ) {
 						strncpy(text, keys, textLen-1);
 						selectAll = false;
 					}

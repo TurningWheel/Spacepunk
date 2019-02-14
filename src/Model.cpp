@@ -85,7 +85,7 @@ Model::bone_t Model::findBone(const char* name) const {
 	if( mesh ) {
 		unsigned int bone = mesh->boneIndexForName(name);
 		if( bone != UINT32_MAX ) {
-			size_t c = 0;
+			Uint32 c = 0;
 			for( ; c < skincache.getSize(); ++c ) {
 				if( bone >= skincache[c].anims.getSize() ) {
 					bone -= (unsigned int)skincache[c].anims.getSize();

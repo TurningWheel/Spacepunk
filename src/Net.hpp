@@ -206,10 +206,10 @@ protected:
 	// gets the remote host with the given id
 	// @param remoteID the id of the remote host to get
 	// @return an index to the remote host, or UINT32_MAX if they could not be found
-	size_t getRemoteWithID(const Uint32 remoteID);
+	Uint32 getRemoteWithID(const Uint32 remoteID);
 
 	// gets the remote host with the given id
 	// @param remoteID the id of the remote host to get
 	// @return an index to the remote host, or UINT32_MAX if they could not be found
-	size_t getRemoteWithID(const Uint32 remoteID) const;
+	Uint32 getRemoteWithID(const Uint32 remoteID) const;
 };

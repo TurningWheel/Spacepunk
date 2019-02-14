@@ -58,7 +58,7 @@ Component::Component(Entity& _entity, Component* _parent) {
 }
 
 Component::~Component() {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c] ) {
 			delete components[c];
 			components[c] = nullptr;
@@ -75,7 +75,7 @@ Component::~Component() {
 
 void Component::clearAllChunkNodes() {
 	clearChunkNode();
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->clearAllChunkNodes();
 	}
 }
@@ -409,7 +409,7 @@ void Component::deleteVisMaps() {
 }
 
 void Component::deleteAllVisMaps() {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->deleteAllVisMaps();
 	}
 	deleteVisMaps();
@@ -420,25 +420,25 @@ void Component::process() {
 		update();
 	}
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->process();
 	}
 }
 
 void Component::beforeWorldInsertion(const World* world) {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->beforeWorldInsertion(world);
 	}
 }
 
 void Component::afterWorldInsertion(const World* world) {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->afterWorldInsertion(world);
 	}
 }
 
 bool Component::checkCollision() const {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->checkCollision() ) {
 			return true;
 		}
@@ -447,13 +447,13 @@ bool Component::checkCollision() const {
 }
 
 void Component::draw(Camera& camera, const ArrayList<Light*>& lights) {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->draw(camera, lights);
 	}
 }
 
 bool Component::hasComponent(type_t type) const {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->getType() == type ) {
 			return true;
 		}
@@ -558,7 +558,7 @@ void Component::update() {
 		}
 	}
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->isToBeDeleted() ) {
 			delete components[c];
 			components.remove(c);
@@ -571,7 +571,7 @@ void Component::update() {
 
 void Component::copyComponents(Component& dest) {
 	Component* component = nullptr;
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		switch( components[c]->getType() ) {
 			case Component::COMPONENT_BASIC:
 			{

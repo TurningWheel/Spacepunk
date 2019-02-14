@@ -151,7 +151,7 @@ void Light::createShadowMap() {
 	glPolygonOffset(1.f, cvar_shadowDepthOffset.toFloat());
 	glEnable(GL_DEPTH_TEST);
 	shadowMap.init();
-	for (size_t c = 0; c < 6; ++c) {
+	for (Uint32 c = 0; c < 6; ++c) {
 		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		shadowCamera->setAng(Shadow::cameraInfo[c].dir);
