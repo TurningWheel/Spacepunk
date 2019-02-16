@@ -297,54 +297,9 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				glUniform1i(shader.getUniformLocation("gNumLights"), 0);
 
 				char buf[32];
-				ArrayList<char> chars;
-
-				for ( int index = 0; index < maxLights; ++textureUnit, ++index) {
-					strcpy(buf, "gShadowmap[");
-					Uint32 len = 11;
-					if (index == 0) {
-						buf[len] = '0';
-						buf[len + 1] = ']';
-						buf[len + 2] = '\0';
-					} else {
-						unsigned int a = index;
-						while (a != 0) {
-							chars.push('0' + a % 10);
-							a /= 10;
-						}
-						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
-							buf[len] = chars[c];
-							++len;
-						}
-						buf[len] = ']';
-						buf[len + 1] = '\0';
-					}
-					glUniform1i(shader.getUniformLocation(buf), textureUnit);
-					chars.resize(0);
-
-					strcpy(buf, "gShadowmapEnabled[");
-					len = 18;
-					if (index == 0) {
-						buf[len] = '0';
-						buf[len + 1] = ']';
-						buf[len + 2] = '\0';
-					}
-					else {
-						unsigned int a = index;
-						while (a != 0) {
-							chars.push('0' + a % 10);
-							a /= 10;
-						}
-						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
-							buf[len] = chars[c];
-							++len;
-						}
-						buf[len] = ']';
-						buf[len + 1] = '\0';
-					}
-					glUniform1i(shader.getUniformLocation(buf), GL_FALSE);
-					chars.resize(0);
-
+				for (int index = 0; index < maxLights; ++textureUnit, ++index) {
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
 					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 				}
 			} else {
@@ -366,55 +321,9 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				}
 
 				char buf[32];
-				ArrayList<char> chars;
-
 				for (int index = textureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
-					strcpy(buf, "gShadowmap[");
-					Uint32 len = 11;
-					if (index == 0) {
-						buf[len] = '0';
-						buf[len + 1] = ']';
-						buf[len + 2] = '\0';
-					}
-					else {
-						unsigned int a = index;
-						while (a != 0) {
-							chars.push('0' + a % 10);
-							a /= 10;
-						}
-						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
-							buf[len] = chars[c];
-							++len;
-						}
-						buf[len] = ']';
-						buf[len + 1] = '\0';
-					}
-					glUniform1i(shader.getUniformLocation(buf), textureUnit);
-					chars.resize(0);
-
-					strcpy(buf, "gShadowmapEnabled[");
-					len = 18;
-					if (index == 0) {
-						buf[len] = '0';
-						buf[len + 1] = ']';
-						buf[len + 2] = '\0';
-					}
-					else {
-						unsigned int a = index;
-						while (a != 0) {
-							chars.push('0' + a % 10);
-							a /= 10;
-						}
-						for (Uint32 c = chars.getSize() - 1; c < chars.getSize(); --c) {
-							buf[len] = chars[c];
-							++len;
-						}
-						buf[len] = ']';
-						buf[len + 1] = '\0';
-					}
-					glUniform1i(shader.getUniformLocation(buf), GL_FALSE);
-					chars.resize(0);
-
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
 					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 				}
 			}
@@ -460,36 +369,12 @@ void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache
 
 				unsigned int numBones = std::min( (unsigned int)skincache[index].anims.getSize(), (unsigned int)SubMesh::maxBones );
 
-				char name[16] = "gBones[";
-				ArrayList<char> chars;
+				char name[16];
 				for( unsigned int i=0; i<numBones; ++i ) {
 					if (entry->getBones()[i].real == false) {
 						break;
 					}
-
-					// build string
-					int len = 7;
-					if (i == 0) {
-						name[len] = '0';
-						name[len+1] = ']';
-						name[len+2] = '\0';
-					} else {
-						unsigned int a = i;
-						while (a != 0) {
-							chars.push('0' + a % 10);
-							a /= 10;
-						}
-						for (Uint32 c = chars.getSize()-1; c < chars.getSize(); --c) {
-							name[len] = chars[c];
-							++len;
-						}
-						name[len] = ']';
-						name[len+1] = '\0';
-					}
-					glUniformMatrix4fv(shader->getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(skincache[index].anims[i]));
-					name[7] = '\0';
-					chars.resize(0);
-
+					glUniformMatrix4fv(shader->getUniformLocation(ShaderProgram::uniformArray(name, "gBones", 6, i)), 1, GL_FALSE, glm::value_ptr(skincache[index].anims[i]));
 #ifndef NDEBUG
 					// debug stuff
 					if( cvar_showBones.toInt() && component ) {

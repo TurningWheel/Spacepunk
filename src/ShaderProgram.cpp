@@ -93,38 +93,57 @@ void ShaderProgram::serialize(FileInterface* file) {
 	}
 }
 
-Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights, Uint32 textureUnit) {
-	if (lastFrameDrawn == camera.getFramesDrawn()) {
-		return textureUnit;
+const char* ShaderProgram::uniformArray(char* buf, const char* name, int len, int index) {
+	strcpy(buf, name);
+	buf[len] = '[';
+	if (index == 0) {
+		buf[len + 1] = '0';
+		buf[len + 2] = ']';
+		buf[len + 3] = '\0';
 	} else {
-		lastFrameDrawn = camera.getFramesDrawn();
+		ArrayList<char> chars;
+		unsigned int a = index;
+		while (a != 0) {
+			chars.push('0' + a % 10);
+			a /= 10;
+		}
+		++len;
+		while (chars.getSize()) {
+			buf[len] = chars.pop();
+			++len;
+		}
+		buf[len] = ']';
+		buf[len + 1] = '\0';
 	}
+	return buf;
+}
 
+Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>& lights, Uint32 maxLights, Uint32 textureUnit) {
+	char buf[32];
 	Uint32 index = 0;
-	StringBuf<32> buf;
 	for (auto light : lights) {
 		Vector lightAng = light->getGlobalAng().toVector();
 		glm::vec3 lightDir( lightAng.x, -lightAng.z, lightAng.y );
 		glm::vec3 lightPos( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
 		glm::vec3 lightScale( light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y );
 
-		glUniform3fv(getUniformLocation(buf.format("gLightPos[%d]",index)), 1, glm::value_ptr(lightPos));
-		glUniform3fv(getUniformLocation(buf.format("gLightColor[%d]",index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
-		glUniform1f(getUniformLocation(buf.format("gLightIntensity[%d]",index)), light->getIntensity());
-		glUniform1f(getUniformLocation(buf.format("gLightRadius[%d]",index)), light->getRadius());
-		glUniform1f(getUniformLocation(buf.format("gLightArc[%d]",index)), light->getArc() * PI / 180.f);
-		glUniform3fv(getUniformLocation(buf.format("gLightScale[%d]",index)), 1, glm::value_ptr(lightScale));
-		glUniform3fv(getUniformLocation(buf.format("gLightDirection[%d]",index)), 1, glm::value_ptr(lightDir));
-		glUniform1i(getUniformLocation(buf.format("gLightShape[%d]",index)), static_cast<GLint>(light->getShape()));
+		glUniform3fv(getUniformLocation(uniformArray(buf, "gLightPos", 9, index)), 1, glm::value_ptr(lightPos));
+		glUniform3fv(getUniformLocation(uniformArray(buf, "gLightColor", 11, index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
+		glUniform1f(getUniformLocation(uniformArray(buf, "gLightIntensity", 15, index)), light->getIntensity());
+		glUniform1f(getUniformLocation(uniformArray(buf, "gLightRadius", 12, index)), light->getRadius());
+		glUniform1f(getUniformLocation(uniformArray(buf, "gLightArc", 9, index)), light->getArc() * PI / 180.f);
+		glUniform3fv(getUniformLocation(uniformArray(buf, "gLightScale", 11, index)), 1, glm::value_ptr(lightScale));
+		glUniform3fv(getUniformLocation(uniformArray(buf, "gLightDirection", 15, index)), 1, glm::value_ptr(lightDir));
+		glUniform1i(getUniformLocation(uniformArray(buf, "gLightShape", 11, index)), static_cast<GLint>(light->getShape()));
 		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
-			glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
-			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_TRUE);
+			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_TRUE);
 			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit);
 			glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
-			glUniformMatrix4fv(getUniformLocation(buf.format("gLightProj[%d]",(int)(index))), 1, GL_FALSE, glm::value_ptr(lightProj));
+			glUniformMatrix4fv(getUniformLocation(uniformArray(buf, "gLightProj", 10, index)), 1, GL_FALSE, glm::value_ptr(lightProj));
 		} else {
-			glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
-			glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
 			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 		}
 
@@ -135,8 +154,8 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 		}
 	}
 	for ( ; index < maxLights; ++index) {
-		glUniform1i(getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), textureUnit);
-		glUniform1i(getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_FALSE);
+		glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+		glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
 		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
 		++textureUnit;
 	}

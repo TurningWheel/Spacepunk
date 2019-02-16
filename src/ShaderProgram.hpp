@@ -51,9 +51,17 @@ public:
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
+	// quickly build a string that references an indexed uniform array
+	// @param buf the buffer to build the string in
+	// @param name the name of the uniform
+	// @param len number of characters in len (excluding /0)
+	// @param index the offset in the uniform array
+	// @return buf
+	static const char* uniformArray(char* buf, const char* name, int len, int index);
+
 private:
+
 	static const ShaderProgram* currentShader;
 	ArrayList<Shader> shaders;
 	GLuint programObject = 0;
-	Uint32 lastFrameDrawn = UINT32_MAX;
 };
