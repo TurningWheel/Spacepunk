@@ -36,7 +36,7 @@ public:
 	static const Uint32 npos = UINT32_MAX;
 
 	// getters & setters
-	const char* const		get() const			{ return str ? str : ""; }
+	const char*				get() const			{ return str ? str : ""; }
 	const Uint32			getSize() const		{ return size; }
 
 	// allocs / reallocs the string (erases data!)

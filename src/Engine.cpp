@@ -762,7 +762,7 @@ void Engine::dumpResources() {
 #include <chrono>
 
 void Engine::timerCallback(double interval) {
-	std::chrono::duration<double, std::ratio<1, 1>> msInterval( 1.0 / interval);
+	std::chrono::duration<double> msInterval(1.0 / interval);
 	while (timerRunning) {
 		auto start = std::chrono::steady_clock::now();
 		if (!paused) {
