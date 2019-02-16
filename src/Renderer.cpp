@@ -612,10 +612,10 @@ void Renderer::drawConsole( const Sint32 height, const char* input, const Linked
 	pos.x = 5; pos.w = 0;
 	pos.y = height-20; pos.h = 0;
 	if( mainEngine->isCursorVisible() ) {
-		StringBuf<256> text(">%s_", input);
+		StringBuf<256> text(">%s_", 1, input);
 		printText( pos, text.get() );
 	} else {
-		StringBuf<256> text(">%s", input);
+		StringBuf<256> text(">%s", 1, input);
 		printText( pos, text.get() );
 	}
 }

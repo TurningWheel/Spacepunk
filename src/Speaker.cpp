@@ -54,7 +54,7 @@ int Speaker::playSound( const char* _name, const bool loop, float range ) {
 		return -1;
 	}
 
-	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s",_name).get());
+	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", 1, _name).get());
 	if( sound ) {
 		int index = maxSources;
 		for( int i=0; i<maxSources; ++i ) {

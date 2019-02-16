@@ -448,11 +448,11 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 							entry.pressed = true;
 							if( script ) {
 								if( mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL) ) {
-									StringBuf<64> dispatch("%sCtrlClick", entry.name.get());
+									StringBuf<64> dispatch("%sCtrlClick", 1, entry.name.get());
 									Script::Args args(entry.params);
 									script->dispatch(dispatch.get(), &args);
 								} else {
-									StringBuf<64> dispatch("%sClick", entry.name.get());
+									StringBuf<64> dispatch("%sClick", 1, entry.name.get());
 									Script::Args args(entry.params);
 									script->dispatch(dispatch.get(), &args);
 								}
@@ -461,12 +461,12 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 					} else {
 						entry.pressed = false;
 						if( script ) {
-							StringBuf<64> dispatch("%sHighlighting", entry.name.get());
+							StringBuf<64> dispatch("%sHighlighting", 1, entry.name.get());
 							Script::Args args(entry.params);
 							script->dispatch(dispatch.get(), &args);
 							if( !entry.highlighted ) {
 								entry.highlighted = true;
-								StringBuf<64> dispatch("%sHighlight", entry.name.get());
+								StringBuf<64> dispatch("%sHighlight", 1, entry.name.get());
 								Script::Args args(entry.params);
 								script->dispatch(dispatch.get(), &args);
 							}

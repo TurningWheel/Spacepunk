@@ -64,5 +64,5 @@ private:
 	static const ShaderProgram* currentShader;
 	ArrayList<Shader> shaders;
 	GLuint programObject = 0;
-	Map<String, GLuint> uniforms;
+	Map<StringBuf<32>, GLuint> uniforms;
 };

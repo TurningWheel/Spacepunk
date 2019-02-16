@@ -97,7 +97,7 @@ void Mixer::setListener(Camera* camera) {
 }
 
 int Mixer::playSound(const char* name, const bool loop) {
-	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", name).get());
+	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", 1, name).get());
 	if( sound ) {
 		return sound->play(loop);
 	}

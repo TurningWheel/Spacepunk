@@ -108,7 +108,7 @@ void World::changeFilename(const char* _filename) {
 	// set new filetype
 	filetype = FILE_MAX;
 	for( int c = 0; c < static_cast<int>(World::FILE_MAX); ++c ) {
-		StringBuf<16> fullExtension(".%s", fileExtensions[static_cast<int>(c)]);
+		StringBuf<16> fullExtension(".%s", 1, fileExtensions[static_cast<int>(c)]);
 		filename.alloc((Uint32)strlen(_filename) + fullExtension.length() + 1);
 		filename = _filename;
 
@@ -470,9 +470,9 @@ void World::process() {
 		// run world script
 		const String scriptname = filename.substr(0,filename.length()-4);
 		if( clientObj && mainEngine->isRunningClient() ) {
-			//script->run(StringBuf<128>("scripts/client/maps/%s.lua", scriptname.get()).get());
+			//script->run(StringBuf<128>("scripts/client/maps/%s.lua", 1, scriptname.get()).get());
 		} else if( clientObj && mainEngine->isRunningServer() ) {
-			//script->run(StringBuf<128>("scripts/server/maps/%s.lua", scriptname.get()).get());
+			//script->run(StringBuf<128>("scripts/server/maps/%s.lua", 1, scriptname.get()).get());
 		}
 	}
 

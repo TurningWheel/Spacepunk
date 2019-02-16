@@ -662,7 +662,7 @@ static int console_serverSaveMap(int argc, const char** argv) {
 
 	int worldID = strtol(argv[0], nullptr, 10);
 	World* world = server->getWorld(worldID);
-	StringBuf<256> path("maps/%s",argv[1]);
+	StringBuf<256> path("maps/%s", 1, argv[1]);
 	path = mainEngine->buildPath(path.get()).get();
 	world->saveFile(path.get(), true);
 

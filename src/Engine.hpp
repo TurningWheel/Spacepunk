@@ -207,10 +207,6 @@ public:
 	// shutdown the engine safely (perhaps from another class)
 	void shutdown();
 
-	// timer thread function (not actually a callback, name is a holdover)
-	// @param interval The exact time in ms between each heartbeat
-	static void timerCallback(double interval);
-
 	// logs a formatted char string to the console
 	// @param msgType the type of message to send to the console
 	// @param fmt a formatted string to print to the console
@@ -403,9 +399,8 @@ private:
 	static const int fpsAverage = 32;
 	double frameval[fpsAverage];
 	Uint32 ticks=0, cycles=0, lastfpscount=0;
-	std::thread timer;
-	static std::atomic_bool timerRunning;
 	bool executedFrames=false;
+	std::chrono::time_point<std::chrono::steady_clock> lastTick;
 
 	// console data
 	Uint32 consoleSleep = 0;

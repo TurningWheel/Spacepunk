@@ -11,7 +11,6 @@
 #include "Console.hpp"
 
 std::atomic_bool Engine::paused(false);
-std::atomic_bool Engine::timerRunning(true);
 
 // log message code strings
 const char* Engine::msgTypeStr[Engine::MSG_TYPE_LENGTH] = {
@@ -266,7 +265,7 @@ void Engine::commandLine(const int argc, const char **argv) {
 
 			// add a mod folder
 			if( !strncmp( arg, "mod=", 4 ) ) {
-				StringBuf<32> modFolder("%s",(const char *)(arg+4));
+				String modFolder = (const char *)(arg+4);
 				addMod(modFolder.get());
 				continue;
 			}
@@ -327,7 +326,7 @@ int Engine::loadConfig(const char* filename) {
 	char str[1024];
 	FILE *fp;
 
-	StringBuf<64> _filename("%s/%s", game.path.get(), filename);
+	StringBuf<64> _filename("%s/%s", 2, game.path.get(), filename);
 	if( _filename.find(".cfg") == UINT32_MAX ) {
 		_filename.append(".cfg");
 	}
@@ -365,7 +364,7 @@ int Engine::saveConfig(const char* filename) {
 	}
 	FILE *fp;
 
-	StringBuf<64> _filename("%s/%s", game.path.get(), filename);
+	StringBuf<64> _filename("%s/%s", 2, game.path.get(), filename);
 	if( _filename.find(".cfg") == UINT32_MAX ) {
 		_filename.append(".cfg");
 	}
@@ -403,7 +402,7 @@ void Engine::startEditor(const char* path) {
 void Engine::editorPlaytest() {
 	if( localClient && localClient->isEditorActive() ) {
 		World* world = localClient->getWorld(0);
-		StringBuf<64> path("%s/maps/.playtest.wlb", game.path.get());
+		StringBuf<64> path("%s/maps/.playtest.wlb", 1, game.path.get());
 		if( world->saveFile(path.get()) ) {
 			playTest = true;
 			startServer();
@@ -534,9 +533,7 @@ void Engine::init() {
 	}
 
 	// instantiate a timer
-	timerRunning = true;
-	timer = std::thread(&Engine::timerCallback, ticksPerSecond);
-	//timer = SDL_AddTimer( 1000 / ticksPerSecond, Engine::timerCallback, (void*)(&paused) );
+	lastTick = std::chrono::steady_clock::now();
 	SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH);
 
 	// instantiate local server
@@ -661,10 +658,6 @@ void Engine::term() {
 
 	// stop engine timer
 	fmsg(MSG_INFO,"closing engine...");
-	fmsg(MSG_INFO,"removing engine timer...");
-	timerRunning = false;
-	if (timer.joinable())
-		timer.join();
 
 	// free sounds
 	Mix_HaltMusic();
@@ -756,30 +749,6 @@ void Engine::dumpResources() {
 	while( entityDefs.getFirst() ) {
 		delete entityDefs.getFirst()->getData();
 		entityDefs.removeNode(entityDefs.getFirst());
-	}
-}
-
-#include <chrono>
-
-void Engine::timerCallback(double interval) {
-	std::chrono::duration<double> msInterval(1.0 / interval);
-	while (timerRunning) {
-		auto start = std::chrono::steady_clock::now();
-		if (!paused) {
-			SDL_Event event;
-			SDL_UserEvent userevent;
-
-			userevent.type = SDL_USEREVENT;
-			userevent.code = 0;
-			userevent.data1 = nullptr;
-			userevent.data2 = nullptr;
-
-			event.type = SDL_USEREVENT;
-			event.user = userevent;
-
-			SDL_PushEvent(&event);
-		}
-		while (std::chrono::steady_clock::now() - start < msInterval);
 	}
 }
 
@@ -1085,11 +1054,30 @@ void Engine::preProcess() {
 	unsigned int newTicksPerSecond = cvar_tickrate.toInt();
 	if( newTicksPerSecond != ticksPerSecond ) {
 		ticksPerSecond = newTicksPerSecond;
-		timerRunning = false;
-		if (timer.joinable())
-			timer.join();
-		timerRunning = true;
-		timer = std::thread(&Engine::timerCallback, ticksPerSecond);
+	}
+
+	// do timer
+	std::chrono::duration<double> msInterval(1.0 / ticksPerSecond);
+	auto now = std::chrono::steady_clock::now();
+	int framesToDo = (now - lastTick) / msInterval;
+	if (framesToDo) {
+		lastTick = now;
+		if (!paused) {
+			for (int c = 0; c < framesToDo; ++c) {
+				SDL_Event event;
+				SDL_UserEvent userevent;
+
+				userevent.type = SDL_USEREVENT;
+				userevent.code = 0;
+				userevent.data1 = nullptr;
+				userevent.data2 = nullptr;
+
+				event.type = SDL_USEREVENT;
+				event.user = userevent;
+
+				SDL_PushEvent(&event);
+			}
+		}
 	}
 
 	SDL_GameController* pad = nullptr;
@@ -1480,7 +1468,7 @@ Engine::mod_t::mod_t(const char* _path):
 	if( !path ) {
 		return;
 	}
-	StringBuf<128> fullPath("%s/game.json", _path);
+	StringBuf<128> fullPath("%s/game.json", 1, _path);
 	if( !FileHelper::readObject(fullPath, *this) ) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Failed to read mod manifest: '%s'", fullPath.get());
 		return;

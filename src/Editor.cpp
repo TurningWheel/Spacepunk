@@ -688,7 +688,7 @@ void Editor::buttonEditorSettings() {
 
 		Field* field = frame->addField("field",128);
 
-		StringBuf<32> text("%.2f", cvar_snapTranslate.toFloat());
+		StringBuf<32> text("%.2f", 1, cvar_snapTranslate.toFloat());
 		field->setText(text.get());
 
 		// label
@@ -731,7 +731,7 @@ void Editor::buttonEditorSettings() {
 
 		Field* field = frame->addField("field",128);
 
-		StringBuf<32> text("%.2f", cvar_snapRotate.toFloat());
+		StringBuf<32> text("%.2f", 1, cvar_snapRotate.toFloat());
 		field->setText(text.get());
 
 		// label
@@ -774,7 +774,7 @@ void Editor::buttonEditorSettings() {
 
 		Field* field = frame->addField("field",128);
 
-		StringBuf<32> text("%.2f", cvar_snapScale.toFloat());
+		StringBuf<32> text("%.2f", 1, cvar_snapScale.toFloat());
 		field->setText(text.get());
 
 		// label
@@ -1128,7 +1128,7 @@ void Editor::buttonMapSettings() {
 		button->setName("buttonRotate");
 		button->getParams().addInt(rotate);
 
-		StringBuf<16> text("Rotate %d*", rotate);
+		StringBuf<16> text("Rotate %d*", 1, rotate);
 		button->setText(text.get());
 	}
 }
@@ -1920,7 +1920,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 				// height
 				{
-					StringBuf<64> name("editor_Tile%sHeight",label);
+					StringBuf<64> name("editor_Tile%sHeight", 1, label);
 					Frame* frame = new Frame(*midFrame,name.get());
 
 					Rect<int> size;
@@ -1956,7 +1956,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 				// slope dir
 				{
-					StringBuf<64> name("editor_Tile%sSlopeDir",label);
+					StringBuf<64> name("editor_Tile%sSlopeDir", 1, label);
 					Frame* frame = new Frame(*midFrame,name.get());
 
 					Rect<int> size;
@@ -1992,7 +1992,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 				// slope size
 				{
-					StringBuf<64> name("editor_Tile%sSlopeSize",label);
+					StringBuf<64> name("editor_Tile%sSlopeSize", 1, label);
 					Frame* frame = new Frame(*midFrame,name.get());
 
 					Rect<int> size;
@@ -2047,7 +2047,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 						break;
 					}
 
-					Field* label = midFrame->addField(StringBuf<32>("labelTileCustom%s",name.get()).get(),16);
+					Field* label = midFrame->addField(StringBuf<32>("labelTileCustom%s", 1, name.get()).get(), 16);
 
 					Rect<int> size;
 					size.x = 6;
@@ -2057,7 +2057,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					y += size.h + 3;
 					label->setSize(size);
 
-					label->setText(StringBuf<32>("Custom %s:", name.get()).get());
+					label->setText(StringBuf<32>("Custom %s:", 1, name.get()).get());
 					label->setColor(color);
 				}
 
@@ -5576,7 +5576,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// translate x
 		{
-			StringBuf<32> name("editor_FrameComponentTranslateX%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentTranslateX%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentTranslate");
 
 			Rect<int> size;
@@ -5602,7 +5602,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentTranslateY%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentTranslateY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5616,7 +5616,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// translate y
 		{
-			StringBuf<32> name("editor_FrameComponentTranslateY%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentTranslateY%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentTranslate");
 
 			Rect<int> size;
@@ -5642,7 +5642,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentTranslateZ%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentTranslateZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5656,7 +5656,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// translate z
 		{
-			StringBuf<32> name("editor_FrameComponentTranslateZ%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentTranslateZ%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentTranslate");
 
 			Rect<int> size;
@@ -5683,7 +5683,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentTranslateX%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentTranslateX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5711,7 +5711,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// roll
 		{
-			StringBuf<32> name("editor_FrameComponentRotateX%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentRotateX%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentRotate");
 
 			Rect<int> size;
@@ -5737,7 +5737,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentRotateY%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentRotateY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5751,7 +5751,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// pitch
 		{
-			StringBuf<32> name("editor_FrameComponentRotateY%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentRotateY%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentRotate");
 
 			Rect<int> size;
@@ -5777,7 +5777,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentRotateZ%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentRotateZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5791,7 +5791,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// yaw
 		{
-			StringBuf<32> name("editor_FrameComponentRotateZ%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentRotateZ%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentRotate");
 
 			Rect<int> size;
@@ -5818,7 +5818,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentRotateX%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentRotateX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5846,7 +5846,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// scale x
 		{
-			StringBuf<32> name("editor_FrameComponentScaleX%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentScaleX%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentScale");
 
 			Rect<int> size;
@@ -5872,7 +5872,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentScaleY%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentScaleY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5886,7 +5886,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// scale y
 		{
-			StringBuf<32> name("editor_FrameComponentScaleY%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentScaleY%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentScale");
 
 			Rect<int> size;
@@ -5912,7 +5912,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentScaleZ%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentScaleZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5926,7 +5926,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// scale z
 		{
-			StringBuf<32> name("editor_FrameComponentScaleZ%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentScaleZ%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentScale");
 
 			Rect<int> size;
@@ -5953,7 +5953,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentScaleX%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentScaleX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -6310,7 +6310,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 								break;
 						}
 
-						Field* label = properties.addField(StringBuf<32>("labelCustom%s",name.get()).get(),16);
+						Field* label = properties.addField(StringBuf<32>("labelCustom%s", 1, name.get()).get(), 16);
 
 						Rect<int> size;
 						size.x = x + border*2;
@@ -6320,7 +6320,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 						y += size.h + border;
 						label->setSize(size);
 
-						label->setText(StringBuf<32>("Custom %s:", name.get()).get());
+						label->setText(StringBuf<32>("Custom %s:", 1, name.get()).get());
 						label->setColor(color);
 					}
 
@@ -6413,7 +6413,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 				// color red
 				{
-					StringBuf<32> name("editor_FrameLightColorR%d", component->getUID());
+					StringBuf<32> name("editor_FrameLightColorR%d", 1, component->getUID());
 					Frame* frame = properties.addFrame(name.get(),"editor_FrameLightColorR");
 
 					Rect<int> size;
@@ -6439,7 +6439,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
 
-					StringBuf<32> dest("editor_FrameLightColorG%d",component->getUID());
+					StringBuf<32> dest("editor_FrameLightColorG%d", 1, component->getUID());
 					field->setTabDestFrame(dest.get());
 					field->setTabDestField("field");
 
@@ -6452,7 +6452,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 				// color green
 				{
-					StringBuf<32> name("editor_FrameLightColorG%d", component->getUID());
+					StringBuf<32> name("editor_FrameLightColorG%d", 1, component->getUID());
 					Frame* frame = properties.addFrame(name.get(),"editor_FrameLightColorG");
 
 					Rect<int> size;
@@ -6478,7 +6478,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
 
-					StringBuf<32> dest("editor_FrameLightColorB%d",component->getUID());
+					StringBuf<32> dest("editor_FrameLightColorB%d", 1, component->getUID());
 					field->setTabDestFrame(dest.get());
 					field->setTabDestField("field");
 
@@ -6491,7 +6491,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 				// color blue
 				{
-					StringBuf<32> name("editor_FrameLightColorB%d", component->getUID());
+					StringBuf<32> name("editor_FrameLightColorB%d", 1, component->getUID());
 					Frame* frame = properties.addFrame(name.get(),"editor_FrameLightColorB");
 
 					Rect<int> size;
@@ -6518,7 +6518,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 					field->setJustify(Field::RIGHT);
 					field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 
-					StringBuf<32> dest("editor_FrameLightColorR%d",component->getUID());
+					StringBuf<32> dest("editor_FrameLightColorR%d", 1, component->getUID());
 					field->setTabDestFrame(dest.get());
 					field->setTabDestField("field");
 
@@ -8858,7 +8858,7 @@ void Editor::updateGUI(Frame& gui) {
 
 							// label
 							{
-								Field* label = properties->addField(StringBuf<64>("labelFlag%s",Entity::flagStr[c]).get(),16);
+								Field* label = properties->addField(StringBuf<64>("labelFlag%s", 1, Entity::flagStr[c]).get(), 16);
 
 								Rect<int> size;
 								size.x = border*2 + 30 + border;

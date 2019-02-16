@@ -614,7 +614,7 @@ void Client::runConsole() {
 
 		// help on current console buffer
 		if( mainEngine->pressKey(SDL_SCANCODE_TAB) ) {
-			StringBuf<64> cmd("help %s", consoleInput);
+			StringBuf<64> cmd("help %s", 1, consoleInput);
 			mainEngine->doCommand(cmd.get());
 		}
 

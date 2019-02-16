@@ -43,7 +43,7 @@ void Game::incrementFrame() {
 World* Game::loadWorld(const char* filename, bool buildPath) {
 	World* world = nullptr;
 	if (buildPath) {
-		StringBuf<64> fullPath("maps/%s",filename);
+		StringBuf<64> fullPath("maps/%s", 1, filename);
 		String path = mainEngine->buildPath(fullPath.get()).get();
 
 		size_t len = strlen(filename);

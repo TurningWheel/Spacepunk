@@ -371,22 +371,33 @@ public:
 		size = defaultSize;
 		str = defaultStr;
 	}
-	StringBuf(const StringBuf<defaultSize>& src) {
+	StringBuf(const String& src) {
 		assign(src.get());
 	}
-	StringBuf(const char* src, ...) {
+	StringBuf(const char* src) {
+		size = defaultSize;
+		str = defaultStr;
+		strncpy_s(str, size, src, size - 1);
+		str[size - 1] = '\0';
+	}
+	StringBuf(const char* src, int numArgs, ...) {
 		size = defaultSize;
 		str = defaultStr;
 
-		str[0] = '\0';
-		str[size-1] = '\0';
+		if (numArgs == 0) {
+			strncpy_s(str, size, src, size - 1);
+			str[size - 1] = '\0';
+		} else {
+			str[0] = '\0';
+			str[size - 1] = '\0';
 
-		va_list argptr;
-		va_start( argptr, src );
-		vsnprintf( str, size, src, argptr );
-		va_end( argptr );
+			va_list argptr;
+			va_start(argptr, numArgs);
+			vsnprintf(str, size, src, argptr);
+			va_end(argptr);
 
-		str[size-1] = '\0';
+			str[size - 1] = '\0';
+		}
 	}
 	virtual ~StringBuf() {
 		if (str == defaultStr) {

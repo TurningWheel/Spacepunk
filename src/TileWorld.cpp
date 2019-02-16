@@ -390,7 +390,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 
 	// load all rooms in this zone
 	LinkedList<TileWorld*> rooms;
-	StringBuf<128> path("maps/%s",_zone);
+	StringBuf<128> path("maps/%s", 1, _zone);
 	path = mainEngine->buildPath(path.get()).get();
 	Directory dir(path.get());
 	StringBuf<16> startLvl("Start");
@@ -403,7 +403,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 		for( int sideInt=Tile::SIDE_EAST; sideInt<Tile::SIDE_TYPE_LENGTH; ++sideInt ) {
 			Tile::side_t side = static_cast<Tile::side_t>(sideInt);
 
-			StringBuf<128> path("maps/%s/%s", _zone, str.get());
+			StringBuf<128> path("maps/%s/%s", 2, _zone, str.get());
 			path = mainEngine->buildPath(path.get()).get();
 			TileWorld* world = new TileWorld(game, true, UINT32_MAX, side, path.get());
 
@@ -423,7 +423,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 	}
 
 	// load starting room
-	StringBuf<128> sRoomPath("maps/%s/Start", _zone);
+	StringBuf<128> sRoomPath("maps/%s/Start", 1, _zone);
 	sRoomPath = mainEngine->buildPath(sRoomPath.get()).get();
 	TileWorld* sRoom = new TileWorld(game, true, UINT32_MAX, Tile::SIDE_EAST, sRoomPath.get());
 
