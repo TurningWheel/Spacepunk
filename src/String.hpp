@@ -42,7 +42,7 @@ public:
 	// allocs / reallocs the string (erases data!)
 	// @param newSize the size (in chars) of the string to alloc
 	// @return the alloc'd string
-	const char* alloc(const Uint32 newSize) {
+	virtual const char* alloc(const Uint32 newSize) {
 		size = newSize;
 		if( str ) {
 			char* result = (char*) realloc(str, size * sizeof(char));
@@ -368,7 +368,8 @@ template<Uint32 defaultSize>
 class StringBuf : public String {
 public:
 	StringBuf() {
-		alloc(defaultSize);
+		size = defaultSize;
+		str = defaultStr;
 	}
 	StringBuf(const StringBuf<defaultSize>& src) {
 		assign(src.get());
@@ -389,8 +390,36 @@ public:
 		str[size-1] = '\0';
 	}
 	virtual ~StringBuf() {
+		if (str == defaultStr) {
+			str = nullptr;
+		}
+	}
+
+	// allocs / reallocs the string (erases data!)
+	// @param newSize the size (in chars) of the string to alloc
+	// @return the alloc'd string
+	virtual const char* alloc(const Uint32 newSize) override {
+		size = newSize;
+		if (str == defaultStr) {
+			str = nullptr;
+		}
+		if (str) {
+			char* result = (char*)realloc(str, size * sizeof(char));
+			assert(result);
+			str = result;
+		}
+		else {
+			str = (char*)malloc(size * sizeof(char));
+			assert(str);
+		}
+		str[0] = '\0';
+		str[size - 1] = '\0';
+		return str;
 	}
 
 	// getters & setters
 	static Uint32 getDefaultSize() { return defaultSize; }
+
+protected:
+	char defaultStr[defaultSize] = "\0";
 };

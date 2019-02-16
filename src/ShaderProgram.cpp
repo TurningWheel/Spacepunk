@@ -34,8 +34,15 @@ ShaderProgram::~ShaderProgram() {
 	}
 }
 
-const GLuint ShaderProgram::getUniformLocation(const char* name) const {
-	return glGetUniformLocation(programObject,(GLchar*)name);
+GLuint ShaderProgram::getUniformLocation(const char* name) {
+	GLuint* uniform = uniforms[name];
+	if (uniform == nullptr) {
+		GLuint value = glGetUniformLocation(programObject, (GLchar*)name);
+		uniforms.insert(name, value);
+		return value;
+	} else {
+		return *uniform;
+	}
 }
 
 void ShaderProgram::bindAttribLocation(GLuint index, const GLchar* name) {
@@ -69,6 +76,7 @@ int ShaderProgram::link() {
 
 		return 1;
 	}
+	uniforms.clear();
 }
 
 void ShaderProgram::mount() {
@@ -101,7 +109,7 @@ const char* ShaderProgram::uniformArray(char* buf, const char* name, int len, in
 		buf[len + 2] = ']';
 		buf[len + 3] = '\0';
 	} else {
-		ArrayList<char> chars;
+		static ArrayList<char> chars;
 		unsigned int a = index;
 		while (a != 0) {
 			chars.push('0' + a % 10);

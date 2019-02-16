@@ -682,6 +682,22 @@ static int console_serverCount(int argc, const char** argv) {
 	return 0;
 }
 
+static int console_serverCountEntities(int argc, const char** argv) {
+	Server* server = mainEngine->getLocalServer();
+	if (!server) {
+		return 1;
+	}
+	Uint32 count = 0;
+	for (Uint32 i = 0; i < server->getNumWorlds(); ++i) {
+		World* world = server->getWorld(i);
+		for (Uint32 c = 0; c < World::numBuckets; ++c) {
+			count += world->getEntities(c).getSize();
+		}
+	}
+	mainEngine->fmsg(Engine::MSG_INFO, "Server has %u entities", count);
+	return 0;
+}
+
 static Ccmd ccmd_host("host","inits a new local server",&console_host);
 static Ccmd ccmd_serverReset("server.reset","restarts the local server",&console_serverReset);
 static Ccmd ccmd_serverDisconnect("server.disconnect","disconnects the server from all remote hosts",&console_serverDisconnect);
@@ -689,3 +705,4 @@ static Ccmd ccmd_serverMap("server.map","loads a world file on the local server"
 static Ccmd ccmd_serverGen("server.gen","generates a level using the given properties",&console_serverGen);
 static Ccmd ccmd_serverSaveMap("server.savemap","saves the given level to disk",&console_serverSaveMap);
 static Ccmd ccmd_serverCount("server.count","counts the number of levels running on the server",&console_serverCount);
+static Ccmd ccmd_serverCountEntities("server.countentities", "count the number of entities in all worlds on the server", &console_serverCountEntities);

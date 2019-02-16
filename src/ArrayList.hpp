@@ -14,7 +14,6 @@ template <typename T>
 class ArrayList {
 public:
 	ArrayList() {
-		alloc(4);
 	}
 
 	ArrayList(const ArrayList& src) {
@@ -25,7 +24,7 @@ public:
 		copy(src);
 	}
 
-	~ArrayList() {
+	virtual ~ArrayList() {
 		if( arr ) {
 			delete[] arr;
 			arr = nullptr;
@@ -411,8 +410,35 @@ public:
 		;
 	}
 
-private:
+protected:
 	T* arr = nullptr;		// array data
 	Uint32 size = 0;		// current array capacity
 	Uint32 maxSize = 0;		// maximum array capacity
+};
+
+template <typename T, Uint32 defaultSize>
+class StaticArrayList : public ArrayList<T> {
+public:
+	StaticArrayList() {
+	}
+
+	StaticArrayList(const StaticArrayList& src) {
+		copy(src);
+	}
+
+	StaticArrayList(const std::initializer_list<T>& src) {
+		copy(src);
+	}
+
+	virtual ~StaticArrayList() {
+		if (arr == defaultArr) {
+			arr = nullptr;
+		}
+	}
+
+	// getters & setters
+	static Uint32 getDefaultSize() { return defaultSize; }
+
+protected:
+	T defaultArr[defaultSize];
 };

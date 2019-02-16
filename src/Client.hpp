@@ -19,6 +19,8 @@ public:
 	Client();
 	virtual ~Client();
 
+	typedef LinkedList<Engine::logmsg_t> LogList;
+
 	// getters & setters
 	virtual bool	isServer() const override	{ return false; }
 	virtual bool	isClient() const override	{ return true; }
@@ -64,7 +66,7 @@ public:
 	const bool						isConsoleAllowed() const			{ return consoleAllowed; }
 	const bool						isConsoleActive() const				{ return consoleActive; }
 	const bool						isEditorActive() const				{ return editor != nullptr; }
-	const LinkedList<Engine::logmsg_t>&	getConsole() const					{ return console; }
+	const LogList&					getConsole() const					{ return console; }
 
 	void	setCuCommand(Node<String>* const node)		{ cuCommand = node; }
 	void	setLogStart(Node<Engine::logmsg_t>* const node)		{ logStart = node; }
@@ -83,7 +85,7 @@ private:
 	Sint32 consoleHeight = 0;
 	char consoleInput[consoleLen];
 	char oldConsoleInput[consoleLen];
-	LinkedList<Engine::logmsg_t> console;
+	LogList console;
 	Node<String>* cuCommand = nullptr;
 	Node<Engine::logmsg_t>* logStart = nullptr;
 

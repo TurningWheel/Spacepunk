@@ -1949,9 +1949,10 @@ void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights
 			}
 
 			// draw chunks
-			Tile::loadShader(*this,camera,lights);
+			auto shader = Tile::loadShader(*this,camera,lights);
+			assert(shader);
 			for( auto chunk : chunkDrawList ) {
-				chunk->draw(camera);
+				chunk->draw(camera, *shader);
 			}
 		}
 	}

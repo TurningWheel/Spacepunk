@@ -23,13 +23,14 @@ public:
 	static const Uint32 invalidID = UINT32_MAX;
 
 	// getters & setters
-	World*				getWorld(const int index)		{ return worlds[index]->getData(); }
-	const Uint32		getTicks() const				{ return ticks; }
-	Net*				getNet() const					{ return net; }
-	bool				isSuicide() const				{ return suicide; }
+	World*						getWorld(const int index)		{ return worlds[index]->getData(); }
+	Uint32						getNumWorlds() const			{ return worlds.getSize(); }
+	const Uint32				getTicks() const				{ return ticks; }
+	Net*						getNet() const					{ return net; }
+	bool						isSuicide() const				{ return suicide; }
 	const LinkedList<Player>	getPlayers() const				{ return players; }
-	virtual bool		isServer() const = 0;
-	virtual bool		isClient() const = 0;
+	virtual bool				isServer() const = 0;
+	virtual bool				isClient() const = 0;
 
 	// marks the sim to be reinitialized
 	void reset() { suicide = true; }

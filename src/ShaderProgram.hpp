@@ -6,6 +6,7 @@
 #include "ArrayList.hpp"
 #include "Node.hpp"
 #include "Shader.hpp"
+#include "Map.hpp"
 
 class Light;
 
@@ -22,7 +23,7 @@ public:
 	// gets the location of a uniform variable
 	// @param name the name of the variable to be retrieved
 	// @return the location of the uniform with the given name
-	const GLuint getUniformLocation(const char* name) const;
+	GLuint getUniformLocation(const char* name);
 
 	// binds an attribute to a shader variable
 	// @param index the index of the attribute to assign to the variable
@@ -60,8 +61,8 @@ public:
 	static const char* uniformArray(char* buf, const char* name, int len, int index);
 
 private:
-
 	static const ShaderProgram* currentShader;
 	ArrayList<Shader> shaders;
 	GLuint programObject = 0;
+	Map<String, GLuint> uniforms;
 };

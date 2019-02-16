@@ -890,15 +890,14 @@ void Chunk::uploadBuffers() {
 
 static Cvar cvar_showChunkEdges("showchunkedges", "show the computed edge list on chunks", "0");
 
-void Chunk::draw(Camera& camera) const {
+void Chunk::draw(Camera& camera, ShaderProgram& shader) const {
 	if( !numIndices )
 		return;
 
 	// upload colors
 	if( camera.getDrawMode() == Camera::DRAW_STANDARD ||
 		camera.getDrawMode() == Camera::DRAW_GLOW ) {
-		const ShaderProgram* shader = ShaderProgram::getCurrentShader();
-		glUniformMatrix3fv(shader->getUniformLocation("gTileColors"), size*size, GL_FALSE, glm::value_ptr(colorChannels[0]));
+		glUniformMatrix3fv(shader.getUniformLocation("gTileColors"), size*size, GL_FALSE, glm::value_ptr(colorChannels[0]));
 	}
 
 	// draw elements

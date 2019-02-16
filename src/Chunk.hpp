@@ -31,7 +31,7 @@ public:
 
 	// draws the chunk
 	// @param camera the camera to render the chunk with
-	void draw(Camera& camera) const;
+	void draw(Camera& camera, ShaderProgram& shader) const;
 
 	// calculates the number of vertices in the chunk
 	// @return the number of vertices for all surfaces in the chunk
