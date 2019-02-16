@@ -376,8 +376,7 @@ public:
 	}
 	StringBuf(const char* src, ...) {
 		size = defaultSize;
-		str = (char*) malloc( size * sizeof(char) );
-		assert(str);
+		str = defaultStr;
 
 		str[0] = '\0';
 		str[size-1] = '\0';
