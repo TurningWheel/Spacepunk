@@ -147,7 +147,8 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_TRUE);
 			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit);
-			glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
+			//glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
+			glm::mat4 lightProj = Camera::makeInfReversedZProj(glm::radians(90.f), 1.f, 1.f);
 			glUniformMatrix4fv(getUniformLocation(uniformArray(buf, "gLightProj", 10, index)), 1, GL_FALSE, glm::value_ptr(lightProj));
 		} else {
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);

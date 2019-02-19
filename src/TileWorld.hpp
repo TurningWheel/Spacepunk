@@ -111,7 +111,7 @@ public:
 	const Uint32				getHeight() const					{ return height; }
 	ArrayList<Tile>&			getTiles()							{ return tiles; }
 	const ArrayList<Tile>&		getTiles() const					{ return tiles; }
-	Chunk*&						getChunks()							{ return chunks; }
+	ArrayList<Chunk>&			getChunks()							{ return chunks; }
 	const LinkedList<exit_t>&	getExits() const					{ return exits; }
 
 	// editing properties
@@ -151,7 +151,7 @@ private:
 
 	// tiles (world geometry)
 	ArrayList<Tile> tiles;
-	Chunk* chunks = nullptr;
+	ArrayList<Chunk> chunks;
 
 	// editing variables
 	bool selecting=false;		// selecting tiles

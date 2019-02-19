@@ -18,6 +18,7 @@
 #include "Chunk.hpp"
 #include "Tile.hpp"
 #include "TileWorld.hpp"
+#include "Renderer.hpp"
 
 const char* Light::meshStr = "assets/editor/light/light.FBX";
 const char* Light::materialStr = "assets/editor/light/material.json";
@@ -123,7 +124,7 @@ void Light::serialize(FileInterface * file) {
 	}
 }
 
-static Cvar cvar_shadowDepthOffset("render.shadowdepthoffset","shadow depth buffer adjustment","2");
+static Cvar cvar_shadowDepthOffset("render.shadowdepthoffset","shadow depth buffer adjustment","0");
 
 void Light::createShadowMap() {
 	if (!entity || !entity->getWorld()) {
@@ -151,6 +152,7 @@ void Light::createShadowMap() {
 	glPolygonOffset(1.f, cvar_shadowDepthOffset.toFloat());
 	glEnable(GL_DEPTH_TEST);
 	shadowMap.init();
+	glCullFace(GL_FRONT);
 	for (Uint32 c = 0; c < 6; ++c) {
 		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -161,8 +163,14 @@ void Light::createShadowMap() {
 		camera->setupProjection(false);
 		world->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
 	}
+	glCullFace(GL_BACK);
 	glPolygonOffset(1.f, 0.f);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+	Framebuffer* fbo = renderer->getFramebufferResource().dataForString("__main"); assert(fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo->getFBO());
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	shadowMapDrawn = true;
 }

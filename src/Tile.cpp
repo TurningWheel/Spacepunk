@@ -174,7 +174,8 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), 4 + index);
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmapEnabled[%d]",(int)(index))), GL_TRUE);
 					light->getShadowMap().bindForReading(GL_TEXTURE0+4+index);
-					glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
+					//glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
+					glm::mat4 lightProj = Camera::makeInfReversedZProj(glm::radians(90.f), 1.f, 1.f);
 					glUniformMatrix4fv(shader.getUniformLocation(buf.format("gLightProj[%d]",(int)(index))), 1, GL_FALSE, glm::value_ptr(lightProj));
 				} else {
 					glUniform1i(shader.getUniformLocation(buf.format("gShadowmap[%d]",(int)index)), 4 + index);

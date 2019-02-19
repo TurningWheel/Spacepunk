@@ -354,14 +354,14 @@ void Entity::update() {
 	// update the chunk node
 	if( world && world->getType() == World::WORLD_TILES ) {
 		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		if( tileworld->getChunks() ) {
+		if (tileworld && tileworld->getChunks().getSize()) {
 			Sint32 cW = tileworld->calcChunksWidth();
 			Sint32 cH = tileworld->calcChunksHeight();
-			if( cW > 0 && cH > 0 ) {
-				Sint32 cX = std::min( std::max( 0, (Sint32)floor((pos.x / Tile::size) / Chunk::size) ), cW - 1 );
-				Sint32 cY = std::min( std::max( 0, (Sint32)floor((pos.y / Tile::size) / Chunk::size) ), cH - 1 );
+			if (cW > 0 && cH > 0) {
+				Sint32 cX = std::min(std::max(0, (Sint32)floor((pos.x / Tile::size) / Chunk::size)), cW - 1);
+				Sint32 cY = std::min(std::max(0, (Sint32)floor((pos.y / Tile::size) / Chunk::size)), cH - 1);
 
-				if( cX != currentCX || cY != currentCY ) {
+				if (cX != currentCX || cY != currentCY) {
 					clearChunkNode();
 
 					currentCX = cX;
@@ -525,7 +525,7 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 
 	// in editor, skip entities at too great a distance
 	if( editorRunning && world->isShowTools() ) {
-		if( (camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() ) {
+		if( (camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() / 4.f ) {
 			return;
 		}
 	}

@@ -44,16 +44,17 @@ uniform vec4 gCustomColorA;
 #ifndef NOSHADOWMAP
 float ShadowFactor(int light)
 {
+	return 1.f;
 	if (gShadowmapEnabled[light] == false) {
 		return 1.f;
 	}
 
 	vec3 lLightDir = WorldPos - gLightPos[light];
 	vec3 lLightDirNormal = -normalize(lLightDir);
-	vec3 lDiff = abs(lLightDir) - vec3(3.f);
-	float lDist = -max(lDiff.x, max(lDiff.y, lDiff.z));
-	vec4 lClip = gLightProj[light] * vec4(0.0, 0.0, lDist, 1.0);
-	float lDepth = (lClip.z / lClip.w) * 0.5f + 0.5f;
+	vec3 lDiff = abs(lLightDir);
+	float lDist = min(-max(lDiff.x, max(lDiff.y, lDiff.z)), 0.f);
+	vec4 lClip = gLightProj[light] * vec4(0.f, 0.f, lDist, 1.f);
+	float lDepth = lClip.z / lClip.w;
 
 	float lClampedDist = clamp(lDepth, 0.f, 1.f);
 	vec4 lUVC = vec4(-lLightDirNormal, lClampedDist);

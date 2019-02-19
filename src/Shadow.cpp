@@ -3,6 +3,8 @@
 #include "Main.hpp"
 #include "Engine.hpp"
 #include "Shadow.hpp"
+#include "Client.hpp"
+#include "Renderer.hpp"
 
 const float Shadow::camerainfo_t::fov = 90.f;
 const float Shadow::camerainfo_t::clipNear = 1.f;
@@ -33,7 +35,7 @@ void Shadow::init() {
 	glGenTextures(1, &shadowMap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowMap);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_FUNC, GL_GEQUAL);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -58,7 +60,11 @@ void Shadow::init() {
 	// Disable reads from the color buffer
 	glReadBuffer(GL_NONE);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+	Framebuffer* fbo = renderer->getFramebufferResource().dataForString("__main"); assert(fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo->getFBO());
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Shadow::term() {

@@ -693,7 +693,6 @@ void Client::preProcess() {
 		mainEngine->joinServer("localhost");
 	}
 	if( framesToRun ) {
-		renderer->clearBuffers();
 		script->dispatch("preprocess");
 
 		if( editor ) {
@@ -776,6 +775,18 @@ void Client::postProcess() {
 		if( editor && editor->isInitialized() ) {
 			textureSelectorActive = editor->isTextureSelectorActive();
 		}
+
+		// set framebuffer
+		auto xres = renderer->getXres();
+		auto yres = renderer->getYres();
+		Framebuffer* fbo = renderer->getFramebufferResource().dataForString("__main");
+		assert(fbo);
+		fbo->term();
+		if (!fbo->isInitialized()) {
+			fbo->init(xres, yres);
+		}
+		fbo->bindForWriting();
+		renderer->clearBuffers();
 
 		if( !textureSelectorActive ) {
 			for( Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext() ) {
@@ -887,7 +898,7 @@ void Client::postProcess() {
 		}
 
 		// swap screen buffer
-		renderer->swapWindow();
+		renderer->swapWindow(*fbo);
 
 		// run script
 		script->dispatch("postprocess");

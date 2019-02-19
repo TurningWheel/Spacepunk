@@ -290,6 +290,7 @@
     <ClInclude Include="..\..\src\Field.hpp" />
     <ClInclude Include="..\..\src\File.hpp" />
     <ClInclude Include="..\..\src\Frame.hpp" />
+    <ClInclude Include="..\..\src\Framebuffer.hpp" />
     <ClInclude Include="..\..\src\Game.hpp" />
     <ClInclude Include="..\..\src\Generator.hpp" />
     <ClInclude Include="..\..\src\Image.hpp" />
@@ -362,6 +363,7 @@
     <ClCompile Include="..\..\src\Field.cpp" />
     <ClCompile Include="..\..\src\File.cpp" />
     <ClCompile Include="..\..\src\Frame.cpp" />
+    <ClCompile Include="..\..\src\Framebuffer.cpp" />
     <ClCompile Include="..\..\src\Game.cpp" />
     <ClCompile Include="..\..\src\Generator.cpp" />
     <ClCompile Include="..\..\src\Image.cpp" />

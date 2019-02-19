@@ -68,7 +68,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator
 	tiles.resize(width * height);
 	int w = calcChunksWidth();
 	int h = calcChunksHeight();
-	chunks = new Chunk[w*h];
+	chunks.resize(w * h);
 
 	Random rand;
 	rand.seedValue(seed);
@@ -382,7 +382,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 	tiles.resize(width * height);
 	int w = calcChunksWidth();
 	int h = calcChunksHeight();
-	chunks = new Chunk[w*h];
+	chunks.resize(w * h);
 
 	// seed random generator
 	Random rand;
@@ -672,7 +672,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 
 		int w = calcChunksWidth();
 		int h = calcChunksHeight();
-		chunks = new Chunk[w*h];
+		chunks.resize(w * h);
 	} else {
 		// open map from file
 		FILE* fp = NULL;
@@ -691,7 +691,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 			tiles.resize(width * height);
 			int w = calcChunksWidth();
 			int h = calcChunksHeight();
-			chunks = new Chunk[w*h];
+			chunks.resize(w * h);
 
 			if (fp != NULL) {
 				fclose(fp);
@@ -713,7 +713,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 				tiles.resize(width * height);
 				int w = calcChunksWidth();
 				int h = calcChunksHeight();
-				chunks = new Chunk[w*h];
+				chunks.resize(w * h);
 			}
 			else {
 				Uint32 reserved = 0;
@@ -741,7 +741,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 				tiles.resize(width * height);
 				int w = calcChunksWidth();
 				int h = calcChunksHeight();
-				chunks = new Chunk[w*h];
+				chunks.resize(w * h);
 
 				// reserved 4 bytes
 				Engine::freadl(&reserved, sizeof(Uint32), 1, fp, shortname.get(), "TileWorld::TileWorld()");
@@ -1085,9 +1085,7 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 }
 
 TileWorld::~TileWorld() {
-	if( chunks )
-		delete[] chunks;
-	chunks = nullptr;
+	chunks.clear();
 	tiles.clear();
 
 	// delete grid objects
@@ -1719,7 +1717,8 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	// create new chunk array
 	int newChunkWidth = newWidth/Chunk::size + ((newWidth%Chunk::size)>0 ? 1 : 0);
 	int newChunkHeight = newHeight/Chunk::size + ((newHeight%Chunk::size)>0 ? 1 : 0);
-	Chunk* newChunks = new Chunk[newChunkWidth*newChunkHeight];
+	ArrayList<Chunk> newChunks;
+	newChunks.resize(newChunkWidth * newChunkHeight);
 
 	// initialize new tile array
 	for( int x=0; x<newWidth; ++x ) {
@@ -1815,7 +1814,7 @@ void TileWorld::resize(int left, int right, int up, int down) {
 
 	// delete the old tiles
 	tiles.clear();
-	delete[] chunks;
+	chunks.clear();
 
 	// copy final width and height
 	width = newWidth;
@@ -2136,7 +2135,7 @@ void TileWorld::draw() {
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
-			glDepthFunc(GL_LEQUAL);
+			glDepthFunc(GL_GEQUAL);
 			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 		} else {
 			// render shadowed scene
@@ -2145,7 +2144,7 @@ void TileWorld::draw() {
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
-			glDepthFunc(GL_LEQUAL);
+			glDepthFunc(GL_GEQUAL);
 			drawSceneObjects(*camera,cameraLightList,camera->getVisibleChunks());
 		}
 
@@ -2153,7 +2152,7 @@ void TileWorld::draw() {
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
 		glDrawBuffer(GL_BACK);
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_GEQUAL);
 		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 
 		// render lasers
@@ -2175,9 +2174,9 @@ void TileWorld::draw() {
 
 		// render depth fail scene
 		camera->setDrawMode(Camera::DRAW_DEPTHFAIL);
-		glDepthFunc(GL_GREATER);
+		glDepthFunc(GL_LESS);
 		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_GEQUAL);
 
 		if( camera->isOrtho() ) {
 			// draw level mask

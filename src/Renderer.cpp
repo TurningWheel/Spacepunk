@@ -1,5 +1,11 @@
 // Renderer.cpp
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+
 #include "Main.hpp"
 #include "LinkedList.hpp"
 #include "Node.hpp"
@@ -7,6 +13,25 @@
 #include "Engine.hpp"
 #include "savepng.hpp"
 #include "Text.hpp"
+
+const GLfloat Renderer::positions[8]{
+	-1.f,  1.f,
+	-1.f, -1.f,
+	 1.f, -1.f,
+	 1.f,  1.f
+};
+
+const GLfloat Renderer::texcoords[8]{
+	0.f, 1.f,
+	0.f, 0.f,
+	1.f, 0.f,
+	1.f, 1.f
+};
+
+const GLuint Renderer::indices[6]{
+	0, 1, 2,
+	0, 2, 3
+};
 
 // This is a little spammy at the moment
 #define REGISTER_GLDEBUG_CALLBACK 1
@@ -64,6 +89,15 @@ Renderer::Renderer() {
 }
 
 Renderer::~Renderer() {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
+		buffer_t buffer = static_cast<buffer_t>(i);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
+		}
+	}
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
+	}
 	if( window ) {
 		SDL_DestroyWindow(window);
 		window = nullptr;
@@ -76,7 +110,6 @@ Renderer::~Renderer() {
 		SDL_FreeSurface(mainsurface);
 		mainsurface = nullptr;
 	}
-
 	if( nullImg )
 		delete nullImg;
 	if( monoFont )
@@ -201,18 +234,43 @@ int Renderer::initVideo() {
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
 #endif
-	glDepthFunc(GL_LEQUAL);
+	glDepthFunc(GL_GEQUAL);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-
+	glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
 
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor( 0.f, 0.f, 0.f, 0.f );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	swapWindow();
+
+	// create vertex array
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	// upload vertex data
+	glGenBuffers(1, &vbo[VERTEX_BUFFER]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(GLfloat), positions, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(0);
+
+	// upload texcoord data
+	glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(GLfloat), texcoords, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(1);
+
+	// upload index data
+	glGenBuffers(1, &vbo[INDEX_BUFFER]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * 3 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+
+	// unbind vertex array
+	glBindVertexArray(0);
 
 	mainEngine->fmsg(Engine::MSG_INFO,"display changed successfully.");
 	return 0;
@@ -250,6 +308,20 @@ bool Renderer::changeVideoMode() {
 
 	// free text resource (it's all badly wrapped now)
 	mainEngine->getTextResource().dumpCache();
+
+	// delete framebuffer cache (need to be resized)
+	framebufferResource.dumpCache();
+
+	// erase fullscreen quad
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
+		buffer_t buffer = static_cast<buffer_t>(i);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
+		}
+	}
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
+	}
 
 	if( mainsurface ) {
 		SDL_FreeSurface(mainsurface);
@@ -657,11 +729,37 @@ void Renderer::printTextColor( const Rect<int>& rect, const glm::vec4& color, co
 void Renderer::clearBuffers() {
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
-	glClearColor( 0.f, 0.f, 0.f, 0.f );
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	glClearDepth(0.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	drawRect(nullptr,glm::vec4(0.f,0.f,0.f,1.f));
 }
 
-void Renderer::swapWindow() {
+void Renderer::swapWindow(Framebuffer& fbo) {
+	// load shader
+	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo.json");
+	if (!mat) {
+		return;
+	}
+	ShaderProgram& shader = mat->getShader();
+	if (&shader != ShaderProgram::getCurrentShader()) {
+		shader.mount();
+	}
+
+	glViewport(0, 0, xres, yres);
+
+	// bind texture
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	fbo.bindForReading(GL_TEXTURE0, GL_COLOR_ATTACHMENT0);
+
+	// upload uniform variables
+	glUniform1i(shader.getUniformLocation("gTexture"), 0);
+
+	// bind vertex array
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+	glBindVertexArray(0);
+
+	// swap window
 	SDL_GL_SwapWindow(window);
 }

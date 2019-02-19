@@ -5,6 +5,8 @@
 
 #include "Rect.hpp"
 #include "Engine.hpp"
+#include "Framebuffer.hpp"
+#include "Resource.hpp"
 
 class Image;
 
@@ -24,13 +26,14 @@ public:
 	static const unsigned int colorWhite = 0xFFFFFFFF;
 
 	// getters & setters
-	const bool 		isInitialized() const	{ return (const bool) initialized; }
-	const bool 		isFullscreen() const	{ return (const bool) fullscreen; }
-	const Sint32 	getXres() const			{ return (const Sint32) xres; }
-	const Sint32	getYres() const			{ return (const Sint32) yres; }
-	const Image*	getNullImage() const	{ return nullImg; }
-	TTF_Font*		getMonoFont() const		{ return monoFont; }
-	double			getAspectRatio() const	{ return ((double)xres) / ((double)yres); }
+	const bool 					isInitialized() const			{ return (const bool) initialized; }
+	const bool 					isFullscreen() const			{ return (const bool) fullscreen; }
+	const Sint32 				getXres() const					{ return (const Sint32) xres; }
+	const Sint32				getYres() const					{ return (const Sint32) yres; }
+	const Image*				getNullImage() const			{ return nullImg; }
+	TTF_Font*					getMonoFont() const				{ return monoFont; }
+	double						getAspectRatio() const			{ return ((double)xres) / ((double)yres); }
+	Resource<Framebuffer>&		getFramebufferResource()		{ return framebufferResource; }
 
 	void	setFullscreen(bool _fullscreen)	{ fullscreen = _fullscreen; }
 	void	setXres(const Sint32 _xres) 	{ xres = _xres; }
@@ -101,7 +104,8 @@ public:
 	void clearBuffers();
 
 	// refreshes the game window with the latest drawings. Called at the end of the frame
-	void swapWindow();
+	// @param fbo the framebuffer to put on screen
+	void swapWindow(Framebuffer& fbo);
 
 	// update the engine window to use the new render settings (resolution, etc.)
 	// @return true if video mode was successfully changed, false otherwise
@@ -115,6 +119,8 @@ private:
 	Sint32 xres;
 	Sint32 yres;
 
+	Resource<Framebuffer> framebufferResource;
+
 	// main window data
 	SDL_Surface *mainsurface = nullptr;
 	SDL_Window *window = nullptr;
@@ -126,6 +132,18 @@ private:
 
 	// fonts
 	TTF_Font* monoFont = nullptr;
+
+	static const GLuint indices[6];
+	static const GLfloat positions[8];
+	static const GLfloat texcoords[8];
+	enum buffer_t {
+		VERTEX_BUFFER,
+		TEXCOORD_BUFFER,
+		INDEX_BUFFER,
+		BUFFER_TYPE_LENGTH
+	};
+	GLuint vbo[BUFFER_TYPE_LENGTH];
+	GLuint vao = 0;
 
 	int initVideo();
 	int initResources();

@@ -319,7 +319,7 @@ void SectorWorld::draw() {
 				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
 				glClear(GL_STENCIL_BUFFER_BIT);
-				glDepthFunc(GL_LESS);
+				glDepthFunc(GL_GREATER);
 				glDrawBuffer(GL_NONE);
 				if( light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) ) {
 					camera->setDrawMode(Camera::DRAW_STENCIL);
@@ -334,7 +334,7 @@ void SectorWorld::draw() {
 				glStencilFunc(GL_EQUAL, 0x00, 0xFF);
 				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
-				glDepthFunc(GL_LEQUAL);
+				glDepthFunc(GL_GEQUAL);
 				drawSceneObjects(*camera,light);
 				glDisable(GL_STENCIL_TEST);
 			}
@@ -344,7 +344,7 @@ void SectorWorld::draw() {
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
 		glDrawBuffer(GL_BACK);
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_GEQUAL);
 		drawSceneObjects(*camera,nullptr);
 
 		// render triangle lines
@@ -355,9 +355,9 @@ void SectorWorld::draw() {
 
 		// render depth fail scene
 		camera->setDrawMode(Camera::DRAW_DEPTHFAIL);
-		glDepthFunc(GL_GREATER);
+		glDepthFunc(GL_LESS);
 		drawSceneObjects(*camera,nullptr);
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_GEQUAL);
 
 		if( camera->isOrtho() ) {
 			// draw level mask

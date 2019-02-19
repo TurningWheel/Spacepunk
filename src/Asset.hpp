@@ -27,6 +27,7 @@ public:
 		ASSET_SOUND,
 		ASSET_TEXT,
 		ASSET_TEXTURE,
+		ASSET_FRAMEBUFFER,
 		ASSET_NUM
 	};
 	static const char* typeStr[ASSET_NUM];

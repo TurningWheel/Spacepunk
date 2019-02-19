@@ -537,14 +537,14 @@ void Component::update() {
 	World* world = entity->getWorld();
 	if( world && world->getType() == World::WORLD_TILES ) {
 		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		if( tileworld->getChunks() ) {
+		if (tileworld && tileworld->getChunks().getSize()) {
 			Sint32 cW = tileworld->calcChunksWidth();
 			Sint32 cH = tileworld->calcChunksHeight();
-			if( cW > 0 && cH > 0 ) {
-				Sint32 cX = std::min( std::max( 0, (Sint32)floor((gPos.x / Tile::size) / Chunk::size) ), cW - 1 );
-				Sint32 cY = std::min( std::max( 0, (Sint32)floor((gPos.y / Tile::size) / Chunk::size) ), cH - 1 );
+			if (cW > 0 && cH > 0) {
+				Sint32 cX = std::min(std::max(0, (Sint32)floor((gPos.x / Tile::size) / Chunk::size)), cW - 1);
+				Sint32 cY = std::min(std::max(0, (Sint32)floor((gPos.y / Tile::size) / Chunk::size)), cH - 1);
 
-				if( cX != currentCX || cY != currentCY ) {
+				if (cX != currentCX || cY != currentCY) {
 					clearChunkNode();
 
 					currentCX = cX;

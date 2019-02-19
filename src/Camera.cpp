@@ -60,6 +60,16 @@ Camera::~Camera() {
 	}
 }
 
+glm::mat4 Camera::makeInfReversedZProj(float radians, float aspect, float zNear)
+{
+	float f = 1.f / tanf(radians / 2.f);
+	return glm::mat4(
+		f / aspect, 0.0f, 0.0f, 0.0f,
+		0.0f, f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, zNear, 0.0f);
+}
+
 void Camera::setupProjection(bool scissor) {
 	World* world = entity->getWorld();
 	if( !renderer ) {
@@ -94,7 +104,8 @@ void Camera::setupProjection(bool scissor) {
 		viewMatrix = cameraRotation * cameraTranslation;
 
 		// get projection transformation
-		projMatrix = glm::perspective( glm::radians((float)fov), (float)win.w/win.h, clipNear, clipFar );
+		//projMatrix = glm::perspective( glm::radians((float)fov), (float)win.w/win.h, clipNear, clipFar );
+		projMatrix = makeInfReversedZProj(glm::radians((float)fov), (float)win.w / win.h, clipNear);
 	}
 
 	if( renderer && scissor ) {
@@ -147,6 +158,7 @@ void Camera::screenPosToWorldRay( int x, int y, Vector& out_origin, Vector& out_
 		1.0f
 	);
 
+	glm::mat4 projMatrix = glm::perspective(glm::radians((float)fov), (float)win.w / win.h, clipNear, clipFar);
 	glm::mat4 inversePMM    = glm::inverse(projMatrix * viewMatrix);
 	glm::vec4 rayStartWorld = inversePMM * rayStart; rayStartWorld /= rayStartWorld.w;
 	glm::vec4 rayEndWorld   = inversePMM * rayEnd  ; rayEndWorld   /= rayEndWorld.w;

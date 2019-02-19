@@ -81,6 +81,13 @@ public:
 	void	setOrtho(const bool _ortho)			{ ortho = _ortho; }
 	void	setEnabled(const bool _enabled)		{ enabled = _enabled; }
 
+	// make a reversed-Z projection matrix with infinite range
+	// @param radians The vertical fov
+	// @param aspect The aspect ratio (w/h)
+	// @param zNear The near clip plane
+	// @return projection matrix
+	static glm::mat4 makeInfReversedZProj(float radians, float aspect, float zNear);
+
 	// sets up the 3D projection for drawing
 	// @param scissor True if you want scissoring
 	void setupProjection(bool scissor);
