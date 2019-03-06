@@ -222,6 +222,11 @@ public:
 	// @param str a char string to print to the console
 	void msg(const Uint32 msgType, const char* str);
 
+	// find the index of the entity def with the given name
+	// @param name the name of the entity def to look for
+	// @return the index of the entity with the given name, or UINT32_MAX if not found
+	Uint32 findEntityDefIndexByName(const char* name);
+
 	// reads data from a file stream and outputs errors to the log
 	// @param ptr a pointer to the variable in which to store the data read
 	// @param size the size of each data element to read

@@ -644,6 +644,18 @@ void Engine::loadResources(const char* folder) {
 
 }
 
+Uint32 Engine::findEntityDefIndexByName(const char* name) {
+	if (!name || name[0] == '\0') {
+		return UINT32_MAX;
+	}
+	for (auto def : entityDefs) {
+		if (def->entity.getName() == name) {
+			return def->index;
+		}
+	}
+	return UINT32_MAX;
+}
+
 void Engine::term() {
 	if( localClient ) {
 		delete localClient;

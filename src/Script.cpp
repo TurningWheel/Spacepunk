@@ -511,6 +511,7 @@ void Script::exposeWorld() {
 		.addFunction("selectEntity", &World::selectEntity)
 		.addFunction("selectEntities", &World::selectEntities)
 		.addFunction("deselectGeometry", &World::deselectGeometry)
+		.addFunction("getEntitiesByName", &World::getEntitiesByName)
 		.endClass()
 	;
 

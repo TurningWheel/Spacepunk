@@ -111,6 +111,11 @@ public:
 	// @return a hit_t structure containing information on the hit object
 	const hit_t lineTraceNoEntities( const Vector& origin, const Vector& dest );
 
+	// get a list of all the entities with the given name
+	// @param name The name of the entities
+	// @return a list of entities
+	ArrayList<Entity*> getEntitiesByName(const char* name);
+
 	// perform a convex sweep test through the world which stops at first hit object
 	// @param shape The convex shape to sweep with
 	// @param originPos The starting position of the shape

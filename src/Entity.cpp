@@ -179,6 +179,28 @@ void Entity::addToEditorList() {
 }
 
 void Entity::insertIntoWorld(World* _world) {
+	// hack... derive an entity def from our current name
+	if (defIndex == UINT32_MAX) {
+		defName = name.get();
+		defIndex = mainEngine->findEntityDefIndexByName(defName.get());
+		if (defIndex == UINT32_MAX) {
+			mainEngine->fmsg(Engine::MSG_WARN, "entity '%s' moved from one world to another without a known def", name.get());
+		}
+	}
+
+	// inform all clients that the original entity is toast
+	if (world) {
+		Game* game = getGame();
+		if (game && game->isServer()) {
+			Packet packet;
+			packet.write32(uid);
+			packet.write32(world->getID());
+			packet.write("ENTD");
+			game->getNet()->signPacket(packet);
+			game->getNet()->broadcastSafe(packet);
+		}
+	}
+
 	// signal components
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->beforeWorldInsertion(_world);
@@ -239,19 +261,6 @@ void Entity::insertIntoWorld(World* _world) {
 
 			game->getNet()->signPacket(packet);
 			game->getNet()->sendPacketSafe(player->getClientID(), packet);
-		}
-	}
-
-	// inform all clients that the original entity is toast
-	if (world) {
-		Game* game = getGame();
-		if (game && game->isServer()) {
-			Packet packet;
-			packet.write32(uid);
-			packet.write32(world->getID());
-			packet.write("ENTD");
-			game->getNet()->signPacket(packet);
-			game->getNet()->broadcastSafe(packet);
 		}
 	}
 }

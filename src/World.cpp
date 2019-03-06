@@ -428,6 +428,21 @@ const World::hit_t World::lineTraceNoEntities( const Vector& origin, const Vecto
 	return emptyResult;
 }
 
+ArrayList<Entity*> World::getEntitiesByName(const char* name) {
+	if (name == nullptr || name[0] == '\0') {
+		return ArrayList<Entity*>();
+	}
+	ArrayList<Entity*> result;
+	for (Uint32 c = 0; c < numBuckets; ++c) {
+		for (auto entity : entities[c]) {
+			if (entity->getName() == name) {
+				result.push(entity);
+			}
+		}
+	}
+	return result;
+}
+
 Entity* World::uidToEntity(const Uint32 uid) {
 	if( uid==nuid ) {
 		return nullptr;
