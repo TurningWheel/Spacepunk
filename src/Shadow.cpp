@@ -60,11 +60,15 @@ void Shadow::init() {
 	// Disable reads from the color buffer
 	glReadBuffer(GL_NONE);
 
+	// check framebuffer status
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to create shadow framebuffer");
+	}
+
 	Client* client = mainEngine->getLocalClient(); assert(client);
 	Renderer* renderer = client->getRenderer(); assert(renderer);
 	Framebuffer* fbo = renderer->getFramebufferResource().dataForString("__main"); assert(fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo->getFBO());
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	fbo->bindForWriting();
 }
 
 void Shadow::term() {

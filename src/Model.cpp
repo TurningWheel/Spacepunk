@@ -295,7 +295,7 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 
 		// silhouette requires a second pass after the stencil op
 		if (silhouette) {
-			glDrawBuffer(GL_BACK);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			glEnable(GL_DEPTH_TEST);
 			glStencilFunc(GL_NOTEQUAL, 1, -1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);

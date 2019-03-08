@@ -301,7 +301,7 @@ void SectorWorld::draw() {
 		if( client->isEditorActive() && showTools && !camera->isOrtho() ) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_BACK);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
@@ -330,7 +330,7 @@ void SectorWorld::draw() {
 
 				// render shadowed scene
 				camera->setDrawMode(Camera::DRAW_STANDARD);
-				glDrawBuffer(GL_BACK);
+				glDrawBuffer(GL_COLOR_ATTACHMENT0);
 				glStencilFunc(GL_EQUAL, 0x00, 0xFF);
 				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
@@ -343,7 +343,7 @@ void SectorWorld::draw() {
 		// render scene with glow textures
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
-		glDrawBuffer(GL_BACK);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glDepthFunc(GL_GEQUAL);
 		drawSceneObjects(*camera,nullptr);
 
@@ -371,7 +371,7 @@ void SectorWorld::draw() {
 			glStencilOp(GL_INCR, GL_INCR, GL_INCR);
 			drawSceneObjects(*camera,nullptr);
 			glStencilFunc(GL_EQUAL, 0x00, 0xFF);
-			glDrawBuffer(GL_BACK);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			Renderer* renderer = camera->getRenderer();
 			if( renderer ) {
 				renderer->drawRect( &camera->getWin(), glm::vec4(.25f,.25f,.25f,1.f) );
@@ -386,7 +386,7 @@ void SectorWorld::draw() {
 			drawSceneObjects(*camera,nullptr);
 		}
 
-		glDrawBuffer(GL_BACK);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDisable(GL_STENCIL_TEST);

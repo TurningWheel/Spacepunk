@@ -133,9 +133,6 @@ int Renderer::initVideo() {
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY );
 #endif
 
-	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
-	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
-
 	SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8 );
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
@@ -736,6 +733,8 @@ void Renderer::clearBuffers() {
 }
 
 void Renderer::swapWindow(Framebuffer& fbo) {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo.json");
 	if (!mat) {
@@ -749,16 +748,19 @@ void Renderer::swapWindow(Framebuffer& fbo) {
 	glViewport(0, 0, xres, yres);
 
 	// bind texture
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	fbo.bindForReading(GL_TEXTURE0, GL_COLOR_ATTACHMENT0);
 
 	// upload uniform variables
+	glUniform2iv(shader.getUniformLocation("gResolution"), 1, glm::value_ptr(glm::ivec2(xres, yres)));
 	glUniform1i(shader.getUniformLocation("gTexture"), 0);
 
 	// bind vertex array
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 	glBindVertexArray(0);
+
+	ShaderProgram::unmount();
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
 	// swap window
 	SDL_GL_SwapWindow(window);

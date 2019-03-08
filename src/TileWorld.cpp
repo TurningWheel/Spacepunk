@@ -2131,7 +2131,7 @@ void TileWorld::draw() {
 		if( (client->isEditorActive() && showTools) || cvar_renderFullbright.toInt() ) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_BACK);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
@@ -2140,7 +2140,7 @@ void TileWorld::draw() {
 		} else {
 			// render shadowed scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_BACK);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
@@ -2151,7 +2151,7 @@ void TileWorld::draw() {
 		// render scene with glow textures
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
-		glDrawBuffer(GL_BACK);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glDepthFunc(GL_GEQUAL);
 		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 
@@ -2190,7 +2190,7 @@ void TileWorld::draw() {
 			glStencilOp(GL_INCR, GL_INCR, GL_INCR);
 			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 			glStencilFunc(GL_EQUAL, 0x00, 0xFF);
-			glDrawBuffer(GL_BACK);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			Renderer* renderer = camera->getRenderer();
 			if( renderer ) {
 				renderer->drawRect( &camera->getWin(), glm::vec4(.25f,.25f,.25f,1.f) );
@@ -2205,7 +2205,7 @@ void TileWorld::draw() {
 			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 		}
 
-		glDrawBuffer(GL_BACK);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDisable(GL_STENCIL_TEST);

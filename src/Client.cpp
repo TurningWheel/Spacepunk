@@ -777,11 +777,12 @@ void Client::postProcess() {
 		}
 
 		// set framebuffer
+		renderer->clearBuffers();
 		auto xres = renderer->getXres();
 		auto yres = renderer->getYres();
 		Framebuffer* fbo = renderer->getFramebufferResource().dataForString("__main");
 		assert(fbo);
-		fbo->term();
+		//fbo->term();
 		if (!fbo->isInitialized()) {
 			fbo->init(xres, yres);
 		}
