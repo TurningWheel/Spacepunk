@@ -26,7 +26,7 @@ void main() {
 	//vec3 Mapped = Color / (Color + vec3(1.f));
 
 	// exposure tone mapping
-	const float exposure = 1.f;
+	const float exposure = 1.5f;
 	vec3 Mapped = vec3(1.f) - exp(-Color * exposure);
 
 	// gamma correction
