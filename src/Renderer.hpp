@@ -34,10 +34,12 @@ public:
 	TTF_Font*					getMonoFont() const				{ return monoFont; }
 	double						getAspectRatio() const			{ return ((double)xres) / ((double)yres); }
 	Resource<Framebuffer>&		getFramebufferResource()		{ return framebufferResource; }
+	const char*					getCurrentFramebuffer() const	{ return currentFramebuffer.get(); }
 
-	void	setFullscreen(bool _fullscreen)	{ fullscreen = _fullscreen; }
-	void	setXres(const Sint32 _xres) 	{ xres = _xres; }
-	void	setYres(const Sint32 _yres) 	{ yres = _yres; }
+	void	setFullscreen(bool _fullscreen)				{ fullscreen = _fullscreen; }
+	void	setXres(const Sint32 _xres) 				{ xres = _xres; }
+	void	setYres(const Sint32 _yres) 				{ yres = _yres; }
+	void	setCurrentFramebuffer(const char* str)		{ currentFramebuffer = str; }
 
 	// sets up the renderer
 	void init();
@@ -103,13 +105,22 @@ public:
 	// clears the screen and the z-buffer
 	void clearBuffers();
 
-	// refreshes the game window with the latest drawings. Called at the end of the frame
+	// blits a framebuffer onto the window
 	// @param fbo the framebuffer to put on screen
-	void swapWindow(Framebuffer& fbo);
+	// @param hdr whether to apply hdr techniques or not
+	void blitFramebuffer(Framebuffer& fbo, bool hdr);
+
+	// refreshes the game window with the latest drawings. Called at the end of the frame
+	void swapWindow();
 
 	// update the engine window to use the new render settings (resolution, etc.)
 	// @return true if video mode was successfully changed, false otherwise
 	bool changeVideoMode();
+
+	// bind the fbo with the given name, creating a new one if it doesn't exist
+	// @param name the name of the fbo to retrieve
+	// @return the fbo
+	Framebuffer* bindFBO(const char* name);
 
 private:
 	const char* loadStr = "Loading...";
@@ -120,6 +131,7 @@ private:
 	Sint32 yres;
 
 	Resource<Framebuffer> framebufferResource;
+	String currentFramebuffer;
 
 	// main window data
 	SDL_Surface *mainsurface = nullptr;

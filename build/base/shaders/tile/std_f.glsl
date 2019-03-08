@@ -37,7 +37,6 @@ uniform mat3 gTileColors[CHUNK_SIZE * CHUNK_SIZE];
 
 float ShadowFactor(int light)
 {
-	return 1.f;
 	if (gShadowmapEnabled[light] == false) {
 		return 1.f;
 	}
@@ -148,7 +147,7 @@ void main() {
 			if( lDiffuseFactor <= 0.f || lShadowFactor <= 0.f) {
 				continue;
 			} else {
-				lDiffuseColor = vec4(gLightColor[c], 0.0) * max(gLightIntensity[c], 1.f) * lDiffuseFactor;
+				lDiffuseColor = vec4(gLightColor[c], 0.0) * gLightIntensity[c] * lDiffuseFactor;
 
 				// calculate specular color
 				vec3  lFragToEye	   = normalize(WorldPos - gCameraPos);
@@ -172,14 +171,14 @@ void main() {
 					float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
 					float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+					lLightColor.a = lLightFalloff *gLightIntensity[c];
 				} else if( gLightShape[c] == 1 ) {
 					// box
 					vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
 					float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
 					float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+					lLightColor.a = lLightFalloff * gLightIntensity[c];
 				} else if( gLightShape[c] == 2 ) {
 					// capsule
 				} else if( gLightShape[c] == 3 ) {
@@ -194,7 +193,7 @@ void main() {
 						float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
 						float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 						float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.0) / lLightRadius;
-						lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+						lLightColor.a = lLightFalloff * gLightIntensity[c] * lSpotFactor;
 					} else {
 						lLightColor.a = 0.0;
 					}
@@ -208,7 +207,7 @@ void main() {
 						float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
 						float  lLightRadius	= gLightRadius[c] * gLightRadius[c];
 						float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-						lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+						lLightColor.a = lLightFalloff * gLightIntensity[c] * lSpotFactor;
 					} else {
 						lLightColor.a = 0.0;
 					}

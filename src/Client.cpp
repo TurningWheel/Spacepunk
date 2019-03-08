@@ -778,22 +778,21 @@ void Client::postProcess() {
 
 		// set framebuffer
 		renderer->clearBuffers();
-		auto xres = renderer->getXres();
-		auto yres = renderer->getYres();
-		Framebuffer* fbo = renderer->getFramebufferResource().dataForString("__main");
-		assert(fbo);
-		//fbo->term();
-		if (!fbo->isInitialized()) {
-			fbo->init(xres, yres);
-		}
-		fbo->bindForWriting();
+		Framebuffer* fbo = renderer->bindFBO("__main");
 		renderer->clearBuffers();
 
 		if( !textureSelectorActive ) {
+			Framebuffer* scene = renderer->bindFBO("scene");
+			renderer->clearBuffers();
+
 			for( Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext() ) {
 				World* world = node->getData();
 				world->draw();
 			}
+
+			Framebuffer* fbo = renderer->bindFBO("__main");
+			renderer->clearBuffers();
+			renderer->blitFramebuffer(*scene, true);
 
 			// editor interface
 			if( editor && editor->isInitialized() ) {
@@ -899,7 +898,9 @@ void Client::postProcess() {
 		}
 
 		// swap screen buffer
-		renderer->swapWindow(*fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		renderer->blitFramebuffer(*fbo, false);
+		renderer->swapWindow();
 
 		// run script
 		script->dispatch("postprocess");

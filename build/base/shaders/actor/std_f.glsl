@@ -44,7 +44,6 @@ uniform vec4 gCustomColorA;
 #ifndef NOSHADOWMAP
 float ShadowFactor(int light)
 {
-	return 1.f;
 	if (gShadowmapEnabled[light] == false) {
 		return 1.f;
 	}
@@ -157,14 +156,14 @@ void main() {
 				float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
 				float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
 				float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-				lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+				lLightColor.a = lLightFalloff * gLightIntensity[c];
 			} else if( gLightShape[c] == 1 ) {
 				// box
 				vec3   lLightFragDiff  = (WorldPos - gLightPos[c]) * (WorldPos - gLightPos[c]);
 				float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
 				float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
 				float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-				lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.f), 1.f);
+				lLightColor.a = lLightFalloff * gLightIntensity[c];
 			} else if( gLightShape[c] == 2 ) {
 				// capsule
 			} else if( gLightShape[c] == 3 ) {
@@ -179,7 +178,7 @@ void main() {
 					float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
 					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
 					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.0) / lLightRadius;
-					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+					lLightColor.a = lLightFalloff * gLightIntensity[c] * lSpotFactor;
 				} else {
 					lLightColor.a = 0.0;
 				}
@@ -193,7 +192,7 @@ void main() {
 					float  lLightFragDist  = max(lLightFragDiff.x, max(lLightFragDiff.y, lLightFragDiff.z));
 					float  lLightRadius    = gLightRadius[c] * gLightRadius[c];
 					float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-					lLightColor.a = lLightFalloff * min( max(gLightIntensity[c], 0.0), 1.0) * lSpotFactor;
+					lLightColor.a = lLightFalloff * gLightIntensity[c] * lSpotFactor;
 				} else {
 					lLightColor.a = 0.0;
 				}
@@ -214,5 +213,4 @@ void main() {
 	float fresnelPower = pow(dot(lNormal, cameraDir), 2);
 	FragColor = FragColor / fresnelPower;
 #endif
-	FragColor = clamp(FragColor, 0.f, 1.f);
 }

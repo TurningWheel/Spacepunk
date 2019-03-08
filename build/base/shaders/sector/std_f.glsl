@@ -44,7 +44,7 @@ void main() {
 
 		// calculate diffuse color
 		if( lDiffuseFactor > 0.0 ) {
-			lDiffuseColor = gLightColor * max(gLightIntensity, 1.f) * lDiffuseFactor;
+			lDiffuseColor = gLightColor * gLightIntensity * lDiffuseFactor;
 
 			// calculate specular color
 			vec3  lFragToEye       = normalize(WorldPos - gCameraPos);
@@ -67,7 +67,7 @@ void main() {
 			float  lLightFragDist  = lLightFragDiff.x + lLightFragDiff.y + lLightFragDiff.z;
 			float  lLightRadius    = gLightRadius * gLightRadius;
 			float  lLightFalloff   = max(lLightRadius - lLightFragDist, 0.f) / lLightRadius;
-			FragColor.a = lLightFalloff * min( max(gLightIntensity, 0.f), 1.f);
+			FragColor.a = lLightFalloff * gLightIntensity;
 		} else {
 			FragColor = vec4(0.0);		
 		}

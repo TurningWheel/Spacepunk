@@ -168,7 +168,7 @@ void Light::createShadowMap() {
 	
 	Client* client = mainEngine->getLocalClient(); assert(client);
 	Renderer* renderer = client->getRenderer(); assert(renderer);
-	Framebuffer* fbo = renderer->getFramebufferResource().dataForString("__main"); assert(fbo);
+	Framebuffer* fbo = renderer->getFramebufferResource().dataForString(renderer->getCurrentFramebuffer()); assert(fbo);
 	fbo->bindForWriting();
 	//glBindFramebuffer(GL_FRAMEBUFFER, fbo->getFBO());
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0);

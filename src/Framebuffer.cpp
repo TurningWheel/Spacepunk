@@ -2,6 +2,8 @@
 
 #include "Framebuffer.hpp"
 #include "Engine.hpp"
+#include "Client.hpp"
+#include "Renderer.hpp"
 
 Framebuffer::Framebuffer(const char* _name) : Asset(_name) {
 	loaded = true;
@@ -76,6 +78,11 @@ void Framebuffer::bindForWriting() {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth, 0);
 	glViewport(0, 0, width, height);
+
+	// remember which fbo is bound for writing
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+	renderer->setCurrentFramebuffer(name.get());
 }
 
 void Framebuffer::bindForReading(GLenum textureUnit, GLenum attachment) const {

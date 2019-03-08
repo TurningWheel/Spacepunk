@@ -732,11 +732,10 @@ void Renderer::clearBuffers() {
 	drawRect(nullptr,glm::vec4(0.f,0.f,0.f,1.f));
 }
 
-void Renderer::swapWindow(Framebuffer& fbo) {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+void Renderer::blitFramebuffer(Framebuffer& fbo, bool hdr) {
 	// load shader
-	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo.json");
+	Material* mat = mainEngine->getMaterialResource().dataForString(
+		hdr ? "shaders/basic/fbo_hdr.json" : "shaders/basic/fbo.json");
 	if (!mat) {
 		return;
 	}
@@ -761,7 +760,18 @@ void Renderer::swapWindow(Framebuffer& fbo) {
 
 	ShaderProgram::unmount();
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+}
 
-	// swap window
+void Renderer::swapWindow() {
 	SDL_GL_SwapWindow(window);
+}
+
+Framebuffer* Renderer::bindFBO(const char* name) {
+	Framebuffer* fbo = framebufferResource.dataForString(name);
+	assert(fbo);
+	if (!fbo->isInitialized()) {
+		fbo->init(xres, yres);
+	}
+	fbo->bindForWriting();
+	return fbo;
 }
