@@ -6,6 +6,7 @@
 #include "Client.hpp"
 #include "Renderer.hpp"
 
+const int Shadow::resolution = 512;
 const float Shadow::camerainfo_t::fov = 90.f;
 const float Shadow::camerainfo_t::clipNear = 1.f;
 const float Shadow::camerainfo_t::clipFar = 1000.f;

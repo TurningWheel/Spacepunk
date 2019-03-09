@@ -12,7 +12,7 @@ public:
 	~Shadow();
 
 	// shadow map resolution
-	static const int resolution = 512;
+	static const int resolution;
 
 	// camera info
 	struct camerainfo_t {
