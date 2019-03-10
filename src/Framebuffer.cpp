@@ -27,7 +27,7 @@ void Framebuffer::init(Uint32 _width, Uint32 _height) {
 	glGenFramebuffers(1, &fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-	// Create the color texture
+	// Create the color textures
 	glGenTextures(ColorBuffer::MAX, color);
 	for (int c = 0; c < ColorBuffer::MAX; ++c) {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color[c]);

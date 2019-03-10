@@ -779,28 +779,40 @@ void Client::postProcess() {
 		// set framebuffer
 		renderer->clearBuffers();
 		Framebuffer* fbo = renderer->bindFBO("__main");
+		fbo->clear();
 
 		if( !textureSelectorActive ) {
 			Framebuffer* scene = renderer->bindFBO("scene");
 			scene->clear();
 
+			bool showTools = false;
 			for( Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext() ) {
 				World* world = node->getData();
 				world->draw();
+				showTools = world->isShowTools();
 			}
 
-			// blur bloom highlights
-			Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1");
-			bloomPass1->clear();
-			renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_HORIZONTAL);
-			Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2");
-			bloomPass2->clear();
-			renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_VERTICAL);
+			if (!showTools || !editor) {
+				// blur bloom highlights
+				Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1");
+				bloomPass1->clear();
+				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_HORIZONTAL);
+				Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2");
+				bloomPass2->clear();
+				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_VERTICAL);
 
-			// blend bloom with scene
-			Framebuffer* fbo = renderer->bindFBO("__main");
-			fbo->clear();
-			renderer->blendFramebuffer(*bloomPass2, GL_COLOR_ATTACHMENT0, *scene, GL_COLOR_ATTACHMENT0);
+				// blend bloom with scene
+				bloomPass1 = renderer->bindFBO("bloomPass1");
+				renderer->blendFramebuffer(*bloomPass2, GL_COLOR_ATTACHMENT0, *scene, GL_COLOR_ATTACHMENT0);
+
+				// blit bloomed scene to window
+				Framebuffer* fbo = renderer->bindFBO("__main");
+				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
+			} else {
+				// blit scene to window
+				Framebuffer* fbo = renderer->bindFBO("__main");
+				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
+			}
 
 			// editor interface
 			if( editor && editor->isInitialized() ) {
@@ -900,15 +912,15 @@ void Client::postProcess() {
 			}
 		}
 
-		// screenshots
-		if( mainEngine->pressKey(SDL_SCANCODE_F6) ) {
-			renderer->takeScreenshot();
-		}
-
 		// swap screen buffer
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		renderer->blitFramebuffer(*fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::BASIC);
 		renderer->swapWindow();
+
+		// screenshots
+		if (mainEngine->pressKey(SDL_SCANCODE_F6)) {
+			renderer->takeScreenshot();
+		}
 
 		// run script
 		script->dispatch("postprocess");
