@@ -7,7 +7,8 @@ in vec3 Normal;
 in vec3 WorldPos;
 in vec3 Tangent;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 FragColorBright;
 
 #define CHUNK_SIZE 2
 #define TILE_SIZE 128
@@ -212,10 +213,18 @@ void main() {
 						lLightColor.a = 0.0;
 					}
 				}
-				lLightColor.a = clamp(lLightColor.a, 0.f, 1.f) * lShadowFactor;
+				lLightColor.a = lLightColor.a * lShadowFactor;
 				lTotalLightColor += vec4(lLightColor.xyz * lLightColor.a, lLightColor.a);
 			}
 		}
 		FragColor *= lTotalLightColor;
 	}
+
+	// check whether fragment output is higher than threshold, if so output to bloom buffer
+    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if (brightness > 1.0) {
+        FragColorBright = vec4(FragColor.rgb, 1.f);
+    } else {
+        FragColorBright = vec4(0.f, 0.f, 0.f, 1.f);
+    }
 }

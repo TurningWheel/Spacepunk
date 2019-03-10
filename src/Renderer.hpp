@@ -25,6 +25,15 @@ public:
 	static const unsigned int colorCyan = 0xFF00FFFF;
 	static const unsigned int colorWhite = 0xFFFFFFFF;
 
+	// fbo blit types
+	enum BlitType {
+		BASIC,
+		HDR,
+		BLUR_HORIZONTAL,
+		BLUR_VERTICAL,
+		MAX
+	};
+
 	// getters & setters
 	const bool 					isInitialized() const			{ return (const bool) initialized; }
 	const bool 					isFullscreen() const			{ return (const bool) fullscreen; }
@@ -107,8 +116,15 @@ public:
 
 	// blits a framebuffer onto the window
 	// @param fbo the framebuffer to put on screen
-	// @param hdr whether to apply hdr techniques or not
-	void blitFramebuffer(Framebuffer& fbo, bool hdr);
+	// @param type what kind of technique to apply
+	void blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType type);
+
+	// combine two fbos together
+	// @param fbo0 first fbo to blend
+	// @param attachment0 buffer from first fbo to blend
+	// @param fbo1 second fbo to blend
+	// @param attachment1 buffer from second fbo to blend
+	void blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuffer& fbo1, GLenum attachment1);
 
 	// refreshes the game window with the latest drawings. Called at the end of the frame
 	void swapWindow();

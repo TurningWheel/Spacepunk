@@ -779,20 +779,28 @@ void Client::postProcess() {
 		// set framebuffer
 		renderer->clearBuffers();
 		Framebuffer* fbo = renderer->bindFBO("__main");
-		renderer->clearBuffers();
 
 		if( !textureSelectorActive ) {
 			Framebuffer* scene = renderer->bindFBO("scene");
-			renderer->clearBuffers();
+			scene->clear();
 
 			for( Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext() ) {
 				World* world = node->getData();
 				world->draw();
 			}
 
+			// blur bloom highlights
+			Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1");
+			bloomPass1->clear();
+			renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_HORIZONTAL);
+			Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2");
+			bloomPass2->clear();
+			renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_VERTICAL);
+
+			// blend bloom with scene
 			Framebuffer* fbo = renderer->bindFBO("__main");
-			renderer->clearBuffers();
-			renderer->blitFramebuffer(*scene, true);
+			fbo->clear();
+			renderer->blendFramebuffer(*bloomPass2, GL_COLOR_ATTACHMENT0, *scene, GL_COLOR_ATTACHMENT0);
 
 			// editor interface
 			if( editor && editor->isInitialized() ) {
@@ -899,7 +907,7 @@ void Client::postProcess() {
 
 		// swap screen buffer
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		renderer->blitFramebuffer(*fbo, false);
+		renderer->blitFramebuffer(*fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::BASIC);
 		renderer->swapWindow();
 
 		// run script

@@ -726,16 +726,17 @@ void Renderer::printTextColor( const Rect<int>& rect, const glm::vec4& color, co
 void Renderer::clearBuffers() {
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.f, 0.f, 0.f, 0.f);
 	glClearDepth(0.f);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	drawRect(nullptr,glm::vec4(0.f,0.f,0.f,1.f));
 }
 
-void Renderer::blitFramebuffer(Framebuffer& fbo, bool hdr) {
+void Renderer::blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuffer& fbo1, GLenum attachment1) {
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
 	// load shader
-	Material* mat = mainEngine->getMaterialResource().dataForString(
-		hdr ? "shaders/basic/fbo_hdr.json" : "shaders/basic/fbo.json");
+	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blend.json");
 	if (!mat) {
 		return;
 	}
@@ -747,7 +748,57 @@ void Renderer::blitFramebuffer(Framebuffer& fbo, bool hdr) {
 	glViewport(0, 0, xres, yres);
 
 	// bind texture
-	fbo.bindForReading(GL_TEXTURE0, GL_COLOR_ATTACHMENT0);
+	fbo0.bindForReading(GL_TEXTURE0, attachment0);
+	fbo1.bindForReading(GL_TEXTURE1, attachment1);
+
+	// upload uniform variables
+	glUniform2iv(shader.getUniformLocation("gResolution"), 1, glm::value_ptr(glm::ivec2(xres, yres)));
+	glUniform1i(shader.getUniformLocation("gTexture0"), 0);
+	glUniform1i(shader.getUniformLocation("gTexture1"), 1);
+
+	// bind vertex array
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+	glBindVertexArray(0);
+
+	ShaderProgram::unmount();
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+}
+
+void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType type) {
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
+	// load shader
+	Material* mat = nullptr;
+	switch (type) {
+	case BASIC:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo.json");
+		break;
+	case HDR:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_hdr.json");
+		break;
+	case BLUR_HORIZONTAL:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blur_h.json");
+		break;
+	case BLUR_VERTICAL:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blur_v.json");
+		break;
+	default:
+		break;
+	}
+	if (!mat) {
+		return;
+	}
+	ShaderProgram& shader = mat->getShader();
+	if (&shader != ShaderProgram::getCurrentShader()) {
+		shader.mount();
+	}
+
+	glViewport(0, 0, xres, yres);
+
+	// bind texture
+	fbo.bindForReading(GL_TEXTURE0, attachment);
 
 	// upload uniform variables
 	glUniform2iv(shader.getUniformLocation("gResolution"), 1, glm::value_ptr(glm::ivec2(xres, yres)));

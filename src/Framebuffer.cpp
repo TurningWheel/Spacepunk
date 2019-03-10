@@ -23,25 +23,31 @@ void Framebuffer::init(Uint32 _width, Uint32 _height) {
 
 	glActiveTexture(GL_TEXTURE0);
 
+	// Create the FBO
+	glGenFramebuffers(1, &fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
 	// Create the color texture
-	glGenTextures(1, &color);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA32F, width, height, false);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	glGenTextures(ColorBuffer::MAX, color);
+	for (int c = 0; c < ColorBuffer::MAX; ++c) {
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color[c]);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA32F, width, height, false);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + c, GL_TEXTURE_2D_MULTISAMPLE, color[c], 0);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	}
 
 	// Create the depth texture
 	glGenTextures(1, &depth);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH32F_STENCIL8, width, height, false);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth, 0);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
-	// Create the FBO
-	glGenFramebuffers(1, &fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth, 0);
-	glDrawBuffer(GL_COLOR_ATTACHMENT0);
-	glReadBuffer(GL_COLOR_ATTACHMENT0);
+	// finalize fbo
+	static const GLenum attachments[ColorBuffer::MAX] = {
+		GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(ColorBuffer::MAX, attachments);
+	glReadBuffer(GL_NONE);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// check fbo status
@@ -57,9 +63,11 @@ void Framebuffer::term() {
 		glDeleteFramebuffers(1, &fbo);
 		fbo = 0;
 	}
-	if (color) {
-		glDeleteTextures(1, &color);
-		color = 0;
+	for (int c = 0; c < ColorBuffer::MAX; ++c) {
+		if (color[c]) {
+			glDeleteTextures(1, &color[c]);
+			color[c] = 0;
+		}
 	}
 	if (depth) {
 		glDeleteTextures(1, &depth);
@@ -75,7 +83,9 @@ void Framebuffer::bindForWriting() {
 	if (!fbo)
 		return;
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color, 0);
+	for (int c = 0; c < ColorBuffer::MAX; ++c) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + c, GL_TEXTURE_2D_MULTISAMPLE, color[c], 0);
+	}
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth, 0);
 	glViewport(0, 0, width, height);
 
@@ -87,10 +97,25 @@ void Framebuffer::bindForWriting() {
 
 void Framebuffer::bindForReading(GLenum textureUnit, GLenum attachment) const {
 	glActiveTexture(textureUnit);
-	if (color && attachment == GL_COLOR_ATTACHMENT0) {
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color);
+	for (int c = 0; c < ColorBuffer::MAX; ++c) {
+		if (color[c] && attachment == GL_COLOR_ATTACHMENT0 + c) {
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color[c]);
+			return;
+		}
 	}
-	else if (depth && attachment == GL_DEPTH_ATTACHMENT) {
+	if (depth && attachment == GL_DEPTH_ATTACHMENT) {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth);
+		return;
 	}
+}
+
+void Framebuffer::clear() {
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glClearDepth(0.f);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
+	static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+		GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }

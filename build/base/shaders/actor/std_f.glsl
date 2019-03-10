@@ -6,7 +6,8 @@ in vec3 WorldPos;
 in vec4 Colors;
 in vec3 Tangent;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 FragColorBright;
 
 uniform bool gAnimated;
 uniform bool gActiveLight;
@@ -202,7 +203,7 @@ void main() {
 #ifndef NONORMALS
 			lLightColor.a *= dot(lNormal, lLightDirection);
 #endif
-			lLightColor.a = clamp(lLightColor.a, 0.f, 1.f) * lShadowFactor;
+			lLightColor.a = lLightColor.a * lShadowFactor;
 			lTotalLightColor += vec4(lLightColor.xyz * lLightColor.a, lLightColor.a);
 		}
 
@@ -214,4 +215,12 @@ void main() {
 	float fresnelPower = pow(dot(lNormal, cameraDir), 2);
 	FragColor = FragColor / fresnelPower;
 #endif
+
+	// check whether fragment output is higher than threshold, if so output to bloom buffer
+    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if (brightness > 1.0) {
+        FragColorBright = vec4(FragColor.rgb, 1.f);
+    } else {
+        FragColorBright = vec4(0.f, 0.f, 0.f, 1.f);
+    }
 }

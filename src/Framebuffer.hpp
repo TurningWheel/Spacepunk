@@ -13,6 +13,13 @@ public:
 	Framebuffer(const char* _name);
 	virtual ~Framebuffer();
 
+	// color buffers
+	enum ColorBuffer {
+		COLOR,
+		BLOOM,
+		MAX
+	};
+
 	// create gl data for framebuffer
 	// @param _width the width of the framebuffer
 	// @param _height the height of the framebuffer
@@ -29,10 +36,13 @@ public:
 	// @param attachment The texture we wish to sample (GL_COLOR_ATTACHMENT0 or GL_DEPTH_ATTACHMENT or GL_STENCIL_ATTACHMENT)
 	void bindForReading(GLenum textureUnit, GLenum attachment) const;
 
+	// clear buffers
+	void clear();
+
 	// getters & setters
 	virtual const type_t	getType() const				{ return ASSET_FRAMEBUFFER; }
 	GLuint					getFBO() const				{ return fbo; }
-	GLuint					getColor() const			{ return color; }
+	GLuint					getColor(int c) const		{ return color[c]; }
 	GLuint					getDepth() const			{ return depth; }
 	GLuint					getStencil() const			{ return stencil; }
 	Uint32					getWidth() const			{ return width; }
@@ -41,7 +51,7 @@ public:
 
 private:
 	GLuint fbo = 0;
-	GLuint color = 0;
+	GLuint color[ColorBuffer::MAX];
 	GLuint depth = 0;
 	GLuint stencil = 0;
 

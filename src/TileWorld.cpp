@@ -2131,7 +2131,9 @@ void TileWorld::draw() {
 		if( (client->isEditorActive() && showTools) || cvar_renderFullbright.toInt() ) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+				GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+			glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
@@ -2140,7 +2142,9 @@ void TileWorld::draw() {
 		} else {
 			// render shadowed scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+				GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+			glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
@@ -2151,7 +2155,9 @@ void TileWorld::draw() {
 		// render scene with glow textures
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+			GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 		glDepthFunc(GL_GEQUAL);
 		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 

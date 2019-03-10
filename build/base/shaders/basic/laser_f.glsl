@@ -5,11 +5,13 @@ in Vertex {
 	flat int Texture;
 } vertex;
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 FragColorBright;
 
 uniform vec4 gColor;
 uniform sampler2D gTexture[2];
 
 void main() {
 	FragColor = gColor * texture(gTexture[vertex.Texture], vertex.TexCoord);
+	FragColorBright = FragColor;
 }

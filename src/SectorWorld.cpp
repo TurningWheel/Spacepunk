@@ -301,7 +301,9 @@ void SectorWorld::draw() {
 		if( client->isEditorActive() && showTools && !camera->isOrtho() ) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+				GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+			glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
@@ -330,7 +332,9 @@ void SectorWorld::draw() {
 
 				// render shadowed scene
 				camera->setDrawMode(Camera::DRAW_STANDARD);
-				glDrawBuffer(GL_COLOR_ATTACHMENT0);
+				static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+					GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+				glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 				glStencilFunc(GL_EQUAL, 0x00, 0xFF);
 				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
@@ -343,7 +347,9 @@ void SectorWorld::draw() {
 		// render scene with glow textures
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
-		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+			GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 		glDepthFunc(GL_GEQUAL);
 		drawSceneObjects(*camera,nullptr);
 
