@@ -42,10 +42,10 @@ float ShadowFactor(int light)
 		return 1.f;
 	}
 
-	vec3 lLightDir = WorldPos + Normal * 10.f - gLightPos[light];
+	vec3 lLightDir = WorldPos - gLightPos[light] + Normal;
 	vec3 lLightDirNormal = normalize(lLightDir);
-	vec3 lDiff = abs(lLightDir);
-	float lDist = min(-max(lDiff.x, max(lDiff.y, lDiff.z)) + 1.f, 0.f);
+	vec3 lDiff = abs(lLightDir + Normal);
+	float lDist = min(-max(lDiff.x, max(lDiff.y, lDiff.z)), 0.f);
 	vec4 lClip = gLightProj[light] * vec4(0.f, 0.f, lDist, 1.f);
 	float lDepth = lClip.z / lClip.w;
 

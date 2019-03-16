@@ -9433,6 +9433,7 @@ static int console_editor(int argc, const char** argv) {
 			path = ".playtest.wlb";
 		}
 	}
+	mainEngine->loadAllDefs();
 	mainEngine->startEditor(path.get());
 	return 0;
 }

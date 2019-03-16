@@ -159,6 +159,7 @@ static int console_mount(int argc, const char** argv) {
 	if(mainEngine->addMod(argv[0])) {
 		mainEngine->dumpResources();
 		mainEngine->loadAllResources();
+		mainEngine->loadAllDefs();
 		return 0;
 	} else {
 		return 1;
@@ -173,6 +174,7 @@ static int console_unmount(int argc, const char** argv) {
 	if(mainEngine->removeMod(argv[0])) {
 		mainEngine->dumpResources();
 		mainEngine->loadAllResources();
+		mainEngine->loadAllDefs();
 		return 0;
 	} else {
 		return 1;
@@ -626,13 +628,14 @@ void Engine::loadResources(const char* folder) {
 			}
 		}
 	}
+}
 
-	// entity definitions for editor
+void Engine::loadDefs(const char* folder) {
 	StringBuf<64> entitiesDirPath;
-	entitiesDirPath.format("%s/entities",folder);
+	entitiesDirPath.format("%s/entities", folder);
 	Directory entitiesDir(entitiesDirPath.get());
-	if( entitiesDir.isLoaded() ) {
-		for( Node<String>* node = entitiesDir.getList().getFirst(); node!=nullptr; node=node->getNext() ) {
+	if (entitiesDir.isLoaded()) {
+		for (Node<String>* node = entitiesDir.getList().getFirst(); node != nullptr; node = node->getNext()) {
 			String& str = node->getData();
 			StringBuf<256> entityPath("entities/");
 			entityPath.append(str.get());
@@ -641,7 +644,6 @@ void Engine::loadResources(const char* folder) {
 			entityDefs.addNodeLast(def);
 		}
 	}
-
 }
 
 Uint32 Engine::findEntityDefIndexByName(const char* name) {
@@ -738,6 +740,17 @@ void Engine::loadAllResources() {
 	}
 }
 
+void Engine::loadAllDefs() {
+	while (entityDefs.getFirst()) {
+		delete entityDefs.getFirst()->getData();
+		entityDefs.removeNode(entityDefs.getFirst());
+	}
+	loadDefs(game.path.get());
+	for (mod_t& mod : mods) {
+		loadDefs(mod.path.get());
+	}
+}
+
 void Engine::dumpResources() {
 	fmsg(MSG_INFO,"dumping engine resources...");
 
@@ -757,11 +770,6 @@ void Engine::dumpResources() {
 	tileNormalTextures.init();
 	tileEffectsTextures.cleanup();
 	tileEffectsTextures.init();
-
-	while( entityDefs.getFirst() ) {
-		delete entityDefs.getFirst()->getData();
-		entityDefs.removeNode(entityDefs.getFirst());
-	}
 }
 
 void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {

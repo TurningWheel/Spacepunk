@@ -145,6 +145,12 @@ public:
 	// loads resources from a particular mod / game folder
 	void loadResources(const char* folder);
 
+	// load entity defs
+	void loadAllDefs();
+
+	// load entity defs from a particular mod / game folder
+	void loadDefs(const char* folder);
+
 	// clears all resource caches, effectively starting the engine "fresh"
 	// this does NOT unmount mods! It simply causes the engine to recache any loaded resources
 	void dumpResources();

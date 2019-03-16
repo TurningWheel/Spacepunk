@@ -49,7 +49,7 @@ float ShadowFactor(int light)
 		return 1.f;
 	}
 
-	vec3 lLightDir = WorldPos + Normal * 20.f - gLightPos[light];
+	vec3 lLightDir = WorldPos - gLightPos[light] + Normal;
 	vec3 lLightDirNormal = normalize(lLightDir);
 	vec3 lDiff = abs(lLightDir);
 	float lBias = 0.f;

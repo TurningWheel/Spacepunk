@@ -2188,32 +2188,9 @@ void TileWorld::draw() {
 		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 		glDepthFunc(GL_GEQUAL);
 
-		if( camera->isOrtho() ) {
-			// draw level mask
-			camera->setDrawMode(Camera::DRAW_DEPTH);
-			glEnable(GL_STENCIL_TEST);
-			glDisable(GL_DEPTH_TEST);
-			glDepthMask(GL_FALSE);
-			glDrawBuffer(GL_NONE);
-			glClear(GL_STENCIL_BUFFER_BIT);
-			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
-			glStencilOp(GL_INCR, GL_INCR, GL_INCR);
-			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
-			glStencilFunc(GL_EQUAL, 0x00, 0xFF);
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
-			Renderer* renderer = camera->getRenderer();
-			if( renderer ) {
-				renderer->drawRect( &camera->getWin(), glm::vec4(.25f,.25f,.25f,1.f) );
-			}
-			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
-
-			// render state gets messed up after this, so reinit
-			camera->setupProjection(true);
-		} else {
-			// render silhouettes
-			camera->setDrawMode(Camera::DRAW_SILHOUETTE);
-			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
-		}
+		// render silhouettes
+		camera->setDrawMode(Camera::DRAW_SILHOUETTE);
+		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);
