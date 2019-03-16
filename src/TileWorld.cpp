@@ -2155,9 +2155,11 @@ void TileWorld::draw() {
 		// render scene with glow textures
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
-		glDrawBuffer(GL_COLOR_ATTACHMENT1);
 		glDepthFunc(GL_GEQUAL);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+		glDrawBuffer(GL_COLOR_ATTACHMENT1);
+		drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 
 		static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
 			GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
