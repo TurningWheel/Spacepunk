@@ -154,12 +154,12 @@ void Light::createShadowMap() {
 	shadowMap.init();
 	for (Uint32 c = 0; c < 6; ++c) {
 		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
-		glClear(GL_DEPTH_BUFFER_BIT);
 		shadowCamera->setAng(Shadow::cameraInfo[c].dir);
 		shadowCamera->update();
 		camera->setClipNear(1.f);
 		camera->setClipFar(radius);
 		camera->setupProjection(false);
+		glClear(GL_DEPTH_BUFFER_BIT);
 		world->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
 	}
 	glPolygonOffset(1.f, 0.f);
