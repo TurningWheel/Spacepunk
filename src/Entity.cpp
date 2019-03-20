@@ -84,6 +84,7 @@ Entity::Entity(World* _world, Uint32 _uid) {
 			uid = world->getNewUID();
 		} else {
 			uid = _uid;
+			world->setMaxUID(_uid);
 		}
 		node = world->getEntities(uid&(World::numBuckets-1)).addNodeLast(this);
 	}

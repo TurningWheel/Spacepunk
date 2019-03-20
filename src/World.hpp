@@ -191,6 +191,7 @@ public:
 	Entity*						getShadowCamera()						{ return shadowCamera; }
 	Shadow&						getDefaultShadow()						{ return defaultShadow; }
 	const Shadow&				getDefaultShadow() const				{ return defaultShadow; }
+	void						setMaxUID(Uint32 uid)					{ uids = std::max(uids, uid); }
 
 	// editing properties
 	bool				isPointerActive() const				{ return pointerActive; }
