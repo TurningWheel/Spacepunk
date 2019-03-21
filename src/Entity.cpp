@@ -394,6 +394,27 @@ void Entity::update() {
 	}
 }
 
+void Entity::remoteExecute(const char* funcName) {
+	Game* game = getGame();
+	if (!game) {
+		return;
+	}
+	Packet packet;
+	packet.write(funcName);
+	packet.write32((Uint32)strlen(funcName));
+	packet.write32(uid);
+	packet.write32(world->getID());
+	packet.write("ENTF");
+	game->getNet()->signPacket(packet);
+	game->getNet()->broadcastSafe(packet);
+}
+
+void Entity::dispatch(const char* funcName) {
+	if (script) {
+		script->dispatch(funcName);
+	}
+}
+
 void Entity::process() {
 	++ticks;
 

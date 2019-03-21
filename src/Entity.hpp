@@ -164,6 +164,14 @@ public:
 	// add to level navigator in editor
 	void addToEditorList();
 
+	// send a signal from server/client or vice versa requesting they run a function
+	// @param funcName the name of the function to remote execute
+	void remoteExecute(const char* funcName);
+
+	// run a script function with the given name
+	// @param funcName the name of the function to execute
+	void dispatch(const char* funcName);
+
 	// removes the entity from the current simulation
 	void remove();
 

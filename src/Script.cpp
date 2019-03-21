@@ -610,6 +610,7 @@ void Script::exposeEntity() {
 		.addFunction("isLocalPlayer", &Entity::isLocalPlayer)
 		.addFunction("insertIntoWorld", &Entity::insertIntoWorld)
 		.addFunction("warp", &Entity::warp)
+		.addFunction("remoteExecute", &Entity::remoteExecute)
 		.endClass()
 	;
 

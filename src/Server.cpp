@@ -243,6 +243,37 @@ void Server::handleNetMessages() {
 						continue;
 					}
 
+					// entity remote function call
+					else if (strncmp((const char*)packetType, "ENTF", 4) == 0) {
+						// read world
+						Uint32 worldID;
+						packet.read32(worldID);
+						Node<World*>* node = worlds[worldID];
+						if (node) {
+							World& world = *node->getData();
+
+							// get uid
+							Uint32 uid;
+							packet.read32(uid);
+							Entity* entity = world.uidToEntity(uid);
+							if (!entity) {
+								continue;
+							}
+
+							// read func name
+							Uint32 funcNameLen;
+							packet.read32(funcNameLen);
+							char funcName[128];
+							funcName[127] = '\0';
+							packet.read(funcName, funcNameLen);
+
+							// run function
+							entity->dispatch(funcName);
+						}
+
+						continue;
+					}
+
 					// player update
 					else if( strncmp( (const char*)packetType, "PLAY", 4) == 0 ) {
 						Uint32 localID;
