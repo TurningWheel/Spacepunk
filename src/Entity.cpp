@@ -463,10 +463,15 @@ void Entity::process() {
 			}
 		}
 
+		// move entity
+		move();
+
 		// interpolate between new and old positions
-		if( ticks - lastUpdate <= mainEngine->getTicksPerSecond()/15 && !isFlag(flag_t::FLAG_LOCAL) ) {
+		if (ticks - lastUpdate <= mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
 			Vector vDiff = newPos - pos;
-			pos += vDiff / 4.f;
+			if (vDiff.lengthSquared() > 64.f || vel.lengthSquared() < 1.f) {
+				pos += vDiff / 4.f;
+			}
 
 			/*ang.bindAngles();
 			newAng.bindAngles();
@@ -490,9 +495,6 @@ void Entity::process() {
 			warp();
 		}
 	}
-
-	// move entity
-	move();
 
 	// correct orientation again
 	ang.wrapAngles();
