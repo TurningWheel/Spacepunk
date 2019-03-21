@@ -180,6 +180,14 @@ void Entity::addToEditorList() {
 }
 
 void Entity::insertIntoWorld(World* _world) {
+	newWorld = _world;
+}
+
+void Entity::finishInsertIntoWorld() {
+	if (!newWorld) {
+		return;
+	}
+
 	// hack... derive an entity def from our current name
 	if (defIndex == UINT32_MAX) {
 		defName = name.get();
@@ -204,7 +212,7 @@ void Entity::insertIntoWorld(World* _world) {
 
 	// signal components
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		components[c]->beforeWorldInsertion(_world);
+		components[c]->beforeWorldInsertion(newWorld);
 	}
 
 	// insert to new world
@@ -213,7 +221,7 @@ void Entity::insertIntoWorld(World* _world) {
 			world->getEntities(uid&(World::numBuckets-1)).removeNode(node);
 		}
 	}
-	world = _world;
+	world = newWorld;
 	if( world ) {
 		uid = world->getNewUID();
 		node = world->getEntities(uid&(World::numBuckets-1)).addNodeLast(this);
@@ -224,7 +232,7 @@ void Entity::insertIntoWorld(World* _world) {
 
 	// signal components again
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		components[c]->afterWorldInsertion(_world);
+		components[c]->afterWorldInsertion(newWorld);
 	}
 
 	// run init script
@@ -264,6 +272,8 @@ void Entity::insertIntoWorld(World* _world) {
 			game->getNet()->sendPacketSafe(player->getClientID(), packet);
 		}
 	}
+
+	newWorld = nullptr;
 }
 
 void Entity::remove() {

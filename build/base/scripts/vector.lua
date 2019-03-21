@@ -19,3 +19,7 @@ end
 function vecEquals(vec1, vec2)
 	return vec1.x == vec2.x and vec1.y == vec2.y and vec1.z == vec2.z
 end
+
+function vecNew(vec)
+	return Vector(vec.x, vec.y, vec.z)
+end

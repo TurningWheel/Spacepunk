@@ -552,7 +552,7 @@ void World::process() {
 		}
 	}
 
-	// delete removed entities
+	// delete entities marked for removal and transfer entities marked for level change
 	for( Uint32 c=0; c<World::numBuckets; ++c ) {
 		Node<Entity*>* nextnode = nullptr;
 		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=nextnode ) {
@@ -577,6 +577,8 @@ void World::process() {
 						server->getNet()->broadcastSafe(packet);
 					}
 				}
+			} else {
+				entity->finishInsertIntoWorld();
 			}
 		}
 	}

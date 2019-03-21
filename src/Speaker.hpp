@@ -51,6 +51,10 @@ public:
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
+	// determine if the speaker is playing a sound
+	// @return true if the given sound source index is playing
+	bool isPlaying(const int index);
+
 	// getters & setters
 	virtual type_t		getType() const override		{ return COMPONENT_SPEAKER; }
 	const char*			getDefaultSound() const			{ return defaultSound.get(); }

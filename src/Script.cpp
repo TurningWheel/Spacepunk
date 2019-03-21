@@ -826,6 +826,7 @@ void Script::exposeSpeaker() {
 		.addFunction("getDefaultSound", &Speaker::getDefaultSound)
 		.addFunction("getDefaultRange", &Speaker::getDefaultRange)
 		.addFunction("isDefaultLoop", &Speaker::isDefaultLoop)
+		.addFunction("isPlaying", &Speaker::isPlaying)
 		.endClass()
 	;
 

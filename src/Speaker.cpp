@@ -101,17 +101,23 @@ int Speaker::playSound( const char* _name, const bool loop, float range ) {
 	}
 }
 
+bool Speaker::isPlaying(const int index) {
+	ALint state = AL_PLAYING;
+	alGetSourcei(sources[index], AL_SOURCE_STATE, &state);
+	if (state == AL_PLAYING) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 bool Speaker::stopSound(const int index) {
 	if( index<0 || index>=maxSources )
 		return false;
 	if( !sources[index] )
 		return false;
-
-	ALint state = AL_PLAYING;
-	alGetSourcei(sources[index],AL_SOURCE_STATE,&state);
-	if( state==AL_STOPPED )
+	if( !isPlaying(index) )
 		return false;
-
 	alSourceStop(sources[index]);
 	alDeleteSources(1, &sources[index]);
 	sources[index] = 0;

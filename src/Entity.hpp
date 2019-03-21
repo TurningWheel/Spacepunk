@@ -215,9 +215,12 @@ public:
 	// runs the entity's assigned script, if any
 	virtual void process();
 
-	// transfers the object into a new world
+	// mark the object to be transfered into another world
 	// @param _world the world to move the entity into
-	virtual void insertIntoWorld(World* _world);
+	void insertIntoWorld(World* _world);
+
+	// finish transfering the object into another world
+	void finishInsertIntoWorld();
 
 	// draws the entity
 	// @param camera the camera through which to draw the entity
@@ -434,6 +437,7 @@ protected:
 	Script* script				= nullptr;	// scripting engine
 	Player* player				= nullptr;	// player associated with this entity, if any
 	Node<Entity*>* chunkNode	= nullptr;	// pointer to our node in the chunk we are occupying (if any)
+	World* newWorld				= nullptr;  // world we are moving to, if any
 
 	Uint32 componentIDs = 0;
 	ArrayList<Component*> components;	// component list
