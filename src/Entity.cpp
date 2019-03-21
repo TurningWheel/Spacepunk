@@ -443,29 +443,34 @@ void Entity::process() {
 
 	// run entity script
 	bool processed = false;
-	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
-		if( script && !scriptStr.empty() && world ) {
+	bool editor = mainEngine->isEditorRunning() && !mainEngine->isPlayTest();
+	if (!editor) {
+		if (script && !scriptStr.empty() && world) {
 			StringBuf<128> path;
-			if( world->isClientObj() && mainEngine->isRunningClient() ) {
+			if (world->isClientObj() && mainEngine->isRunningClient()) {
 				path.format("scripts/client/entities/%s.lua", scriptStr.get());
-			} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
+			}
+			else if (world->isServerObj() && mainEngine->isRunningServer()) {
 				path.format("scripts/server/entities/%s.lua", scriptStr.get());
 			}
 
 			// first time
-			if( !ranScript ) {
+			if (!ranScript) {
 				ranScript = true;
 				script->load(path.get());
 				script->dispatch("init");
-			} else {
+			}
+			else {
 				script->dispatch("process");
 				processed = true;
 			}
 		}
+	}
 
-		// move entity
-		move();
+	// move entity
+	move();
 
+	if (!editor) {
 		// interpolate between new and old positions
 		if (ticks - lastUpdate <= mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
 			Vector vDiff = newPos - pos;
