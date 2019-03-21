@@ -85,6 +85,7 @@ void Player::setEntity(Entity* _entity) {
 		camera = entity->findComponentByName<Camera>("Camera");
 		rTool = entity->findComponentByName<Model>("RightTool");
 		lTool = entity->findComponentByName<Model>("LeftTool");
+		lamp = entity->findComponentByName<Light>("Lamp");
 		if( !models || !bbox || !camera ) {
 			mainEngine->fmsg(Engine::MSG_WARN,"failed to setup player for third party client: missing bodypart");
 		}
@@ -130,6 +131,7 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	camera = entity->findComponentByName<Camera>("Camera");
 	rTool = entity->findComponentByName<Model>("RightTool");
 	lTool = entity->findComponentByName<Model>("LeftTool");
+	lamp = entity->findComponentByName<Light>("Lamp");
 	if( !models || !bbox || !camera ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: missing bodypart");
 		entity->remove();
@@ -484,6 +486,12 @@ void Player::control() {
 	}
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_LEFT);
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_RIGHT);
+
+	// lamp
+	if (lamp && input.binaryToggle(Input::bindingenum_t::INVENTORY1)) {
+		lamp->setIntensity(lamp->getIntensity() == 0.f ? 1.f : 0.f);
+	}
+	input.consumeBinaryToggle(Input::bindingenum_t::INVENTORY1);
 }
 
 void Player::updateCamera() {

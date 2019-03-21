@@ -2085,7 +2085,7 @@ void TileWorld::draw() {
 			light->getChunksLit().clear();
 
 			// don't render invisible lights
-			if( !light->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) ) {
+			if (!light->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || light->getIntensity() <= 0.f || light->getRadius() <= 0.f || light->getArc() <= 0.f ) {
 				continue;
 			}
 

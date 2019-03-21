@@ -116,6 +116,7 @@ private:
 	Camera* camera = nullptr;
 	Model* lTool = nullptr;
 	Model* rTool = nullptr;
+	Light* lamp = nullptr;
 
 	// player controller vars
 	float buttonRight = 0.f;
