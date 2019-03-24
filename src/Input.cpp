@@ -75,6 +75,12 @@ const char* Input::binding(Input::bindingenum_t binding) const {
 	return bindings[binding].input.get();
 }
 
+void Input::refresh() {
+	for (int c = 0; c < bindingenum_t::BINDINGENUM_TYPE_LENGTH; ++c) {
+		rebind(static_cast<bindingenum_t>(c), bindings[c].input.get());
+	}
+}
+
 void Input::rebind(Input::bindingenum_t binding, const char* input) {
 	bindings[binding].input.assign(input);
 	if( input == nullptr ) {

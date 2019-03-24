@@ -116,6 +116,9 @@ public:
 	// @param input the input to rebind to the action
 	void rebind(bindingenum_t binding, const char* input);
 
+	// refresh bindings (eg after a new controller is detected)
+	void refresh();
+
 	// find the binding with the given name
 	// @param name the name of the binding
 	// @return the binding enum

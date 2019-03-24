@@ -1186,6 +1186,9 @@ void Engine::preProcess() {
 				} else {
 					controllers.addNode(event.cdevice.which, pad);
 					fmsg(MSG_INFO, "Added controller with device index (%d)", event.cdevice.which);
+					for (int c = 0; c < 4; ++c) {
+						inputs[c].refresh();
+					}
 					break;
 				}
 				break;
