@@ -179,8 +179,10 @@ void Entity::addToEditorList() {
 	}
 }
 
-void Entity::insertIntoWorld(World* _world) {
+void Entity::insertIntoWorld(World* _world, const Entity* _anchor, const Vector& _offset) {
 	newWorld = _world;
+	anchor = _anchor;
+	offset = _offset;
 }
 
 void Entity::finishInsertIntoWorld() {
@@ -235,30 +237,16 @@ void Entity::finishInsertIntoWorld() {
 		components[c]->afterWorldInsertion(newWorld);
 	}
 
-	// run init script
-	if( script && !scriptStr.empty() && world ) {
-		StringBuf<64> path;
-		if( world->isClientObj() && mainEngine->isRunningClient() ) {
-			path.format("scripts/client/entities/%s.lua", scriptStr.get());
-		} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
-			path.format("scripts/server/entities/%s.lua", scriptStr.get());
-		}
-		script->load(path.get());
-		script->dispatch("init");
-	}
-
 	// if we're moving a player, we need to signal that client
 	if (player) {
 		Game* game = getGame();
 		if (game && game->isServer()) {
 			Packet packet;
 
-			packet.write32(ang.degreesRoll());
-			packet.write32(ang.degreesPitch());
-			packet.write32(ang.degreesYaw());
-			packet.write32(pos.z);
-			packet.write32(pos.y);
-			packet.write32(pos.x);
+			packet.write32(offset.z);
+			packet.write32(offset.y);
+			packet.write32(offset.x);
+			packet.write32(anchor ? anchor->getUID() : World::nuid);
 
 			packet.write(world->getShortname().get());
 			packet.write32((Uint32)world->getShortname().length());
@@ -266,11 +254,18 @@ void Entity::finishInsertIntoWorld() {
 			packet.write32(player->getServerID());
 			packet.write32(player->getLocalID());
 			packet.write32(player->getClientID());
-			packet.write("SPWN");
+			packet.write("PLVL");
 
 			game->getNet()->signPacket(packet);
 			game->getNet()->sendPacketSafe(player->getClientID(), packet);
 		}
+	}
+
+	// use anchor
+	if (anchor) {
+		pos = anchor->getPos() + offset;
+		updateNeeded = true;
+		warp();
 	}
 
 	newWorld = nullptr;
@@ -404,6 +399,36 @@ void Entity::update() {
 	}
 }
 
+void Entity::updatePacket(Packet& packet) const {
+	if (player) {
+		packet.write32((Sint32)(getLookDir().degreesRoll() * 32));
+		packet.write32((Sint32)(getLookDir().degreesPitch() * 32));
+		packet.write32((Sint32)(getLookDir().degreesYaw() * 32));
+		packet.write8(player->hasJumped() ? 1 : 0);
+		packet.write8(player->isMoving() ? 1 : 0);
+		packet.write8(player->isCrouching() ? 1 : 0);
+		packet.write32(player->getServerID());
+		packet.write8(1); // signifies this is a player
+	}
+	else {
+		packet.write8(0); // signifies this is not a player, stop here
+	}
+	packet.write8(falling ? 1U : 0U);
+	packet.write32((Sint32)(ang.degreesRoll() * 32));
+	packet.write32((Sint32)(ang.degreesPitch() * 32));
+	packet.write32((Sint32)(ang.degreesYaw() * 32));
+	packet.write32((Sint32)(vel.z * 128));
+	packet.write32((Sint32)(vel.y * 128));
+	packet.write32((Sint32)(vel.x * 128));
+	packet.write32((Sint32)(pos.z * 32));
+	packet.write32((Sint32)(pos.y * 32));
+	packet.write32((Sint32)(pos.x * 32));
+	packet.write32(defIndex);
+	packet.write32(uid);
+	packet.write32(world->getID());
+	packet.write("ENTU");
+}
+
 void Entity::remoteExecute(const char* funcName) {
 	Game* game = getGame();
 	if (!game) {
@@ -504,31 +529,49 @@ void Entity::process() {
 	if (!editor) {
 		// interpolate between new and old positions
 		if (ticks - lastUpdate <= mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
+			Vector oPos = pos;
+			Angle oAng = ang;
+
+			// interpolate position
 			Vector vDiff = newPos - pos;
 			if (vDiff.lengthSquared() > 64.f || vel.lengthSquared() < 1.f) {
 				pos += vDiff / 4.f;
 			}
-
-			/*ang.bindAngles();
-			newAng.bindAngles();
-			ang.yaw = ang.yaw > 180.f ? ang.yaw - 360.f : ang.yaw;
-			ang.pitch = ang.pitch > 180.f ? ang.pitch - 360.f : ang.pitch;
-			ang.roll = ang.roll > 180.f ? ang.roll - 360.f : ang.roll;
-			newAng.yaw = newAng.yaw > 180.f ? newAng.yaw - 360.f : newAng.yaw;
-			newAng.pitch = newAng.pitch > 180.f ? newAng.pitch - 360.f : newAng.pitch;
-			newAng.roll = newAng.roll > 180.f ? newAng.roll - 360.f : newAng.roll;
-
-			Angle aDiff;
-			aDiff.yaw = newAng.yaw - ang.yaw;
-			aDiff.pitch = newAng.pitch - ang.pitch;
-			aDiff.roll = newAng.roll - ang.roll;
-			ang.yaw += aDiff.yaw / 4.f;
-			ang.pitch += aDiff.pitch / 4.f;
-			ang.roll += aDiff.roll / 4.f;*/
 			ang = newAng;
 
-			updateNeeded = true;
-			warp();
+			// correct illegal move from clients, or alawys accept from server
+			Game* game = getGame();
+			bool illegal = false;
+			if (game && game->isServer()) {
+				/*BBox* bbox = findComponentByName<BBox>("physics");
+				if (bbox) {
+					LinkedList<World::hit_t> result;
+					auto convexShape = static_cast<const btConvexShape*>(bbox->getCollisionShapePtr());
+					if (convexShape) {
+						world->convexSweepList(convexShape, bbox->getGlobalPos(), bbox->getGlobalAng(), pos + bbox->getLocalPos(), ang + bbox->getLocalAng(), result);
+						if (result.getSize()) {
+							//Packet packet;
+							//updatePacket(packet);
+							//game->getNet()->signPacket(packet);
+							//game->getNet()->broadcastSafe(packet);
+							illegal = true;
+						}
+					}
+				}
+				if (!illegal) {
+					updateNeeded = true;
+					warp();
+				}
+				else {
+					pos = oPos;
+					ang = oAng;
+				}*/
+				updateNeeded = true;
+				warp();
+			} else {
+				updateNeeded = true;
+				warp();
+			}
 		}
 	}
 

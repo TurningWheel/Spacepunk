@@ -228,13 +228,66 @@ void Client::handleNetMessages() {
 						continue;
 					}
 
-					// server has spawned a player (or relocated them to another level)
-					else if (strncmp((const char*)packetType, "SPWN", 4) == 0 || strncmp((const char*)packetType, "PLVL", 4) == 0) {
-						bool forceRelocate = false;
-						if (strncmp((const char*)packetType, "SPWN", 4) == 0) {
-							forceRelocate = true;
+					// server has relocated a player to another level
+					else if (strncmp((const char*)packetType, "PLVL", 4) == 0) {
+						Uint32 localID, clientID, serverID;
+						packet.read32(clientID);
+						packet.read32(localID);
+						packet.read32(serverID);
+
+						// read world filename
+						Uint32 worldFilenameLen;
+						packet.read32(worldFilenameLen);
+						String worldFilename;
+						worldFilename.alloc(worldFilenameLen + 1);
+						worldFilename[worldFilenameLen] = '\0';
+						packet.read(&worldFilename[0], worldFilenameLen);
+						World* world = worldForName(worldFilename.get());
+						if (!world) {
+							world = loadWorld(worldFilename.get(), true);
+						}
+						assert(world);
+
+						// get player
+						if (clientID != net->getLocalID()) {
+							continue;
+						} else {
+							clientID = Player::invalidID;
+						}
+						Player* player = findPlayer(clientID, localID);
+						assert(player);
+						player->setServerID(serverID);
+
+						// read anchor uid
+						Uint32 anchorUID = World::nuid;
+						packet.read32(anchorUID);
+						Entity* anchor = world->uidToEntity(anchorUID);
+						if (!anchor) {
+							mainEngine->fmsg(Engine::MSG_WARN, "Client got PLVL packet, but anchor is missing");
+							continue;
 						}
 
+						// read offset
+						Uint32 posInt[3];
+						packet.read32(posInt[0]);
+						packet.read32(posInt[1]);
+						packet.read32(posInt[2]);
+						Vector pos((Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2]);
+
+						Angle ang = player->getEntity()->getAng();
+						Vector vel = player->getEntity()->getVel();
+
+						// move to new level
+						if (clientID == Player::invalidID) {
+							player->despawn();
+							player->spawn(*world, anchor->getPos() + pos, ang);
+							player->getEntity()->setVel(vel);
+						}
+						continue;
+					}
+
+					// server has spawned a player
+					else if (strncmp((const char*)packetType, "SPWN", 4) == 0) {
 						Uint32 localID, clientID, serverID;
 						packet.read32(clientID);
 						packet.read32(localID);
@@ -261,27 +314,24 @@ void Client::handleNetMessages() {
 						assert(player);
 						player->setServerID(serverID);
 
-						// spawn or relocate player
-						if (forceRelocate || (player->getEntity() && player->getEntity()->getWorld() != world)) {
-							// read pos
-							Uint32 posInt[3];
-							packet.read32(posInt[0]);
-							packet.read32(posInt[1]);
-							packet.read32(posInt[2]);
-							Vector pos((Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2]);
+						// read pos
+						Uint32 posInt[3];
+						packet.read32(posInt[0]);
+						packet.read32(posInt[1]);
+						packet.read32(posInt[2]);
+						Vector pos((Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2]);
 
-							// read ang
-							Uint32 angInt[3];
-							packet.read32(angInt[0]);
-							packet.read32(angInt[1]);
-							packet.read32(angInt[2]);
-							Angle ang((Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f);
+						// read ang
+						Uint32 angInt[3];
+						packet.read32(angInt[0]);
+						packet.read32(angInt[1]);
+						packet.read32(angInt[2]);
+						Angle ang((Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f);
 
-							// only actually spawn the player if they belong to us
-							if (clientID == Player::invalidID) {
-								player->despawn();
-								player->spawn(*world, pos, ang);
-							}
+						// only actually spawn the player if they belong to us
+						if (clientID == Player::invalidID) {
+							player->despawn();
+							player->spawn(*world, pos, ang);
 						}
 						continue;
 					}
@@ -329,7 +379,6 @@ void Client::handleNetMessages() {
 							// get uid
 							Uint32 uid;
 							packet.read32(uid);
-							Entity* entity = world.uidToEntity(uid);
 
 							// get entity type
 							Uint32 type;
@@ -360,7 +409,57 @@ void Client::handleNetMessages() {
 							Uint8 isFalling;
 							packet.read8(isFalling);
 
+							// read player properties
+							Player* player = nullptr;
+							Uint8 isPlayer;
+							packet.read8(isPlayer);
+							if (isPlayer) {
+								Uint32 serverID;
+								packet.read32(serverID);
+								player = findPlayer(serverID);
+								if (player && player->getClientID() != Player::invalidID) {
+									// read crouch status
+									Uint8 isCrouching;
+									packet.read8(isCrouching);
+									if (isCrouching) {
+										player->putInCrouch(true);
+									}
+									else {
+										player->putInCrouch(false);
+									}
+
+									// read moving status
+									Uint8 isMoving;
+									packet.read8(isMoving);
+									if (isMoving) {
+										player->setMoving(true);
+									}
+									else {
+										player->setMoving(false);
+									}
+
+									// read jumped status
+									Uint8 hasJumped;
+									packet.read8(hasJumped);
+									if (hasJumped) {
+										player->setJumped(true);
+									}
+									else {
+										player->setJumped(false);
+									}
+
+									// read look direction
+									Uint32 lookDirInt[3];
+									packet.read32(lookDirInt[0]);
+									packet.read32(lookDirInt[1]);
+									packet.read32(lookDirInt[2]);
+									Angle lookDir((((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f);
+									player->setLookDir(lookDir);
+								}
+							}
+
 							// update the entity
+							Entity* entity = player && player->getEntity() ? player->getEntity() : world.uidToEntity(uid);
 							if( !entity ) {
 								// we need to spawn the entity
 								if( type != UINT32_MAX ) {
@@ -383,60 +482,26 @@ void Client::handleNetMessages() {
 								entity->setNewAng(ang);
 								entity->setVel(vel);
 								entity->setLastUpdate(entity->getTicks());
+								/*if (player && player->getClientID() == Player::invalidID) {
+									// this is fairly serious: we're in an invalid spot! update immediately
+									entity->setPos(pos);
+									entity->setAng(ang);
+									entity->setVel(vel);
+									entity->warp();
+									//entity->setLastUpdate(entity->getTicks());
+								} else {
+									entity->setNewPos(pos);
+									entity->setNewAng(ang);
+									entity->setVel(vel);
+									entity->setLastUpdate(entity->getTicks());
+								}*/
 							}
-
-							if( entity ) {
+							if (entity) {
 								entity->setFalling((isFalling == 1) ? true : false);
-
-								// update the player (if this is one)
-								Uint8 isPlayer;
-								packet.read8(isPlayer);
-								if( isPlayer ) {
-									Uint32 serverID;
-									packet.read32(serverID);
-									Player* player = findPlayer(serverID);
-									if( player ) {
-										if( entity->getPlayer() == nullptr ) {
-											entity->setPlayer(player);
-											player->setEntity(entity);
-											player->updateColors(player->getColors());
-										}
-
-										// read crouch status
-										Uint8 isCrouching;
-										packet.read8(isCrouching);
-										if( isCrouching ) {
-											player->putInCrouch(true);
-										} else {
-											player->putInCrouch(false);
-										}
-
-										// read moving status
-										Uint8 isMoving;
-										packet.read8(isMoving);
-										if( isMoving ) {
-											player->setMoving(true);
-										} else {
-											player->setMoving(false);
-										}
-
-										// read jumped status
-										Uint8 hasJumped;
-										packet.read8(hasJumped);
-										if( hasJumped ) {
-											player->setJumped(true);
-										} else {
-											player->setJumped(false);
-										}
-
-										// read look direction
-										Uint32 lookDirInt[3];
-										packet.read32(lookDirInt[0]);
-										packet.read32(lookDirInt[1]);
-										packet.read32(lookDirInt[2]);
-										Angle lookDir( (((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f );
-										player->setLookDir(lookDir);
-									}
+								if (player && entity->getPlayer() == nullptr) {
+									entity->setPlayer(player);
+									player->setEntity(entity);
+									player->updateColors(player->getColors());
 								}
 							}
 						}

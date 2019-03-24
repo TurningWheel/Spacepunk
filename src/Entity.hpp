@@ -31,6 +31,7 @@ class ShaderProgram;
 class Camera;
 class Player;
 class BBox;
+class Packet;
 
 class Entity {
 public:
@@ -125,6 +126,8 @@ public:
 	const Vector&						getPathNodePosition() const			{ return pathNode; }
 	const Vector&						getPathNodeDir() const				{ return pathDir; }
 	bool								hasPath() const						{ return path != nullptr; }
+	const Entity*						getAnchor() const					{ return anchor; }
+	const Vector&						getOffset() const					{ return offset; }
 
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
 	void					setMat(const glm::mat4& _mat)					{ if( mat != _mat ) { mat = _mat; updateNeeded = true; matSet = true; } }
@@ -167,6 +170,10 @@ public:
 	// send a signal from server/client or vice versa requesting they run a function
 	// @param funcName the name of the function to remote execute
 	void remoteExecute(const char* funcName);
+
+	// fill out an update packet for this entity
+	// @param packet the packet to fill out
+	void updatePacket(Packet& packet) const;
 
 	// run a script function with the given name
 	// @param funcName the name of the function to execute
@@ -217,7 +224,9 @@ public:
 
 	// mark the object to be transfered into another world
 	// @param _world the world to move the entity into
-	void insertIntoWorld(World* _world);
+	// @param _anchor the entity we need to remain attached to during the move
+	// @param _offset offset from the anchor if one exists
+	void insertIntoWorld(World* _world, const Entity* _anchor = nullptr, const Vector& _offset = Vector(0.f));
 
 	// finish transfering the object into another world
 	void finishInsertIntoWorld();
@@ -437,40 +446,43 @@ protected:
 	Script* script				= nullptr;	// scripting engine
 	Player* player				= nullptr;	// player associated with this entity, if any
 	Node<Entity*>* chunkNode	= nullptr;	// pointer to our node in the chunk we are occupying (if any)
+
 	World* newWorld				= nullptr;  // world we are moving to, if any
+	const Entity* anchor		= nullptr;	// entity we are attached to for the transition
+	Vector offset;							// offset from the anchor
 
 	Uint32 componentIDs = 0;
-	ArrayList<Component*> components;	// component list
+	ArrayList<Component*> components;		// component list
 
-	Vector oldPos;					// mostly used by the editor and audio engines
-	Vector pos;						// position
-	Vector newPos;					// new position to interpolate towards (net)
-	Vector vel;						// velocity
-	Angle ang;						// angle
-	Angle newAng;					// new angle to interpolate towards (net)
-	Angle rot;						// angular velocity
-	Vector scale;					// visual scale
-	glm::mat4 mat;					// matrix (position * rotation * scale)
+	Vector oldPos;							// mostly used by the editor and audio engines
+	Vector pos;								// position
+	Vector newPos;							// new position to interpolate towards (net)
+	Vector vel;								// velocity
+	Angle ang;								// angle
+	Angle newAng;							// new angle to interpolate towards (net)
+	Angle rot;								// angular velocity
+	Vector scale;							// visual scale
+	glm::mat4 mat;							// matrix (position * rotation * scale)
 	bool matSet = false;
-	bool updateNeeded = false;		// if true, matrix gets updated, and component matrices get updated
+	bool updateNeeded = false;				// if true, matrix gets updated, and component matrices get updated
 
-	Sint32 currentCX = INT32_MAX;	// X coord of the chunk we are currently occupying
-	Sint32 currentCY = INT32_MAX;	// Y coord of the chunk we are currently occupying
+	Sint32 currentCX = INT32_MAX;			// X coord of the chunk we are currently occupying
+	Sint32 currentCY = INT32_MAX;			// Y coord of the chunk we are currently occupying
 
-	sort_t sort = SORT_ANY;			// editing filter
-	Uint32 flags = 0;				// flags
-	Uint32 defIndex = UINT32_MAX;	// index of the definition used to make the entity
-	String defName;					// name gained from def file
-	String name;					// the entity's name
-	String scriptStr;				// entity script filename
-	bool ranScript = false;			// is true if script has run at least once
+	sort_t sort = SORT_ANY;					// editing filter
+	Uint32 flags = 0;						// flags
+	Uint32 defIndex = UINT32_MAX;			// index of the definition used to make the entity
+	String defName;							// name gained from def file
+	String name;							// the entity's name
+	String scriptStr;						// entity script filename
+	bool ranScript = false;					// is true if script has run at least once
 
-	Uint32 uid=0;					// entity id number
-	Uint32 ticks=0;					// lifespan of the entity
-	Uint32 lastUpdate=0;			// time of last remote update of the entity (netplay)
-	bool toBeDeleted = false;		// if true, the entity has been marked for deletion at the end of the current frame
-	bool shouldSave = true;			// if true, the entity is saved when the world is saved to a file; if false, it is not
-	bool falling = false;			// when true the entity is off the floor, otherwise they are on the floor
+	Uint32 uid=0;							// entity id number
+	Uint32 ticks=0;							// lifespan of the entity
+	Uint32 lastUpdate=0;					// time of last remote update of the entity (netplay)
+	bool toBeDeleted = false;				// if true, the entity has been marked for deletion at the end of the current frame
+	bool shouldSave = true;					// if true, the entity is saved when the world is saved to a file; if false, it is not
+	bool falling = false;					// when true the entity is off the floor, otherwise they are on the floor
 
 	Map<String, String> keyvalues;
 

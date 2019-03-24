@@ -116,10 +116,11 @@ public:
 	virtual void serialize(FileInterface* file) override;
 
 	// getters & setters
-	virtual type_t					getType() const override	{ return COMPONENT_BBOX; }
-	shape_t							getShape() const			{ return shape; }
-	bool							isEnabled() const			{ return enabled; }
-	float							getMass() const				{ return mass; }
+	virtual type_t					getType() const override		{ return COMPONENT_BBOX; }
+	shape_t							getShape() const				{ return shape; }
+	bool							isEnabled() const				{ return enabled; }
+	float							getMass() const					{ return mass; }
+	const btCollisionShape*			getCollisionShapePtr() const	{ return collisionShapePtr; }
 
 	void		setShape(shape_t _shape)			{ shape = _shape; dirty = true; updateNeeded = true; }
 	void		setEnabled(bool _enabled)			{ enabled = _enabled; dirty = true; updateNeeded = true; }

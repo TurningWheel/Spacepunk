@@ -292,12 +292,12 @@ void Server::handleNetMessages() {
 								// only update the player's position if they are on the world that they say they are.
 								if( world != entity->getWorld() ) {
 									Packet packet;
-									packet.write32(entity->getAng().degreesRoll());
-									packet.write32(entity->getAng().degreesPitch());
-									packet.write32(entity->getAng().degreesYaw());
-									packet.write32(entity->getPos().z);
-									packet.write32(entity->getPos().y);
-									packet.write32(entity->getPos().x);
+									packet.write32(entity->getOffset().z);
+									packet.write32(entity->getOffset().y);
+									packet.write32(entity->getOffset().x);
+
+									const Entity* anchor = entity->getAnchor();
+									packet.write32(anchor ? anchor->getUID() : World::nuid);
 
 									World* world = entity->getWorld();
 									assert(world);
@@ -555,15 +555,9 @@ void Server::postProcess() {
 		// send entity updates to client
 		if( net->isConnected() ) {
 			if( ticks % (mainEngine->getTicksPerSecond()/10) == 0 ) {
-				Uint32 worldIndex;
-				Node<World*>* node;
-				for( worldIndex = 0, node = worlds.getFirst(); node != nullptr; node = node->getNext(), ++worldIndex ) {
-					World* world = node->getData();
-
+				for( auto world : worlds ) {
 					for( Uint32 c=0; c<World::numBuckets; ++c ) {
-						for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-							Entity* entity = node->getData();
-
+						for( auto entity : world->getEntities(c) ) {
 							if( !entity->isFlag(Entity::flag_t::FLAG_UPDATE) || entity->isFlag(Entity::flag_t::FLAG_LOCAL) ) {
 								// don't update local-only entities
 								continue;
@@ -580,34 +574,7 @@ void Server::postProcess() {
 
 								// update entity for client
 								Packet packet;
-
-								if( player ) {
-									packet.write32((Sint32)(entity->getLookDir().degreesRoll() * 32));
-									packet.write32((Sint32)(entity->getLookDir().degreesPitch() * 32));
-									packet.write32((Sint32)(entity->getLookDir().degreesYaw() * 32));
-									packet.write8(player->hasJumped() ? 1 : 0);
-									packet.write8(player->isMoving() ? 1 : 0);
-									packet.write8(player->isCrouching() ? 1 : 0);
-									packet.write32(player->getServerID());
-									packet.write8(1); // signifies this is a player
-								} else {
-									packet.write8(0); // signifies this is not a player, stop here
-								}
-								packet.write8(entity->isFalling() ? 1U : 0U);
-								packet.write32((Sint32)(entity->getAng().degreesRoll() * 32));
-								packet.write32((Sint32)(entity->getAng().degreesPitch() * 32));
-								packet.write32((Sint32)(entity->getAng().degreesYaw() * 32));
-								packet.write32((Sint32)(entity->getVel().z * 128));
-								packet.write32((Sint32)(entity->getVel().y * 128));
-								packet.write32((Sint32)(entity->getVel().x * 128));
-								packet.write32((Sint32)(entity->getPos().z * 32));
-								packet.write32((Sint32)(entity->getPos().y * 32));
-								packet.write32((Sint32)(entity->getPos().x * 32));
-								packet.write32(entity->getDefIndex());
-								packet.write32(entity->getUID());
-								packet.write32(worldIndex);
-								packet.write("ENTU");
-
+								entity->updatePacket(packet);
 								net->signPacket(packet);
 								net->sendPacket(remote->id, packet);
 							}
