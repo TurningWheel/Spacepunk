@@ -20,11 +20,11 @@
 #include "Map.hpp"
 #include "Path.hpp"
 #include "Tile.hpp"
+#include "Script.hpp"
 
 #include <memory>
 
 class Engine;
-class Script;
 class World;
 class Light;
 class ShaderProgram;
@@ -169,7 +169,7 @@ public:
 
 	// send a signal from server/client or vice versa requesting they run a function
 	// @param funcName the name of the function to remote execute
-	void remoteExecute(const char* funcName);
+	void remoteExecute(const char* funcName, const Script::Args& args);
 
 	// fill out an update packet for this entity
 	// @param packet the packet to fill out
@@ -177,7 +177,7 @@ public:
 
 	// run a script function with the given name
 	// @param funcName the name of the function to execute
-	void dispatch(const char* funcName);
+	void dispatch(const char* funcName, Script::Args& args);
 
 	// removes the entity from the current simulation
 	void remove();

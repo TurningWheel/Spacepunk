@@ -42,6 +42,10 @@ public:
 		virtual var_t getType() = 0;
 		virtual void push(lua_State* lua) = 0;
 		virtual param_t* copy() = 0;
+		virtual const char* str() = 0;
+
+	protected:
+		String string;
 	};
 
 	// boolean parameter
@@ -56,13 +60,20 @@ public:
 		virtual param_t* copy() override {
 			return new param_bool_t(value);
 		}
+		virtual const char* str() override {
+			return value ? "tb" : "fb";
+		}
 		bool value = false;
 	};
 
 	// integer parameter
 	struct param_int_t : param_t {
-		param_int_t() {}
-		param_int_t(const int _value) : value(_value) {}
+		param_int_t() {
+			string.alloc(6);
+		}
+		param_int_t(const int _value) : value(_value) {
+			string.alloc(6);
+		}
 		virtual ~param_int_t() {}
 		virtual var_t getType() override { return TYPE_INTEGER; }
 		virtual void push(lua_State* lua) override {
@@ -71,13 +82,24 @@ public:
 		virtual param_t* copy() override {
 			return new param_int_t(value);
 		}
+		virtual const char* str() override {
+			Uint32* p = (Uint32*)(const_cast<char*>(string.get()));
+			*p = value;
+			string[4] = 'i';
+			string[5] = '\0';
+			return string.get();
+		}
 		int value = 0;
 	};
 
 	// float parameter
 	struct param_float_t : param_t {
-		param_float_t() {}
-		param_float_t(const float _value) : value(_value) {}
+		param_float_t() {
+			string.alloc(6);
+		}
+		param_float_t(const float _value) : value(_value) {
+			string.alloc(6);
+		}
 		virtual ~param_float_t() {}
 		virtual var_t getType() override { return TYPE_FLOAT; }
 		virtual void push(lua_State* lua) override {
@@ -85,6 +107,13 @@ public:
 		}
 		virtual param_t* copy() override {
 			return new param_float_t(value);
+		}
+		virtual const char* str() override {
+			float* p = (float*)(const_cast<char*>(string.get()));
+			*p = value;
+			string[4] = 'f';
+			string[5] = '\0';
+			return string.get();
 		}
 		float value = 0.f;
 	};
@@ -101,6 +130,13 @@ public:
 		virtual param_t* copy() override {
 			return new param_string_t(value);
 		}
+		virtual const char* str() override {
+			string.alloc(value.getSize() + 5);
+			string.format("%s    s", value.get());
+			float* p = (float*)(const_cast<char*>(string.get()) + value.length());
+			*p = value.length();
+			return string.get();
+		}
 		String value;
 	};
 
@@ -116,6 +152,9 @@ public:
 		virtual param_t* copy() override {
 			return new param_pointer_t(value);
 		}
+		virtual const char* str() override {
+			return "p";
+		}
 		void* value = nullptr;
 	};
 
@@ -129,6 +168,9 @@ public:
 		}
 		virtual param_t* copy() override {
 			return new param_nil_t();
+		}
+		virtual const char* str() override {
+			return "n";
 		}
 	};
 

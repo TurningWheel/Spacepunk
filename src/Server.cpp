@@ -267,8 +267,60 @@ void Server::handleNetMessages() {
 							funcName[127] = '\0';
 							packet.read(funcName, funcNameLen);
 
+							// read args
+							Uint32 argsLen;
+							packet.read32(argsLen);
+							Script::Args args;
+							for (Uint32 c = 0; c < argsLen; ++c) {
+								char argType;
+								packet.read8((Uint8&)argType);
+								switch (argType) {
+								case 'b': {
+									char value;
+									packet.read8((Uint8&)value);
+									if (value == 't') {
+										args.addBool(true);
+									} else if (value == 'f') {
+										args.addBool(false);
+									}
+									break;
+								}
+								case 'i': {
+									Uint32 value;
+									packet.read32(value);
+									args.addInt((int)value);
+									break;
+								}
+								case 'f': {
+									float value;
+									packet.read32((Uint32&)value);
+									args.addFloat(value);
+									break;
+								}
+								case 's': {
+									Uint32 len;
+									packet.read32(len);
+									String value;
+									value.alloc(len + 1);
+									value[len] = '\0';
+									packet.read(&value[0], len);
+									args.addString(value);
+									break;
+								}
+								case 'p': {
+									mainEngine->fmsg(Engine::MSG_ERROR, "Client got RFC with a pointer, will be nullptr");
+									args.addPointer(nullptr);
+									break;
+								}
+								case 'n': {
+									args.addNil();
+									break;
+								}
+								}
+							}
+
 							// run function
-							entity->dispatch(funcName);
+							entity->dispatch(funcName, args);
 						}
 
 						continue;

@@ -429,12 +429,18 @@ void Entity::updatePacket(Packet& packet) const {
 	packet.write("ENTU");
 }
 
-void Entity::remoteExecute(const char* funcName) {
+void Entity::remoteExecute(const char* funcName, const Script::Args& args) {
 	Game* game = getGame();
 	if (!game) {
 		return;
 	}
 	Packet packet;
+	if (args.getList().getSize()) {
+		for (int c = args.getList().getSize() - 1; c >= 0; --c) {
+			packet.write(args.getList()[c]->str());
+		}
+	}
+	packet.write32(args.getSize());
 	packet.write(funcName);
 	packet.write32((Uint32)strlen(funcName));
 	packet.write32(uid);
@@ -444,9 +450,9 @@ void Entity::remoteExecute(const char* funcName) {
 	game->getNet()->broadcastSafe(packet);
 }
 
-void Entity::dispatch(const char* funcName) {
+void Entity::dispatch(const char* funcName, Script::Args& args) {
 	if (script) {
-		script->dispatch(funcName);
+		script->dispatch(funcName, &args);
 	}
 }
 

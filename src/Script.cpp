@@ -188,6 +188,18 @@ void Script::exposeEngine() {
 	;
 
 	luabridge::getGlobalNamespace(lua)
+		.beginClass<Script::Args>("ScriptArgs")
+		.addFunction("getSize", &Script::Args::getSize)
+		.addFunction("addBool", &Script::Args::addBool)
+		.addFunction("addInt", &Script::Args::addInt)
+		.addFunction("addFloat", &Script::Args::addFloat)
+		.addFunction("addString", &Script::Args::addString)
+		.addFunction("addPointer", &Script::Args::addPointer)
+		.addFunction("addNil", &Script::Args::addNil)
+		.endClass()
+	;
+
+	luabridge::getGlobalNamespace(lua)
 		.beginClass<glm::mat4>("matrix4x4")
 		.endClass()
 	;
