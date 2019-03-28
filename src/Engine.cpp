@@ -773,6 +773,10 @@ void Engine::dumpResources() {
 }
 
 void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
+	if (fmt == nullptr) {
+		return;
+	}
+
 #ifdef NDEBUG
 	if( msgType==Engine::MSG_DEBUG ) {
 		return;

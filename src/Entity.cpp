@@ -437,7 +437,9 @@ void Entity::remoteExecute(const char* funcName, const Script::Args& args) {
 	Packet packet;
 	if (args.getList().getSize()) {
 		for (int c = args.getList().getSize() - 1; c >= 0; --c) {
-			packet.write(args.getList()[c]->str());
+			auto arg = args.getList()[c];
+			const char* str = arg->str();
+			packet.write(str, arg->strSize());
 		}
 	}
 	packet.write32(args.getSize());
@@ -1045,6 +1047,16 @@ int Entity::getKeyValueAsInt(const char* key) const
 		return strtol(value->get(), nullptr, 10);
 	} else {
 		return 0;
+	}
+}
+
+bool Entity::getKeyValueAsBool(const char* key) const
+{
+	const String* value = keyvalues.find(key);
+	if (value) {
+		return *value == "true";
+	} else {
+		return false;
 	}
 }
 

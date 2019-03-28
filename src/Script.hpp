@@ -39,10 +39,11 @@ public:
 		param_t() {}
 		virtual ~param_t() {}
 
-		virtual var_t getType() = 0;
-		virtual void push(lua_State* lua) = 0;
-		virtual param_t* copy() = 0;
+		virtual var_t getType() const = 0;
+		virtual void push(lua_State* lua) const = 0;
+		virtual param_t* copy() const = 0;
 		virtual const char* str() = 0;
+		Uint32 strSize() const { return string.getSize(); }
 
 	protected:
 		String string;
@@ -50,14 +51,18 @@ public:
 
 	// boolean parameter
 	struct param_bool_t : param_t {
-		param_bool_t() {}
-		param_bool_t(const bool _value) : value(_value) {}
+		param_bool_t() {
+			string.alloc(2);
+		}
+		param_bool_t(const bool _value) : value(_value) {
+			string.alloc(2);
+		}
 		virtual ~param_bool_t() {}
-		virtual var_t getType() override { return TYPE_BOOLEAN; }
-		virtual void push(lua_State* lua) override {
+		virtual var_t getType() const override { return TYPE_BOOLEAN; }
+		virtual void push(lua_State* lua) const override {
 			lua_pushboolean(lua, value ? 1 : 0);
 		}
-		virtual param_t* copy() override {
+		virtual param_t* copy() const override {
 			return new param_bool_t(value);
 		}
 		virtual const char* str() override {
@@ -69,24 +74,23 @@ public:
 	// integer parameter
 	struct param_int_t : param_t {
 		param_int_t() {
-			string.alloc(6);
+			string.alloc(5);
 		}
 		param_int_t(const int _value) : value(_value) {
-			string.alloc(6);
+			string.alloc(5);
 		}
 		virtual ~param_int_t() {}
-		virtual var_t getType() override { return TYPE_INTEGER; }
-		virtual void push(lua_State* lua) override {
+		virtual var_t getType() const override { return TYPE_INTEGER; }
+		virtual void push(lua_State* lua) const override {
 			lua_pushinteger(lua, static_cast<lua_Integer>(value));
 		}
-		virtual param_t* copy() override {
+		virtual param_t* copy() const override {
 			return new param_int_t(value);
 		}
 		virtual const char* str() override {
-			Uint32* p = (Uint32*)(const_cast<char*>(string.get()));
+			Uint32* p = (Uint32*)(&string[0]);
 			*p = value;
 			string[4] = 'i';
-			string[5] = '\0';
 			return string.get();
 		}
 		int value = 0;
@@ -95,24 +99,23 @@ public:
 	// float parameter
 	struct param_float_t : param_t {
 		param_float_t() {
-			string.alloc(6);
+			string.alloc(5);
 		}
 		param_float_t(const float _value) : value(_value) {
-			string.alloc(6);
+			string.alloc(5);
 		}
 		virtual ~param_float_t() {}
-		virtual var_t getType() override { return TYPE_FLOAT; }
-		virtual void push(lua_State* lua) override {
+		virtual var_t getType() const override { return TYPE_FLOAT; }
+		virtual void push(lua_State* lua) const override {
 			lua_pushnumber(lua, static_cast<lua_Number>(value));
 		}
-		virtual param_t* copy() override {
+		virtual param_t* copy() const override {
 			return new param_float_t(value);
 		}
 		virtual const char* str() override {
-			float* p = (float*)(const_cast<char*>(string.get()));
+			float* p = (float*)(&string[0]);
 			*p = value;
 			string[4] = 'f';
-			string[5] = '\0';
 			return string.get();
 		}
 		float value = 0.f;
@@ -123,18 +126,19 @@ public:
 		param_string_t() {}
 		param_string_t(const String& _value) : value(_value) {}
 		virtual ~param_string_t() {}
-		virtual var_t getType() override { return TYPE_STRING; }
-		virtual void push(lua_State* lua) override {
+		virtual var_t getType() const override { return TYPE_STRING; }
+		virtual void push(lua_State* lua) const override {
 			lua_pushlstring(lua, value.get(), value.getSize());
 		}
-		virtual param_t* copy() override {
+		virtual param_t* copy() const override {
 			return new param_string_t(value);
 		}
 		virtual const char* str() override {
-			string.alloc(value.getSize() + 5);
-			string.format("%s    s", value.get());
-			float* p = (float*)(const_cast<char*>(string.get()) + value.length());
+			string.alloc(value.getSize() + 4);
+			string.format("%s\0\0\0\0", value.get());
+			Uint32* p = (Uint32*)(&string[value.length()]);
 			*p = value.length();
+			string[string.getSize() - 1] = 's';
 			return string.get();
 		}
 		String value;
@@ -142,14 +146,18 @@ public:
 
 	// pointer parameter
 	struct param_pointer_t : param_t {
-		param_pointer_t() {}
-		param_pointer_t(void* _value) : value(_value) {}
+		param_pointer_t() {
+			string.alloc(1);
+		}
+		param_pointer_t(void* _value) : value(_value) {
+			string.alloc(1);
+		}
 		virtual ~param_pointer_t() {}
-		virtual var_t getType() override { return TYPE_POINTER; }
-		virtual void push(lua_State* lua) override {
+		virtual var_t getType() const override { return TYPE_POINTER; }
+		virtual void push(lua_State* lua) const override {
 			lua_pushlightuserdata(lua, value);
 		}
-		virtual param_t* copy() override {
+		virtual param_t* copy() const override {
 			return new param_pointer_t(value);
 		}
 		virtual const char* str() override {
@@ -160,13 +168,15 @@ public:
 
 	// nil parameter
 	struct param_nil_t : param_t {
-		param_nil_t() {}
+		param_nil_t() {
+			string.alloc(1);
+		}
 		virtual ~param_nil_t() {}
-		virtual var_t getType() override { return TYPE_NIL; }
-		virtual void push(lua_State* lua) override {
+		virtual var_t getType() const override { return TYPE_NIL; }
+		virtual void push(lua_State* lua) const override {
 			lua_pushnil(lua);
 		}
-		virtual param_t* copy() override {
+		virtual param_t* copy() const override {
 			return new param_nil_t();
 		}
 		virtual const char* str() override {

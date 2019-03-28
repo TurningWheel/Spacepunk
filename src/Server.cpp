@@ -266,6 +266,7 @@ void Server::handleNetMessages() {
 							char funcName[128];
 							funcName[127] = '\0';
 							packet.read(funcName, funcNameLen);
+							funcName[funcNameLen] = '\0';
 
 							// read args
 							Uint32 argsLen;
@@ -313,6 +314,11 @@ void Server::handleNetMessages() {
 									break;
 								}
 								case 'n': {
+									args.addNil();
+									break;
+								}
+								default: {
+									mainEngine->fmsg(Engine::MSG_ERROR, "Unknown arg type for remote function call!");
 									args.addNil();
 									break;
 								}

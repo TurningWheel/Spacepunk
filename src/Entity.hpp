@@ -214,6 +214,11 @@ public:
 	// @return the value associated with the key, or 0 if it could not be found
 	int getKeyValueAsInt(const char* key) const;
 
+	// get the specified key value as a bool
+	// @param key the key to search for
+	// @return the value associated with the key, or false if it could not be found
+	bool getKeyValueAsBool(const char* key) const;
+
 	// same as getKeyValueAsString()
 	// @param key the key to search for
 	// @return the value associated with the key, or "" if it could not be found

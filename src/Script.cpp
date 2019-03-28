@@ -189,6 +189,7 @@ void Script::exposeEngine() {
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Script::Args>("ScriptArgs")
+		.addConstructor<void (*)()>()
 		.addFunction("getSize", &Script::Args::getSize)
 		.addFunction("addBool", &Script::Args::addBool)
 		.addFunction("addInt", &Script::Args::addInt)
@@ -561,6 +562,7 @@ void Script::exposeEntity() {
 		.addFunction("getKeyValueAsString", &Entity::getKeyValueAsString)
 		.addFunction("getKeyValueAsFloat", &Entity::getKeyValueAsFloat)
 		.addFunction("getKeyValueAsInt", &Entity::getKeyValueAsInt)
+		.addFunction("getKeyValueAsBool", &Entity::getKeyValueAsBool)
 		.addFunction("getKeyValue", &Entity::getKeyValue)
 		.addFunction("isFlag", &Entity::isFlag)
 		.addFunction("isFalling", &Entity::isFalling)
