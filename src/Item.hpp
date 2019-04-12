@@ -6,6 +6,7 @@
 #include "String.hpp"
 #include "ArrayList.hpp"
 #include "Map.hpp"
+#include "Inventory.hpp"
 #include "Entity.hpp"
 
 class Item {
@@ -114,4 +115,6 @@ private:
 	//Conditions	conditionalEffects;
 
 	Map<String, Action> actions;						// map actions by name (eg "tap", "hold")
+
+	Inventory inventory;
 };

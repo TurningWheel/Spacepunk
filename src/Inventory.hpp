@@ -19,4 +19,8 @@ public:
 	};
 
 	Map<String, Slot*> items;
+
+	// save/load this object to a file
+	// @param file interface to serialize with
+	void serialize(FileInterface * file);
 };

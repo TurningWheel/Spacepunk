@@ -947,6 +947,7 @@ void Entity::serialize(FileInterface * file) {
 	file->property("flags", flags);
 	file->property("falling", falling);
 	file->property("sort", sort);
+	file->property("item", item);
 	if( version >= 1 ) {
 		file->property("keys", keyvalues);
 	}

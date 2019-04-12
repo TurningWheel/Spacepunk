@@ -20,6 +20,7 @@
 #include "Map.hpp"
 #include "Path.hpp"
 #include "Tile.hpp"
+#include "Item.hpp"
 #include "Script.hpp"
 
 #include <memory>
@@ -490,6 +491,8 @@ protected:
 	bool falling = false;					// when true the entity is off the floor, otherwise they are on the floor
 
 	Map<String, String> keyvalues;
+
+	Item item;
 
 	// editor variables
 	bool selected = false;
