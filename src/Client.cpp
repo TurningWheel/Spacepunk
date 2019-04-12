@@ -26,6 +26,7 @@ Client::Client() {
 	renderer = new Renderer();
 	mixer = new Mixer();
 	script = new Script(*this);
+	gui = new Frame("root");
 }
 
 Client::~Client() {
@@ -707,10 +708,7 @@ void Client::closeEditor() {
 		editor = nullptr;
 	}
 
-	if( gui ) {
-		delete gui;
-		gui = nullptr;
-	}
+	gui->clear();
 
 	closeAllWorlds();
 }
@@ -718,7 +716,8 @@ void Client::closeEditor() {
 void Client::startEditor(const char* path) {
 	closeEditor();
 	editor = new Editor();
-	gui = new Frame("editor_gui");
+	gui->clear();
+	gui->addFrame("editor_gui");
 
 	// destroy all players
 	players.removeAll();
@@ -893,7 +892,7 @@ void Client::process() {
 			if (player.getClientID() == Player::invalidID) {
 				// in the context of a client, this means *we* own the player.
 				// in any other circumstance, it would contain a legitimate client ID.
-				player.updateCamera();
+				player.process();
 			}
 		}
 

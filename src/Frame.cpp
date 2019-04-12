@@ -216,7 +216,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			actualImage = renderer.getNullImage();
 		} else {
 			// this is done just in case the cache was dumped...
-			actualImage = image.image = mainEngine->getImageResource().dataForString(image.name.get());
+			actualImage = image.image = mainEngine->getImageResource().dataForString(image.path.get());
 			if( actualImage==nullptr ) {
 				actualImage = renderer.getNullImage();
 			} 
@@ -646,13 +646,17 @@ Field* Frame::addField(const char* name, const int len) {
 	return field;
 }
 
-Frame::image_t* Frame::addImage( int x, int y, const glm::vec4& color, const char* name ) {
+Frame::image_t* Frame::addImage( int x, int y, const glm::vec4& color, Image* image, const char* name ) {
+	if (!image || !name) {
+		return nullptr;
+	}
 	image_t* imageObj = new image_t();
 	imageObj->x = x;
 	imageObj->y = y;
 	imageObj->color = color;
 	imageObj->name = name;
-	imageObj->image = mainEngine->getImageResource().dataForString(name);
+	imageObj->image = image;
+	imageObj->path = image->getName();
 	images.addNodeLast(imageObj);
 	return imageObj;
 }

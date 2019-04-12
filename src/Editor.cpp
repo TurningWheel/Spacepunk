@@ -2441,7 +2441,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f,.5f,.5f,1.f));
-		topFrame->addImage(3,3,glm::vec4(1.f),"images/gui/icon_translate-x.png");
+		topFrame->addImage(3,3,glm::vec4(1.f), mainEngine->getImageResource().dataForString("images/gui/icon_translate-x.png"));
 
 		{
 			Frame* frame = new Frame(*topFrame,"editor_FramePanelX");
@@ -2476,7 +2476,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f,.5f,.5f,1.f));
-		topFrame->addImage(3,3,glm::vec4(1.f),"images/gui/icon_translate-y.png");
+		topFrame->addImage(3,3,glm::vec4(1.f), mainEngine->getImageResource().dataForString("images/gui/icon_translate-y.png"));
 
 		{
 			Frame* frame = new Frame(*topFrame,"editor_FramePanelY");
@@ -2511,7 +2511,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f,.5f,.5f,1.f));
-		topFrame->addImage(3,3,glm::vec4(1.f),"images/gui/icon_translate-z.png");
+		topFrame->addImage(3,3,glm::vec4(1.f), mainEngine->getImageResource().dataForString("images/gui/icon_translate-z.png"));
 
 		{
 			Frame* frame = new Frame(*topFrame,"editor_FramePanelZ");
@@ -4178,14 +4178,14 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 			int x = image->x;
 			int y = image->y;
 			parent->remove(rotateImg);
-			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),translateImg);
+			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(translateImg));
 		} else {
 			Frame::image_t* image = parent->findImage(scaleImg);
 			if( image ) {
 				int x = image->x;
 				int y = image->y;
 				parent->remove(scaleImg);
-				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),translateImg);
+				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(translateImg));
 			}
 		}
 	}
@@ -4197,14 +4197,14 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 			int x = image->x;
 			int y = image->y;
 			parent->remove(translateImg);
-			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),rotateImg);
+			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(rotateImg));
 		} else {
 			Frame::image_t* image = parent->findImage(scaleImg);
 			if( image ) {
 				int x = image->x;
 				int y = image->y;
 				parent->remove(scaleImg);
-				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),rotateImg);
+				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(rotateImg));
 			}
 		}
 	}
@@ -4216,14 +4216,14 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 			int x = image->x;
 			int y = image->y;
 			parent->remove(translateImg);
-			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),scaleImg);
+			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(scaleImg));
 		} else {
 			Frame::image_t* image = parent->findImage(rotateImg);
 			if( image ) {
 				int x = image->x;
 				int y = image->y;
 				parent->remove(rotateImg);
-				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),scaleImg);
+				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(scaleImg));
 			}
 		}
 	}
