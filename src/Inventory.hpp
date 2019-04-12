@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "ArrayList.hpp"
+#include "Map.hpp"
+#include "String.hpp"
 
 class Item;
 
@@ -12,5 +13,10 @@ public:
 	float bioMatter;
 	float neuroThread;
 
-	ArrayList<Item*> items;
+	class Slot {
+		bool locked; // if the slot is locked
+		Item* item;
+	};
+
+	Map<String, Slot*> items;
 };

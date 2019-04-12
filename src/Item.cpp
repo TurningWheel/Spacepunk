@@ -35,7 +35,6 @@ void Item::serialize(FileInterface* file) {
 	file->property("maxCooldown", maxCooldown);
 	file->property("slotRestrictions", slotRestrictions);
 	//file->property("conditionalEffects", conditionalEffects);
-	file->property("entity", entity);
 	file->property("actions", actions);
 }
 

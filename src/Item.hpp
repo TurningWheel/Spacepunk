@@ -10,14 +10,7 @@
 
 class Item {
 public:
-	Item() : entity(nullptr) {
-	}
-	Item(const Item& src) : entity(nullptr) {
-		src.entity.copy(nullptr, &entity);
-	}
-	Item& operator=(const Item& src) {
-		src.entity.copy(nullptr, &entity);
-		return *this;
+	Item() {
 	}
 
 	typedef ArrayList<String> StringList;
@@ -119,8 +112,6 @@ private:
 	StringList	slotRestrictions;						// list of slots that this item cannot be in
 
 	//Conditions	conditionalEffects;
-
-	Entity		entity;									// contains cosmetic info and such
 
 	Map<String, Action> actions;						// map actions by name (eg "tap", "hold")
 };

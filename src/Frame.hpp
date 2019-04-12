@@ -177,18 +177,18 @@ public:
 	Frame* findHead();
 
 	// getters & setters
-	Frame*				getParent()				{ return parent; }
-	const char*			getName() const			{ return name.get(); }
-	const int			getBorder() const		{ return border; }
-	const Rect<int>&	getSize() const			{ return size; }
-	const Rect<int>&	getActualSize() const	{ return actualSize; }
-	const bool			isHigh() const			{ return high; }
-	LinkedList<Frame*>&		getFrames()				{ return frames; }
-	LinkedList<Field*>&		getFields()				{ return fields; }
+	Frame*						getParent()				{ return parent; }
+	const char*					getName() const			{ return name.get(); }
+	const int					getBorder() const		{ return border; }
+	const Rect<int>&			getSize() const			{ return size; }
+	const Rect<int>&			getActualSize() const	{ return actualSize; }
+	const bool					isHigh() const			{ return high; }
+	LinkedList<Frame*>&			getFrames()				{ return frames; }
+	LinkedList<Field*>&			getFields()				{ return fields; }
 	LinkedList<Button*>&		getButtons()			{ return buttons; }
 	LinkedList<entry_t*>&		getEntries()			{ return list; }
-	const bool			isDisabled() const		{ return disabled; }
-	const bool			isHollow() const		{ return hollow; }
+	const bool					isDisabled() const		{ return disabled; }
+	const bool					isHollow() const		{ return hollow; }
 
 	void	setBorder(const int _border)			{ border = _border; }
 	void	setPos(const int x, const int y)		{ size.x = x; size.y = y; }
