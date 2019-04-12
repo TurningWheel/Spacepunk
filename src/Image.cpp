@@ -31,9 +31,25 @@ const GLuint Image::indices[6] {
 
 Image::Image(const char* _name) : Asset(_name) {
 	bool clamp = false;
-	if (_name && _name[0] == '#') {
-		clamp = true;
-		++_name;
+	bool point = false;
+	if (_name) {
+		switch (_name[0]) {
+		case '#':
+			++_name;
+			clamp = true;
+			break;
+		case '$':
+			++_name;
+			point = true;
+			break;
+		case '%':
+			++_name;
+			clamp = true;
+			point = true;
+			break;
+		default:
+			break;
+		}
 	}
 	path = mainEngine->buildPath(_name).get();
 	
@@ -55,15 +71,20 @@ Image::Image(const char* _name) : Asset(_name) {
 	glBindTexture(GL_TEXTURE_2D, texid);
 	glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, surf->w, surf->h);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
-	if (!clamp) {
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	} else {
+	if (clamp) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	if (point) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	}
 	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.f);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SDL_UnlockSurface(surf);
