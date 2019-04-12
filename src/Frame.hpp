@@ -33,7 +33,7 @@ public:
 		String path;
 		glm::vec4 color;
 		Image* image;
-		int x, y;
+		Rect<Sint32> pos;
 	};
 
 	// frame list entry
@@ -110,13 +110,12 @@ public:
 	Field* addField(const char* name, const int len);
 
 	// adds a new image object to the current frame
-	// @param x x coordinate of the text in the frame
-	// @param y y coordinate of the text in the frame
-	// @param color the color of the text in the frame
+	// @param pos position of the image in the frame
+	// @param color the color of the image
 	// @param image the image to draw
 	// @param name the name of the image (unique id)
 	// @return the newly created image object
-	image_t* addImage( int x, int y, const glm::vec4& color, Image* image, const char* name = "" );
+	image_t* addImage( const Rect<Sint32>& pos, const glm::vec4& color, Image* image, const char* name = "" );
 
 	// adds a new entry to the frame's list
 	// @param name internal name of the new entry

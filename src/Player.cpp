@@ -194,10 +194,12 @@ void Player::setupGUI() {
 
 	// create reticle
 	Image* reticle = mainEngine->getImageResource().dataForString("images/gui/reticle_1.png");
-	int x = camera->getWin().x + camera->getWin().w / 2 - reticle->getWidth() / 2;
-	int y = camera->getWin().y + camera->getWin().h / 2 - reticle->getHeight() / 2;
-	char buf[9] = "reticle"; buf[7] = '0' + localID; buf[8] = '\0';
-	gui->addImage(x, y, glm::vec4(1.f), reticle, buf);
+	int w = reticle->getWidth();
+	int h = reticle->getHeight();
+	int x = camera->getWin().x + camera->getWin().w / 2 - w / 2;
+	int y = camera->getWin().y + camera->getWin().h / 2 - h / 2;
+	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
+	gui->addImage(Rect<Sint32>(x, y, w, h), glm::vec4(1.f), reticle, name);
 }
 
 void Player::updateGUI() {
@@ -208,10 +210,14 @@ void Player::updateGUI() {
 	Frame* gui = client->getGUI(); assert(gui);
 
 	// update reticle position (in-case it moves)
-	char buf[9] = "reticle"; buf[7] = '0' + localID; buf[8] = '\0';
-	auto reticle = gui->findImage(buf); assert(reticle);
-	reticle->x = camera->getWin().x + camera->getWin().w / 2 - reticle->image->getWidth() / 2;
-	reticle->y = camera->getWin().y + camera->getWin().h / 2 - reticle->image->getHeight() / 2;
+	Rect<Sint32> pos;
+	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
+	auto reticle = gui->findImage(name); assert(reticle);
+	pos.w = reticle->image->getWidth();
+	pos.h = reticle->image->getHeight();
+	pos.x = camera->getWin().x + camera->getWin().w / 2 - pos.w / 2;
+	pos.y = camera->getWin().y + camera->getWin().h / 2 - pos.h / 2;
+	reticle->pos = pos;
 }
 
 void Player::updateColors(const colors_t& _colors) {
