@@ -59,6 +59,9 @@ public:
 	// control the player (preprocess)
 	void control();
 
+	// update the player (process)
+	void process();
+
 	// move the camera (postprocess)
 	void updateCamera();
 
@@ -76,6 +79,12 @@ public:
 
 	// used by other clients to set the entity for this player
 	void setEntity(Entity* _entity);
+
+	// setup player gui
+	void setupGUI();
+
+	// update player gui
+	void updateGUI();
 
 	// getters & setters
 	const char*				getName() const			{ return name.get(); }

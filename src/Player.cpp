@@ -161,6 +161,8 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 			rect.w = mainEngine->getXres();
 			rect.h = mainEngine->getYres();
 			camera->setWin(rect);
+
+			setupGUI();
 		} else {
 			// we don't own this player and shouldn't see their camera
 			Rect<Sint32> rect;
@@ -177,6 +179,18 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	}
 
 	return true;
+}
+
+void Player::process() {
+	updateGUI();
+}
+
+void Player::setupGUI() {
+	
+}
+
+void Player::updateGUI() {
+
 }
 
 void Player::updateColors(const colors_t& _colors) {

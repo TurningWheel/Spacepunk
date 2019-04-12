@@ -886,6 +886,17 @@ void Client::process() {
 			textureSelectorActive = editor->isTextureSelectorActive();
 		}
 
+		// update players
+		for (Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
+			Player& player = node->getData();
+
+			if (player.getClientID() == Player::invalidID) {
+				// in the context of a client, this means *we* own the player.
+				// in any other circumstance, it would contain a legitimate client ID.
+				player.updateCamera();
+			}
+		}
+
 		if( !consoleActive ) {
 			// process gui
 			bool usableInterface = true;
