@@ -12,6 +12,8 @@
 #include "Model.hpp"
 #include "BBox.hpp"
 #include "Camera.hpp"
+#include "Frame.hpp"
+#include "Renderer.hpp"
 
 const char* Player::defaultName = "Player";
 const float Player::standFeetHeight = 48.f;
@@ -186,11 +188,36 @@ void Player::process() {
 }
 
 void Player::setupGUI() {
-	
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Frame* gui = client->getGUI(); assert(gui);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+
+	// create reticle
+	Image* reticle = mainEngine->getImageResource().dataForString("images/gui/reticle_1.png");
+	int w = reticle->getWidth();
+	int h = reticle->getHeight();
+	int x = camera->getWin().x + camera->getWin().w / 2 - w / 2;
+	int y = camera->getWin().y + camera->getWin().h / 2 - h / 2;
+	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
+	gui->addImage(Rect<Sint32>(x, y, w, h), glm::vec4(1.f), reticle, name);
 }
 
 void Player::updateGUI() {
+	if (!entity) {
+		return;
+	}
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Frame* gui = client->getGUI(); assert(gui);
 
+	// update reticle position (in-case it moves)
+	Rect<Sint32> pos;
+	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
+	auto reticle = gui->findImage(name); assert(reticle);
+	pos.w = reticle->image->getWidth();
+	pos.h = reticle->image->getHeight();
+	pos.x = camera->getWin().x + camera->getWin().w / 2 - pos.w / 2;
+	pos.y = camera->getWin().y + camera->getWin().h / 2 - pos.h / 2;
+	reticle->pos = pos;
 }
 
 void Player::updateColors(const colors_t& _colors) {

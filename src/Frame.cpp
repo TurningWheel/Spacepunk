@@ -216,17 +216,17 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			actualImage = renderer.getNullImage();
 		} else {
 			// this is done just in case the cache was dumped...
-			actualImage = image.image = mainEngine->getImageResource().dataForString(image.name.get());
+			actualImage = image.image = mainEngine->getImageResource().dataForString(image.path.get());
 			if( actualImage==nullptr ) {
 				actualImage = renderer.getNullImage();
 			} 
 		}
 
 		Rect<int> pos;
-		pos.x = _size.x + image.x - actualSize.x;
-		pos.y =  _size.y + image.y - actualSize.y;
-		pos.w = actualImage->getWidth();
-		pos.h = actualImage->getHeight();
+		pos.x = _size.x + image.pos.x - actualSize.x;
+		pos.y =  _size.y + image.pos.y - actualSize.y;
+		pos.w = image.pos.w > 0 ? image.pos.w : actualImage->getWidth();
+		pos.h = image.pos.h > 0 ? image.pos.h : actualImage->getHeight();
 
 		Rect<int> dest;
 		dest.x = max( _size.x, pos.x );
@@ -646,13 +646,16 @@ Field* Frame::addField(const char* name, const int len) {
 	return field;
 }
 
-Frame::image_t* Frame::addImage( int x, int y, const glm::vec4& color, const char* name ) {
+Frame::image_t* Frame::addImage( const Rect<Sint32>& pos, const glm::vec4& color, Image* image, const char* name ) {
+	if (!image || !name) {
+		return nullptr;
+	}
 	image_t* imageObj = new image_t();
-	imageObj->x = x;
-	imageObj->y = y;
+	imageObj->pos = pos;
 	imageObj->color = color;
 	imageObj->name = name;
-	imageObj->image = mainEngine->getImageResource().dataForString(name);
+	imageObj->image = image;
+	imageObj->path = image->getName();
 	images.addNodeLast(imageObj);
 	return imageObj;
 }
