@@ -863,6 +863,18 @@ void Client::preProcess() {
 			}
 		}
 	}
+	if (gui) {
+		Sint32 xres = mainEngine->getXres();
+		Sint32 yres = mainEngine->getYres();
+		Rect<int> guiRect;
+		guiRect.x = 0;
+		guiRect.y = 0;
+		guiRect.w = xres;
+		guiRect.h = yres;
+		gui->setSize(guiRect);
+		gui->setActualSize(guiRect);
+		gui->setHollow(true);
+	}
 	handleNetMessages();
 	Game::preProcess();
 }

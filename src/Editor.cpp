@@ -1707,7 +1707,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 	Sint32 xres = mainEngine->getXres();
 	Sint32 yres = mainEngine->getYres();
 
-	Frame* gui = client->getGUI();
+	Frame* gui = client->getGUI()->findFrame("editor_gui");
 	Rect<int> guiRect;
 	guiRect.x = 0;
 	guiRect.y = 0;
