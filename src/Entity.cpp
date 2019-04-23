@@ -936,7 +936,7 @@ bool Entity::interact(Entity& user, BBox& bbox)
 }
 
 void Entity::serialize(FileInterface * file) {
-	Uint32 version = 1;
+	Uint32 version = 2;
 	file->property("Entity::version", version);
 
 	file->property("name", name);
@@ -947,7 +947,9 @@ void Entity::serialize(FileInterface * file) {
 	file->property("flags", flags);
 	file->property("falling", falling);
 	file->property("sort", sort);
-	file->property("item", item);
+	if (version >= 2) {
+		file->property("item", item);
+	}
 	if( version >= 1 ) {
 		file->property("keys", keyvalues);
 	}

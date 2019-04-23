@@ -7,7 +7,7 @@
 #include "ArrayList.hpp"
 #include "Map.hpp"
 #include "Inventory.hpp"
-#include "Entity.hpp"
+#include "WideVector.hpp"
 
 class Item {
 public:
@@ -18,15 +18,6 @@ public:
 	typedef Map<String, String> StringMap;
 
 	struct Action {
-		Action() : projectile(nullptr) {}
-		Action(const Action& src) : projectile(nullptr) {
-			src.projectile.copy(nullptr, &projectile);
-		}
-		Action& operator=(const Action& src) {
-			src.projectile.copy(nullptr, &projectile);
-			return *this;
-		}
-
 		StringList	comboItems;							// a list of items which must be simultaneously activated to trigger this action
 
 		float		damage = 0.f;						// damage value
@@ -49,7 +40,7 @@ public:
 		bool		shootProjectile = false;			// shoot a projectile instead of a hitscan
 		float		gravity = 0.f;						// projectile gravity in m/s
 		float		speed = 0.f;						// projectile speed in m/s
-		Entity		projectile;							// projectile cosmetics n stuff
+		//Entity	projectile;							// projectile cosmetics n stuff
 
 		// save/load this object to a file
 		// @param file interface to serialize with

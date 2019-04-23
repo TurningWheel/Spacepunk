@@ -56,7 +56,7 @@ void Item::Action::serialize(FileInterface* file) {
 	file->property("shootProjectile", shootProjectile);
 	file->property("gravity", gravity);
 	file->property("speed", speed);
-	file->property("projectile", projectile);
+	//file->property("projectile", projectile);
 }
 
 /*void Item::ConditionalEffect::serialize(FileInterface* file) {

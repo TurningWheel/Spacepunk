@@ -50,15 +50,25 @@ public:
 	// @return resultant state of the button after processing
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
+	// callback function for processing a click
+	class Function {
+	public:
+		// handle the button click
+		// @param args the args to consume
+		// @return error code
+		virtual int operator ()(Script::Args& args) const = 0;
+	};
+
 	// getters & setters
-	const char*			getName() const			{ return name.get(); }
-	const int			getBorder() const		{ return border; }
-	const Rect<int>&	getSize() const			{ return size; }
-	const bool			isPressed() const		{ return pressed; }
-	const bool			isHighlighted() const	{ return highlighted; }
-	const bool			isDisabled() const		{ return disabled; }
-	const style_t		getStyle() const		{ return style; }
-	Script::Args&		getParams()				{ return params; }
+	const char*			getName() const				{ return name.get(); }
+	const int			getBorder() const			{ return border; }
+	const Rect<int>&	getSize() const				{ return size; }
+	const bool			isPressed() const			{ return pressed; }
+	const bool			isHighlighted() const		{ return highlighted; }
+	const bool			isDisabled() const			{ return disabled; }
+	const style_t		getStyle() const			{ return style; }
+	Script::Args&		getParams()					{ return params; }
+	const Function*		getClickCallback() const	{ return clickCallback;  }
 
 	void	setBorder(const int _border)				{ border = _border; }
 	void	setPos(const int x, const int y)			{ size.x = x; size.y = y; }
@@ -72,9 +82,11 @@ public:
 	void	setDisabled(const bool _disabled)			{ disabled = _disabled; }
 	void	setStyle(const style_t _style)				{ style = _style; }
 	void	setPressed(const bool _pressed)				{ reallyPressed = _pressed; }
+	void	setClickCallback(const Function* fn)		{ clickCallback = fn; }
 
 private:
-	Frame* parent = nullptr;		// parent frame
+	Frame* parent = nullptr;					// parent frame
+	const Function* clickCallback = nullptr;	// native callback for clicking. if nullptr, a script callback is used instead
 
 	String name;					// internal button name
 	String text;					// button text, if any
