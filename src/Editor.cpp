@@ -3628,6 +3628,7 @@ void Editor::editEntities(bool usable) {
 					for( Node<Entity*>* node=copiedEntities.getFirst(); node!=nullptr; node=node->getNext() ) {
 						Entity* entity = node->getData();
 						entity->insertIntoWorld(&world);
+						entity->finishInsertIntoWorld();
 						entity->setSelected(true);
 						entity->setHighlighted(true);
 						entity->addToEditorList();
