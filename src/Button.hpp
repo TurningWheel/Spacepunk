@@ -56,7 +56,9 @@ public:
 		// handle the button click
 		// @param args the args to consume
 		// @return error code
-		virtual int operator ()(Script::Args& args) const = 0;
+		virtual int operator ()(Script::Args& args) const {
+			return 0;
+		}
 	};
 
 	// getters & setters
@@ -68,7 +70,8 @@ public:
 	const bool			isDisabled() const			{ return disabled; }
 	const style_t		getStyle() const			{ return style; }
 	Script::Args&		getParams()					{ return params; }
-	const Function*		getClickCallback() const	{ return clickCallback;  }
+	const Function&		getCallback() const			{ return callback;  }
+	bool				isNativeCallback() const	{ return nativeCallback;  }
 
 	void	setBorder(const int _border)				{ border = _border; }
 	void	setPos(const int x, const int y)			{ size.x = x; size.y = y; }
@@ -82,12 +85,13 @@ public:
 	void	setDisabled(const bool _disabled)			{ disabled = _disabled; }
 	void	setStyle(const style_t _style)				{ style = _style; }
 	void	setPressed(const bool _pressed)				{ reallyPressed = _pressed; }
-	void	setClickCallback(const Function* fn)		{ clickCallback = fn; }
+	void	setCallback(const Function& fn)				{ callback = fn; }
+	void	setNativeCallback(bool _enabled)			{ nativeCallback = _enabled; }
 
 private:
-	Frame* parent = nullptr;					// parent frame
-	const Function* clickCallback = nullptr;	// native callback for clicking. if nullptr, a script callback is used instead
-
+	Frame* parent = nullptr;		// parent frame
+	Function callback;				// native callback for clicking
+	bool nativeCallback = false;	// if true, the native callback is used instead of a script callback
 	String name;					// internal button name
 	String text;					// button text, if any
 	String icon;					// icon, if any (supersedes text content)

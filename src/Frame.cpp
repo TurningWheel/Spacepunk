@@ -405,8 +405,8 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 						mainEngine->fmsg(Engine::MSG_WARN,"unnamed button clicked in '%s' gui",name.get());
 					} else if( script ) {
 						Script::Args args(button.getParams());
-						if (button.getClickCallback()) {
-							(*button.getClickCallback())(args);
+						if (button.isNativeCallback()) {
+							button.getCallback()(args);
 						} else {
 							script->dispatch(button.getName(), &args);
 						}
