@@ -523,17 +523,20 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			if( field.isSelected() && fieldResult.highlighted ) {
 				result.usable = usable = false;
 			}
-			if( fieldResult.entered || destField ) {
-				if( name.empty() ) {
-					mainEngine->fmsg(Engine::MSG_WARN,"returned field in unnamed gui frame");
-				} else {
-					if( !field.getName() || field.getName()[0] == '\0' ) {
-						mainEngine->fmsg(Engine::MSG_WARN,"unnamed field returned in '%s' gui",name.get());
-					} else if( script ) {
-						Script::Args args(field.getParams());
-						args.addString(field.getText());
-						script->dispatch(field.getName(), &args);
-					}
+		}
+
+		if (fieldResult.entered || destField) {
+			if (name.empty()) {
+				mainEngine->fmsg(Engine::MSG_WARN, "returned field in unnamed gui frame");
+			}
+			else {
+				if (!field.getName() || field.getName()[0] == '\0') {
+					mainEngine->fmsg(Engine::MSG_WARN, "unnamed field returned in '%s' gui", name.get());
+				}
+				else if (script) {
+					Script::Args args(field.getParams());
+					args.addString(field.getText());
+					script->dispatch(field.getName(), &args);
 				}
 			}
 		}
@@ -544,8 +547,8 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
-	// all but the parent frame will "capture" the mouse
-	if( parent != nullptr ) {
+	// hollow frames don't capture the mouse
+	if( parent != nullptr && !hollow ) {
 		Sint32 mousex = mainEngine->getMouseX();
 		Sint32 mousey = mainEngine->getMouseY();
 		Sint32 omousex = mainEngine->getOldMouseX();
