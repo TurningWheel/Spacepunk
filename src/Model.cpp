@@ -45,6 +45,17 @@ Model::Model(Entity& _entity, Component* _parent) :
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeString("editor_FrameModelMesh", "Mesh", meshStr));
+	attributes.push(new AttributeString("editor_FrameModelMaterial", "Material", materialStr));
+	attributes.push(new AttributeString("editor_FrameModelDepthFailMaterial", "Depth Fail Material", depthfailStr));
+	attributes.push(new AttributeString("editor_FrameModelAnimation", "Animation", animationStr));
+	attributes.push(new AttributeBool("buttonModelCustomColor", "Custom Color Enabled", shaderVars.customColorEnabled));
+	attributes.push(new AttributeColor("editor_FrameModelCustomColorR", "Custom Red", shaderVars.customColorR));
+	attributes.push(new AttributeColor("editor_FrameModelCustomColorG", "Custom Green", shaderVars.customColorG));
+	attributes.push(new AttributeColor("editor_FrameModelCustomColorB", "Custom Blue", shaderVars.customColorB));
+	attributes.push(new AttributeColor("editor_FrameModelCustomColorA", "Custom Glow", shaderVars.customColorA));
 }
 
 Model::~Model() {
@@ -323,6 +334,7 @@ bool Model::hasAnimations() const {
 }
 
 void Model::load(FILE* fp) {
+	// DEPRECATED, DO NOT USE
 	Component::load(fp);
 
 	Uint32 len = 0;

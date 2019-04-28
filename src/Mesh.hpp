@@ -41,7 +41,7 @@ public:
 
 	// shader vars
 	struct shadervars_t {
-		GLboolean customColorEnabled = GL_FALSE;
+		bool customColorEnabled = false;
 		ArrayList<GLfloat> customColorR = { 1.f, 0.f, 0.f, 1.f };
 		ArrayList<GLfloat> customColorG = { 0.f, 1.f, 0.f, 1.f };
 		ArrayList<GLfloat> customColorB = { 0.f, 0.f, 1.f, 1.f };
@@ -54,11 +54,7 @@ public:
 		void serialize(FileInterface * file) {
 			Uint32 version = 0;
 			file->property("Mesh::version", version);
-
-			bool customColorBool = customColorEnabled == GL_TRUE;
-			file->property("customColorEnabled", customColorBool);
-			customColorEnabled = customColorBool ? GL_TRUE : GL_FALSE;
-
+			file->property("customColorEnabled", customColorEnabled);
 			file->property("customColorR", customColorR);
 			file->property("customColorG", customColorG);
 			file->property("customColorB", customColorB);

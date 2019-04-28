@@ -204,8 +204,8 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 		unsigned int textureUnit = 0;
 		if( camera.getDrawMode() == Camera::DRAW_STANDARD || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL || camera.getDrawMode() == Camera::DRAW_GLOW ) {
 			// load per-mesh shader vars
-			glUniform1i(shader.getUniformLocation("gCustomColorEnabled"), shaderVars.customColorEnabled);
-			if( shaderVars.customColorEnabled == GL_TRUE ) {
+			glUniform1i(shader.getUniformLocation("gCustomColorEnabled"), shaderVars.customColorEnabled ? GL_TRUE : GL_FALSE);
+			if( shaderVars.customColorEnabled == true ) {
 				glUniform4fv(shader.getUniformLocation("gCustomColorR"), 1, &shaderVars.customColorR[0]);
 				glUniform4fv(shader.getUniformLocation("gCustomColorG"), 1, &shaderVars.customColorG[0]);
 				glUniform4fv(shader.getUniformLocation("gCustomColorB"), 1, &shaderVars.customColorB[0]);

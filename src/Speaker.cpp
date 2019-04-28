@@ -37,6 +37,11 @@ Speaker::Speaker(Entity& _entity, Component* _parent) :
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeString("editor_FrameSpeakerDefaultSound", "Default Sound", defaultSound));
+	attributes.push(new AttributeBool("buttonSpeakerDefaultLoop", "Loop", defaultLoop));
+	attributes.push(new AttributeFloat("editor_FrameSpeakerDefaultRange", "Range", defaultRange));
 }
 
 Speaker::~Speaker() {

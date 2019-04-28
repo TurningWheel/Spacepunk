@@ -39,6 +39,11 @@ const char* BBox::shapeStr[SHAPE_MAX] = {
 BBox::BBox(Entity& _entity, Component* _parent) :
 	Component(_entity, _parent) {
 	name = typeStr[COMPONENT_BBOX];
+
+	// exposed attributes
+	attributes.push(new AttributeBool("buttonBBoxEnabled", "Enabled", enabled));
+	attributes.push(new AttributeEnum<shape_t>("editor_FrameBBoxShape", "Shape", shapeStr, shape_t::SHAPE_MAX, shape));
+	attributes.push(new AttributeFloat("editor_FrameBBoxMass", "Mass", mass));
 }
 
 BBox::~BBox() {
@@ -508,7 +513,7 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// build shader vars
 	Mesh::shadervars_t shaderVars;
 	shaderVars.lineWidth = 0;
-	shaderVars.customColorEnabled = GL_TRUE;
+	shaderVars.customColorEnabled = true;
 	shaderVars.customColorR = { 0.f, 0.f, 0.f, 0.f };
 	shaderVars.customColorB = { 0.f, 0.f, 0.f, 0.f };
 

@@ -144,8 +144,8 @@ private:
 	String depthfailStr;				// depth fail material
 	String animationStr;				// animation keyframe file
 	Mesh::shadervars_t shaderVars;		// colors
-	bool broken = false;				// if true, assets were not found and the model won't be drawn
 
+	bool broken = false;						// if true, assets were not found and the model won't be drawn
 	bool skinUpdateNeeded = false;				// if true, skin will get tossed on next draw call
 	SkinCache skincache;						// bone transforms
 	Map<String, AnimationState> animations;		// animation states

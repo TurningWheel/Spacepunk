@@ -99,7 +99,6 @@ protected:
 	Shadow shadowMap;
 	bool shadowMapDrawn = false;
 	Uint32 shadowTicks = 0;
-
 	Uint32 lastUpdate = 0;
 	bool chosen = false;
 

@@ -189,18 +189,9 @@ public:
 
 	// sets the red color of a light
 	// @param uid the uid of the component to change
-	// @param r the value to use
-	void entityLightColorR(unsigned int uid, float r);
-
-	// sets the green color of a light
-	// @param uid the uid of the component to change
-	// @param g the value to use
-	void entityLightColorG(unsigned int uid, float g);
-
-	// sets the blue color of a light
-	// @param uid the uid of the component to change
-	// @param b the value to use
-	void entityLightColorB(unsigned int uid, float b);
+	// @param color the color channel to modify
+	// @param value the value to use
+	void entityLightColor(unsigned int uid, int color, float value);
 
 	// sets the intensity of a light
 	// @param uid the uid of the component to change

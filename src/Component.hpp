@@ -10,12 +10,14 @@
 #include "LinkedList.hpp"
 #include "Rect.hpp"
 #include "WideVector.hpp"
+#include "Script.hpp"
 
 class Chunk;
 class Entity;
 class Camera;
 class Light;
 class World;
+class Frame;
 
 class Component {
 public:
@@ -33,6 +35,117 @@ public:
 	};
 	static const char* typeStr[COMPONENT_MAX];
 	static const char* typeIcon[COMPONENT_MAX];
+
+	// An exposed attribute (modifiable in editor)
+	class Attribute {
+	public:
+		Attribute(const char* _name, const char* _label);
+
+		enum class Type {
+			TYPE_BOOLEAN,
+			TYPE_INTEGER,
+			TYPE_FLOAT,
+			TYPE_STRING,
+			TYPE_VECTOR,
+			TYPE_COLOR,
+			TYPE_ENUM,
+			TYPE_MAX
+		};
+
+		virtual const Type getType() const = 0;
+		const char* getName() const { return name.get(); }
+		const char* getLabel() const { return label.get(); }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const = 0;
+
+	protected:
+		String name;
+		String label;
+	};
+
+	// bool attribute
+	class AttributeBool : public Attribute {
+	public:
+		AttributeBool(const char* _name, const char* _label, bool& _value);
+		virtual const Type getType() const override { return Type::TYPE_BOOLEAN; }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+
+	private:
+		bool& value;
+	};
+
+	// integer attribute
+	class AttributeInt : public Attribute {
+	public:
+		AttributeInt(const char* _name, const char* _label, int& _value);
+		virtual const Type getType() const override { return Type::TYPE_INTEGER; }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+
+	private:
+		int& value;
+	};
+
+	// float attribute
+	class AttributeFloat : public Attribute {
+	public:
+		AttributeFloat(const char* _name, const char* _label, float& _value);
+		virtual const Type getType() const override { return Type::TYPE_FLOAT; }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+
+	private:
+		float& value;
+	};
+
+	// string attribute
+	class AttributeString : public Attribute {
+	public:
+		AttributeString(const char* _name, const char* _label, String& _value);
+		virtual const Type getType() const override { return Type::TYPE_STRING; }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+
+	private:
+		String& value;
+	};
+
+	// vector attribute
+	class AttributeVector : public Attribute {
+	public:
+		AttributeVector(const char* _name, const char* _label, Vector& _value);
+		virtual const Type getType() const override { return Type::TYPE_VECTOR; }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+
+	private:
+		Vector& value;
+	};
+
+	// color attribute
+	class AttributeColor : public Attribute {
+	public:
+		AttributeColor(const char* _name, const char* _label, ArrayList<GLfloat>& _value);
+		virtual const Type getType() const override { return Type::TYPE_COLOR; }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+
+	private:
+		ArrayList<GLfloat>& value;
+	};
+
+	// enum attribute
+	template<typename E>
+	class AttributeEnum : public Attribute {
+	public:
+		AttributeEnum(const char* _name, const char* _label, const char** _values, Uint32 _maxValue, E& _value) :
+			Attribute(_name, _label),
+			value(_value),
+			maxValue(_maxValue),
+			values(_values)
+		{}
+		virtual const Type getType() const override { return Type::TYPE_ENUM; }
+		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+
+	private:
+		const char** values;
+		Uint32 maxValue;
+		E& value;
+	};
 
 	// bbox rect
 	struct bboxrect_t {
@@ -223,29 +336,30 @@ public:
 	void revertToIdentity();
 
 	// getters & setters
-	virtual type_t				getType() const							{ return COMPONENT_BASIC; }
-	const Entity*				getEntity() const						{ return entity; }
-	Entity*						getEntity()								{ return entity; }
-	const Component*			getParent() const						{ return parent; }
-	bool						isToBeDeleted() const					{ return toBeDeleted; }
-	bool						isEditorOnly() const					{ return editorOnly; }
-	bool						isUpdateNeeded() const					{ return updateNeeded; }
-	ArrayList<Component*>&		getComponents()							{ return components; }
-	Uint32						getUID() const							{ return uid; }
-	const char*					getName() const							{ return name.get(); }
-	const Vector&				getLocalPos() const						{ return lPos; }
-	const Angle&				getLocalAng() const						{ return lAng; }
-	const Vector&				getLocalScale() const					{ return lScale; }
-	const glm::mat4&			getLocalMat() const						{ return lMat; }
-	const Vector&				getGlobalPos() const					{ return gPos; }
-	const Angle&				getGlobalAng() const					{ return gAng; }
-	const Vector&				getGlobalScale() const					{ return gScale; }
-	const glm::mat4&			getGlobalMat() const					{ return gMat; }
-	bool						isCollapsed() const						{ return collapsed; }
-	const bool*					getTilesVisible() const					{ return tilesVisible; }
-	const bool*					getChunksVisible() const				{ return chunksVisible; }
-	const ArrayList<Chunk*>&	getVisibleChunks() const				{ return visibleChunks; }
-	bool						isLocalMatSet() const					{ return lMatSet; }
+	virtual type_t					getType() const						{ return COMPONENT_BASIC; }
+	const Entity*					getEntity() const					{ return entity; }
+	Entity*							getEntity()							{ return entity; }
+	const Component*				getParent() const					{ return parent; }
+	bool							isToBeDeleted() const				{ return toBeDeleted; }
+	bool							isEditorOnly() const				{ return editorOnly; }
+	bool							isUpdateNeeded() const				{ return updateNeeded; }
+	ArrayList<Component*>&			getComponents()						{ return components; }
+	Uint32							getUID() const						{ return uid; }
+	const char*						getName() const						{ return name.get(); }
+	const Vector&					getLocalPos() const					{ return lPos; }
+	const Angle&					getLocalAng() const					{ return lAng; }
+	const Vector&					getLocalScale() const				{ return lScale; }
+	const glm::mat4&				getLocalMat() const					{ return lMat; }
+	const Vector&					getGlobalPos() const				{ return gPos; }
+	const Angle&					getGlobalAng() const				{ return gAng; }
+	const Vector&					getGlobalScale() const				{ return gScale; }
+	const glm::mat4&				getGlobalMat() const				{ return gMat; }
+	bool							isCollapsed() const					{ return collapsed; }
+	const bool*						getTilesVisible() const				{ return tilesVisible; }
+	const bool*						getChunksVisible() const			{ return chunksVisible; }
+	const ArrayList<Chunk*>&		getVisibleChunks() const			{ return visibleChunks; }
+	bool							isLocalMatSet() const				{ return lMatSet; }
+	const ArrayList<Attribute*>&	getAttributes() const				{ return attributes; }
 
 	void				setEditorOnly(bool _editorOnly)			{ editorOnly = _editorOnly; }
 	void				setName(const char* _name)				{ name = _name; }
@@ -315,4 +429,7 @@ protected:
 	void occlusionTestTiles(float range, int accuracy);
 	void occlusionTestTilesStep(float range, Sint32 tX, Sint32 tY, int accuracy);
 	bool occlusionTestTilesLine(Sint32 sX, Sint32 sY, Sint32 eX, Sint32 eY, bool entities);
+
+	// attributes available for reflection
+	ArrayList<Attribute*> attributes;
 };

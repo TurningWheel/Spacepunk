@@ -47,6 +47,14 @@ Light::Light(Entity& _entity, Component* _parent) :
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeVector("editor_FrameLightColor", "Color", color));
+	attributes.push(new AttributeFloat("editor_FrameLightIntensity", "Intensity", intensity));
+	attributes.push(new AttributeFloat("editor_FrameLightRadius", "Radius", radius));
+	attributes.push(new AttributeFloat("editor_FrameLightArc", "Arc", arc));
+	attributes.push(new AttributeBool("editor_FrameLightShadow", "Shadow-casting", shadow));
+	attributes.push(new AttributeEnum<shape_t>("editor_FrameLightShape", "Shape", shapeStr, shape_t::SHAPE_NUM, shape));
 }
 
 Light::~Light() {
@@ -79,7 +87,7 @@ void Light::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	Mesh::shadervars_t shaderVars;
-	shaderVars.customColorEnabled = GL_TRUE;
+	shaderVars.customColorEnabled = true;
 	shaderVars.customColorR = { color.x, color.y, color.z, 1.f };
 
 	glm::mat4 matrix = glm::scale(glm::mat4(1.f), glm::vec3(.5f));

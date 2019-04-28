@@ -77,6 +77,7 @@ public:
 
 private:
 	ALuint sources[maxSources];
+
 	String defaultSound;
 	bool defaultLoop = false;
 	float defaultRange = 256.f;

@@ -46,6 +46,16 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeFloat("editor_FrameCameraClipNear", "Clip Near", clipNear));
+	attributes.push(new AttributeFloat("editor_FrameCameraClipFar", "Clip Far", clipFar));
+	attributes.push(new AttributeInt("editor_FrameCameraWinX", "Window X", win.x));
+	attributes.push(new AttributeInt("editor_FrameCameraWinY", "Window Y", win.y));
+	attributes.push(new AttributeInt("editor_FrameCameraWinW", "Window W", win.w));
+	attributes.push(new AttributeInt("editor_FrameCameraWinH", "Window H", win.h));
+	attributes.push(new AttributeInt("editor_FrameCameraFOV", "Vertical FOV in Degrees", fov));
+	attributes.push(new AttributeBool("buttonCameraOrtho", "Orthogonal", ortho));
 }
 
 Camera::~Camera() {
