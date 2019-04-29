@@ -172,7 +172,7 @@ void Entity::addToEditorList() {
 					entry->color = glm::vec4(1.f);
 				}
 
-				listener = std::make_shared<Entity::listener_t>((void*) entry);
+				listener = std::make_shared<Frame::listener_t>((void*) entry);
 				entry->listener = listener;
 			}
 		}
@@ -1066,36 +1066,6 @@ bool Entity::getKeyValueAsBool(const char* key) const
 const char* Entity::getKeyValue(const char* key) const
 {
 	return getKeyValueAsString(key);
-}
-
-void Entity::listener_t::onDeleted() {
-	if( !entry ) {
-		return;
-	}
-	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
-	entryCast->suicide = true;
-}
-
-void Entity::listener_t::onChangeColor(bool selected, bool highlighted) {
-	if( !entry ) {
-		return;
-	}
-	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
-	if( selected ) {
-		entryCast->color = glm::vec4(1.f,0.f,0.f,1.f);
-	} else if( highlighted ) {
-		entryCast->color = glm::vec4(1.f,1.f,0.f,1.f);
-	} else {
-		entryCast->color = glm::vec4(1.f);
-	}
-}
-
-void Entity::listener_t::onChangeName(const char* name) {
-	if( !entry ) {
-		return;
-	}
-	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
-	entryCast->text = name;
 }
 
 void Entity::findAPath(int endX, int endY) {

@@ -11,13 +11,13 @@
 #include "Rect.hpp"
 #include "WideVector.hpp"
 #include "Script.hpp"
+#include "Frame.hpp"
 
 class Chunk;
 class Entity;
 class Camera;
 class Light;
 class World;
-class Frame;
 
 class Component {
 public:
@@ -39,7 +39,7 @@ public:
 	// An exposed attribute (modifiable in editor)
 	class Attribute {
 	public:
-		Attribute(const char* _name, const char* _label);
+		Attribute(const char* _label);
 
 		enum class Type {
 			TYPE_BOOLEAN,
@@ -53,21 +53,33 @@ public:
 		};
 
 		virtual const Type getType() const = 0;
-		const char* getName() const { return name.get(); }
 		const char* getLabel() const { return label.get(); }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const = 0;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const = 0;
 
 	protected:
-		String name;
 		String label;
 	};
 
 	// bool attribute
 	class AttributeBool : public Attribute {
 	public:
-		AttributeBool(const char* _name, const char* _label, bool& _value);
+		AttributeBool(const char* _label, bool& _value);
+		virtual ~AttributeBool() {}
 		virtual const Type getType() const override { return Type::TYPE_BOOLEAN; }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(bool& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				value = !value;
+				return 0;
+			}
+		private:
+			bool& value;
+		};
 
 	private:
 		bool& value;
@@ -76,9 +88,26 @@ public:
 	// integer attribute
 	class AttributeInt : public Attribute {
 	public:
-		AttributeInt(const char* _name, const char* _label, int& _value);
+		AttributeInt(const char* _label, int& _value);
+		virtual ~AttributeInt() {}
 		virtual const Type getType() const override { return Type::TYPE_INTEGER; }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(int& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = strtol(static_cast<Script::param_string_t*>(args.getList()[0])->value.get(), nullptr, 10);
+				return 0;
+			}
+		private:
+			int& value;
+		};
 
 	private:
 		int& value;
@@ -87,9 +116,26 @@ public:
 	// float attribute
 	class AttributeFloat : public Attribute {
 	public:
-		AttributeFloat(const char* _name, const char* _label, float& _value);
+		AttributeFloat(const char* _label, float& _value);
+		virtual ~AttributeFloat() {}
 		virtual const Type getType() const override { return Type::TYPE_FLOAT; }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(float& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = strtof(static_cast<Script::param_string_t*>(args.getList()[0])->value.get(), nullptr);
+				return 0;
+			}
+		private:
+			float& value;
+		};
 
 	private:
 		float& value;
@@ -98,9 +144,26 @@ public:
 	// string attribute
 	class AttributeString : public Attribute {
 	public:
-		AttributeString(const char* _name, const char* _label, String& _value);
+		AttributeString(const char* _label, String& _value);
+		virtual ~AttributeString() {}
 		virtual const Type getType() const override { return Type::TYPE_STRING; }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(String& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = static_cast<Script::param_string_t*>(args.getList()[0])->value.get();
+				return 0;
+			}
+		private:
+			String& value;
+		};
 
 	private:
 		String& value;
@@ -109,9 +172,41 @@ public:
 	// vector attribute
 	class AttributeVector : public Attribute {
 	public:
-		AttributeVector(const char* _name, const char* _label, Vector& _value);
+		AttributeVector(const char* _label, Vector& _value);
+		virtual ~AttributeVector() {}
 		virtual const Type getType() const override { return Type::TYPE_VECTOR; }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(Vector& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 2 ||
+					args.getList()[0]->getType() != Script::var_t::TYPE_INTEGER ||
+					args.getList()[1]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				int dim = static_cast<Script::param_int_t*>(args.getList()[0])->value;
+				switch (dim) {
+				case 0:
+					value.x = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+					break;
+				case 1:
+					value.y = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+					break;
+				case 2:
+					value.z = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+					break;
+				default:
+					break;
+				}
+				return 0;
+			}
+		private:
+			Vector& value;
+		};
 
 	private:
 		Vector& value;
@@ -120,9 +215,29 @@ public:
 	// color attribute
 	class AttributeColor : public Attribute {
 	public:
-		AttributeColor(const char* _name, const char* _label, ArrayList<GLfloat>& _value);
+		AttributeColor(const char* _label, ArrayList<GLfloat>& _value);
+		virtual ~AttributeColor() {}
 		virtual const Type getType() const override { return Type::TYPE_COLOR; }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(ArrayList<GLfloat>& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 2 ||
+					args.getList()[0]->getType() != Script::var_t::TYPE_INTEGER ||
+					args.getList()[1]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				int color = static_cast<Script::param_int_t*>(args.getList()[0])->value;
+				value[color] = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+				return 0;
+			}
+		private:
+			ArrayList<GLfloat>& value;
+		};
 
 	private:
 		ArrayList<GLfloat>& value;
@@ -132,14 +247,79 @@ public:
 	template<typename E>
 	class AttributeEnum : public Attribute {
 	public:
-		AttributeEnum(const char* _name, const char* _label, const char** _values, Uint32 _maxValue, E& _value) :
-			Attribute(_name, _label),
+		AttributeEnum(const char* _label, const char** _values, Uint32 _maxValue, E& _value) :
+			Attribute(_label),
 			value(_value),
 			maxValue(_maxValue),
 			values(_values)
 		{}
+		virtual ~AttributeEnum() {}
 		virtual const Type getType() const override { return Type::TYPE_ENUM; }
-		virtual void createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const override;
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override {
+			static const int border = 3;
+
+			// label
+			{
+				Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+				Rect<int> size;
+				size.x = border * 2 + x;
+				size.w = width - border * 4 - x;
+				size.y = y;
+				size.h = 20;
+				label->setSize(size);
+				label->setText(this->label.get());
+
+				y += size.h + border;
+			}
+
+			// box of entries
+			{
+				Frame* frame = properties.addFrame("");
+
+				Rect<int> size;
+				size.x = 0; size.w = width - border * 4 - x;
+				size.y = 0; size.h = 150;
+				frame->setActualSize(size);
+				size.x = x + border * 2; size.w = width - border * 4 - x;
+				size.y = y; size.h = 150;
+				frame->setSize(size);
+				frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+				frame->setHigh(false);
+				frame->setBorder(0);
+
+				// entry list
+				for (Uint32 c = 0; c < maxValue; ++c) {
+					Frame::entry_t* entry = frame->addEntry("entry", true);
+					entry->text = values[c];
+					entry->params.addInt(c);
+					entry->click = new Callback(value);
+					entry->ctrlClick = new Callback(value);
+					entry->color = glm::vec4(1.f);
+				}
+
+				y += size.h + border;
+			}
+
+			y += border;
+		}
+		class Callback : public Script::Function {
+		public:
+			Callback(E& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_INTEGER) {
+					return 1;
+				}
+				int i = static_cast<Script::param_int_t*>(args.getList()[0])->value;
+				value = static_cast<E>(i);
+				return 0;
+			}
+		private:
+			E& value;
+		};
 
 	private:
 		const char** values;

@@ -21,25 +21,24 @@
 #include "Speaker.hpp"
 #include "Character.hpp"
 
-Component::Attribute::Attribute(const char* _name, const char* _label) {
-	name = _name;
+Component::Attribute::Attribute(const char* _label) {
 	label = _label;
 }
 
-Component::AttributeBool::AttributeBool(const char * _name, const char * _label, bool & _value) :
-	Attribute(_name, _label),
-	value(_value) {
-}
+Component::AttributeBool::AttributeBool(const char * _label, bool & _value) :
+	Attribute(_label),
+	value(_value)
+{}
 
-void Component::AttributeBool::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const {
+void Component::AttributeBool::createAttributeUI(Frame& properties, int x, int& y, int width) const {
 	static const int border = 3;
 
-	Button* button = properties.addButton(this->name.get());
+	Button* button = properties.addButton("");
 	button->setBorder(1);
 	button->setIcon("images/gui/checkmark.png");
 	button->setStyle(Button::STYLE_CHECKBOX);
 	button->setPressed(value);
-	button->getParams().addInt(uid);
+	button->setCallback(new Callback(value));
 
 	Rect<int> size;
 	size.x = border * 2 + x; size.w = 30;
@@ -48,11 +47,7 @@ void Component::AttributeBool::createAttributeUI(Frame& properties, Uint32 uid, 
 
 	// label
 	{
-		String labelStr;
-		labelStr.alloc(this->name.getSize() + 5);
-		labelStr.assign(this->name);
-		labelStr.append("Label");
-		Field* label = properties.addField(labelStr.get(), this->label.length());
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
 
 		Rect<int> size;
 		size.x = border * 2 + 30 + border + x;
@@ -66,13 +61,13 @@ void Component::AttributeBool::createAttributeUI(Frame& properties, Uint32 uid, 
 	y += size.h + border;
 }
 
-Component::AttributeInt::AttributeInt(const char * _name, const char * _label, int & _value) :
-	Attribute(_name, _label),
-	value(_value) {
-}
+Component::AttributeInt::AttributeInt(const char * _label, int & _value) :
+	Attribute(_label),
+	value(_value)
+{}
 
-void Component::AttributeInt::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const {
-	Frame* frame = properties.addFrame(this->name.get());
+void Component::AttributeInt::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	Frame* frame = properties.addFrame("");
 
 	static const int border = 3;
 
@@ -98,7 +93,7 @@ void Component::AttributeInt::createAttributeUI(Frame& properties, Uint32 uid, i
 	field->setNumbersOnly(true);
 	field->setJustify(Field::RIGHT);
 	field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-	field->getParams().addInt(uid);
+	field->setCallback(new Callback(value));
 
 	char i[16];
 	snprintf(i, 16, "%d", value);
@@ -106,11 +101,7 @@ void Component::AttributeInt::createAttributeUI(Frame& properties, Uint32 uid, i
 
 	// label
 	{
-		String labelStr;
-		labelStr.alloc(this->name.getSize() + 5);
-		labelStr.assign(this->name);
-		labelStr.append("Label");
-		Field* label = properties.addField(labelStr.get(), this->label.length());
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
 
 		Rect<int> size;
 		size.x = x + border + width / 3;
@@ -124,13 +115,13 @@ void Component::AttributeInt::createAttributeUI(Frame& properties, Uint32 uid, i
 	y += size.h + border * 3;
 }
 
-Component::AttributeFloat::AttributeFloat(const char * _name, const char * _label, float & _value) :
-	Attribute(_name, _label),
-	value(_value) {
-}
+Component::AttributeFloat::AttributeFloat(const char * _label, float & _value) :
+	Attribute(_label),
+	value(_value)
+{}
 
-void Component::AttributeFloat::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const {
-	Frame* frame = properties.addFrame(this->name.get());
+void Component::AttributeFloat::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	Frame* frame = properties.addFrame("");
 
 	static const int border = 3;
 
@@ -156,7 +147,7 @@ void Component::AttributeFloat::createAttributeUI(Frame& properties, Uint32 uid,
 	field->setNumbersOnly(true);
 	field->setJustify(Field::RIGHT);
 	field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-	field->getParams().addInt(uid);
+	field->setCallback(new Callback(value));
 
 	char f[16];
 	snprintf(f, 16, "%.1f", value);
@@ -164,11 +155,7 @@ void Component::AttributeFloat::createAttributeUI(Frame& properties, Uint32 uid,
 
 	// label
 	{
-		String labelStr;
-		labelStr.alloc(this->name.getSize() + 5);
-		labelStr.assign(this->name);
-		labelStr.append("Label");
-		Field* label = properties.addField(labelStr.get(), this->label.length());
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
 
 		Rect<int> size;
 		size.x = x + border + width / 3;
@@ -182,21 +169,17 @@ void Component::AttributeFloat::createAttributeUI(Frame& properties, Uint32 uid,
 	y += size.h + border * 3;
 }
 
-Component::AttributeString::AttributeString(const char * _name, const char * _label, String & _value) :
-	Attribute(_name, _label),
-	value(_value) {
-}
+Component::AttributeString::AttributeString(const char * _label, String & _value) :
+	Attribute(_label),
+	value(_value)
+{}
 
-void Component::AttributeString::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const {
+void Component::AttributeString::createAttributeUI(Frame& properties, int x, int& y, int width) const {
 	static const int border = 3;
 
 	// label
 	{
-		String labelStr;
-		labelStr.alloc(this->name.getSize() + 5);
-		labelStr.assign(this->name);
-		labelStr.append("Label");
-		Field* label = properties.addField(labelStr.get(), this->label.length());
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
 
 		Rect<int> size;
 		size.x = border * 2 + x;
@@ -211,7 +194,7 @@ void Component::AttributeString::createAttributeUI(Frame& properties, Uint32 uid
 
 	// string field
 	{
-		Frame* frame = properties.addFrame(this->name.get());
+		Frame* frame = properties.addFrame("");
 
 		Rect<int> size;
 		size.x = 0; size.w = width - border * 4 - x;
@@ -230,7 +213,7 @@ void Component::AttributeString::createAttributeUI(Frame& properties, Uint32 uid
 		field->setEditable(true);
 
 		field->setText(value.get());
-		field->getParams().addInt(uid);
+		field->setCallback(new Callback(value));
 
 		y += size.h + border;
 	}
@@ -238,21 +221,17 @@ void Component::AttributeString::createAttributeUI(Frame& properties, Uint32 uid
 	y += border;
 }
 
-Component::AttributeVector::AttributeVector(const char * _name, const char * _label, Vector & _value) :
-	Attribute(_name, _label),
-	value(_value) {
-}
+Component::AttributeVector::AttributeVector(const char * _label, Vector & _value) :
+	Attribute(_label),
+	value(_value)
+{}
 
-void Component::AttributeVector::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const {
+void Component::AttributeVector::createAttributeUI(Frame& properties, int x, int& y, int width) const {
 	static const int border = 3;
 
 	// label
 	{
-		String labelStr;
-		labelStr.alloc(this->name.getSize() + 5);
-		labelStr.assign(this->name);
-		labelStr.append("Label");
-		Field* label = properties.addField(labelStr.get(), this->label.length());
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
 
 		Rect<int> size;
 		size.x = x + border * 2;
@@ -267,7 +246,7 @@ void Component::AttributeVector::createAttributeUI(Frame& properties, Uint32 uid
 
 	// dimensions
 	for (int dim = 0; dim < 3; ++dim) {
-		Frame* frame = properties.addFrame(this->name.get());
+		Frame* frame = properties.addFrame("");
 
 		Rect<int> size;
 		size.x = 0;
@@ -306,7 +285,7 @@ void Component::AttributeVector::createAttributeUI(Frame& properties, Uint32 uid
 			snprintf(f, 16, "%.2f", value.z);
 			break;
 		}
-		field->getParams().addInt(uid);
+		field->setCallback(new Callback(value));
 		field->getParams().addInt(dim);
 		field->setText(f);
 	}
@@ -314,21 +293,17 @@ void Component::AttributeVector::createAttributeUI(Frame& properties, Uint32 uid
 	y += 30 + border;
 }
 
-Component::AttributeColor::AttributeColor(const char* _name, const char* _label, ArrayList<GLfloat>& _value) :
-	Attribute(_name, _label),
-	value(_value) {
-}
+Component::AttributeColor::AttributeColor(const char* _label, ArrayList<GLfloat>& _value) :
+	Attribute(_label),
+	value(_value)
+{}
 
-void Component::AttributeColor::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const {
+void Component::AttributeColor::createAttributeUI(Frame& properties, int x, int& y, int width) const {
 	static const int border = 3;
 
 	// label
 	{
-		String labelStr;
-		labelStr.alloc(this->name.getSize() + 5);
-		labelStr.assign(this->name);
-		labelStr.append("Label");
-		Field* label = properties.addField(labelStr.get(), this->label.length());
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
 
 		Rect<int> size;
 		size.x = x + border * 2;
@@ -343,7 +318,7 @@ void Component::AttributeColor::createAttributeUI(Frame& properties, Uint32 uid,
 
 	// color channels
 	for (int color = 0; color < 3; ++color) {
-		Frame* frame = properties.addFrame(this->name.get());
+		Frame* frame = properties.addFrame("");
 
 		Rect<int> size;
 		size.x = 0;
@@ -378,7 +353,7 @@ void Component::AttributeColor::createAttributeUI(Frame& properties, Uint32 uid,
 			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
 			break;
 		}
-		field->getParams().addInt(uid);
+		field->setCallback(new Callback(value));
 		field->getParams().addInt(color);
 
 		char f[16];
@@ -388,64 +363,6 @@ void Component::AttributeColor::createAttributeUI(Frame& properties, Uint32 uid,
 
 	y += 30 + border;
 }
-
-template <typename E>
-void Component::AttributeEnum<E>::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const {
-	static const int border = 3;
-
-	// label
-	{
-		String labelStr;
-		labelStr.alloc(this->name.getSize() + 5);
-		labelStr.assign(this->name);
-		labelStr.append("Label");
-		Field* label = properties.addField(labelStr.get(), this->label.length());
-
-		Rect<int> size;
-		size.x = border * 2 + x;
-		size.w = width - border * 4 - x;
-		size.y = y;
-		size.h = 20;
-		label->setSize(size);
-		label->setText(this->label.get());
-
-		y += size.h + border;
-	}
-
-	// box of entries
-	{
-		Frame* frame = properties.addFrame(this->name.get());
-
-		Rect<int> size;
-		size.x = 0; size.w = width - border * 4 - x;
-		size.y = 0; size.h = 150;
-		frame->setActualSize(size);
-		size.x = x + border * 2; size.w = width - border * 4 - x;
-		size.y = y; size.h = 150;
-		frame->setSize(size);
-		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-		frame->setHigh(false);
-		frame->setBorder(0);
-
-		// entry list
-		for (Uint32 c = 0; c < maxValue; ++c) {
-			Frame::entry_t* entry = frame->addEntry("entry", true);
-			entry->text = values[c];
-			entry->params.addInt(uid);
-			entry->params.addString(values[c]);
-			entry->color = glm::vec4(1.f);
-		}
-
-		y += size.h + border;
-	}
-
-	y += border;
-}
-
-// define additional required prototypes for AttributeEnum here!
-template void Component::AttributeEnum<BBox::shape_t>::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const;
-template void Component::AttributeEnum<Light::shape_t>::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const;
-template void Component::AttributeEnum<Character::sex_t>::createAttributeUI(Frame& properties, Uint32 uid, int x, int& y, int width) const;
 
 const char* Component::typeStr[COMPONENT_MAX] = {
 	"basic",

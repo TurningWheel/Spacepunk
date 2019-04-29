@@ -41,9 +41,9 @@ BBox::BBox(Entity& _entity, Component* _parent) :
 	name = typeStr[COMPONENT_BBOX];
 
 	// exposed attributes
-	attributes.push(new AttributeBool("buttonBBoxEnabled", "Enabled", enabled));
-	attributes.push(new AttributeEnum<shape_t>("editor_FrameBBoxShape", "Shape", shapeStr, shape_t::SHAPE_MAX, shape));
-	attributes.push(new AttributeFloat("editor_FrameBBoxMass", "Mass", mass));
+	attributes.push(new AttributeBool("Enabled", enabled));
+	attributes.push(new AttributeEnum<shape_t>("Shape", shapeStr, shape_t::SHAPE_MAX, shape));
+	attributes.push(new AttributeFloat("Mass", mass));
 }
 
 BBox::~BBox() {

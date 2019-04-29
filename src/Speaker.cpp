@@ -39,9 +39,9 @@ Speaker::Speaker(Entity& _entity, Component* _parent) :
 	}
 
 	// exposed attributes
-	attributes.push(new AttributeString("editor_FrameSpeakerDefaultSound", "Default Sound", defaultSound));
-	attributes.push(new AttributeBool("buttonSpeakerDefaultLoop", "Loop", defaultLoop));
-	attributes.push(new AttributeFloat("editor_FrameSpeakerDefaultRange", "Range", defaultRange));
+	attributes.push(new AttributeString("Default Sound", defaultSound));
+	attributes.push(new AttributeBool("Loop", defaultLoop));
+	attributes.push(new AttributeFloat("Range", defaultRange));
 }
 
 Speaker::~Speaker() {

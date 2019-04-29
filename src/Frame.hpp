@@ -12,11 +12,9 @@
 #include "Button.hpp"
 #include "Field.hpp"
 #include "Script.hpp"
-#include "Entity.hpp"
 
 #include <memory>
 
-class Button;
 class Renderer;
 class Image;
 class Field;
@@ -36,6 +34,18 @@ public:
 		Rect<Sint32> pos;
 	};
 
+	struct listener_t {
+		listener_t(void* _entry) :
+			entry(_entry) {}
+
+		void onDeleted();
+		void onChangeColor(bool selected, bool highlighted);
+		void onChangeName(const char* name);
+
+		// Frame::entry_t*
+		void* entry = nullptr;
+	};
+
 	// frame list entry
 	struct entry_t {
 		~entry_t();
@@ -51,7 +61,12 @@ public:
 		Uint32 highlightTime = 0;
 		bool suicide = false;
 
-		std::shared_ptr<Entity::listener_t> listener;
+		const Script::Function* click = nullptr;
+		const Script::Function* ctrlClick = nullptr;
+		const Script::Function* highlight = nullptr;
+		const Script::Function* highlighting = nullptr;
+
+		std::shared_ptr<listener_t> listener;
 	};
 
 	// frame processing result structure

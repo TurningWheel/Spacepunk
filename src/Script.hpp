@@ -254,6 +254,17 @@ public:
 		ArrayList<param_t*> list;
 	};
 
+	// native callback function for processing script args
+	class Function {
+	public:
+		virtual ~Function() {}
+
+		// handle the script args
+		// @param args the args to consume
+		// @return error code
+		virtual int operator()(Args& args) const = 0;
+	};
+
 	// load and evaluate the given script
 	// @param filename filename of the script to run
 	// @return 0 on success, nonzero on failure

@@ -6,7 +6,6 @@
 #include <glm/vec4.hpp>
 
 #include "Rect.hpp"
-#include "Engine.hpp"
 #include "Main.hpp"
 #include "Script.hpp"
 
@@ -50,28 +49,16 @@ public:
 	// @return resultant state of the button after processing
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
-	// callback function for processing a click
-	class Function {
-	public:
-		// handle the button click
-		// @param args the args to consume
-		// @return error code
-		virtual int operator ()(Script::Args& args) const {
-			return 0;
-		}
-	};
-
 	// getters & setters
-	const char*			getName() const				{ return name.get(); }
-	const int			getBorder() const			{ return border; }
-	const Rect<int>&	getSize() const				{ return size; }
-	const bool			isPressed() const			{ return pressed; }
-	const bool			isHighlighted() const		{ return highlighted; }
-	const bool			isDisabled() const			{ return disabled; }
-	const style_t		getStyle() const			{ return style; }
-	Script::Args&		getParams()					{ return params; }
-	const Function&		getCallback() const			{ return callback;  }
-	bool				isNativeCallback() const	{ return nativeCallback;  }
+	const char*					getName() const				{ return name.get(); }
+	const int					getBorder() const			{ return border; }
+	const Rect<int>&			getSize() const				{ return size; }
+	const bool					isPressed() const			{ return pressed; }
+	const bool					isHighlighted() const		{ return highlighted; }
+	const bool					isDisabled() const			{ return disabled; }
+	const style_t				getStyle() const			{ return style; }
+	Script::Args&				getParams()					{ return params; }
+	const Script::Function*		getCallback() const			{ return callback; }
 
 	void	setBorder(const int _border)				{ border = _border; }
 	void	setPos(const int x, const int y)			{ size.x = x; size.y = y; }
@@ -80,32 +67,30 @@ public:
 	void	setTextColor(const glm::vec4& _color)		{ textColor = _color; }
 	void	setName(const char* _name)					{ name = _name; }
 	void	setText(const char* _text)					{ text = _text; }
-	void	setIcon(const char* _icon)					{ icon = _icon; iconImg = mainEngine->getImageResource().dataForString(icon.get()); }
+	void	setIcon(const char* _icon);
 	void	setTooltip(const char* _tooltip)			{ tooltip = _tooltip; }
 	void	setDisabled(const bool _disabled)			{ disabled = _disabled; }
 	void	setStyle(const style_t _style)				{ style = _style; }
 	void	setPressed(const bool _pressed)				{ reallyPressed = _pressed; }
-	void	setCallback(const Function& fn)				{ callback = fn; }
-	void	setNativeCallback(bool _enabled)			{ nativeCallback = _enabled; }
+	void	setCallback(const Script::Function* fn)		{ callback = fn; }
 
 private:
-	Frame* parent = nullptr;		// parent frame
-	Function callback;				// native callback for clicking
-	bool nativeCallback = false;	// if true, the native callback is used instead of a script callback
-	String name;					// internal button name
-	String text;					// button text, if any
-	String icon;					// icon, if any (supersedes text content)
-	String tooltip;					// if empty, button has no tooltip; otherwise, it does
-	Script::Args params;			// optional function parameters to use when the button function is called	
-	int border = 3;					// size of the button border in pixels
-	Rect<int> size;					// size and position of the button within its parent frame
-	bool pressed = false;			// button pressed state
-	bool reallyPressed = false;		// the "actual" button state, pre-mouse process
-	bool highlighted = true;		// true if mouse is hovering over button; false otherwise
-	glm::vec4 color;				// the button's color
-	glm::vec4 textColor;			// text color
-	style_t style = STYLE_NORMAL;	// button style
-	bool disabled=false;			// if true, the button is invisible and unusable
-	Uint32 highlightTime = 0;		// records the time since the button was highlighted
-	Image* iconImg = nullptr;		// the icon image
+	Frame* parent = nullptr;						// parent frame
+	const Script::Function* callback = nullptr;		// native callback for clicking
+	String name;									// internal button name
+	String text;									// button text, if any
+	String icon;									// icon, if any (supersedes text content)
+	String tooltip;									// if empty, button has no tooltip; otherwise, it does
+	Script::Args params;							// optional function parameters to use when the button function is called	
+	int border = 3;									// size of the button border in pixels
+	Rect<int> size;									// size and position of the button within its parent frame
+	bool pressed = false;							// button pressed state
+	bool reallyPressed = false;						// the "actual" button state, pre-mouse process
+	bool highlighted = true;						// true if mouse is hovering over button; false otherwise
+	glm::vec4 color;								// the button's color
+	glm::vec4 textColor;							// text color
+	style_t style = STYLE_NORMAL;					// button style
+	bool disabled=false;							// if true, the button is invisible and unusable
+	Uint32 highlightTime = 0;						// records the time since the button was highlighted
+	Image* iconImg = nullptr;						// the icon image
 };

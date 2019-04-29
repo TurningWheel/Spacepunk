@@ -21,6 +21,15 @@ Button::Button(Frame& _parent) : Button() {
 }
 
 Button::~Button() {
+	if (callback) {
+		delete callback;
+		callback = nullptr;
+	}
+}
+
+void Button::setIcon(const char* _icon) {
+	icon = _icon;
+	iconImg = mainEngine->getImageResource().dataForString(icon.get());
 }
 
 void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {

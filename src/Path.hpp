@@ -59,6 +59,7 @@ public:
             startY(_startY),
             endX(_endX),
             endY(_endY) {}
+		virtual ~Task() {}
 
         virtual PathFinder::Path* findPath() = 0;
 

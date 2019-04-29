@@ -39,23 +39,23 @@ Character::Character(Entity& entity, Component* parent) :
 	luck = DEFAULT_LUCK;
 
 	// exposed attributes
-	attributes.push(new AttributeInt("editor_FrameCharacterHp", "HP", hp));
-	attributes.push(new AttributeInt("editor_FrameCharacterMp", "MP", mp));
-	attributes.push(new AttributeEnum<sex_t>("editor_FrameCharacterSex", "Sex", sexStr, sex_t::SEX_MAX, sex));
-	attributes.push(new AttributeInt("editor_FrameCharacterLevel", "Level", level));
-	attributes.push(new AttributeInt("editor_FrameCharacterXp", "XP", xp));
-	attributes.push(new AttributeInt("editor_FrameCharacterHunger", "Hunger", hunger));
-	attributes.push(new AttributeInt("editor_FrameCharacterNanoMatter", "Nanomatter", nanoMatter));
-	attributes.push(new AttributeInt("editor_FrameCharacterBioMatter", "Biomatter", bioMatter));
-	attributes.push(new AttributeInt("editor_FrameCharacterNeuroThread", "Neurothread", neuroThread));
-	attributes.push(new AttributeInt("editor_FrameCharacterGold", "Gold", gold));
-	attributes.push(new AttributeInt("editor_FrameCharacterStrength", "Strength", strength));
-	attributes.push(new AttributeInt("editor_FrameCharacterDexterity", "Dexterity", dexterity));
-	attributes.push(new AttributeInt("editor_FrameCharacterIntelligence", "Intelligence", intelligence));
-	attributes.push(new AttributeInt("editor_FrameCharacterConstitution", "Constitution", constitution));
-	attributes.push(new AttributeInt("editor_FrameCharacterPerception", "Perception", perception));
-	attributes.push(new AttributeInt("editor_FrameCharacterCharisma", "Charisma", charisma));
-	attributes.push(new AttributeInt("editor_FrameCharacterLuck", "Luck", luck));
+	attributes.push(new AttributeInt("HP", hp));
+	attributes.push(new AttributeInt("MP", mp));
+	attributes.push(new AttributeEnum<sex_t>("Sex", sexStr, sex_t::SEX_MAX, sex));
+	attributes.push(new AttributeInt("Level", level));
+	attributes.push(new AttributeInt("XP", xp));
+	attributes.push(new AttributeInt("Hunger", hunger));
+	attributes.push(new AttributeInt("Nanomatter", nanoMatter));
+	attributes.push(new AttributeInt("Biomatter", bioMatter));
+	attributes.push(new AttributeInt("Neurothread", neuroThread));
+	attributes.push(new AttributeInt("Gold", gold));
+	attributes.push(new AttributeInt("Strength", strength));
+	attributes.push(new AttributeInt("Dexterity", dexterity));
+	attributes.push(new AttributeInt("Intelligence", intelligence));
+	attributes.push(new AttributeInt("Constitution", constitution));
+	attributes.push(new AttributeInt("Perception", perception));
+	attributes.push(new AttributeInt("Charisma", charisma));
+	attributes.push(new AttributeInt("Luck", luck));
 }
 
 Character::~Character() {

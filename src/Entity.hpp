@@ -22,8 +22,7 @@
 #include "Tile.hpp"
 #include "Item.hpp"
 #include "Script.hpp"
-
-#include <memory>
+#include "Frame.hpp"
 
 class Engine;
 class World;
@@ -73,18 +72,6 @@ public:
 
 	// editor definition
 	struct def_t;
-
-	struct listener_t {
-		listener_t(void* _entry):
-			entry(_entry) {}
-
-		void onDeleted();
-		void onChangeColor(bool selected, bool highlighted);
-		void onChangeName(const char* name);
-
-		// Frame::entry_t*
-		void* entry = nullptr;
-	};
 
 	Entity(World* _world, Uint32 uid = UINT32_MAX);
 	virtual ~Entity();
@@ -497,7 +484,7 @@ protected:
 	// editor variables
 	bool selected = false;
 	bool highlighted = false;
-	std::shared_ptr<Entity::listener_t> listener;
+	std::shared_ptr<Frame::listener_t> listener;
 
 	Vector pathNode;
 	Vector pathDir;

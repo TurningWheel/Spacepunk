@@ -47,15 +47,15 @@ Model::Model(Entity& _entity, Component* _parent) :
 	}
 
 	// exposed attributes
-	attributes.push(new AttributeString("editor_FrameModelMesh", "Mesh", meshStr));
-	attributes.push(new AttributeString("editor_FrameModelMaterial", "Material", materialStr));
-	attributes.push(new AttributeString("editor_FrameModelDepthFailMaterial", "Depth Fail Material", depthfailStr));
-	attributes.push(new AttributeString("editor_FrameModelAnimation", "Animation", animationStr));
-	attributes.push(new AttributeBool("buttonModelCustomColor", "Custom Color Enabled", shaderVars.customColorEnabled));
-	attributes.push(new AttributeColor("editor_FrameModelCustomColorR", "Custom Red", shaderVars.customColorR));
-	attributes.push(new AttributeColor("editor_FrameModelCustomColorG", "Custom Green", shaderVars.customColorG));
-	attributes.push(new AttributeColor("editor_FrameModelCustomColorB", "Custom Blue", shaderVars.customColorB));
-	attributes.push(new AttributeColor("editor_FrameModelCustomColorA", "Custom Glow", shaderVars.customColorA));
+	attributes.push(new AttributeString("Mesh", meshStr));
+	attributes.push(new AttributeString("Material", materialStr));
+	attributes.push(new AttributeString("Depth Fail Material", depthfailStr));
+	attributes.push(new AttributeString("Animation", animationStr));
+	attributes.push(new AttributeBool("Custom Color Enabled", shaderVars.customColorEnabled));
+	attributes.push(new AttributeColor("Custom Red", shaderVars.customColorR));
+	attributes.push(new AttributeColor("Custom Green", shaderVars.customColorG));
+	attributes.push(new AttributeColor("Custom Blue", shaderVars.customColorB));
+	attributes.push(new AttributeColor("Custom Glow", shaderVars.customColorA));
 }
 
 Model::~Model() {

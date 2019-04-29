@@ -48,14 +48,14 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 	}
 
 	// exposed attributes
-	attributes.push(new AttributeFloat("editor_FrameCameraClipNear", "Clip Near", clipNear));
-	attributes.push(new AttributeFloat("editor_FrameCameraClipFar", "Clip Far", clipFar));
-	attributes.push(new AttributeInt("editor_FrameCameraWinX", "Window X", win.x));
-	attributes.push(new AttributeInt("editor_FrameCameraWinY", "Window Y", win.y));
-	attributes.push(new AttributeInt("editor_FrameCameraWinW", "Window W", win.w));
-	attributes.push(new AttributeInt("editor_FrameCameraWinH", "Window H", win.h));
-	attributes.push(new AttributeInt("editor_FrameCameraFOV", "Vertical FOV in Degrees", fov));
-	attributes.push(new AttributeBool("buttonCameraOrtho", "Orthogonal", ortho));
+	attributes.push(new AttributeFloat("Clip Near", clipNear));
+	attributes.push(new AttributeFloat("Clip Far", clipFar));
+	attributes.push(new AttributeInt("Window X", win.x));
+	attributes.push(new AttributeInt("Window Y", win.y));
+	attributes.push(new AttributeInt("Window W", win.w));
+	attributes.push(new AttributeInt("Window H", win.h));
+	attributes.push(new AttributeInt("Vertical FOV in Degrees", fov));
+	attributes.push(new AttributeBool("Orthogonal", ortho));
 }
 
 Camera::~Camera() {

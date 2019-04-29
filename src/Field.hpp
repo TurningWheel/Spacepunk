@@ -59,18 +59,19 @@ public:
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
 	// getters & setters
-	const char*				getName() const						{ return name.get(); }
-	const char*				getText() const						{ return text; }
-	const Uint32			getTextLen() const					{ return textLen; }
-	const glm::vec4&		getColor() const					{ return color; }
-	const Rect<int>			getSize() const						{ return size; }
-	const justify_t			getJustify() const					{ return justify; }
-	const bool				isSelected() const					{ return selected; }
-	const bool				isEditable() const					{ return editable; }
-	const bool				isNumbersOnly() const				{ return numbersOnly; }
-	const char*				getTabDestField() const				{ return tabDestField.get(); }
-	const char*				getTabDestFrame() const				{ return tabDestFrame.get(); }
-	Script::Args&			getParams()							{ return params; }
+	const char*					getName() const						{ return name.get(); }
+	const char*					getText() const						{ return text; }
+	const Uint32				getTextLen() const					{ return textLen; }
+	const glm::vec4&			getColor() const					{ return color; }
+	const Rect<int>				getSize() const						{ return size; }
+	const justify_t				getJustify() const					{ return justify; }
+	const bool					isSelected() const					{ return selected; }
+	const bool					isEditable() const					{ return editable; }
+	const bool					isNumbersOnly() const				{ return numbersOnly; }
+	const char*					getTabDestField() const				{ return tabDestField.get(); }
+	const char*					getTabDestFrame() const				{ return tabDestFrame.get(); }
+	Script::Args&				getParams()							{ return params; }
+	const Script::Function*		getCallback() const					{ return callback; }
 
 	void	setName(const char* _name)							{ name = _name; }
 	void	setText(const char* _text)							{ memset(text, '\0', textLen); strncpy(text,_text,textLen); }
@@ -83,6 +84,7 @@ public:
 	void	setScroll(const bool _scroll)						{ scroll = _scroll; }
 	void	setTabDestField(const char* _tabDest)				{ tabDestField = _tabDest; }
 	void	setTabDestFrame(const char* _tabDest)				{ tabDestFrame = _tabDest; }
+	void	setCallback(const Script::Function* fn)				{ callback = fn; }
 
 private:
 	Frame* parent = nullptr;	// parent frame
@@ -99,6 +101,7 @@ private:
 	bool numbersOnly = false;
 	bool scroll = true;
 	bool selectAll = false;
+	const Script::Function* callback = nullptr;
 
 	String tabDestFrame = invalidName;
 	String tabDestField = invalidName;

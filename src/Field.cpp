@@ -43,9 +43,13 @@ Field::Field(Frame& _parent, const char* _text) : Field(_text) {
 
 Field::~Field() {
 	deselect();
-	if( text ) {
-		free( text );
+	if (text) {
+		free(text);
 		text = nullptr;
+	}
+	if (callback) {
+		delete callback;
+		callback = nullptr;
 	}
 }
 

@@ -49,12 +49,12 @@ Light::Light(Entity& _entity, Component* _parent) :
 	}
 
 	// exposed attributes
-	attributes.push(new AttributeVector("editor_FrameLightColor", "Color", color));
-	attributes.push(new AttributeFloat("editor_FrameLightIntensity", "Intensity", intensity));
-	attributes.push(new AttributeFloat("editor_FrameLightRadius", "Radius", radius));
-	attributes.push(new AttributeFloat("editor_FrameLightArc", "Arc", arc));
-	attributes.push(new AttributeBool("editor_FrameLightShadow", "Shadow-casting", shadow));
-	attributes.push(new AttributeEnum<shape_t>("editor_FrameLightShape", "Shape", shapeStr, shape_t::SHAPE_NUM, shape));
+	attributes.push(new AttributeVector("Color", color));
+	attributes.push(new AttributeFloat("Intensity", intensity));
+	attributes.push(new AttributeFloat("Radius", radius));
+	attributes.push(new AttributeFloat("Arc", arc));
+	attributes.push(new AttributeBool("Shadow-casting", shadow));
+	attributes.push(new AttributeEnum<shape_t>("Shape", shapeStr, shape_t::SHAPE_NUM, shape));
 }
 
 Light::~Light() {
