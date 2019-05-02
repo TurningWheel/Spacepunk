@@ -677,6 +677,12 @@ void Entity::warp() {
 	}
 }
 
+void Entity::depositItem(Entity * entityToDeposit, String invSlot)
+{
+	EntityItem.depositItem(entityToDeposit, invSlot);
+	entityToDeposit->insertIntoWorld(nullptr, entityToDeposit, Vector());
+}
+
 bool Entity::move() {
 	if( !isFlag(Entity::FLAG_STATIC) ) {
 		if( rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
@@ -948,7 +954,7 @@ void Entity::serialize(FileInterface * file) {
 	file->property("falling", falling);
 	file->property("sort", sort);
 	if (version >= 2) {
-		file->property("item", item);
+		file->property("EntityItem", EntityItem);
 	}
 	if( version >= 1 ) {
 		file->property("keys", keyvalues);

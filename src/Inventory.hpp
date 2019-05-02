@@ -14,8 +14,11 @@ public:
 	float neuroThread;
 
 	class Slot {
+	public:
 		bool locked; // if the slot is locked
-		Item* item;
+		class Entity* entity;
+
+		void serialize(FileInterface * file);
 	};
 
 	Map<String, Slot*> items;

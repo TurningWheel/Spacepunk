@@ -51,6 +51,12 @@ public:
 	// @param file interface to serialize with
 	void serialize(FileInterface * file);
 
+	// deposit item into inventory slot
+	void depositItem(Entity* itemToDeposit, String invSlot);
+
+	// check if a slot is currently filled
+	bool isSlotFilled(String invSlot);
+
 private:
 	/*struct ConditionalEffect {
 		String effect;
@@ -107,5 +113,5 @@ private:
 
 	Map<String, Action> actions;						// map actions by name (eg "tap", "hold")
 
-	Inventory inventory;
+	Inventory ItemInventory;
 };

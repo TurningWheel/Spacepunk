@@ -38,6 +38,19 @@ void Item::serialize(FileInterface* file) {
 	file->property("actions", actions);
 }
 
+void Item::depositItem(Entity* itemToDeposit, String invSlot)
+{
+	// TODO: add some sort of check to ensure slot name is valid
+	Inventory::Slot slot;
+	slot.entity = itemToDeposit;
+	ItemInventory.items.insert(invSlot, &slot);
+}
+
+bool Item::isSlotFilled(String invSlot)
+{
+	return ItemInventory.items.find(invSlot) == nullptr;
+}
+
 void Item::Action::serialize(FileInterface* file) {
 	int version = 0;
 	file->property("Action::version", version);
