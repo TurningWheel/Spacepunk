@@ -306,6 +306,7 @@
     <ClInclude Include="..\..\src\Mesh.hpp" />
     <ClInclude Include="..\..\src\Mixer.hpp" />
     <ClInclude Include="..\..\src\Model.hpp" />
+    <ClInclude Include="..\..\src\Multimesh.hpp" />
     <ClInclude Include="..\..\src\Net.hpp" />
     <ClInclude Include="..\..\src\NetSDL.hpp" />
     <ClInclude Include="..\..\src\Node.hpp" />
@@ -377,6 +378,7 @@
     <ClCompile Include="..\..\src\Chunk.cpp" />
     <ClCompile Include="..\..\src\Mixer.cpp" />
     <ClCompile Include="..\..\src\Model.cpp" />
+    <ClCompile Include="..\..\src\Multimesh.cpp" />
     <ClCompile Include="..\..\src\Net.cpp" />
     <ClCompile Include="..\..\src\NetSDL.cpp" />
     <ClCompile Include="..\..\src\Packet.cpp" />

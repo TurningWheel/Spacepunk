@@ -31,6 +31,7 @@
 #include "Camera.hpp"
 #include "Speaker.hpp"
 #include "Character.hpp"
+#include "Multimesh.hpp"
 
 int Script::load(const char* _filename) {
 	filename = mainEngine->buildPath(_filename);
@@ -850,4 +851,14 @@ void Script::exposeCharacter() {
 
 void Script::exposeEmitter() {
 	// todo
+}
+
+void Script::exposeMultimesh() {
+	luabridge::getGlobalNamespace(lua)
+		.deriveClass<Multimesh, Component>("Multimesh")
+		.endClass()
+	;
+
+	LinkedList<Multimesh*>::exposeToScript(lua, "LinkedListMultimeshPtr", "NodeMultimeshPtr");
+	ArrayList<Multimesh*>::exposeToScript(lua, "ArrayListMultimeshPtr");
 }

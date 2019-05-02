@@ -5,7 +5,7 @@
 #include "Main.hpp"
 #include "Component.hpp"
 #include "String.hpp"
-#include "Model.hpp"
+#include "Mesh.hpp"
 
 class Speaker : public Component {
 public:

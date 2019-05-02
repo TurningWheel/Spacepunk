@@ -312,6 +312,7 @@ private:
 	void exposeSpeaker();
 	void exposeCharacter();
 	void exposeEmitter();
+	void exposeMultimesh();
 	void exposeEditor(Editor& _editor);
 
 	lua_State* lua = nullptr;

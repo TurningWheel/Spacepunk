@@ -29,6 +29,7 @@
 #include "Camera.hpp"
 #include "Speaker.hpp"
 #include "Character.hpp"
+#include "Multimesh.hpp"
 
 const char* Entity::flagStr[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
 	"VISIBLE",
@@ -910,8 +911,10 @@ Component* Entity::addComponent(Component::type_t type) {
 		return addComponent<Speaker>();
 	case Component::COMPONENT_CHARACTER:
 		return addComponent<Character>();
+	case Component::COMPONENT_MULTIMESH:
+		return addComponent<Multimesh>();
 	default:
-		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown entity type %u", (Uint32)type);
+		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown component type %u", (Uint32)type);
 		return nullptr;
 	}
 }

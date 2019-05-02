@@ -20,6 +20,7 @@
 #include "Camera.hpp"
 #include "Speaker.hpp"
 #include "Character.hpp"
+#include "Multimesh.hpp"
 
 Component::Attribute::Attribute(const char* _label) {
 	label = _label;
@@ -372,7 +373,8 @@ const char* Component::typeStr[COMPONENT_MAX] = {
 	"camera",
 	"speaker",
 	"emitter",
-	"character"
+	"character",
+	"multimesh"
 };
 
 const char* Component::typeIcon[COMPONENT_MAX] = {
@@ -383,7 +385,8 @@ const char* Component::typeIcon[COMPONENT_MAX] = {
 	"images/gui/camera.png",
 	"images/gui/speaker.png",
 	"images/gui/emitter.png",
-	"images/gui/character.png"
+	"images/gui/character.png",
+	"images/gui/mesh.png"
 };
 
 Component::Component(Entity& _entity, Component* _parent) {
@@ -978,6 +981,14 @@ void Component::copyComponents(Component& dest) {
 				*character1 = *character0;
 				break;
 			}
+			case Component::COMPONENT_MULTIMESH:
+			{
+				component = dest.addComponent<Multimesh>();
+				Multimesh* mm0 = static_cast<Multimesh*>(components[c]);
+				Multimesh* mm1 = static_cast<Multimesh*>(component);
+				*mm1 = *mm0;
+				break;
+			}
 			default:
 			{
 				mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
@@ -1088,8 +1099,10 @@ Component* Component::addComponent(Component::type_t type) {
 		return addComponent<Speaker>();
 	case Component::COMPONENT_CHARACTER:
 		return addComponent<Character>();
+	case Component::COMPONENT_MULTIMESH:
+		return addComponent<Multimesh>();
 	default:
-		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown entity type %u", (Uint32)type);
+		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown component type %u", (Uint32)type);
 		return nullptr;
 	}
 }
