@@ -856,6 +856,12 @@ void Script::exposeEmitter() {
 void Script::exposeMultimesh() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Multimesh, Component>("Multimesh")
+		.addFunction("getMaterial", &Model::getMaterial)
+		.addFunction("getDepthFailMat", &Model::getDepthFailMat)
+		.addFunction("getShaderVars", &Model::getShaderVars)
+		.addFunction("setMaterial", &Model::setMaterial)
+		.addFunction("setDepthFailMat", &Model::setDepthFailMat)
+		.addFunction("setShaderVars", &Model::setShaderVars)
 		.endClass()
 	;
 

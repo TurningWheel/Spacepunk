@@ -63,6 +63,15 @@ public:
 		cache.clear();
 	}
 
+	// delete some specific data from the cache
+	void deleteData(const char* name) {
+		T** data = cache.find(name);
+		if (data) {
+			delete *data;
+			cache.remove(name);
+		}
+	}
+
 private:
 	Map<String, T*> cache;
 	int error = 0;

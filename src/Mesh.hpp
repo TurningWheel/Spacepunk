@@ -23,6 +23,7 @@
 class ShaderProgram;
 class Camera;
 class Material;
+class Model;
 
 class Mesh : public Asset {
 public:
@@ -98,6 +99,14 @@ public:
 	// @return the index of the bone we are searching for, or UINT32_MAX if the bone could not be found
 	unsigned int boneIndexForName( const char* name ) const;
 
+	// empties all data from this mesh
+	void clear();
+
+	// builds a composite mesh from several models
+	// @param models The models to compose the mesh from
+	// @param root The root transform of all the models
+	void composeMesh(const LinkedList<Model*>& models, const glm::mat4& root);
+
 	// submesh entry
 	class SubMesh {
 	public:
@@ -121,10 +130,14 @@ public:
 		// the number of elements to be drawn
 		unsigned int elementCount;
 
-		SubMesh(const char* name, const VoxelMeshData& data);
-		SubMesh(const char* name, const aiScene& _scene, aiMesh* mesh);
+		SubMesh(unsigned int _numIndices, unsigned int _numVertices);
+		SubMesh(const VoxelMeshData& data);
+		SubMesh(const aiScene* _scene, aiMesh* mesh);
+		SubMesh(const SubMesh& src, const glm::mat4& transform);
 		~SubMesh();
 
+		void finalize();
+		void append(const SubMesh& src, const glm::mat4& transform);
 		void draw(const Camera& camera);
 		const Vector& getMaxBox() const { return maxBox; }
 		const Vector& getMinBox() const { return minBox; }
@@ -171,9 +184,12 @@ public:
 		const float*						getTexCoords() const		{ return texCoords; }
 		const float*						getNormals() const			{ return normals; }
 		const float*						getColors() const			{ return colors; }
+		const float*						getTangents() const			{ return tangents; }
 		const GLuint*						getIndices() const			{ return indices; }
 		const ArrayList<boneinfo_t>&		getBones() const			{ return bones; }
-		const aiNode*						getRootNode() const			{ return scene->mRootNode; }
+		const aiNode*						getRootNode() const			{ return scene ? scene->mRootNode : nullptr; }
+		const unsigned int					getLastVertex() const		{ return lastVertex; }
+		const unsigned int					getLastIndex() const		{ return lastIndex; }
 
 	private:
 		Map<String, unsigned int> boneMapping; // maps a bone name to its index
@@ -193,13 +209,16 @@ public:
 		float* colors = nullptr;		// colors    4 floats per vertex
 		float* tangents = nullptr;		// tangents  3 floats per vertex
 		GLuint* indices = nullptr;		// indices   2 uints per vertex (first is vertex, second is adjacent vertex)
+
+		unsigned int lastVertex = 0;	// last vertex modified
+		unsigned int lastIndex = 0;		// last index modified
 	};
 
 	// getters & setters
 	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const		{ return subMeshes; }
-	const Vector&					getMinBox() const			{ return minBox; }
-	const Vector&					getMaxBox() const			{ return maxBox; }
-	float							getAnimLength() const;
+	const Vector&							getMinBox() const			{ return minBox; }
+	const Vector&							getMaxBox() const			{ return maxBox; }
+	float									getAnimLength() const;
 
 private:
 	Assimp::Importer* importer = nullptr;

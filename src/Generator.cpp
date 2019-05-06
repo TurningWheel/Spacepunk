@@ -709,6 +709,8 @@ void Generator::fixDoors() {
 void Generator::emptyBlocks() {
 	Uint32 index;
 
+	// uncomment this to make hallways 2x2
+	/*
 	index = 0;
 	for (Sint32 c = 0; c < options.dungeonWidth; ++c) {
 		for (Sint32 r = 0; r < options.dungeonHeight; ++r) {
@@ -733,7 +735,7 @@ void Generator::emptyBlocks() {
 			}
 			++index;
 		}
-	}
+	}*/
 
 	index = 0;
 	for (Sint32 c = 0; c < options.dungeonWidth; ++c) {
