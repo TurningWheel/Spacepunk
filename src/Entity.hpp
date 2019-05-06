@@ -433,6 +433,9 @@ public:
 	// updates the physics component of the entity to move it to the current location
 	void warp();
 
+	// deposit an item into the specified inventory slot
+	void depositItem(Entity* entityToDeposit, String invSlot);
+
 protected:
 	Node<Entity*>* node			= nullptr;	// node to the world entity list
 	World* world				= nullptr;	// parent world object
@@ -479,7 +482,7 @@ protected:
 
 	Map<String, String> keyvalues;
 
-	Item item;
+	Item EntityItem;
 
 	// editor variables
 	bool selected = false;
