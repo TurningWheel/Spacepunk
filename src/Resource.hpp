@@ -72,6 +72,12 @@ public:
 		}
 	}
 
+	// calculate the size of this resource cache
+	Uint32 getSizeInBytes() const {
+		// need something better than sizeof
+		return (Uint32)(cache.getSize() * sizeof(T));
+	}
+
 private:
 	Map<String, T*> cache;
 	int error = 0;

@@ -345,6 +345,9 @@ public:
 	// @return a random 32-bit number
 	Uint32 random();
 
+	// print cache sizes to show memory consumption
+	void printCacheSize() const;
+
 private:
 	static const char* msgTypeStr[MSG_TYPE_LENGTH];
 

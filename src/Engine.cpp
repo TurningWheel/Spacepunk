@@ -209,6 +209,11 @@ static int console_sleep(int argc, const char** argv) {
 	return 0;
 }
 
+static int console_cacheSize(int argc, const char** argv) {
+	mainEngine->printCacheSize();
+	return 0;
+}
+
 static Ccmd ccmd_help("help","lists all console commands and variables",&console_help);
 static Ccmd ccmd_shutdown("exit","kill engine immediately",&console_shutdown);
 static Ccmd ccmd_windowed("windowed","set the engine to windowed mode",&console_windowed);
@@ -222,7 +227,27 @@ static Ccmd ccmd_unmount("unmount","unmounts a mod and dumps the engine cache",&
 static Ccmd ccmd_play("play","play the sound file with the given path",&console_play);
 static Ccmd ccmd_loadconfig("loadconfig","loads the given config file",&console_loadConfig);
 static Ccmd ccmd_sleep("sleep","waits X seconds before running the next command, useful for configs",&console_sleep);
+static Ccmd ccmd_cachesize("cachesize", "prints the size of all resource caches in bytes", &console_cacheSize);
 static Cvar cvar_tickrate("tickrate","number of frames processed in a second","60");
+
+void Engine::printCacheSize() const {
+	Uint32 total = 0;
+	mainEngine->fmsg(Engine::MSG_INFO, "meshes: %u bytes", meshResource.getSizeInBytes()); total += meshResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "images: %u bytes", imageResource.getSizeInBytes()); total += imageResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "materials: %u bytes", materialResource.getSizeInBytes()); total += materialResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "textures: %u bytes", textureResource.getSizeInBytes()); total += textureResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "text: %u bytes", textResource.getSizeInBytes()); total += textResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "sounds: %u bytes", soundResource.getSizeInBytes()); total += soundResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "animations: %u bytes", animationResource.getSizeInBytes()); total += animationResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "cubemaps: %u bytes", cubemapResource.getSizeInBytes()); total += cubemapResource.getSizeInBytes();
+	Client* client = mainEngine->getLocalClient();
+	if (client) {
+		Renderer* renderer = client->getRenderer(); assert(renderer);
+		mainEngine->fmsg(Engine::MSG_INFO, "framebuffers: %u bytes", renderer->getFramebufferResource().getSizeInBytes());
+		total += renderer->getFramebufferResource().getSizeInBytes();
+	}
+	mainEngine->fmsg(Engine::MSG_INFO, "total: %u bytes", total);
+}
 
 void Engine::commandLine(const int argc, const char **argv) {
 	int c;
