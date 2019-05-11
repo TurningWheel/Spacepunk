@@ -13,8 +13,8 @@ Multimesh::Multimesh(Entity& _entity, Component* _parent) :
 	meshStr = generateGUID();
 
 	// exposed attributes
-	attributes.push(new AttributeString("Material", materialStr));
-	attributes.push(new AttributeString("Depth Fail Material", depthfailStr));
+	attributes.push(new AttributeFile("Material", "json", materialStr));
+	attributes.push(new AttributeFile("Depth Fail Material", "json", depthfailStr));
 	attributes.push(new AttributeBool("Custom Color Enabled", shaderVars.customColorEnabled));
 	attributes.push(new AttributeColor("Custom Red", shaderVars.customColorR));
 	attributes.push(new AttributeColor("Custom Green", shaderVars.customColorG));

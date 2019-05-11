@@ -136,6 +136,9 @@ public:
 	void								setPlayTest(const bool b)						{ playTest = b; }
 	void								setConsoleSleep(Uint32 i)						{ consoleSleep = i; }
 
+	// get the directory the game is running in
+	const char* getRunningDir();
+
 	// initialize the engine
 	void init();
 
@@ -326,10 +329,14 @@ public:
 	// @return true if the button has been clicked, false otherwise
 	const bool pressMouse(const int index)	{ if( mousestatus[index] ) { mousestatus[index]=false; return true; } else { return false; } }
 
-	// gets the path to an asset and returns its full path as a string
-	// @param path the path without including mod or base folders
-	// @return the full path string
-	String buildPath(const char* path);
+	// takes a full system path to a local asset and attempts to cut it down to a virtual path
+	// @param path the full filename
+	String shortenPath(const char* path) const;
+
+	// gets the virtual file path to an asset and returns its full path as a string
+	// @param path the path to the asset without mod or base folders
+	// @return the complete path string
+	String buildPath(const char* path) const;
 
 	// add a mod to the game
 	// @param name the name of the mod folder to add
@@ -362,6 +369,7 @@ private:
 	SDL_Event event;
 	static std::atomic_bool paused;
 	unsigned int ticksPerSecond = defaultTickRate;
+	String runDir;
 
 	// mod data
 	mod_t game;

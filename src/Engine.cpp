@@ -214,6 +214,11 @@ static int console_cacheSize(int argc, const char** argv) {
 	return 0;
 }
 
+static int console_printDir(int argc, const char** argv) {
+	mainEngine->fmsg(Engine::MSG_INFO, mainEngine->getRunningDir());
+	return 0;
+}
+
 static Ccmd ccmd_help("help","lists all console commands and variables",&console_help);
 static Ccmd ccmd_shutdown("exit","kill engine immediately",&console_shutdown);
 static Ccmd ccmd_windowed("windowed","set the engine to windowed mode",&console_windowed);
@@ -228,6 +233,7 @@ static Ccmd ccmd_play("play","play the sound file with the given path",&console_
 static Ccmd ccmd_loadconfig("loadconfig","loads the given config file",&console_loadConfig);
 static Ccmd ccmd_sleep("sleep","waits X seconds before running the next command, useful for configs",&console_sleep);
 static Ccmd ccmd_cachesize("cachesize", "prints the size of all resource caches in bytes", &console_cacheSize);
+static Ccmd ccmd_printDir("printdir", "shows the directory that the engine is running from", &console_printDir);
 static Cvar cvar_tickrate("tickrate","number of frames processed in a second","60");
 
 void Engine::printCacheSize() const {
@@ -1093,6 +1099,32 @@ int Engine::strCompare(const char* a, const char* b) {
 	return strcmp(a, b);
 }
 
+const char* Engine::getRunningDir() {
+	if (runDir.empty()) {
+#ifdef PLATFORM_WINDOWS
+		wchar_t pBuf[256];
+		int len = (int)sizeof(pBuf);
+		int bytes = GetModuleFileName(NULL, pBuf, len);
+		if (bytes > 0) {
+			char str[256];
+			wcstombs(str, pBuf, sizeof(str));
+			runDir = str;
+		}
+#else
+		char szTmp[64];
+		snprintf(szTmp, 64, "/proc/%d/exe", getpid());
+		char pBuf[256];
+		int len = (int)sizeof(pBuf);
+		int bytes = std::min(readlink(szTmp, pBuf, len), len - 1);
+		if (bytes >= 0) {
+			pBuf[bytes] = '\0';
+			runDir = pBuf;
+		}
+#endif
+	}
+	return runDir.get();
+}
+
 void Engine::preProcess() {
 	anykeystatus = false;
 
@@ -1131,125 +1163,160 @@ void Engine::preProcess() {
 
 	SDL_GameController* pad = nullptr;
 	while( SDL_PollEvent(&event) ) {
-		switch( event.type ) {
-			case SDL_QUIT: // if SDL receives the shutdown signal
-				if( localClient ) {
-					if( localClient->isEditorActive() ) {
-						killSignal = true;
+		switch (event.type) {
+		case SDL_QUIT: // if SDL receives the shutdown signal
+		{
+			if (localClient) {
+				if (localClient->isEditorActive()) {
+					killSignal = true;
+					break;
+				}
+			}
+			shutdown();
+			break;
+		}
+		case SDL_KEYDOWN: // if a key is pressed...
+		{
+			if (SDL_IsTextInputActive()) {
+				if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(inputstr) > 0) {
+					inputstr[strlen(inputstr) - 1] = 0;
+					cursorflash = ticks;
+				}
+				else if (event.key.keysym.sym == SDLK_c && SDL_GetModState()&KMOD_CTRL) {
+					if (inputstr)
+						SDL_SetClipboardText(inputstr);
+					cursorflash = ticks;
+				}
+				else if (event.key.keysym.sym == SDLK_v && SDL_GetModState()&KMOD_CTRL) {
+					if (inputstr)
+						strcpy(inputstr, SDL_GetClipboardText());
+					cursorflash = ticks;
+				}
+			}
+			lastkeypressed = SDL_GetKeyName(SDL_GetKeyFromScancode(event.key.keysym.scancode));
+			keystatus[event.key.keysym.scancode] = true;
+			anykeystatus = true;
+			break;
+		}
+		case SDL_KEYUP: // if a key is unpressed...
+		{
+			keystatus[event.key.keysym.scancode] = false;
+			break;
+		}
+		case SDL_TEXTINPUT:
+		{
+			if (!inputnum || !charsHaveLetters(event.text.text, SDL_TEXTINPUTEVENT_TEXT_SIZE)) {
+				if ((event.text.text[0] != 'c' && event.text.text[0] != 'C') || !(SDL_GetModState()&KMOD_CTRL)) {
+					if ((event.text.text[0] != 'v' && event.text.text[0] != 'V') || !(SDL_GetModState()&KMOD_CTRL)) {
+						if (inputstr) {
+							int i = inputlen - (int)strlen(inputstr) - 1;
+							strncat(inputstr, event.text.text, max(0, i));
+							strcpy(lastInput, event.text.text);
+						}
+						cursorflash = ticks;
+					}
+				}
+			}
+			break;
+		}
+		case SDL_MOUSEBUTTONDOWN: // if a mouse button is pressed...
+		{
+			if (!mousestatus[event.button.button]) {
+				mousestatus[event.button.button] = true;
+				if (ticks - mouseClickTime <= doubleClickTime) {
+					dbc_mousestatus[event.button.button] = true;
+				}
+				mouseClickTime = ticks;
+			}
+			break;
+		}
+		case SDL_MOUSEBUTTONUP: // if a mouse button is released...
+		{
+			mousestatus[event.button.button] = false;
+			dbc_mousestatus[event.button.button] = false;
+			break;
+		}
+		case SDL_MOUSEWHEEL:
+		{
+			mousewheelx = event.wheel.x;
+			mousewheely = event.wheel.y;
+			break;
+		}
+		case SDL_MOUSEMOTION: // if the mouse is moved...
+		{
+			if (ticks == 0) {
+				// fixes a bug with unpredictable starting mouse movement
+				break;
+			}
+			mousex = event.motion.x;
+			mousey = event.motion.y;
+			mousexrel += event.motion.xrel;
+			mouseyrel += event.motion.yrel;
+
+			if (std::abs(mousexrel) > 2 || std::abs(mouseyrel) > 2) {
+				mouseClickTime = 0;
+			}
+			break;
+		}
+		case SDL_CONTROLLERDEVICEADDED:
+		{
+			pad = SDL_GameControllerOpen(event.cdevice.which);
+			if (pad == nullptr) {
+				fmsg(MSG_WARN, "A controller was plugged in, but no handle is available!");
+			}
+			else {
+				controllers.addNode(event.cdevice.which, pad);
+				fmsg(MSG_INFO, "Added controller with device index (%d)", event.cdevice.which);
+				for (int c = 0; c < 4; ++c) {
+					inputs[c].refresh();
+				}
+				break;
+			}
+			break;
+		}
+		case SDL_CONTROLLERDEVICEREMOVED:
+		{
+			pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
+			if (pad == nullptr) {
+				fmsg(MSG_WARN, "A controller was removed, but I don't know which one!");
+			}
+			else {
+				Uint32 index = 0;
+				Node<SDL_GameController*>* node = controllers.getFirst();
+				for (; node != nullptr; node = node->getNext(), ++index) {
+					SDL_GameController* curr = node->getData();
+					if (pad == curr) {
+						SDL_GameControllerClose(curr);
+						controllers.removeNode(node);
+						fmsg(MSG_INFO, "Removed controller with device index (%d), instance id (%d)", index, event.cdevice.which);
 						break;
 					}
 				}
-				shutdown();
-				break;
-			case SDL_KEYDOWN: // if a key is pressed...
-				if( SDL_IsTextInputActive() ) {
-					if( event.key.keysym.sym == SDLK_BACKSPACE && strlen(inputstr) > 0 ) {
-						inputstr[strlen(inputstr)-1]=0;
-						cursorflash=ticks;
-					} else if( event.key.keysym.sym == SDLK_c && SDL_GetModState()&KMOD_CTRL ) {
-						if( inputstr )
-							SDL_SetClipboardText(inputstr);
-						cursorflash=ticks;
-					} else if( event.key.keysym.sym == SDLK_v && SDL_GetModState()&KMOD_CTRL ) {
-						if( inputstr )
-							strcpy(inputstr,SDL_GetClipboardText());
-						cursorflash=ticks;
-					}
-				}
-				lastkeypressed = SDL_GetKeyName(SDL_GetKeyFromScancode(event.key.keysym.scancode));
-				keystatus[event.key.keysym.scancode] = true;
-				anykeystatus = true;
-				break;
-			case SDL_KEYUP: // if a key is unpressed...
-				keystatus[event.key.keysym.scancode] = false;
-				break;
-			case SDL_TEXTINPUT:
-				if( !inputnum || !charsHaveLetters(event.text.text,SDL_TEXTINPUTEVENT_TEXT_SIZE) ) {
-					if( (event.text.text[0] != 'c' && event.text.text[0] != 'C') || !(SDL_GetModState()&KMOD_CTRL) ) {
-						if( (event.text.text[0] != 'v' && event.text.text[0] != 'V') || !(SDL_GetModState()&KMOD_CTRL) ) {
-							if( inputstr ) {
-								int i = inputlen-(int)strlen(inputstr)-1;
-								strncat(inputstr,event.text.text,max(0,i));
-								strcpy(lastInput, event.text.text);
-							}
-							cursorflash=ticks;
-						}
-					}
-				}
-				break;
-			case SDL_MOUSEBUTTONDOWN: // if a mouse button is pressed...
-				if( !mousestatus[event.button.button] ) {
-					mousestatus[event.button.button] = true;
-					if( ticks - mouseClickTime <= doubleClickTime ) {
-						dbc_mousestatus[event.button.button] = true;
-					}
-					mouseClickTime = ticks;
-				}
-				break;
-			case SDL_MOUSEBUTTONUP: // if a mouse button is released...
-				mousestatus[event.button.button] = false;
-				dbc_mousestatus[event.button.button] = false;
-				break;
-			case SDL_MOUSEWHEEL:
-				mousewheelx = event.wheel.x;
-				mousewheely = event.wheel.y;
-				break;
-			case SDL_MOUSEMOTION: // if the mouse is moved...
-				if( ticks==0 ) {
-					// fixes a bug with unpredictable starting mouse movement
-					break;
-				}
-				mousex = event.motion.x;
-				mousey = event.motion.y;
-				mousexrel += event.motion.xrel;
-				mouseyrel += event.motion.yrel;
+			}
+			break;
+		}
+		case SDL_DROPFILE:
+		{
+			String droppedFile = shortenPath(event.drop.file);
+			if (!inputnum && inputstr) {
+				int i = inputlen - (int)strlen(inputstr) - 1;
+				strncpy(inputstr, droppedFile.get(), std::min(inputlen - 1, (int)droppedFile.length()));
+			}
+			SDL_free(event.drop.file);
+		}
+		case SDL_USEREVENT: // if the game timer has elapsed
+		{
+			executedFrames = true;
 
-				if( std::abs(mousexrel) > 2 || std::abs(mouseyrel) > 2 ) {
-					mouseClickTime = 0;
-				}
-				break;
-			case SDL_CONTROLLERDEVICEADDED:
-				pad = SDL_GameControllerOpen(event.cdevice.which);
-				if( pad == nullptr ) {
-					fmsg(MSG_WARN, "A controller was plugged in, but no handle is available!");
-				} else {
-					controllers.addNode(event.cdevice.which, pad);
-					fmsg(MSG_INFO, "Added controller with device index (%d)", event.cdevice.which);
-					for (int c = 0; c < 4; ++c) {
-						inputs[c].refresh();
-					}
-					break;
-				}
-				break;
-			case SDL_CONTROLLERDEVICEREMOVED:
-				pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
-				if( pad == nullptr ) {
-					fmsg(MSG_WARN, "A controller was removed, but I don't know which one!");
-				} else {
-					Uint32 index = 0;
-					Node<SDL_GameController*>* node = controllers.getFirst();
-					for( ; node != nullptr; node = node->getNext(), ++index ) {
-						SDL_GameController* curr = node->getData();
-						if( pad == curr ) {
-							SDL_GameControllerClose(curr);
-							controllers.removeNode(node);
-							fmsg(MSG_INFO, "Removed controller with device index (%d), instance id (%d)", index, event.cdevice.which);
-							break;
-						}
-					}
-				}
-				break;
-			case SDL_USEREVENT: // if the game timer has elapsed
-				executedFrames=true;
-
-				++ticks;
-				if( localServer ) {
-					localServer->incrementFrame();
-				}
-				if( localClient ) {
-					localClient->incrementFrame();
-				}
-				break;
+			++ticks;
+			if (localServer) {
+				localServer->incrementFrame();
+			}
+			if (localClient) {
+				localClient->incrementFrame();
+			}
+			break;
+		}
 		}
 	}
 	if( !mousestatus[SDL_BUTTON_LEFT] ) {
@@ -1366,14 +1433,59 @@ void Engine::postProcess() {
 	++cycles;
 }
 
-String Engine::buildPath(const char* path) {
+String Engine::shortenPath(const char* path) const {
+	if (path == nullptr || path[0] == '\0') {
+		return String();
+	}
+
+	Uint32 offset = 0;
+	String pathStr = path;
+
+	// windows has to convert backslashes to forward slashes
+#ifdef PLATFORM_WINDOWS
+	for (Uint32 c = 0; c < pathStr.getSize(); ++c) {
+		if (pathStr[c] == '\0') {
+			break;
+		}
+		if (pathStr[c] == '\\') {
+			pathStr[c] = '/';
+		}
+	}
+#endif
+
+	StringBuf<32> withSlashes;
+	do {
+		withSlashes.format("/%s/", game.path.get());
+		offset = pathStr.find(withSlashes.get(), 0);
+		if (offset != String::npos) {
+			pathStr = pathStr.substr(offset + withSlashes.length());
+		} else {
+			for (const mod_t& mod : mods) {
+				withSlashes.format("/%s/", mod.path.get());
+				offset = pathStr.find(withSlashes.get(), 0);
+				if (offset != String::npos) {
+					pathStr = pathStr.substr(offset + withSlashes.length());
+					break;
+				}
+			}
+		}
+	} while (offset != String::npos);
+
+	return pathStr;
+}
+
+String Engine::buildPath(const char* path) const {
+	if (path == nullptr || path[0] == '\0') {
+		return String();
+	}
+
 	StringBuf<256> result(game.path.get());
-	result.appendf("/%s",path);
+	result.appendf("/%s", path);
 
 	// if a mod has the same path, use the mod's path instead...
-	for( mod_t& mod : mods ) {
+	for( const mod_t& mod : mods ) {
 		StringBuf<256> modResult(mod.path.get());
-		modResult.appendf("/%s",path);
+		modResult.appendf("/%s", path);
 
 		FILE* fp = nullptr;
 		if( (fp=fopen( modResult.get(), "rb" )) != nullptr ) {

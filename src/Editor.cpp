@@ -5702,21 +5702,21 @@ void Editor::updateGUI(Frame& gui) {
 					}
 
 					// script
+					Field* scriptField = nullptr;
 					{
 						Frame* frame = properties->addFrame("editor_FrameEntityPropertiesScript");
 
 						Rect<int> size;
-						size.x = 0; size.w = width - border*4;
+						size.x = 0; size.w = width - border*4 - 30 - border;
 						size.y = 0; size.h = 30;
 						frame->setActualSize(size);
-						size.x = border*2; size.w = width - border*4;
+						size.x = border*2; size.w = width - border*4 - 30 - border;
 						size.y = y; size.h = 30;
-						y += size.h + border;
 						frame->setSize(size);
 						frame->setColor(glm::vec4(.25,.25,.25,1.0));
 						frame->setHigh(false);
 
-						Field* field = frame->addField("field",64);
+						Field* field = scriptField = frame->addField("field",64);
 						size.x = border; size.w = frame->getSize().w-border*2;
 						size.y = border; size.h = frame->getSize().h-border*2;
 						field->setSize(size);
@@ -5727,6 +5727,81 @@ void Editor::updateGUI(Frame& gui) {
 						} else {
 							field->setText(firstEntity->getScriptStr());
 						}
+					}
+
+					// button
+					{
+						class ScriptButtonCallback : public Script::Function {
+						public:
+							ScriptButtonCallback(Entity* _entity, Field* _field):
+								entity(_entity),
+								field(_field)
+							{}
+							virtual ~ScriptButtonCallback() {}
+							virtual int operator()(Script::Args& args) const override {
+								mainEngine->setPaused(true);
+								nfdchar_t* resultPath = nullptr;
+								nfdresult_t result = NFD_OpenDialog("lua", nullptr, &resultPath);
+								if (result == NFD_CANCEL) {
+									mainEngine->setPaused(false);
+									return 1;
+								}
+								else if (result == NFD_ERROR) {
+									mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
+									mainEngine->setPaused(false);
+									return 2;
+								}
+								else {
+									String value = resultPath;
+
+									// cut out slashes
+									Uint32 i = 0;
+									do {
+										i = value.find('/', 0);
+										if (i != String::npos) {
+											value = value.substr(i + 1);
+										}
+									} while (i != String::npos);
+
+#ifdef PLATFORM_WINDOWS
+									// windows has to cut out backward slashes, too
+									i = 0;
+									do {
+										i = value.find('\\', 0);
+										if (i != String::npos) {
+											value = value.substr(i + 1);
+										}
+									} while (i != String::npos);
+#endif
+
+									// remove suffix
+									Uint32 offset = value.find(".lua");
+									if (offset != String::npos) {
+										value[offset] = '\0';
+									}
+									entity->setScriptStr(value.get());
+									field->setText(value.get());
+									mainEngine->setPaused(false);
+									return 0;
+								}
+							}
+						private:
+							Entity* entity = nullptr;
+							Field* field = nullptr;
+						};
+
+						Button* button = properties->addButton("");
+						button->setBorder(1);
+						button->setIcon("images/gui/open.png");
+						button->setStyle(Button::STYLE_NORMAL);
+						button->setCallback(new ScriptButtonCallback(firstEntity, scriptField));
+
+						Rect<int> size;
+						size.x = border * 2 + (width - border * 4 - 30); size.w = 30;
+						size.y = y; size.h = 30;
+						button->setSize(size);
+
+						y += size.h + border;
 					}
 
 					// flags label
