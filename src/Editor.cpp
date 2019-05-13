@@ -1523,7 +1523,7 @@ void Editor::initWidgets() {
 
 		Mesh::shadervars_t shaderVars;
 		shaderVars.customColorEnabled = true;
-		shaderVars.customColorA = {.75f,.75f,.75f,1.f};
+		shaderVars.customColorA = {1.f,1.f,1.f,1.f};
 
 		Model* model = widget->addComponent<Model>();
 		model->setName("model");

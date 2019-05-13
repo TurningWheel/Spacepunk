@@ -323,4 +323,7 @@ private:
 	// room library
 	ArrayList<roomlib_t> roomLibs;
 	ArrayList<tunnellib_t> tunnelLibs;
+
+	// level kit
+	String levelkit;
 };
