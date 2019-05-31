@@ -18,6 +18,7 @@ class Entity;
 class Camera;
 class Light;
 class World;
+class Field;
 
 class Component {
 public:
@@ -50,6 +51,7 @@ public:
 			TYPE_VECTOR,
 			TYPE_COLOR,
 			TYPE_ENUM,
+			TYPE_FILE,
 			TYPE_MAX
 		};
 
@@ -326,6 +328,49 @@ public:
 		const char** values;
 		Uint32 maxValue;
 		E& value;
+	};
+
+	// file attribute
+	class AttributeFile : public Attribute {
+	public:
+		AttributeFile(const char* _label, const char* _extensions, String& _value);
+		virtual ~AttributeFile() {}
+		virtual const Type getType() const override { return Type::TYPE_FILE; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class FieldCallback : public Script::Function {
+		public:
+			FieldCallback(String& _value) :
+				value(_value)
+			{}
+			virtual ~FieldCallback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = static_cast<Script::param_string_t*>(args.getList()[0])->value.get();
+				return 0;
+			}
+		private:
+			String& value;
+		};
+		class ButtonCallback : public Script::Function {
+		public:
+			ButtonCallback(String& _value, const char* _extensions, Field* _field) :
+				value(_value),
+				extensions(_extensions),
+				field(_field)
+			{}
+			virtual ~ButtonCallback() {}
+			virtual int operator()(Script::Args& args) const override;
+		private:
+			String& value;
+			const char* extensions = nullptr;
+			Field* field = nullptr;
+		};
+
+	private:
+		String& value;
+		const char* extensions = nullptr;
 	};
 
 	// bbox rect

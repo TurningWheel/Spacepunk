@@ -135,6 +135,7 @@ public:
 		return *this;
 	}
 
+	// used by entity def importer to prevent meshes loading when def is imported
 	static bool dontLoadMesh;
 
 private:

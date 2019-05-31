@@ -39,7 +39,7 @@ Speaker::Speaker(Entity& _entity, Component* _parent) :
 	}
 
 	// exposed attributes
-	attributes.push(new AttributeString("Default Sound", defaultSound));
+	attributes.push(new AttributeFile("Default Sound", "wav,ogg,mp3,FLAC,mod", defaultSound));
 	attributes.push(new AttributeBool("Loop", defaultLoop));
 	attributes.push(new AttributeFloat("Range", defaultRange));
 }

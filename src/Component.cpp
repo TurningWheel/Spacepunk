@@ -365,6 +365,95 @@ void Component::AttributeColor::createAttributeUI(Frame& properties, int x, int&
 	y += 30 + border;
 }
 
+Component::AttributeFile::AttributeFile(const char* _label, const char* _extensions, String& _value) :
+	Attribute(_label),
+	extensions(_extensions),
+	value(_value)
+{}
+
+void Component::AttributeFile::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	static const int border = 3;
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = border * 2 + x;
+		size.w = width - border * 4 - x;
+		size.y = y;
+		size.h = 20;
+		label->setSize(size);
+		label->setText(this->label.get());
+
+		y += size.h + border;
+	}
+
+	// string field
+	Field* field = nullptr;
+	{
+		Frame* frame = properties.addFrame("");
+
+		Rect<int> size;
+		size.x = 0; size.w = width - border * 4 - x - 30 - border;
+		size.y = 0; size.h = 30;
+		frame->setActualSize(size);
+		size.x = x + border * 2; size.w = width - border * 4 - x - 30 - border;
+		size.y = y; size.h = 30;
+		frame->setSize(size);
+		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setHigh(false);
+
+		field = frame->addField("field", 128);
+		size.x = border; size.w = frame->getSize().w - border * 2;
+		size.y = border; size.h = frame->getSize().h - border * 2;
+		field->setSize(size);
+		field->setEditable(true);
+
+		field->setText(value.get());
+		field->setCallback(new FieldCallback(value));
+	}
+
+	// button
+	{
+		Button* button = properties.addButton("");
+		button->setBorder(1);
+		button->setIcon("images/gui/open.png");
+		button->setStyle(Button::STYLE_NORMAL);
+		button->setCallback(new ButtonCallback(value, extensions, field));
+
+		Rect<int> size;
+		size.x = border * 2 + x + (width - border * 4 - x - 30); size.w = 30;
+		size.y = y; size.h = 30;
+		button->setSize(size);
+
+		y += size.h + border;
+	}
+
+	y += border;
+}
+
+int Component::AttributeFile::ButtonCallback::operator()(Script::Args& args) const {
+	mainEngine->setPaused(true);
+	nfdchar_t* resultPath = nullptr;
+	nfdresult_t result = NFD_OpenDialog(extensions, nullptr, &resultPath);
+	if (result == NFD_CANCEL) {
+		mainEngine->setPaused(false);
+		return 1;
+	}
+	else if (result == NFD_ERROR) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
+		mainEngine->setPaused(false);
+		return 2;
+	}
+	else {
+		value = mainEngine->shortenPath(resultPath);
+		field->setText(value.get());
+		mainEngine->setPaused(false);
+		return 0;
+	}
+}
+
 const char* Component::typeStr[COMPONENT_MAX] = {
 	"basic",
 	"bbox",

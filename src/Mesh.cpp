@@ -24,82 +24,131 @@
 #include "Model.hpp"
 
 Mesh::Mesh(const char* _name) : Asset(_name) {
-	mainEngine->fmsg(Engine::MSG_DEBUG,"loading mesh '%s'...",name.get());
-
-	path = mainEngine->buildPath(_name).get();
-
-	String extension = path.substr(path.length() - 4);
-	if (extension == ".vox") {
-		// load voxel mesh
-		VoxelMeshData data = VoxelReader::readVoxel(path.get());
-		Mesh::SubMesh* entry = new Mesh::SubMesh(name.get(), data);
-		mainEngine->fmsg(Engine::MSG_DEBUG,"loaded voxel mesh: %d verts", entry->getNumVertices());
-		subMeshes.addNodeLast(entry);
-		numVertices += entry->getNumVertices();
-	} else {
-		// load standard mesh
-		importer = new Assimp::Importer();
-		unsigned int flags = 0;
-		flags |= aiProcess_SplitByBoneCount;
-		flags |= aiProcess_SplitLargeMeshes;
-		flags |= aiProcess_CalcTangentSpace;
-		flags |= aiProcess_GenSmoothNormals;
-		flags |= aiProcess_Triangulate;
-		flags |= aiProcess_FlipUVs;
-		flags |= aiProcess_JoinIdenticalVertices;
-		//flags |= aiProcess_FixInfacingNormals;
-		flags |= aiProcess_ValidateDataStructure;
-		flags |= aiProcess_ImproveCacheLocality;
-		flags |= aiProcess_RemoveRedundantMaterials;
-		flags |= aiProcess_SortByPType;
-		flags |= aiProcess_FindInvalidData;
-		flags |= aiProcess_OptimizeMeshes;
-		#ifndef PLATFORM_LINUX
-		flags |= aiProcess_OptimizeGraph; // ASSIMP crashes on linux when this is used
-		#endif
-		flags |= aiProcess_LimitBoneWeights;
-		scene = importer->ReadFile(path.get(), 0);
-		if( !scene ) {
-			mainEngine->fmsg(Engine::MSG_ERROR,"failed to load mesh '%s': %s",name.get(),importer->GetErrorString());
-			return;
-		} else {
-			if( !scene->HasAnimations() ) {
-				flags |= aiProcess_PreTransformVertices;
-			}
-			importer->ApplyPostProcessing(flags);
-		}
-		for( unsigned int i=0; i < scene->mNumMeshes; ++i ) {
-			Mesh::SubMesh* entry = new Mesh::SubMesh(name.get(), *scene, scene->mMeshes[i]);
-			minBox.x = min(minBox.x,entry->getMinBox().x);
-			minBox.y = min(minBox.y,entry->getMinBox().y);
-			minBox.z = min(minBox.z,entry->getMinBox().z);
-			maxBox.x = max(maxBox.x,entry->getMaxBox().x);
-			maxBox.y = max(maxBox.y,entry->getMaxBox().y);
-			maxBox.z = max(maxBox.z,entry->getMaxBox().z);
-			subMeshes.addNodeLast(entry);
-			numBones += entry->getNumBones();
-			numVertices += entry->getNumVertices();
-			mainEngine->fmsg(Engine::MSG_DEBUG,"loaded submesh: %d verts, %d bones", entry->getNumVertices(), entry->getNumBones());
-		}
+	if (!_name || _name[0] == '\0') {
+		return;
 	}
-	mainEngine->fmsg(Engine::MSG_DEBUG,"loaded mesh '%s': %d entries, %d verts, %d bones", name.get(), subMeshes.getSize(), numVertices, numBones);
+	if (_name[0] == '#') {
+		mainEngine->fmsg(Engine::MSG_DEBUG, "allocating composite mesh '%s'...", name.get());
+		loaded = true;
+		return;
+	} else {
+		mainEngine->fmsg(Engine::MSG_DEBUG, "loading mesh '%s'...", name.get());
 
-	loaded = true;
+		path = mainEngine->buildPath(_name).get();
+
+		String extension = path.substr(path.length() - 4);
+		if (extension == ".vox") {
+			// load voxel mesh
+			VoxelMeshData data = VoxelReader::readVoxel(path.get());
+			Mesh::SubMesh* entry = new Mesh::SubMesh(data);
+			mainEngine->fmsg(Engine::MSG_DEBUG, "loaded voxel mesh: %d verts", entry->getNumVertices());
+			subMeshes.addNodeLast(entry);
+			numVertices += entry->getNumVertices();
+		} else {
+			// load standard mesh
+			importer = new Assimp::Importer();
+			unsigned int flags = 0;
+			flags |= aiProcess_SplitByBoneCount;
+			flags |= aiProcess_SplitLargeMeshes;
+			flags |= aiProcess_CalcTangentSpace;
+			flags |= aiProcess_GenSmoothNormals;
+			flags |= aiProcess_Triangulate;
+			flags |= aiProcess_FlipUVs;
+			flags |= aiProcess_JoinIdenticalVertices;
+			//flags |= aiProcess_FixInfacingNormals;
+			flags |= aiProcess_ValidateDataStructure;
+			flags |= aiProcess_ImproveCacheLocality;
+			flags |= aiProcess_RemoveRedundantMaterials;
+			flags |= aiProcess_SortByPType;
+			flags |= aiProcess_FindInvalidData;
+			flags |= aiProcess_OptimizeMeshes;
+#ifndef PLATFORM_LINUX
+			flags |= aiProcess_OptimizeGraph; // ASSIMP crashes on linux when this is used
+#endif
+			flags |= aiProcess_LimitBoneWeights;
+			scene = importer->ReadFile(path.get(), 0);
+			if (!scene) {
+				mainEngine->fmsg(Engine::MSG_ERROR, "failed to load mesh '%s': %s", name.get(), importer->GetErrorString());
+				return;
+			} else {
+				if (!scene->HasAnimations()) {
+					flags |= aiProcess_PreTransformVertices;
+				}
+				importer->ApplyPostProcessing(flags);
+			}
+			for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
+				Mesh::SubMesh* entry = new Mesh::SubMesh(scene, scene->mMeshes[i]);
+				minBox.x = min(minBox.x, entry->getMinBox().x);
+				minBox.y = min(minBox.y, entry->getMinBox().y);
+				minBox.z = min(minBox.z, entry->getMinBox().z);
+				maxBox.x = max(maxBox.x, entry->getMaxBox().x);
+				maxBox.y = max(maxBox.y, entry->getMaxBox().y);
+				maxBox.z = max(maxBox.z, entry->getMaxBox().z);
+				subMeshes.addNodeLast(entry);
+				numBones += entry->getNumBones();
+				numVertices += entry->getNumVertices();
+				mainEngine->fmsg(Engine::MSG_DEBUG, "loaded submesh: %d verts, %d bones", entry->getNumVertices(), entry->getNumBones());
+			}
+		}
+		mainEngine->fmsg(Engine::MSG_DEBUG, "loaded mesh '%s': %d entries, %d verts, %d bones", name.get(), subMeshes.getSize(), numVertices, numBones);
+		loaded = true;
+		return;
+	}
 }
 
 Mesh::~Mesh(void) {
-	while( subMeshes.getFirst() ) {
+	clear();
+}
+
+void Mesh::clear() {
+	numBones = 0;
+	numVertices = 0;
+	minBox = Vector(0.f);
+	maxBox = Vector(0.f);
+	while (subMeshes.getFirst()) {
 		delete subMeshes.getFirst()->getData();
 		subMeshes.removeNode(subMeshes.getFirst());
 	}
-	if( importer ) {
-		if( scene ) {
+	if (importer) {
+		if (scene) {
 			importer->FreeScene();
 			scene = nullptr;
 		}
 		delete importer;
 		importer = nullptr;
 	}
+}
+
+void Mesh::composeMesh(const LinkedList<Model*>& models, const glm::mat4& root) {
+	unsigned int _numVertices = 0;
+	unsigned int _numIndices = 0;
+	for (auto model : models) {
+		Mesh* mesh = mainEngine->getMeshResource().dataForString(model->getMesh());
+		if (!mesh) {
+			continue;
+		}
+		for (auto submesh : mesh->getSubMeshes()) {
+			_numVertices += submesh->getNumVertices();
+			_numIndices += submesh->getNumIndices();
+		}
+	}
+	if (!_numVertices || !_numIndices) {
+		return;
+	}
+	Mesh::SubMesh* entry = new Mesh::SubMesh(_numIndices, _numVertices);
+	for (auto model : models) {
+		Mesh* mesh = mainEngine->getMeshResource().dataForString(model->getMesh());
+		if (!mesh) {
+			continue;
+		}
+		for (auto submesh : mesh->getSubMeshes()) {
+			entry->append(*submesh, glm::inverse(root) * model->getGlobalMat());
+		}
+	}
+	entry->finalize();
+	subMeshes.addNodeLast(entry);
+	numVertices += entry->getNumVertices();
+	mainEngine->fmsg(Engine::MSG_DEBUG, "composed mesh '%s': %d entries, %d verts", name.get(), subMeshes.getSize(), numVertices);
 }
 
 unsigned int Mesh::boneIndexForName(const char* name) const {
@@ -411,7 +460,172 @@ void Mesh::draw(Camera& camera, const Component* component, ShaderProgram* shade
 	draw(camera, component, skincache, shader);
 }
 
-Mesh::SubMesh::SubMesh(const char* name, const VoxelMeshData& data) {
+Mesh::SubMesh::SubMesh(unsigned int _numIndices, unsigned int _numVertices) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
+		vbo[static_cast<buffer_t>(i)] = 0;
+	}
+
+	elementCount = _numIndices;
+	numVertices = _numVertices;
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	vertices = new float[numVertices * 3];
+	texCoords = new float[numVertices * 2];
+	normals = new float[numVertices * 3];
+	colors = new float[numVertices * 3];
+	tangents = new float[numVertices * 3];
+	indices = new GLuint[elementCount];
+	for (unsigned int c = 0; c < elementCount; ++c) {
+		indices[c] = 0U;
+	}
+	for (unsigned int c = 0; c < numVertices * 2; ++c) {
+		texCoords[c] = 0.f;
+	}
+	for (unsigned int c = 0; c < numVertices * 3; ++c) {
+		vertices[c] = 0.f;
+		normals[c] = 0.f;
+		colors[c] = 1.f;
+		tangents[c] = 0.f;
+	}
+
+	glBindVertexArray(0);
+}
+
+Mesh::SubMesh::SubMesh(const SubMesh& submesh, const glm::mat4& root) :
+	SubMesh(submesh.getNumIndices(), submesh.getNumVertices()) {
+	append(submesh, root);
+	finalize();
+}
+
+void Mesh::SubMesh::finalize() {
+	glBindVertexArray(vao);
+
+	if (vbo[VERTEX_BUFFER]) {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(0);
+	}
+	if (vbo[TEXCOORD_BUFFER]) {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, 2 * numVertices * sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(1);
+	}
+	if (vbo[NORMAL_BUFFER]) {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[NORMAL_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), normals, GL_STATIC_DRAW);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(2);
+	}
+	if (vbo[COLOR_BUFFER]) {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[COLOR_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(3);
+	}
+	if (vbo[TANGENT_BUFFER]) {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[TANGENT_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), tangents, GL_STATIC_DRAW);
+		glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(6);
+	}
+	if (vbo[INDEX_BUFFER]) {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementCount * sizeof(GLuint), indices, GL_STATIC_DRAW);
+	}
+
+	glBindVertexArray(0);
+}
+
+void Mesh::SubMesh::append(const SubMesh& submesh, const glm::mat4& root) {
+	const glm::mat4& positionMat = root;
+	glm::mat4 normalMat = root;
+	normalMat[3] = glm::vec4(0.f, 0.f, 0.f, 1.f);
+
+	glBindVertexArray(vao);
+
+	// positions
+	if (submesh.getVertices()) {
+		memcpy(&vertices[lastVertex * 3], submesh.getVertices(), sizeof(float) * submesh.getNumVertices() * 3);
+		for (unsigned int c = lastVertex; c < lastVertex + submesh.getNumVertices(); ++c) {
+			glm::vec4 vertex(vertices[c * 3 + 0], vertices[c * 3 + 1], vertices[c * 3 + 2], 1.f);
+			vertex = positionMat * vertex;
+			vertices[c * 3 + 0] = vertex.x;
+			vertices[c * 3 + 1] = vertex.y;
+			vertices[c * 3 + 2] = vertex.z;
+		}
+		if (!vbo[VERTEX_BUFFER]) {
+			glGenBuffers(1, &vbo[VERTEX_BUFFER]);
+		}
+	}
+
+	// texcoords
+	if (submesh.getTexCoords()) {
+		memcpy(&texCoords[lastVertex * 2], submesh.getTexCoords(), sizeof(float) * submesh.getNumVertices() * 2);
+		if (!vbo[TEXCOORD_BUFFER]) {
+			glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
+		}
+	}
+
+	// normals
+	if (submesh.getNormals()) {
+		memcpy(&normals[lastVertex * 3], submesh.getNormals(), sizeof(float) * submesh.getNumVertices() * 3);
+		for (unsigned int c = lastVertex; c < lastVertex + submesh.getNumVertices(); ++c) {
+			glm::vec4 normal(normals[c * 3], normals[c * 3 + 1], normals[c * 3 + 2], 0.f);
+			normal = normalMat * normal;
+			normals[c * 3 + 0] = normal.x;
+			normals[c * 3 + 1] = normal.y;
+			normals[c * 3 + 2] = normal.z;
+		}
+		if (!vbo[NORMAL_BUFFER]) {
+			glGenBuffers(1, &vbo[NORMAL_BUFFER]);
+		}
+	}
+
+	// colors
+	if (submesh.getColors()) {
+		memcpy(&colors[lastVertex * 3], submesh.getColors(), sizeof(float) * submesh.getNumVertices() * 3);
+		if (!vbo[COLOR_BUFFER]) {
+			glGenBuffers(1, &vbo[COLOR_BUFFER]);
+		}
+	}
+
+	// tangents
+	if (submesh.getTangents()) {
+		memcpy(&tangents[lastVertex * 3], submesh.getTangents(), sizeof(float) * submesh.getNumVertices() * 3);
+		for (unsigned int c = lastVertex; c < lastVertex + submesh.getNumVertices(); ++c) {
+			glm::vec4 tangent(tangents[c * 3], tangents[c * 3 + 1], tangents[c * 3 + 2], 0.f);
+			tangent = normalMat * tangent;
+			tangents[c * 3 + 0] = tangent.x;
+			tangents[c * 3 + 1] = tangent.y;
+			tangents[c * 3 + 2] = tangent.z;
+		}
+		if (!vbo[TANGENT_BUFFER]) {
+			glGenBuffers(1, &vbo[TANGENT_BUFFER]);
+		}
+	}
+
+	// indices
+	if (submesh.getIndices()) {
+		memcpy(&indices[lastIndex], submesh.getIndices(), sizeof(GLuint) * submesh.getNumIndices());
+		for (unsigned int c = lastIndex; c < lastIndex + submesh.getNumIndices(); ++c) {
+			indices[c] += lastVertex;
+		}
+		if (!vbo[INDEX_BUFFER]) {
+			glGenBuffers(1, &vbo[INDEX_BUFFER]);
+		}
+	}
+
+	lastVertex += submesh.getNumVertices();
+	lastIndex += submesh.getNumIndices();
+
+	glBindVertexArray(0);
+}
+
+Mesh::SubMesh::SubMesh(const VoxelMeshData& data) {
 	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
@@ -474,8 +688,8 @@ Mesh::SubMesh::SubMesh(const char* name, const VoxelMeshData& data) {
 	glBindVertexArray(0);
 }
 
-Mesh::SubMesh::SubMesh(const char* name, const aiScene& _scene, aiMesh* mesh) {
-	scene = &_scene;
+Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
+	scene = _scene;
 
 	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
 		vbo[static_cast<buffer_t>(i)] = 0;
@@ -608,7 +822,9 @@ Mesh::SubMesh::SubMesh(const char* name, const aiScene& _scene, aiMesh* mesh) {
 		}
 
 		// maps nodes that might not be considered "bones" per-se
-		mapBones(scene->mRootNode);
+		if (scene) {
+			mapBones(scene->mRootNode);
+		}
 
 		glGenBuffers(1, &vbo[BONE_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[BONE_BUFFER]);
@@ -744,8 +960,9 @@ void Mesh::SubMesh::boneTransform(const Map<String, AnimationState>& animations,
 #include <mutex>
 
 void Mesh::SubMesh::readNodeHierarchy(const Map<String, AnimationState>* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const {
-	aiMatrix4x4 nodeTransform = node->mTransformation;
+	assert(scene);
 
+	aiMatrix4x4 nodeTransform = node->mTransformation;
 	const char* nodeName = node->mName.data;
 	const aiNodeAnim* nodeAnim = findNodeAnim(scene->mAnimations[0], nodeName);
 
@@ -986,6 +1203,10 @@ Mesh::SubMesh::~SubMesh() {
 
 	if( vbo[BONE_BUFFER] ) {
 		glDeleteBuffers(1, &vbo[BONE_BUFFER]);
+	}
+
+	if (vbo[TANGENT_BUFFER]) {
+		glDeleteBuffers(1, &vbo[TANGENT_BUFFER]);
 	}
 
 	if( vbo[INDEX_BUFFER] ) {

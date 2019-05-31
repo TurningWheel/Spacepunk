@@ -217,7 +217,10 @@ void Generator::roundMask() {
 void Generator::emplaceRooms() {
 	if( options.roomLayout == "Packed" ) {
 		packRooms();
+	} else if( options.roomLayout == "Scattered" ) {
+		scatterRooms();
 	} else {
+		mainEngine->fmsg(Engine::MSG_WARN, "unknown room layout type, defaulting to Scattered");
 		scatterRooms();
 	}
 }
@@ -240,7 +243,7 @@ void Generator::packRooms() {
 }
 
 void Generator::scatterRooms() {
-	Sint32 numRooms = allocRooms();
+	Sint32 numRooms = options.complex ? allocRooms() / 2 : allocRooms() * 2;
 	for (Sint32 i = 0; i < numRooms; ++i) {
 		emplaceRoom();
 	}
@@ -263,13 +266,13 @@ void Generator::emplaceRoom(Sint32 x, Sint32 y) {
 	Sint32 r2 = (proto.y + proto.h) * options.subdivisor - 1;
 	Sint32 c2 = (proto.x + proto.w) * options.subdivisor - 1;
 
-	if (r1 < 1 || r2 > maxRows)
+	if (r1 < 1 || r2 >= maxRows - 1)
 		return;
-	if (c1 < 1 || c2 > maxCols)
+	if (c1 < 1 || c2 >= maxCols - 1)
 		return;
 
 	// check for collisions with other rooms
-	if (soundRoom(r1, r2, c1, c2))
+	if (!options.complex && soundRoom(r1, r2, c1, c2))
 		return;
 	Sint32 roomID = numRooms;
 	++numRooms;
@@ -635,7 +638,7 @@ void Generator::removeDeadends(Sint32 percentage) {
 				continue;
 			if (tiles[index] & STAIRS)
 				continue;
-			if (!all || (rand.getSint32()%100 < percentage))
+			if (!all && (rand.getSint32()%100 < percentage))
 				continue;
 
 			collapse(r, c);
@@ -665,7 +668,7 @@ bool Generator::checkTunnel(Sint32 r, Sint32 c, Sint32 dir) {
 	for (Sint32 i = 0; i < 5; ++i) {
 		const Sint32 (&p)[2] = closeends[dir].walled[i];
 		Sint32 index = (r + p[0]) + (c + p[1]) * options.dungeonHeight;
-		if (tiles[index] & OPEN_SPACE) {
+		if ((Uint32)index < tiles.getSize() && tiles[index] & (OPEN_SPACE | DOOR_SPACE)) {
 			return false;
 		}
 	}
@@ -686,8 +689,25 @@ void Generator::fixDoors() {
 			for (Uint32 c = 0; c < doors.getSize(); ++c) {
 				auto &door = doors[c];
 				Sint32 index = door.row + door.col * options.dungeonHeight;
-				Uint32& doorTile = tiles[index];
-				if (!(doorTile & OPEN_SPACE)) {
+				Sint32 next = index;
+				switch (dir) {
+				case WEST:
+					--next;
+					break;
+				case EAST:
+					++next;
+					break;
+				case NORTH:
+					next -= options.dungeonHeight;
+					break;
+				case SOUTH:
+					next += options.dungeonHeight;
+					break;
+				default:
+					break;
+				}
+				Uint32& doorTile = tiles[next];
+				if (!(doorTile & (OPEN_SPACE))) {
 					doorTile &= ~DOOR_SPACE;
 					doors.remove(c);
 					--c;
@@ -709,6 +729,8 @@ void Generator::fixDoors() {
 void Generator::emptyBlocks() {
 	Uint32 index;
 
+	// uncomment this to make hallways 2x2
+	/*
 	index = 0;
 	for (Sint32 c = 0; c < options.dungeonWidth; ++c) {
 		for (Sint32 r = 0; r < options.dungeonHeight; ++r) {
@@ -733,7 +755,7 @@ void Generator::emptyBlocks() {
 			}
 			++index;
 		}
-	}
+	}*/
 
 	index = 0;
 	for (Sint32 c = 0; c < options.dungeonWidth; ++c) {
@@ -778,7 +800,7 @@ void Generator::serialize(FileInterface * file) {
 }
 
 void Generator::options_t::serialize(FileInterface * file) {
-	Uint32 version = 0;
+	Uint32 version = 1;
 	file->property("Generator::options_t::version", version);
 	file->property("seed", seed);
 	file->property("width", dungeonWidth);
@@ -795,6 +817,9 @@ void Generator::options_t::serialize(FileInterface * file) {
 	file->property("hallwaySize", hallwaySize);
 	subdivisor = hallwaySize + 1;
 
+	if (version >= 1) {
+		file->property("complex", complex);
+	}
 	file->property("power", power);
 	file->property("gravity", gravity);
 	file->property("lifeSupport", lifeSupport);

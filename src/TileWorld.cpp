@@ -650,7 +650,9 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 	pathFinder(*(new PathFinder(*this)))
 {
 	silent = _silent;
-	clientObj = game->isClient();
+	if (game) {
+		clientObj = game->isClient();
+	}
 	id = _id;
 	if (_filename && _filename[0] != '\0') {
 		changeFilename(_filename);

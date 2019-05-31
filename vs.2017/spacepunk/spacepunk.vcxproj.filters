@@ -419,11 +419,10 @@
     <ClCompile Include="..\..\src\Framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="..\..\src\Inventory.cpp">
-=======
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\Multimesh.cpp">
->>>>>>> master
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

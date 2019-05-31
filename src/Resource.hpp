@@ -63,6 +63,21 @@ public:
 		cache.clear();
 	}
 
+	// delete some specific data from the cache
+	void deleteData(const char* name) {
+		T** data = cache.find(name);
+		if (data) {
+			delete *data;
+			cache.remove(name);
+		}
+	}
+
+	// calculate the size of this resource cache
+	Uint32 getSizeInBytes() const {
+		// need something better than sizeof
+		return (Uint32)(cache.getSize() * sizeof(T));
+	}
+
 private:
 	Map<String, T*> cache;
 	int error = 0;
