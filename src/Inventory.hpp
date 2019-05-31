@@ -26,4 +26,6 @@ public:
 	// save/load this object to a file
 	// @param file interface to serialize with
 	void serialize(FileInterface * file);
+
+	void setVisibility(bool visible);
 };

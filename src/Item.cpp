@@ -1,6 +1,8 @@
 // Item.cpp
 
+#include "Entity.hpp"
 #include "Item.hpp"
+#include "Inventory.hpp"
 #include "File.hpp"
 
 void Item::serialize(FileInterface* file) {
@@ -38,17 +40,39 @@ void Item::serialize(FileInterface* file) {
 	file->property("actions", actions);
 }
 
+void Item::InitInventory()
+{
+	Inventory.items.insert("Helmet", nullptr);
+	Inventory.items.insert("Suit", nullptr);
+	Inventory.items.insert("Gloves", nullptr);
+	Inventory.items.insert("Boots", nullptr);
+	Inventory.items.insert("Back", nullptr);
+	Inventory.items.insert("RightHip", nullptr);
+	Inventory.items.insert("LeftHip", nullptr);
+	Inventory.items.insert("Waist", nullptr);
+	Inventory.items.insert("RightHand", nullptr);
+	Inventory.items.insert("LeftHand", nullptr);
+}
+
 void Item::depositItem(Entity* itemToDeposit, String invSlot)
 {
-	// TODO: add some sort of check to ensure slot name is valid
-	Inventory::Slot slot;
-	slot.entity = itemToDeposit;
-	ItemInventory.items.insert(invSlot, &slot);
+	if (Inventory.items.find(invSlot))
+	{
+		Inventory::Slot slot;
+		slot.entity = itemToDeposit;
+		Inventory.items.insert(invSlot, &slot);
+	}
 }
 
 bool Item::isSlotFilled(String invSlot)
 {
-	return ItemInventory.items.find(invSlot) == nullptr;
+	return getSlottedItem(invSlot) != nullptr;
+}
+
+Entity* Item::getSlottedItem(String invSlot)
+{
+	Inventory::Slot* slot = *Inventory.items.find(invSlot);
+	return slot->entity;
 }
 
 void Item::Action::serialize(FileInterface* file) {
