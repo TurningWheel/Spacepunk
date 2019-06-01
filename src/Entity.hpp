@@ -482,7 +482,7 @@ protected:
 
 	Map<String, String> keyvalues;
 
-	Item EntityItem;
+	Item item;
 
 	// editor variables
 	bool selected = false;

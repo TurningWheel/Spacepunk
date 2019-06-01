@@ -680,7 +680,7 @@ void Entity::warp() {
 
 void Entity::depositItem(Entity * entityToDeposit, String invSlot)
 {
-	EntityItem.depositItem(entityToDeposit, invSlot);
+	item.depositItem(entityToDeposit, invSlot);
 	entityToDeposit->insertIntoWorld(nullptr, entityToDeposit, Vector());
 }
 
@@ -957,7 +957,7 @@ void Entity::serialize(FileInterface * file) {
 	file->property("falling", falling);
 	file->property("sort", sort);
 	if (version >= 2) {
-		file->property("EntityItem", EntityItem);
+		file->property("EntityItem", item);
 	}
 	if( version >= 1 ) {
 		file->property("keys", keyvalues);
