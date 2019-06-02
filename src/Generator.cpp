@@ -791,12 +791,17 @@ void Generator::emptyBlocks() {
 }
 
 void Generator::serialize(FileInterface * file) {
-	Uint32 version = 0;
+	Uint32 version = 1;
 	file->property("Generator::version", version);
 	file->property("name", name);
 	file->property("options", options);
-	file->property("rooms", roomLibs);
-	file->property("tunnels", tunnelLibs);
+	if (version < 1) {
+		file->property("rooms", roomLibs);
+		file->property("tunnels", tunnelLibs);
+	}
+	else {
+		file->property("levelkit", levelkit);
+	}
 }
 
 void Generator::options_t::serialize(FileInterface * file) {

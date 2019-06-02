@@ -297,17 +297,17 @@ public:
 	// get list contents at specified index
 	// @param pos index value
 	// @return a reference to the list at this index
-	const T& get(Uint32 pos) const {
-		assert(pos < size);
-		return arr[pos];
+	const T get(int pos) const {
+		assert((Uint32)pos < size);
+		return arr[(Uint32)pos];
 	}
 
 	// get list contents at specified index
 	// @param pos index value
 	// @return a reference to the list at this index
-	T& get(Uint32 pos) {
-		assert(pos < size);
-		return arr[pos];
+	T get(int pos) {
+		assert((Uint32)pos < size);
+		return arr[(Uint32)pos];
 	}
 
 	// get list contents at specified index
@@ -379,10 +379,10 @@ public:
 		typedef const T& (ArrayList<T>::*PeekConstFn)() const;
 		PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
 
-		typedef T& (ArrayList<T>::*GetFn)(Uint32);
+		typedef T (ArrayList<T>::*GetFn)(int);
 		GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
 
-		typedef const T& (ArrayList<T>::*GetConstFn)(Uint32) const;
+		typedef const T (ArrayList<T>::*GetConstFn)(int) const;
 		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
 
 		luabridge::getGlobalNamespace(lua)

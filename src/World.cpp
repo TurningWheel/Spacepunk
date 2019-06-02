@@ -10,6 +10,7 @@
 #include "Shadow.hpp"
 #include "Entity.hpp"
 #include "BBox.hpp"
+#include "Generator.hpp"
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -98,6 +99,19 @@ void World::getSelectedEntities(LinkedList<Entity*>& outResult) {
 			}
 		}
 	}
+}
+
+ArrayList<int> World::generateDungeon(const char* filename) const {
+	Generator gen(clientObj);
+	FileHelper::readObject(mainEngine->buildPath(filename).get(), gen);
+	gen.createDungeon();
+	ArrayList<int> result;
+	result.resize(gen.getTiles().getSize());
+	for (unsigned int c = 0; c < gen.getTiles().getSize(); ++c)
+	{
+		result[c] = (int)gen.getTiles()[c];
+	}
+	return result;
 }
 
 void World::changeFilename(const char* _filename) {	

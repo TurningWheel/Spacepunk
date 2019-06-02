@@ -141,6 +141,11 @@ public:
 	// @param flat if true, the search radius is 2-dimensional
 	virtual void findEntitiesInRadius( const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false ) = 0;
 
+	// generates a tilemap using the dungeon generator
+	// @param filename The filename to the generator options json
+	// @return a tilemap
+	ArrayList<int> generateDungeon(const char* filename) const;
+
 	// generate a new UID for a world object and advance the UID counter
 	// @return the fresh UID
 	Uint32 getNewUID() { ++uids; return uids; }
