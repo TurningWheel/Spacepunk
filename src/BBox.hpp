@@ -122,7 +122,7 @@ public:
 	float							getMass() const					{ return mass; }
 	const btCollisionShape*			getCollisionShapePtr() const	{ return collisionShapePtr; }
 
-	void		setShape(shape_t _shape)			{ shape = _shape; dirty = true; updateNeeded = true; }
+	void		setShape(Uint32 _shape)				{ shape = (shape_t)_shape; dirty = true; updateNeeded = true; }
 	void		setEnabled(bool _enabled)			{ enabled = _enabled; dirty = true; updateNeeded = true; }
 	void		setMass(float _mass)				{ mass = _mass; dirty = true; updateNeeded = true; }
 

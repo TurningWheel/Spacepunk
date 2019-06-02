@@ -215,6 +215,8 @@ void Script::exposeEngine() {
 
 	Rect<Sint32>::exposeToScript(lua, "RectSint32");
 	Rect<Uint32>::exposeToScript(lua, "RectUint32");
+	ArrayList<int>::exposeToScript(lua, "ArrayListInt");
+	ArrayList<float>::exposeToScript(lua, "ArrayListFloat");
 }
 
 void Script::exposeFrame() {
@@ -482,6 +484,7 @@ void Script::exposeWorld() {
 		.addFunction("selectEntities", &World::selectEntities)
 		.addFunction("deselectGeometry", &World::deselectGeometry)
 		.addFunction("getEntitiesByName", &World::getEntitiesByName)
+		.addFunction("generateDungeon", &World::generateDungeon)
 		.endClass()
 	;
 
@@ -561,6 +564,7 @@ void Script::exposeEntity() {
 		.addFunction("addLight", &Entity::addComponent<Light>)
 		.addFunction("addSpeaker", &Entity::addComponent<Speaker>)
 		.addFunction("addCharacter", &Entity::addComponent<Character>)
+		.addFunction("addMultimesh", &Entity::addComponent<Multimesh>)
 		.addFunction("findComponentByName", &Entity::findComponentByName<Component>)
 		.addFunction("findBBoxByName", &Entity::findComponentByName<BBox>)
 		.addFunction("findModelByName", &Entity::findComponentByName<Model>)
@@ -568,6 +572,7 @@ void Script::exposeEntity() {
 		.addFunction("findCameraByName", &Entity::findComponentByName<Camera>)
 		.addFunction("findSpeakerByName", &Entity::findComponentByName<Speaker>)
 		.addFunction("findCharacterByName", &Entity::findComponentByName<Character>)
+		.addFunction("findMultimeshByName", &Entity::findComponentByName<Multimesh>)
 		.addFunction("lineTrace", &Entity::lineTrace)
 		.addFunction("findAPath", &Entity::findAPath)
 		.addFunction("findRandomPath", &Entity::findRandomPath)
@@ -593,6 +598,7 @@ void Script::exposeEntity() {
 	exposeCamera();
 	exposeSpeaker();
 	exposeCharacter();
+	exposeMultimesh();
 
 	if( entity ) {
 		luabridge::push(lua, entity);
@@ -673,6 +679,7 @@ void Script::exposeBBox() {
 		.addFunction("setShape", &BBox::setShape)
 		.addFunction("setMass", &BBox::setMass)
 		.addFunction("findAllOverlappingEntities", &BBox::findAllOverlappingEntities)
+		.addFunction("createRigidBody", &BBox::createRigidBody)
 		.endClass()
 	;
 
