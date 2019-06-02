@@ -63,6 +63,7 @@ public:
 	//returns entity filling a slot
 	class Entity* getSlottedItem(String invSlot);
 
+	void setInventoryVisibility(bool visible);
 private:
 	/*struct ConditionalEffect {
 		String effect;

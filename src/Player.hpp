@@ -98,6 +98,7 @@ public:
 	bool					isMoving() const		{ return moving; }
 	bool					hasJumped() const		{ return jumped; }
 	const Angle&			getLookDir() const		{ return lookDir; }
+	bool					isInvVisible() const	{ return inventoryVisible;  }
 
 	void	setName(const char* _name)				{ name = _name; }
 	void	setServerID(Uint32 id)					{ serverID = id; }
@@ -134,6 +135,13 @@ private:
 	float buttonBackward = 0.f;
 	bool buttonJump = false;
 	bool buttonCrouch = false;
+
+	// inventory vars
+	bool inventoryVisible = false;
+	bool holdingInteract = false;
+	float interactHoldTime = 0;
+	const float HOLD_TO_PICKUP_TIME = 0.5;
+	Entity* previousInteractedEntity = nullptr;
 
 	bool moving = false;
 	bool crouching = false;

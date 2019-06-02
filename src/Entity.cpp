@@ -90,6 +90,8 @@ Entity::Entity(World* _world, Uint32 _uid) {
 		node = world->getEntities(uid&(World::numBuckets-1)).addNodeLast(this);
 	}
 
+	item.InitInventory();
+
 	// initialize a few things
 	scale = Vector(1.f);
 	flags = static_cast<int>(flag_t::FLAG_VISIBLE) | static_cast<int>(flag_t::FLAG_SHADOW) | static_cast<int>(flag_t::FLAG_ALLOWTRACE);
@@ -682,6 +684,43 @@ void Entity::depositItem(Entity * entityToDeposit, String invSlot)
 {
 	item.depositItem(entityToDeposit, invSlot);
 	entityToDeposit->insertIntoWorld(nullptr, entityToDeposit, Vector());
+}
+
+void Entity::depositInAvailableSlot(Entity* entityToDeposit)
+{
+	if (!item.isSlotFilled("RightHand"))
+	{
+		depositItem(entityToDeposit, "RightHand");
+	}
+	else if (!item.isSlotFilled("LeftHand"))
+	{
+		depositItem(entityToDeposit, "LeftHand");
+	}
+	else if (!item.isSlotFilled("Back"))
+	{
+		depositItem(entityToDeposit, "Back");
+	}
+	else if (!item.isSlotFilled("RightHip"))
+	{
+		depositItem(entityToDeposit, "RightHip");
+	}
+	else if (!item.isSlotFilled("LeftHip"))
+	{
+		depositItem(entityToDeposit, "LeftHip");
+	}
+	else if (!item.isSlotFilled("Waist"))
+	{
+		depositItem(entityToDeposit, "Waist");
+	}
+	else
+	{
+		depositItem(entityToDeposit, "RightHand");
+	}
+}
+
+void Entity::setInventoryVisibility(bool visible)
+{
+	item.setInventoryVisibility(visible);
 }
 
 bool Entity::move() {

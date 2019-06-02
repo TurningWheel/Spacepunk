@@ -42,16 +42,27 @@ void Item::serialize(FileInterface* file) {
 
 void Item::InitInventory()
 {
-	Inventory.items.insert("Helmet", nullptr);
-	Inventory.items.insert("Suit", nullptr);
-	Inventory.items.insert("Gloves", nullptr);
-	Inventory.items.insert("Boots", nullptr);
-	Inventory.items.insert("Back", nullptr);
-	Inventory.items.insert("RightHip", nullptr);
-	Inventory.items.insert("LeftHip", nullptr);
-	Inventory.items.insert("Waist", nullptr);
-	Inventory.items.insert("RightHand", nullptr);
-	Inventory.items.insert("LeftHand", nullptr);
+	Inventory::Slot slotHelmet;
+	Inventory::Slot slotSuit;
+	Inventory::Slot slotGloves;
+	Inventory::Slot slotBoots;
+	Inventory::Slot slotBack;
+	Inventory::Slot slotRightHip;
+	Inventory::Slot slotLeftHip;
+	Inventory::Slot slotWaist;
+	Inventory::Slot slotRightHand;
+	Inventory::Slot slotLeftHand;
+
+	Inventory.items.insert("Helmet", &slotHelmet);
+	Inventory.items.insert("Suit", &slotSuit);
+	Inventory.items.insert("Gloves", &slotGloves);
+	Inventory.items.insert("Boots", &slotBoots);
+	Inventory.items.insert("Back", &slotBack);
+	Inventory.items.insert("RightHip", &slotRightHip);
+	Inventory.items.insert("LeftHip", &slotLeftHip);
+	Inventory.items.insert("Waist", &slotWaist);
+	Inventory.items.insert("RightHand", &slotRightHand);
+	Inventory.items.insert("LeftHand", &slotLeftHand);
 }
 
 void Item::depositItem(Entity* itemToDeposit, String invSlot)
@@ -73,6 +84,11 @@ Entity* Item::getSlottedItem(String invSlot)
 {
 	Inventory::Slot* slot = *Inventory.items.find(invSlot);
 	return slot->entity;
+}
+
+void Item::setInventoryVisibility(bool visible)
+{
+	Inventory.setVisibility(visible);
 }
 
 void Item::Action::serialize(FileInterface* file) {

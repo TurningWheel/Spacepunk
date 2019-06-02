@@ -15,6 +15,7 @@ public:
 
 	class Slot {
 	public:
+
 		bool locked; // if the slot is locked
 		class Entity* entity;
 
