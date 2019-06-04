@@ -212,8 +212,14 @@ public:
 	// @return the value associated with the key, or "" if it could not be found
 	const char* getKeyValue(const char* key) const;
 
-	// runs the entity's assigned script, if any
-	virtual void process();
+	// runs the entity's pre-process script
+	void preProcess();
+
+	// updates the entity and runs the entity script
+	void process();
+
+	// runs the entity's post-process script
+	void postProcess();
 
 	// mark the object to be transfered into another world
 	// @param _world the world to move the entity into
@@ -428,13 +434,21 @@ public:
 
 	// check if this entity is a player owned by this client
 	// @return true if the entity is a player from this client, otherwise false
-	bool isLocalPlayer();
+	bool isLocalPlayer() const;
 
 	// updates the physics component of the entity to move it to the current location
 	void warp();
 
 	// deposit an item into the specified inventory slot
 	void depositItem(Entity* entityToDeposit, String invSlot);
+
+	// check if this entity is existing on the client
+	// @return true if the entity is a client object
+	bool isClientObj() const;
+
+	// check if this entity is existing on the server
+	// @return true if the entity is a server object
+	bool isServerObj() const;
 
 protected:
 	Node<Entity*>* node			= nullptr;	// node to the world entity list

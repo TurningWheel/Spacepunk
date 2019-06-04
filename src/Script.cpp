@@ -587,6 +587,8 @@ void Script::exposeEntity() {
 		.addFunction("insertIntoWorld", &Entity::insertIntoWorld)
 		.addFunction("warp", &Entity::warp)
 		.addFunction("remoteExecute", &Entity::remoteExecute)
+		.addFunction("isClientObj", &Entity::isClientObj)
+		.addFunction("isServerObj", &Entity::isServerObj)
 		.endClass()
 	;
 

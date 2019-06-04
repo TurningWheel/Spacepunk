@@ -459,6 +459,14 @@ void Entity::dispatch(const char* funcName, Script::Args& args) {
 	}
 }
 
+void Entity::preProcess() {
+	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
+		if (script && !scriptStr.empty() && world && ticks != 0) {
+			script->dispatch("preprocess");
+		}
+	}
+}
+
 void Entity::process() {
 	++ticks;
 
@@ -507,27 +515,15 @@ void Entity::process() {
 	}
 
 	// run entity script
-	bool processed = false;
 	bool editor = mainEngine->isEditorRunning() && !mainEngine->isPlayTest();
 	if (!editor) {
 		if (script && !scriptStr.empty() && world) {
-			StringBuf<128> path;
-			if (world->isClientObj() && mainEngine->isRunningClient()) {
-				path.format("scripts/client/entities/%s.lua", scriptStr.get());
-			}
-			else if (world->isServerObj() && mainEngine->isRunningServer()) {
-				path.format("scripts/server/entities/%s.lua", scriptStr.get());
-			}
-
-			// first time
 			if (!ranScript) {
 				ranScript = true;
-				script->load(path.get());
+				script->load(StringBuf<64>("scripts/entities/%s.lua", 1, scriptStr.get()));
 				script->dispatch("init");
-			}
-			else {
+			} else {
 				script->dispatch("process");
-				processed = true;
 			}
 		}
 	}
@@ -596,17 +592,11 @@ void Entity::process() {
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->process();
 	}
+}
 
-	// run post process script
-	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
-		if( script && !scriptStr.empty() && world && processed ) {
-			StringBuf<128> path;
-			if( world->isClientObj() && mainEngine->isRunningClient() ) {
-				path.format("scripts/client/entities/%s.lua", scriptStr.get());
-			} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
-				path.format("scripts/server/entities/%s.lua", scriptStr.get());
-			}
-
+void Entity::postProcess() {
+	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
+		if (script && !scriptStr.empty() && world && ticks != 0) {
 			script->dispatch("postprocess");
 		}
 	}
@@ -941,7 +931,7 @@ bool Entity::interact(Entity& user, BBox& bbox)
 	args.addInt(user.getUID());
 	args.addString(bbox.getName());
 
-	return (script->dispatch("interact", &args) == 0);
+	return script->dispatch("interact", &args) == 0;
 }
 
 void Entity::serialize(FileInterface * file) {
@@ -1146,7 +1136,7 @@ void Entity::def_t::serialize(FileInterface * file) {
 	Model::dontLoadMesh = false;
 }
 
-bool Entity::isLocalPlayer() {
+bool Entity::isLocalPlayer() const {
 	if (player) {
 		if (player->getClientID() == Player::invalidID) {
 			return true;
@@ -1164,4 +1154,20 @@ void Entity::setScriptStr(const char* _scriptStr) {
 		script = new Script(*this);
 	}
 	ranScript = false;
+}
+
+bool Entity::isClientObj() const {
+	if (world) {
+		return world->isClientObj();
+	} else {
+		return false;
+	}
+}
+
+bool Entity::isServerObj() const {
+	if (world) {
+		return !world->isClientObj();
+	} else {
+		return false;
+	}
 }
