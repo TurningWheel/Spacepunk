@@ -463,7 +463,7 @@ void Entity::dispatch(const char* funcName, Script::Args& args) {
 
 void Entity::preProcess() {
 	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
-		if (script && !scriptStr.empty() && world && ticks != 0) {
+		if (script && !scriptStr.empty() && world && ranScript && ticks != 0) {
 			script->dispatch("preprocess");
 		}
 	}
@@ -598,7 +598,7 @@ void Entity::process() {
 
 void Entity::postProcess() {
 	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
-		if (script && !scriptStr.empty() && world && ticks != 0) {
+		if (script && !scriptStr.empty() && world && ranScript && ticks != 0) {
 			script->dispatch("postprocess");
 		}
 	}
