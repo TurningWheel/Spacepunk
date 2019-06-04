@@ -460,37 +460,64 @@ void Player::control() {
 	// don't actually turn the entity vertically
 	rot.pitch = 0.f;
 
-	//Interacting with entities.
-	if ( !client->isConsoleActive() ) {
-		World* world = entity->getWorld();
-		if ( input.binaryToggle(Input::INTERACT) && camera && world ) {
-			input.consumeBinaryToggle(Input::INTERACT);
-			Vector start = camera->getGlobalPos();
-			Vector dest = start + camera->getGlobalAng().toVector() * 128;
-			World::hit_t hit = entity->lineTrace(start, dest);
 
-			if ( hit.hitEntity )
-			{
-				Entity* hitEntity = nullptr;
-				if ( (hitEntity = world->uidToEntity(hit.index)) != nullptr )
+	if ( !client->isConsoleActive() ) {
+		//Interacting with entities.
+		World* world = entity->getWorld();
+		if(camera && world)
+		{
+			if (input.binaryToggle(Input::INTERACT)) {
+				if (holdingInteract)
 				{
-					auto hitBBox = static_cast<BBox*>(hit.pointer);
-					if ( hitBBox )
+					// 60hz
+					interactHoldTime += 1 / 60;
+				}
+				holdingInteract = true;
+				input.consumeBinaryToggle(Input::INTERACT);
+				Vector start = camera->getGlobalPos();
+				Vector dest = start + camera->getGlobalAng().toVector() * 128;
+				World::hit_t hit = entity->lineTrace(start, dest);
+
+				if (hit.hitEntity)
+				{
+					Entity* hitEntity = nullptr;
+					if ((hitEntity = world->uidToEntity(hit.index)) != nullptr)
 					{
-						if ( hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE) )
+						previousInteractedEntity = hitEntity;
+						auto hitBBox = static_cast<BBox*>(hit.pointer);
+						if (hitBBox)
 						{
-							mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
-							Packet packet;
-							packet.write32(hitBBox->getUID());
-							packet.write32(hitEntity->getUID());
-							packet.write32(client->indexForWorld(world));
-							packet.write32(localID);
-							packet.write("ESEL");
-							client->getNet()->signPacket(packet);
-							client->getNet()->sendPacketSafe(0, packet);
+							if (hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE))
+							{
+								mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
+								Packet packet;
+								packet.write32(hitBBox->getUID());
+								packet.write32(hitEntity->getUID());
+								packet.write32(client->indexForWorld(world));
+								packet.write32(localID);
+								packet.write("ESEL");
+								client->getNet()->signPacket(packet);
+								client->getNet()->sendPacketSafe(0, packet);
+							}
 						}
 					}
 				}
+			}
+			else
+			{
+				holdingInteract = false;
+				if (interactHoldTime >= HOLD_TO_PICKUP_TIME && previousInteractedEntity->isPickupable())
+				{
+					entity->depositInAvailableSlot(previousInteractedEntity);
+				}
+				interactHoldTime = 0;
+			}
+			// Toggling inventory
+			if (input.binaryToggle(Input::TOGGLE_INVENTORY))
+			{
+				input.consumeBinaryToggle(Input::TOGGLE_INVENTORY);
+				entity->setInventoryVisibility(!inventoryVisible);
+				inventoryVisible = !inventoryVisible;
 			}
 		}
 	}

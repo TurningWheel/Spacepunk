@@ -116,6 +116,7 @@ public:
 	bool								hasPath() const						{ return path != nullptr; }
 	const Entity*						getAnchor() const					{ return anchor; }
 	const Vector&						getOffset() const					{ return offset; }
+	bool								isPickupable() const					{ return canBePickedUp; }
 
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
 	void					setMat(const glm::mat4& _mat)					{ if( mat != _mat ) { mat = _mat; updateNeeded = true; matSet = true; } }
@@ -450,6 +451,12 @@ public:
 	// @return true if the entity is a server object
 	bool isServerObj() const;
 
+	// deposits in first empty slot or right hand if all filled
+	void depositInAvailableSlot(Entity* entityToDeposit);
+
+	// toggles inventory on/off
+	void setInventoryVisibility(bool visible);
+
 protected:
 	Node<Entity*>* node			= nullptr;	// node to the world entity list
 	World* world				= nullptr;	// parent world object
@@ -497,6 +504,7 @@ protected:
 	Map<String, String> keyvalues;
 
 	Item item;
+	bool canBePickedUp = false;
 
 	// editor variables
 	bool selected = false;
