@@ -805,10 +805,9 @@ bool Entity::hasComponent(Component::type_t type) const {
 }
 
 Entity* Entity::copy(World* world, Entity* entity) const {
-	if( !entity ) {
+	if (!entity) {
 		entity = new Entity(world);
 	}
-
 	entity->setPlayer(player);
 	entity->setFlags(flags);
 	entity->setPos(pos);
@@ -825,78 +824,9 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	entity->setFalling(falling);
 	entity->setSort(sort);
 	entity->keyvalues.copy(keyvalues);
-
-	Component* component = nullptr;
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		switch( components[c]->getType() ) {
-			case Component::COMPONENT_BASIC:
-			{
-				component = entity->addComponent<Component>();
-				break;
-			}
-			case Component::COMPONENT_BBOX:
-			{
-				component = entity->addComponent<BBox>();
-				BBox* bbox0 = static_cast<BBox*>(components[c]);
-				BBox* bbox1 = static_cast<BBox*>(component);
-				*bbox1 = *bbox0;
-				break;
-			}
-			case Component::COMPONENT_MODEL:
-			{
-				component = entity->addComponent<Model>();
-				Model* model0 = static_cast<Model*>(components[c]);
-				Model* model1 = static_cast<Model*>(component);
-				*model1 = *model0;
-				break;
-			}
-			case Component::COMPONENT_LIGHT:
-			{
-				component = entity->addComponent<Light>();
-				Light* light0 = static_cast<Light*>(components[c]);
-				Light* light1 = static_cast<Light*>(component);
-				*light1 = *light0;
-				break;
-			}
-			case Component::COMPONENT_CAMERA:
-			{
-				component = entity->addComponent<Camera>();
-				Camera* camera0 = static_cast<Camera*>(components[c]);
-				Camera* camera1 = static_cast<Camera*>(component);
-				*camera1 = *camera0;
-				break;
-			}
-			case Component::COMPONENT_SPEAKER:
-			{
-				component = entity->addComponent<Speaker>();
-				Speaker* speaker0 = static_cast<Speaker*>(components[c]);
-				Speaker* speaker1 = static_cast<Speaker*>(component);
-				*speaker1 = *speaker0;
-				break;
-			}
-			case Component::COMPONENT_CHARACTER:
-			{
-				component = entity->addComponent<Character>();
-				Character* character0 = static_cast<Character*>(components[c]);
-				Character* character1 = static_cast<Character*>(component);
-				*character1 = *character0;
-				break;
-			}
-			default:
-			{
-				mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
-				break;
-			}
-		}
-		if( !component ) {
-			mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from entity '%s'", entity->getName());
-		} else {
-			*component = *components[c];
-			components[c]->copyComponents(*component);
-			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
-		}
+		components[c]->copy(*entity);
 	}
-
 	entity->update();
 	entity->animate("idle", false);
 

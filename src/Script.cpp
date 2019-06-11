@@ -410,6 +410,7 @@ void Script::exposeEditor(Editor& _editor) {
 		.addFunction("entityKeyValueSelect", &Editor::entityKeyValueSelect)
 		.addFunction("entityAddComponent", &Editor::entityAddComponent)
 		.addFunction("entityRemoveComponent", &Editor::entityRemoveComponent)
+		.addFunction("entityCopyComponent", &Editor::entityCopyComponent)
 		.addFunction("entityComponentExpand", &Editor::entityComponentExpand)
 		.addFunction("entityComponentCollapse", &Editor::entityComponentCollapse)
 		.addFunction("entityComponentName", &Editor::entityComponentName)
@@ -612,10 +613,13 @@ void Script::exposeEntity() {
 }
 
 void Script::exposeComponent() {
+	typedef Component* (Component::*GetParentFn)();
+	GetParentFn getParent = static_cast<GetParentFn>(&Component::getParent);
+
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Component>("Component")
 		.addFunction("getType", &Component::getType)
-		.addFunction("getParent", &Component::getParent)
+		.addFunction("getParent", getParent)
 		.addFunction("isEditorOnly", &Component::isEditorOnly)
 		.addFunction("isUpdateNeeded", &Component::isUpdateNeeded)
 		.addFunction("getUID", &Component::getUID)
@@ -638,6 +642,7 @@ void Script::exposeComponent() {
 		.addFunction("hasComponent", &Component::hasComponent)
 		.addFunction("removeComponentByName", &Component::removeComponentByName)
 		.addFunction("removeComponentByUID", &Component::removeComponentByUID)
+		.addFunction("copyComponents", &Component::copyComponents)
 		.addFunction("addComponent", &Component::addComponent<Component>)
 		.addFunction("addBBox", &Component::addComponent<BBox>)
 		.addFunction("addModel", &Component::addComponent<Model>)

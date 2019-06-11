@@ -474,7 +474,7 @@ Mesh::SubMesh::SubMesh(unsigned int _numIndices, unsigned int _numVertices) {
 	vertices = new float[numVertices * 3];
 	texCoords = new float[numVertices * 2];
 	normals = new float[numVertices * 3];
-	colors = new float[numVertices * 3];
+	colors = new float[numVertices * 4];
 	tangents = new float[numVertices * 3];
 	indices = new GLuint[elementCount];
 	for (unsigned int c = 0; c < elementCount; ++c) {
@@ -486,8 +486,10 @@ Mesh::SubMesh::SubMesh(unsigned int _numIndices, unsigned int _numVertices) {
 	for (unsigned int c = 0; c < numVertices * 3; ++c) {
 		vertices[c] = 0.f;
 		normals[c] = 0.f;
-		colors[c] = 1.f;
 		tangents[c] = 0.f;
+	}
+	for (unsigned int c = 0; c < numVertices * 4; ++c) {
+		colors[c] = 0.f;
 	}
 
 	glBindVertexArray(0);
@@ -522,8 +524,8 @@ void Mesh::SubMesh::finalize() {
 	}
 	if (vbo[COLOR_BUFFER]) {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[COLOR_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), colors, GL_STATIC_DRAW);
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glBufferData(GL_ARRAY_BUFFER, 4 * numVertices * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(3);
 	}
 	if (vbo[TANGENT_BUFFER]) {
@@ -587,7 +589,7 @@ void Mesh::SubMesh::append(const SubMesh& submesh, const glm::mat4& root) {
 
 	// colors
 	if (submesh.getColors()) {
-		memcpy(&colors[lastVertex * 3], submesh.getColors(), sizeof(float) * submesh.getNumVertices() * 3);
+		memcpy(&colors[lastVertex * 4], submesh.getColors(), sizeof(float) * submesh.getNumVertices() * 4);
 		if (!vbo[COLOR_BUFFER]) {
 			glGenBuffers(1, &vbo[COLOR_BUFFER]);
 		}

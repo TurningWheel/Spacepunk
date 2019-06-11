@@ -1013,84 +1013,165 @@ void Component::update() {
 	}
 }
 
-void Component::copyComponents(Component& dest) {
+void Component::copy(Component& dest) {
 	Component* component = nullptr;
+	switch (getType()) {
+	case Component::COMPONENT_BASIC:
+	{
+		component = dest.addComponent<Component>();
+		break;
+	}
+	case Component::COMPONENT_BBOX:
+	{
+		component = dest.addComponent<BBox>();
+		BBox* bbox0 = static_cast<BBox*>(this);
+		BBox* bbox1 = static_cast<BBox*>(component);
+		*bbox1 = *bbox0;
+		break;
+	}
+	case Component::COMPONENT_MODEL:
+	{
+		component = dest.addComponent<Model>();
+		Model* model0 = static_cast<Model*>(this);
+		Model* model1 = static_cast<Model*>(component);
+		*model1 = *model0;
+		break;
+	}
+	case Component::COMPONENT_LIGHT:
+	{
+		component = dest.addComponent<Light>();
+		Light* light0 = static_cast<Light*>(this);
+		Light* light1 = static_cast<Light*>(component);
+		*light1 = *light0;
+		break;
+	}
+	case Component::COMPONENT_CAMERA:
+	{
+		component = dest.addComponent<Camera>();
+		Camera* camera0 = static_cast<Camera*>(this);
+		Camera* camera1 = static_cast<Camera*>(component);
+		*camera1 = *camera0;
+		break;
+	}
+	case Component::COMPONENT_SPEAKER:
+	{
+		component = dest.addComponent<Speaker>();
+		Speaker* speaker0 = static_cast<Speaker*>(this);
+		Speaker* speaker1 = static_cast<Speaker*>(component);
+		*speaker1 = *speaker0;
+		break;
+	}
+	case Component::COMPONENT_CHARACTER:
+	{
+		component = dest.addComponent<Character>();
+		Character* character0 = static_cast<Character*>(this);
+		Character* character1 = static_cast<Character*>(component);
+		*character1 = *character0;
+		break;
+	}
+	case Component::COMPONENT_MULTIMESH:
+	{
+		component = dest.addComponent<Multimesh>();
+		Multimesh* mm0 = static_cast<Multimesh*>(this);
+		Multimesh* mm1 = static_cast<Multimesh*>(component);
+		*mm1 = *mm0;
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	if (!component) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to copy component");
+	} else {
+		*component = *this;
+		copyComponents(*component);
+		mainEngine->fmsg(Engine::MSG_DEBUG, "copied %s component", Component::typeStr[(int)getType()]);
+	}
+}
+
+void Component::copy(Entity& dest) {
+	Component* component = nullptr;
+	switch (getType()) {
+	case Component::COMPONENT_BASIC:
+	{
+		component = dest.addComponent<Component>();
+		break;
+	}
+	case Component::COMPONENT_BBOX:
+	{
+		component = dest.addComponent<BBox>();
+		BBox* bbox0 = static_cast<BBox*>(this);
+		BBox* bbox1 = static_cast<BBox*>(component);
+		*bbox1 = *bbox0;
+		break;
+	}
+	case Component::COMPONENT_MODEL:
+	{
+		component = dest.addComponent<Model>();
+		Model* model0 = static_cast<Model*>(this);
+		Model* model1 = static_cast<Model*>(component);
+		*model1 = *model0;
+		break;
+	}
+	case Component::COMPONENT_LIGHT:
+	{
+		component = dest.addComponent<Light>();
+		Light* light0 = static_cast<Light*>(this);
+		Light* light1 = static_cast<Light*>(component);
+		*light1 = *light0;
+		break;
+	}
+	case Component::COMPONENT_CAMERA:
+	{
+		component = dest.addComponent<Camera>();
+		Camera* camera0 = static_cast<Camera*>(this);
+		Camera* camera1 = static_cast<Camera*>(component);
+		*camera1 = *camera0;
+		break;
+	}
+	case Component::COMPONENT_SPEAKER:
+	{
+		component = dest.addComponent<Speaker>();
+		Speaker* speaker0 = static_cast<Speaker*>(this);
+		Speaker* speaker1 = static_cast<Speaker*>(component);
+		*speaker1 = *speaker0;
+		break;
+	}
+	case Component::COMPONENT_CHARACTER:
+	{
+		component = dest.addComponent<Character>();
+		Character* character0 = static_cast<Character*>(this);
+		Character* character1 = static_cast<Character*>(component);
+		*character1 = *character0;
+		break;
+	}
+	case Component::COMPONENT_MULTIMESH:
+	{
+		component = dest.addComponent<Multimesh>();
+		Multimesh* mm0 = static_cast<Multimesh*>(this);
+		Multimesh* mm1 = static_cast<Multimesh*>(component);
+		*mm1 = *mm0;
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	if (!component) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to copy component");
+	} else {
+		*component = *this;
+		copyComponents(*component);
+		mainEngine->fmsg(Engine::MSG_DEBUG, "copied %s component", Component::typeStr[(int)getType()]);
+	}
+}
+
+void Component::copyComponents(Component& dest) {
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		switch( components[c]->getType() ) {
-			case Component::COMPONENT_BASIC:
-			{
-				component = dest.addComponent<Component>();
-				break;
-			}
-			case Component::COMPONENT_BBOX:
-			{
-				component = dest.addComponent<BBox>();
-				BBox* bbox0 = static_cast<BBox*>(components[c]);
-				BBox* bbox1 = static_cast<BBox*>(component);
-				*bbox1 = *bbox0;
-				break;
-			}
-			case Component::COMPONENT_MODEL:
-			{
-				component = dest.addComponent<Model>();
-				Model* model0 = static_cast<Model*>(components[c]);
-				Model* model1 = static_cast<Model*>(component);
-				*model1 = *model0;
-				break;
-			}
-			case Component::COMPONENT_LIGHT:
-			{
-				component = dest.addComponent<Light>();
-				Light* light0 = static_cast<Light*>(components[c]);
-				Light* light1 = static_cast<Light*>(component);
-				*light1 = *light0;
-				break;
-			}
-			case Component::COMPONENT_CAMERA:
-			{
-				component = dest.addComponent<Camera>();
-				Camera* camera0 = static_cast<Camera*>(components[c]);
-				Camera* camera1 = static_cast<Camera*>(component);
-				*camera1 = *camera0;
-				break;
-			}
-			case Component::COMPONENT_SPEAKER:
-			{
-				component = dest.addComponent<Speaker>();
-				Speaker* speaker0 = static_cast<Speaker*>(components[c]);
-				Speaker* speaker1 = static_cast<Speaker*>(component);
-				*speaker1 = *speaker0;
-				break;
-			}
-			case Component::COMPONENT_CHARACTER:
-			{
-				component = dest.addComponent<Character>();
-				Character* character0 = static_cast<Character*>(components[c]);
-				Character* character1 = static_cast<Character*>(component);
-				*character1 = *character0;
-				break;
-			}
-			case Component::COMPONENT_MULTIMESH:
-			{
-				component = dest.addComponent<Multimesh>();
-				Multimesh* mm0 = static_cast<Multimesh*>(components[c]);
-				Multimesh* mm1 = static_cast<Multimesh*>(component);
-				*mm1 = *mm0;
-				break;
-			}
-			default:
-			{
-				mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
-				break;
-			}
-		}
-		if( !component ) {
-			mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from entity '%s'", entity->getName());
-		} else {
-			*component = *components[c];
-			components[c]->copyComponents(*component);
-			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
-		}
+		components[c]->copy(dest);
 	}
 }
 
