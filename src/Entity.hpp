@@ -116,7 +116,7 @@ public:
 	bool								hasPath() const						{ return path != nullptr; }
 	const Entity*						getAnchor() const					{ return anchor; }
 	const Vector&						getOffset() const					{ return offset; }
-	bool								isPickupable() const					{ return canBePickedUp; }
+	bool								isPickupable() const				{ return canBePickedUp; }
 
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
 	void					setMat(const glm::mat4& _mat)					{ if( mat != _mat ) { mat = _mat; updateNeeded = true; matSet = true; } }
@@ -140,6 +140,7 @@ public:
 	void					setDefName(const char* _defName)				{ defName = _defName; }
 	void					setDefIndex(Uint32 _defIndex)					{ defIndex = _defIndex; }
 	void					setSort(sort_t _sort)							{ sort = _sort; }
+	void					setPickupable(bool _pickupable)					{ canBePickedUp = _pickupable; }
 
 	// editor properties
 
