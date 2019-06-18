@@ -153,8 +153,14 @@ public:
 	// draws the world and its contents
 	virtual void draw() = 0;
 
+	// preprocess world events
+	virtual void preProcess();
+
 	// process world events
 	virtual void process();
+
+	// postprocess world events
+	virtual void postProcess();
 
 	// writes the world contents to a file
 	// @param _filename the filename to write to, or blank to use our last filename

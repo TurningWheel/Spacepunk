@@ -483,6 +483,15 @@ void World::findSelectedEntities(LinkedList<Entity*>& outList) {
 	}
 }
 
+void World::preProcess() {
+	for (Uint32 c = 0; c < World::numBuckets; ++c) {
+		for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
+			Entity* entity = node->getData();
+			entity->preProcess();
+		}
+	}
+}
+
 void World::process() {
 	++ticks;
 
@@ -594,6 +603,15 @@ void World::process() {
 			} else {
 				entity->finishInsertIntoWorld();
 			}
+		}
+	}
+}
+
+void World::postProcess() {
+	for (Uint32 c = 0; c < World::numBuckets; ++c) {
+		for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
+			Entity* entity = node->getData();
+			entity->postProcess();
 		}
 	}
 }

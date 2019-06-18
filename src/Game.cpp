@@ -136,29 +136,37 @@ void Game::closeAllWorlds() {
 }
 
 void Game::preProcess() {
-	// stub
+	for (Uint32 frame = 0; frame < framesToRun; ++frame) {
+		// update net interface
+		if (net) {
+			net->update();
+		}
+
+		for (Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext()) {
+			World* world = node->getData();
+			world->preProcess();
+		}
+	}
 }
 
 void Game::process() {
 	for( Uint32 frame=0; frame<framesToRun; ++frame ) {
-		// update net interface
-		if( net ) {
-			net->update();
-		}
-
 		// process worlds
 		for( Node<World*>* node=worlds.getFirst(); node!=nullptr; node=node->getNext() ) {
 			World* world = node->getData();
 			world->process();
 		}
-
-		// increment ticks
-		++ticks;
 	}
 }
 
 void Game::postProcess() {
-	// stub
+	for (Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext()) {
+		World* world = node->getData();
+		world->postProcess();
+	}
+
+	// increment ticks
+	++ticks;
 }
 
 Player* Game::findPlayer(Uint32 clientID, Uint32 localID) {

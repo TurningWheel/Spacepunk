@@ -29,10 +29,12 @@ uniform bool gShadowmapEnabled[MAX_LIGHTS];
 #endif
 uniform int gNumLights;
 
+#ifndef VERTEX_COLORS
 #ifdef BUMPMAP
 uniform sampler2D gTexture[2]; // 1st = diffuse, 2nd = normals
 #else
 uniform sampler2D gTexture;
+#endif
 #endif
 
 // colormapped texture
@@ -80,6 +82,7 @@ float ShadowFactor(int light)
 }
 #endif
 
+#ifndef VERTEX_COLORS
 #ifdef BUMPMAP
 vec3 CalcBumpedNormal() {
     vec3 lNormal = normalize(Normal);
@@ -96,6 +99,7 @@ vec3 CalcBumpedNormal() {
     return lNewNormal;
 }
 #endif
+#endif
 
 void main() {
 	vec2   lTexCoord  = TexCoord;
@@ -108,10 +112,17 @@ void main() {
 
 	// do custom colors
 	if( gCustomColorEnabled ) {
+#ifndef VERTEX_COLORS
 #ifdef BUMPMAP
 		vec4 lTexColor = texture2D(gTexture[0], lTexCoord);
 #else
 		vec4 lTexColor = texture2D(gTexture, lTexCoord);
+#endif
+#else
+		vec4 lTexColor = vec4(Colors.xyz, 1.f);
+		if (!gActiveLight) {
+			lTexColor = vec4(Colors.a, 0.f, 0.f, 1.f);
+		}
 #endif
 		if( gActiveLight ) {
 			FragColor  = gCustomColorR * lTexColor.r;
@@ -121,10 +132,18 @@ void main() {
 		FragColor += gCustomColorG * lTexColor.g;
 		FragColor += gCustomColorB * lTexColor.b;
 	} else {
+#ifndef VERTEX_COLORS
 #ifdef BUMPMAP
 		FragColor = texture(gTexture[0], lTexCoord);
 #else
 		FragColor = texture(gTexture, lTexCoord);
+#endif
+#else
+		if (gActiveLight) {
+			FragColor = vec4(Colors.xyz, 1.f);
+		} else {
+			FragColor = vec4(Colors.a, 0.f, 0.f, 1.f);
+		}
 #endif
 	}
 

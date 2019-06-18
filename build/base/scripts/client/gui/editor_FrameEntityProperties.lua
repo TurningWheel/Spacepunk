@@ -26,3 +26,7 @@ end
 function buttonDelete(uid)
 	editor:entityRemoveComponent(uid)
 end
+
+function buttonCopy(uid)
+	editor:entityCopyComponent(uid)
+end

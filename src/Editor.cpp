@@ -4283,6 +4283,28 @@ void Editor::entityRemoveComponent(unsigned int uid) {
 	}
 }
 
+void Editor::entityCopyComponent(unsigned int uid) {
+	for (Uint32 c = 0; c < world->numBuckets; ++c) {
+		for (Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext()) {
+			Entity* entity = node->getData();
+			if (!entity->isSelected()) {
+				continue;
+			}
+			Component* component = entity->findComponentByUID<Component>(uid);
+			if (component)
+			{
+				if (component->getParent()) {
+					component->copy(*component->getParent());
+				} else {
+					component->copy(*component->getEntity());
+				}
+				entity->update();
+				guiNeedsUpdate = true;
+			}
+		}
+	}
+}
+
 void Editor::entityAddComponent(unsigned int uid, Uint32 type) {
 	for( Uint32 c=0; c<world->numBuckets; ++c ) {
 		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
@@ -5062,6 +5084,21 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 			Rect<int> size;
 			size.x = border*2 + x + 30 + border; size.w = 30;
+			size.y = y; size.h = 30;
+			button->setSize(size);
+		}
+
+		// copy component
+		{
+			Button* button = properties.addButton("buttonCopy");
+			button->setIcon("images/gui/copy-icon.png");
+			button->setStyle(Button::STYLE_NORMAL);
+			button->getParams().addInt(component->getUID());
+			button->setBorder(2);
+			button->setTooltip("Duplicate this component.");
+
+			Rect<int> size;
+			size.x = border * 2 + x + 30 + border + 30 + border; size.w = 30;
 			size.y = y; size.h = 30;
 			button->setSize(size);
 

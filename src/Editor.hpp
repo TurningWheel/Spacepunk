@@ -155,6 +155,10 @@ public:
 	// @param type the type of component to add
 	void entityAddComponent(unsigned int uid, Uint32 type);
 
+	// duplicate a component in the entity
+	// @param uid the uid of the component to duplicate
+	void entityCopyComponent(unsigned int uid);
+
 	// removes a component from an entity
 	// @param uid the uid of the component to remove
 	void entityRemoveComponent(unsigned int uid);

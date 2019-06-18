@@ -519,6 +519,14 @@ public:
 		return component;
 	}
 
+	// copy this component and all sub-components into another component
+	// @param dest the component which will contain our copies
+	void copy(Component& dest);
+
+	// copy this component and all sub-components into another entity
+	// @param dest the entity which will contain our copies
+	void copy(Entity& dest);
+
 	// copy sub-components into another component
 	// @param dest the component which will contain our copies
 	void copyComponents(Component& dest);
@@ -566,6 +574,7 @@ public:
 	const Entity*					getEntity() const					{ return entity; }
 	Entity*							getEntity()							{ return entity; }
 	const Component*				getParent() const					{ return parent; }
+	Component*						getParent()							{ return parent; }
 	bool							isToBeDeleted() const				{ return toBeDeleted; }
 	bool							isEditorOnly() const				{ return editorOnly; }
 	bool							isUpdateNeeded() const				{ return updateNeeded; }

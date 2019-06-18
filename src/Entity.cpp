@@ -461,6 +461,14 @@ void Entity::dispatch(const char* funcName, Script::Args& args) {
 	}
 }
 
+void Entity::preProcess() {
+	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
+		if (script && !scriptStr.empty() && world && ranScript && ticks != 0) {
+			script->dispatch("preprocess");
+		}
+	}
+}
+
 void Entity::process() {
 	++ticks;
 
@@ -509,27 +517,15 @@ void Entity::process() {
 	}
 
 	// run entity script
-	bool processed = false;
 	bool editor = mainEngine->isEditorRunning() && !mainEngine->isPlayTest();
 	if (!editor) {
 		if (script && !scriptStr.empty() && world) {
-			StringBuf<128> path;
-			if (world->isClientObj() && mainEngine->isRunningClient()) {
-				path.format("scripts/client/entities/%s.lua", scriptStr.get());
-			}
-			else if (world->isServerObj() && mainEngine->isRunningServer()) {
-				path.format("scripts/server/entities/%s.lua", scriptStr.get());
-			}
-
-			// first time
 			if (!ranScript) {
 				ranScript = true;
-				script->load(path.get());
+				script->load(StringBuf<64>("scripts/entities/%s.lua", 1, scriptStr.get()));
 				script->dispatch("init");
-			}
-			else {
+			} else {
 				script->dispatch("process");
-				processed = true;
 			}
 		}
 	}
@@ -598,17 +594,11 @@ void Entity::process() {
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->process();
 	}
+}
 
-	// run post process script
-	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
-		if( script && !scriptStr.empty() && world && processed ) {
-			StringBuf<128> path;
-			if( world->isClientObj() && mainEngine->isRunningClient() ) {
-				path.format("scripts/client/entities/%s.lua", scriptStr.get());
-			} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
-				path.format("scripts/server/entities/%s.lua", scriptStr.get());
-			}
-
+void Entity::postProcess() {
+	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
+		if (script && !scriptStr.empty() && world && ranScript && ticks != 0) {
 			script->dispatch("postprocess");
 		}
 	}
@@ -815,10 +805,9 @@ bool Entity::hasComponent(Component::type_t type) const {
 }
 
 Entity* Entity::copy(World* world, Entity* entity) const {
-	if( !entity ) {
+	if (!entity) {
 		entity = new Entity(world);
 	}
-
 	entity->setPlayer(player);
 	entity->setFlags(flags);
 	entity->setPos(pos);
@@ -835,78 +824,9 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	entity->setFalling(falling);
 	entity->setSort(sort);
 	entity->keyvalues.copy(keyvalues);
-
-	Component* component = nullptr;
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		switch( components[c]->getType() ) {
-			case Component::COMPONENT_BASIC:
-			{
-				component = entity->addComponent<Component>();
-				break;
-			}
-			case Component::COMPONENT_BBOX:
-			{
-				component = entity->addComponent<BBox>();
-				BBox* bbox0 = static_cast<BBox*>(components[c]);
-				BBox* bbox1 = static_cast<BBox*>(component);
-				*bbox1 = *bbox0;
-				break;
-			}
-			case Component::COMPONENT_MODEL:
-			{
-				component = entity->addComponent<Model>();
-				Model* model0 = static_cast<Model*>(components[c]);
-				Model* model1 = static_cast<Model*>(component);
-				*model1 = *model0;
-				break;
-			}
-			case Component::COMPONENT_LIGHT:
-			{
-				component = entity->addComponent<Light>();
-				Light* light0 = static_cast<Light*>(components[c]);
-				Light* light1 = static_cast<Light*>(component);
-				*light1 = *light0;
-				break;
-			}
-			case Component::COMPONENT_CAMERA:
-			{
-				component = entity->addComponent<Camera>();
-				Camera* camera0 = static_cast<Camera*>(components[c]);
-				Camera* camera1 = static_cast<Camera*>(component);
-				*camera1 = *camera0;
-				break;
-			}
-			case Component::COMPONENT_SPEAKER:
-			{
-				component = entity->addComponent<Speaker>();
-				Speaker* speaker0 = static_cast<Speaker*>(components[c]);
-				Speaker* speaker1 = static_cast<Speaker*>(component);
-				*speaker1 = *speaker0;
-				break;
-			}
-			case Component::COMPONENT_CHARACTER:
-			{
-				component = entity->addComponent<Character>();
-				Character* character0 = static_cast<Character*>(components[c]);
-				Character* character1 = static_cast<Character*>(component);
-				*character1 = *character0;
-				break;
-			}
-			default:
-			{
-				mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
-				break;
-			}
-		}
-		if( !component ) {
-			mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from entity '%s'", entity->getName());
-		} else {
-			*component = *components[c];
-			components[c]->copyComponents(*component);
-			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
-		}
+		components[c]->copy(*entity);
 	}
-
 	entity->update();
 	entity->animate("idle", false);
 
@@ -980,7 +900,7 @@ bool Entity::interact(Entity& user, BBox& bbox)
 	args.addInt(user.getUID());
 	args.addString(bbox.getName());
 
-	return (script->dispatch("interact", &args) == 0);
+	return script->dispatch("interact", &args) == 0;
 }
 
 void Entity::serialize(FileInterface * file) {
@@ -1185,7 +1105,7 @@ void Entity::def_t::serialize(FileInterface * file) {
 	Model::dontLoadMesh = false;
 }
 
-bool Entity::isLocalPlayer() {
+bool Entity::isLocalPlayer() const {
 	if (player) {
 		if (player->getClientID() == Player::invalidID) {
 			return true;
@@ -1203,4 +1123,20 @@ void Entity::setScriptStr(const char* _scriptStr) {
 		script = new Script(*this);
 	}
 	ranScript = false;
+}
+
+bool Entity::isClientObj() const {
+	if (world) {
+		return world->isClientObj();
+	} else {
+		return false;
+	}
+}
+
+bool Entity::isServerObj() const {
+	if (world) {
+		return !world->isClientObj();
+	} else {
+		return false;
+	}
 }
