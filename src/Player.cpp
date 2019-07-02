@@ -484,6 +484,12 @@ void Player::control() {
 					if ((hitEntity = world->uidToEntity(hit.index)) != nullptr)
 					{
 						previousInteractedEntity = hitEntity;
+
+						if (previousInteractedEntity->isPickupable())
+						{
+							entity->depositInAvailableSlot(previousInteractedEntity);
+						}
+
 						auto hitBBox = static_cast<BBox*>(hit.pointer);
 						if (hitBBox)
 						{
@@ -506,10 +512,7 @@ void Player::control() {
 			else
 			{
 				holdingInteract = false;
-				if (interactHoldTime >= HOLD_TO_PICKUP_TIME && previousInteractedEntity->isPickupable())
-				{
-					entity->depositInAvailableSlot(previousInteractedEntity);
-				}
+
 				interactHoldTime = 0;
 			}
 			// Toggling inventory

@@ -140,7 +140,7 @@ private:
 	bool inventoryVisible = false;
 	bool holdingInteract = false;
 	float interactHoldTime = 0;
-	const float HOLD_TO_PICKUP_TIME = 0.5;
+	const float HOLD_TO_PICKUP_TIME = 0;
 	Entity* previousInteractedEntity = nullptr;
 
 	bool moving = false;

@@ -6,6 +6,8 @@
 #include "String.hpp"
 
 class Item;
+class Frame;
+class Rect;
 
 class Inventory {
 public:
@@ -29,4 +31,6 @@ public:
 	void serialize(FileInterface * file);
 
 	void setVisibility(bool visible);
+
+	void setupInvSlotDisplay(String slotName, Frame* frame, Rect<int> frameSize, int xPos, int yPos)
 };
