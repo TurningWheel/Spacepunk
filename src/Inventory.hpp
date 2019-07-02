@@ -4,10 +4,10 @@
 
 #include "Map.hpp"
 #include "String.hpp"
+#include "Rect.hpp"
 
 class Item;
 class Frame;
-class Rect;
 
 class Inventory {
 public:
@@ -32,5 +32,5 @@ public:
 
 	void setVisibility(bool visible);
 
-	void setupInvSlotDisplay(String slotName, Frame* frame, Rect<int> frameSize, int xPos, int yPos)
+	void setupInvSlotDisplay(String slotName, Frame* frame, Rect<int> frameSize, int xPos, int yPos);
 };
