@@ -615,6 +615,10 @@ void Script::exposeEntity() {
 void Script::exposeComponent() {
 	typedef Component* (Component::*GetParentFn)();
 	GetParentFn getParent = static_cast<GetParentFn>(&Component::getParent);
+	typedef void (Component::*CopyComponentFn)(Component*);
+	CopyComponentFn copyToComponent = static_cast<CopyComponentFn>(&Component::copy);
+	typedef void (Component::*CopyEntityFn)(Entity*);
+	CopyEntityFn copyToEntity = static_cast<CopyEntityFn>(&Component::copy);
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Component>("Component")
@@ -642,6 +646,8 @@ void Script::exposeComponent() {
 		.addFunction("hasComponent", &Component::hasComponent)
 		.addFunction("removeComponentByName", &Component::removeComponentByName)
 		.addFunction("removeComponentByUID", &Component::removeComponentByUID)
+		.addFunction("copyToEntity", copyToEntity)
+		.addFunction("copyToComponent", copyToComponent)
 		.addFunction("copyComponents", &Component::copyComponents)
 		.addFunction("addComponent", &Component::addComponent<Component>)
 		.addFunction("addBBox", &Component::addComponent<BBox>)

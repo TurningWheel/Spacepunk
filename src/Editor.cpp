@@ -4294,9 +4294,9 @@ void Editor::entityCopyComponent(unsigned int uid) {
 			if (component)
 			{
 				if (component->getParent()) {
-					component->copy(*component->getParent());
+					component->copy(component->getParent());
 				} else {
-					component->copy(*component->getEntity());
+					component->copy(component->getEntity());
 				}
 				entity->update();
 				guiNeedsUpdate = true;

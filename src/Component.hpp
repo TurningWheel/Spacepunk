@@ -521,11 +521,11 @@ public:
 
 	// copy this component and all sub-components into another component
 	// @param dest the component which will contain our copies
-	void copy(Component& dest);
+	void copy(Component* dest);
 
 	// copy this component and all sub-components into another entity
 	// @param dest the entity which will contain our copies
-	void copy(Entity& dest);
+	void copy(Entity* dest);
 
 	// copy sub-components into another component
 	// @param dest the component which will contain our copies

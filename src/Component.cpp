@@ -1013,17 +1013,21 @@ void Component::update() {
 	}
 }
 
-void Component::copy(Component& dest) {
+void Component::copy(Component* dest) {
+	if (dest == nullptr)
+	{
+		return;
+	}
 	Component* component = nullptr;
 	switch (getType()) {
 	case Component::COMPONENT_BASIC:
 	{
-		component = dest.addComponent<Component>();
+		component = dest->addComponent<Component>();
 		break;
 	}
 	case Component::COMPONENT_BBOX:
 	{
-		component = dest.addComponent<BBox>();
+		component = dest->addComponent<BBox>();
 		BBox* bbox0 = static_cast<BBox*>(this);
 		BBox* bbox1 = static_cast<BBox*>(component);
 		*bbox1 = *bbox0;
@@ -1031,7 +1035,7 @@ void Component::copy(Component& dest) {
 	}
 	case Component::COMPONENT_MODEL:
 	{
-		component = dest.addComponent<Model>();
+		component = dest->addComponent<Model>();
 		Model* model0 = static_cast<Model*>(this);
 		Model* model1 = static_cast<Model*>(component);
 		*model1 = *model0;
@@ -1039,7 +1043,7 @@ void Component::copy(Component& dest) {
 	}
 	case Component::COMPONENT_LIGHT:
 	{
-		component = dest.addComponent<Light>();
+		component = dest->addComponent<Light>();
 		Light* light0 = static_cast<Light*>(this);
 		Light* light1 = static_cast<Light*>(component);
 		*light1 = *light0;
@@ -1047,7 +1051,7 @@ void Component::copy(Component& dest) {
 	}
 	case Component::COMPONENT_CAMERA:
 	{
-		component = dest.addComponent<Camera>();
+		component = dest->addComponent<Camera>();
 		Camera* camera0 = static_cast<Camera*>(this);
 		Camera* camera1 = static_cast<Camera*>(component);
 		*camera1 = *camera0;
@@ -1055,7 +1059,7 @@ void Component::copy(Component& dest) {
 	}
 	case Component::COMPONENT_SPEAKER:
 	{
-		component = dest.addComponent<Speaker>();
+		component = dest->addComponent<Speaker>();
 		Speaker* speaker0 = static_cast<Speaker*>(this);
 		Speaker* speaker1 = static_cast<Speaker*>(component);
 		*speaker1 = *speaker0;
@@ -1063,7 +1067,7 @@ void Component::copy(Component& dest) {
 	}
 	case Component::COMPONENT_CHARACTER:
 	{
-		component = dest.addComponent<Character>();
+		component = dest->addComponent<Character>();
 		Character* character0 = static_cast<Character*>(this);
 		Character* character1 = static_cast<Character*>(component);
 		*character1 = *character0;
@@ -1071,7 +1075,7 @@ void Component::copy(Component& dest) {
 	}
 	case Component::COMPONENT_MULTIMESH:
 	{
-		component = dest.addComponent<Multimesh>();
+		component = dest->addComponent<Multimesh>();
 		Multimesh* mm0 = static_cast<Multimesh*>(this);
 		Multimesh* mm1 = static_cast<Multimesh*>(component);
 		*mm1 = *mm0;
@@ -1091,17 +1095,21 @@ void Component::copy(Component& dest) {
 	}
 }
 
-void Component::copy(Entity& dest) {
+void Component::copy(Entity* dest) {
+	if (dest == nullptr)
+	{
+		return;
+	}
 	Component* component = nullptr;
 	switch (getType()) {
 	case Component::COMPONENT_BASIC:
 	{
-		component = dest.addComponent<Component>();
+		component = dest->addComponent<Component>();
 		break;
 	}
 	case Component::COMPONENT_BBOX:
 	{
-		component = dest.addComponent<BBox>();
+		component = dest->addComponent<BBox>();
 		BBox* bbox0 = static_cast<BBox*>(this);
 		BBox* bbox1 = static_cast<BBox*>(component);
 		*bbox1 = *bbox0;
@@ -1109,7 +1117,7 @@ void Component::copy(Entity& dest) {
 	}
 	case Component::COMPONENT_MODEL:
 	{
-		component = dest.addComponent<Model>();
+		component = dest->addComponent<Model>();
 		Model* model0 = static_cast<Model*>(this);
 		Model* model1 = static_cast<Model*>(component);
 		*model1 = *model0;
@@ -1117,7 +1125,7 @@ void Component::copy(Entity& dest) {
 	}
 	case Component::COMPONENT_LIGHT:
 	{
-		component = dest.addComponent<Light>();
+		component = dest->addComponent<Light>();
 		Light* light0 = static_cast<Light*>(this);
 		Light* light1 = static_cast<Light*>(component);
 		*light1 = *light0;
@@ -1125,7 +1133,7 @@ void Component::copy(Entity& dest) {
 	}
 	case Component::COMPONENT_CAMERA:
 	{
-		component = dest.addComponent<Camera>();
+		component = dest->addComponent<Camera>();
 		Camera* camera0 = static_cast<Camera*>(this);
 		Camera* camera1 = static_cast<Camera*>(component);
 		*camera1 = *camera0;
@@ -1133,7 +1141,7 @@ void Component::copy(Entity& dest) {
 	}
 	case Component::COMPONENT_SPEAKER:
 	{
-		component = dest.addComponent<Speaker>();
+		component = dest->addComponent<Speaker>();
 		Speaker* speaker0 = static_cast<Speaker*>(this);
 		Speaker* speaker1 = static_cast<Speaker*>(component);
 		*speaker1 = *speaker0;
@@ -1141,7 +1149,7 @@ void Component::copy(Entity& dest) {
 	}
 	case Component::COMPONENT_CHARACTER:
 	{
-		component = dest.addComponent<Character>();
+		component = dest->addComponent<Character>();
 		Character* character0 = static_cast<Character*>(this);
 		Character* character1 = static_cast<Character*>(component);
 		*character1 = *character0;
@@ -1149,7 +1157,7 @@ void Component::copy(Entity& dest) {
 	}
 	case Component::COMPONENT_MULTIMESH:
 	{
-		component = dest.addComponent<Multimesh>();
+		component = dest->addComponent<Multimesh>();
 		Multimesh* mm0 = static_cast<Multimesh*>(this);
 		Multimesh* mm1 = static_cast<Multimesh*>(component);
 		*mm1 = *mm0;
@@ -1171,7 +1179,7 @@ void Component::copy(Entity& dest) {
 
 void Component::copyComponents(Component& dest) {
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		components[c]->copy(dest);
+		components[c]->copy(&dest);
 	}
 }
 

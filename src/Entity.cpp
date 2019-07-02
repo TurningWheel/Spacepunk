@@ -825,7 +825,7 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	entity->setSort(sort);
 	entity->keyvalues.copy(keyvalues);
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		components[c]->copy(*entity);
+		components[c]->copy(entity);
 	}
 	entity->update();
 	entity->animate("idle", false);
