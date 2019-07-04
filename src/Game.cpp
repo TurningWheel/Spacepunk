@@ -5,6 +5,7 @@
 #include "World.hpp"
 #include "TileWorld.hpp"
 #include "SectorWorld.hpp"
+#include "BasicWorld.hpp"
 #include "Camera.hpp"
 #include "Game.hpp"
 #include "Tile.hpp"
@@ -46,21 +47,17 @@ World* Game::loadWorld(const char* filename, bool buildPath) {
 		StringBuf<64> fullPath("maps/%s", 1, filename);
 		String path = mainEngine->buildPath(fullPath.get()).get();
 
-		size_t len = strlen(filename);
-		if( len >= 4 && strcmpi((const char*)(filename + len - 4), ".swd") == 0 ) {
-			world = new SectorWorld(this, false, (Uint32)worlds.getSize(), "Untitled World");
-		} else {
-			world = new TileWorld(this, false, (Uint32)worlds.getSize(), Tile::SIDE_EAST, path.get());
-		}
-		world->initialize(!world->isLoaded());
+		auto bworld = new BasicWorld(this, false, (Uint32)worlds.getSize(), "Untitled World");
+		bworld->changeFilename(path.get());
+		FileHelper::readObject(path.get(), *bworld);
+		bworld->initialize(!bworld->isLoaded());
+		world = bworld;
 	} else {
-		size_t len = strlen(filename);
-		if( len >= 4 && strcmpi((const char*)(filename + len - 4), ".swd") == 0 ) {
-			world = new SectorWorld(this, false, (Uint32)worlds.getSize(), "Untitled World");
-		} else {
-			world = new TileWorld(this, false, (Uint32)worlds.getSize(), Tile::SIDE_EAST, filename);
-		}
-		world->initialize(!world->isLoaded());
+		auto bworld = new BasicWorld(this, false, (Uint32)worlds.getSize(), "Untitled World");
+		bworld->changeFilename(filename);
+		FileHelper::readObject(filename, *bworld);
+		bworld->initialize(!bworld->isLoaded());
+		world = bworld;
 	}
 
 	// unload our existing copy of the world if we've already loaded it
@@ -77,6 +74,13 @@ World* Game::loadWorld(const char* filename, bool buildPath) {
 	if (!alreadyExists) {
 		worlds.addNodeLast(world);
 	}
+	return world;
+}
+
+BasicWorld* Game::newBasicWorld(const char* name) {
+	BasicWorld* world = new BasicWorld(this, false, (Uint32)worlds.getSize(), name);
+	world->initialize(!world->isLoaded());
+	worlds.addNodeLast(world);
 	return world;
 }
 

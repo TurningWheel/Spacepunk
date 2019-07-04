@@ -273,6 +273,7 @@
     <ClInclude Include="..\..\src\AnimationState.hpp" />
     <ClInclude Include="..\..\src\ArrayList.hpp" />
     <ClInclude Include="..\..\src\Asset.hpp" />
+    <ClInclude Include="..\..\src\BasicWorld.hpp" />
     <ClInclude Include="..\..\src\BBox.hpp" />
     <ClInclude Include="..\..\src\Button.hpp" />
     <ClInclude Include="..\..\src\Camera.hpp" />
@@ -347,6 +348,7 @@
     <ClCompile Include="..\..\src\Animation.cpp" />
     <ClCompile Include="..\..\src\AnimationState.cpp" />
     <ClCompile Include="..\..\src\Asset.cpp" />
+    <ClCompile Include="..\..\src\BasicWorld.cpp" />
     <ClCompile Include="..\..\src\BBox.cpp" />
     <ClCompile Include="..\..\src\Button.cpp" />
     <ClCompile Include="..\..\src\Camera.cpp" />

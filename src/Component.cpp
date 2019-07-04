@@ -552,6 +552,8 @@ void Component::occlusionTest(float range, int accuracy) {
 		return;
 	} else {
 		switch( world->getType() ) {
+		case World::WORLD_BASIC:
+			break;
 		case World::WORLD_TILES:
 			occlusionTestTiles(range, accuracy);
 			break;

@@ -1894,9 +1894,6 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 	}
 }
 
-static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","0");
-static Cvar cvar_renderCull("render.cull", "accuracy for occlusion culling", "7");
-
 void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList) {
 	Client* client = mainEngine->getLocalClient();
 	if( !client )
@@ -1993,8 +1990,6 @@ void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights
 	ShaderProgram::unmount();
 	camera.onFrameDrawn();
 }
-
-Cvar cvar_renderFullbright("render.fullbright", "replaces all lights with camera-based illumination", "0");
 
 void TileWorld::draw() {
 	Client* client = mainEngine->getLocalClient();

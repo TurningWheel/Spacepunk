@@ -26,6 +26,9 @@ const char* World::fileExtensions[World::FILE_MAX] = {
 
 Cvar cvar_showEdges("showedges", "highlight chunk silhouettes with visible lines", "0");
 Cvar cvar_showVerts("showverts", "highlight all triangle edges with visible lines", "0");
+Cvar cvar_renderFullbright("render.fullbright", "replaces all lights with camera-based illumination", "0");
+Cvar cvar_depthOffset("render.depthoffset", "depth buffer adjustment", "0");
+Cvar cvar_renderCull("render.cull", "accuracy for occlusion culling", "7");
 
 World::World(Game* _game)
 {

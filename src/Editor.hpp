@@ -12,7 +12,6 @@ class Renderer;
 class Sector;
 class World;
 class TileWorld;
-class SectorWorld;
 
 class Editor {
 public:

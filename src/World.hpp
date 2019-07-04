@@ -27,7 +27,8 @@ public:
 	enum type_t {
 		WORLD_INVALID,
 		WORLD_TILES,
-		WORLD_SECTORS
+		WORLD_SECTORS,
+		WORLD_BASIC
 	};
 
 	// hit structure (for collisions)
@@ -272,3 +273,6 @@ protected:
 
 extern Cvar cvar_showEdges;
 extern Cvar cvar_showVerts;
+extern Cvar cvar_renderFullbright;
+extern Cvar cvar_depthOffset;
+extern Cvar cvar_renderCull;

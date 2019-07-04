@@ -13,6 +13,7 @@ class Entity;
 class World;
 class TileWorld;
 class SectorWorld;
+class BasicWorld;
 
 class Game {
 public:
@@ -56,6 +57,11 @@ public:
 	// @param filename the filename of the world to load
 	// @return a pointer to the World, or nullptr on error
 	World* loadWorld(const char* filename, bool buildPath);
+
+	// creates a new basic world
+	// @param name the world's name
+	// @return the newly created world, or nullptr on error
+	BasicWorld* newBasicWorld(const char* name);
 
 	// creates a new sector world
 	// @param name the world's name

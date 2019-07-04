@@ -22,6 +22,7 @@
 #include "SectorVertex.hpp"
 #include "Sector.hpp"
 #include "SectorWorld.hpp"
+#include "BasicWorld.hpp"
 
 //Component Headers.
 #include "Model.hpp"
@@ -139,8 +140,10 @@ void Editor::init(Client& _client) {
 
 	// close all open worlds and create a blank one
 	client->closeAllWorlds();
-	world = client->newTileWorld("Untitled World", 32, 32);
-	editingMode = TILES;
+	//world = client->newTileWorld("Untitled World", 32, 32);
+	//editingMode = TILES;
+	world = client->newBasicWorld("Untitled World");
+	editingMode = ENTITIES;
 
 	// initialize components
 	initWidgets();
@@ -166,13 +169,15 @@ void Editor::init(Client& _client, const char* name, bool tiles, int w, int h) {
 
 	// close all open worlds and create a blank one
 	client->closeAllWorlds();
-	if( tiles ) {
+	/*if( tiles ) {
 		world = client->newTileWorld(name,w,h);
 		editingMode = TILES;
 	} else {
 		world = client->newSectorWorld(name);
 		editingMode = SECTORS;
-	}
+	}*/
+	world = client->newBasicWorld(name);
+	editingMode = ENTITIES;
 
 	// initialize components
 	initWidgets();
@@ -207,6 +212,8 @@ void Editor::init(Client& _client, const char* path) {
 		editingMode = TILES;
 	} else if( world->getType() == World::WORLD_SECTORS ) {
 		editingMode = SECTORS;
+	} else {
+		editingMode = ENTITIES;
 	}
 
 	// initialize components
@@ -3934,11 +3941,11 @@ void Editor::process(const bool usable) {
 
 				if( inWindow ) {
 					camera->screenPosToWorldRay(mouseX,mouseY,rayStart,rayEnd);
-					rayEnd = rayStart+rayEnd*camera->getClipFar();
+					Vector rayStop = rayStart+rayEnd*camera->getClipFar();
 
 					// ray trace the world
 					LinkedList<World::hit_t> list;
-					world.lineTraceList(rayStart, rayEnd, list);
+					world.lineTraceList(rayStart, rayStop, list);
 
 					if( list.getSize()>0 ) {
 						world.setPointerActive(false);
@@ -4031,6 +4038,17 @@ void Editor::process(const bool usable) {
 									highlightedFace = highlightedSector->findFaceWithNormal(hit.normal);
 								}
 							}
+						}
+					}
+					if (list.getSize() == 0)
+					{
+						highlightedVertex = World::nuid;
+						highlightedSector = nullptr;
+						highlightedFace = -1;
+						world.setPointerActive(true);
+						world.setPointerPos(rayStart + rayEnd * 256.f);
+						if (!highlightedObjManuallySet && (!leftClicking || leftClick)) {
+							highlightedObj = World::nuid;
 						}
 					}
 				}
