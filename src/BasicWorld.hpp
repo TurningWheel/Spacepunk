@@ -74,7 +74,6 @@ private:
 
 	// how many tiles a "large" grid section is
 	static const int largeGridSize = 8;
-	float tileSize = 0;
 
 	// editing grid graphics data
 	enum buffer_t {

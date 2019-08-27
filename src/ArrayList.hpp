@@ -342,22 +342,10 @@ public:
 	// sort the array list using the given function
 	// @param fn The sort function to use
 	void sort(const SortFunction& fn) {
-		ArrayList<T> result;
-		result.alloc(size);
-		for (int c = 0; c < size; ++c) {
-			bool foundPlace = false;
-			for (int i = 0; i < result.getSize(); ++i) {
-				if (fn(arr[c], result[i])) {
-					result.insertAndRearrange(arr[c], i);
-					foundPlace = true;
-					break;
-				}
-			}
-			if (!foundPlace) {
-				result.push(arr[c]);
-			}
+		if (size <= 1U) {
+			return;
 		}
-		swap(result);
+		mergeSortImp(fn, 0U, size - 1U);
 	}
 
 	// exposes this list type to a script
@@ -414,6 +402,75 @@ protected:
 	T* arr = nullptr;		// array data
 	Uint32 size = 0;		// current array capacity
 	Uint32 maxSize = 0;		// maximum array capacity
+
+	// merge two subarrays within the array
+	// @param fn the sort function to test with
+	// @param l the start of the first subarray
+	// @param m the midpoint
+	// @param r the end of the right subarray
+	void merge(const SortFunction& fn, Uint32 l, Uint32 m, Uint32 r) {
+		Uint32 n1 = m - l + 1U; // length of first subarray
+		Uint32 n2 = r - m;      // length of second subarray
+
+		// create temp vectors
+		ArrayList<T> L, R;
+		L.resize(n1);
+		R.resize(n2);
+
+		// copy data to temp vectors L and R
+		for (Uint32 i = 0U; i < n1; ++i) {
+			L[i] = arr[l + i];
+		}
+		for (Uint32 i = 0U; i < n2; ++i) {
+			R[i] = arr[m + 1U + i];
+		}
+
+		// merge the temp vectors back into arr[l..r]
+		Uint32 i = 0U;  // initial index of first subarray
+		Uint32 j = 0U;  // initial index of second subarray
+		Uint32 k = l;   // initial index of merged subarray
+		while (i < n1 && j < n2) {
+			if (fn(L[i], R[j])) {
+				arr[k] = L[i];
+				++i;
+			} else {
+				arr[k] = R[j];
+				++j;
+			}
+			++k;
+		}
+
+		// copy the remaining elements of L, if there are any
+		while (i < n1) {
+			arr[k] = L[i];
+			++i;
+			++k;
+		}
+
+		// copy the remaining elements of R, if there are any
+		while (j < n2) {
+			arr[k] = R[j];
+			++j;
+			++k;
+		}
+	}
+
+	// recursive merge sort algorithm
+	// @param fn the sort function to test with
+	// @param l the left index of the subarray to sort
+	// @param r the right index of the subarray to sort
+	void mergeSortImp(const SortFunction& fn, Uint32 l, Uint32 r) {
+		if (l < r) {
+			// same as (l+r) / 2, but avoids overflow for large l and r
+			Uint32 m = l + (r - l) / 2U;
+
+			// Sort first and second halves
+			mergeSortImp(fn, l, m);
+			mergeSortImp(fn, m + 1U, r);
+
+			merge(fn, l, m, r);
+		}
+	}
 };
 
 template <typename T, Uint32 defaultSize>

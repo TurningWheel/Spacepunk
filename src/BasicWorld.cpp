@@ -369,7 +369,7 @@ void BasicWorld::createGrid() {
 	if (!mainEngine->isEditorRunning()) {
 		return;
 	}
-	tileSize = cvar_snapTranslate.toFloat();
+	float tileSize = cvar_snapTranslate.toFloat();
 
 	for (int i = 0; i < BUFFER_MAX; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
