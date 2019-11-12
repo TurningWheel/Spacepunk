@@ -1,0 +1,27 @@
+{
+	"Material::version": 0,
+	"transparent": false,
+	"shadow": true,
+	"program": {
+		"ShaderProgram::version": 0,
+		"shaders": [
+			{
+				"Shader::version": 0,
+				"type": 0,
+				"path": "shaders/actor/std_v.glsl",
+				"defines": []
+			},
+			{
+				"Shader::version": 0,
+				"type": 2,
+				"path": "assets/mirror/reflect_f.glsl",
+				"defines": []
+			}
+		]
+	},
+	"textures": [],
+	"glowTextures": [],
+	"cubemaps": [
+		"images/cubemap/tile/cubemap.json"
+	]
+}

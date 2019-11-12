@@ -326,7 +326,7 @@
                     },
                     "components": [],
                     "BBox::version": 1,
-                    "shape": 0,
+                    "shape": 2,
                     "enabled": true,
                     "mass": -1.0
                 }
