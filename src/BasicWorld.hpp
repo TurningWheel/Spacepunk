@@ -31,6 +31,12 @@ public:
 	// draws the world and its contents
 	virtual void draw();
 
+	// draws entities in the world
+	// @param camera the camera through which to draw the scene
+	// @param light the light by which the scene should be illuminated (or nullptr for no illumination)
+	// @param entities the entities to draw
+	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights);
+
 	// writes the world contents to a file
 	// @param _filename the filename to write to, or blank to use our last filename
 	// @param updateFilename if true, our current filename is changed, otherwise, it is not
@@ -55,12 +61,6 @@ protected:
 	virtual void generateObstacleCache();
 
 private:
-	// draws entities in the world
-	// @param camera the camera through which to draw the scene
-	// @param light the light by which the scene should be illuminated (or nullptr for no illumination)
-	// @param entities the entities to draw
-	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights);
-
 	// draws the editing grid
 	// @param camera the camera through which to draw the grid
 	// @param z the height of the grid in the world

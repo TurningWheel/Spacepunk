@@ -18,6 +18,7 @@
 #include "Chunk.hpp"
 #include "Tile.hpp"
 #include "TileWorld.hpp"
+#include "BasicWorld.hpp"
 #include "Renderer.hpp"
 
 const char* Light::meshStr = "assets/editor/light/light.FBX";
@@ -138,7 +139,7 @@ void Light::createShadowMap() {
 	if (!entity || !entity->getWorld()) {
 		return;
 	}
-	TileWorld* world = static_cast<TileWorld*>(entity->getWorld());
+	World* world = entity->getWorld();
 	if (!world) {
 		return;
 	}
@@ -168,7 +169,11 @@ void Light::createShadowMap() {
 		camera->setClipFar(radius);
 		camera->setupProjection(false);
 		glClear(GL_DEPTH_BUFFER_BIT);
-		world->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
+		if (world->getType() == World::type_t::WORLD_TILES) {
+			static_cast<TileWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
+		} else if (world->getType() == World::type_t::WORLD_BASIC) {
+			static_cast<BasicWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({this}));
+		}
 	}
 	glPolygonOffset(1.f, 0.f);
 	
