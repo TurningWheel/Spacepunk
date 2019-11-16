@@ -28,6 +28,57 @@ Features:
 	* asynchronous pathfinding
 	* multi-world servers
 
+Build/Install:
+
+	The following libs must be installed to build Spacepunk:
+
+		glew
+		openAL
+		SDL2
+		SDL_net
+		SDL_ttf
+		SDL_image
+		SDL_mixer
+		bullet
+		glm
+		nfd (https://github.com/mlabbe/nativefiledialog)
+		luajit
+		luabridge (https://github.com/vinniefalco/LuaBridge)
+
+	Windows:
+
+		Visual Studio 2017 or later is required to compile.
+		Visual Studio 2015 was previously supported, but is no longer up to date.
+
+		The project is configured to look for dependencies in C:/GameLibs,
+		which should have "include" and "lib" directories. In the future,
+		this may use an environment variable instead. For our private use,
+		we distribute a GameLibs.zip directory that includes built versions
+		of every necessary lib and header, which you can request from me by
+		using my contact info below.
+
+	Linux:
+
+		The engine has been tested to compile on Ubuntu 18.04.1 LTS.
+		You will need cmake, make, and g++ to compile. Run these commands to
+		produce a spacepunk.bin file in the "build" folder:
+
+		cmake -DCMAKE_BUILD_TYPE=Release
+		make
+
+		There is a known issue regarding LuaBridge where addConstructor() won´t
+		compile correctly with g++. You can fix this by injecting the following code in
+		LuaBridge/detail/Namespace.h (around line 836):
+
+		Class <T>& addConstructor ()
+		{
+			lua_pushcclosure (L,
+				&ctorPlacementProxy <typename FuncTraits <void (*) (void)>::Params, T>, 0);
+			rawsetfield(L, -2, "__call");
+
+			return *this;
+		}
+
 Controls:
 
 	These can be rebound via autoexec.cfg in the base folder. Also check help in the editor.
@@ -38,7 +89,7 @@ Console:
 
 	windowed			- toggle window mode
 	fullscreen			- toggle fullscreen mode
-	size <x> <y>		- where <x> and <y> are the desired resolution (eg 1280 720)
+	size <x> <y>			- where <x> and <y> are the desired resolution (eg 1280 720)
 	clear				- clear the console
 	version				- print engine version info
 	editor				- start game editor
