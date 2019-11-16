@@ -1,0 +1,66 @@
+{
+    "Entity::def_t::version": 1,
+    "editor": true,
+    "entity": {
+        "Entity::version": 1,
+        "name": "Shadow Camera",
+        "pos": {
+            "x": 128.0,
+            "y": 128.0,
+            "z": 0.0
+        },
+        "ang": {
+            "yaw": 0.0,
+            "pitch": 0.0,
+            "roll": 0.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "scriptStr": "",
+        "flags": 390,
+        "falling": false,
+        "sort": 0,
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 4,
+                "data": {
+                    "Component::version": 0,
+                    "name": "camera",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "lAng": {
+                        "yaw": 0.0,
+                        "pitch": 0.0,
+                        "roll": 0.0
+                    },
+                    "lScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [],
+                    "Camera::version": 0,
+                    "clipNear": 1.0,
+                    "clipFar": 1000.0,
+                    "win": {
+                        "x": 0,
+                        "y": 0,
+                        "w": 2048,
+                        "h": 2048
+                    },
+                    "fov": 90,
+                    "ortho": false
+                }
+            }
+        ]
+    }
+}

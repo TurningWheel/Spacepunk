@@ -9,7 +9,7 @@ Packet::Packet(const Packet& src) {
 }
 
 void Packet::clear() {
-	for( size_t c=0; c<maxLen; ++c ) {
+	for( Uint32 c=0; c<maxLen; ++c ) {
 		data[c] = 0;
 	}
 	offset = 0;

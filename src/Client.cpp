@@ -26,6 +26,7 @@ Client::Client() {
 	renderer = new Renderer();
 	mixer = new Mixer();
 	script = new Script(*this);
+	gui = new Frame("root");
 }
 
 Client::~Client() {
@@ -33,14 +34,22 @@ Client::~Client() {
 		script->dispatch("term");
 		delete script;
 	}
-	if( renderer )
-		delete renderer;
-	if( mixer )
-		delete mixer;
-	if( gui )
+	if( gui ) {
 		delete gui;
-	if( editor )
+		gui = nullptr;
+	}
+	if( editor ) {
 		delete editor;
+		editor = nullptr;
+	}
+	if( renderer ) {
+		delete renderer;
+		renderer = nullptr;
+	}
+	if( mixer ) {
+		delete mixer;
+		mixer = nullptr;
+	}
 }
 
 void Client::init() {
@@ -220,46 +229,198 @@ void Client::handleNetMessages() {
 						continue;
 					}
 
-					// server has spawned a player
-					else if( strncmp( (const char*)packetType, "SPWN", 4) == 0 ) {
+					// server has relocated a player to another level
+					else if (strncmp((const char*)packetType, "PLVL", 4) == 0) {
 						Uint32 localID, clientID, serverID;
 						packet.read32(clientID);
 						packet.read32(localID);
 						packet.read32(serverID);
 
+						// read world filename
+						Uint32 worldFilenameLen;
+						packet.read32(worldFilenameLen);
+						String worldFilename;
+						worldFilename.alloc(worldFilenameLen + 1);
+						worldFilename[worldFilenameLen] = '\0';
+						packet.read(&worldFilename[0], worldFilenameLen);
+						World* world = worldForName(worldFilename.get());
+						if (!world) {
+							world = loadWorld(worldFilename.get(), true);
+						}
+						assert(world);
+
+						// get player
+						if (clientID != net->getLocalID()) {
+							continue;
+						} else {
+							clientID = Player::invalidID;
+						}
+						Player* player = findPlayer(clientID, localID);
+						assert(player);
+						player->setServerID(serverID);
+
+						// read anchor uid
+						Uint32 anchorUID = World::nuid;
+						packet.read32(anchorUID);
+						Entity* anchor = world->uidToEntity(anchorUID);
+						if (!anchor) {
+							mainEngine->fmsg(Engine::MSG_WARN, "Client got PLVL packet, but anchor is missing");
+							continue;
+						}
+
+						// read offset
+						Uint32 posInt[3];
+						packet.read32(posInt[0]);
+						packet.read32(posInt[1]);
+						packet.read32(posInt[2]);
+						Vector pos((Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2]);
+
+						Angle ang = player->getEntity()->getAng();
+						Vector vel = player->getEntity()->getVel();
+
+						// move to new level
+						if (clientID == Player::invalidID) {
+							player->despawn();
+							player->spawn(*world, anchor->getPos() + pos, ang);
+							player->getEntity()->setVel(vel);
+						}
+						continue;
+					}
+
+					// server has spawned a player
+					else if (strncmp((const char*)packetType, "SPWN", 4) == 0) {
+						Uint32 localID, clientID, serverID;
+						packet.read32(clientID);
+						packet.read32(localID);
+						packet.read32(serverID);
+
+						// read world filename
+						Uint32 worldFilenameLen;
+						packet.read32(worldFilenameLen);
+						String worldFilename;
+						worldFilename.alloc(worldFilenameLen + 1);
+						worldFilename[worldFilenameLen] = '\0';
+						packet.read(&worldFilename[0], worldFilenameLen);
+						World* world = worldForName(worldFilename.get());
+						if (!world) {
+							world = loadWorld(worldFilename.get(), true);
+						}
+						assert(world);
+
+						// get player
+						if( clientID == net->getLocalID() ) {
+							clientID = Player::invalidID;
+						}
+						Player* player = findPlayer(clientID, localID);
+						assert(player);
+						player->setServerID(serverID);
+
+						// read pos
+						Uint32 posInt[3];
+						packet.read32(posInt[0]);
+						packet.read32(posInt[1]);
+						packet.read32(posInt[2]);
+						Vector pos((Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2]);
+
+						// read ang
+						Uint32 angInt[3];
+						packet.read32(angInt[0]);
+						packet.read32(angInt[1]);
+						packet.read32(angInt[2]);
+						Angle ang((Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f);
+
+						// only actually spawn the player if they belong to us
+						if (clientID == Player::invalidID) {
+							player->despawn();
+							player->spawn(*world, pos, ang);
+						}
+						continue;
+					}
+
+					// entity remote function call
+					else if (strncmp((const char*)packetType, "ENTF", 4) == 0) {
 						// read world
 						Uint32 worldID;
 						packet.read32(worldID);
 						Node<World*>* node = worlds[worldID];
-						if( node ) {
+						if (node) {
 							World& world = *node->getData();
 
-							// read pos
-							Uint32 posInt[3];
-							packet.read32(posInt[0]);
-							packet.read32(posInt[1]);
-							packet.read32(posInt[2]);
-							Vector pos( posInt[0], posInt[1], posInt[2] );
-
-							// read ang
-							Uint32 angInt[3];
-							packet.read32(angInt[0]);
-							packet.read32(angInt[1]);
-							packet.read32(angInt[2]);
-							Angle ang( angInt[0] * PI / 180.f, angInt[1] * PI / 180.f, angInt[2] * PI / 180.f );
-
-							// spawn player
-							if( clientID == net->getLocalID() ) {
-								clientID = Player::invalidID;
+							// get uid
+							Uint32 uid;
+							packet.read32(uid);
+							Entity* entity = world.uidToEntity(uid);
+							if (!entity) {
+								continue;
 							}
-							Player* player = findPlayer(clientID, localID);
-							assert(player);
-							player->setServerID(serverID);
 
-							// only actually spawn the player if they belong to us
-							if( clientID == Player::invalidID ) {
-								player->spawn(world, pos, ang);
+							// read func name
+							Uint32 funcNameLen;
+							packet.read32(funcNameLen);
+							char funcName[128];
+							funcName[127] = '\0';
+							packet.read(funcName, funcNameLen);
+							funcName[funcNameLen] = '\0';
+
+							// read args
+							Uint32 argsLen;
+							packet.read32(argsLen);
+							Script::Args args;
+							for (Uint32 c = 0; c < argsLen; ++c) {
+								char argType;
+								packet.read8((Uint8&)argType);
+								switch (argType) {
+								case 'b': {
+									char value;
+									packet.read8((Uint8&)value);
+									if (value == 't') {
+										args.addBool(true);
+									} else if (value == 'f') {
+										args.addBool(false);
+									}
+									break;
+								}
+								case 'i': {
+									Uint32 value;
+									packet.read32(value);
+									args.addInt((int)value);
+									break;
+								}
+								case 'f': {
+									float value;
+									packet.read32((Uint32&)value);
+									args.addFloat(value);
+									break;
+								}
+								case 's': {
+									Uint32 len;
+									packet.read32(len);
+									String value;
+									value.alloc(len + 1);
+									value[len] = '\0';
+									packet.read(&value[0], len);
+									args.addString(value);
+									break;
+								}
+								case 'p': {
+									mainEngine->fmsg(Engine::MSG_ERROR, "Client got RFC with a pointer, will be nullptr");
+									args.addPointer(nullptr);
+									break;
+								}
+								case 'n': {
+									args.addNil();
+									break;
+								}
+								default: {
+									mainEngine->fmsg(Engine::MSG_ERROR, "Unknown arg type for remote function call!");
+									args.addNil();
+									break;
+								}
+								}
 							}
+
+							// run function
+							entity->dispatch(funcName, args);
 						}
 
 						continue;
@@ -277,7 +438,6 @@ void Client::handleNetMessages() {
 							// get uid
 							Uint32 uid;
 							packet.read32(uid);
-							Entity* entity = world.uidToEntity(uid);
 
 							// get entity type
 							Uint32 type;
@@ -308,7 +468,57 @@ void Client::handleNetMessages() {
 							Uint8 isFalling;
 							packet.read8(isFalling);
 
+							// read player properties
+							Player* player = nullptr;
+							Uint8 isPlayer;
+							packet.read8(isPlayer);
+							if (isPlayer) {
+								Uint32 serverID;
+								packet.read32(serverID);
+								player = findPlayer(serverID);
+								if (player && player->getClientID() != Player::invalidID) {
+									// read crouch status
+									Uint8 isCrouching;
+									packet.read8(isCrouching);
+									if (isCrouching) {
+										player->putInCrouch(true);
+									}
+									else {
+										player->putInCrouch(false);
+									}
+
+									// read moving status
+									Uint8 isMoving;
+									packet.read8(isMoving);
+									if (isMoving) {
+										player->setMoving(true);
+									}
+									else {
+										player->setMoving(false);
+									}
+
+									// read jumped status
+									Uint8 hasJumped;
+									packet.read8(hasJumped);
+									if (hasJumped) {
+										player->setJumped(true);
+									}
+									else {
+										player->setJumped(false);
+									}
+
+									// read look direction
+									Uint32 lookDirInt[3];
+									packet.read32(lookDirInt[0]);
+									packet.read32(lookDirInt[1]);
+									packet.read32(lookDirInt[2]);
+									Angle lookDir((((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f);
+									player->setLookDir(lookDir);
+								}
+							}
+
 							// update the entity
+							Entity* entity = player && player->getEntity() ? player->getEntity() : world.uidToEntity(uid);
 							if( !entity ) {
 								// we need to spawn the entity
 								if( type != UINT32_MAX ) {
@@ -331,60 +541,26 @@ void Client::handleNetMessages() {
 								entity->setNewAng(ang);
 								entity->setVel(vel);
 								entity->setLastUpdate(entity->getTicks());
+								/*if (player && player->getClientID() == Player::invalidID) {
+									// this is fairly serious: we're in an invalid spot! update immediately
+									entity->setPos(pos);
+									entity->setAng(ang);
+									entity->setVel(vel);
+									entity->warp();
+									//entity->setLastUpdate(entity->getTicks());
+								} else {
+									entity->setNewPos(pos);
+									entity->setNewAng(ang);
+									entity->setVel(vel);
+									entity->setLastUpdate(entity->getTicks());
+								}*/
 							}
-
-							if( entity ) {
+							if (entity) {
 								entity->setFalling((isFalling == 1) ? true : false);
-
-								// update the player (if this is one)
-								Uint8 isPlayer;
-								packet.read8(isPlayer);
-								if( isPlayer ) {
-									Uint32 serverID;
-									packet.read32(serverID);
-									Player* player = findPlayer(serverID);
-									if( player ) {
-										if( entity->getPlayer() == nullptr ) {
-											entity->setPlayer(player);
-											player->setEntity(entity);
-											player->updateColors(player->getColors());
-										}
-
-										// read crouch status
-										Uint8 isCrouching;
-										packet.read8(isCrouching);
-										if( isCrouching ) {
-											player->putInCrouch(true);
-										} else {
-											player->putInCrouch(false);
-										}
-
-										// read moving status
-										Uint8 isMoving;
-										packet.read8(isMoving);
-										if( isMoving ) {
-											player->setMoving(true);
-										} else {
-											player->setMoving(false);
-										}
-
-										// read jumped status
-										Uint8 hasJumped;
-										packet.read8(hasJumped);
-										if( hasJumped ) {
-											player->setJumped(true);
-										} else {
-											player->setJumped(false);
-										}
-
-										// read look direction
-										Uint32 lookDirInt[3];
-										packet.read32(lookDirInt[0]);
-										packet.read32(lookDirInt[1]);
-										packet.read32(lookDirInt[2]);
-										Angle lookDir( (((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f );
-										player->setLookDir(lookDir);
-									}
+								if (player && entity->getPlayer() == nullptr) {
+									entity->setPlayer(player);
+									player->setEntity(entity);
+									player->updateColors(player->getColors());
 								}
 							}
 						}
@@ -532,10 +708,7 @@ void Client::closeEditor() {
 		editor = nullptr;
 	}
 
-	if( gui ) {
-		delete gui;
-		gui = nullptr;
-	}
+	gui->clear();
 
 	closeAllWorlds();
 }
@@ -543,7 +716,8 @@ void Client::closeEditor() {
 void Client::startEditor(const char* path) {
 	closeEditor();
 	editor = new Editor();
-	gui = new Frame("editor_gui");
+	gui->clear();
+	gui->addFrame("editor_gui");
 
 	// destroy all players
 	players.removeAll();
@@ -593,7 +767,7 @@ void Client::runConsole() {
 
 		// help on current console buffer
 		if( mainEngine->pressKey(SDL_SCANCODE_TAB) ) {
-			StringBuf<64> cmd("help %s", consoleInput);
+			StringBuf<64> cmd("help %s", 1, consoleInput);
 			mainEngine->doCommand(cmd.get());
 		}
 
@@ -630,7 +804,7 @@ void Client::runConsole() {
 				logStart = console.getLast();
 			}
 			for( int c=0; logStart!=console.getFirst() && c<10; logStart=logStart->getPrev(), ++c ) {
-				size_t i=-1;
+				Uint32 i=-1;
 				String* str = &logStart->getData().text;
 				while( (i=str->find('\n',i+1)) != UINT32_MAX ) {
 					++c;
@@ -642,7 +816,7 @@ void Client::runConsole() {
 		if( mainEngine->pressKey(SDL_SCANCODE_PAGEDOWN) ) {
 			if( logStart!=nullptr ) {
 				for( int c=0; logStart!=console.getLast() && c<10; logStart=logStart->getNext(), ++c ) {
-					size_t i=-1;
+					Uint32 i=-1;
 					String* str = &logStart->getData().text;
 					while( (i=str->find('\n',i+1)) != UINT32_MAX ) {
 						++c;
@@ -672,7 +846,6 @@ void Client::preProcess() {
 		mainEngine->joinServer("localhost");
 	}
 	if( framesToRun ) {
-		renderer->clearBuffers();
 		script->dispatch("preprocess");
 
 		if( editor ) {
@@ -689,6 +862,18 @@ void Client::preProcess() {
 				player.control();
 			}
 		}
+	}
+	if (gui) {
+		Sint32 xres = mainEngine->getXres();
+		Sint32 yres = mainEngine->getYres();
+		Rect<int> guiRect;
+		guiRect.x = 0;
+		guiRect.y = 0;
+		guiRect.w = xres;
+		guiRect.h = yres;
+		gui->setSize(guiRect);
+		gui->setActualSize(guiRect);
+		gui->setHollow(true);
 	}
 	handleNetMessages();
 	Game::preProcess();
@@ -710,6 +895,17 @@ void Client::process() {
 		if( editor ) {
 			editorFullscreen = editor->isFullscreen();
 			textureSelectorActive = editor->isTextureSelectorActive();
+		}
+
+		// update players
+		for (Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
+			Player& player = node->getData();
+
+			if (player.getClientID() == Player::invalidID) {
+				// in the context of a client, this means *we* own the player.
+				// in any other circumstance, it would contain a legitimate client ID.
+				player.process();
+			}
 		}
 
 		if( !consoleActive ) {
@@ -756,10 +952,42 @@ void Client::postProcess() {
 			textureSelectorActive = editor->isTextureSelectorActive();
 		}
 
+		// set framebuffer
+		renderer->clearBuffers();
+		Framebuffer* fbo = renderer->bindFBO("__main");
+		fbo->clear();
+
 		if( !textureSelectorActive ) {
+			Framebuffer* scene = renderer->bindFBO("scene");
+			scene->clear();
+
+			bool showTools = false;
 			for( Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext() ) {
 				World* world = node->getData();
 				world->draw();
+				showTools = world->isShowTools();
+			}
+
+			if (!showTools || !editor) {
+				// blur bloom highlights
+				Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1");
+				bloomPass1->clear();
+				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_HORIZONTAL);
+				Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2");
+				bloomPass2->clear();
+				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_VERTICAL);
+
+				// blend bloom with scene
+				bloomPass1 = renderer->bindFBO("bloomPass1");
+				renderer->blendFramebuffer(*bloomPass2, GL_COLOR_ATTACHMENT0, *scene, GL_COLOR_ATTACHMENT0);
+
+				// blit bloomed scene to window
+				Framebuffer* fbo = renderer->bindFBO("__main");
+				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
+			} else {
+				// blit scene to window
+				Framebuffer* fbo = renderer->bindFBO("__main");
+				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
 			}
 
 			// editor interface
@@ -860,13 +1088,15 @@ void Client::postProcess() {
 			}
 		}
 
+		// swap screen buffer
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		renderer->blitFramebuffer(*fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::BASIC);
+		renderer->swapWindow();
+
 		// screenshots
-		if( mainEngine->pressKey(SDL_SCANCODE_F6) ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_F6)) {
 			renderer->takeScreenshot();
 		}
-
-		// swap screen buffer
-		renderer->swapWindow();
 
 		// run script
 		script->dispatch("postprocess");
@@ -936,7 +1166,9 @@ static int console_clientDisconnect(int argc, const char** argv) {
 static int console_clientReset(int argc, const char** argv) {
 	Client* client = mainEngine->getLocalClient();
 	if( client ) {
+		mainEngine->setInputStr(nullptr);
 		mainEngine->setPlayTest(false);
+		mainEngine->dumpResources();
 		client->reset();
 		return 0;
 	} else {
@@ -947,6 +1179,7 @@ static int console_clientReset(int argc, const char** argv) {
 static int console_clientMap(int argc, const char** argv) {
 	if( argc < 1 ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"A path is needed. ex: client.map TestWorld");
+		return 1;
 	}
 	Client* client = mainEngine->getLocalClient();
 	if( client ) {
@@ -979,10 +1212,28 @@ static int console_clientSpawn(int argc, const char** argv) {
 	return 1;
 }
 
+static int console_clientCountEntities(int argc, const char** argv) {
+	Client* client = mainEngine->getLocalClient();
+	if (!client) {
+		return 1;
+	}
+	Uint32 count = 0;
+	for (Uint32 i = 0; i < client->getNumWorlds(); ++i) {
+		World* world = client->getWorld(i);
+		for (Uint32 c = 0; c < World::numBuckets; ++c) {
+			count += world->getEntities(c).getSize();
+		}
+	}
+	mainEngine->fmsg(Engine::MSG_INFO, "Client has %u entities", count);
+	return 0;
+}
+
 static Ccmd ccmd_clientReset("client.reset","restarts the local client",&console_clientReset);
 static Ccmd ccmd_clientDisconnect("client.disconnect","disconnects the client from the remote host",&console_clientDisconnect);
 static Ccmd ccmd_clientMap("client.map","loads a world file on the local client",&console_clientMap);
 static Ccmd ccmd_clientSpawn("client.spawn","spawns a new player into the world we are connected to",&console_clientSpawn);
+static Ccmd ccmd_clientCountEntities("client.countentities", "count the number of entities in all worlds on the client", &console_clientCountEntities);
+
 Cvar cvar_showFPS("showfps","displays an FPS counter","0");
 Cvar cvar_showSpeed("showspeed","displays player speedometer","0");
 Cvar cvar_showMatrix("showmatrix","displays the camera matrix of the first player","0");

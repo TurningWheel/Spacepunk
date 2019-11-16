@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Main.hpp"
-#include "LinkedList.hpp"
 #include "String.hpp"
+#include "Map.hpp"
 
 class Input {
 public:
@@ -34,6 +34,7 @@ public:
 		HAND_LEFT,
 		HAND_RIGHT,
 
+		TOGGLE_INVENTORY,
 		INVENTORY1,
 		INVENTORY2,
 		INVENTORY3,
@@ -62,39 +63,65 @@ public:
 		float analog = 0.f;
 		bool binary = false;
 		bool consumed = false;
+
+		// bind type
+		enum bindtype_t {
+			INVALID,
+			KEYBOARD,
+			CONTROLLER_AXIS,
+			CONTROLLER_BUTTON,
+			MOUSE_BUTTON,
+			NUM
+		};
+		bindtype_t type = INVALID;
+
+		// keyboard binding info
+		SDL_Scancode scancode = SDL_Scancode::SDL_SCANCODE_UNKNOWN;
+
+		// gamepad binding info
+		SDL_GameController* pad = nullptr;
+		SDL_GameControllerAxis padAxis = SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_INVALID;
+		SDL_GameControllerButton padButton = SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_INVALID;
+		bool padAxisNegative = false;
+
+		// mouse button info
+		int mouseButton = 0;
 	};
 
 	// gets the analog value of a particular input binding
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the analog value (range = -1.f : +1.f)
 	float analog(bindingenum_t binding) const;
 
 	// gets the binary value of a particular input binding
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the bool value (false = not pressed, true = pressed)
 	bool binary(bindingenum_t binding) const;
 
 	// gets the binary value of a particular input binding, if it's not been consumed
 	// releasing the input and retriggering it "unconsumes"
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the bool value (false = not pressed, true = pressed)
 	bool binaryToggle(bindingenum_t binding) const;
 
-	// @param binding: the binding to flag consumed
+	// @param binding the binding to flag consumed
 	void consumeBinaryToggle(bindingenum_t binding);
 
 	// gets the input mapped to a particular input binding
-	// @param binding: the binding to query
+	// @param binding the binding to query
 	// @return the input mapped to the given binding
 	const char* binding(bindingenum_t binding) const;
 
 	// rebind the given action to the given input
-	// @param name: the action to rebind
-	// @param input: the input to rebind to the action
+	// @param name the action to rebind
+	// @param input the input to rebind to the action
 	void rebind(bindingenum_t binding, const char* input);
 
+	// refresh bindings (eg after a new controller is detected)
+	void refresh();
+
 	// find the binding with the given name
-	// @param name: the name of the binding
+	// @param name the name of the binding
 	// @return the binding enum
 	static bindingenum_t enumForName(const char* name);
 
@@ -111,9 +138,13 @@ private:
 
 	// converts the given input to a boolean value
 	// @return the converted value
-	static bool binaryOf(const char* input);
+	static bool binaryOf(binding_t& binding);
 
 	// converts the given input to a float value
 	// @return the converted value
-	static float analogOf(const char* input);
+	static float analogOf(binding_t& binding);
+
+	// map of scancodes to input names
+	static Map<String, SDL_Scancode> scancodeNames;
+	static SDL_Scancode getScancodeFromName(const char* name);
 };

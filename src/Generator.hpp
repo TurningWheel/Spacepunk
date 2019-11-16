@@ -229,6 +229,7 @@ public:
 		Sint32 removeDeadends	= 0;			// percentage
 		Sint32 addStairs		= 2;			// number of stairs
 		Sint32 subdivisor		= 2;
+		bool complex			= false;		// whether to create "complex" (non-rectangle) rooms
 		bool power				= false;
 		bool gravity			= false;
 		bool lifeSupport		= false;
@@ -322,4 +323,7 @@ private:
 	// room library
 	ArrayList<roomlib_t> roomLibs;
 	ArrayList<tunnellib_t> tunnelLibs;
+
+	// level kit
+	String levelkit;
 };

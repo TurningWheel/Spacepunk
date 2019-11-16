@@ -22,6 +22,7 @@
 #include "SectorVertex.hpp"
 #include "Sector.hpp"
 #include "SectorWorld.hpp"
+#include "BasicWorld.hpp"
 
 //Component Headers.
 #include "Model.hpp"
@@ -118,6 +119,16 @@ Cvar cvar_snapRotate("editor.snap.rotate", "Rotate snap", "15.0");
 Cvar cvar_snapScale("editor.snap.scale", "Scale snap", "25.0");
 Cvar cvar_editorSounds("editor.sounds", "Enable editor sound effects", "1");
 
+Editor::Editor() {
+}
+
+Editor::~Editor() {
+	if (copiedTiles) {
+		delete copiedTiles;
+		copiedTiles = 0;
+	}
+}
+
 void Editor::init(Client& _client) {
 	client = &_client;
 
@@ -129,8 +140,10 @@ void Editor::init(Client& _client) {
 
 	// close all open worlds and create a blank one
 	client->closeAllWorlds();
-	world = client->newTileWorld("Untitled World", 32, 32);
-	editingMode = TILES;
+	//world = client->newTileWorld("Untitled World", 32, 32);
+	//editingMode = TILES;
+	world = client->newBasicWorld("Untitled World");
+	editingMode = ENTITIES;
 
 	// initialize components
 	initWidgets();
@@ -156,13 +169,15 @@ void Editor::init(Client& _client, const char* name, bool tiles, int w, int h) {
 
 	// close all open worlds and create a blank one
 	client->closeAllWorlds();
-	if( tiles ) {
+	/*if( tiles ) {
 		world = client->newTileWorld(name,w,h);
 		editingMode = TILES;
 	} else {
 		world = client->newSectorWorld(name);
 		editingMode = SECTORS;
-	}
+	}*/
+	world = client->newBasicWorld(name);
+	editingMode = ENTITIES;
 
 	// initialize components
 	initWidgets();
@@ -197,6 +212,8 @@ void Editor::init(Client& _client, const char* path) {
 		editingMode = TILES;
 	} else if( world->getType() == World::WORLD_SECTORS ) {
 		editingMode = SECTORS;
+	} else {
+		editingMode = ENTITIES;
 	}
 
 	// initialize components
@@ -678,7 +695,7 @@ void Editor::buttonEditorSettings() {
 
 		Field* field = frame->addField("field",128);
 
-		StringBuf<32> text("%.2f", cvar_snapTranslate.toFloat());
+		StringBuf<32> text("%.2f", 1, cvar_snapTranslate.toFloat());
 		field->setText(text.get());
 
 		// label
@@ -721,7 +738,7 @@ void Editor::buttonEditorSettings() {
 
 		Field* field = frame->addField("field",128);
 
-		StringBuf<32> text("%.2f", cvar_snapRotate.toFloat());
+		StringBuf<32> text("%.2f", 1, cvar_snapRotate.toFloat());
 		field->setText(text.get());
 
 		// label
@@ -764,7 +781,7 @@ void Editor::buttonEditorSettings() {
 
 		Field* field = frame->addField("field",128);
 
-		StringBuf<32> text("%.2f", cvar_snapScale.toFloat());
+		StringBuf<32> text("%.2f", 1, cvar_snapScale.toFloat());
 		field->setText(text.get());
 
 		// label
@@ -804,7 +821,7 @@ void Editor::buttonEditorSettingsApply() {
 		Button* button = frame->findButton("buttonSnapEnabled");
 		assert(button);
 
-		cvar_snapEnabled.value = button->isPressed() ? "1" : "0";
+		cvar_snapEnabled.set(button->isPressed() ? "1" : "0");
 	}
 
 	// collect translate snap
@@ -815,7 +832,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapTranslate.value = field->getText();
+		cvar_snapTranslate.set(field->getText());
 	}
 
 	// collect rotate snap
@@ -826,7 +843,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapRotate.value = field->getText();
+		cvar_snapRotate.set(field->getText());
 	}
 
 	// collect scale snap
@@ -837,7 +854,7 @@ void Editor::buttonEditorSettingsApply() {
 		Field* field = frame->findField("field");
 		assert(field);
 
-		cvar_snapScale.value = field->getText();
+		cvar_snapScale.set(field->getText());
 	}
 }
 
@@ -1118,7 +1135,7 @@ void Editor::buttonMapSettings() {
 		button->setName("buttonRotate");
 		button->getParams().addInt(rotate);
 
-		StringBuf<16> text("Rotate %d*", rotate);
+		StringBuf<16> text("Rotate %d*", 1, rotate);
 		button->setText(text.get());
 	}
 }
@@ -1457,7 +1474,7 @@ void Editor::initWidgets() {
 	entity->setFlags(static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_VISIBLE));
 	editingCamera = entity->addComponent<Camera>();
 	editingCamera->setClipFar(10240.f);
-	client->getMixer()->setListener(*editingCamera);
+	client->getMixer()->setListener(editingCamera);
 
 	// set camera window
 	Rect<int> camRect;
@@ -1512,8 +1529,8 @@ void Editor::initWidgets() {
 		widget->update();
 
 		Mesh::shadervars_t shaderVars;
-		shaderVars.customColorEnabled = GL_TRUE;
-		shaderVars.customColorA = {.75f,.75f,.75f,1.f};
+		shaderVars.customColorEnabled = true;
+		shaderVars.customColorA = {1.f,1.f,1.f,1.f};
 
 		Model* model = widget->addComponent<Model>();
 		model->setName("model");
@@ -1539,7 +1556,7 @@ void Editor::initWidgets() {
 		widgetX->update();
 
 		Mesh::shadervars_t shaderVars;
-		shaderVars.customColorEnabled = GL_TRUE;
+		shaderVars.customColorEnabled = true;
 		shaderVars.customColorA = {1.f,0.f,0.f,1.f};
 
 		Model* model = widgetX->addComponent<Model>();
@@ -1566,7 +1583,7 @@ void Editor::initWidgets() {
 		widgetXY->update();
 
 		Mesh::shadervars_t shaderVars;
-		shaderVars.customColorEnabled = GL_TRUE;
+		shaderVars.customColorEnabled = true;
 		shaderVars.customColorA = {1.f,1.f,0.f,1.f};
 
 		Model* model = widgetXY->addComponent<Model>();
@@ -1593,7 +1610,7 @@ void Editor::initWidgets() {
 		widgetY->update();
 
 		Mesh::shadervars_t shaderVars;
-		shaderVars.customColorEnabled = GL_TRUE;
+		shaderVars.customColorEnabled = true;
 		shaderVars.customColorA = {0.f,1.f,0.f,1.f};
 
 		Model* model = widgetY->addComponent<Model>();
@@ -1620,7 +1637,7 @@ void Editor::initWidgets() {
 		widgetYZ->update();
 
 		Mesh::shadervars_t shaderVars;
-		shaderVars.customColorEnabled = GL_TRUE;
+		shaderVars.customColorEnabled = true;
 		shaderVars.customColorA = {0.f,1.f,1.f,1.f};
 
 		Model* model = widgetYZ->addComponent<Model>();
@@ -1647,7 +1664,7 @@ void Editor::initWidgets() {
 		widgetZ->update();
 
 		Mesh::shadervars_t shaderVars;
-		shaderVars.customColorEnabled = GL_TRUE;
+		shaderVars.customColorEnabled = true;
 		shaderVars.customColorA = {0.f,0.f,1.f,1.f};
 
 		Model* model = widgetZ->addComponent<Model>();
@@ -1674,7 +1691,7 @@ void Editor::initWidgets() {
 		widgetZX->update();
 
 		Mesh::shadervars_t shaderVars;
-		shaderVars.customColorEnabled = GL_TRUE;
+		shaderVars.customColorEnabled = true;
 		shaderVars.customColorA = {1.f,0.f,1.f,1.f};
 
 		Model* model = widgetZX->addComponent<Model>();
@@ -1697,7 +1714,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 	Sint32 xres = mainEngine->getXres();
 	Sint32 yres = mainEngine->getYres();
 
-	Frame* gui = client->getGUI();
+	Frame* gui = client->getGUI()->findFrame("editor_gui");
 	Rect<int> guiRect;
 	guiRect.x = 0;
 	guiRect.y = 0;
@@ -1910,7 +1927,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 				// height
 				{
-					StringBuf<64> name("editor_Tile%sHeight",label);
+					StringBuf<64> name("editor_Tile%sHeight", 1, label);
 					Frame* frame = new Frame(*midFrame,name.get());
 
 					Rect<int> size;
@@ -1946,7 +1963,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 				// slope dir
 				{
-					StringBuf<64> name("editor_Tile%sSlopeDir",label);
+					StringBuf<64> name("editor_Tile%sSlopeDir", 1, label);
 					Frame* frame = new Frame(*midFrame,name.get());
 
 					Rect<int> size;
@@ -1982,7 +1999,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 				// slope size
 				{
-					StringBuf<64> name("editor_Tile%sSlopeSize",label);
+					StringBuf<64> name("editor_Tile%sSlopeSize", 1, label);
 					Frame* frame = new Frame(*midFrame,name.get());
 
 					Rect<int> size;
@@ -2037,7 +2054,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 						break;
 					}
 
-					Field* label = midFrame->addField(StringBuf<32>("labelTileCustom%s",name.get()).get(),16);
+					Field* label = midFrame->addField(StringBuf<32>("labelTileCustom%s", 1, name.get()).get(), 16);
 
 					Rect<int> size;
 					size.x = 6;
@@ -2047,7 +2064,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					y += size.h + 3;
 					label->setSize(size);
 
-					label->setText(StringBuf<32>("Custom %s:", name.get()).get());
+					label->setText(StringBuf<32>("Custom %s:", 1, name.get()).get());
 					label->setColor(color);
 				}
 
@@ -2431,7 +2448,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f,.5f,.5f,1.f));
-		topFrame->addImage(3,3,glm::vec4(1.f),"images/gui/icon_translate-x.png");
+		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), glm::vec4(1.f), mainEngine->getImageResource().dataForString("images/gui/icon_translate-x.png"));
 
 		{
 			Frame* frame = new Frame(*topFrame,"editor_FramePanelX");
@@ -2466,7 +2483,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f,.5f,.5f,1.f));
-		topFrame->addImage(3,3,glm::vec4(1.f),"images/gui/icon_translate-y.png");
+		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), glm::vec4(1.f), mainEngine->getImageResource().dataForString("images/gui/icon_translate-y.png"));
 
 		{
 			Frame* frame = new Frame(*topFrame,"editor_FramePanelY");
@@ -2501,7 +2518,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f,.5f,.5f,1.f));
-		topFrame->addImage(3,3,glm::vec4(1.f),"images/gui/icon_translate-z.png");
+		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), glm::vec4(1.f), mainEngine->getImageResource().dataForString("images/gui/icon_translate-z.png"));
 
 		{
 			Frame* frame = new Frame(*topFrame,"editor_FramePanelZ");
@@ -2721,7 +2738,41 @@ void Editor::updateTileFields(TileWorld& world, Sint32 pointerX, Sint32 pointerY
 	}
 }
 
-void Editor::editTiles() {
+void Editor::updateTiles(TileWorld& world) {
+	ArrayList<Tile>& tiles = world.getTiles();
+	for( Uint32 x=0; x<world.getWidth(); ++x ) {
+		for( Uint32 y=0; y<world.getHeight(); ++y ) {
+			Tile& tile = tiles[y+x*world.getHeight()];
+			if( tile.isChanged() ) {
+				tile.setChanged(false);
+				Tile* neighbor = nullptr;
+
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_EAST)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_EAST);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_EAST);
+				}
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_SOUTH);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_SOUTH);
+				}
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_WEST)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_WEST);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_WEST);
+				}
+				if( (neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) != nullptr ) {
+					tile.compileUpperVertices(*neighbor,Tile::SIDE_NORTH);
+					tile.compileLowerVertices(*neighbor,Tile::SIDE_NORTH);
+				}
+				tile.compileCeilingVertices();
+				tile.compileFloorVertices();
+				tile.buildBuffers();
+				tile.compileBulletPhysicsMesh();
+			}
+		}
+	}
+}
+
+void Editor::editTiles(bool usable) {
 	Camera* camera = editingCamera;
 	if( !camera )
 		return;
@@ -2778,6 +2829,69 @@ void Editor::editTiles() {
 		world.selectEntities(false);
 	}
 
+	// copy/paste
+	if( !mainEngine->getInputStr() ) {
+		if( mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL) ) {
+			bool paste = mainEngine->pressKey(SDL_SCANCODE_V);
+			bool cut = mainEngine->pressKey(SDL_SCANCODE_X);
+			bool copy = mainEngine->pressKey(SDL_SCANCODE_C);
+
+			// paste tiles
+			if( paste && copiedTiles ) {
+				Rect<int> rect = world.getSelectedRect();
+				rect.w = min(copiedTiles->getWidth(), world.getWidth() - rect.x );
+				rect.h = min(copiedTiles->getHeight(), world.getHeight() - rect.y );
+
+				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
+					Sint32 pitch = x * world.getHeight();
+					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
+						tiles[y + pitch] = copiedTiles->getTiles()[(y - rect.y) + (x - rect.x) * copiedTiles->getHeight()];
+					}
+				}
+				rect.x = max(0, rect.x - 1);
+				rect.y = max(0, rect.y - 1);
+				rect.w = min((int)world.getWidth() - 1, rect.w + 2);
+				rect.h = min((int)world.getHeight() - 1, rect.h + 2);
+				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
+					Sint32 pitch = x * world.getHeight();
+					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
+						tiles[y + pitch].setChanged(true);
+						tiles[y + pitch].getChunk()->setChanged(true);
+					}
+				}
+
+				updateTiles(world);
+			}
+
+			// copy/cut tiles
+			if( copy || cut ) {
+				Rect<int> rect = world.getSelectedRect();
+				rect.x += rect.w >= 0 ? 0 : rect.w;
+				rect.y += rect.h >= 0 ? 0 : rect.h;
+				rect.w = abs(rect.w) + 1;
+				rect.h = abs(rect.h) + 1;
+
+				if (copiedTiles) {
+					delete copiedTiles;
+				}
+
+				// create world for copied tiles
+				copiedTiles = new TileWorld(nullptr, true, 0, Tile::side_t::SIDE_EAST, "", rect.w, rect.h, "Copied Tiles");
+				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
+					Sint32 pitch = x * world.getHeight();
+					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
+						copiedTiles->getTiles()[(y - rect.y) + (x - rect.x) * rect.h] = tiles[y + pitch];
+						if (cut) {
+							tiles[y + pitch] = Tile();
+							tiles[y + pitch].setChanged(true);
+							tiles[y + pitch].getChunk()->setChanged(true);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// manipulate tiles
 	bool buttonRight = false;
 	bool buttonDown = false;
@@ -2824,8 +2938,10 @@ void Editor::editTiles() {
 		ceilingPos.y = cameraPos.y;
 		ceilingPos.z = tile.getCeilingHeight();
 		tile.setCeilingSlopeHeightForVec(ceilingPos);
-		buttonPlus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
-		buttonMinus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		if (usable) {
+			buttonPlus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
+			buttonMinus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		}
 	} else {
 		glm::vec3 floorPos;
 		const Vector& cameraPos = camera->getGlobalPos();
@@ -2836,8 +2952,10 @@ void Editor::editTiles() {
 		floorPos.y = cameraPos.y;
 		floorPos.z = tile.getFloorHeight();
 		tile.setFloorSlopeHeightForVec(floorPos);
-		buttonPlus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
-		buttonMinus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		if (usable) {
+			buttonPlus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()<0 : mainEngine->getMouseWheelY()>0;
+			buttonMinus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY()>0 : mainEngine->getMouseWheelY()<0;
+		}
 	}
 
 	if( buttonRight || buttonLeft || buttonDown || buttonUp || buttonEnter || buttonPlus || buttonMinus || buttonZero ) {
@@ -2872,7 +2990,7 @@ void Editor::editTiles() {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (x-world.getSelectedRect().x));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * ((Sint32)x-world.getSelectedRect().x));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -2889,7 +3007,7 @@ void Editor::editTiles() {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (x-world.getSelectedRect().x));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * ((Sint32)x-world.getSelectedRect().x));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -2911,7 +3029,7 @@ void Editor::editTiles() {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (y-world.getSelectedRect().y));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * ((Sint32)y-world.getSelectedRect().y));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -2928,7 +3046,7 @@ void Editor::editTiles() {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (y-world.getSelectedRect().y));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * ((Sint32)y-world.getSelectedRect().y));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -2950,7 +3068,7 @@ void Editor::editTiles() {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-(x-world.getSelectedRect().x)));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-((Sint32)x-world.getSelectedRect().x)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -2967,7 +3085,7 @@ void Editor::editTiles() {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-(x-world.getSelectedRect().x)));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w-((Sint32)x-world.getSelectedRect().x)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -2989,7 +3107,7 @@ void Editor::editTiles() {
 								tile.setCeilingSlopeSize(0);
 							}
 							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-(y-world.getSelectedRect().y)));
+							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-((Sint32)y-world.getSelectedRect().y)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3006,7 +3124,7 @@ void Editor::editTiles() {
 								tile.setFloorSlopeSize(0);
 							}
 							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-(y-world.getSelectedRect().y)));
+							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h-((Sint32)y-world.getSelectedRect().y)));
 							tile.setChanged(true);
 							tile.getChunk()->setChanged(true);
 						}
@@ -3155,37 +3273,8 @@ void Editor::editTiles() {
 				}
 			}
 		}
-		for( Uint32 x=0; x<world.getWidth(); ++x ) {
-			for( Uint32 y=0; y<world.getHeight(); ++y ) {
-				Tile& tile = tiles[y+x*world.getHeight()];
-				if( tile.isChanged() ) {
-					tile.setChanged(false);
-					Tile* neighbor = nullptr;
 
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_EAST)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_EAST);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_EAST);
-					}
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_SOUTH);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_SOUTH);
-					}
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_WEST)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_WEST);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_WEST);
-					}
-					if( (neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) != nullptr ) {
-						tile.compileUpperVertices(*neighbor,Tile::SIDE_NORTH);
-						tile.compileLowerVertices(*neighbor,Tile::SIDE_NORTH);
-					}
-					tile.compileCeilingVertices();
-					tile.compileFloorVertices();
-					tile.buildBuffers();
-					tile.compileBulletPhysicsMesh();
-				}
-			}
-		}
-
+		updateTiles(world);
 		updateTileFields(world, world.getSelectedRect().x, world.getSelectedRect().y);
 	}
 
@@ -3300,7 +3389,7 @@ void Editor::handleWidget(World& world) {
 					}
 				} else if( editingMode == SECTORS ) {
 					SectorWorld& sectorWorld = static_cast<SectorWorld&>(world);
-					for( size_t c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
+					for( Uint32 c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
 						SectorVertex* vertex = sectorWorld.getVertices()[c];
 
 						if( vertex->isSelected() ) {
@@ -3417,7 +3506,7 @@ void Editor::handleWidget(World& world) {
 	}
 }
 
-void Editor::editSectors() {
+void Editor::editSectors(bool usable) {
 	if( world->getType() != World::WORLD_SECTORS ) {
 		return;
 	}
@@ -3433,7 +3522,7 @@ void Editor::editSectors() {
 			if( draggingWidget ) {
 				draggingWidget = false;
 
-				for( size_t c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
+				for( Uint32 c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
 					SectorVertex* vertex = sectorWorld.getVertices()[c];
 					vertex->setOldPos(vertex->getPos());
 				}
@@ -3450,7 +3539,7 @@ void Editor::editSectors() {
 	}
 
 	// highlight vertex
-	for( size_t c = 0; c < vertices.getSize(); ++c ) {
+	for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 		SectorVertex* vertex = vertices[c];
 		vertex->setHighlighted(c == highlightedVertex);
 	}
@@ -3499,7 +3588,7 @@ void Editor::editSectors() {
 	}
 }
 
-void Editor::editEntities() {
+void Editor::editEntities(bool usable) {
 	World& world = *this->world;
 
 	// delete
@@ -3546,6 +3635,7 @@ void Editor::editEntities() {
 					for( Node<Entity*>* node=copiedEntities.getFirst(); node!=nullptr; node=node->getNext() ) {
 						Entity* entity = node->getData();
 						entity->insertIntoWorld(&world);
+						entity->finishInsertIntoWorld();
 						entity->setSelected(true);
 						entity->setHighlighted(true);
 						entity->addToEditorList();
@@ -3829,7 +3919,7 @@ void Editor::process(const bool usable) {
 				camera->getEntity()->setAng(ang);
 			}
 			camera->getEntity()->update();
-			client->getMixer()->setListener(*camera);
+			client->getMixer()->setListener(camera);
 
 			// move selector (mouse pointer)
 			if( !usable ) {
@@ -3851,11 +3941,11 @@ void Editor::process(const bool usable) {
 
 				if( inWindow ) {
 					camera->screenPosToWorldRay(mouseX,mouseY,rayStart,rayEnd);
-					rayEnd = rayStart+rayEnd*camera->getClipFar();
+					Vector rayStop = rayStart+rayEnd*camera->getClipFar();
 
 					// ray trace the world
 					LinkedList<World::hit_t> list;
-					world.lineTraceList(rayStart, rayEnd, list);
+					world.lineTraceList(rayStart, rayStop, list);
 
 					if( list.getSize()>0 ) {
 						world.setPointerActive(false);
@@ -3950,6 +4040,17 @@ void Editor::process(const bool usable) {
 							}
 						}
 					}
+					if (list.getSize() == 0)
+					{
+						highlightedVertex = World::nuid;
+						highlightedSector = nullptr;
+						highlightedFace = -1;
+						world.setPointerActive(true);
+						world.setPointerPos(rayStart + rayEnd * 256.f);
+						if (!highlightedObjManuallySet && (!leftClicking || leftClick)) {
+							highlightedObj = World::nuid;
+						}
+					}
 				}
 			}
 		}
@@ -3985,11 +4086,11 @@ void Editor::process(const bool usable) {
 
 		// main editing functionality
 		if( editingMode==TILES || editingMode==TEXTURES ) {
-			editTiles();
+			editTiles(usable);
 		} else if( editingMode==ENTITIES ) {
-			editEntities();
+			editEntities(usable);
 		} else if( editingMode==SECTORS ) {
-			editSectors();
+			editSectors(usable);
 		}
 
 		// toggle mouselook
@@ -4023,7 +4124,7 @@ void Editor::process(const bool usable) {
 			leftClicking = false;
 			leftClickLock = true;
 
-			size_t index = 0;
+			Uint32 index = 0;
 			if (textureUnderMouse && textureUnderMouse[0] != '\0' && strcmp(textureUnderMouse, Tile::defaultTexture) != 0) {
 				index = mainEngine->getTextureDictionary().find(textureUnderMouse);
 				if (index == Dictionary::nindex) {
@@ -4093,17 +4194,17 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 	if( widgetMode == TRANSLATE ) {
 		Frame::image_t* image = parent->findImage(rotateImg);
 		if( image ) {
-			int x = image->x;
-			int y = image->y;
+			int x = image->pos.x;
+			int y = image->pos.y;
 			parent->remove(rotateImg);
-			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),translateImg);
+			parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(translateImg));
 		} else {
 			Frame::image_t* image = parent->findImage(scaleImg);
 			if( image ) {
-				int x = image->x;
-				int y = image->y;
+				int x = image->pos.x;
+				int y = image->pos.y;
 				parent->remove(scaleImg);
-				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),translateImg);
+				parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(translateImg));
 			}
 		}
 	}
@@ -4112,17 +4213,17 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 	if( widgetMode == ROTATE ) {
 		Frame::image_t* image = parent->findImage(translateImg);
 		if( image ) {
-			int x = image->x;
-			int y = image->y;
+			int x = image->pos.x;
+			int y = image->pos.y;
 			parent->remove(translateImg);
-			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),rotateImg);
+			parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(rotateImg));
 		} else {
 			Frame::image_t* image = parent->findImage(scaleImg);
 			if( image ) {
-				int x = image->x;
-				int y = image->y;
+				int x = image->pos.x;
+				int y = image->pos.y;
 				parent->remove(scaleImg);
-				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),rotateImg);
+				parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(rotateImg));
 			}
 		}
 	}
@@ -4131,900 +4232,18 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 	if( widgetMode == SCALE ) {
 		Frame::image_t* image = parent->findImage(translateImg);
 		if( image ) {
-			int x = image->x;
-			int y = image->y;
+			int x = image->pos.x;
+			int y = image->pos.y;
 			parent->remove(translateImg);
-			parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),scaleImg);
+			parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(scaleImg));
 		} else {
 			Frame::image_t* image = parent->findImage(rotateImg);
 			if( image ) {
-				int x = image->x;
-				int y = image->y;
+				int x = image->pos.x;
+				int y = image->pos.y;
 				parent->remove(rotateImg);
-				parent->addImage(x,y,glm::vec4(1.f,1.f,1.f,1.f),scaleImg);
+				parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f,1.f,1.f,1.f), mainEngine->getImageResource().dataForString(scaleImg));
 			}
-		}
-	}
-}
-
-void Editor::entityBBoxShape(unsigned int uid, const char* shape) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			BBox* bbox = dynamic_cast<BBox*>(component);
-			if( !bbox ) {
-				return;
-			}
-
-			for( Uint32 c = 0; c < (int)BBox::SHAPE_MAX; ++c ) {
-				if( strcmp(shape,BBox::shapeStr[c]) == 0 ) {
-					bbox->setShape(static_cast<BBox::shape_t>(c));
-					bbox->update();
-					return;
-				}
-			}
-			return;
-		}
-	}
-}
-
-void Editor::entityBBoxEnabled(unsigned int uid) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			BBox* bbox = dynamic_cast<BBox*>(component);
-			if( !bbox ) {
-				return;
-			}
-
-			bbox->setEnabled(bbox->isEnabled() == false);
-			return;
-		}
-	}
-}
-
-void Editor::entityModelLoadMesh(unsigned int uid, const char* name) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Model* model = dynamic_cast<Model*>(component);
-			if( !model ) {
-				return;
-			}
-
-			model->setMesh(name);
-			if( model->hasAnimations() ) {
-				entity->animate("idle", false);
-			}
-			return;
-		}
-	}
-}
-
-void Editor::entityModelLoadMaterial(unsigned int uid, const char* name) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Model* model = dynamic_cast<Model*>(component);
-			if( !model ) {
-				return;
-			}
-
-			model->setMaterial(name);
-			return;
-		}
-	}
-}
-
-void Editor::entityModelLoadDepthFailMat(unsigned int uid, const char* name) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Model* model = dynamic_cast<Model*>(component);
-			if( !model ) {
-				return;
-			}
-
-			model->setDepthFailMat(name);
-			return;
-		}
-	}
-}
-
-void Editor::entityModelLoadAnimation(unsigned int uid, const char* name) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Model* model = dynamic_cast<Model*>(component);
-			if( !model ) {
-				return;
-			}
-
-			model->setAnimation(name);
-			return;
-		}
-	}
-}
-
-void Editor::entityModelCustomColor(unsigned int uid) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Model* model = dynamic_cast<Model*>(component);
-			if( !model ) {
-				return;
-			}
-
-			Mesh::shadervars_t shaderVars = model->getShaderVars();
-			shaderVars.customColorEnabled = (shaderVars.customColorEnabled==GL_TRUE) ? GL_FALSE : GL_TRUE;
-			model->setShaderVars(shaderVars);
-			return;
-		}
-	}
-}
-
-void Editor::entityModelCustomColorChannel(unsigned int uid, int channel, int color, float f) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Model* model = dynamic_cast<Model*>(component);
-			if( !model ) {
-				return;
-			}
-
-			ArrayList<GLfloat>* vector = nullptr;
-			Mesh::shadervars_t shaderVars = model->getShaderVars();
-			switch( channel ) {
-				case 0:
-					vector = &shaderVars.customColorR;
-					break;
-				case 1:
-					vector = &shaderVars.customColorG;
-					break;
-				case 2:
-					vector = &shaderVars.customColorB;
-					break;
-				default:
-					vector = &shaderVars.customColorA;
-					break;
-			}
-			(*vector)[color] = f;
-			model->setShaderVars(shaderVars);
-			return;
-		}
-	}
-}
-
-void Editor::entityLightColorR(unsigned int uid, float r) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Light* light = dynamic_cast<Light*>(component);
-			if( !light ) {
-				return;
-			}
-
-			Vector color = light->getColor();
-			color.x = r;
-			light->setColor(color);
-			return;
-		}
-	}
-}
-
-void Editor::entityLightColorG(unsigned int uid, float g) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Light* light = dynamic_cast<Light*>(component);
-			if( !light ) {
-				return;
-			}
-
-			Vector color = light->getColor();
-			color.y = g;
-			light->setColor(color);
-			return;
-		}
-	}
-}
-
-void Editor::entityLightColorB(unsigned int uid, float b) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Light* light = dynamic_cast<Light*>(component);
-			if( !light ) {
-				return;
-			}
-
-			Vector color = light->getColor();
-			color.z = b;
-			light->setColor(color);
-			return;
-		}
-	}
-}
-
-void Editor::entityLightIntensity(unsigned int uid, float intensity) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Light* light = dynamic_cast<Light*>(component);
-			if( !light ) {
-				return;
-			}
-
-			light->setIntensity(intensity);
-			return;
-		}
-	}
-}
-
-void Editor::entityLightRadius(unsigned int uid, float radius) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Light* light = dynamic_cast<Light*>(component);
-			if( !light ) {
-				return;
-			}
-
-			light->setRadius(radius);
-			return;
-		}
-	}
-}
-
-void Editor::entityLightShape(unsigned int uid, const char* shape) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Light* light = dynamic_cast<Light*>(component);
-			if( !light ) {
-				return;
-			}
-
-			for( Uint32 c = 0; c < (int)Light::SHAPE_NUM; ++c ) {
-				if( strcmp(shape,Light::shapeStr[c]) == 0 ) {
-					light->setShape(static_cast<Light::shape_t>(c));
-					light->update();
-					return;
-				}
-			}
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraClipNear(unsigned int uid, float f) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			camera->setClipNear(f);
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraClipFar(unsigned int uid, float f) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			camera->setClipFar(f);
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraWinX(unsigned int uid, int i) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			Rect<Sint32> win = camera->getWin();
-			win.x = i;
-			camera->setWin(win);
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraWinY(unsigned int uid, int i) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			Rect<Sint32> win = camera->getWin();
-			win.y = i;
-			camera->setWin(win);
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraWinW(unsigned int uid, int i) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			Rect<Sint32> win = camera->getWin();
-			win.w = i;
-			camera->setWin(win);
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraWinH(unsigned int uid, int i) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			Rect<Sint32> win = camera->getWin();
-			win.h = i;
-			camera->setWin(win);
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraFOV(unsigned int uid, int i) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			camera->setFov(i);
-			return;
-		}
-	}
-}
-
-void Editor::entityCameraOrtho(unsigned int uid) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Camera* camera = dynamic_cast<Camera*>(component);
-			if( !camera ) {
-				return;
-			}
-
-			camera->setOrtho(camera->isOrtho()==false);
-			return;
-		}
-	}
-}
-
-void Editor::entitySpeakerDefaultSound(unsigned int uid, const char* name) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Speaker* speaker = dynamic_cast<Speaker*>(component);
-			if( !speaker ) {
-				return;
-			}
-
-			speaker->setDefaultSound(name);
-			speaker->stopAllSounds();
-			speaker->playSound(speaker->getDefaultSound(), speaker->isDefaultLoop(), speaker->getDefaultRange());
-			return;
-		}
-	}
-}
-
-void Editor::entitySpeakerDefaultRange(unsigned int uid, const float range) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Speaker* speaker = dynamic_cast<Speaker*>(component);
-			if( !speaker ) {
-				return;
-			}
-
-			speaker->setDefaultRange(range);
-			speaker->stopAllSounds();
-			speaker->playSound(speaker->getDefaultSound(), speaker->isDefaultLoop(), speaker->getDefaultRange());
-			return;
-		}
-	}
-}
-
-void Editor::entitySpeakerDefaultLoop(unsigned int uid) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			Speaker* speaker = dynamic_cast<Speaker*>(component);
-			if( !speaker ) {
-				return;
-			}
-
-			speaker->setDefaultLoop(speaker->isDefaultLoop()==false);
-			speaker->stopAllSounds();
-			speaker->playSound(speaker->getDefaultSound(), speaker->isDefaultLoop(), speaker->getDefaultRange());
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterHp(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setHp(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterMp(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setMp(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterSex(unsigned int uid, const char* sex) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			for( Uint32 c = 0; c < (int)Character::SEX_MAX; ++c ) {
-				if( strcmp(sex,Character::sexStr[c]) == 0 ) {
-					character->setSex(static_cast<Character::sex_t>(c));
-					return;
-				}
-			}
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterLevel(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setLevel(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterXp(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setXp(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterHunger(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setHunger(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterNanoMatter(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setNanoMatter(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterBioMatter(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setBioMatter(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterNeuroThread(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setNeuroThread(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterGold(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setGold(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterStrength(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setStrength(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterDexterity(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setDexterity(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterIntelligence(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setIntelligence(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterConstitution(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setConstitution(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterPerception(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setPerception(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterCharisma(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setCharisma(value);
-			return;
-		}
-	}
-}
-
-void Editor::entityCharacterLuck(unsigned int uid, Sint32 value) {
-	for ( Uint32 c = 0; c < world->numBuckets; ++c ) {
-		for ( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if ( !entity->isSelected() ) {
-				continue;
-			}
-			Character* character = dynamic_cast<Character*>(entity->findComponentByUID<Component>(uid));
-			if ( !character ) {
-				return;
-			}
-
-			character->setLuck(value);
-			return;
 		}
 	}
 }
@@ -5077,6 +4296,28 @@ void Editor::entityRemoveComponent(unsigned int uid) {
 			Frame* frame = client->getGUI()->findFrame("editor_FrameEntityAddComponent");
 			if( frame ) {
 				frame->removeSelf();
+			}
+		}
+	}
+}
+
+void Editor::entityCopyComponent(unsigned int uid) {
+	for (Uint32 c = 0; c < world->numBuckets; ++c) {
+		for (Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext()) {
+			Entity* entity = node->getData();
+			if (!entity->isSelected()) {
+				continue;
+			}
+			Component* component = entity->findComponentByUID<Component>(uid);
+			if (component)
+			{
+				if (component->getParent()) {
+					component->copy(component->getParent());
+				} else {
+					component->copy(component->getEntity());
+				}
+				entity->update();
+				guiNeedsUpdate = true;
 			}
 		}
 	}
@@ -5434,7 +4675,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// translate x
 		{
-			StringBuf<32> name("editor_FrameComponentTranslateX%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentTranslateX%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentTranslate");
 
 			Rect<int> size;
@@ -5460,7 +4701,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentTranslateY%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentTranslateY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5474,7 +4715,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// translate y
 		{
-			StringBuf<32> name("editor_FrameComponentTranslateY%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentTranslateY%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentTranslate");
 
 			Rect<int> size;
@@ -5500,7 +4741,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentTranslateZ%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentTranslateZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5514,7 +4755,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// translate z
 		{
-			StringBuf<32> name("editor_FrameComponentTranslateZ%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentTranslateZ%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentTranslate");
 
 			Rect<int> size;
@@ -5541,7 +4782,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentTranslateX%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentTranslateX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5569,7 +4810,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// roll
 		{
-			StringBuf<32> name("editor_FrameComponentRotateX%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentRotateX%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentRotate");
 
 			Rect<int> size;
@@ -5595,7 +4836,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentRotateY%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentRotateY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5609,7 +4850,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// pitch
 		{
-			StringBuf<32> name("editor_FrameComponentRotateY%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentRotateY%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentRotate");
 
 			Rect<int> size;
@@ -5635,7 +4876,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentRotateZ%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentRotateZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5649,7 +4890,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// yaw
 		{
-			StringBuf<32> name("editor_FrameComponentRotateZ%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentRotateZ%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentRotate");
 
 			Rect<int> size;
@@ -5676,7 +4917,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentRotateX%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentRotateX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5704,7 +4945,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// scale x
 		{
-			StringBuf<32> name("editor_FrameComponentScaleX%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentScaleX%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentScale");
 
 			Rect<int> size;
@@ -5730,7 +4971,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentScaleY%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentScaleY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5744,7 +4985,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// scale y
 		{
-			StringBuf<32> name("editor_FrameComponentScaleY%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentScaleY%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentScale");
 
 			Rect<int> size;
@@ -5770,7 +5011,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentScaleZ%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentScaleZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5784,7 +5025,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// scale z
 		{
-			StringBuf<32> name("editor_FrameComponentScaleZ%d", component->getUID());
+			StringBuf<32> name("editor_FrameComponentScaleZ%d", 1, component->getUID());
 			Frame* frame = properties.addFrame(name.get(),"editor_FrameComponentScale");
 
 			Rect<int> size;
@@ -5811,7 +5052,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setJustify(Field::RIGHT);
 			field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
 
-			StringBuf<32> dest("editor_FrameComponentScaleX%d", component->getUID());
+			StringBuf<32> dest("editor_FrameComponentScaleX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
 			field->setTabDestField("field");
 
@@ -5825,2038 +5066,12 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 		// do specialized component properties
 		Component::type_t type = component->getType();
-		switch( type ) {
-			case Component::COMPONENT_BBOX:
-			{
-				BBox* bbox = static_cast<BBox*>(component);
-
-				// shape label
-				{
-					Field* label = properties.addField("labelBBoxShape",12);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Shape:");
-				}
-
-				// shape
-				{
-					Frame* frame = properties.addFrame("editor_FrameBBoxShape");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 150;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 150;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-					frame->setBorder(0);
-
-					// list of shapes
-					for( Uint32 c = 0; c < BBox::shape_t::SHAPE_MAX; ++c ) {
-						Frame::entry_t* entry = frame->addEntry("entry",true);
-						entry->text = BBox::shapeStr[c];
-						entry->params.addInt(component->getUID());
-						entry->params.addString(BBox::shapeStr[c]);
-						entry->color = glm::vec4(1.f);
-					}
-				}
-
-				// enabled flag
-				{
-					Button* button = properties.addButton("buttonBBoxEnabled");
-					button->setBorder(1);
-					button->setIcon("images/gui/checkmark.png");
-					button->setStyle(Button::STYLE_CHECKBOX);
-					button->setPressed( bbox->isEnabled() );
-					button->setTooltip("Toggles the BBox's collision on and off.");
-
-					button->getParams().addInt(component->getUID());
-
-					Rect<int> size;
-					size.x = x + border*2; size.w = 30;
-					size.y = y; size.h = 30;
-					button->setSize(size);
-
-					// label
-					{
-						Field* label = properties.addField("labelBBoxEnabled", 16);
-
-						Rect<int> size;
-						size.x = x + border*2 + 30 + border;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Enabled");
-					}
-
-					y += size.h + border;
-				}
-
-				break;
-			}
-			case Component::COMPONENT_MODEL:
-			{
-				Model* model = static_cast<Model*>(component);
-
-				// mesh label
-				{
-					Field* label = properties.addField("labelModelMesh",16);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Mesh:");
-				}
-
-				// mesh
-				{
-					Frame* frame = properties.addFrame("editor_FrameModelMesh");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 30;
-					frame->setActualSize(size);
-					size.x = border*2 + x; size.w = width - border*4 - x;
-					size.y = y; size.h = 30;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",128);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-
-					field->setText(model->getMesh());
-					field->getParams().addInt(component->getUID());
-				}
-
-				// material label
-				{
-					Field* label = properties.addField("labelModelMaterial",16);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Material:");
-				}
-
-				// material
-				{
-					Frame* frame = properties.addFrame("editor_FrameModelMaterial");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 30;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",128);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-
-					field->setText(model->getMaterial());
-					field->getParams().addInt(component->getUID());
-				}
-
-				// depth fail material label
-				{
-					Field* label = properties.addField("labelModelDepthFailMaterial",24);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Depth Fail Material:");
-				}
-
-				// depth fail material
-				{
-					Frame* frame = properties.addFrame("editor_FrameModelDepthFailMaterial");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 30;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",128);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-
-					field->setText(model->getDepthFailMat());
-					field->getParams().addInt(component->getUID());
-				}
-
-				// animation label
-				{
-					Field* label = properties.addField("labelModelAnimation",12);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Animation:");
-				}
-
-				// animation
-				{
-					Frame* frame = properties.addFrame("editor_FrameModelAnimation");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 30;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",128);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-
-					field->setText(model->getAnimation());
-					field->getParams().addInt(component->getUID());
-				}
-
-				// custom color flag
-				{
-					Button* button = properties.addButton("buttonModelCustomColor");
-					button->setBorder(1);
-					button->setIcon("images/gui/checkmark.png");
-					button->setStyle(Button::STYLE_CHECKBOX);
-					button->setPressed( model->getShaderVars().customColorEnabled == GL_TRUE );
-					button->setTooltip("Enables custom color values for each color channel");
-					button->getParams().addInt(component->getUID());
-
-					Rect<int> size;
-					size.x = border*2 + x; size.w = 30;
-					size.y = y; size.h = 30;
-					button->setSize(size);
-
-					// label
-					{
-						Field* label = properties.addField("labelModelCustomColor", 16);
-
-						Rect<int> size;
-						size.x = border*2 + 30 + border + x;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Custom Colors");
-					}
-
-					y += size.h + border;
-				}
-
-				for( int channel=0; channel<4; ++channel ) {
-					// label
-					{
-						StringBuf<32> name;
-						glm::vec4 color;
-						switch( channel ) {
-							case 0:
-								name = "Red";
-								color = glm::vec4(1.0f, 0.1f, 0.1f, 1.0f);
-								break;
-							case 1:
-								name = "Green";
-								color = glm::vec4(0.1f, 1.0f, 0.1f, 1.0f);
-								break;
-							case 2:
-								name = "Blue";
-								color = glm::vec4(0.1f, 0.1f, 1.0f, 1.0f);
-								break;
-							case 3:
-								name = "Alpha";
-								color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-								break;
-						}
-
-						Field* label = properties.addField(StringBuf<32>("labelCustom%s",name.get()).get(),16);
-
-						Rect<int> size;
-						size.x = x + border*2;
-						size.w = width - border*4 - x;
-						size.y = y;
-						size.h = 20;
-						y += size.h + border;
-						label->setSize(size);
-
-						label->setText(StringBuf<32>("Custom %s:", name.get()).get());
-						label->setColor(color);
-					}
-
-					// custom color
-					for( int color=0; color<3; ++color ) {
-						const ArrayList<GLfloat>* vector = nullptr;
-						switch( channel ) {
-							case 0:
-								vector = &model->getShaderVars().customColorR;
-								break;
-							case 1:
-								vector = &model->getShaderVars().customColorG;
-								break;
-							case 2:
-								vector = &model->getShaderVars().customColorB;
-								break;
-							default:
-								vector = &model->getShaderVars().customColorA;
-								break;
-						}
-
-						Frame* frame = properties.addFrame("editor_FrameModelCustomColor");
-
-						Rect<int> size;
-						size.x = 0;
-						size.w = (width - x)/3 - border*2;
-						size.y = 0;
-						size.h = 30;
-						frame->setActualSize(size);
-						size.x = x + border*2 + ((width - x)/3 - border) * color;
-						size.w = (width - x)/3 - border*2;
-						size.y = y;
-						size.h = 30;
-						frame->setSize(size);
-						frame->setColor(glm::vec4(.25,.25,.25,1.0));
-						frame->setHigh(false);
-
-						Field* field = frame->addField("field",9);
-						size.x = border; size.w = frame->getSize().w-border*2;
-						size.y = border; size.h = frame->getSize().h-border*2;
-						field->setSize(size);
-						field->setEditable(true);
-						field->setNumbersOnly(true);
-						field->setJustify(Field::RIGHT);
-
-						switch( color ) {
-							case 0:
-								field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
-								break;
-							case 1:
-								field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
-								break;
-							default:
-								field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
-								break;
-						}
-						field->getParams().addInt(component->getUID());
-						field->getParams().addInt(channel);
-						field->getParams().addInt(color);
-
-						char f[16];
-						snprintf(f,16,"%.2f",(*vector)[color]);
-						field->setText(f);
-					}
-
-					y += 30;
-				}
-
-				y += border;
-
-				break;
-			}
-			case Component::COMPONENT_LIGHT:
-			{
-				Light* light = static_cast<Light*>(component);
-
-				// color label
-				{
-					Field* label = properties.addField("labelLightColor",16);
-
-					Rect<int> size;
-					size.x = x + border*2;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Color:");
-				}
-
-				// color red
-				{
-					StringBuf<32> name("editor_FrameLightColorR%d", component->getUID());
-					Frame* frame = properties.addFrame(name.get(),"editor_FrameLightColorR");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,.2f,.2f,1.f));
-
-					StringBuf<32> dest("editor_FrameLightColorG%d",component->getUID());
-					field->setTabDestFrame(dest.get());
-					field->setTabDestField("field");
-
-					field->getParams().addInt(component->getUID());
-
-					char r[16];
-					snprintf(r,16,"%.2f",light->getColor().x);
-					field->setText(r);
-				}
-
-				// color green
-				{
-					StringBuf<32> name("editor_FrameLightColorG%d", component->getUID());
-					Frame* frame = properties.addFrame(name.get(),"editor_FrameLightColorG");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2 + (width - x)/3 - border;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(.2f,1.f,.2f,1.f));
-
-					StringBuf<32> dest("editor_FrameLightColorB%d",component->getUID());
-					field->setTabDestFrame(dest.get());
-					field->setTabDestField("field");
-
-					field->getParams().addInt(component->getUID());
-
-					char g[16];
-					snprintf(g,16,"%.2f",light->getColor().y);
-					field->setText(g);
-				}
-
-				// color blue
-				{
-					StringBuf<32> name("editor_FrameLightColorB%d", component->getUID());
-					Frame* frame = properties.addFrame(name.get(),"editor_FrameLightColorB");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2 + 2*(width - x)/3 - border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(.2f,.2f,1.f,1.f));
-
-					StringBuf<32> dest("editor_FrameLightColorR%d",component->getUID());
-					field->setTabDestFrame(dest.get());
-					field->setTabDestField("field");
-
-					field->getParams().addInt(component->getUID());
-
-					char b[16];
-					snprintf(b,16,"%.2f",light->getColor().z);
-					field->setText(b);
-				}
-
-				// intensity
-				{
-					Frame* frame = properties.addFrame("editor_FrameLightIntensity");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i,16,"%.2f",light->getIntensity());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelLightIntensity",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Intensity");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// radius
-				{
-					Frame* frame = properties.addFrame("editor_FrameLightRadius");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char r[16];
-					snprintf(r,16,"%.1f",light->getRadius());
-					field->setText(r);
-
-					// label
-					{
-						Field* label = properties.addField("labelLightRadius",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Radius");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// shape label
-				{
-					Field* label = properties.addField("labelLightShape",12);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Shape:");
-				}
-
-				// shape
-				{
-					Frame* frame = properties.addFrame("editor_FrameLightShape");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 150;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 150;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-					frame->setBorder(0);
-
-					// list of shapes
-					for( Uint32 c = 0; c < Light::shape_t::SHAPE_NUM; ++c ) {
-						Frame::entry_t* entry = frame->addEntry("entry",true);
-						entry->text = Light::shapeStr[c];
-						entry->params.addInt(component->getUID());
-						entry->params.addString(Light::shapeStr[c]);
-						entry->color = glm::vec4(1.f);
-					}
-				}
-				break;
-			}
-			case Component::COMPONENT_CAMERA:
-			{
-				Camera* camera = static_cast<Camera*>(component);
-
-				// clip near
-				{
-					Frame* frame = properties.addFrame("editor_FrameCameraClipNear");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = width/3 - border*2 - x;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = width/3 - border*2 - x;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char f[16];
-					snprintf(f,16,"%.1f",camera->getClipNear());
-					field->setText(f);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraClipNear",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Clip Near");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// clip far
-				{
-					Frame* frame = properties.addFrame("editor_FrameCameraClipFar");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = width/3 - border*2 - x;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = width/3 - border*2 - x;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char f[16];
-					snprintf(f,16,"%.1f",camera->getClipFar());
-					field->setText(f);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraClipFar",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Clip Far");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// window x
-				{
-					Frame* frame = properties.addFrame("editor_FrameCameraWinX");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = width/3 - border*2 - x;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = width/3 - border*2 - x;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i,16,"%d",camera->getWin().x);
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraWinX",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Window X");
-					}
-
-					y += size.h + border*2;
-				}
-
-				// window y
-				{
-					Frame* frame = properties.addFrame("editor_FrameCameraWinY");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = width/3 - border*2 - x;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = width/3 - border*2 - x;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i,16,"%d",camera->getWin().y);
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraWinY",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Window Y");
-					}
-
-					y += size.h + border*2;
-				}
-
-				// window w
-				{
-					Frame* frame = properties.addFrame("editor_FrameCameraWinW");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = width/3 - border*2 - x;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = width/3 - border*2 - x;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i,16,"%d",camera->getWin().w);
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraWinW",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Window W");
-					}
-
-					y += size.h + border*2;
-				}
-
-				// window h
-				{
-					Frame* frame = properties.addFrame("editor_FrameCameraWinH");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = width/3 - border*2 - x;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = width/3 - border*2 - x;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i,16,"%d",camera->getWin().h);
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraWinH",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Window H");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// fov
-				{
-					Frame* frame = properties.addFrame("editor_FrameCameraFOV");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = width/3 - border*2 - x;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = width/3 - border*2 - x;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f,1.f,1.f,1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i,16,"%d",camera->getFov());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraFOV",16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("FOV");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// orthographic flag
-				{
-					Button* button = properties.addButton("buttonCameraOrtho");
-					button->setBorder(1);
-					button->setIcon("images/gui/checkmark.png");
-					button->setStyle(Button::STYLE_CHECKBOX);
-					button->setPressed( camera->isOrtho() );
-					button->setTooltip("Causes the camera to use an orthographic projection");
-
-					button->getParams().addInt(component->getUID());
-
-					Rect<int> size;
-					size.x = x + border*2; size.w = 30;
-					size.y = y; size.h = 30;
-					button->setSize(size);
-
-					// label
-					{
-						Field* label = properties.addField("labelCameraOrtho", 16);
-
-						Rect<int> size;
-						size.x = x + border*2 + 30 + border;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Orthographic");
-					}
-
-					y += size.h + border;
-				}
-				break;
-			}
-			case Component::COMPONENT_SPEAKER:
-			{
-				Speaker* speaker = static_cast<Speaker*>(component);
-
-				// default sound label
-				{
-					Field* label = properties.addField("labelDefaultSound",12);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Default Sound:");
-				}
-
-				// default sound
-				{
-					Frame* frame = properties.addFrame("editor_FrameSpeakerDefaultSound");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 30;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",128);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-
-					field->setText(speaker->getDefaultSound());
-					field->getParams().addInt(component->getUID());
-				}
-
-				// default range label
-				{
-					Field* label = properties.addField("labelDefaultRange",12);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Default Range:");
-				}
-
-				// default range
-				{
-					Frame* frame = properties.addFrame("editor_FrameSpeakerDefaultRange");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 30;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field",128);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-
-					char data[16];
-					snprintf(data,16,"%.1f",speaker->getDefaultRange());
-					field->setText(data);
-
-					field->getParams().addInt(component->getUID());
-				}
-
-				// default loop flag
-				{
-					Button* button = properties.addButton("buttonSpeakerDefaultLoop");
-					button->setBorder(1);
-					button->setIcon("images/gui/checkmark.png");
-					button->setStyle(Button::STYLE_CHECKBOX);
-					button->setPressed( speaker->isDefaultLoop() );
-					button->setTooltip("Causes the speaker to loop the default sound effect");
-
-					button->getParams().addInt(component->getUID());
-
-					Rect<int> size;
-					size.x = x + border*2; size.w = 30;
-					size.y = y; size.h = 30;
-					button->setSize(size);
-
-					// label
-					{
-						Field* label = properties.addField("labelSpeakerDefaultLoop", 16);
-
-						Rect<int> size;
-						size.x = x + border*2 + 30 + border;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Loop");
-					}
-
-					y += size.h + border;
-				}
-
-				break;
-			}
-			case Component::COMPONENT_CHARACTER:
-			{
-				Character* character = static_cast<Character*>(component);
-
-				//General attributes.
-				// general label
-				{
-					Field* label = properties.addField("labelCharacterGeneral", 18);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("General properties");
-				}
-
-				// hp
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterHp");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getHp());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterHp", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("HP");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// mp
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterMp");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getMp());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterMp", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("MP");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// Sex
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterSex");
-
-					Rect<int> size;
-					size.x = 0; size.w = width - border*4 - x;
-					size.y = 0; size.h = 100;
-					frame->setActualSize(size);
-					size.x = x + border*2; size.w = width - border*4 - x;
-					size.y = y; size.h = 100;
-					y += size.h + border;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25,.25,.25,1.0));
-					frame->setHigh(false);
-					frame->setBorder(0);
-
-					// list of sexes
-					for( Uint32 c = 0; c < Character::sex_t::SEX_MAX; ++c ) {
-						Frame::entry_t* entry = frame->addEntry("entry",true);
-						entry->text = Character::sexStr[c];
-						entry->params.addInt(component->getUID());
-						entry->params.addString(Character::sexStr[c]);
-						entry->color = glm::vec4(1.f);
-					}
-
-					// label
-					{
-						Field* label = properties.addField("labelSex", 12);
-
-						Rect<int> size;
-						size.x = border*2 + x;
-						size.w = width - border*4 - x;
-						size.y = y;
-						size.h = 20;
-						y += size.h + border;
-						label->setSize(size);
-						label->setText("Sex");
-					}
-				}
-
-				// level
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterLevel");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getLevel());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterLevel", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Level");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// xp
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterXp");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getXp());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterXp", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("XP");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// hunger
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterHunger");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getHunger());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterHunger", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Hunger");
-					}
-
-					y += size.h + border*3;
-				}
-
-				//Resource attributes.
-				// resources label
-				{
-					Field* label = properties.addField("labelCharacterResources", 12);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Resources");
-				}
-
-				// nano matter
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterNanoMatter");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getNanoMatter());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterNanoMatter", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Nanomatter");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// biomatter
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterBioMatter");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getBioMatter());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterBioMatter", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Biomatter");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// neurothread
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterNeuroThread");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getNeuroThread());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterNeuroThread", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Neurothread");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// gold
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterGold");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getGold());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterGold", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Gold");
-					}
-
-					y += size.h + border*3;
-				}
-
-				//Attribute attributes.
-				// attributes label
-				{
-					Field* label = properties.addField("labelCharacterAttributes", 12);
-
-					Rect<int> size;
-					size.x = border*2 + x;
-					size.w = width - border*4 - x;
-					size.y = y;
-					size.h = 20;
-					y += size.h + border;
-					label->setSize(size);
-					label->setText("Attributes");
-				}
-
-				// strength
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterStrength");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getStrength());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterStrength", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Strength");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// dexterity
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterDexterity");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getDexterity());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterDexterity", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Dexterity");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// intelligence
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterIntelligence");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getIntelligence());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterIntelligence", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Intelligence");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// constitution
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterConstitution");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getConstitution());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterConstitution", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Constitution");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// perception
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterPerception");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getPerception());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterPerception", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Perception");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// charisma
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterCharisma");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getCharisma());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterCharisma", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Charisma");
-					}
-
-					y += size.h + border*3;
-				}
-
-				// luck
-				{
-					Frame* frame = properties.addFrame("editor_FrameCharacterLuck");
-
-					Rect<int> size;
-					size.x = 0;
-					size.w = (width - x)/3 - border*2;
-					size.y = 0;
-					size.h = 30;
-					frame->setActualSize(size);
-					size.x = x + border*2;
-					size.w = (width - x)/3 - border*2;
-					size.y = y;
-					size.h = 30;
-					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
-					frame->setHigh(false);
-
-					Field* field = frame->addField("field", 9);
-					size.x = border; size.w = frame->getSize().w-border*2;
-					size.y = border; size.h = frame->getSize().h-border*2;
-					field->setSize(size);
-					field->setEditable(true);
-					field->setNumbersOnly(true);
-					field->setJustify(Field::RIGHT);
-					field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
-
-					field->getParams().addInt(component->getUID());
-
-					char i[16];
-					snprintf(i, 16, "%d", character->getLuck());
-					field->setText(i);
-
-					// label
-					{
-						Field* label = properties.addField("labelCharacterLuck", 16);
-
-						Rect<int> size;
-						size.x = x + border + width/3;
-						size.w = width - border*4 - 30 - border - x;
-						size.y = y + 5;
-						size.h = 30;
-						label->setSize(size);
-						label->setText("Luck");
-					}
-
-					y += size.h + border*3;
-				}
-
-				break;
-			}
-			default:
-				break;
+		for (auto attribute : component->getAttributes()) {
+			attribute->createAttributeUI(properties, x, y, width);
 		}
 
 		// sub-components
-		for( size_t c = 0; c < component->getComponents().getSize(); ++c ) {
+		for( Uint32 c = 0; c < component->getComponents().getSize(); ++c ) {
 			Component* curr = component->getComponents()[c];
 			componentGUI(properties, curr, x, y);
 		}
@@ -7887,6 +5102,21 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 
 			Rect<int> size;
 			size.x = border*2 + x + 30 + border; size.w = 30;
+			size.y = y; size.h = 30;
+			button->setSize(size);
+		}
+
+		// copy component
+		{
+			Button* button = properties.addButton("buttonCopy");
+			button->setIcon("images/gui/copy-icon.png");
+			button->setStyle(Button::STYLE_NORMAL);
+			button->getParams().addInt(component->getUID());
+			button->setBorder(2);
+			button->setTooltip("Duplicate this component.");
+
+			Rect<int> size;
+			size.x = border * 2 + x + 30 + border + 30 + border; size.w = 30;
 			size.y = y; size.h = 30;
 			button->setSize(size);
 
@@ -8527,21 +5757,21 @@ void Editor::updateGUI(Frame& gui) {
 					}
 
 					// script
+					Field* scriptField = nullptr;
 					{
 						Frame* frame = properties->addFrame("editor_FrameEntityPropertiesScript");
 
 						Rect<int> size;
-						size.x = 0; size.w = width - border*4;
+						size.x = 0; size.w = width - border*4 - 30 - border;
 						size.y = 0; size.h = 30;
 						frame->setActualSize(size);
-						size.x = border*2; size.w = width - border*4;
+						size.x = border*2; size.w = width - border*4 - 30 - border;
 						size.y = y; size.h = 30;
-						y += size.h + border;
 						frame->setSize(size);
 						frame->setColor(glm::vec4(.25,.25,.25,1.0));
 						frame->setHigh(false);
 
-						Field* field = frame->addField("field",64);
+						Field* field = scriptField = frame->addField("field",64);
 						size.x = border; size.w = frame->getSize().w-border*2;
 						size.y = border; size.h = frame->getSize().h-border*2;
 						field->setSize(size);
@@ -8552,6 +5782,81 @@ void Editor::updateGUI(Frame& gui) {
 						} else {
 							field->setText(firstEntity->getScriptStr());
 						}
+					}
+
+					// button
+					{
+						class ScriptButtonCallback : public Script::Function {
+						public:
+							ScriptButtonCallback(Entity* _entity, Field* _field):
+								entity(_entity),
+								field(_field)
+							{}
+							virtual ~ScriptButtonCallback() {}
+							virtual int operator()(Script::Args& args) const override {
+								mainEngine->setPaused(true);
+								nfdchar_t* resultPath = nullptr;
+								nfdresult_t result = NFD_OpenDialog("lua", nullptr, &resultPath);
+								if (result == NFD_CANCEL) {
+									mainEngine->setPaused(false);
+									return 1;
+								}
+								else if (result == NFD_ERROR) {
+									mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
+									mainEngine->setPaused(false);
+									return 2;
+								}
+								else {
+									String value = resultPath;
+
+									// cut out slashes
+									Uint32 i = 0;
+									do {
+										i = value.find('/', 0);
+										if (i != String::npos) {
+											value = value.substr(i + 1);
+										}
+									} while (i != String::npos);
+
+#ifdef PLATFORM_WINDOWS
+									// windows has to cut out backward slashes, too
+									i = 0;
+									do {
+										i = value.find('\\', 0);
+										if (i != String::npos) {
+											value = value.substr(i + 1);
+										}
+									} while (i != String::npos);
+#endif
+
+									// remove suffix
+									Uint32 offset = value.find(".lua");
+									if (offset != String::npos) {
+										value[offset] = '\0';
+									}
+									entity->setScriptStr(value.get());
+									field->setText(value.get());
+									mainEngine->setPaused(false);
+									return 0;
+								}
+							}
+						private:
+							Entity* entity = nullptr;
+							Field* field = nullptr;
+						};
+
+						Button* button = properties->addButton("");
+						button->setBorder(1);
+						button->setIcon("images/gui/open.png");
+						button->setStyle(Button::STYLE_NORMAL);
+						button->setCallback(new ScriptButtonCallback(firstEntity, scriptField));
+
+						Rect<int> size;
+						size.x = border * 2 + (width - border * 4 - 30); size.w = 30;
+						size.y = y; size.h = 30;
+						button->setSize(size);
+
+						y += size.h + border;
 					}
 
 					// flags label
@@ -8586,7 +5891,7 @@ void Editor::updateGUI(Frame& gui) {
 
 							// label
 							{
-								Field* label = properties->addField(StringBuf<64>("labelFlag%s",Entity::flagStr[c]).get(),16);
+								Field* label = properties->addField(StringBuf<64>("labelFlag%s", 1, Entity::flagStr[c]).get(), 16);
 
 								Rect<int> size;
 								size.x = border*2 + 30 + border;
@@ -8682,7 +5987,7 @@ void Editor::updateGUI(Frame& gui) {
 
 						// add sub-components
 						int x = 0;
-						for( size_t c = 0; c < firstEntity->getComponents().getSize(); ++c ) {
+						for( Uint32 c = 0; c < firstEntity->getComponents().getSize(); ++c ) {
 							Component* component = firstEntity->getComponents()[c];
 							componentGUI(*properties, component, x, y);
 						}
@@ -8900,7 +6205,7 @@ void Editor::updateGUI(Frame& gui) {
 			Vector average;
 
 			int numSelected = 0;
-			for( size_t c = 0; c < vertices.getSize(); ++c ) {
+			for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 				SectorVertex* vertex = sectorWorld.getVertices()[c];
 				if( vertex->isSelected() ) {
 					average += vertex->getPos();
@@ -9161,6 +6466,7 @@ static int console_editor(int argc, const char** argv) {
 			path = ".playtest.wlb";
 		}
 	}
+	mainEngine->loadAllDefs();
 	mainEngine->startEditor(path.get());
 	return 0;
 }

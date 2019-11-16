@@ -3,34 +3,32 @@
 
 #pragma once
 
-#include <type_traits>
-#include "LinkedList.hpp"
-#include "Node.hpp"
+#include "ArrayList.hpp"
 #include "Pair.hpp"
-#include "String.hpp"
 #include "File.hpp"
 
-template <typename T>
+#include <type_traits>
+
+template <typename K, typename T>
 class Map {
 public:
-	static const size_t maxBucketSize = 1;
+	static const Uint32 maxBucketSize = 1;
 
 	Map() {
-		hash.resize(numBuckets);
+		data.resize(numBuckets);
 	}
 	~Map() {
-		clear();
 	}
 
 	// getters & setters
-	ArrayList<OrderedPair<String, T>>&				getHash(size_t index)			{ return hash[index]; }
-	const ArrayList<OrderedPair<String, T>>&		getHash(size_t index) const		{ return hash[index]; }
-	size_t											getNumBuckets() const			{ return numBuckets; }
-	size_t											getSize() const					{ return size; }
+	ArrayList<OrderedPair<K, T>>&				getHash(Uint32 index)			{ return data[index]; }
+	const ArrayList<OrderedPair<K, T>>&			getHash(Uint32 index) const		{ return data[index]; }
+	Uint32										getNumBuckets() const			{ return numBuckets; }
+	Uint32										getSize() const					{ return size; }
 
 	// clears the map of all key/value pairs
 	void clear() {
-		for (auto& bucket : hash) {
+		for (auto& bucket : data) {
 			bucket.clear();
 		}
 		size = 0;
@@ -38,49 +36,52 @@ public:
 
 	// not only clears the map, but also resets its size
 	void reset() {
-		hash.clear();
+		data.clear();
 		size = 0;
 		numBuckets = 4;
-		hash.resize(numBuckets);
+		data.resize(numBuckets);
 	}
 
 	// inserts a key/value pair into the Map
-	// @param key The key string
+	// @param key The key
 	// @param value The value associated with the key
-	void insert(const char* key, const T& value) {
-		assert(key != nullptr);
+	void insert(const K& key, const T& value) {
+		T* oldValue = find(key);
+		if (oldValue) {
+			*oldValue = value;
+			return;
+		} else {
+			if (size + 1 >= numBuckets * maxBucketSize) {
+				rehash(numBuckets * 2);
+			}
 
-		if (size + 1 >= numBuckets * maxBucketSize) {
-			rehash(numBuckets * 2);
+			auto& list = data[hash(key) & (numBuckets - 1)];
+			list.push(OrderedPair<K, T>(key, value));
+			++size;
 		}
-
-		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
-		list.push(OrderedPair<String, T>(String(key), value));
-		++size;
 	}
 
 	// resize and rebuild the hash map
 	// @param newBucketCount Updated number of buckets in the map
-	void rehash(size_t newBucketCount) {
-		ArrayList<OrderedPair<String, T>> list;
+	void rehash(Uint32 newBucketCount) {
+		ArrayList<OrderedPair<K, T>> list;
 		for (auto& it : *this) {
 			list.push(it);
 		}
 		clear();
 		numBuckets = newBucketCount;
-		hash.resize(numBuckets);
+		data.resize(numBuckets);
 		for (auto& it : list) {
-			insert(it.a.get(), it.b);
+			insert(it.a, it.b);
 		}
 	}
 
 	// determine if the key with the given name exists
 	// @return true if key/value pair exists, false otherwise
-	bool exists(const char* key) const {
-		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
+	bool exists(const K& key) const {
+		auto& list = data[hash(key) & (numBuckets - 1)];
 		for( auto& pair : list ) {
-			if( strcmp(pair.a.get(), key) == 0 ) {
+			if( pair.a == key ) {
 				return true;
 			}
 		}
@@ -88,14 +89,13 @@ public:
 	}
 
 	// removes a key/value pair from the Map
-	// @param key The key string
+	// @param key The key
 	// @return true if the key/value pair was removed, otherwise false
-	bool remove(const char* key) {
-		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
-		for( size_t c = 0; c < list.getSize(); ++c ) {
+	bool remove(const K& key) {
+		auto& list = data[hash(key) & (numBuckets - 1)];
+		for( Uint32 c = 0; c < list.getSize(); ++c ) {
 			auto& pair = list[c];
-			if( strcmp(pair.a.get(), key) == 0 ) {
+			if( pair.a == key ) {
 				list.remove(c);
 				--size;
 				return true;
@@ -107,21 +107,19 @@ public:
 	// find the key/value pair with the given name
 	// @param key The name of the pair to find
 	// @return the value associated with the key, or nullptr if it could not be found
-	T* find(const char* key) {
-		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
+	T* find(const K& key) {
+		auto& list = data[hash(key) & (numBuckets - 1)];
 		for( auto& pair : list ) {
-			if( strcmp(pair.a.get(), key) == 0 ) {
+			if( pair.a == key ) {
 				return &pair.b;
 			}
 		}
 		return nullptr;
 	}
-	const T* find(const char* key) const {
-		assert(key != nullptr);
-		auto& list = hash[djb2Hash(key) & (numBuckets - 1)];
+	const T* find(const K& key) const {
+		auto& list = data[hash(key) & (numBuckets - 1)];
 		for( auto& pair : list ) {
-			if( strcmp(pair.a.get(), key) == 0 ) {
+			if( pair.a == key ) {
 				return &pair.b;
 			}
 		}
@@ -130,11 +128,11 @@ public:
 
 	// replace the contents of this map with those of another
 	// @param src The map to copy
-	void copy(const Map<T>& src) {
+	void copy(const Map<K, T>& src) {
 		clear();
 		rehash(src.getNumBuckets());
 		for (auto& it : src) {
-			insert(it.a.get(), it.b);
+			insert(it.a, it.b);
 		}
 	}
 
@@ -146,7 +144,7 @@ public:
 			file->propertyName("data");
 			file->beginArray(keyCount);
 			for( Uint32 c = 0; c < keyCount; ++c ) {
-				String key;
+				K key;
 				T value;
 
 				file->beginObject();
@@ -154,13 +152,13 @@ public:
 				file->property("value", value);
 				file->endObject();
 
-				insert(key.get(), value);
+				insert(key, value);
 			}
 			file->endArray();
 		} else {
 			Uint32 keyCount = 0;
 			for (Uint32 c = 0; c < numBuckets; ++c) {
-				keyCount += static_cast<Uint32>(hash[c].getSize());
+				keyCount += static_cast<Uint32>(data[c].getSize());
 			}
 
 			file->propertyName("data");
@@ -178,22 +176,22 @@ public:
 	// find the key/value pair with the given name
 	// @param key The name of the pair to find
 	// @return the value associated with the key
-	T* operator[](const char* str) {
-		return find(str);
+	T* operator[](const K& key) {
+		return find(key);
 	}
-	const T* operator[](const char* str) const {
-		return (const T*)(find(str));
+	const T* operator[](const K& key) const {
+		return (const T*)(find(key));
 	}
 
 	// Iterator
 	class Iterator {
 	public:
-		Iterator(Map& _map, size_t _position, size_t _bucket) :
+		Iterator(Map<K, T>& _map, Uint32 _position, Uint32 _bucket) :
 			map(_map),
 			position(_position),
 			bucket(_bucket) {}
 
-		OrderedPair<String, T>& operator*() {
+		OrderedPair<K, T>& operator*() {
 			assert(bucket >= 0 && bucket < map.getNumBuckets());
 			assert(position >= 0 && position < map.getHash(bucket).getSize());
 			return map.getHash(bucket)[position];
@@ -210,20 +208,20 @@ public:
 			return position != it.position || bucket != it.bucket;
 		}
 	private:
-		Map& map;
-		size_t position;
-		size_t bucket;
+		Map<K, T>& map;
+		Uint32 position;
+		Uint32 bucket;
 	};
 
 	// ConstIterator
 	class ConstIterator {
 	public:
-		ConstIterator(const Map& _map, size_t _position, size_t _bucket) :
+		ConstIterator(const Map<K, T>& _map, Uint32 _position, Uint32 _bucket) :
 			map(_map),
 			position(_position),
 			bucket(_bucket) {}
 
-		const OrderedPair<String, T>& operator*() const {
+		const OrderedPair<K, T>& operator*() const {
 			assert(bucket >= 0 && bucket < map.getNumBuckets());
 			assert(position >= 0 && position < map.getHash(bucket).getSize());
 			return map.getHash(bucket)[position];
@@ -240,25 +238,25 @@ public:
 			return position != it.position || bucket != it.bucket;
 		}
 	private:
-		const Map& map;
-		size_t position;
-		size_t bucket;
+		const Map<K, T>& map;
+		Uint32 position;
+		Uint32 bucket;
 	};
 
 	// begin()
 	Iterator begin() {
-		size_t c = 0;
+		Uint32 c = 0;
 		for (; c < numBuckets; ++c) {
-			if (hash[c].getSize()) {
+			if (data[c].getSize()) {
 				return Iterator(*this, 0, c);
 			}
 		}
 		return Iterator(*this, 0, c);
 	}
 	const ConstIterator begin() const {
-		size_t c = 0;
+		Uint32 c = 0;
 		for (; c < numBuckets; ++c) {
-			if (hash[c].getSize()) {
+			if (data[c].getSize()) {
 				return ConstIterator(*this, 0, c);
 			}
 		}
@@ -274,18 +272,21 @@ public:
 	}
 
 private:
-	ArrayList<ArrayList<OrderedPair<String, T>>> hash;
-	size_t numBuckets = 4;
-	size_t size = 0;
-
-	unsigned long djb2Hash(const char* str) const {
-		unsigned long hash = 5381;
-		int c;
-
-		while((c = *str++)!=0) {
-			hash = ((hash << 5) + hash) + c; // hash * 33 + c
-		}
-
-		return hash;
+	ArrayList<ArrayList<OrderedPair<K, T>>> data;
+	Uint32 numBuckets = 4;
+	Uint32 size = 0;
+	
+	typename std::enable_if<std::is_class<K>::value, unsigned long>::type
+	hash(const K& key) const {
+		return key.hash();
+	}
+	unsigned long hash(Sint32 key) const {
+		return static_cast<unsigned long>(key);
+	}
+	unsigned long hash(Uint32 key) const {
+		return static_cast<unsigned long>(key);
+	}
+	unsigned long hash(bool key) const {
+		return key ? 1 : 0;
 	}
 };

@@ -1,0 +1,33 @@
+{
+	"Material::version": 0,
+	"transparent": true,
+	"shadow": false,
+	"program": {
+		"ShaderProgram::version": 0,
+		"shaders": [
+			{
+				"Shader::version": 0,
+				"type": 0,
+				"path": "shaders/basic/billboard_v.glsl",
+				"defines": []
+			},
+			{
+				"Shader::version": 0,
+				"type": 1,
+				"path": "shaders/basic/billboard_g.glsl",
+				"defines": []
+			},
+			{
+				"Shader::version": 0,
+				"type": 2,
+				"path": "shaders/basic/billboard_f.glsl",
+				"defines": []
+			}
+		]
+	},
+	"textures": [
+		"images/system/null.png"
+	],
+	"glowTextures": [],
+	"cubemaps": []
+}

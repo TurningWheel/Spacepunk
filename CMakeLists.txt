@@ -10,8 +10,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 
 # default build type
 if (NOT CMAKE_BUILD_TYPE)
-  set (CMAKE_BUILD_TYPE Release)
+	set (CMAKE_BUILD_TYPE Release)
 endif(NOT CMAKE_BUILD_TYPE)
+
+if (LINUX AND NOT ADVANCED_GDB_DEBUG)
+	set(ADVANCED_GDB_DEBUG TRUE)
+endif()
 
 # cmake modules path
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
@@ -58,7 +62,7 @@ else()
 
 		# bundle settings
 		set(MACOSX_BUNDLE_BUNDLE_NAME Spacepunk)
-		set(MACOSX_BUNDLE true)
+		set(MACOSX_BUNDLE TRUE)
 		set(MACOSX_BUNDLE_INFO_STRING Spacepunk 1.0.0.0)
 		set(MACOSX_BUNDLE_LONG_VERSION 1.0.0.0)
 		set(MACOSX_BUNDLE_SHORT_VERSION_STRING 1.0.0.0)
@@ -70,6 +74,9 @@ else()
 	else()
 		# linux settings
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pg -ffast-math -funroll-loops -std=c++14 -fstrict-aliasing")
+		if (ADVANCED_GDB_DEBUG)
+			set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb3")
+		endif() # ADVANCED_GDB_DEBUG
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ffast-math -funroll-loops -std=c++14 -fstrict-aliasing")
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wl,-rpath=$ORIGIN")

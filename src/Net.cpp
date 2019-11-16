@@ -46,10 +46,10 @@ void Net::unlockThread() {
 }
 
 void Net::update() {
-	for( size_t remoteIndex = 0; remoteIndex < remotes.getSize(); ++remoteIndex ) {
+	for( Uint32 remoteIndex = 0; remoteIndex < remotes.getSize(); ++remoteIndex ) {
 		remote_t* remote = remotes[remoteIndex];
 
-		for( size_t c = 0; c < remote->resendStack.getSize(); ++c ) {
+		for( Uint32 c = 0; c < remote->resendStack.getSize(); ++c ) {
 			safepacket_t* safepacket = remote->resendStack[c];
 
 			if( SDL_GetTicks() - safepacket->lastTimeSent >= msBeforeResend ) {
@@ -68,8 +68,8 @@ void Net::update() {
 	}
 }
 
-size_t Net::getRemoteWithID(const Uint32 remoteID) {
-	for( size_t c = 0; c < remotes.getSize(); ++c ) {
+Uint32 Net::getRemoteWithID(const Uint32 remoteID) {
+	for( Uint32 c = 0; c < remotes.getSize(); ++c ) {
 		remote_t* remote = remotes[c];
 		if( remote->id == remoteID ) {
 			return c;
@@ -79,8 +79,8 @@ size_t Net::getRemoteWithID(const Uint32 remoteID) {
 	return UINT32_MAX;
 }
 
-size_t Net::getRemoteWithID(const Uint32 remoteID) const {
-	for( size_t c = 0; c < remotes.getSize(); ++c ) {
+Uint32 Net::getRemoteWithID(const Uint32 remoteID) const {
+	for( Uint32 c = 0; c < remotes.getSize(); ++c ) {
 		const remote_t* remote = remotes[c];
 		if( remote->id == remoteID ) {
 			return c;

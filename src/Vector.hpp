@@ -5,11 +5,7 @@
 
 #define GLM_FORCE_RADIANS
 #include <glm/vec3.hpp>
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #include "File.hpp"
 

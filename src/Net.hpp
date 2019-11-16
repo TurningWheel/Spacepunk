@@ -85,19 +85,19 @@ public:
 	virtual void term() = 0;
 
 	// hosts a new open connection
-	// @param port: the port to host the connection on
+	// @param port the port to host the connection on
 	// @return true when the port is successfully opened, false on failure
 	virtual bool host(Uint16 port) = 0;
 
 	// connects to the given address, forming a new remote connection
-	// @param address: the address to connect to
-	// @param port: the port to open the connection on
+	// @param address the address to connect to
+	// @param port the port to open the connection on
 	// @return true on connection success, false on failure
 	virtual bool connect(const char* address, Uint16 port) = 0;
 
 	// disconnects a remote connection
-	// @param remoteID: the remote host to disconnect from
-	// @param inform: if true, remote host will be notified of disconnect; otherwise it will not
+	// @param remoteID the remote host to disconnect from
+	// @param inform if true, remote host will be notified of disconnect; otherwise it will not
 	// @return true if the disconnect succeeded, false otherwise
 	virtual bool disconnect(Uint32 remoteID, bool inform=true) = 0;
 
@@ -110,7 +110,7 @@ public:
 	virtual bool disconnectAll() = 0;
 
 	// find the name of the given remote host
-	// @param remoteID: the id of the remote host we wish to query
+	// @param remoteID the id of the remote host we wish to query
 	// @return the name of a remote host in a string
 	virtual const char* getHostname(Uint32 remoteID) const = 0;
 
@@ -118,29 +118,29 @@ public:
 	virtual const kind_t getKind() const = 0;
 
 	// sends a packet to a remote recipient
-	// @param packet: the packet to send
-	// @param remoteID: the id of the recipient
+	// @param packet the packet to send
+	// @param remoteID the id of the recipient
 	// @return true if the send succeeded, false otherwise
 	virtual bool sendPacket(Uint32 remoteID, const Packet& packet) = 0;
 
 	// just like sendPacket, except guarantees delivery
-	// @param packet: the packet to send
-	// @param remoteID: the id of the recipient
+	// @param packet the packet to send
+	// @param remoteID the id of the recipient
 	// @return true if the send succeeded, false otherwise
 	virtual bool sendPacketSafe(Uint32 remoteID, const Packet& packet) = 0;
 
 	// broadcasts a packet to all remote hosts
-	// @param packet: the packet to send
+	// @param packet the packet to send
 	// @return true if the send succeeded, false otherwise
 	virtual bool broadcast(Packet& packet) = 0;
 
 	// just like broadcast, except guarantees delivery
-	// @param packet: the packet to send
+	// @param packet the packet to send
 	// @return true if the send succeeded, false otherwise
 	virtual bool broadcastSafe(Packet& packet) = 0;
 
 	// pops a packet from the stack and returns it
-	// @param remoteIndex: the index of the remote host to read a packet from (not the id!)
+	// @param remoteIndex the index of the remote host to read a packet from (not the id!)
 	// @return the highest packet on the stack, or nullptr if no packets are left
 	virtual Packet* recvPacket(unsigned int remoteIndex) = 0;
 
@@ -151,14 +151,14 @@ public:
 	virtual Uint32 numRemoteHosts() const = 0;
 
 	// signs a packet with user id and timestamp info
-	// @param packet: the packet to sign
+	// @param packet the packet to sign
 	// @return true if packet was successfully signed, false on failure
 	bool signPacket(Packet& packet);
 
 	// handles network level packets
-	// @param packet: the packet data
-	// @param type: the 4 char packet type string
-	// @param remoteID: the remote id that the packet came from
+	// @param packet the packet data
+	// @param type the 4 char packet type string
+	// @param remoteID the remote id that the packet came from
 	// @return positive number if the packet was interpreted here, 0 otherwise
 	virtual int handleNetworkPacket(Packet& packet, const char* type, Uint32 remoteID) = 0;
 
@@ -191,7 +191,7 @@ protected:
 	ArrayList<remote_t*> remotes;
 
 	// completes a connection to a host
-	// @param data: the request data
+	// @param data the request data
 	virtual void completeConnection(void* data) = 0;
 
 	// threading
@@ -204,12 +204,12 @@ protected:
 	bool kill = false;
 
 	// gets the remote host with the given id
-	// @param remoteID: the id of the remote host to get
+	// @param remoteID the id of the remote host to get
 	// @return an index to the remote host, or UINT32_MAX if they could not be found
-	size_t getRemoteWithID(const Uint32 remoteID);
+	Uint32 getRemoteWithID(const Uint32 remoteID);
 
 	// gets the remote host with the given id
-	// @param remoteID: the id of the remote host to get
+	// @param remoteID the id of the remote host to get
 	// @return an index to the remote host, or UINT32_MAX if they could not be found
-	size_t getRemoteWithID(const Uint32 remoteID) const;
+	Uint32 getRemoteWithID(const Uint32 remoteID) const;
 };

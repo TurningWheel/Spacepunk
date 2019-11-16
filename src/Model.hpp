@@ -7,11 +7,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/vec4.hpp>
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #include "ArrayList.hpp"
 #include "LinkedList.hpp"
@@ -56,15 +52,15 @@ public:
 	static const char* defaultMesh;
 
 	// draws the component
-	// @param camera: the camera through which to draw the component
-	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light) override;
+	// @param camera the camera through which to draw the component
+	// @param light the light by which the component should be illuminated (or nullptr for no illumination)
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	// update the component
 	virtual void process() override;
 
 	// finds a bone with the given name
-	// @param name: the name of the bone to search for
+	// @param name the name of the bone to search for
 	// @return a struct containing bone position, orientation, etc.
 	bone_t findBone(const char* name) const;
 
@@ -72,7 +68,7 @@ public:
 	bool hasAnimations() const;
 
 	// load the component from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	virtual void load(FILE* fp) override;
 
 	// save/load this object to a file
@@ -107,8 +103,8 @@ public:
 	const char*							getMaterial() const					{ return materialStr.get(); }
 	const char*							getDepthFailMat() const				{ return depthfailStr.get(); }
 	const char*							getAnimation() const				{ return animationStr.get(); }
-	const Map<AnimationState>&			getAnimations() const				{ return animations; }
-	Map<AnimationState>&				getAnimations()						{ return animations; }
+	const Map<String, AnimationState>&	getAnimations() const				{ return animations; }
+	Map<String, AnimationState>&		getAnimations()						{ return animations; }
 	const Mesh::shadervars_t&			getShaderVars() const				{ return shaderVars; }
 	const SkinCache&					getSkinCache() const				{ return skincache; }
 	float								getAnimationSpeed() const			{ return animationSpeed; }
@@ -139,6 +135,9 @@ public:
 		return *this;
 	}
 
+	// used by entity def importer to prevent meshes loading when def is imported
+	static bool dontLoadMesh;
+
 private:
 	bool genius = false;				// if true, and camera belongs to same entity as model, model is not rendered
 	String meshStr;						// mesh filename
@@ -146,14 +145,14 @@ private:
 	String depthfailStr;				// depth fail material
 	String animationStr;				// animation keyframe file
 	Mesh::shadervars_t shaderVars;		// colors
-	bool broken = false;				// if true, assets were not found and the model won't be drawn
 
-	bool skinUpdateNeeded = false;		// if true, skin will get tossed on next draw call
-	SkinCache skincache;				// bone transforms
-	Map<AnimationState> animations;		// animation states
-	float animationSpeed = 1.f;			// anim speed factor
-	String currentAnimation;			// currently playing animation (deprecated)
-	String previousAnimation;			// previously playing animation (deprecated)
+	bool broken = false;						// if true, assets were not found and the model won't be drawn
+	bool skinUpdateNeeded = false;				// if true, skin will get tossed on next draw call
+	SkinCache skincache;						// bone transforms
+	Map<String, AnimationState> animations;		// animation states
+	float animationSpeed = 1.f;					// anim speed factor
+	String currentAnimation;					// currently playing animation (deprecated)
+	String previousAnimation;					// previously playing animation (deprecated)
 
 	// loads all animations from the current animation manifest
 	void loadAnimations();

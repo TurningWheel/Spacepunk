@@ -28,15 +28,15 @@ void Dictionary::insert(const char* word, Uint32 _value) {
 		return;
 	}
 
-	size_t len = strlen(word);
+	Uint32 len = static_cast<Uint32>(strlen(word));
 	depth = std::max( depth, len );
 
 	// get branch (create new if necessary)
-	size_t size = tree.getSize();
-	size_t index = (size_t)(*word);
+	Uint32 size = tree.getSize();
+	Uint32 index = (Uint32)(*word);
 	if( index >= size ) {
 		tree.resize(index+1);
-		for( size_t c = size; c < tree.getSize(); ++c ) {
+		for( Uint32 c = size; c < tree.getSize(); ++c ) {
 			tree[c] = nullptr;
 		}
 	}
@@ -56,7 +56,7 @@ bool Dictionary::isLeaf() const {
 	}
 }
 
-size_t Dictionary::find(const char* word) const {
+Uint32 Dictionary::find(const char* word) const {
 	if( word == nullptr || *word == '\0' ) {
 		return nindex;
 	}
@@ -66,7 +66,7 @@ size_t Dictionary::find(const char* word) const {
 		if( *word == '\0' ) {
 			return dict->value; // found the end of the word
 		} else {
-			if( *word >= dict->tree.getSize() ) {
+			if( *word >= (Sint32)dict->tree.getSize() ) {
 				break;
 			} else {
 				dict = dict->tree[*word];
@@ -83,8 +83,8 @@ size_t Dictionary::find(const char* word) const {
 	return nindex; // word not found
 }
 
-size_t Dictionary::findOrInsert(const char* word) {
-	size_t pos = find(word);
+Uint32 Dictionary::findOrInsert(const char* word) {
+	Uint32 pos = find(word);
 	if (pos == nindex) {
 		pos = words.getSize();
 		insert(word);

@@ -14,9 +14,55 @@
 bool Frame::tabbing = false;
 const Sint32 Frame::sliderSize = 15;
 
+void Frame::listener_t::onDeleted() {
+	if( !entry ) {
+		return;
+	}
+	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
+	entryCast->suicide = true;
+}
+
+void Frame::listener_t::onChangeColor(bool selected, bool highlighted) {
+	if( !entry ) {
+		return;
+	}
+	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
+	if( selected ) {
+		entryCast->color = glm::vec4(1.f,0.f,0.f,1.f);
+	} else if( highlighted ) {
+		entryCast->color = glm::vec4(1.f,1.f,0.f,1.f);
+	} else {
+		entryCast->color = glm::vec4(1.f);
+	}
+}
+
+void Frame::listener_t::onChangeName(const char* name) {
+	if( !entry ) {
+		return;
+	}
+	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
+	entryCast->text = name;
+}
+
 Frame::entry_t::~entry_t() {
 	if( listener ) {
 		listener->entry = nullptr;
+	}
+	if (click) {
+		delete click;
+		click = nullptr;
+	}
+	if (ctrlClick) {
+		delete ctrlClick;
+		ctrlClick = nullptr;
+	}
+	if (highlighting) {
+		delete highlighting;
+		highlighting = nullptr;
+	}
+	if (highlight) {
+		delete highlight;
+		highlight = nullptr;
 	}
 }
 
@@ -216,17 +262,17 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			actualImage = renderer.getNullImage();
 		} else {
 			// this is done just in case the cache was dumped...
-			actualImage = image.image = mainEngine->getImageResource().dataForString(image.name.get());
+			actualImage = image.image = mainEngine->getImageResource().dataForString(image.path.get());
 			if( actualImage==nullptr ) {
 				actualImage = renderer.getNullImage();
 			} 
 		}
 
 		Rect<int> pos;
-		pos.x = _size.x + image.x - actualSize.x;
-		pos.y =  _size.y + image.y - actualSize.y;
-		pos.w = actualImage->getWidth();
-		pos.h = actualImage->getHeight();
+		pos.x = _size.x + image.pos.x - actualSize.x;
+		pos.y =  _size.y + image.pos.y - actualSize.y;
+		pos.w = image.pos.w > 0 ? image.pos.w : actualImage->getWidth();
+		pos.h = image.pos.h > 0 ? image.pos.h : actualImage->getHeight();
 
 		Rect<int> dest;
 		dest.x = max( _size.x, pos.x );
@@ -244,16 +290,24 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	}
 
 	// render list entries
-	int i;
-	Node<entry_t*>* node;
-	for( node=list.getFirst(), i=0; node!=nullptr; node=node->getNext(), ++i ) {
+	int listStart = std::min( std::max( 0, actualSize.y / entrySize ), (int)list.getSize() - 1 );
+	int i = listStart;
+	Node<entry_t*>* node = node=list.nodeForIndex(listStart);
+	for( ; node!=nullptr; node=node->getNext(), ++i ) {
 		entry_t& entry = *node->getData();
+		if (entry.text.empty()) {
+			continue;
+		}
+
+		// get rendered text
+		Text* text = mainEngine->getTextResource().dataForString(entry.text.get());
+		if (text == nullptr) {
+			continue;
+		}
 
 		// get the size of the rendered text
-		int textSizeW, textSizeH;
-		TTF_SizeUTF8(renderer.getMonoFont(),entry.text.get(),&textSizeW,&textSizeH);
-		textSizeW += Text::outlineSize*2;
-		textSizeH += Text::outlineSize*2;
+		int textSizeW = text->getWidth();
+		int textSizeH = entrySize;
 
 		Rect<int> pos;
 		pos.x = _size.x + border - actualSize.x;
@@ -274,7 +328,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _size.y + _size.h ) );
 
 		if( src.w<=0 || src.h<=0 || dest.w<=0 || dest.h<=0 )
-			continue;
+			break;
 
 		if( entry.pressed ) {
 			renderer.drawRect( &dest, color*2.f );
@@ -282,12 +336,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			renderer.drawRect( &dest, color*1.5f );
 		}
 
-		if( !entry.text.empty() ) {
-			Text* text = mainEngine->getTextResource().dataForString(entry.text.get());
-			if( text ) {
-				text->drawColor( src, dest, entry.color );
-			}
-		}
+		text->drawColor( src, dest, entry.color );
 	}
 
 	// draw buttons
@@ -395,94 +444,95 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			result.highlightTime = buttonResult.highlightTime;
 			result.tooltip = buttonResult.tooltip;
 			if( buttonResult.clicked ) {
-				if( name.empty() ) {
-					mainEngine->fmsg(Engine::MSG_WARN,"button clicked in unnamed gui frame");
+				Script::Args args(button.getParams());
+				if (button.getCallback()) {
+					(*button.getCallback())(args);
+				} else if(script) {
+					script->dispatch(button.getName(), &args);
 				} else {
-					if( !button.getName() || button.getName()[0] == '\0' ) {
-						mainEngine->fmsg(Engine::MSG_WARN,"unnamed button clicked in '%s' gui",name.get());
-					} else if( script ) {
-						Script::Args args(button.getParams());
-						script->dispatch(button.getName(), &args);
-					}
+					mainEngine->fmsg(Engine::MSG_ERROR, "button clicked with no callback (script or otherwise)");
 				}
 			}
 			result.usable = usable = false;
 		}
 	}
 
-	if( script ) {
+	if (script) {
 		script->dispatch("process");
+	}
 
-		Sint32 omousex = mainEngine->getOldMouseX();
-		Sint32 omousey = mainEngine->getOldMouseY();
+	Sint32 omousex = mainEngine->getOldMouseX();
+	Sint32 omousey = mainEngine->getOldMouseY();
 
-		// process the frame's list entries
-		if( usable && list.getSize()>0 ) {
-			int i;
-			Node<entry_t*>* node = nullptr;
-			Node<entry_t*>* nextnode = nullptr;
-			for( i=0, node=list.getFirst(); node!=nullptr; node=nextnode, ++i ) {
-				entry_t& entry = *node->getData();
+	// process the frame's list entries
+	if( usable && list.getSize()>0 ) {
+		int i;
+		Node<entry_t*>* node = nullptr;
+		Node<entry_t*>* nextnode = nullptr;
+		for( i=0, node=list.getFirst(); node!=nullptr; node=nextnode, ++i ) {
+			entry_t& entry = *node->getData();
 
-				nextnode = node->getNext();
+			nextnode = node->getNext();
 
-				if( entry.suicide ) {
-					delete node->getData();
-					list.removeNode(node);
-					--i;
-					continue;
-				}
+			if( entry.suicide ) {
+				delete node->getData();
+				list.removeNode(node);
+				--i;
+				continue;
+			}
 
-				Rect<int> entryRect;
-				entryRect.x = _size.x + border - actualSize.x; entryRect.w = _size.w - border*2;
-				entryRect.y = _size.y + border + i*entrySize - actualSize.y; entryRect.h = entrySize;
+			Rect<int> entryRect;
+			entryRect.x = _size.x + border - actualSize.x; entryRect.w = _size.w - border*2;
+			entryRect.y = _size.y + border + i*entrySize - actualSize.y; entryRect.h = entrySize;
 
-				if( _size.containsPoint(omousex,omousey) && entryRect.containsPoint(omousex,omousey) ) {
-					result.highlightTime = entry.highlightTime;
-					result.tooltip = entry.text.get();
-					if( mainEngine->getMouseStatus(SDL_BUTTON_LEFT) ) {
-						if( !entry.pressed ) {
-							entry.pressed = true;
-							if( script ) {
-								if( mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL) ) {
-									StringBuf<64> dispatch("%sCtrlClick", entry.name.get());
-									Script::Args args(entry.params);
-									script->dispatch(dispatch.get(), &args);
-								} else {
-									StringBuf<64> dispatch("%sClick", entry.name.get());
-									Script::Args args(entry.params);
-									script->dispatch(dispatch.get(), &args);
-								}
+			if( _size.containsPoint(omousex,omousey) && entryRect.containsPoint(omousex,omousey) ) {
+				result.highlightTime = entry.highlightTime;
+				result.tooltip = entry.text.get();
+				if( mainEngine->getMouseStatus(SDL_BUTTON_LEFT) ) {
+					if( !entry.pressed ) {
+						entry.pressed = true;
+						Script::Args args(entry.params);
+						if( mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL) ) {
+							if (entry.ctrlClick) {
+								(*entry.ctrlClick)(args);
+							} else if (script) {
+								StringBuf<64> dispatch("%sCtrlClick", 1, entry.name.get());
+								script->dispatch(dispatch.get(), &args);
 							}
-						}
-					} else {
-						entry.pressed = false;
-						if( script ) {
-							StringBuf<64> dispatch("%sHighlighting", entry.name.get());
-							Script::Args args(entry.params);
-							script->dispatch(dispatch.get(), &args);
-							if( !entry.highlighted ) {
-								entry.highlighted = true;
-								StringBuf<64> dispatch("%sHighlight", entry.name.get());
-								Script::Args args(entry.params);
+						} else {
+							if (entry.click) {
+								(*entry.click)(args);
+							} else if (script) {
+								StringBuf<64> dispatch("%sClick", 1, entry.name.get());
 								script->dispatch(dispatch.get(), &args);
 							}
 						}
 					}
-					result.usable = usable = false;
 				} else {
-					entry.highlightTime = SDL_GetTicks();
-					entry.highlighted = false;
 					entry.pressed = false;
+					Script::Args args(entry.params);
+					if (entry.highlighting) {
+						(*entry.highlighting)(args);
+					} else if (script) {
+						StringBuf<64> dispatch("%sHighlighting", 1, entry.name.get());
+						script->dispatch(dispatch.get(), &args);
+					}
+					if( !entry.highlighted ) {
+						entry.highlighted = true;
+						if (entry.highlight) {
+							(*entry.highlight)(args);
+						} else if (script) {
+							StringBuf<64> dispatch("%sHighlight", 1, entry.name.get());
+							script->dispatch(dispatch.get(), &args);
+						}
+					}
 				}
+				result.usable = usable = false;
+			} else {
+				entry.highlightTime = SDL_GetTicks();
+				entry.highlighted = false;
+				entry.pressed = false;
 			}
-		}
-	} else if( !name.empty() && !script ) {
-		String filename = mainEngine->buildPath(scriptPath);
-		FILE* fp = NULL;
-		if( (fp=fopen(filename.get(),"r")) != NULL ) {
-			fclose(fp);
-			script = new Script(*this);
 		}
 	}
 
@@ -516,18 +566,17 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			if( field.isSelected() && fieldResult.highlighted ) {
 				result.usable = usable = false;
 			}
-			if( fieldResult.entered || destField ) {
-				if( name.empty() ) {
-					mainEngine->fmsg(Engine::MSG_WARN,"returned field in unnamed gui frame");
-				} else {
-					if( !field.getName() || field.getName()[0] == '\0' ) {
-						mainEngine->fmsg(Engine::MSG_WARN,"unnamed field returned in '%s' gui",name.get());
-					} else if( script ) {
-						Script::Args args(field.getParams());
-						args.addString(field.getText());
-						script->dispatch(field.getName(), &args);
-					}
-				}
+		}
+
+		if (fieldResult.entered || destField) {
+			Script::Args args(field.getParams());
+			args.addString(field.getText());
+			if (field.getCallback()) {
+				(*field.getCallback())(args);
+			} else if (script) {
+				script->dispatch(field.getName(), &args);
+			} else {
+				mainEngine->fmsg(Engine::MSG_ERROR, "modified field with no callback (script or otherwise)");
 			}
 		}
 
@@ -537,8 +586,8 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
-	// all but the parent frame will "capture" the mouse
-	if( parent != nullptr ) {
+	// hollow frames don't capture the mouse
+	if( parent != nullptr && !hollow ) {
 		Sint32 mousex = mainEngine->getMouseX();
 		Sint32 mousey = mainEngine->getMouseY();
 		Sint32 omousex = mainEngine->getOldMouseX();
@@ -643,13 +692,16 @@ Field* Frame::addField(const char* name, const int len) {
 	return field;
 }
 
-Frame::image_t* Frame::addImage( int x, int y, const glm::vec4& color, const char* name ) {
+Frame::image_t* Frame::addImage( const Rect<Sint32>& pos, const glm::vec4& color, Image* image, const char* name ) {
+	if (!image || !name) {
+		return nullptr;
+	}
 	image_t* imageObj = new image_t();
-	imageObj->x = x;
-	imageObj->y = y;
+	imageObj->pos = pos;
 	imageObj->color = color;
 	imageObj->name = name;
-	imageObj->image = mainEngine->getImageResource().dataForString(name);
+	imageObj->image = image;
+	imageObj->path = image->getName();
 	images.addNodeLast(imageObj);
 	return imageObj;
 }

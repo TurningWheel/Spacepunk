@@ -1,5 +1,11 @@
 // Renderer.cpp
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+
 #include "Main.hpp"
 #include "LinkedList.hpp"
 #include "Node.hpp"
@@ -8,6 +14,74 @@
 #include "savepng.hpp"
 #include "Text.hpp"
 
+const GLfloat Renderer::positions[8]{
+	-1.f,  1.f,
+	-1.f, -1.f,
+	 1.f, -1.f,
+	 1.f,  1.f
+};
+
+const GLfloat Renderer::texcoords[8]{
+	0.f, 1.f,
+	0.f, 0.f,
+	1.f, 0.f,
+	1.f, 1.f
+};
+
+const GLuint Renderer::indices[6]{
+	0, 1, 2,
+	0, 2, 3
+};
+
+// This is a little spammy at the moment
+#define REGISTER_GLDEBUG_CALLBACK 1
+
+#if REGISTER_GLDEBUG_CALLBACK
+
+static void GLAPIENTRY onGlDebugMessageCallback(
+	GLenum source,		// GL_DEBUG_SOURCE_*
+	GLenum type,		// GL_DEBUG_TYPE_*
+	GLuint id,
+	GLenum severity,	// GL_DEBUG_SEVERITY_*
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	Engine::msg_t logType;
+
+	switch (severity) {
+	case GL_DEBUG_SEVERITY_HIGH:
+		logType = Engine::MSG_ERROR;
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		logType = Engine::MSG_WARN;
+		break;
+	case GL_DEBUG_SEVERITY_LOW:
+		logType = Engine::MSG_INFO;
+		break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		// we honestly don't care about these
+		return;
+	default:
+		return;
+	}
+
+	mainEngine->fmsg(
+		logType,
+		"OpenGL: type = 0x%x, severity = 0x%x",
+		type,
+		severity
+	);
+
+	mainEngine->fmsg(
+		logType,
+		"%s",
+		message
+	);
+}
+
+#endif
+
 Renderer::Renderer() {
 	xres = mainEngine->getXres();
 	yres = mainEngine->getYres();
@@ -15,6 +89,15 @@ Renderer::Renderer() {
 }
 
 Renderer::~Renderer() {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
+		buffer_t buffer = static_cast<buffer_t>(i);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
+		}
+	}
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
+	}
 	if( window ) {
 		SDL_DestroyWindow(window);
 		window = nullptr;
@@ -27,7 +110,6 @@ Renderer::~Renderer() {
 		SDL_FreeSurface(mainsurface);
 		mainsurface = nullptr;
 	}
-
 	if( nullImg )
 		delete nullImg;
 	if( monoFont )
@@ -45,10 +127,11 @@ void Renderer::init() {
 int Renderer::initVideo() {
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 4 );
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 3 );
+#ifndef BUILD_DEBUG
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
-
-	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
-	SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
+#else
+	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY );
+#endif
 
 	SDL_GL_SetAttribute( SDL_GL_ALPHA_SIZE, 8 );
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
@@ -88,6 +171,8 @@ int Renderer::initVideo() {
 	int result=0;
 	SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE,&result);
 
+
+#ifndef PLATFORM_LINUX
 	// get opengl extensions
 	if( !glewWasInit ) {
 		glewExperimental=GL_TRUE;
@@ -99,6 +184,7 @@ int Renderer::initVideo() {
 			glewWasInit = true;
 		}
 	}
+#endif
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	Uint32 rmask = 0xff000000;
@@ -119,24 +205,69 @@ int Renderer::initVideo() {
 		}
 	}
 
+	const GLubyte * verStr = glGetString(GL_VERSION);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_VERSION = %s", verStr);
+	const GLubyte * shVerStr = glGetString(GL_SHADING_LANGUAGE_VERSION);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_SHADING_LANGUAGE_VERSION = %s", shVerStr);
+	GLint imageUnits = 0; glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &imageUnits);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = %d", imageUnits);
+
+#if REGISTER_GLDEBUG_CALLBACK
+	// During init, enable debug output
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(onGlDebugMessageCallback, 0);
+	// use glDebugMessageControl to filter the callbacks
+#endif
+
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+#ifdef BUILD_DEBUG
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
 	glMatrixMode( GL_PROJECTION );
 	glLoadIdentity();
-	glClearColor( 0.f, 0.f, 0.f, 0.f );
-	glDepthFunc(GL_LEQUAL);
+#endif
+	glDepthFunc(GL_GEQUAL);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 	glEnable(GL_MULTISAMPLE);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-	clearBuffers();
-	swapWindow();
+	glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glClearColor( 0.f, 0.f, 0.f, 0.f );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	// create vertex array
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	// upload vertex data
+	glGenBuffers(1, &vbo[VERTEX_BUFFER]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(GLfloat), positions, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(0);
+
+	// upload texcoord data
+	glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
+	glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(GLfloat), texcoords, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(1);
+
+	// upload index data
+	glGenBuffers(1, &vbo[INDEX_BUFFER]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 2 * 3 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+
+	// unbind vertex array
+	glBindVertexArray(0);
 
 	mainEngine->fmsg(Engine::MSG_INFO,"display changed successfully.");
 	return 0;
@@ -174,6 +305,20 @@ bool Renderer::changeVideoMode() {
 
 	// free text resource (it's all badly wrapped now)
 	mainEngine->getTextResource().dumpCache();
+
+	// delete framebuffer cache (need to be resized)
+	framebufferResource.dumpCache();
+
+	// erase fullscreen quad
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
+		buffer_t buffer = static_cast<buffer_t>(i);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
+		}
+	}
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
+	}
 
 	if( mainsurface ) {
 		SDL_FreeSurface(mainsurface);
@@ -516,24 +661,30 @@ void Renderer::drawConsole( const Sint32 height, const char* input, const Linked
 		const String* str = &logMsg.text;
 		Text* text = mainEngine->getTextResource().dataForString((*str).get());
 		if( text ) {
-			y -= TTF_FontHeight(monoFont);
+			Sint32 h = (Sint32)text->getHeight();
+			y -= h;
 			Rect<int> pos;
 			pos.x = 5; pos.w = 0;
 			pos.y = y; pos.h = 0;
 			text->drawColor(Rect<int>(),pos,glm::vec4(logMsg.color,1.f));
+			if (y < -h) {
+				break;
+			}
 		}
-		if( y < -TTF_FontHeight(monoFont) ) {
-			break;
+		else {
+			if (y < 0) {
+				break;
+			}
 		}
 	}
 	Rect<int> pos;
 	pos.x = 5; pos.w = 0;
 	pos.y = height-20; pos.h = 0;
 	if( mainEngine->isCursorVisible() ) {
-		StringBuf<256> text(">%s_", input);
+		StringBuf<256> text(">%s_", 1, input);
 		printText( pos, text.get() );
 	} else {
-		StringBuf<256> text(">%s", input);
+		StringBuf<256> text(">%s", 1, input);
 		printText( pos, text.get() );
 	}
 }
@@ -575,10 +726,103 @@ void Renderer::printTextColor( const Rect<int>& rect, const glm::vec4& color, co
 void Renderer::clearBuffers() {
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
+	glClearDepth(0.f);
+	glClearColor(0.f, 0.f, 0.f, 0.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	drawRect(nullptr,glm::vec4(0.f,0.f,0.f,1.f));
+}
+
+void Renderer::blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuffer& fbo1, GLenum attachment1) {
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
+	// load shader
+	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blend.json");
+	if (!mat) {
+		return;
+	}
+	ShaderProgram& shader = mat->getShader();
+	if (&shader != ShaderProgram::getCurrentShader()) {
+		shader.mount();
+	}
+
+	glViewport(0, 0, xres, yres);
+
+	// bind texture
+	fbo0.bindForReading(GL_TEXTURE0, attachment0);
+	fbo1.bindForReading(GL_TEXTURE1, attachment1);
+
+	// upload uniform variables
+	glUniform2iv(shader.getUniformLocation("gResolution"), 1, glm::value_ptr(glm::ivec2(xres, yres)));
+	glUniform1i(shader.getUniformLocation("gTexture0"), 0);
+	glUniform1i(shader.getUniformLocation("gTexture1"), 1);
+
+	// bind vertex array
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+	glBindVertexArray(0);
+
+	ShaderProgram::unmount();
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+}
+
+void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType type) {
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+
+	// load shader
+	Material* mat = nullptr;
+	switch (type) {
+	case BASIC:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo.json");
+		break;
+	case HDR:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_hdr.json");
+		break;
+	case BLUR_HORIZONTAL:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blur_h.json");
+		break;
+	case BLUR_VERTICAL:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blur_v.json");
+		break;
+	default:
+		break;
+	}
+	if (!mat) {
+		return;
+	}
+	ShaderProgram& shader = mat->getShader();
+	if (&shader != ShaderProgram::getCurrentShader()) {
+		shader.mount();
+	}
+
+	glViewport(0, 0, xres, yres);
+
+	// bind texture
+	fbo.bindForReading(GL_TEXTURE0, attachment);
+
+	// upload uniform variables
+	glUniform2iv(shader.getUniformLocation("gResolution"), 1, glm::value_ptr(glm::ivec2(xres, yres)));
+	glUniform1i(shader.getUniformLocation("gTexture"), 0);
+
+	// bind vertex array
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+	glBindVertexArray(0);
+
+	ShaderProgram::unmount();
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 }
 
 void Renderer::swapWindow() {
 	SDL_GL_SwapWindow(window);
+}
+
+Framebuffer* Renderer::bindFBO(const char* name) {
+	Framebuffer* fbo = framebufferResource.dataForString(name);
+	assert(fbo);
+	if (!fbo->isInitialized()) {
+		fbo->init(xres, yres);
+	}
+	fbo->bindForWriting();
+	return fbo;
 }

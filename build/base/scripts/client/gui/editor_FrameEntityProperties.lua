@@ -27,26 +27,6 @@ function buttonDelete(uid)
 	editor:entityRemoveComponent(uid)
 end
 
--- BBox component:
-
-function buttonBBoxEnabled(uid)
-	editor:entityBBoxEnabled(uid)
-end
-
--- Model component:
-
-function buttonModelCustomColor(uid)
-	editor:entityModelCustomColor(uid)
-end
-
--- Camera component:
-
-function buttonCameraOrtho(uid)
-	editor:entityCameraOrtho(uid)
-end
-
--- Speaker component:
-
-function buttonSpeakerDefaultLoop(uid)
-	editor:entitySpeakerDefaultLoop(uid)
+function buttonCopy(uid)
+	editor:entityCopyComponent(uid)
 end

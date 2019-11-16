@@ -17,6 +17,7 @@
 #include "Script.hpp"
 #include "BBox.hpp"
 #include "Mesh.hpp"
+#include "Mixer.hpp"
 
 const char* Camera::meshStr = "assets/editor/camera/camera.FBX";
 const char* Camera::materialStr = "assets/editor/camera/material.json";
@@ -45,12 +46,41 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeFloat("Clip Near", clipNear));
+	attributes.push(new AttributeFloat("Clip Far", clipFar));
+	attributes.push(new AttributeInt("Window X", win.x));
+	attributes.push(new AttributeInt("Window Y", win.y));
+	attributes.push(new AttributeInt("Window W", win.w));
+	attributes.push(new AttributeInt("Window H", win.h));
+	attributes.push(new AttributeInt("Vertical FOV in Degrees", fov));
+	attributes.push(new AttributeBool("Orthogonal", ortho));
 }
 
 Camera::~Camera() {
+	Client* client = mainEngine->getLocalClient();
+	if (client) {
+		Mixer* mixer = client->getMixer();
+		if (mixer) {
+			if (mixer->getListener() == this) {
+				mixer->setListener(nullptr);
+			}
+		}
+	}
 }
 
-void Camera::setupProjection() {
+glm::mat4 Camera::makeInfReversedZProj(float radians, float aspect, float zNear)
+{
+	float f = 1.f / tanf(radians / 2.f);
+	return glm::mat4(
+		f / aspect, 0.0f, 0.0f, 0.0f,
+		0.0f, f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, -1.0f,
+		0.0f, 0.0f, zNear, 0.0f);
+}
+
+void Camera::setupProjection(bool scissor) {
 	World* world = entity->getWorld();
 	if( !renderer ) {
 		return;
@@ -84,14 +114,18 @@ void Camera::setupProjection() {
 		viewMatrix = cameraRotation * cameraTranslation;
 
 		// get projection transformation
-		projMatrix = glm::perspective( glm::radians((float)fov), (float)win.w/win.h, clipNear, clipFar );
+		//projMatrix = glm::perspective( glm::radians((float)fov), (float)win.w/win.h, clipNear, clipFar );
+		projMatrix = makeInfReversedZProj(glm::radians((float)fov), (float)win.w / win.h, clipNear);
 	}
 
-	if( renderer ) {
+	if( renderer && scissor ) {
 		int yres = renderer->getYres();
 		glViewport( win.x, yres-win.h-win.y, win.w, win.h );
 		glScissor( win.x, yres-win.h-win.y, win.w, win.h );
 		glEnable(GL_SCISSOR_TEST);
+	} else {
+		glViewport( win.x, -win.y, win.w, win.h );
+		glDisable(GL_SCISSOR_TEST);
 	}
 
 	// get combination of the two
@@ -134,6 +168,7 @@ void Camera::screenPosToWorldRay( int x, int y, Vector& out_origin, Vector& out_
 		1.0f
 	);
 
+	glm::mat4 projMatrix = glm::perspective(glm::radians((float)fov), (float)win.w / win.h, clipNear, clipFar);
 	glm::mat4 inversePMM    = glm::inverse(projMatrix * viewMatrix);
 	glm::vec4 rayStartWorld = inversePMM * rayStart; rayStartWorld /= rayStartWorld.w;
 	glm::vec4 rayEndWorld   = inversePMM * rayEnd  ; rayEndWorld   /= rayEndWorld.w;
@@ -156,10 +191,14 @@ void Camera::drawCube( const glm::mat4& transform, const glm::vec4& color ) {
 }
 
 void Camera::drawLine3D( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
-	line3D.draw(*this,width,src,dest,color);
+	line3D.drawLine(*this,width,src,dest,color);
 }
 
-void Camera::draw(Camera& camera, Light* light) {
+void Camera::drawLaser( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
+	line3D.drawLaser(*this,width,src,dest,color);
+}
+
+void Camera::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
 	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
 		return;
@@ -183,7 +222,7 @@ void Camera::draw(Camera& camera, Light* light) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
-		ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, gMat);
+		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat);
 		if( shader ) {
 			mesh->draw(camera, this, shader);
 		}
@@ -282,4 +321,8 @@ void Camera::drawDebug() {
 			lines.removeNode(node);
 		}
 	}
+}
+
+void Camera::onFrameDrawn() {
+	++framesDrawn;
 }

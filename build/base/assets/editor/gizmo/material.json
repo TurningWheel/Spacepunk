@@ -16,7 +16,7 @@
 				"type": 2,
 				"path": "shaders/actor/std_f.glsl",
 				"defines": [
-					"FRESNEL"
+					"NOSHADOWMAP"
 				]
 			}
 		]

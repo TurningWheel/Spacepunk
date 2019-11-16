@@ -37,6 +37,11 @@ Speaker::Speaker(Entity& _entity, Component* _parent) :
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeFile("Default Sound", "wav,ogg,mp3,FLAC,mod", defaultSound));
+	attributes.push(new AttributeBool("Loop", defaultLoop));
+	attributes.push(new AttributeFloat("Range", defaultRange));
 }
 
 Speaker::~Speaker() {
@@ -54,7 +59,7 @@ int Speaker::playSound( const char* _name, const bool loop, float range ) {
 		return -1;
 	}
 
-	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s",_name).get());
+	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", 1, _name).get());
 	if( sound ) {
 		int index = maxSources;
 		for( int i=0; i<maxSources; ++i ) {
@@ -101,17 +106,23 @@ int Speaker::playSound( const char* _name, const bool loop, float range ) {
 	}
 }
 
+bool Speaker::isPlaying(const int index) {
+	ALint state = AL_PLAYING;
+	alGetSourcei(sources[index], AL_SOURCE_STATE, &state);
+	if (state == AL_PLAYING) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 bool Speaker::stopSound(const int index) {
 	if( index<0 || index>=maxSources )
 		return false;
 	if( !sources[index] )
 		return false;
-
-	ALint state = AL_PLAYING;
-	alGetSourcei(sources[index],AL_SOURCE_STATE,&state);
-	if( state==AL_STOPPED )
+	if( !isPlaying(index) )
 		return false;
-
 	alSourceStop(sources[index]);
 	alDeleteSources(1, &sources[index]);
 	sources[index] = 0;
@@ -128,7 +139,7 @@ bool Speaker::stopAllSounds() {
 	return result;
 }
 
-void Speaker::draw(Camera& camera, Light* light) {
+void Speaker::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
 	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
 		return;
@@ -142,7 +153,7 @@ void Speaker::draw(Camera& camera, Light* light) {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
-		ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, gMat);
+		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat);
 		if( shader ) {
 			mesh->draw(camera, this, shader);
 		}
@@ -257,4 +268,10 @@ void Speaker::serialize(FileInterface * file) {
 	file->property("defaultSound", defaultSound);
 	file->property("defaultLoop", defaultLoop);
 	file->property("defaultRange", defaultRange);
+
+	if( file->isReading() ) {
+		if( !defaultSound.empty() ) {
+			playSound(defaultSound,defaultLoop,defaultRange);
+		}
+	}
 }

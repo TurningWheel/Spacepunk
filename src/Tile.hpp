@@ -13,11 +13,7 @@
 
 #include "Main.hpp"
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #define GLM_FORCE_RADIANS
 #include <glm/vec3.hpp>
@@ -43,6 +39,9 @@ public:
 
 	// the floor and ceiling height of a completely solid tile
 	static const int solidWallHeight = 0;
+
+	// maximum number of lights that will fit in the tile shader
+	static const Uint32 maxLights = 12;
 
 	// default texture
 	static const char* defaultTexture;
@@ -89,12 +88,12 @@ public:
 	const Sint32&			getCeilingSlopeSize() const				{ return ceilingSlopeSize; }
 	const side_t&			getFloorSlopeSide() const				{ return floorSlopeSide; }
 	const Sint32&			getFloorSlopeSize() const				{ return floorSlopeSize; }
-	LinkedList<vertex_t>&			getCeilingVertices()					{ return ceilingVertices; }
-	LinkedList<vertex_t>&			getFloorVertices()						{ return floorVertices; }
-	LinkedList<vertex_t>&			getLowerVertices(const side_t side)		{ return lowerVertices[side]; }
-	LinkedList<vertex_t>&			getUpperVertices(const side_t side)		{ return upperVertices[side]; }
+	LinkedList<vertex_t>&	getCeilingVertices()					{ return ceilingVertices; }
+	LinkedList<vertex_t>&	getFloorVertices()						{ return floorVertices; }
+	LinkedList<vertex_t>&	getLowerVertices(const side_t side)		{ return lowerVertices[side]; }
+	LinkedList<vertex_t>&	getUpperVertices(const side_t side)		{ return upperVertices[side]; }
 	const bool				isChanged() const						{ return changed; }
-	const size_t			getNumVertices() const					{ return numVertices; }
+	const Uint32			getNumVertices() const					{ return numVertices; }
 	bool					isLocked() const						{ return locked; }
 	const shadervars_t&		getShaderVars() const					{ return shaderVars; }
 
@@ -118,11 +117,11 @@ public:
 	void	setShaderVars(const shadervars_t& src)							{ shaderVars = src; }
 
 	// load the shader that we will use to draw the tile with
-	// @param world: the world object that contains the scene
-	// @param camera: the camera object that will be used to render the scene
-	// @param light: the light object to illuminate the scene with, or nullptr for no light
+	// @param world the world object that contains the scene
+	// @param camera the camera object that will be used to render the scene
+	// @param light the light object to illuminate the scene with, or nullptr for no light
 	// @return the shader program that was loaded, or nullptr if the shader failed to load
-	static ShaderProgram* loadShader(TileWorld& world, Camera& camera, Light* light);
+	static ShaderProgram* loadShader(const TileWorld& world, const Camera& camera, const ArrayList<Light*>& lights);
 
 	// cleans out our vertex lists
 	void cleanVertexBuffers();
@@ -134,18 +133,18 @@ public:
 	void compileFloorVertices();
 
 	// rebuild the list of vertices for the given lower wall of this tile
-	// @param neighbor: the neighboring tile to build the wall against
-	// @param side: the vertices for which wall to build
+	// @param neighbor the neighboring tile to build the wall against
+	// @param side the vertices for which wall to build
 	void compileUpperVertices(Tile& neighbor, const side_t side);
 
 	// rebuild the list of vertices for the given lower wall of this tile
-	// @param neighbor: the neighboring tile to build the wall against
-	// @param side: the vertices for which wall to build
+	// @param neighbor the neighboring tile to build the wall against
+	// @param side the vertices for which wall to build
 	void compileLowerVertices(Tile& neighbor, const side_t side);
 
 	// calculates the number of vertices in the tile
 	// @return the number of vertices for all surfaces in the tile
-	size_t calculateVertices() const;
+	Uint32 calculateVertices() const;
 
 	// determines if the tile has any space or not
 	// @return true if the tile has any visible surfaces, false otherwise
@@ -155,24 +154,24 @@ public:
 	void buildBuffers();
 
 	// modify the z value of the given vector by the amount of slope exhibited by the ceiling
-	// @param vec: the vector to modify
+	// @param vec the vector to modify
 	void setCeilingSlopeHeightForVec(glm::vec3& vec);
 
 	// modify the z value of the given vector by the amount of slope exhibited by the floor
-	// @param vec: the vector to modify
+	// @param vec the vector to modify
 	void setFloorSlopeHeightForVec(glm::vec3& vec);
 
 	// get the height of the given upper wall
-	// @param neighbor: the neighboring tile to test against
-	// @param side: the height of which wall to retrieve
-	// @param corner: the corner of the wall to calculate height for
+	// @param neighbor the neighboring tile to test against
+	// @param side the height of which wall to retrieve
+	// @param corner the corner of the wall to calculate height for
 	// @return the height of the wall corner in map units
 	Sint32 upperWallHeight(const Tile& neighbor, const side_t side, const corner_t corner);
 
 	// get the height of the given lower wall
-	// @param neighbor: the neighboring tile to test against
-	// @param side: the height of which wall to retrieve
-	// @param corner: the corner of the wall to calculate height for
+	// @param neighbor the neighboring tile to test against
+	// @param side the height of which wall to retrieve
+	// @param corner the corner of the wall to calculate height for
 	// @return the height of the wall corner in map units
 	Sint32 lowerWallHeight(const Tile& neighbor, const side_t side, const corner_t corner);
 
@@ -180,12 +179,12 @@ public:
 	void compileBulletPhysicsMesh();
 
 	// finds the tile neighboring this one, if one exists
-	// @param side: the particular neighbor we are looking for
+	// @param side the particular neighbor we are looking for
 	// @return a pointer to the tile, or nullptr if the tile does not exist
 	Tile* findNeighbor(const side_t side);
 
 	// converts an int to one of the tile's several vertex lists
-	// @param i: the int to convert. accepted values:
+	// @param i the int to convert. accepted values:
 	// 0 = ceilingVertices
 	// 1 = floorVertices
 	// 2-5 = upperVertices(SIDE_EAST) ... upperVertices(SIDE_NORTH)
@@ -199,6 +198,8 @@ public:
 
 	// conversion to const char*
 	void operator=(const Tile& src) {
+		shaderVars = src.shaderVars;
+
 		// ceiling data
 		ceilingHeight = src.getCeilingHeight();
 		ceilingTexture = src.getCeilingTexture();
@@ -264,7 +265,7 @@ private:
 	btRigidBody* rigidBody = nullptr;
 
 	// vertex lists
-	size_t numVertices = 0;
+	Uint32 numVertices = 0;
 	LinkedList<vertex_t> ceilingVertices;
 	LinkedList<vertex_t> floorVertices;
 	LinkedList<vertex_t> upperVertices[SIDE_TYPE_LENGTH];

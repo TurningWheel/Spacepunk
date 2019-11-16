@@ -5,6 +5,15 @@
 #undef min
 #undef max
 
+#ifdef PLATFORM_LINUX
+#include <string.h>
+//Utter bodge to make things work because of Windows.
+inline char* strncpy_s(char *strDest, Uint32 numberOfElements, const char *strSource, Uint32 count)
+{
+	return strncpy(strDest, strSource, count);
+}
+#endif
+
 class String {
 public:
 	String() {
@@ -24,16 +33,16 @@ public:
 	}
 
 	// represents an invalid position in the string
-	static const size_t npos = UINT32_MAX;
+	static const Uint32 npos = UINT32_MAX;
 
 	// getters & setters
-	const char* const		get() const			{ return str ? str : ""; }
-	const size_t			getSize() const		{ return size; }
+	const char*				get() const			{ return str ? str : ""; }
+	const Uint32			getSize() const		{ return size; }
 
 	// allocs / reallocs the string (erases data!)
-	// @param newSize: the size (in chars) of the string to alloc
+	// @param newSize the size (in chars) of the string to alloc
 	// @return the alloc'd string
-	const char* alloc(const size_t newSize) {
+	virtual const char* alloc(const Uint32 newSize) {
 		size = newSize;
 		if( str ) {
 			char* result = (char*) realloc(str, size * sizeof(char));
@@ -60,17 +69,17 @@ public:
 
 	// get the length of the string
 	// @return the number of chars in the string
-	size_t length() const {
+	Uint32 length() const {
 		if( str == nullptr || size == 0 ) {
 			return 0;
 		}
-		size_t c = 0;
+		Uint32 c = 0;
 		for( ; c < size && str[c] != '\0'; ++c );
 		return c;
 	}
 
 	// copies src into string. string will always be null-terminated
-	// @param src: the string to copy into our string
+	// @param src the string to copy into our string
 	const char* assign(const char* src) {
 		if( src == nullptr ) {
 			if( str ) {
@@ -83,19 +92,19 @@ public:
 			if( str == src || *this == src ) {
 				return str;
 			}
-			size_t srcLen = strlen(src)+1;
+			Uint32 srcLen = static_cast<Uint32>(strlen(src)) + 1;
 			if( srcLen > size || str == nullptr ) {
 				alloc(srcLen);
 			}
 			assert(str);
-			strncpy(str, src, size);
+			strncpy_s(str, size, src, size-1);
 			str[size-1] = '\0';
 			return str;
 		}
 	}
 
 	// copies formatted src string into our string. string will always be null-terminated
-	// @param src: the formatted string to copy
+	// @param src the formatted string to copy
 	const char* format(const char* src, ...) {
 		if( str == nullptr || size==0 ) {
 			return "";
@@ -114,7 +123,7 @@ public:
 	}
 
 	// append formatted string into our string. string will always be null-terminated
-	// @param src: the formatted string to append
+	// @param src the formatted string to append
 	// @return this string
 	const char* append(const char* src) {
 		if( str == nullptr ) {
@@ -123,19 +132,19 @@ public:
 		if( src == nullptr ) {
 			return str;
 		}
-		size_t len = length();
+		Uint32 len = length();
 		if( len >= size-1 ) {
 			return str;
 		}
-		size_t last = std::min(len + strlen(src), size-1);
+		Uint32 last = std::min(len + (Uint32)strlen(src), size-1);
 
-		strncpy((char *)(str + len), src, last-len);
+		strncpy_s((char *)(str + len), size-len, src, last-len);
 		str[last] = '\0';
 		return str;
 	}
 
 	// append formatted string into our string. string will always be null-terminated
-	// @param src: the formatted string to append
+	// @param src the formatted string to append
 	// @return this string
 	const char* appendf(const char* src, ...) {
 		if( str == nullptr ) {
@@ -144,7 +153,7 @@ public:
 		if( src == nullptr ) {
 			return str;
 		}
-		size_t len = length();
+		Uint32 len = length();
 		if( len >= size-1 ) {
 			return str;
 		}
@@ -159,7 +168,7 @@ public:
 		va_end( argptr );
 		buf[size-len-1] = '\0';
 
-		strncpy((char *)(str + len), buf, size-len-1);
+		strncpy_s((char *)(str + len), size-len, buf, size-len-1);
 		str[size-1] = '\0';
 		free(buf);
 
@@ -167,10 +176,10 @@ public:
 	}
 
 	// build a new string using part of this string
-	// @param start: the index to start at
-	// @param end: the index to end at
+	// @param start the index to start at
+	// @param end the index to end at
 	// @return the resulting substr
-	String substr(const size_t start, size_t end = 0) const {
+	String substr(const Uint32 start, Uint32 end = 0) const {
 		if( end == 0 ) {
 			end = size;
 		}
@@ -184,7 +193,7 @@ public:
 			return String("");
 		}
 
-		size_t c, i;
+		Uint32 c, i;
 		String result;
 		result.alloc( end - start + 1 );
 		for( i = 0, c = start; c < end; ++c, ++i ) {
@@ -195,17 +204,17 @@ public:
 	}
 
 	// locates the first instance of the key string in our string and returns its location
-	// @param key: the string to locate
-	// @param offset: the index to start looking in our string
+	// @param key the string to locate
+	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
-	size_t find(const char* key, size_t offset = 0) const {
+	Uint32 find(const char* key, Uint32 offset = 0) const {
 		if( key == nullptr || str == nullptr ) {
 			return npos;
 		}
-		size_t ourLen = length();
-		size_t itsLen = strlen(key);
-		for( size_t c = offset; c < ourLen; ++c ) {
-			size_t i, j;
+		Uint32 ourLen = length();
+		Uint32 itsLen = static_cast<Uint32>(strlen(key));
+		for( Uint32 c = offset; c < ourLen; ++c ) {
+			Uint32 i, j;
 			for( j = 0, i = c; i < ourLen && j < itsLen; ++i, ++j ) {
 				if( str[i] != key[j] ) {
 					break;
@@ -219,15 +228,15 @@ public:
 	}
 
 	// locates the first instance of the key char in our string and returns its location
-	// @param key: the char to locate
-	// @param offset: the index to start looking in our string
+	// @param key the char to locate
+	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
-	size_t find(const char key, size_t offset = 0) const {
+	Uint32 find(const char key, Uint32 offset = 0) const {
 		if( str == nullptr ) {
 			return npos;
 		}
-		size_t ourLen = length();
-		for( size_t c = offset; c < ourLen; ++c ) {
+		Uint32 ourLen = length();
+		for( Uint32 c = offset; c < ourLen; ++c ) {
 			if( str[c] == key ) {
 				return c;
 			}
@@ -255,13 +264,28 @@ public:
 		return result;
 	}
 
+	// hash the string
+	// @return a number representation of the string
+	unsigned long hash() const {
+		if (str == nullptr) {
+			return 0;
+		}
+		unsigned long value = 5381;
+		int c;
+		const char* data = str;
+		while((c = *data++)!=0) {
+			value = ((value << 5) + value) + c; // hash * 33 + c
+		}
+		return value;
+	}
+
 	// access char data
 	// @return the char at the given index
-	char& operator[](const size_t index) {
+	char& operator[](const Uint32 index) {
 		assert(index >= 0 && index < size);
 		return str[index];
 	}
-	const char& operator[](const size_t index) const {
+	const char& operator[](const Uint32 index) const {
 		assert(index >= 0 && index < size);
 		return str[index];
 	}
@@ -337,36 +361,75 @@ public:
 
 protected:
 	char* str = nullptr;
-	size_t size = 0;
+	Uint32 size = 0;
 };
 
-template<size_t defaultSize>
+template<Uint32 defaultSize>
 class StringBuf : public String {
 public:
 	StringBuf() {
-		alloc(defaultSize);
+		size = defaultSize;
+		str = defaultStr;
 	}
-	StringBuf(const StringBuf<defaultSize>& src) {
+	StringBuf(const String& src) {
 		assign(src.get());
 	}
-	StringBuf(const char* src, ...) {
+	StringBuf(const char* src) {
 		size = defaultSize;
-		str = (char*) malloc( size * sizeof(char) );
-		assert(str);
+		str = defaultStr;
+		strncpy_s(str, size, src, size - 1);
+		str[size - 1] = '\0';
+	}
+	StringBuf(const char* src, int numArgs, ...) {
+		size = defaultSize;
+		str = defaultStr;
 
-		str[0] = '\0';
-		str[size-1] = '\0';
+		if (numArgs == 0) {
+			strncpy_s(str, size, src, size - 1);
+			str[size - 1] = '\0';
+		} else {
+			str[0] = '\0';
+			str[size - 1] = '\0';
 
-		va_list argptr;
-		va_start( argptr, src );
-		vsnprintf( str, size, src, argptr );
-		va_end( argptr );
+			va_list argptr;
+			va_start(argptr, numArgs);
+			vsnprintf(str, size, src, argptr);
+			va_end(argptr);
 
-		str[size-1] = '\0';
+			str[size - 1] = '\0';
+		}
 	}
 	virtual ~StringBuf() {
+		if (str == defaultStr) {
+			str = nullptr;
+		}
+	}
+
+	// allocs / reallocs the string (erases data!)
+	// @param newSize the size (in chars) of the string to alloc
+	// @return the alloc'd string
+	virtual const char* alloc(const Uint32 newSize) override {
+		size = newSize;
+		if (str == defaultStr) {
+			str = nullptr;
+		}
+		if (str) {
+			char* result = (char*)realloc(str, size * sizeof(char));
+			assert(result);
+			str = result;
+		}
+		else {
+			str = (char*)malloc(size * sizeof(char));
+			assert(str);
+		}
+		str[0] = '\0';
+		str[size - 1] = '\0';
+		return str;
 	}
 
 	// getters & setters
-	static size_t getDefaultSize() { return defaultSize; }
+	static Uint32 getDefaultSize() { return defaultSize; }
+
+protected:
+	char defaultStr[defaultSize] = "\0";
 };

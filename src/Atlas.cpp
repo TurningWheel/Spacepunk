@@ -53,7 +53,7 @@ bool Atlas::loadImage(const char* _name) {
 	}
 
 	// do not load an image if it already exists in the bank
-	for( size_t c = 0; c < pairs.getSize(); ++c ) {
+	for( Uint32 c = 0; c < pairs.getSize(); ++c ) {
 		pair_t* pair = pairs[c];
 		String& str = pair->name;
 		if( str == _name ) {
@@ -90,7 +90,7 @@ void Atlas::refresh() {
 
 	GLuint c = 0;
 	Node<pair_t*>* node = nullptr;
-	for( size_t c = 0; c < pairs.getSize(); ++c ) {
+	for( Uint32 c = 0; c < pairs.getSize(); ++c ) {
 		pair_t* pair = pairs[c];
 
 		// resize surface
@@ -109,7 +109,7 @@ void Atlas::refresh() {
 const GLuint Atlas::indexForName(const char* name) const {
 	int c = 0;
 	const Node<pair_t*>* node = nullptr;
-	for( size_t c = 0; c < pairs.getSize(); ++c ) {
+	for( Uint32 c = 0; c < pairs.getSize(); ++c ) {
 		pair_t* pair = pairs[c];
 		if( pair->name == name ) {
 			return (GLuint)c;

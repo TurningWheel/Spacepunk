@@ -9,12 +9,11 @@
 
 // templated ArrayList (similar to std::vector)
 // adding or removing elements can unsort the list.
-// @param T: generic type that the list will contain
+// @param T generic type that the list will contain
 template <typename T>
 class ArrayList {
 public:
 	ArrayList() {
-		alloc(4);
 	}
 
 	ArrayList(const ArrayList& src) {
@@ -25,7 +24,7 @@ public:
 		copy(src);
 	}
 
-	~ArrayList() {
+	virtual ~ArrayList() {
 		if( arr ) {
 			delete[] arr;
 			arr = nullptr;
@@ -35,8 +34,8 @@ public:
 	// getters & setters
 	const T*		getArray() const		{ return arr; }
 	T*				getArray()				{ return arr; }
-	size_t			getSize() const			{ return size; }
-	size_t			getMaxSize() const		{ return maxSize; }
+	Uint32			getSize() const			{ return size; }
+	Uint32			getMaxSize() const		{ return maxSize; }
 
 	// @return true if list is empty
 	bool empty() const {
@@ -46,7 +45,7 @@ public:
 	// Iterator
 	class Iterator {
 	public:
-		Iterator(ArrayList<T>& _arr, size_t _pos) :
+		Iterator(ArrayList<T>& _arr, Uint32 _pos) :
 			arr(_arr),
 			pos(_pos) {}
 
@@ -63,13 +62,13 @@ public:
 		}
 	private:
 		ArrayList<T>& arr;
-		size_t pos;
+		Uint32 pos;
 	};
 
 	// ConstIterator
 	class ConstIterator {
 	public:
-		ConstIterator(const ArrayList<T>& _arr, size_t _pos) :
+		ConstIterator(const ArrayList<T>& _arr, Uint32 _pos) :
 			arr(_arr),
 			pos(_pos) {}
 
@@ -86,7 +85,7 @@ public:
 		}
 	private:
 		const ArrayList<T>& arr;
-		size_t pos;
+		Uint32 pos;
 	};
 
 	// begin()
@@ -106,17 +105,17 @@ public:
 	}
 
 	// resize the internal list
-	// @param len: number of elements to size the list for
+	// @param len number of elements to size the list for
 	// @return *this
-	ArrayList& alloc(size_t len) {
+	ArrayList& alloc(Uint32 len) {
 		maxSize = len;
-		size_t newSize = std::min( maxSize, size );
+		Uint32 newSize = std::min( maxSize, size );
 		T* newArr = nullptr;
 		if( len ) {
 			newArr = new T[len];
 			assert(newArr);
-			size_t copyLen = min(size, len);
-			for( size_t c = 0; c < copyLen; ++c ) {
+			Uint32 copyLen = min(size, len);
+			for( Uint32 c = 0; c < copyLen; ++c ) {
 				newArr[c] = std::move(arr[c]);
 			}
 		}
@@ -130,14 +129,14 @@ public:
 	}
 
 	// fill the internal list, resizing if necessary
-	// @param len: number of elements to size the list for
+	// @param len number of elements to size the list for
 	// @return *this
-	ArrayList& resize(size_t len) {
+	ArrayList& resize(Uint32 len) {
 		if( len > maxSize ) {
 			alloc(len);
 		}
 		if( len > size ) {
-			for( size_t c = size; c < len; ++c ) {
+			for( Uint32 c = size; c < len; ++c ) {
 				arr[c] = T();
 			}
 		}
@@ -153,50 +152,82 @@ public:
 	}
 
 	// replace list contents with those of another list
-	// @param src: the list to copy into our list
+	// @param src the list to copy into our list
 	// @return *this;
 	ArrayList& copy(const ArrayList& src) {
 		alloc(src.getSize());
 		size = src.getSize();
-		for( size_t c = 0; c < src.getSize(); ++c ) {
+		for( Uint32 c = 0; c < src.getSize(); ++c ) {
 			arr[c] = src[c];
 		}
 		return *this;
 	}
 
 	// replace list contents with those of an array
-	// @param src: the array to copy into our list
+	// @param src the array to copy into our list
 	// @return *this;
 	ArrayList& copy(const std::initializer_list<T>& src) {
-		alloc(src.size());
-		size = src.size();
+		alloc(static_cast<Uint32>(src.size()));
+		size = static_cast<Uint32>(src.size());
 		const T* it;
-		size_t c;
+		Uint32 c;
 		for( c = 0, it = std::begin(src); it != std::end(src); ++it, ++c ) {
 			arr[c] = *it;
 		}
 		return *this;
 	}
 
+	// quickly swap the internal array of this list with that of another list
+	// @param src the list to swap with
+	void swap(ArrayList& src) {
+		auto tempArr = arr;
+		arr = src.arr;
+		src.arr = tempArr;
+
+		auto tempMaxSize = maxSize;
+		maxSize = src.maxSize;
+		src.maxSize = tempMaxSize;
+
+		auto tempSize = size;
+		size = src.size;
+		src.size = tempSize;
+	}
+
 	// push a value onto the list
-	// @param val: the value to push
+	// @param val the value to push
 	void push(const T& val) {
 		if( size==maxSize ) {
 			alloc(std::max((unsigned int)size*2U, 4U));
 		}
 		++size;
-		arr[size-1] = val;
+		arr[size-1] = std::move(val);
 	}
 
 	// insert a value into the list
-	// @param val: the value to insert
-	// @param pos: the index to displace (move to the end of the list)
-	void insert(const T& val, size_t pos) {
+	// @param val the value to insert
+	// @param pos the index to displace (move to the end of the list)
+	void insert(const T& val, Uint32 pos) {
+		assert(pos <= size);
 		if( size==maxSize ) {
 			alloc(std::max((unsigned int)size*2U, 4U));
 		}
 		++size;
 		arr[size-1] = arr[pos];
+		arr[pos] = val;
+	}
+
+	// insert a value into the list, rearranging all elements after it
+	// @param val the value to insert
+	// @param pos the index to displace (move all elements starting here 1 index forward)
+	void insertAndRearrange(const T& val, Uint32 pos) {
+		assert(pos <= size);
+		if( size==maxSize ) {
+			alloc(std::max((unsigned int)size*2U, 4U));
+		}
+		++size;
+		for( Uint32 c = size-1; c > pos; --c ) {
+			arr[c] = arr[c-1];
+		}
 		arr[pos] = val;
 	}
 
@@ -223,9 +254,9 @@ public:
 	}
 
 	// removes and returns an element from the list without moving the rest of the list
-	// @param pos: the index of the element to remove
+	// @param pos the index of the element to remove
 	// @return the value at the given index
-	T remove(size_t pos) {
+	T remove(Uint32 pos) {
 		assert(size > pos);
 		T result = arr[pos];
 		--size;
@@ -234,14 +265,14 @@ public:
 	}
 
 	// removes and returns an element from the list, rearranging all elements after it
-	// @param pos: the index of the element to remove
+	// @param pos the index of the element to remove
 	// @return the value at the given index
-	T removeAndRearrange(size_t pos) {
+	T removeAndRearrange(Uint32 pos) {
 		assert(size > pos);
 		T result = arr[pos];
 
-		size_t newSize = size - 1;
-		for( size_t c = pos; c < newSize; ++c ) {
+		Uint32 newSize = size - 1;
+		for( Uint32 c = pos; c < newSize; ++c ) {
 			arr[c] = arr[c+1];
 		}
 
@@ -250,50 +281,73 @@ public:
 	}
 
 	// replace list contents with those of another list
-	// @param src: the list to copy into our list
+	// @param src the list to copy into our list
 	// @return *this;
 	ArrayList& operator=(const ArrayList& src) {
 		return copy(src);
 	}
 
 	// replace list contents with those of an array
-	// @param src: the array to copy into our list
+	// @param src the array to copy into our list
 	// @return *this;
 	ArrayList& operator=(const std::initializer_list<T>& src) {
 		return copy(src);
 	}
 
 	// get list contents at specified index
-	// @param pos: index value
+	// @param pos index value
 	// @return a reference to the list at this index
-	const T& get(size_t pos) const {
+	const T get(int pos) const {
+		assert((Uint32)pos < size);
+		return arr[(Uint32)pos];
+	}
+
+	// get list contents at specified index
+	// @param pos index value
+	// @return a reference to the list at this index
+	T get(int pos) {
+		assert((Uint32)pos < size);
+		return arr[(Uint32)pos];
+	}
+
+	// get list contents at specified index
+	// @param pos index value
+	// @return a reference to the list at this index
+	const T& operator[](Uint32 pos) const {
 		assert(pos < size);
 		return arr[pos];
 	}
 
 	// get list contents at specified index
-	// @param pos: index value
+	// @param pos index value
 	// @return a reference to the list at this index
-	T& get(size_t pos) {
+	T& operator[](Uint32 pos) {
 		assert(pos < size);
 		return arr[pos];
 	}
 
-	// get list contents at specified index
-	// @param pos: index value
-	// @return a reference to the list at this index
-	const T& operator[](size_t pos) const {
-		assert(pos < size);
-		return arr[pos];
+	// abstract class to define sort function
+	class SortFunction {
+	public:
+		SortFunction() {}
+		virtual ~SortFunction() {}
+
+		// compare a and b
+		// @param a the first element to compare
+		// @param b the second element to compare
+		// @return true if a should be placed before b
+		virtual const bool operator()(const T& a, const T& b) const = 0;
+	};
+
+	// sort the array list using the given function
+	// @param fn The sort function to use
+	void sort(const SortFunction& fn) {
+		if (size <= 1U) {
+			return;
+		}
+		mergeSortImp(fn, 0U, size - 1U);
 	}
 
-	// get list contents at specified index
-	// @param pos: index value
-	// @return a reference to the list at this index
-	T& operator[](size_t pos) {
-		assert(pos < size);
-		return arr[pos];
-	}
 	// exposes this list type to a script
 	// @param lua The script engine to expose to
 	// @param name The type name in lua
@@ -313,10 +367,10 @@ public:
 		typedef const T& (ArrayList<T>::*PeekConstFn)() const;
 		PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
 
-		typedef T& (ArrayList<T>::*GetFn)(size_t);
+		typedef T (ArrayList<T>::*GetFn)(int);
 		GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
 
-		typedef const T& (ArrayList<T>::*GetConstFn)(size_t) const;
+		typedef const T (ArrayList<T>::*GetConstFn)(int) const;
 		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
 
 		luabridge::getGlobalNamespace(lua)
@@ -344,8 +398,104 @@ public:
 		;
 	}
 
-private:
+protected:
 	T* arr = nullptr;		// array data
-	size_t size = 0;		// current array capacity
-	size_t maxSize = 0;		// maximum array capacity
+	Uint32 size = 0;		// current array capacity
+	Uint32 maxSize = 0;		// maximum array capacity
+
+	// merge two subarrays within the array
+	// @param fn the sort function to test with
+	// @param l the start of the first subarray
+	// @param m the midpoint
+	// @param r the end of the right subarray
+	void merge(const SortFunction& fn, Uint32 l, Uint32 m, Uint32 r) {
+		Uint32 n1 = m - l + 1U; // length of first subarray
+		Uint32 n2 = r - m;      // length of second subarray
+
+		// create temp vectors
+		ArrayList<T> L, R;
+		L.resize(n1);
+		R.resize(n2);
+
+		// copy data to temp vectors L and R
+		for (Uint32 i = 0U; i < n1; ++i) {
+			L[i] = arr[l + i];
+		}
+		for (Uint32 i = 0U; i < n2; ++i) {
+			R[i] = arr[m + 1U + i];
+		}
+
+		// merge the temp vectors back into arr[l..r]
+		Uint32 i = 0U;  // initial index of first subarray
+		Uint32 j = 0U;  // initial index of second subarray
+		Uint32 k = l;   // initial index of merged subarray
+		while (i < n1 && j < n2) {
+			if (fn(L[i], R[j])) {
+				arr[k] = L[i];
+				++i;
+			} else {
+				arr[k] = R[j];
+				++j;
+			}
+			++k;
+		}
+
+		// copy the remaining elements of L, if there are any
+		while (i < n1) {
+			arr[k] = L[i];
+			++i;
+			++k;
+		}
+
+		// copy the remaining elements of R, if there are any
+		while (j < n2) {
+			arr[k] = R[j];
+			++j;
+			++k;
+		}
+	}
+
+	// recursive merge sort algorithm
+	// @param fn the sort function to test with
+	// @param l the left index of the subarray to sort
+	// @param r the right index of the subarray to sort
+	void mergeSortImp(const SortFunction& fn, Uint32 l, Uint32 r) {
+		if (l < r) {
+			// same as (l+r) / 2, but avoids overflow for large l and r
+			Uint32 m = l + (r - l) / 2U;
+
+			// Sort first and second halves
+			mergeSortImp(fn, l, m);
+			mergeSortImp(fn, m + 1U, r);
+
+			merge(fn, l, m, r);
+		}
+	}
+};
+
+template <typename T, Uint32 defaultSize>
+class StaticArrayList : public ArrayList<T> {
+public:
+	StaticArrayList() {
+	}
+
+	StaticArrayList(const StaticArrayList& src) {
+		copy(src);
+	}
+
+	StaticArrayList(const std::initializer_list<T>& src) {
+		copy(src);
+	}
+
+	virtual ~StaticArrayList() {
+		if (arr == defaultArr) {
+			arr = nullptr;
+		}
+	}
+
+	// getters & setters
+	static Uint32 getDefaultSize() { return defaultSize; }
+
+protected:
+	T defaultArr[defaultSize];
 };

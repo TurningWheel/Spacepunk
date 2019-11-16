@@ -14,12 +14,12 @@ public:
 	}
 
 	// getters & setters
-	Map<T*>&		getCache()			{ return cache; }
-	const int		getError() const	{ return error; }
+	Map<String, T*>&		getCache()			{ return cache; }
+	const int				getError() const	{ return error; }
 
 	// number of items in the resource
 	// @return the number of cached items in the resource
-	size_t size() const {
+	Uint32 size() const {
 		return cache.getSize();
 	}
 
@@ -28,7 +28,7 @@ public:
 	// if the data does not exist in the cache, the resource creates it anew and error is set to 1
 	// if the data failed to be created then error is set to 2
 	// otherwise, error is set to 0 and the existing data is returned
-	// @param name: the name of the data to load
+	// @param name the name of the data to load
 	// @return the data, or nullptr if the data could not be loaded
 	T* dataForString( const char* name ) {
 		if( name == nullptr || name[0] == '\0' ) {
@@ -63,7 +63,22 @@ public:
 		cache.clear();
 	}
 
+	// delete some specific data from the cache
+	void deleteData(const char* name) {
+		T** data = cache.find(name);
+		if (data) {
+			delete *data;
+			cache.remove(name);
+		}
+	}
+
+	// calculate the size of this resource cache
+	Uint32 getSizeInBytes() const {
+		// need something better than sizeof
+		return (Uint32)(cache.getSize() * sizeof(T));
+	}
+
 private:
-	Map<T*> cache;
+	Map<String, T*> cache;
 	int error = 0;
 };

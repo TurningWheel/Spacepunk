@@ -22,52 +22,52 @@ public:
 
 	const Node<T>* 		getFirst() const			{ return (const Node<T>*)(first); }
 	const Node<T>* 		getLast() const				{ return (const Node<T>*)(last); }
-	size_t				getSize() const				{ return size; }
+	Uint32				getSize() const				{ return size; }
 
 	void 				setFirst(Node<T> *node)		{ first = node; }
 	void 				setLast(Node<T> *node)		{ last = node; }
 
 	// returns the node at the given index
-	// @param index: the index of the node to be returned
+	// @param index the index of the node to be returned
 	// @return the Node at the given index, or nullptr if the Node does not exist
-	Node<T>* nodeForIndex(const size_t index) {
+	Node<T>* nodeForIndex(const Uint32 index) {
 		if( index>=size ) {
 			return nullptr;
 		} else if( index>=size/2 ) {
 			Node<T>* node=last;
-			for( size_t i=size-1; i!=index; node=node->getPrev(), --i );
+			for( Uint32 i=size-1; i!=index; node=node->getPrev(), --i );
 			return node;
 		} else {
 			Node<T>* node=first;
-			for( size_t i=0; i!=index; node=node->getNext(), ++i );
+			for( Uint32 i=0; i!=index; node=node->getNext(), ++i );
 			return node;
 		}
 	}
-	const Node<T>* nodeForIndex(const size_t index) const {
+	const Node<T>* nodeForIndex(const Uint32 index) const {
 		if( index>=size ) {
 			return nullptr;
 		} else if( index>=size/2 ) {
 			const Node<T>* node=last;
-			for( size_t i=size-1; i!=index; node=node->getPrev(), --i );
+			for( Uint32 i=size-1; i!=index; node=node->getPrev(), --i );
 			return node;
 		} else {
 			const Node<T>* node=first;
-			for( size_t i=0; i!=index; node=node->getNext(), ++i );
+			for( Uint32 i=0; i!=index; node=node->getNext(), ++i );
 			return node;
 		}
 	}
 
 	// returns the index of the given node in the list
-	// @param node: the node for whom you wish to retrieve the index
+	// @param node the node for whom you wish to retrieve the index
 	// @return the index for the given node, or -1 if the node does not exist in the list
-	size_t indexForNode(const Node<T>* node) const {
+	Uint32 indexForNode(const Node<T>* node) const {
 		if( node->getList() != this )
 			return -1;
 		if( node==last )
 			return size-1;
 
 		Node<T>* tempNode;
-		size_t i;
+		Uint32 i;
 
 		for( tempNode=first, i=0; tempNode!=nullptr && tempNode!=node; tempNode=tempNode->getNext(), ++i );
 		if( tempNode==nullptr ) {
@@ -78,17 +78,17 @@ public:
 	}
 
 	// adds a node to the list
-	// @param index: the position within the list to insert the node
-	// @param data: the data to be assigned to the node
+	// @param index the position within the list to insert the node
+	// @param data the data to be assigned to the node
 	// @return the newly created Node
-	Node<T>* addNode(const size_t index, const T& data) {
+	Node<T>* addNode(const Uint32 index, const T& data) {
 		Node<T>* node = nodeForIndex(index);
 		++size;
 		return new Node<T>(*this,node,data);
 	}
 
 	// adds a node to the beginning of the list
-	// @param data: the data to be assigned to the node
+	// @param data the data to be assigned to the node
 	// @return the newly created Node
 	Node<T>* addNodeFirst(const T& data) {
 		++size;
@@ -96,7 +96,7 @@ public:
 	}
 
 	// adds a node to the end of the list
-	// @param data: the data to be assigned to the node
+	// @param data the data to be assigned to the node
 	// @return the newly created Node
 	Node<T>* addNodeLast(const T& data) {
 		++size;
@@ -104,7 +104,7 @@ public:
 	}
 
 	// removes a node from the list
-	// @param node: the node to remove from the list
+	// @param node the node to remove from the list
 	void removeNode(Node<T>* node) {
 		if( this != node->getList() )
 		{
@@ -132,8 +132,8 @@ public:
 	}
 
 	// removes a node from the list
-	// @param index: the index of the node to be removed from the list
-	void removeNode(const size_t index) {
+	// @param index the index of the node to be removed from the list
+	void removeNode(const Uint32 index) {
 		removeNode(nodeForIndex(index));
 	}
 
@@ -161,12 +161,12 @@ public:
 	// sort the list from least significant elements to most significant elements
 	// @return a reference to the sorted list
 	LinkedList<T>& sort() {
-		size_t len = size;
+		Uint32 len = size;
 		if( len<=1 ) {
 			return *this;
 		}
 
-		size_t i;
+		Uint32 i;
 		Node<T>* node;
 		LinkedList<T> left, right;
 		for( i=0, node = first; node!=nullptr && i<len; ++i, node=node->getNext() ) {
@@ -185,12 +185,12 @@ public:
 	}
 
 	// linear search for the node with the given index
-	// @param index: the index of the node to be returned
+	// @param index the index of the node to be returned
 	// @return the Node at the given index, or nullptr if the Node does not exist
-	Node<T>* operator[](const size_t index) {
+	Node<T>* operator[](const Uint32 index) {
 		return nodeForIndex(index);
 	}
-	const Node<T>* operator[](const size_t index) const {
+	const Node<T>* operator[](const Uint32 index) const {
 		return (const Node<T>*)(nodeForIndex(index));
 	}
 
@@ -267,16 +267,16 @@ public:
 		NodeConstFn getFirstConst = static_cast<NodeConstFn>(&LinkedList<T>::getFirst);
 		NodeConstFn getLastConst = static_cast<NodeConstFn>(&LinkedList<T>::getLast);
 
-		typedef Node<T>* (LinkedList<T>::*NodeIndexFn)(const size_t);
+		typedef Node<T>* (LinkedList<T>::*NodeIndexFn)(const Uint32);
 		NodeIndexFn nodeForIndex = static_cast<NodeIndexFn>(&LinkedList<T>::nodeForIndex);
 
-		typedef const Node<T>* (LinkedList<T>::*NodeIndexConstFn)(const size_t) const;
+		typedef const Node<T>* (LinkedList<T>::*NodeIndexConstFn)(const Uint32) const;
 		NodeIndexConstFn nodeForIndexConst = static_cast<NodeIndexConstFn>(&LinkedList<T>::nodeForIndex);
 
 		typedef void (LinkedList<T>::*NodeRemoveFn)(Node<T>*);
 		NodeRemoveFn removeNode = static_cast<NodeRemoveFn>(&LinkedList<T>::removeNode);
 
-		typedef void (LinkedList<T>::*NodeRemoveIndexFn)(const size_t);
+		typedef void (LinkedList<T>::*NodeRemoveIndexFn)(const Uint32);
 		NodeRemoveIndexFn removeNodeIndex = static_cast<NodeRemoveIndexFn>(&LinkedList<T>::removeNode);
 
 		luabridge::getGlobalNamespace(lua)
@@ -308,7 +308,7 @@ public:
 private:
 	Node<T>* first	= nullptr;
 	Node<T>* last	= nullptr;
-	size_t size = 0;
+	Uint32 size = 0;
 
 	LinkedList<T>& merge(LinkedList<T>& left, LinkedList<T>& right) {
 		LinkedList<T> result;

@@ -18,6 +18,8 @@
 #include "Chunk.hpp"
 #include "Tile.hpp"
 #include "TileWorld.hpp"
+#include "BasicWorld.hpp"
+#include "Renderer.hpp"
 
 const char* Light::meshStr = "assets/editor/light/light.FBX";
 const char* Light::materialStr = "assets/editor/light/material.json";
@@ -30,6 +32,8 @@ const char* Light::shapeStr[SHAPE_NUM] = {
 	"cone",
 	"pyramid"
 };
+
+Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "3");
 
 Light::Light(Entity& _entity, Component* _parent) :
 	Component(_entity, _parent) {
@@ -44,6 +48,14 @@ Light::Light(Entity& _entity, Component* _parent) :
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeVector("Color", color));
+	attributes.push(new AttributeFloat("Intensity", intensity));
+	attributes.push(new AttributeFloat("Radius", radius));
+	attributes.push(new AttributeFloat("Arc", arc));
+	attributes.push(new AttributeBool("Shadow-casting", shadow));
+	attributes.push(new AttributeEnum<shape_t>("Shape", shapeStr, shape_t::SHAPE_NUM, shape));
 }
 
 Light::~Light() {
@@ -54,64 +66,17 @@ static Cvar cvar_lightCull("light.cull", "accuracy for lights' occlusion culling
 void Light::update() {
 	Component::update();
 
+	// occlusion test
 	World* world = entity->getWorld();
 	if( world && world->isLoaded() ) {
 		if( lastUpdate != entity->getTicks() || !chunksVisible ) {
 			occlusionTest(radius, cvar_lightCull.toInt());
 			lastUpdate = entity->getTicks();
-			chunksShadow.clear();
-
-			// get all chunks in a radius
-			if( world->getType() == World::WORLD_TILES && entity->isFlag(Entity::FLAG_SHADOW) ) {
-				TileWorld* tileworld = static_cast<TileWorld*>(world);
-
-				Sint32 worldW = (Sint32)tileworld->getWidth() / Chunk::size;
-				Sint32 worldH = (Sint32)tileworld->getHeight() / Chunk::size;
-				Sint32 chunkSize = (Chunk::size * Tile::size);
-				Sint32 chunkRadius = floor(radius / chunkSize);
-				Sint32 midX = floor(gPos.x / chunkSize);
-				Sint32 midY = floor(gPos.y / chunkSize);
-				Sint32 startX = min( max( 0, midX - chunkRadius ), worldW - 1 );
-				Sint32 startY = min( max( 0, midY - chunkRadius ), worldH - 1 );
-				Sint32 endX = min( max( 0, midX + chunkRadius ), worldW - 1 );
-				Sint32 endY = min( max( 0, midY + chunkRadius ), worldH - 1 );
-
-				for( Sint32 x = startX; x <= endX; ++x ) {
-					for( Sint32 y = startY; y <= endY; ++y ) {
-						Chunk& chunk = tileworld->getChunks()[y + x * worldH];
-
-						float lightX = gPos.x;
-						float lightY = gPos.y;
-						float chunkX = x * chunkSize;
-						float chunkY = y * chunkSize;
-						if( lightX>=chunkX && lightX<chunkX+chunkSize ) {
-							chunkX = lightX;
-						}
-						if( lightY>=chunkY && lightY<chunkY+chunkSize ) {
-							chunkY = lightY;
-						}
-						if( lightX != chunkX || lightY != chunkY ) {
-							if( lightX>chunkX )
-								chunkX += chunkSize;
-							if( lightY>chunkY )
-								chunkY += chunkSize;
-							float diffX = (chunkX-lightX)*(chunkX-lightX);
-							float diffY = (chunkY-lightY)*(chunkY-lightY);
-							float dist = diffX+diffY;
-							if( dist <= radius * radius ) {
-								chunksShadow.push(&chunk);
-							}
-						} else {
-							chunksShadow.push(&chunk);
-						}
-					}
-				}
-			}
 		}
 	}
 }
 
-void Light::draw(Camera& camera, Light* light) {
+void Light::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
 	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
 		return;
@@ -123,14 +88,14 @@ void Light::draw(Camera& camera, Light* light) {
 	}
 
 	Mesh::shadervars_t shaderVars;
-	shaderVars.customColorEnabled = GL_TRUE;
+	shaderVars.customColorEnabled = true;
 	shaderVars.customColorR = { color.x, color.y, color.z, 1.f };
 
 	glm::mat4 matrix = glm::scale(glm::mat4(1.f), glm::vec3(.5f));
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
-		ShaderProgram* shader = mesh->loadShader(*this, camera, light, material, shaderVars, gMat * matrix);
+		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat * matrix);
 		if( shader ) {
 			mesh->draw(camera, this, shader);
 		}
@@ -153,20 +118,75 @@ void Light::load(FILE* fp) {
 void Light::serialize(FileInterface * file) {
 	Component::serialize(file);
 
-	Uint32 version = 1;
+	Uint32 version = 2;
 	file->property("Light::version", version);
 
-	switch( version ) {
-	case 0:
-		file->property("color", color);
-		file->property("intensity", intensity);
-		file->property("radius", radius);
-		break;
-	default:
-		file->property("color", color);
-		file->property("intensity", intensity);
-		file->property("radius", radius);
+	file->property("color", color);
+	file->property("intensity", intensity);
+	file->property("radius", radius);
+	if (version >= 1) {
 		file->property("shape", shape);
-		break;
 	}
+	if (version >= 2) {
+		file->property("shadow", shadow);
+		file->property("arc", arc);
+	}
+}
+
+static Cvar cvar_shadowDepthOffset("render.shadowdepthoffset","shadow depth buffer adjustment","0");
+
+void Light::createShadowMap() {
+	if (!entity || !entity->getWorld()) {
+		return;
+	}
+	World* world = entity->getWorld();
+	if (!world) {
+		return;
+	}
+	if (entity->getTicks() == shadowTicks && shadowMap.isInitialized()) {
+		return;
+	} else {
+		shadowTicks = entity->getTicks();
+	}
+
+	if (shadowMap.isInitialized() && entity->isFlag(Entity::FLAG_STATIC)) {
+		return;
+	}
+
+	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
+	Camera* camera = shadowCamera->findComponentByUID<Camera>(1); assert(camera);
+	camera->setDrawMode(Camera::DRAW_SHADOW);
+	shadowCamera->setPos(gPos);
+
+	glPolygonOffset(1.f, cvar_shadowDepthOffset.toFloat());
+	glEnable(GL_DEPTH_TEST);
+	shadowMap.init();
+	for (Uint32 c = 0; c < 6; ++c) {
+		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
+		shadowCamera->setAng(Shadow::cameraInfo[c].dir);
+		shadowCamera->update();
+		camera->setClipNear(1.f);
+		camera->setClipFar(radius);
+		camera->setupProjection(false);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		if (world->getType() == World::type_t::WORLD_TILES) {
+			static_cast<TileWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
+		} else if (world->getType() == World::type_t::WORLD_BASIC) {
+			static_cast<BasicWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({this}));
+		}
+	}
+	glPolygonOffset(1.f, 0.f);
+	
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+	Framebuffer* fbo = renderer->getFramebufferResource().dataForString(renderer->getCurrentFramebuffer()); assert(fbo);
+	fbo->bindForWriting();
+	//glBindFramebuffer(GL_FRAMEBUFFER, fbo->getFBO());
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	shadowMapDrawn = true;
+}
+
+void Light::deleteShadowMap() {
+	shadowMap.term();
 }

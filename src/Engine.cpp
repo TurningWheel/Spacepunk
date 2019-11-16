@@ -10,6 +10,8 @@
 #include "TileWorld.hpp"
 #include "Console.hpp"
 
+std::atomic_bool Engine::paused(false);
+
 // log message code strings
 const char* Engine::msgTypeStr[Engine::MSG_TYPE_LENGTH] = {
 	"DEBUG",
@@ -132,17 +134,17 @@ static int console_help(int argc, const char** argv) {
 	if( argc > 0 ) {
 		search = argv[0];
 	}
-	size_t len = strlen(search);
+	Uint32 len = static_cast<Uint32>(strlen(search));
 
-	for( Node<Cvar*>* node = Cvar::getList().getFirst(); node != nullptr; node = node->getNext() ) {
-		Cvar* cvar = node->getData();
-		if( strncmp(search, cvar->name, len) == 0 ) {
-			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", cvar->name.get(), cvar->desc.get());
+	for( auto& pair : Cvar::getMap() ) {
+		Cvar* cvar = pair.b;
+		if( strncmp(search, cvar->getName(), len) == 0 ) {
+			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", cvar->getName(), cvar->getDesc());
 		}
 	}
-	for( Node<Ccmd*>* node = Ccmd::getList().getFirst(); node != nullptr; node = node->getNext() ) {
-		Ccmd* ccmd = node->getData();
-		if( strncmp(search, ccmd->name, len) == 0 ) {
+	for( auto& pair : Ccmd::getMap() ) {
+		Ccmd* ccmd = pair.b;
+		if( strncmp(search, ccmd->name.get(), len) == 0 ) {
 			mainEngine->fmsg(Engine::MSG_NOTE,"%s: %s", ccmd->name.get(), ccmd->desc.get());
 		}
 	}
@@ -157,6 +159,7 @@ static int console_mount(int argc, const char** argv) {
 	if(mainEngine->addMod(argv[0])) {
 		mainEngine->dumpResources();
 		mainEngine->loadAllResources();
+		mainEngine->loadAllDefs();
 		return 0;
 	} else {
 		return 1;
@@ -171,6 +174,7 @@ static int console_unmount(int argc, const char** argv) {
 	if(mainEngine->removeMod(argv[0])) {
 		mainEngine->dumpResources();
 		mainEngine->loadAllResources();
+		mainEngine->loadAllDefs();
 		return 0;
 	} else {
 		return 1;
@@ -205,6 +209,16 @@ static int console_sleep(int argc, const char** argv) {
 	return 0;
 }
 
+static int console_cacheSize(int argc, const char** argv) {
+	mainEngine->printCacheSize();
+	return 0;
+}
+
+static int console_printDir(int argc, const char** argv) {
+	mainEngine->fmsg(Engine::MSG_INFO, mainEngine->getRunningDir());
+	return 0;
+}
+
 static Ccmd ccmd_help("help","lists all console commands and variables",&console_help);
 static Ccmd ccmd_shutdown("exit","kill engine immediately",&console_shutdown);
 static Ccmd ccmd_windowed("windowed","set the engine to windowed mode",&console_windowed);
@@ -218,7 +232,28 @@ static Ccmd ccmd_unmount("unmount","unmounts a mod and dumps the engine cache",&
 static Ccmd ccmd_play("play","play the sound file with the given path",&console_play);
 static Ccmd ccmd_loadconfig("loadconfig","loads the given config file",&console_loadConfig);
 static Ccmd ccmd_sleep("sleep","waits X seconds before running the next command, useful for configs",&console_sleep);
+static Ccmd ccmd_cachesize("cachesize", "prints the size of all resource caches in bytes", &console_cacheSize);
+static Ccmd ccmd_printDir("printdir", "shows the directory that the engine is running from", &console_printDir);
 static Cvar cvar_tickrate("tickrate","number of frames processed in a second","60");
+
+void Engine::printCacheSize() const {
+	Uint32 total = 0;
+	mainEngine->fmsg(Engine::MSG_INFO, "meshes: %u bytes", meshResource.getSizeInBytes()); total += meshResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "images: %u bytes", imageResource.getSizeInBytes()); total += imageResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "materials: %u bytes", materialResource.getSizeInBytes()); total += materialResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "textures: %u bytes", textureResource.getSizeInBytes()); total += textureResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "text: %u bytes", textResource.getSizeInBytes()); total += textResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "sounds: %u bytes", soundResource.getSizeInBytes()); total += soundResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "animations: %u bytes", animationResource.getSizeInBytes()); total += animationResource.getSizeInBytes();
+	mainEngine->fmsg(Engine::MSG_INFO, "cubemaps: %u bytes", cubemapResource.getSizeInBytes()); total += cubemapResource.getSizeInBytes();
+	Client* client = mainEngine->getLocalClient();
+	if (client) {
+		Renderer* renderer = client->getRenderer(); assert(renderer);
+		mainEngine->fmsg(Engine::MSG_INFO, "framebuffers: %u bytes", renderer->getFramebufferResource().getSizeInBytes());
+		total += renderer->getFramebufferResource().getSizeInBytes();
+	}
+	mainEngine->fmsg(Engine::MSG_INFO, "total: %u bytes", total);
+}
 
 void Engine::commandLine(const int argc, const char **argv) {
 	int c;
@@ -263,7 +298,7 @@ void Engine::commandLine(const int argc, const char **argv) {
 
 			// add a mod folder
 			if( !strncmp( arg, "mod=", 4 ) ) {
-				StringBuf<32> modFolder("%s",(const char *)(arg+4));
+				String modFolder = (const char *)(arg+4);
 				addMod(modFolder.get());
 				continue;
 			}
@@ -278,41 +313,29 @@ void Engine::commandLine(const int argc, const char **argv) {
 				fmsg(MSG_WARN,"unknown command: '%s'", arg);
 			} else {
 				// search ccmds for a match
-				bool foundCcmd = false;
-				for( auto& ccmd : Ccmd::getList() ) {
-					if( strncmp(ccmd->name, token, 128) == 0 ) {
-						int argc = 0;
-						const char** argv = new const char*[10];
-						while( token && argc<10 ) {
-							token = strtok(nullptr, " ");
-							if( token ) {
-								argv[argc] = token;
-								++argc;
-							}
+				Ccmd** ccmd = Ccmd::getMap().find(token);
+				if( ccmd ) {
+					int argc = 0;
+					const char** argv = new const char*[10];
+					while( token && argc<10 ) {
+						token = strtok(nullptr, " ");
+						if( token ) {
+							argv[argc] = token;
+							++argc;
 						}
-						ccmd->func(argc, argv);
-						delete[] argv;
-						foundCcmd = true;
-						break;
 					}
-				}
-				if( foundCcmd ) {
+					(*ccmd)->func(argc, argv);
+					delete[] argv;
 					continue;
 				}
 
 				// search cvars for a match
-				bool foundCvar = false;
-				for( auto& cvar : Cvar::getList() ) {
-					if( strncmp(cvar->name, token, 128) == 0 ) {
-						foundCvar = true;
-						if( strlen(arg) > strlen(token) ) {
-							cvar->value = (const char*)(arg + strlen(token) + 1);
-						}
-						fmsg(MSG_NOTE,"%s = %s",cvar->name.get(),cvar->value.get());
-						break;
+				Cvar** cvar = Cvar::getMap().find(token);
+				if (cvar) {
+					if( strlen(arg) > strlen(token) ) {
+						(*cvar)->set((const char*)(arg + strlen(token) + 1));
 					}
-				}
-				if( foundCvar ) {
+					fmsg(MSG_NOTE,"%s = %s",(*cvar)->getName(),(*cvar)->toStr());
 					continue;
 				}
 			}
@@ -336,7 +359,7 @@ int Engine::loadConfig(const char* filename) {
 	char str[1024];
 	FILE *fp;
 
-	StringBuf<64> _filename("%s/%s", game.path.get(), filename);
+	StringBuf<64> _filename("%s/%s", 2, game.path.get(), filename);
 	if( _filename.find(".cfg") == UINT32_MAX ) {
 		_filename.append(".cfg");
 	}
@@ -374,7 +397,7 @@ int Engine::saveConfig(const char* filename) {
 	}
 	FILE *fp;
 
-	StringBuf<64> _filename("%s/%s", game.path.get(), filename);
+	StringBuf<64> _filename("%s/%s", 2, game.path.get(), filename);
 	if( _filename.find(".cfg") == UINT32_MAX ) {
 		_filename.append(".cfg");
 	}
@@ -412,7 +435,7 @@ void Engine::startEditor(const char* path) {
 void Engine::editorPlaytest() {
 	if( localClient && localClient->isEditorActive() ) {
 		World* world = localClient->getWorld(0);
-		StringBuf<64> path("%s/maps/.playtest.wlb", game.path.get());
+		StringBuf<64> path("%s/maps/.playtest.wlb", 1, game.path.get());
 		if( world->saveFile(path.get()) ) {
 			playTest = true;
 			startServer();
@@ -543,7 +566,7 @@ void Engine::init() {
 	}
 
 	// instantiate a timer
-	timer = SDL_AddTimer( 1000 / ticksPerSecond, Engine::timerCallback, (void*)(&paused) );
+	lastTick = std::chrono::steady_clock::now();
 	SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH);
 
 	// instantiate local server
@@ -636,13 +659,14 @@ void Engine::loadResources(const char* folder) {
 			}
 		}
 	}
+}
 
-	// entity definitions for editor
+void Engine::loadDefs(const char* folder) {
 	StringBuf<64> entitiesDirPath;
-	entitiesDirPath.format("%s/entities",folder);
+	entitiesDirPath.format("%s/entities", folder);
 	Directory entitiesDir(entitiesDirPath.get());
-	if( entitiesDir.isLoaded() ) {
-		for( Node<String>* node = entitiesDir.getList().getFirst(); node!=nullptr; node=node->getNext() ) {
+	if (entitiesDir.isLoaded()) {
+		for (Node<String>* node = entitiesDir.getList().getFirst(); node != nullptr; node = node->getNext()) {
 			String& str = node->getData();
 			StringBuf<256> entityPath("entities/");
 			entityPath.append(str.get());
@@ -651,7 +675,18 @@ void Engine::loadResources(const char* folder) {
 			entityDefs.addNodeLast(def);
 		}
 	}
+}
 
+Uint32 Engine::findEntityDefIndexByName(const char* name) {
+	if (!name || name[0] == '\0') {
+		return UINT32_MAX;
+	}
+	for (auto def : entityDefs) {
+		if (def->entity.getName() == name) {
+			return def->index;
+		}
+	}
+	return UINT32_MAX;
 }
 
 void Engine::term() {
@@ -668,8 +703,6 @@ void Engine::term() {
 
 	// stop engine timer
 	fmsg(MSG_INFO,"closing engine...");
-	fmsg(MSG_INFO,"removing engine timer...");
-	SDL_RemoveTimer(timer);
 
 	// free sounds
 	Mix_HaltMusic();
@@ -738,6 +771,17 @@ void Engine::loadAllResources() {
 	}
 }
 
+void Engine::loadAllDefs() {
+	while (entityDefs.getFirst()) {
+		delete entityDefs.getFirst()->getData();
+		entityDefs.removeNode(entityDefs.getFirst());
+	}
+	loadDefs(game.path.get());
+	for (mod_t& mod : mods) {
+		loadDefs(mod.path.get());
+	}
+}
+
 void Engine::dumpResources() {
 	fmsg(MSG_INFO,"dumping engine resources...");
 
@@ -757,33 +801,13 @@ void Engine::dumpResources() {
 	tileNormalTextures.init();
 	tileEffectsTextures.cleanup();
 	tileEffectsTextures.init();
-
-	while( entityDefs.getFirst() ) {
-		delete entityDefs.getFirst()->getData();
-		entityDefs.removeNode(entityDefs.getFirst());
-	}
-}
-
-Uint32 Engine::timerCallback(Uint32 interval, void *param) {
-	if( *((bool*)param) )
-		return interval;
-
-	SDL_Event event;
-	SDL_UserEvent userevent;
-
-	userevent.type = SDL_USEREVENT;
-	userevent.code = 0;
-	userevent.data1 = nullptr;
-	userevent.data2 = nullptr;
-
-	event.type = SDL_USEREVENT;
-	event.user = userevent;
-
-	SDL_PushEvent(&event);
-	return interval;
 }
 
 void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
+	if (fmt == nullptr) {
+		return;
+	}
+
 #ifdef NDEBUG
 	if( msgType==Engine::MSG_DEBUG ) {
 		return;
@@ -815,7 +839,7 @@ void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {
 	str[1024-1] = '\0';
 
 	// bust multi-line strings into individual strings...
-	for( size_t c=0; c<strlen(str); ++c ) {
+	for( Uint32 c=0; c<(Uint32)strlen(str); ++c ) {
 		if( str[c]=='\n' ) {
 			str[c]=0;
 
@@ -915,7 +939,7 @@ void Engine::msg(const Uint32 msgType, const char* str) {
 	fmsg(msgType,str);
 }
 
-void Engine::freadl( void* ptr, size_t size, size_t count, FILE* stream, const char* filename, const char* funcName ) {
+void Engine::freadl( void* ptr, Uint32 size, Uint32 count, FILE* stream, const char* filename, const char* funcName ) {
 	if( fread(ptr, size, count, stream) != count ) {
 		if( filename != nullptr ) {
 			if( funcName != nullptr ) {
@@ -1057,8 +1081,8 @@ void Engine::shutdown() {
 	running = false;
 }
 
-bool Engine::charsHaveLetters(const char *arr, size_t len) {
-	for( int c=0; c<len; ++c ) {
+bool Engine::charsHaveLetters(const char *arr, Uint32 len) {
+	for( Uint32 c=0; c<len; ++c ) {
 		if( arr[c] == 0 ) {
 			return false;
 		}
@@ -1071,6 +1095,36 @@ bool Engine::charsHaveLetters(const char *arr, size_t len) {
 	return false;
 }
 
+int Engine::strCompare(const char* a, const char* b) {
+	return strcmp(a, b);
+}
+
+const char* Engine::getRunningDir() {
+	if (runDir.empty()) {
+#ifdef PLATFORM_WINDOWS
+		wchar_t pBuf[256];
+		int len = (int)sizeof(pBuf);
+		int bytes = GetModuleFileName(NULL, pBuf, len);
+		if (bytes > 0) {
+			char str[256];
+			wcstombs(str, pBuf, sizeof(str));
+			runDir = str;
+		}
+#else
+		char szTmp[64];
+		snprintf(szTmp, 64, "/proc/%d/exe", getpid());
+		char pBuf[256];
+		int len = (int)sizeof(pBuf);
+		int bytes = std::min(readlink(szTmp, pBuf, len), len - 1);
+		if (bytes >= 0) {
+			pBuf[bytes] = '\0';
+			runDir = pBuf;
+		}
+#endif
+	}
+	return runDir.get();
+}
+
 void Engine::preProcess() {
 	anykeystatus = false;
 
@@ -1081,128 +1135,188 @@ void Engine::preProcess() {
 	unsigned int newTicksPerSecond = cvar_tickrate.toInt();
 	if( newTicksPerSecond != ticksPerSecond ) {
 		ticksPerSecond = newTicksPerSecond;
-		SDL_RemoveTimer(timer);
-		timer = SDL_AddTimer( 1000 / ticksPerSecond, Engine::timerCallback, (void*)(&paused) );
+	}
+
+	// do timer
+	std::chrono::duration<double> msInterval(1.0 / ticksPerSecond);
+	auto now = std::chrono::steady_clock::now();
+	int framesToDo = (now - lastTick) / msInterval;
+	if (framesToDo) {
+		lastTick = now;
+		if (!paused) {
+			for (int c = 0; c < framesToDo; ++c) {
+				SDL_Event event;
+				SDL_UserEvent userevent;
+
+				userevent.type = SDL_USEREVENT;
+				userevent.code = 0;
+				userevent.data1 = nullptr;
+				userevent.data2 = nullptr;
+
+				event.type = SDL_USEREVENT;
+				event.user = userevent;
+
+				SDL_PushEvent(&event);
+			}
+		}
 	}
 
 	SDL_GameController* pad = nullptr;
 	while( SDL_PollEvent(&event) ) {
-		switch( event.type ) {
-			case SDL_QUIT: // if SDL receives the shutdown signal
-				if( localClient ) {
-					if( localClient->isEditorActive() ) {
-						killSignal = true;
+		switch (event.type) {
+		case SDL_QUIT: // if SDL receives the shutdown signal
+		{
+			if (localClient) {
+				if (localClient->isEditorActive()) {
+					killSignal = true;
+					break;
+				}
+			}
+			shutdown();
+			break;
+		}
+		case SDL_KEYDOWN: // if a key is pressed...
+		{
+			if (SDL_IsTextInputActive()) {
+				if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(inputstr) > 0) {
+					inputstr[strlen(inputstr) - 1] = 0;
+					cursorflash = ticks;
+				}
+				else if (event.key.keysym.sym == SDLK_c && SDL_GetModState()&KMOD_CTRL) {
+					if (inputstr)
+						SDL_SetClipboardText(inputstr);
+					cursorflash = ticks;
+				}
+				else if (event.key.keysym.sym == SDLK_v && SDL_GetModState()&KMOD_CTRL) {
+					if (inputstr)
+						strcpy(inputstr, SDL_GetClipboardText());
+					cursorflash = ticks;
+				}
+			}
+			lastkeypressed = SDL_GetKeyName(SDL_GetKeyFromScancode(event.key.keysym.scancode));
+			keystatus[event.key.keysym.scancode] = true;
+			anykeystatus = true;
+			break;
+		}
+		case SDL_KEYUP: // if a key is unpressed...
+		{
+			keystatus[event.key.keysym.scancode] = false;
+			break;
+		}
+		case SDL_TEXTINPUT:
+		{
+			if (!inputnum || !charsHaveLetters(event.text.text, SDL_TEXTINPUTEVENT_TEXT_SIZE)) {
+				if ((event.text.text[0] != 'c' && event.text.text[0] != 'C') || !(SDL_GetModState()&KMOD_CTRL)) {
+					if ((event.text.text[0] != 'v' && event.text.text[0] != 'V') || !(SDL_GetModState()&KMOD_CTRL)) {
+						if (inputstr) {
+							int i = inputlen - (int)strlen(inputstr) - 1;
+							strncat(inputstr, event.text.text, max(0, i));
+							strcpy(lastInput, event.text.text);
+						}
+						cursorflash = ticks;
+					}
+				}
+			}
+			break;
+		}
+		case SDL_MOUSEBUTTONDOWN: // if a mouse button is pressed...
+		{
+			if (!mousestatus[event.button.button]) {
+				mousestatus[event.button.button] = true;
+				if (ticks - mouseClickTime <= doubleClickTime) {
+					dbc_mousestatus[event.button.button] = true;
+				}
+				mouseClickTime = ticks;
+			}
+			break;
+		}
+		case SDL_MOUSEBUTTONUP: // if a mouse button is released...
+		{
+			mousestatus[event.button.button] = false;
+			dbc_mousestatus[event.button.button] = false;
+			break;
+		}
+		case SDL_MOUSEWHEEL:
+		{
+			mousewheelx = event.wheel.x;
+			mousewheely = event.wheel.y;
+			break;
+		}
+		case SDL_MOUSEMOTION: // if the mouse is moved...
+		{
+			if (ticks == 0) {
+				// fixes a bug with unpredictable starting mouse movement
+				break;
+			}
+			mousex = event.motion.x;
+			mousey = event.motion.y;
+			mousexrel += event.motion.xrel;
+			mouseyrel += event.motion.yrel;
+
+			if (std::abs(mousexrel) > 2 || std::abs(mouseyrel) > 2) {
+				mouseClickTime = 0;
+			}
+			break;
+		}
+		case SDL_CONTROLLERDEVICEADDED:
+		{
+			pad = SDL_GameControllerOpen(event.cdevice.which);
+			if (pad == nullptr) {
+				fmsg(MSG_WARN, "A controller was plugged in, but no handle is available!");
+			}
+			else {
+				controllers.addNode(event.cdevice.which, pad);
+				fmsg(MSG_INFO, "Added controller with device index (%d)", event.cdevice.which);
+				for (int c = 0; c < 4; ++c) {
+					inputs[c].refresh();
+				}
+				break;
+			}
+			break;
+		}
+		case SDL_CONTROLLERDEVICEREMOVED:
+		{
+			pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
+			if (pad == nullptr) {
+				fmsg(MSG_WARN, "A controller was removed, but I don't know which one!");
+			}
+			else {
+				Uint32 index = 0;
+				Node<SDL_GameController*>* node = controllers.getFirst();
+				for (; node != nullptr; node = node->getNext(), ++index) {
+					SDL_GameController* curr = node->getData();
+					if (pad == curr) {
+						SDL_GameControllerClose(curr);
+						controllers.removeNode(node);
+						fmsg(MSG_INFO, "Removed controller with device index (%d), instance id (%d)", index, event.cdevice.which);
 						break;
 					}
 				}
-				shutdown();
-				break;
-			case SDL_KEYDOWN: // if a key is pressed...
-				if( SDL_IsTextInputActive() ) {
-					if( event.key.keysym.sym == SDLK_BACKSPACE && strlen(inputstr) > 0 ) {
-						inputstr[strlen(inputstr)-1]=0;
-						cursorflash=ticks;
-					} else if( event.key.keysym.sym == SDLK_c && SDL_GetModState()&KMOD_CTRL ) {
-						if( inputstr )
-							SDL_SetClipboardText(inputstr);
-						cursorflash=ticks;
-					} else if( event.key.keysym.sym == SDLK_v && SDL_GetModState()&KMOD_CTRL ) {
-						if( inputstr )
-							strcpy(inputstr,SDL_GetClipboardText());
-						cursorflash=ticks;
-					}
-				}
-				lastkeypressed = SDL_GetKeyName(SDL_GetKeyFromScancode(event.key.keysym.scancode));
-				keystatus[event.key.keysym.scancode] = true;
-				anykeystatus = true;
-				break;
-			case SDL_KEYUP: // if a key is unpressed...
-				keystatus[event.key.keysym.scancode] = false;
-				break;
-			case SDL_TEXTINPUT:
-				if( !inputnum || !charsHaveLetters(event.text.text,SDL_TEXTINPUTEVENT_TEXT_SIZE) ) {
-					if( (event.text.text[0] != 'c' && event.text.text[0] != 'C') || !(SDL_GetModState()&KMOD_CTRL) ) {
-						if( (event.text.text[0] != 'v' && event.text.text[0] != 'V') || !(SDL_GetModState()&KMOD_CTRL) ) {
-							if( inputstr ) {
-								int i = inputlen-(int)strlen(inputstr)-1;
-								strncat(inputstr,event.text.text,max(0,i));
-								strcpy(lastInput, event.text.text);
-							}
-							cursorflash=ticks;
-						}
-					}
-				}
-				break;
-			case SDL_MOUSEBUTTONDOWN: // if a mouse button is pressed...
-				if( !mousestatus[event.button.button] ) {
-					mousestatus[event.button.button] = true;
-					if( ticks - mouseClickTime <= doubleClickTime ) {
-						dbc_mousestatus[event.button.button] = true;
-					}
-					mouseClickTime = ticks;
-				}
-				break;
-			case SDL_MOUSEBUTTONUP: // if a mouse button is released...
-				mousestatus[event.button.button] = false;
-				dbc_mousestatus[event.button.button] = false;
-				break;
-			case SDL_MOUSEWHEEL:
-				mousewheelx = event.wheel.x;
-				mousewheely = event.wheel.y;
-				break;
-			case SDL_MOUSEMOTION: // if the mouse is moved...
-				if( ticks==0 ) {
-					// fixes a bug with unpredictable starting mouse movement
-					break;
-				}
-				mousex = event.motion.x;
-				mousey = event.motion.y;
-				mousexrel += event.motion.xrel;
-				mouseyrel += event.motion.yrel;
+			}
+			break;
+		}
+		case SDL_DROPFILE:
+		{
+			String droppedFile = shortenPath(event.drop.file);
+			if (!inputnum && inputstr) {
+				int i = inputlen - (int)strlen(inputstr) - 1;
+				strncpy(inputstr, droppedFile.get(), std::min(inputlen - 1, (int)droppedFile.length()));
+			}
+			SDL_free(event.drop.file);
+		}
+		case SDL_USEREVENT: // if the game timer has elapsed
+		{
+			executedFrames = true;
 
-				if( std::abs(mousexrel) > 2 || std::abs(mouseyrel) > 2 ) {
-					mouseClickTime = 0;
-				}
-				break;
-			case SDL_CONTROLLERDEVICEADDED:
-				pad = SDL_GameControllerOpen(event.cdevice.which);
-				if( pad == nullptr ) {
-					fmsg(MSG_WARN, "A controller was plugged in, but no handle is available!");
-				} else {
-					controllers.addNode(event.cdevice.which, pad);
-					fmsg(MSG_INFO, "Added controller with device index (%d)", event.cdevice.which);
-					break;
-				}
-				break;
-			case SDL_CONTROLLERDEVICEREMOVED:
-				pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
-				if( pad == nullptr ) {
-					fmsg(MSG_WARN, "A controller was removed, but I don't know which one!");
-				} else {
-					Uint32 index = 0;
-					Node<SDL_GameController*>* node = controllers.getFirst();
-					for( ; node != nullptr; node = node->getNext(), ++index ) {
-						SDL_GameController* curr = node->getData();
-						if( pad == curr ) {
-							SDL_GameControllerClose(curr);
-							controllers.removeNode(node);
-							fmsg(MSG_INFO, "Removed controller with device index (%d), instance id (%d)", index, event.cdevice.which);
-							break;
-						}
-					}
-				}
-				break;
-			case SDL_USEREVENT: // if the game timer has elapsed
-				executedFrames=true;
-
-				++ticks;
-				if( localServer ) {
-					localServer->incrementFrame();
-				}
-				if( localClient ) {
-					localClient->incrementFrame();
-				}
-				break;
+			++ticks;
+			if (localServer) {
+				localServer->incrementFrame();
+			}
+			if (localClient) {
+				localClient->incrementFrame();
+			}
+			break;
+		}
 		}
 	}
 	if( !mousestatus[SDL_BUTTON_LEFT] ) {
@@ -1319,14 +1433,59 @@ void Engine::postProcess() {
 	++cycles;
 }
 
-String Engine::buildPath(const char* path) {
+String Engine::shortenPath(const char* path) const {
+	if (path == nullptr || path[0] == '\0') {
+		return String();
+	}
+
+	Uint32 offset = 0;
+	String pathStr = path;
+
+	// windows has to convert backslashes to forward slashes
+#ifdef PLATFORM_WINDOWS
+	for (Uint32 c = 0; c < pathStr.getSize(); ++c) {
+		if (pathStr[c] == '\0') {
+			break;
+		}
+		if (pathStr[c] == '\\') {
+			pathStr[c] = '/';
+		}
+	}
+#endif
+
+	StringBuf<32> withSlashes;
+	do {
+		withSlashes.format("/%s/", game.path.get());
+		offset = pathStr.find(withSlashes.get(), 0);
+		if (offset != String::npos) {
+			pathStr = pathStr.substr(offset + withSlashes.length());
+		} else {
+			for (const mod_t& mod : mods) {
+				withSlashes.format("/%s/", mod.path.get());
+				offset = pathStr.find(withSlashes.get(), 0);
+				if (offset != String::npos) {
+					pathStr = pathStr.substr(offset + withSlashes.length());
+					break;
+				}
+			}
+		}
+	} while (offset != String::npos);
+
+	return pathStr;
+}
+
+String Engine::buildPath(const char* path) const {
+	if (path == nullptr || path[0] == '\0') {
+		return String();
+	}
+
 	StringBuf<256> result(game.path.get());
-	result.appendf("/%s",path);
+	result.appendf("/%s", path);
 
 	// if a mod has the same path, use the mod's path instead...
-	for( mod_t& mod : mods ) {
+	for( const mod_t& mod : mods ) {
 		StringBuf<256> modResult(mod.path.get());
-		modResult.appendf("/%s",path);
+		modResult.appendf("/%s", path);
 
 		FILE* fp = nullptr;
 		if( (fp=fopen( modResult.get(), "rb" )) != nullptr ) {
@@ -1388,7 +1547,7 @@ bool Engine::removeMod(const char* name) {
 		return false;
 
 	// check that we have not already added the mod
-	size_t index = 0;
+	Uint32 index = 0;
 	for( mod_t& mod : mods ) {
 		if( mod.path == name ) {
 			mods.removeNode(index);
@@ -1473,7 +1632,7 @@ Engine::mod_t::mod_t(const char* _path):
 	if( !path ) {
 		return;
 	}
-	StringBuf<128> fullPath("%s/game.json", _path);
+	StringBuf<128> fullPath("%s/game.json", 1, _path);
 	if( !FileHelper::readObject(fullPath, *this) ) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Failed to read mod manifest: '%s'", fullPath.get());
 		return;

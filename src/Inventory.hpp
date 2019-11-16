@@ -2,9 +2,12 @@
 
 #pragma once
 
-#include "ArrayList.hpp"
+#include "Map.hpp"
+#include "String.hpp"
+#include "Rect.hpp"
 
 class Item;
+class Frame;
 
 class Inventory {
 public:
@@ -12,5 +15,22 @@ public:
 	float bioMatter;
 	float neuroThread;
 
-	ArrayList<Item*> items;
+	class Slot {
+	public:
+
+		bool locked; // if the slot is locked
+		class Entity* entity;
+
+		void serialize(FileInterface * file);
+	};
+
+	Map<String, Slot*> items;
+
+	// save/load this object to a file
+	// @param file interface to serialize with
+	void serialize(FileInterface * file);
+
+	void setVisibility(bool visible);
+
+	void setupInvSlotDisplay(String slotName, Frame* frame, Rect<int> frameSize, int xPos, int yPos);
 };

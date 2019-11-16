@@ -169,14 +169,14 @@ void Text::drawColor( Rect<int> src, Rect<int> dest, const glm::vec4& color ) co
 	if( !mat ) {
 		return;
 	}
-	const ShaderProgram& shader = mat->getShader();
+	ShaderProgram& shader = mat->getShader();
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();
 	}
 
 	glViewport(0, 0, xres, yres);
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
 
 	src.w = src.w <= 0 ? surf->w : src.w;

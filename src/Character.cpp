@@ -37,6 +37,25 @@ Character::Character(Entity& entity, Component* parent) :
 	perception = DEFAULT_PERCEPTION;
 	charisma = DEFAULT_CHARISMA;
 	luck = DEFAULT_LUCK;
+
+	// exposed attributes
+	attributes.push(new AttributeInt("HP", hp));
+	attributes.push(new AttributeInt("MP", mp));
+	attributes.push(new AttributeEnum<sex_t>("Sex", sexStr, sex_t::SEX_MAX, sex));
+	attributes.push(new AttributeInt("Level", level));
+	attributes.push(new AttributeInt("XP", xp));
+	attributes.push(new AttributeInt("Hunger", hunger));
+	attributes.push(new AttributeInt("Nanomatter", nanoMatter));
+	attributes.push(new AttributeInt("Biomatter", bioMatter));
+	attributes.push(new AttributeInt("Neurothread", neuroThread));
+	attributes.push(new AttributeInt("Gold", gold));
+	attributes.push(new AttributeInt("Strength", strength));
+	attributes.push(new AttributeInt("Dexterity", dexterity));
+	attributes.push(new AttributeInt("Intelligence", intelligence));
+	attributes.push(new AttributeInt("Constitution", constitution));
+	attributes.push(new AttributeInt("Perception", perception));
+	attributes.push(new AttributeInt("Charisma", charisma));
+	attributes.push(new AttributeInt("Luck", luck));
 }
 
 Character::~Character() {

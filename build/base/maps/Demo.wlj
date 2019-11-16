@@ -1,0 +1,2394 @@
+{
+    "BasicWorld::version": 0,
+    "nameStr": "Untitled World",
+    "entities": [
+        {
+            "Entity::version": 2,
+            "name": "Floor",
+            "pos": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 126.1910400390625
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 32.0,
+                "y": 32.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 129,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Marble.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Sun",
+            "pos": {
+                "x": 673.158935546875,
+                "y": 740.394287109375,
+                "z": -811.964111328125
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 3,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "light",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Light::version": 2,
+                        "color": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "intensity": 1.0,
+                        "radius": 100000.0,
+                        "shape": 0,
+                        "shadow": true,
+                        "arc": 70.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Player Start",
+            "pos": {
+                "x": -259.30511474609377,
+                "y": 301.112060546875,
+                "z": 94.19107055664063
+            },
+            "ang": {
+                "yaw": 5.573006629943848,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "PlayerStart",
+            "flags": 1286,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 0,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "models",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 2,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "Head",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "Model::version": 1,
+                                    "meshStr": "",
+                                    "materialStr": "",
+                                    "depthfailStr": "",
+                                    "animationStr": "",
+                                    "shaderVars": {
+                                        "Mesh::version": 0,
+                                        "customColorEnabled": true,
+                                        "customColorR": [
+                                            0.699999988079071,
+                                            0.5,
+                                            0.20000000298023225,
+                                            1.0
+                                        ],
+                                        "customColorG": [
+                                            1.0,
+                                            1.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "customColorB": [
+                                            0.10000000149011612,
+                                            0.10000000149011612,
+                                            0.5,
+                                            1.0
+                                        ],
+                                        "customColorA": [
+                                            0.0,
+                                            1.0,
+                                            0.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "genius": false
+                                }
+                            },
+                            {
+                                "type": 2,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "Torso",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "Model::version": 1,
+                                    "meshStr": "",
+                                    "materialStr": "",
+                                    "depthfailStr": "",
+                                    "animationStr": "",
+                                    "shaderVars": {
+                                        "Mesh::version": 0,
+                                        "customColorEnabled": true,
+                                        "customColorR": [
+                                            0.10000000149011612,
+                                            0.10000000149011612,
+                                            0.5,
+                                            1.0
+                                        ],
+                                        "customColorG": [
+                                            0.5,
+                                            0.5,
+                                            0.5,
+                                            1.0
+                                        ],
+                                        "customColorB": [
+                                            0.20000000298023225,
+                                            0.20000000298023225,
+                                            0.20000000298023225,
+                                            1.0
+                                        ],
+                                        "customColorA": [
+                                            0.0,
+                                            1.0,
+                                            0.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "genius": false
+                                }
+                            },
+                            {
+                                "type": 2,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "Arms",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "Model::version": 1,
+                                    "meshStr": "",
+                                    "materialStr": "",
+                                    "depthfailStr": "",
+                                    "animationStr": "",
+                                    "shaderVars": {
+                                        "Mesh::version": 0,
+                                        "customColorEnabled": true,
+                                        "customColorR": [
+                                            0.10000000149011612,
+                                            0.10000000149011612,
+                                            0.5,
+                                            1.0
+                                        ],
+                                        "customColorG": [
+                                            0.5,
+                                            0.5,
+                                            0.5,
+                                            1.0
+                                        ],
+                                        "customColorB": [
+                                            0.20000000298023225,
+                                            0.20000000298023225,
+                                            0.20000000298023225,
+                                            1.0
+                                        ],
+                                        "customColorA": [
+                                            0.0,
+                                            1.0,
+                                            0.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "genius": false
+                                }
+                            },
+                            {
+                                "type": 2,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "Feet",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "Model::version": 1,
+                                    "meshStr": "",
+                                    "materialStr": "",
+                                    "depthfailStr": "",
+                                    "animationStr": "",
+                                    "shaderVars": {
+                                        "Mesh::version": 0,
+                                        "customColorEnabled": true,
+                                        "customColorR": [
+                                            0.10000000149011612,
+                                            0.10000000149011612,
+                                            0.5,
+                                            1.0
+                                        ],
+                                        "customColorG": [
+                                            0.5,
+                                            0.5,
+                                            0.5,
+                                            1.0
+                                        ],
+                                        "customColorB": [
+                                            0.20000000298023225,
+                                            0.20000000298023225,
+                                            0.20000000298023225,
+                                            1.0
+                                        ],
+                                        "customColorA": [
+                                            0.0,
+                                            1.0,
+                                            0.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "genius": false
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": 1,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "bbox",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": -64.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 32.0,
+                            "y": 32.0,
+                            "z": 64.0
+                        },
+                        "components": [],
+                        "BBox::version": 1,
+                        "shape": 0,
+                        "enabled": true,
+                        "mass": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Man",
+            "pos": {
+                "x": 176.3466339111328,
+                "y": 134.10836791992188,
+                "z": 94.1910400390625
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": -64.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 64.0,
+                            "y": 64.0,
+                            "z": 64.0
+                        },
+                        "components": [],
+                        "Model::version": 1,
+                        "meshStr": "assets/ted/model.obj",
+                        "materialStr": "assets/ted/material.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                },
+                {
+                    "type": 1,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "bbox",
+                        "lPos": {
+                            "x": -8.0,
+                            "y": -8.0,
+                            "z": -56.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 16.0,
+                            "y": 16.0,
+                            "z": 56.0
+                        },
+                        "components": [],
+                        "BBox::version": 1,
+                        "shape": 2,
+                        "enabled": true,
+                        "mass": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Wall",
+            "pos": {
+                "x": 517.6463623046875,
+                "y": 0.66424560546875,
+                "z": 126.1910400390625
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 0.8254413604736328,
+                "y": 32.0,
+                "z": 12.297443389892579
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Wood.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Wall",
+            "pos": {
+                "x": -513.432373046875,
+                "y": 0.66424560546875,
+                "z": 126.1910400390625
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 0.8254413604736328,
+                "y": 32.0,
+                "z": 25.248144149780275
+            },
+            "scriptStr": "",
+            "flags": 129,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Wood.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Wall",
+            "pos": {
+                "x": 0.934783935546875,
+                "y": -506.97552490234377,
+                "z": 126.1910400390625
+            },
+            "ang": {
+                "yaw": 4.714004993438721,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 0.8254413604736328,
+                "y": 32.0,
+                "z": 12.297443389892579
+            },
+            "scriptStr": "",
+            "flags": 129,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Wood.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Wall",
+            "pos": {
+                "x": 0.934783935546875,
+                "y": 510.34783935546877,
+                "z": 126.1910400390625
+            },
+            "ang": {
+                "yaw": 4.714004993438721,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 0.8254413604736328,
+                "y": 32.0,
+                "z": 12.297443389892579
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Wood.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Floor",
+            "pos": {
+                "x": 246.52989196777345,
+                "y": -128.39715576171876,
+                "z": 151.45851135253907
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 4.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Marble.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Floor",
+            "pos": {
+                "x": -38.00740051269531,
+                "y": -130.296142578125,
+                "z": -71.31909942626953
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 3.5186288356781008,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 16.745559692382814,
+                "y": 3.189699649810791,
+                "z": 0.7115446329116821
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Marble.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Floor",
+            "pos": {
+                "x": -329.51507568359377,
+                "y": -128.39715576171876,
+                "z": -42.441993713378909
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 4.0,
+                "y": 4.0,
+                "z": 4.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 1.0,
+                                        "y": 1.0,
+                                        "z": 1.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 5,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Marble.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Physics Box",
+            "pos": {
+                "x": -265.1770324707031,
+                "y": -132.09539794921876,
+                "z": -226.7308807373047
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 16.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Rock.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                },
+                {
+                    "type": 1,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "physics",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 16.0,
+                            "y": 16.0,
+                            "z": 16.0
+                        },
+                        "components": [],
+                        "BBox::version": 1,
+                        "shape": 0,
+                        "enabled": true,
+                        "mass": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Skybox",
+            "pos": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 100.0,
+                "y": 100.0,
+                "z": 100.0
+            },
+            "scriptStr": "",
+            "flags": 17031,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 16.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": -1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/skybox/material.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "ShadowHighlight",
+            "pos": {
+                "x": 312.6778564453125,
+                "y": 238.516845703125,
+                "z": -659.6180419921875
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 129,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 3,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "light",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Light::version": 2,
+                        "color": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "intensity": 0.5,
+                        "radius": 100000.0,
+                        "shape": 0,
+                        "shadow": true,
+                        "arc": 70.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Speaker",
+            "pos": {
+                "x": -0.139739990234375,
+                "y": 110.8121337890625,
+                "z": -223.16128540039063
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 5,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "speaker",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Speaker::version": 0,
+                        "defaultSound": "beach-seagulls.ogg",
+                        "defaultLoop": true,
+                        "defaultRange": 256.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 2,
+            "name": "Floor",
+            "pos": {
+                "x": -329.51507568359377,
+                "y": -128.39715576171876,
+                "z": 10.892436981201172
+            },
+            "ang": {
+                "yaw": 0.0,
+                "pitch": 0.0,
+                "roll": 0.0
+            },
+            "scale": {
+                "x": 3.0,
+                "y": 3.0,
+                "z": 5.316874980926514
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 0,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "yaw": 0.0,
+                            "pitch": 0.0,
+                            "roll": 0.0
+                        },
+                        "lScale": {
+                            "x": 32.0,
+                            "y": 32.0,
+                            "z": 32.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 0,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "yaw": 0.0,
+                                        "pitch": 0.0,
+                                        "roll": 0.0
+                                    },
+                                    "lScale": {
+                                        "x": 0.5,
+                                        "y": 0.5,
+                                        "z": 0.5
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 3,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/editor/bbox/Cylinder.FBX",
+                        "materialStr": "assets/materials/Marble.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        }
+    ]
+}

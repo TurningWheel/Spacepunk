@@ -27,6 +27,7 @@
 #include "Speaker.hpp"
 #include "Console.hpp"
 
+bool Model::dontLoadMesh = false;
 const int Model::maxAnimations = 8;
 const char* Model::defaultMesh = "assets/block/block.FBX";
 
@@ -38,12 +39,23 @@ Model::Model(Entity& _entity, Component* _parent) :
 	loadAnimations();
 
 	// add a bbox for editor usage
-	if( mainEngine->isEditorRunning() ) {
+	if( mainEngine->isEditorRunning() && !dontLoadMesh ) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_MESH);
 		bbox->setEditorOnly(true);
 		bbox->update();
 	}
+
+	// exposed attributes
+	attributes.push(new AttributeFile("Mesh", "vox,FBX,dae,gltf,glb,blend,3ds,ase,obj,ifc,xgl,zgl,ply,dxf,lwo,lws,lxo,stl,x,ac,ms3d,cob,scn,xml,ogex,3d,mdl,md2,md3,pk3,mdc,md5,smd,vta,b3d,q3d,q3s,nff,noff,raw,ter,hmp,ndo", meshStr));
+	attributes.push(new AttributeFile("Material", "json", materialStr));
+	attributes.push(new AttributeFile("Depth Fail Material", "json", depthfailStr));
+	attributes.push(new AttributeFile("Animation", "json", animationStr));
+	attributes.push(new AttributeBool("Custom Color Enabled", shaderVars.customColorEnabled));
+	attributes.push(new AttributeColor("Custom Red", shaderVars.customColorR));
+	attributes.push(new AttributeColor("Custom Green", shaderVars.customColorG));
+	attributes.push(new AttributeColor("Custom Blue", shaderVars.customColorB));
+	attributes.push(new AttributeColor("Custom Glow", shaderVars.customColorA));
 }
 
 Model::~Model() {
@@ -84,7 +96,7 @@ Model::bone_t Model::findBone(const char* name) const {
 	if( mesh ) {
 		unsigned int bone = mesh->boneIndexForName(name);
 		if( bone != UINT32_MAX ) {
-			size_t c = 0;
+			Uint32 c = 0;
 			for( ; c < skincache.getSize(); ++c ) {
 				if( bone >= skincache[c].anims.getSize() ) {
 					bone -= (unsigned int)skincache[c].anims.getSize();
@@ -127,8 +139,14 @@ void Model::setWeightOnChildren(const aiNode* root, AnimationState& animation, f
 }
 
 bool Model::animate(const char* name, bool blend) {
+	if (dontLoadMesh) {
+		return false;
+	}
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	if (!mesh || !animations.exists(name)) {
+		if (strcmp(name,"__tpose")) {
+			animate("__tpose", false);
+		}
 		return false;
 	}
 	for (auto& pair : animations) {
@@ -176,9 +194,7 @@ void Model::loadAnimations() {
 	tPose.name = "__tpose";
 	animations.insert("__tpose", AnimationState(tPose, ArrayList<Animation::sound_t>()));
 
-	if (!animate("idle", false)) {
-		animate("__tpose", false);
-	}
+	animate("idle", false);
 }
 
 void Model::updateSkin() {
@@ -189,8 +205,8 @@ void Model::updateSkin() {
 	}
 }
 
-void Model::draw(Camera& camera, Light* light) {
-	Component::draw(camera, light);
+void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
+	Component::draw(camera, lights);
 
 	// don't draw the model if its assets are missing
 	if (broken) {
@@ -201,9 +217,11 @@ void Model::draw(Camera& camera, Light* light) {
 	bool silhouette = false;
 	if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
 		camera.setDrawMode(Camera::DRAW_DEPTH);
-		glClearStencil(0);
-		glClear(GL_STENCIL_BUFFER_BIT);
 		glEnable(GL_STENCIL_TEST);
+		glDisable(GL_DEPTH_TEST);
+		glDepthMask(GL_FALSE);
+		glDrawBuffer(GL_NONE);
+		glClear(GL_STENCIL_BUFFER_BIT);
 		glStencilFunc(GL_ALWAYS, 1, -1);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		silhouette = true;
@@ -213,8 +231,17 @@ void Model::draw(Camera& camera, Light* light) {
 	if( camera.getEntity()->isShouldSave() && !entity->isShouldSave() ) {
 		return;
 	}
+	if( camera.getDrawMode() == Camera::DRAW_SHADOW && (!entity->isShouldSave() && entity->getScriptStr() == "") ) {
+		return;
+	}
+
+	// static lights only render static objects
+	if( camera.getDrawMode()==Camera::DRAW_SHADOW && lights[0]->getEntity()->isFlag(Entity::FLAG_STATIC) && !entity->isFlag(Entity::FLAG_STATIC) )
+		return;
 
 	// skip certain passes if necessary
+	if( camera.getDrawMode()==Camera::DRAW_SHADOW && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)) )
+		return;
 	if( camera.getDrawMode()==Camera::DRAW_STENCIL && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)) )
 		return;
 	if( camera.getDrawMode()==Camera::DRAW_GLOW && !(entity->isFlag(Entity::flag_t::FLAG_GLOWING)) )
@@ -223,8 +250,8 @@ void Model::draw(Camera& camera, Light* light) {
 		return;
 
 	// don't render models marked genius
-	if( ( entity->isFlag(Entity::flag_t::FLAG_GENIUS) || genius ) && camera.getEntity() == entity ) {
-		if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
+	if( ( entity->isFlag(Entity::flag_t::FLAG_GENIUS) || genius ) ) {
+		if( camera.getEntity() == entity && camera.getDrawMode() != Camera::DRAW_STENCIL ) {
 			return;
 		}
 	}
@@ -261,9 +288,9 @@ void Model::draw(Camera& camera, Light* light) {
 		// load shader
 		ShaderProgram* shader = nullptr;
 		if( camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
-			shader = mesh->loadShader(*this, camera, light, depthfailmat, shaderVars, gMat);
+			shader = mesh->loadShader(*this, camera, lights, depthfailmat, shaderVars, gMat);
 		} else {
-			shader = mesh->loadShader(*this, camera, light, mat, shaderVars, gMat);
+			shader = mesh->loadShader(*this, camera, lights, mat, shaderVars, gMat);
 		}
 
 		// update skin
@@ -279,14 +306,19 @@ void Model::draw(Camera& camera, Light* light) {
 
 		// silhouette requires a second pass after the stencil op
 		if (silhouette) {
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
+			glEnable(GL_DEPTH_TEST);
 			glStencilFunc(GL_NOTEQUAL, 1, -1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			camera.setDrawMode(Camera::DRAW_SILHOUETTE);
 			ShaderProgram* shader = nullptr;
-			shader = mesh->loadShader(*this, camera, light, mat, shaderVars, gMat);
+			shader = mesh->loadShader(*this, camera, lights, mat, shaderVars, gMat);
 			if( shader ) {
 				mesh->draw(camera, this, skincache, shader);
 			}
+			glDepthMask(GL_TRUE);
+			glDisable(GL_STENCIL_TEST);
+			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
 		}
 	}
 }
@@ -302,6 +334,7 @@ bool Model::hasAnimations() const {
 }
 
 void Model::load(FILE* fp) {
+	// DEPRECATED, DO NOT USE
 	Component::load(fp);
 
 	Uint32 len = 0;
@@ -380,7 +413,7 @@ void Model::serialize(FileInterface * file) {
 
 	file->property("shaderVars", shaderVars);
 
-	if (file->isReading() && hasAnimations()) {
+	if (file->isReading()) {
 		loadAnimations();
 	}
 

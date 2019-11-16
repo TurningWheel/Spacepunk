@@ -11,6 +11,7 @@
 #include "Component.hpp"
 #include "Entity.hpp"
 #include "TileWorld.hpp"
+#include "Frame.hpp"
 
 //Component headers.
 #include "BBox.hpp"
@@ -19,6 +20,439 @@
 #include "Camera.hpp"
 #include "Speaker.hpp"
 #include "Character.hpp"
+#include "Multimesh.hpp"
+
+Component::Attribute::Attribute(const char* _label) {
+	label = _label;
+}
+
+Component::AttributeBool::AttributeBool(const char * _label, bool & _value) :
+	Attribute(_label),
+	value(_value)
+{}
+
+void Component::AttributeBool::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	static const int border = 3;
+
+	Button* button = properties.addButton("");
+	button->setBorder(1);
+	button->setIcon("images/gui/checkmark.png");
+	button->setStyle(Button::STYLE_CHECKBOX);
+	button->setPressed(value);
+	button->setCallback(new Callback(value));
+
+	Rect<int> size;
+	size.x = border * 2 + x; size.w = 30;
+	size.y = y; size.h = 30;
+	button->setSize(size);
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = border * 2 + 30 + border + x;
+		size.w = width - border * 4 - 30 - border - x;
+		size.y = y + 5;
+		size.h = 30;
+		label->setSize(size);
+		label->setText(this->label.get());
+	}
+
+	y += size.h + border;
+}
+
+Component::AttributeInt::AttributeInt(const char * _label, int & _value) :
+	Attribute(_label),
+	value(_value)
+{}
+
+void Component::AttributeInt::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	Frame* frame = properties.addFrame("");
+
+	static const int border = 3;
+
+	Rect<int> size;
+	size.x = 0;
+	size.w = width / 3 - border * 2 - x;
+	size.y = 0;
+	size.h = 30;
+	frame->setActualSize(size);
+	size.x = x + border * 2;
+	size.w = width / 3 - border * 2 - x;
+	size.y = y;
+	size.h = 30;
+	frame->setSize(size);
+	frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+	frame->setHigh(false);
+
+	Field* field = frame->addField("field", 9);
+	size.x = border; size.w = frame->getSize().w - border * 2;
+	size.y = border; size.h = frame->getSize().h - border * 2;
+	field->setSize(size);
+	field->setEditable(true);
+	field->setNumbersOnly(true);
+	field->setJustify(Field::RIGHT);
+	field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
+	field->setCallback(new Callback(value));
+
+	char i[16];
+	snprintf(i, 16, "%d", value);
+	field->setText(i);
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = x + border + width / 3;
+		size.w = width - border * 4 - 30 - border - x;
+		size.y = y + 5;
+		size.h = 30;
+		label->setSize(size);
+		label->setText(this->label.get());
+	}
+
+	y += size.h + border * 3;
+}
+
+Component::AttributeFloat::AttributeFloat(const char * _label, float & _value) :
+	Attribute(_label),
+	value(_value)
+{}
+
+void Component::AttributeFloat::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	Frame* frame = properties.addFrame("");
+
+	static const int border = 3;
+
+	Rect<int> size;
+	size.x = 0;
+	size.w = width / 3 - border * 2 - x;
+	size.y = 0;
+	size.h = 30;
+	frame->setActualSize(size);
+	size.x = x + border * 2;
+	size.w = width / 3 - border * 2 - x;
+	size.y = y;
+	size.h = 30;
+	frame->setSize(size);
+	frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+	frame->setHigh(false);
+
+	Field* field = frame->addField("field", 9);
+	size.x = border; size.w = frame->getSize().w - border * 2;
+	size.y = border; size.h = frame->getSize().h - border * 2;
+	field->setSize(size);
+	field->setEditable(true);
+	field->setNumbersOnly(true);
+	field->setJustify(Field::RIGHT);
+	field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
+	field->setCallback(new Callback(value));
+
+	char f[16];
+	snprintf(f, 16, "%.1f", value);
+	field->setText(f);
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = x + border + width / 3;
+		size.w = width - border * 4 - 30 - border - x;
+		size.y = y + 5;
+		size.h = 30;
+		label->setSize(size);
+		label->setText(this->label.get());
+	}
+
+	y += size.h + border * 3;
+}
+
+Component::AttributeString::AttributeString(const char * _label, String & _value) :
+	Attribute(_label),
+	value(_value)
+{}
+
+void Component::AttributeString::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	static const int border = 3;
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = border * 2 + x;
+		size.w = width - border * 4 - x;
+		size.y = y;
+		size.h = 20;
+		label->setSize(size);
+		label->setText(this->label.get());
+
+		y += size.h + border;
+	}
+
+	// string field
+	{
+		Frame* frame = properties.addFrame("");
+
+		Rect<int> size;
+		size.x = 0; size.w = width - border * 4 - x;
+		size.y = 0; size.h = 30;
+		frame->setActualSize(size);
+		size.x = x + border * 2; size.w = width - border * 4 - x;
+		size.y = y; size.h = 30;
+		frame->setSize(size);
+		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setHigh(false);
+
+		Field* field = frame->addField("field", 128);
+		size.x = border; size.w = frame->getSize().w - border * 2;
+		size.y = border; size.h = frame->getSize().h - border * 2;
+		field->setSize(size);
+		field->setEditable(true);
+
+		field->setText(value.get());
+		field->setCallback(new Callback(value));
+
+		y += size.h + border;
+	}
+
+	y += border;
+}
+
+Component::AttributeVector::AttributeVector(const char * _label, Vector & _value) :
+	Attribute(_label),
+	value(_value)
+{}
+
+void Component::AttributeVector::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	static const int border = 3;
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = x + border * 2;
+		size.w = width - border * 4 - x;
+		size.y = y;
+		size.h = 20;
+		label->setSize(size);
+		label->setText(this->label.get());
+
+		y += size.h + border;
+	}
+
+	// dimensions
+	for (int dim = 0; dim < 3; ++dim) {
+		Frame* frame = properties.addFrame("");
+
+		Rect<int> size;
+		size.x = 0;
+		size.w = (width - x) / 3 - border * 2;
+		size.y = 0;
+		size.h = 30;
+		frame->setActualSize(size);
+		size.x = x + border * 2 + ((width - x) / 3 - border) * dim;
+		size.w = (width - x) / 3 - border * 2;
+		size.y = y;
+		size.h = 30;
+		frame->setSize(size);
+		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setHigh(false);
+
+		Field* field = frame->addField("field", 9);
+		size.x = border; size.w = frame->getSize().w - border * 2;
+		size.y = border; size.h = frame->getSize().h - border * 2;
+		field->setSize(size);
+		field->setEditable(true);
+		field->setNumbersOnly(true);
+		field->setJustify(Field::RIGHT);
+
+		char f[16];
+		switch (dim) {
+		case 0:
+			field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+			snprintf(f, 16, "%.2f", value.x);
+			break;
+		case 1:
+			field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+			snprintf(f, 16, "%.2f", value.y);
+			break;
+		default:
+			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+			snprintf(f, 16, "%.2f", value.z);
+			break;
+		}
+		field->setCallback(new Callback(value));
+		field->getParams().addInt(dim);
+		field->setText(f);
+	}
+
+	y += 30 + border;
+}
+
+Component::AttributeColor::AttributeColor(const char* _label, ArrayList<GLfloat>& _value) :
+	Attribute(_label),
+	value(_value)
+{}
+
+void Component::AttributeColor::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	static const int border = 3;
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = x + border * 2;
+		size.w = width - border * 4 - x;
+		size.y = y;
+		size.h = 20;
+		label->setSize(size);
+		label->setText(this->label.get());
+
+		y += size.h + border;
+	}
+
+	// color channels
+	for (int color = 0; color < 3; ++color) {
+		Frame* frame = properties.addFrame("");
+
+		Rect<int> size;
+		size.x = 0;
+		size.w = (width - x) / 3 - border * 2;
+		size.y = 0;
+		size.h = 30;
+		frame->setActualSize(size);
+		size.x = x + border * 2 + ((width - x) / 3 - border) * color;
+		size.w = (width - x) / 3 - border * 2;
+		size.y = y;
+		size.h = 30;
+		frame->setSize(size);
+		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setHigh(false);
+
+		Field* field = frame->addField("field", 9);
+		size.x = border; size.w = frame->getSize().w - border * 2;
+		size.y = border; size.h = frame->getSize().h - border * 2;
+		field->setSize(size);
+		field->setEditable(true);
+		field->setNumbersOnly(true);
+		field->setJustify(Field::RIGHT);
+
+		switch (color) {
+		case 0:
+			field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+			break;
+		case 1:
+			field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+			break;
+		default:
+			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+			break;
+		}
+		field->setCallback(new Callback(value));
+		field->getParams().addInt(color);
+
+		char f[16];
+		snprintf(f, 16, "%.2f", value[color]);
+		field->setText(f);
+	}
+
+	y += 30 + border;
+}
+
+Component::AttributeFile::AttributeFile(const char* _label, const char* _extensions, String& _value) :
+	Attribute(_label),
+	extensions(_extensions),
+	value(_value)
+{}
+
+void Component::AttributeFile::createAttributeUI(Frame& properties, int x, int& y, int width) const {
+	static const int border = 3;
+
+	// label
+	{
+		Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+		Rect<int> size;
+		size.x = border * 2 + x;
+		size.w = width - border * 4 - x;
+		size.y = y;
+		size.h = 20;
+		label->setSize(size);
+		label->setText(this->label.get());
+
+		y += size.h + border;
+	}
+
+	// string field
+	Field* field = nullptr;
+	{
+		Frame* frame = properties.addFrame("");
+
+		Rect<int> size;
+		size.x = 0; size.w = width - border * 4 - x - 30 - border;
+		size.y = 0; size.h = 30;
+		frame->setActualSize(size);
+		size.x = x + border * 2; size.w = width - border * 4 - x - 30 - border;
+		size.y = y; size.h = 30;
+		frame->setSize(size);
+		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setHigh(false);
+
+		field = frame->addField("field", 128);
+		size.x = border; size.w = frame->getSize().w - border * 2;
+		size.y = border; size.h = frame->getSize().h - border * 2;
+		field->setSize(size);
+		field->setEditable(true);
+
+		field->setText(value.get());
+		field->setCallback(new FieldCallback(value));
+	}
+
+	// button
+	{
+		Button* button = properties.addButton("");
+		button->setBorder(1);
+		button->setIcon("images/gui/open.png");
+		button->setStyle(Button::STYLE_NORMAL);
+		button->setCallback(new ButtonCallback(value, extensions, field));
+
+		Rect<int> size;
+		size.x = border * 2 + x + (width - border * 4 - x - 30); size.w = 30;
+		size.y = y; size.h = 30;
+		button->setSize(size);
+
+		y += size.h + border;
+	}
+
+	y += border;
+}
+
+int Component::AttributeFile::ButtonCallback::operator()(Script::Args& args) const {
+	mainEngine->setPaused(true);
+	nfdchar_t* resultPath = nullptr;
+	nfdresult_t result = NFD_OpenDialog(extensions, nullptr, &resultPath);
+	if (result == NFD_CANCEL) {
+		mainEngine->setPaused(false);
+		return 1;
+	}
+	else if (result == NFD_ERROR) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
+		mainEngine->setPaused(false);
+		return 2;
+	}
+	else {
+		value = mainEngine->shortenPath(resultPath);
+		field->setText(value.get());
+		mainEngine->setPaused(false);
+		return 0;
+	}
+}
 
 const char* Component::typeStr[COMPONENT_MAX] = {
 	"basic",
@@ -28,7 +462,8 @@ const char* Component::typeStr[COMPONENT_MAX] = {
 	"camera",
 	"speaker",
 	"emitter",
-	"character"
+	"character",
+	"multimesh"
 };
 
 const char* Component::typeIcon[COMPONENT_MAX] = {
@@ -39,7 +474,8 @@ const char* Component::typeIcon[COMPONENT_MAX] = {
 	"images/gui/camera.png",
 	"images/gui/speaker.png",
 	"images/gui/emitter.png",
-	"images/gui/character.png"
+	"images/gui/character.png",
+	"images/gui/mesh.png"
 };
 
 Component::Component(Entity& _entity, Component* _parent) {
@@ -58,7 +494,7 @@ Component::Component(Entity& _entity, Component* _parent) {
 }
 
 Component::~Component() {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c] ) {
 			delete components[c];
 			components[c] = nullptr;
@@ -71,11 +507,19 @@ Component::~Component() {
 
 	// remove chunk node
 	clearChunkNode();
+
+	// delete attributes
+	for (auto attribute : attributes) {
+		if (attribute) {
+			delete attribute;
+			attribute = nullptr;
+		}
+	}
 }
 
 void Component::clearAllChunkNodes() {
 	clearChunkNode();
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->clearAllChunkNodes();
 	}
 }
@@ -108,6 +552,8 @@ void Component::occlusionTest(float range, int accuracy) {
 		return;
 	} else {
 		switch( world->getType() ) {
+		case World::WORLD_BASIC:
+			break;
 		case World::WORLD_TILES:
 			occlusionTestTiles(range, accuracy);
 			break;
@@ -409,7 +855,7 @@ void Component::deleteVisMaps() {
 }
 
 void Component::deleteAllVisMaps() {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->deleteAllVisMaps();
 	}
 	deleteVisMaps();
@@ -420,25 +866,25 @@ void Component::process() {
 		update();
 	}
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->process();
 	}
 }
 
 void Component::beforeWorldInsertion(const World* world) {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->beforeWorldInsertion(world);
 	}
 }
 
 void Component::afterWorldInsertion(const World* world) {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->afterWorldInsertion(world);
 	}
 }
 
 bool Component::checkCollision() const {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->checkCollision() ) {
 			return true;
 		}
@@ -446,14 +892,14 @@ bool Component::checkCollision() const {
 	return false;
 }
 
-void Component::draw(Camera& camera, Light* light) {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
-		components[c]->draw(camera, light);
+void Component::draw(Camera& camera, const ArrayList<Light*>& lights) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+		components[c]->draw(camera, lights);
 	}
 }
 
 bool Component::hasComponent(type_t type) const {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->getType() == type ) {
 			return true;
 		}
@@ -511,8 +957,8 @@ void Component::update() {
 		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
 		glm::mat4 rotationM = glm::mat4( 1.f );
 		rotationM = glm::rotate(rotationM, (float)(lAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 		rotationM = glm::rotate(rotationM, (float)(lAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
+		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
 		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
 		lMat = translationM * rotationM * scaleM;
 	}
@@ -521,13 +967,13 @@ void Component::update() {
 		gMat = parent->getGlobalMat() * lMat;
 		gAng.yaw = lAng.yaw + parent->getGlobalAng().yaw;
 		gAng.pitch = lAng.pitch + parent->getGlobalAng().pitch;
-		gAng.roll = -(lAng.roll + parent->getGlobalAng().roll);
+		gAng.roll = lAng.roll + parent->getGlobalAng().roll;
 		gAng.wrapAngles();
 	} else {
 		gMat = entity->getMat() * lMat;
 		gAng.yaw = lAng.yaw + entity->getAng().yaw;
 		gAng.pitch = lAng.pitch + entity->getAng().pitch;
-		gAng.roll = -(lAng.roll + entity->getAng().roll);
+		gAng.roll = lAng.roll + entity->getAng().roll;
 		gAng.wrapAngles();
 	}
 	gPos = Vector( gMat[3][0], gMat[3][2], -gMat[3][1] );
@@ -537,14 +983,14 @@ void Component::update() {
 	World* world = entity->getWorld();
 	if( world && world->getType() == World::WORLD_TILES ) {
 		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		if( tileworld->getChunks() ) {
+		if (tileworld && tileworld->getChunks().getSize()) {
 			Sint32 cW = tileworld->calcChunksWidth();
 			Sint32 cH = tileworld->calcChunksHeight();
-			if( cW > 0 && cH > 0 ) {
-				Sint32 cX = std::min( std::max( 0, (Sint32)floor((gPos.x / Tile::size) / Chunk::size) ), cW - 1 );
-				Sint32 cY = std::min( std::max( 0, (Sint32)floor((gPos.y / Tile::size) / Chunk::size) ), cH - 1 );
+			if (cW > 0 && cH > 0) {
+				Sint32 cX = std::min(std::max(0, (Sint32)floor((gPos.x / Tile::size) / Chunk::size)), cW - 1);
+				Sint32 cY = std::min(std::max(0, (Sint32)floor((gPos.y / Tile::size) / Chunk::size)), cH - 1);
 
-				if( cX != currentCX || cY != currentCY ) {
+				if (cX != currentCX || cY != currentCY) {
 					clearChunkNode();
 
 					currentCX = cX;
@@ -558,7 +1004,7 @@ void Component::update() {
 		}
 	}
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->isToBeDeleted() ) {
 			delete components[c];
 			components.remove(c);
@@ -569,76 +1015,173 @@ void Component::update() {
 	}
 }
 
-void Component::copyComponents(Component& dest) {
+void Component::copy(Component* dest) {
+	if (dest == nullptr)
+	{
+		return;
+	}
 	Component* component = nullptr;
-	for( size_t c = 0; c < components.getSize(); ++c ) {
-		switch( components[c]->getType() ) {
-			case Component::COMPONENT_BASIC:
-			{
-				component = dest.addComponent<Component>();
-				break;
-			}
-			case Component::COMPONENT_BBOX:
-			{
-				component = dest.addComponent<BBox>();
-				BBox* bbox0 = static_cast<BBox*>(components[c]);
-				BBox* bbox1 = static_cast<BBox*>(component);
-				*bbox1 = *bbox0;
-				break;
-			}
-			case Component::COMPONENT_MODEL:
-			{
-				component = dest.addComponent<Model>();
-				Model* model0 = static_cast<Model*>(components[c]);
-				Model* model1 = static_cast<Model*>(component);
-				*model1 = *model0;
-				break;
-			}
-			case Component::COMPONENT_LIGHT:
-			{
-				component = dest.addComponent<Light>();
-				Light* light0 = static_cast<Light*>(components[c]);
-				Light* light1 = static_cast<Light*>(component);
-				*light1 = *light0;
-				break;
-			}
-			case Component::COMPONENT_CAMERA:
-			{
-				component = dest.addComponent<Camera>();
-				Camera* camera0 = static_cast<Camera*>(components[c]);
-				Camera* camera1 = static_cast<Camera*>(component);
-				*camera1 = *camera0;
-				break;
-			}
-			case Component::COMPONENT_SPEAKER:
-			{
-				component = dest.addComponent<Speaker>();
-				Speaker* speaker0 = static_cast<Speaker*>(components[c]);
-				Speaker* speaker1 = static_cast<Speaker*>(component);
-				*speaker1 = *speaker0;
-				break;
-			}
-			case Component::COMPONENT_CHARACTER:
-			{
-				component = dest.addComponent<Character>();
-				Character* character0 = static_cast<Character*>(components[c]);
-				Character* character1 = static_cast<Character*>(component);
-				*character1 = *character0;
-				break;
-			}
-			default:
-			{
-				mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
-				break;
-			}
-		}
-		if( !component ) {
-			mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from entity '%s'", entity->getName());
-		} else {
-			*component = *components[c];
-			components[c]->copyComponents(*component);
-			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
-		}
+	switch (getType()) {
+	case Component::COMPONENT_BASIC:
+	{
+		component = dest->addComponent<Component>();
+		break;
+	}
+	case Component::COMPONENT_BBOX:
+	{
+		component = dest->addComponent<BBox>();
+		BBox* bbox0 = static_cast<BBox*>(this);
+		BBox* bbox1 = static_cast<BBox*>(component);
+		*bbox1 = *bbox0;
+		break;
+	}
+	case Component::COMPONENT_MODEL:
+	{
+		component = dest->addComponent<Model>();
+		Model* model0 = static_cast<Model*>(this);
+		Model* model1 = static_cast<Model*>(component);
+		*model1 = *model0;
+		break;
+	}
+	case Component::COMPONENT_LIGHT:
+	{
+		component = dest->addComponent<Light>();
+		Light* light0 = static_cast<Light*>(this);
+		Light* light1 = static_cast<Light*>(component);
+		*light1 = *light0;
+		break;
+	}
+	case Component::COMPONENT_CAMERA:
+	{
+		component = dest->addComponent<Camera>();
+		Camera* camera0 = static_cast<Camera*>(this);
+		Camera* camera1 = static_cast<Camera*>(component);
+		*camera1 = *camera0;
+		break;
+	}
+	case Component::COMPONENT_SPEAKER:
+	{
+		component = dest->addComponent<Speaker>();
+		Speaker* speaker0 = static_cast<Speaker*>(this);
+		Speaker* speaker1 = static_cast<Speaker*>(component);
+		*speaker1 = *speaker0;
+		break;
+	}
+	case Component::COMPONENT_CHARACTER:
+	{
+		component = dest->addComponent<Character>();
+		Character* character0 = static_cast<Character*>(this);
+		Character* character1 = static_cast<Character*>(component);
+		*character1 = *character0;
+		break;
+	}
+	case Component::COMPONENT_MULTIMESH:
+	{
+		component = dest->addComponent<Multimesh>();
+		Multimesh* mm0 = static_cast<Multimesh*>(this);
+		Multimesh* mm1 = static_cast<Multimesh*>(component);
+		*mm1 = *mm0;
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	if (!component) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to copy component");
+	} else {
+		*component = *this;
+		copyComponents(*component);
+		mainEngine->fmsg(Engine::MSG_DEBUG, "copied %s component", Component::typeStr[(int)getType()]);
+	}
+}
+
+void Component::copy(Entity* dest) {
+	if (dest == nullptr)
+	{
+		return;
+	}
+	Component* component = nullptr;
+	switch (getType()) {
+	case Component::COMPONENT_BASIC:
+	{
+		component = dest->addComponent<Component>();
+		break;
+	}
+	case Component::COMPONENT_BBOX:
+	{
+		component = dest->addComponent<BBox>();
+		BBox* bbox0 = static_cast<BBox*>(this);
+		BBox* bbox1 = static_cast<BBox*>(component);
+		*bbox1 = *bbox0;
+		break;
+	}
+	case Component::COMPONENT_MODEL:
+	{
+		component = dest->addComponent<Model>();
+		Model* model0 = static_cast<Model*>(this);
+		Model* model1 = static_cast<Model*>(component);
+		*model1 = *model0;
+		break;
+	}
+	case Component::COMPONENT_LIGHT:
+	{
+		component = dest->addComponent<Light>();
+		Light* light0 = static_cast<Light*>(this);
+		Light* light1 = static_cast<Light*>(component);
+		*light1 = *light0;
+		break;
+	}
+	case Component::COMPONENT_CAMERA:
+	{
+		component = dest->addComponent<Camera>();
+		Camera* camera0 = static_cast<Camera*>(this);
+		Camera* camera1 = static_cast<Camera*>(component);
+		*camera1 = *camera0;
+		break;
+	}
+	case Component::COMPONENT_SPEAKER:
+	{
+		component = dest->addComponent<Speaker>();
+		Speaker* speaker0 = static_cast<Speaker*>(this);
+		Speaker* speaker1 = static_cast<Speaker*>(component);
+		*speaker1 = *speaker0;
+		break;
+	}
+	case Component::COMPONENT_CHARACTER:
+	{
+		component = dest->addComponent<Character>();
+		Character* character0 = static_cast<Character*>(this);
+		Character* character1 = static_cast<Character*>(component);
+		*character1 = *character0;
+		break;
+	}
+	case Component::COMPONENT_MULTIMESH:
+	{
+		component = dest->addComponent<Multimesh>();
+		Multimesh* mm0 = static_cast<Multimesh*>(this);
+		Multimesh* mm1 = static_cast<Multimesh*>(component);
+		*mm1 = *mm0;
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	if (!component) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to copy component");
+	} else {
+		*component = *this;
+		copyComponents(*component);
+		mainEngine->fmsg(Engine::MSG_DEBUG, "copied %s component", Component::typeStr[(int)getType()]);
+	}
+}
+
+void Component::copyComponents(Component& dest) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+		components[c]->copy(&dest);
 	}
 }
 
@@ -736,8 +1279,10 @@ Component* Component::addComponent(Component::type_t type) {
 		return addComponent<Speaker>();
 	case Component::COMPONENT_CHARACTER:
 		return addComponent<Character>();
+	case Component::COMPONENT_MULTIMESH:
+		return addComponent<Multimesh>();
 	default:
-		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown entity type %u", (Uint32)type);
+		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown component type %u", (Uint32)type);
 		return nullptr;
 	}
 }
@@ -750,7 +1295,7 @@ void Component::serialize(FileInterface * file) {
 	file->property("lAng", lAng);
 	file->property("lScale", lScale);
 	serializeComponents(file);
-}	
+}
 
 void Component::serializeComponents(FileInterface* file) {
 	if (file->isReading()) {
@@ -797,4 +1342,20 @@ void Component::serializeComponents(FileInterface* file) {
 		}
 		file->endArray();
 	}
+}
+
+void Component::shootLaser(const glm::mat4& mat, WideVector& color, float size, float life) {
+	Vector start = Vector(mat[3].x, mat[3].z, -mat[3].y);
+	//glm::mat4 endMat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
+	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 10000.f;
+	World* world = entity->getWorld();
+	World::hit_t hit = world->lineTrace(start, end);
+	end = hit.pos;
+	if (hit.hitEntity) {
+		Entity* hitEntity = entity->getWorld()->uidToEntity(hit.index);
+		if (hitEntity) {
+			hitEntity->applyForce((hit.pos - entity->getPos()).normal() * 1000.f, hit.pos);
+		}
+	}
+	world->addLaser(start, end, color, size, life);
 }

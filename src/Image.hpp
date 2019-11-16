@@ -13,14 +13,14 @@ public:
 	virtual ~Image();
 
 	// draws the image
-	// @param src: the section of the image to be used for drawing, or nullptr for the whole image
-	// @param dest: the location and size by which the image should be drawn
+	// @param src the section of the image to be used for drawing, or nullptr for the whole image
+	// @param dest the location and size by which the image should be drawn
 	void draw(const Rect<int>* src, const Rect<int>& dest) const;
 
 	// draws the image with the given color
-	// @param src: the section of the image to be used for drawing, or nullptr for the whole image
-	// @param dest: the location and size by which the image should be drawn
-	// @param color: a 32-bit color to mix with the image
+	// @param src the section of the image to be used for drawing, or nullptr for the whole image
+	// @param dest the location and size by which the image should be drawn
+	// @param color a 32-bit color to mix with the image
 	void drawColor(const Rect<int>* src, const Rect<int>& dest, const glm::vec4& color) const;
 
 	// getters & setters

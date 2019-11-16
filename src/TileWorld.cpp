@@ -2,11 +2,7 @@
 
 #include "Main.hpp"
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -53,10 +49,11 @@ int generateThread(void* data) {
 }
 
 // create a world using a generator
-TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, const Generator& gen)
-	: pathFinder(*(new PathFinder(*this)))
+TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator& gen)
+	: World(_game),
+	pathFinder(*(new PathFinder(*this)))
 {
-	clientObj = _clientObj;
+	clientObj = game->isClient();
 	id = _id;
 
 	const Generator::options_t& options = gen.getOptions();
@@ -71,7 +68,7 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, const Gener
 	tiles.resize(width * height);
 	int w = calcChunksWidth();
 	int h = calcChunksHeight();
-	chunks = new Chunk[w*h];
+	chunks.resize(w * h);
 
 	Random rand;
 	rand.seedValue(seed);
@@ -80,7 +77,7 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, const Gener
 	const ArrayList<Uint32>& tiles = gen.getTiles();
 	ArrayList<Uint8> placed;
 	placed.resize(tiles.getSize());
-	for (size_t c = 0; c < placed.getSize(); ++c) {
+	for (Uint32 c = 0; c < placed.getSize(); ++c) {
 		placed[c] = 0;
 	}
 
@@ -366,10 +363,11 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, const Gener
 }
 
 // generate a new world
-TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _seed, Uint32 _width, Uint32 _height, const char* _nameStr)
-	: pathFinder(*(new PathFinder(*this)))
+TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, Uint32 _width, Uint32 _height, const char* _nameStr)
+	: World(_game),
+	pathFinder(*(new PathFinder(*this)))
 {
-	clientObj = _clientObj;
+	clientObj = game->isClient();
 	id = _id;
 
 	mainEngine->fmsg(Engine::MSG_INFO, "generating new world from '%s' and seed: %d", _zone, _seed);
@@ -384,7 +382,7 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 	tiles.resize(width * height);
 	int w = calcChunksWidth();
 	int h = calcChunksHeight();
-	chunks = new Chunk[w*h];
+	chunks.resize(w * h);
 
 	// seed random generator
 	Random rand;
@@ -392,7 +390,7 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 
 	// load all rooms in this zone
 	LinkedList<TileWorld*> rooms;
-	StringBuf<128> path("maps/%s",_zone);
+	StringBuf<128> path("maps/%s", 1, _zone);
 	path = mainEngine->buildPath(path.get()).get();
 	Directory dir(path.get());
 	StringBuf<16> startLvl("Start");
@@ -405,9 +403,9 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 		for( int sideInt=Tile::SIDE_EAST; sideInt<Tile::SIDE_TYPE_LENGTH; ++sideInt ) {
 			Tile::side_t side = static_cast<Tile::side_t>(sideInt);
 
-			StringBuf<128> path("maps/%s/%s", _zone, str.get());
+			StringBuf<128> path("maps/%s/%s", 2, _zone, str.get());
 			path = mainEngine->buildPath(path.get()).get();
-			TileWorld* world = new TileWorld(true, _clientObj, UINT32_MAX, side, path.get());
+			TileWorld* world = new TileWorld(game, true, UINT32_MAX, side, path.get());
 
 			// discard rooms that failed to load or are too big
 			if( !world->isLoaded() ) {
@@ -425,9 +423,9 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 	}
 
 	// load starting room
-	StringBuf<128> sRoomPath("maps/%s/Start", _zone);
+	StringBuf<128> sRoomPath("maps/%s/Start", 1, _zone);
 	sRoomPath = mainEngine->buildPath(sRoomPath.get()).get();
-	TileWorld* sRoom = new TileWorld(true, _clientObj, UINT32_MAX, Tile::SIDE_EAST, sRoomPath.get());
+	TileWorld* sRoom = new TileWorld(game, true, UINT32_MAX, Tile::SIDE_EAST, sRoomPath.get());
 
 	if( !sRoom->isLoaded() ) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Can't generate level, start room too big!");
@@ -647,11 +645,14 @@ TileWorld::TileWorld(bool _clientObj, Uint32 _id, const char* _zone, Uint32 _see
 }
 
 // load a world file or create a blank one
-TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width, Uint32 _height, const char* _nameStr)
-	: pathFinder(*(new PathFinder(*this)))
+TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width, Uint32 _height, const char* _nameStr)
+	: World(_game),
+	pathFinder(*(new PathFinder(*this)))
 {
 	silent = _silent;
-	clientObj = _clientObj;
+	if (game) {
+		clientObj = game->isClient();
+	}
 	id = _id;
 	if (_filename && _filename[0] != '\0') {
 		changeFilename(_filename);
@@ -673,7 +674,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 
 		int w = calcChunksWidth();
 		int h = calcChunksHeight();
-		chunks = new Chunk[w*h];
+		chunks.resize(w * h);
 	} else {
 		// open map from file
 		FILE* fp = NULL;
@@ -692,7 +693,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 			tiles.resize(width * height);
 			int w = calcChunksWidth();
 			int h = calcChunksHeight();
-			chunks = new Chunk[w*h];
+			chunks.resize(w * h);
 
 			if (fp != NULL) {
 				fclose(fp);
@@ -714,7 +715,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 				tiles.resize(width * height);
 				int w = calcChunksWidth();
 				int h = calcChunksHeight();
-				chunks = new Chunk[w*h];
+				chunks.resize(w * h);
 			}
 			else {
 				Uint32 reserved = 0;
@@ -742,7 +743,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 				tiles.resize(width * height);
 				int w = calcChunksWidth();
 				int h = calcChunksHeight();
-				chunks = new Chunk[w*h];
+				chunks.resize(w * h);
 
 				// reserved 4 bytes
 				Engine::freadl(&reserved, sizeof(Uint32), 1, fp, shortname.get(), "TileWorld::TileWorld()");
@@ -884,7 +885,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 								Engine::freadl(ceilingTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 								if (ceilingTexture) {
-									size_t index = textureStrings.find(ceilingTexture);
+									Uint32 index = textureStrings.find(ceilingTexture);
 									if (index == Dictionary::nindex) {
 										tile.setCeilingTexture((Uint32)textureStrings.getWords().getSize());
 										textureStrings.insert(ceilingTexture);
@@ -917,7 +918,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 								Engine::freadl(floorTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 								if (floorTexture) {
-									size_t index = textureStrings.find(floorTexture);
+									Uint32 index = textureStrings.find(floorTexture);
 									if (index == Dictionary::nindex) {
 										tile.setFloorTexture((Uint32)textureStrings.getWords().getSize());
 										textureStrings.insert(floorTexture);
@@ -998,7 +999,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 										Engine::freadl(upperTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 										if (upperTexture) {
-											size_t index = textureStrings.find(upperTexture);
+											Uint32 index = textureStrings.find(upperTexture);
 											if (index == Dictionary::nindex) {
 												tile.setUpperTexture(side, (Uint32)textureStrings.getWords().getSize());
 												textureStrings.insert(upperTexture);
@@ -1035,7 +1036,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 										Engine::freadl(lowerTexture, sizeof(char), len, fp, shortname.get(), "TileWorld::TileWorld()");
 
 										if (lowerTexture) {
-											size_t index = textureStrings.find(lowerTexture);
+											Uint32 index = textureStrings.find(lowerTexture);
 											if (index == Dictionary::nindex) {
 												tile.setLowerTexture(side, (Uint32)textureStrings.getWords().getSize());
 												textureStrings.insert(lowerTexture);
@@ -1086,9 +1087,7 @@ TileWorld::TileWorld(bool _silent, bool _clientObj, Uint32 _id, Tile::side_t ori
 }
 
 TileWorld::~TileWorld() {
-	if( chunks )
-		delete[] chunks;
-	chunks = nullptr;
+	chunks.clear();
 	tiles.clear();
 
 	// delete grid objects
@@ -1540,10 +1539,12 @@ void TileWorld::destroyGrid() {
 		buffer_t buffer = static_cast<buffer_t>(i);
 		if( vbo[buffer] ) {
 			glDeleteBuffers(1,&vbo[buffer]);
+			vbo[buffer] = 0;
 		}
 	}
 	if( vao ) {
 		glDeleteVertexArrays(1,&vao);
+		vao = 0;
 	}
 }
 
@@ -1718,7 +1719,8 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	// create new chunk array
 	int newChunkWidth = newWidth/Chunk::size + ((newWidth%Chunk::size)>0 ? 1 : 0);
 	int newChunkHeight = newHeight/Chunk::size + ((newHeight%Chunk::size)>0 ? 1 : 0);
-	Chunk* newChunks = new Chunk[newChunkWidth*newChunkHeight];
+	ArrayList<Chunk> newChunks;
+	newChunks.resize(newChunkWidth * newChunkHeight);
 
 	// initialize new tile array
 	for( int x=0; x<newWidth; ++x ) {
@@ -1814,7 +1816,7 @@ void TileWorld::resize(int left, int right, int up, int down) {
 
 	// delete the old tiles
 	tiles.clear();
-	delete[] chunks;
+	chunks.clear();
 
 	// copy final width and height
 	width = newWidth;
@@ -1844,7 +1846,6 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	}
 	for (auto light : lights) {
 		light->getChunksLit().clear();
-		light->getChunksShadow().clear();
 	}
 
 	// move entities, if necessary
@@ -1868,7 +1869,7 @@ void TileWorld::resize(int left, int right, int up, int down) {
 }
 
 void TileWorld::drawGrid(Camera& camera, float z) {
-	glLineWidth(2.f);
+	//glLineWidth(2.f);
 
 	// setup model matrix
 	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(0,-z,0));
@@ -1879,7 +1880,7 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/grid.json");
 	if( mat ) {
-		const ShaderProgram& shader = mat->getShader();
+		ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 
@@ -1890,16 +1891,10 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 		glBindVertexArray(vao);
 		glDrawElements(GL_LINES, (width+1+height+1)*2, GL_UNSIGNED_INT, NULL);
 		glBindVertexArray(0);
-
-		shader.unmount();
 	}
 }
 
-static Cvar cvar_depthOffset("render.depthoffset","depth buffer adjustment","1");
-static Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "2");
-static Cvar cvar_renderCull("render.cull", "accuracy for occlusion culling", "7");
-
-void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<Chunk*>& chunkDrawList) {
+void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList) {
 	Client* client = mainEngine->getLocalClient();
 	if( !client )
 		return;
@@ -1917,7 +1912,7 @@ void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<C
 		editingMode = static_cast<Editor::editingmode_t>(editor->getEditingMode());
 	}
 
-	if( camera.getDrawMode() != Camera::DRAW_STENCIL || cvar_shadowsEnabled.toInt()&2 ) {
+	if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
 		if( camera.getDrawMode() <= Camera::DRAW_GLOW ||
 			camera.getDrawMode() == Camera::DRAW_TRIANGLES ||
 			(camera.getDrawMode() == Camera::DRAW_SILHOUETTE && cvar_showEdges.toInt()) ) {
@@ -1952,9 +1947,10 @@ void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<C
 			}
 
 			// draw chunks
-			Tile::loadShader(*this,camera,light);
+			auto shader = Tile::loadShader(*this,camera,lights);
+			assert(shader);
 			for( auto chunk : chunkDrawList ) {
-				chunk->draw(camera);
+				chunk->draw(camera, *shader);
 			}
 		}
 	}
@@ -1966,18 +1962,20 @@ void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<C
 	}
 
 	// draw entities
-	if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
-		for( auto chunk : chunkDrawList ) {
-			for( auto entity : chunk->getEPopulation() ) {
-				// in silhouette mode, skip unhighlighted or unselected actors
-				if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
-					if( !entity->isHighlighted() && entity->getUID() != highlightedObj ) {
-						continue;
+	if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
+		if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
+			for( auto chunk : chunkDrawList ) {
+				for( auto entity : chunk->getEPopulation() ) {
+					// in silhouette mode, skip unhighlighted or unselected actors
+					if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
+						if( !entity->isHighlighted() && entity->getUID() != highlightedObj ) {
+							continue;
+						}
 					}
-				}
 
-				// draw the entity
-				entity->draw(camera,light);
+					// draw the entity
+					entity->draw(camera,lights);
+				}
 			}
 		}
 	}
@@ -1990,6 +1988,7 @@ void TileWorld::drawSceneObjects(Camera& camera, Light* light, const ArrayList<C
 	// reset some gl state
 	glActiveTexture(GL_TEXTURE0);
 	ShaderProgram::unmount();
+	camera.onFrameDrawn();
 }
 
 void TileWorld::draw() {
@@ -2039,6 +2038,11 @@ void TileWorld::draw() {
 	for( Node<Camera*>* node=cameras.getFirst(); node!=nullptr; node=node->getNext() ) {
 		Camera* camera = node->getData();
 
+		// skip deactivated cameras
+		if( !camera->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || !camera->isEnabled() ) {
+			continue;
+		}
+
 		// in editor, skip minimap if any other cameras are selected
 		// replace it with our selected camera(s)
 		Rect<Sint32> oldWin;
@@ -2052,21 +2056,10 @@ void TileWorld::draw() {
 			}
 		}
 
-		// skip deactivated cameras
-		if( !camera->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) ) {
+		// skip cameras whose window is too small
+		if( camera->getWin().w <= 0 || camera->getWin().h <= 0 ) {
 			continue;
 		}
-
-		// clear the window area
-		glClear(GL_DEPTH_BUFFER_BIT);
-		Rect<int> backgroundRect = camera->getWin();
-		renderer->drawRect(&backgroundRect,glm::vec4(0.f,0.f,0.f,1.f));
-
-		// set proper light blending function
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
-		// setup projection
-		camera->setupProjection();
 
 		// occlusion test
 		if( !camera->getChunksVisible() ) {
@@ -2081,6 +2074,7 @@ void TileWorld::draw() {
 
 		// build relevant light list
 		// this could be done better
+		bool shadowsEnabled = (!client->isEditorActive() || !showTools) && !cvar_renderFullbright.toInt() && cvar_shadowsEnabled.toInt();
 		for( Node<Light*>* node=lights.getFirst(); node!=nullptr; node=node->getNext() ) {
 			Light* light = node->getData();
 
@@ -2088,7 +2082,7 @@ void TileWorld::draw() {
 			light->getChunksLit().clear();
 
 			// don't render invisible lights
-			if( !light->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) ) {
+			if (!light->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || light->getIntensity() <= 0.f || light->getRadius() <= 0.f || light->getArc() <= 0.f ) {
 				continue;
 			}
 
@@ -2102,111 +2096,100 @@ void TileWorld::draw() {
 					if( !light->isChosen() ) {
 						light->setChosen(true);
 						cameraLightList.push(light);
+						if (shadowsEnabled) {
+							if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
+								light->createShadowMap();
+							}
+						}
 					}
 				}
 			}
 		}
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+		// clear the window area
+		glClear(GL_DEPTH_BUFFER_BIT);
+		Rect<int> backgroundRect = camera->getWin();
+		renderer->drawRect(&backgroundRect,glm::vec4(0.f,0.f,0.f,1.f));
+
+		// set proper light blending function
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+		// setup projection
+		camera->setupProjection(true);
 
 		// render scene into depth buffer
 		camera->setDrawMode(Camera::DRAW_DEPTH);
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDrawBuffer(GL_NONE);
-		drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
+		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 
-		if( client->isEditorActive() && showTools ) {
+		if( (client->isEditorActive() && showTools) || cvar_renderFullbright.toInt() ) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_BACK);
+			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+				GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+			glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
-			drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
+			glDepthFunc(GL_GEQUAL);
+			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 		} else {
-			for( auto light : cameraLightList ) {
-				// render stencil shadows
-				glEnable(GL_STENCIL_TEST);
-				glDepthMask(GL_FALSE);
-				glEnable(GL_DEPTH_CLAMP);
-				glDisable(GL_CULL_FACE);
-				glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
-				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
-				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
-				glClear(GL_STENCIL_BUFFER_BIT);
-				glDepthFunc(GL_LESS);
-				glDrawBuffer(GL_NONE);
-				if( cvar_shadowsEnabled.toInt() ) {
-					if( light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) ) {
-						camera->setDrawMode(Camera::DRAW_STENCIL);
-						if( light->getChunksShadow().getSize() > 0 ) {
-							drawSceneObjects(*camera,light,light->getChunksShadow());
-						}
-					}
-				}
-				glDisable(GL_DEPTH_CLAMP);
-				glEnable(GL_CULL_FACE);
-
-				// render shadowed scene
-				camera->setDrawMode(Camera::DRAW_STANDARD);
-				glDrawBuffer(GL_BACK);
-				glStencilFunc(GL_EQUAL, 0x00, 0xFF);
-				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
-				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
-				glDepthFunc(GL_LEQUAL);
-				if( light->getChunksLit().getSize() > 0 ) {
-					drawSceneObjects(*camera,light,light->getChunksLit());
-				}
-				glDisable(GL_STENCIL_TEST);
-			}
+			// render shadowed scene
+			camera->setDrawMode(Camera::DRAW_STANDARD);
+			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+				GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+			glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
+			glDisable(GL_STENCIL_TEST);
+			glEnable(GL_DEPTH_TEST);
+			glDepthMask(GL_FALSE);
+			glDepthFunc(GL_GEQUAL);
+			drawSceneObjects(*camera,cameraLightList,camera->getVisibleChunks());
 		}
 
 		// render scene with glow textures
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
-		glDrawBuffer(GL_BACK);
-		glDepthFunc(GL_LEQUAL);
-		drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
+		glDepthFunc(GL_GEQUAL);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+		glDrawBuffer(GL_COLOR_ATTACHMENT1);
+		drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
+
+		static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+			GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
+
+		// render lasers
+		for (auto& laser : lasers) {
+			if (laser.maxLife > 0.f) {
+				glm::vec4 color = laser.color;
+				color.a *= laser.life / laser.maxLife;
+				camera->drawLaser(laser.size, laser.start, laser.end, color);
+			} else {
+				camera->drawLaser(laser.size, laser.start, laser.end, laser.color);
+			}
+		}
 
 		// render triangle lines
 		if( cvar_showVerts.toInt() ) {
 			camera->setDrawMode(Camera::DRAW_TRIANGLES);
-			drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
+			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 		}
 
 		// render depth fail scene
 		camera->setDrawMode(Camera::DRAW_DEPTHFAIL);
-		glDepthFunc(GL_GREATER);
-		drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_LESS);
+		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+		glDepthFunc(GL_GEQUAL);
 
-		if( camera->isOrtho() ) {
-			// draw level mask
-			camera->setDrawMode(Camera::DRAW_DEPTH);
-			glEnable(GL_STENCIL_TEST);
-			glDisable(GL_DEPTH_TEST);
-			glDepthMask(GL_FALSE);
-			glDrawBuffer(GL_NONE);
-			glClear(GL_STENCIL_BUFFER_BIT);
-			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
-			glStencilOp(GL_INCR, GL_INCR, GL_INCR);
-			drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
-			glStencilFunc(GL_EQUAL, 0x00, 0xFF);
-			glDrawBuffer(GL_BACK);
-			Renderer* renderer = camera->getRenderer();
-			if( renderer ) {
-				renderer->drawRect( &camera->getWin(), glm::vec4(.25f,.25f,.25f,1.f) );
-			}
-			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
+		// render silhouettes
+		camera->setDrawMode(Camera::DRAW_SILHOUETTE);
+		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
 
-			// render state gets messed up after this, so reinit
-			camera->setupProjection();
-		} else {
-			// render silhouettes
-			camera->setDrawMode(Camera::DRAW_SILHOUETTE);
-			drawSceneObjects(*camera,nullptr,camera->getVisibleChunks());
-		}
-
-		glDrawBuffer(GL_BACK);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDisable(GL_STENCIL_TEST);
@@ -2246,6 +2229,12 @@ void TileWorld::draw() {
 		ShaderProgram::unmount();
 
 		cameraLightList.clear();
+	}
+
+	for (auto light : lights) {
+		if (light->getShadowTicks() != light->getEntity()->getTicks()) {
+			light->deleteShadowMap();
+		}
 	}
 }
 
@@ -2358,4 +2347,20 @@ void TileWorld::generateObstacleCache()
 
 std::future<PathFinder::Path*> TileWorld::findAPath(int startX, int startY, int endX, int endY) {
 	return pathFinder.generateAStarPath(startX, startY, endX, endY);
+}
+
+void TileWorld::findRandomTile(float height, int& outX, int& outY) {
+	ArrayList<Tile*> validTiles;
+	for (auto& tile : tiles) {
+		float tileHeight = tile.getFloorHeight() - (tile.getCeilingHeight() + tile.getCeilingSlopeSize());
+		if (height <= tileHeight) {
+			validTiles.push(&tile);
+		}
+	}
+	if (!validTiles.getSize()) {
+		return;
+	}
+	Sint32 rand = mainEngine->getRandom().getSint32() % validTiles.getSize();
+	outX = validTiles[rand]->getX() / Tile::size;
+	outY = validTiles[rand]->getY() / Tile::size;
 }

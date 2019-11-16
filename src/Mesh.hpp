@@ -23,12 +23,16 @@
 class ShaderProgram;
 class Camera;
 class Material;
+class Model;
 
 class Mesh : public Asset {
 public:
 	Mesh() {}
 	Mesh(const char* _name);
 	virtual ~Mesh();
+
+	// maximum number of lights that will fit in the tile shader
+	static const Uint32 maxLights = 12;
 
 	// skin cache
 	struct skincache_t {
@@ -38,7 +42,7 @@ public:
 
 	// shader vars
 	struct shadervars_t {
-		GLboolean customColorEnabled = GL_FALSE;
+		bool customColorEnabled = false;
 		ArrayList<GLfloat> customColorR = { 1.f, 0.f, 0.f, 1.f };
 		ArrayList<GLfloat> customColorG = { 0.f, 1.f, 0.f, 1.f };
 		ArrayList<GLfloat> customColorB = { 0.f, 0.f, 1.f, 1.f };
@@ -51,11 +55,7 @@ public:
 		void serialize(FileInterface * file) {
 			Uint32 version = 0;
 			file->property("Mesh::version", version);
-
-			bool customColorBool = customColorEnabled == GL_TRUE;
-			file->property("customColorEnabled", customColorBool);
-			customColorEnabled = customColorBool ? GL_TRUE : GL_FALSE;
-
+			file->property("customColorEnabled", customColorEnabled);
 			file->property("customColorR", customColorR);
 			file->property("customColorG", customColorG);
 			file->property("customColorB", customColorB);
@@ -68,36 +68,44 @@ public:
 	const bool hasAnimations() const;
 
 	// loads the appropriate shader to draw the mesh
-	// @param component: the component that contains the mesh
-	// @param camera: the camera object to render the scene with
-	// @param light: the light object to light the scene with, or nullptr for no light source
-	// @param material: path to the material asset used to render the mesh
+	// @param component the component that contains the mesh
+	// @param camera the camera object to render the scene with
+	// @param light the light object to light the scene with, or nullptr for no light source
+	// @param material path to the material asset used to render the mesh
 	// @return the ShaderProgram object with the given name, or nullptr if no shader was loaded
-	// @param matrix: model matrix
-	ShaderProgram* loadShader(Component& component, Camera& camera, Light* light, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
+	// @param matrix model matrix
+	ShaderProgram* loadShader(const Component& component, Camera& camera, const ArrayList<Light*>& lights, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
 
 	// draws the mesh without animating it
-	// @param camera: the camera to render the mesh through
-	// @param component: optional component tied to the mesh
-	// @param shader: the shader program to draw the mesh with
+	// @param camera the camera to render the mesh through
+	// @param component optional component tied to the mesh
+	// @param shader the shader program to draw the mesh with
 	void draw( Camera& camera, const Component* component, ShaderProgram* shader );
 
 	// draws the mesh
-	// @param camera: the camera to render the mesh through
-	// @param component: optional component tied to the mesh
-	// @param skincache: skincache to render with
-	// @param shader: the shader program to draw the mesh with
+	// @param camera the camera to render the mesh through
+	// @param component optional component tied to the mesh
+	// @param skincache skincache to render with
+	// @param shader the shader program to draw the mesh with
 	void draw( Camera& camera, const Component* component, ArrayList<skincache_t>& skincache, ShaderProgram* shader );
 
 	// skins the mesh
-	// @param animations: animations to skin with
-	// @param skincache: where to store resulting skin
-	void skin( Map<AnimationState>& animations, ArrayList<skincache_t>& skincache );
+	// @param animations animations to skin with
+	// @param skincache where to store resulting skin
+	void skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) const;
 
 	// find the bone with the given name
-	// @param name: the name of the bone to search for
+	// @param name the name of the bone to search for
 	// @return the index of the bone we are searching for, or UINT32_MAX if the bone could not be found
 	unsigned int boneIndexForName( const char* name ) const;
+
+	// empties all data from this mesh
+	void clear();
+
+	// builds a composite mesh from several models
+	// @param models The models to compose the mesh from
+	// @param root The root transform of all the models
+	void composeMesh(const LinkedList<Model*>& models, const glm::mat4& root);
 
 	// submesh entry
 	class SubMesh {
@@ -122,10 +130,14 @@ public:
 		// the number of elements to be drawn
 		unsigned int elementCount;
 
-		SubMesh(const char* name, const VoxelMeshData& data);
-		SubMesh(const char* name, const aiScene& _scene, aiMesh* mesh);
+		SubMesh(unsigned int _numIndices, unsigned int _numVertices);
+		SubMesh(const VoxelMeshData& data);
+		SubMesh(const aiScene* _scene, aiMesh* mesh);
+		SubMesh(const SubMesh& src, const glm::mat4& transform);
 		~SubMesh();
 
+		void finalize();
+		void append(const SubMesh& src, const glm::mat4& transform);
 		void draw(const Camera& camera);
 		const Vector& getMaxBox() const { return maxBox; }
 		const Vector& getMinBox() const { return minBox; }
@@ -143,23 +155,25 @@ public:
 		struct boneinfo_t {
 			glm::mat4 offset;
 			String name;
+			bool real;
 		};
 
 		unsigned int boneIndexForName( const char* name ) const;
 
 		GLuint findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3);
+		void mapBones(const aiNode* node);
 
-		void boneTransform(Map<AnimationState>& animations, skincache_t& skin);
-		void readNodeHierarchy(Map<AnimationState>& animations, skincache_t& skin, const aiNode* node, const glm::mat4& rootTransform);
-		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str);
+		void boneTransform(const Map<String, AnimationState>& animations, skincache_t& skin) const;
+		void readNodeHierarchy(const Map<String, AnimationState>* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const;
+		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str) const;
 
-		void calcInterpolatedPosition(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedRotation(aiQuaternion& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
-		void calcInterpolatedScaling(aiVector3D& out, Map<AnimationState>& animations, const aiNodeAnim* nodeAnim);
+		void calcInterpolatedPosition(aiVector3D& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) const;
+		void calcInterpolatedRotation(aiQuaternion& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim, bool& first) const;
+		void calcInterpolatedScaling(aiVector3D& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) const;
 
-		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim);
-		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim);
-		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim);
+		unsigned int findPosition(float animationTime, const aiNodeAnim* nodeAnim) const;
+		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
+		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
 
 		// getters & setters
 		virtual const type_t				getType() const				{ return ASSET_MESH; }
@@ -170,12 +184,15 @@ public:
 		const float*						getTexCoords() const		{ return texCoords; }
 		const float*						getNormals() const			{ return normals; }
 		const float*						getColors() const			{ return colors; }
+		const float*						getTangents() const			{ return tangents; }
 		const GLuint*						getIndices() const			{ return indices; }
 		const ArrayList<boneinfo_t>&		getBones() const			{ return bones; }
-		const aiNode*						getRootNode() const			{ return scene->mRootNode; }
+		const aiNode*						getRootNode() const			{ return scene ? scene->mRootNode : nullptr; }
+		const unsigned int					getLastVertex() const		{ return lastVertex; }
+		const unsigned int					getLastIndex() const		{ return lastIndex; }
 
 	private:
-		Map<unsigned int> boneMapping; // maps a bone name to its index
+		Map<String, unsigned int> boneMapping; // maps a bone name to its index
 		ArrayList<boneinfo_t> bones;
     	unsigned int numBones = 0;
 		unsigned int numVertices = 0;
@@ -186,19 +203,22 @@ public:
 		Vector minBox, maxBox;
 
 		// raw data
-		float* vertices = nullptr;		// position:  3 floats per vertex
-		float* texCoords = nullptr;		// texCoords: 2 floats per vertex
-		float* normals = nullptr;		// normals:   3 floats per vertex
-		float* colors = nullptr;		// colors:    4 floats per vertex
-		float* tangents = nullptr;		// tangents:  3 floats per vertex
-		GLuint* indices = nullptr;		// indices:   2 uints per vertex (first is vertex, second is adjacent vertex)
+		float* vertices = nullptr;		// position  3 floats per vertex
+		float* texCoords = nullptr;		// texCoords 2 floats per vertex
+		float* normals = nullptr;		// normals   3 floats per vertex
+		float* colors = nullptr;		// colors    4 floats per vertex
+		float* tangents = nullptr;		// tangents  3 floats per vertex
+		GLuint* indices = nullptr;		// indices   2 uints per vertex (first is vertex, second is adjacent vertex)
+
+		unsigned int lastVertex = 0;	// last vertex modified
+		unsigned int lastIndex = 0;		// last index modified
 	};
 
 	// getters & setters
 	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const		{ return subMeshes; }
-	const Vector&					getMinBox() const			{ return minBox; }
-	const Vector&					getMaxBox() const			{ return maxBox; }
-	float							getAnimLength() const;
+	const Vector&							getMinBox() const			{ return minBox; }
+	const Vector&							getMaxBox() const			{ return maxBox; }
+	float									getAnimLength() const;
 
 private:
 	Assimp::Importer* importer = nullptr;

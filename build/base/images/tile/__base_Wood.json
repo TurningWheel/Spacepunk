@@ -1,0 +1,8 @@
+{
+	"Texture::version": 0,
+	"textures": [
+		"images/tile/diffuse/Wood_011_basecolor.png",
+		"images/tile/normal/Wood_011_normal.png",
+		"images/tile/fx/empty.png"
+	]
+}

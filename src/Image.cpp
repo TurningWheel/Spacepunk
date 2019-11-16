@@ -30,6 +30,27 @@ const GLuint Image::indices[6] {
 };
 
 Image::Image(const char* _name) : Asset(_name) {
+	bool clamp = false;
+	bool point = false;
+	if (_name) {
+		switch (_name[0]) {
+		case '#':
+			++_name;
+			clamp = true;
+			break;
+		case '$':
+			++_name;
+			point = true;
+			break;
+		case '%':
+			++_name;
+			clamp = true;
+			point = true;
+			break;
+		default:
+			break;
+		}
+	}
 	path = mainEngine->buildPath(_name).get();
 	
 	mainEngine->fmsg(Engine::MSG_DEBUG,"loading image '%s'...",_name);
@@ -50,12 +71,22 @@ Image::Image(const char* _name) : Asset(_name) {
 	glBindTexture(GL_TEXTURE_2D, texid);
 	glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, surf->w, surf->h);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.f);
-	glGenerateMipmap(GL_TEXTURE_2D);
+	if (clamp) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+	if (point) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	} else {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.f);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
 	SDL_UnlockSurface(surf);
 
 	// initialize buffer names
@@ -125,14 +156,14 @@ void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::v
 	if( !mat ) {
 		return;
 	}
-	const ShaderProgram& shader = mat->getShader();
+	ShaderProgram& shader = mat->getShader();
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();
 	}
 
 	glViewport(0, 0, xres, yres);
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
 
 	// for the use of a whole image

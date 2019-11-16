@@ -24,12 +24,13 @@
 const char* SectorWorld::fileMagicNumber = "SPACEPUNK_SWD_01";
 const char* SectorWorld::fileMagicNumberSaveOut = "SPACEPUNK_SWD_01";
 
-SectorWorld::SectorWorld(bool _silent, bool _clientObj, Uint32 _id, const char* _name)
+SectorWorld::SectorWorld(Game* _game, bool _silent, Uint32 _id, const char* _name)
+	: World(_game)
 //	: pathFinder(*(new PathFinder(*this)))
 {
 	nameStr = _name;
 	silent = _silent;
-	clientObj = _clientObj;
+	clientObj = game->isClient();
 	id = _id;
 }
 
@@ -105,7 +106,7 @@ void SectorWorld::initialize(bool empty) {
 	updateGridRigidBody(0.f);
 }
 
-const bool SectorWorld::selectVertex(const size_t index, const bool b) {
+const bool SectorWorld::selectVertex(const Uint32 index, const bool b) {
 	if( index < vertices.getSize() ) {
 		vertices[index]->selected = b;
 		vertices[index]->highlighted = b;
@@ -119,13 +120,13 @@ const bool SectorWorld::selectVertex(const size_t index, const bool b) {
 }
 
 void SectorWorld::selectVertices(const bool b) {
-	for( size_t c = 0; c < vertices.getSize(); ++c ) {
+	for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 		vertices[c]->selected = b;
 		vertices[c]->highlighted = b;
 	}
 }
 
-void SectorWorld::removeSector(size_t index) {
+void SectorWorld::removeSector(Uint32 index) {
 	// todo
 }
 
@@ -140,7 +141,7 @@ void SectorWorld::findEntitiesInRadius( const Vector& origin, float radius, Link
 void SectorWorld::process() {
 	World::process();
 
-	for( size_t c = 0; c < sectors.getSize(); ++c ) {
+	for( Uint32 c = 0; c < sectors.getSize(); ++c ) {
 		sectors[c]->process();
 	}
 }
@@ -165,14 +166,14 @@ void SectorWorld::drawSceneObjects(Camera& camera, Light* light) {
 	if( camera.getDrawMode() <= Camera::DRAW_GLOW ||
 		camera.getDrawMode() == Camera::DRAW_TRIANGLES ||
 		(camera.getDrawMode() == Camera::DRAW_SILHOUETTE && cvar_showEdges.toInt()) ) {
-		for( size_t c = 0; c < sectors.getSize(); ++c ) {
+		for( Uint32 c = 0; c < sectors.getSize(); ++c ) {
 			sectors[c]->draw(camera, light);
 		}
 		ShaderProgram::unmount();
 
 		// sector vertices
 		if( editorActive && showTools ) {
-			for( size_t c = 0; c < vertices.getSize(); ++c ) {
+			for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
 				vertices[c]->draw(camera);
 			}
 		}
@@ -185,7 +186,7 @@ void SectorWorld::drawSceneObjects(Camera& camera, Light* light) {
 
 	// draw entities
 	if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
-		for( size_t c = 0; c < numBuckets; ++c ) {
+		for( Uint32 c = 0; c < numBuckets; ++c ) {
 			for( const Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
 				const Entity* entity = node->getData();
 
@@ -197,7 +198,7 @@ void SectorWorld::drawSceneObjects(Camera& camera, Light* light) {
 				}
 
 				// draw the entity
-				entity->draw(camera,light);
+				entity->draw(camera,ArrayList<Light*>({light}));
 			}
 		}
 	}
@@ -288,7 +289,7 @@ void SectorWorld::draw() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 		// setup projection
-		camera->setupProjection();
+		camera->setupProjection(true);
 
 		// render scene into depth buffer
 		camera->setDrawMode(Camera::DRAW_DEPTH);
@@ -300,7 +301,9 @@ void SectorWorld::draw() {
 		if( client->isEditorActive() && showTools && !camera->isOrtho() ) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
-			glDrawBuffer(GL_BACK);
+			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+				GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+			glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 			glDisable(GL_STENCIL_TEST);
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
@@ -318,7 +321,7 @@ void SectorWorld::draw() {
 				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
 				glClear(GL_STENCIL_BUFFER_BIT);
-				glDepthFunc(GL_LESS);
+				glDepthFunc(GL_GREATER);
 				glDrawBuffer(GL_NONE);
 				if( light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) ) {
 					camera->setDrawMode(Camera::DRAW_STENCIL);
@@ -329,11 +332,13 @@ void SectorWorld::draw() {
 
 				// render shadowed scene
 				camera->setDrawMode(Camera::DRAW_STANDARD);
-				glDrawBuffer(GL_BACK);
+				static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+					GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+				glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
 				glStencilFunc(GL_EQUAL, 0x00, 0xFF);
 				glStencilOpSeparate(GL_BACK, GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilOpSeparate(GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP);
-				glDepthFunc(GL_LEQUAL);
+				glDepthFunc(GL_GEQUAL);
 				drawSceneObjects(*camera,light);
 				glDisable(GL_STENCIL_TEST);
 			}
@@ -342,8 +347,10 @@ void SectorWorld::draw() {
 		// render scene with glow textures
 		camera->setDrawMode(Camera::DRAW_GLOW);
 		glDepthMask(GL_FALSE);
-		glDrawBuffer(GL_BACK);
-		glDepthFunc(GL_LEQUAL);
+		static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
+			GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(Framebuffer::ColorBuffer::MAX, attachments);
+		glDepthFunc(GL_GEQUAL);
 		drawSceneObjects(*camera,nullptr);
 
 		// render triangle lines
@@ -354,9 +361,9 @@ void SectorWorld::draw() {
 
 		// render depth fail scene
 		camera->setDrawMode(Camera::DRAW_DEPTHFAIL);
-		glDepthFunc(GL_GREATER);
+		glDepthFunc(GL_LESS);
 		drawSceneObjects(*camera,nullptr);
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_GEQUAL);
 
 		if( camera->isOrtho() ) {
 			// draw level mask
@@ -370,7 +377,7 @@ void SectorWorld::draw() {
 			glStencilOp(GL_INCR, GL_INCR, GL_INCR);
 			drawSceneObjects(*camera,nullptr);
 			glStencilFunc(GL_EQUAL, 0x00, 0xFF);
-			glDrawBuffer(GL_BACK);
+			glDrawBuffer(GL_COLOR_ATTACHMENT0);
 			Renderer* renderer = camera->getRenderer();
 			if( renderer ) {
 				renderer->drawRect( &camera->getWin(), glm::vec4(.25f,.25f,.25f,1.f) );
@@ -378,14 +385,14 @@ void SectorWorld::draw() {
 			glStencilFunc(GL_ALWAYS, 0x00, 0xFF);
 
 			// render state gets messed up after this, so reinit
-			camera->setupProjection();
+			camera->setupProjection(true);
 		} else {
 			// render silhouettes
 			camera->setDrawMode(Camera::DRAW_SILHOUETTE);
 			drawSceneObjects(*camera,nullptr);
 		}
 
-		glDrawBuffer(GL_BACK);
+		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDisable(GL_STENCIL_TEST);
@@ -550,7 +557,7 @@ void SectorWorld::destroyGrid() {
 }
 
 void SectorWorld::drawGrid(Camera& camera, float z) {
-	glLineWidth(2.f);
+	//glLineWidth(2.f);
 
 	// setup model matrix
 	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(pointerPos.x - largeGridSize * tileSize / 2.f,-z,pointerPos.y - largeGridSize * tileSize / 2.f));
@@ -561,7 +568,7 @@ void SectorWorld::drawGrid(Camera& camera, float z) {
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/grid.json");
 	if( mat ) {
-		const ShaderProgram& shader = mat->getShader();
+		ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 

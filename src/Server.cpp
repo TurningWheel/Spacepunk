@@ -12,6 +12,7 @@
 #include "NetSDL.hpp"
 #include "Console.hpp"
 #include "TileWorld.hpp"
+#include "BBox.hpp"
 
 Server::Server() {
 	net = new NetSDL(*this);
@@ -85,7 +86,7 @@ void Server::handleNetMessages() {
 								msgPacket.write("CMSG");
 								net->signPacket(msgPacket);
 
-								for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+								for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 									const Net::remote_t* remote = net->getRemoteHosts()[c];
 									net->sendPacketSafe(remote->id,msgPacket);
 								}
@@ -210,7 +211,9 @@ void Server::handleNetMessages() {
 									packet.write32(entity->getPos().y);
 									packet.write32(entity->getPos().x);
 
-									packet.write32(worldID);
+									packet.write(world->getShortname().get());
+									packet.write32((Uint32)world->getShortname().length());
+
 									packet.write32(serverID);
 									packet.write32(localID);
 									packet.write32(clientID);
@@ -220,7 +223,7 @@ void Server::handleNetMessages() {
 									net->sendPacketSafe(clientID, packet);
 
 									// update other clients about this player
-									for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+									for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 										Net::remote_t* remote = net->getRemoteHosts()[c];
 										if( remote->id == clientID ) {
 											continue;
@@ -235,6 +238,95 @@ void Server::handleNetMessages() {
 						
 						if( !playerSpawned ) {
 							mainEngine->fmsg(Engine::MSG_ERROR,"Failed to spawn player (%d) of client (%d)!", localID, clientID);
+						}
+
+						continue;
+					}
+
+					// entity remote function call
+					else if (strncmp((const char*)packetType, "ENTF", 4) == 0) {
+						// read world
+						Uint32 worldID;
+						packet.read32(worldID);
+						Node<World*>* node = worlds[worldID];
+						if (node) {
+							World& world = *node->getData();
+
+							// get uid
+							Uint32 uid;
+							packet.read32(uid);
+							Entity* entity = world.uidToEntity(uid);
+							if (!entity) {
+								continue;
+							}
+
+							// read func name
+							Uint32 funcNameLen;
+							packet.read32(funcNameLen);
+							char funcName[128];
+							funcName[127] = '\0';
+							packet.read(funcName, funcNameLen);
+							funcName[funcNameLen] = '\0';
+
+							// read args
+							Uint32 argsLen;
+							packet.read32(argsLen);
+							Script::Args args;
+							for (Uint32 c = 0; c < argsLen; ++c) {
+								char argType;
+								packet.read8((Uint8&)argType);
+								switch (argType) {
+								case 'b': {
+									char value;
+									packet.read8((Uint8&)value);
+									if (value == 't') {
+										args.addBool(true);
+									} else if (value == 'f') {
+										args.addBool(false);
+									}
+									break;
+								}
+								case 'i': {
+									Uint32 value;
+									packet.read32(value);
+									args.addInt((int)value);
+									break;
+								}
+								case 'f': {
+									float value;
+									packet.read32((Uint32&)value);
+									args.addFloat(value);
+									break;
+								}
+								case 's': {
+									Uint32 len;
+									packet.read32(len);
+									String value;
+									value.alloc(len + 1);
+									value[len] = '\0';
+									packet.read(&value[0], len);
+									args.addString(value);
+									break;
+								}
+								case 'p': {
+									mainEngine->fmsg(Engine::MSG_ERROR, "Client got RFC with a pointer, will be nullptr");
+									args.addPointer(nullptr);
+									break;
+								}
+								case 'n': {
+									args.addNil();
+									break;
+								}
+								default: {
+									mainEngine->fmsg(Engine::MSG_ERROR, "Unknown arg type for remote function call!");
+									args.addNil();
+									break;
+								}
+								}
+							}
+
+							// run function
+							entity->dispatch(funcName, args);
 						}
 
 						continue;
@@ -257,17 +349,23 @@ void Server::handleNetMessages() {
 
 								// only update the player's position if they are on the world that they say they are.
 								if( world != entity->getWorld() ) {
-									Uint32 worldID = indexForWorld(entity->getWorld());
-
 									Packet packet;
-									packet.write32(entity->getAng().degreesRoll());
-									packet.write32(entity->getAng().degreesPitch());
-									packet.write32(entity->getAng().degreesYaw());
-									packet.write32(entity->getPos().z);
-									packet.write32(entity->getPos().y);
-									packet.write32(entity->getPos().x);
-									packet.write32(worldID);
-									packet.write32(localID);
+									packet.write32(entity->getOffset().z);
+									packet.write32(entity->getOffset().y);
+									packet.write32(entity->getOffset().x);
+
+									const Entity* anchor = entity->getAnchor();
+									packet.write32(anchor ? anchor->getUID() : World::nuid);
+
+									World* world = entity->getWorld();
+									assert(world);
+									packet.write(world->getShortname().get());
+									packet.write32((Uint32)world->getShortname().length());
+
+									packet.write32(player->getServerID());
+									packet.write32(player->getLocalID());
+									packet.write32(player->getClientID());
+
 									packet.write("PLVL");
 
 									net->signPacket(packet);
@@ -336,9 +434,11 @@ void Server::handleNetMessages() {
 						Uint32 localID;
 						Entity *playerEntity = nullptr;
 						Entity *selectedEntity = nullptr;
+						BBox *selectedBBox = nullptr;
 						Uint32 worldID;
 						Player* player = nullptr;
 						Uint32 selectedEntityUID;
+						Uint32 selectedBBoxUID;
 
 						if( packet.read32(localID) ) {
 							player = findPlayer(id, localID);
@@ -352,14 +452,18 @@ void Server::handleNetMessages() {
 								if ( world && packet.read32(selectedEntityUID) )
 								{
 									selectedEntity = world->uidToEntity(selectedEntityUID);
+									if ( packet.read32(selectedBBoxUID) )
+									{
+										selectedBBox = selectedEntity->findComponentByUID<BBox>(selectedBBoxUID);
+									}
 								}
 							}
 						}
 
-						if ( selectedEntity && playerEntity )
+						if ( selectedEntity && selectedBBox && playerEntity )
 						{
 							mainEngine->fmsg(Engine::MSG_DEBUG, "Client %d selected entity '%s': UID %d", localID, selectedEntity->getName().get(), selectedEntity->getUID());
-							selectedEntity->interact(*playerEntity);
+							selectedEntity->interact(*playerEntity, *selectedBBox);
 
 							Packet packet;
 							packet.write32(selectedEntityUID);
@@ -404,7 +508,7 @@ void Server::onEstablishConnection(Uint32 remoteID) {
 }
 
 void Server::updateAllClientsAboutPlayers() {
-	for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+	for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 		Net::remote_t* remote = net->getRemoteHosts()[c];
 		updateClientAboutPlayers(remote->id);
 	}
@@ -509,21 +613,15 @@ void Server::postProcess() {
 		// send entity updates to client
 		if( net->isConnected() ) {
 			if( ticks % (mainEngine->getTicksPerSecond()/10) == 0 ) {
-				Uint32 worldIndex;
-				Node<World*>* node;
-				for( worldIndex = 0, node = worlds.getFirst(); node != nullptr; node = node->getNext(), ++worldIndex ) {
-					World* world = node->getData();
-
+				for( auto world : worlds ) {
 					for( Uint32 c=0; c<World::numBuckets; ++c ) {
-						for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-							Entity* entity = node->getData();
-
+						for( auto entity : world->getEntities(c) ) {
 							if( !entity->isFlag(Entity::flag_t::FLAG_UPDATE) || entity->isFlag(Entity::flag_t::FLAG_LOCAL) ) {
 								// don't update local-only entities
 								continue;
 							}
 
-							for( size_t c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+							for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
 								const Net::remote_t* remote = net->getRemoteHosts()[c];
 
 								Player* player = entity->getPlayer();
@@ -534,34 +632,7 @@ void Server::postProcess() {
 
 								// update entity for client
 								Packet packet;
-
-								if( player ) {
-									packet.write32((Sint32)(entity->getLookDir().degreesRoll() * 32));
-									packet.write32((Sint32)(entity->getLookDir().degreesPitch() * 32));
-									packet.write32((Sint32)(entity->getLookDir().degreesYaw() * 32));
-									packet.write8(player->hasJumped() ? 1 : 0);
-									packet.write8(player->isMoving() ? 1 : 0);
-									packet.write8(player->isCrouching() ? 1 : 0);
-									packet.write32(player->getServerID());
-									packet.write8(1); // signifies this is a player
-								} else {
-									packet.write8(0); // signifies this is not a player, stop here
-								}
-								packet.write8(entity->isFalling() ? 1U : 0U);
-								packet.write32((Sint32)(entity->getAng().degreesRoll() * 32));
-								packet.write32((Sint32)(entity->getAng().degreesPitch() * 32));
-								packet.write32((Sint32)(entity->getAng().degreesYaw() * 32));
-								packet.write32((Sint32)(entity->getVel().z * 128));
-								packet.write32((Sint32)(entity->getVel().y * 128));
-								packet.write32((Sint32)(entity->getVel().x * 128));
-								packet.write32((Sint32)(entity->getPos().z * 32));
-								packet.write32((Sint32)(entity->getPos().y * 32));
-								packet.write32((Sint32)(entity->getPos().x * 32));
-								packet.write32(entity->getDefIndex());
-								packet.write32(entity->getUID());
-								packet.write32(worldIndex);
-								packet.write("ENTU");
-
+								entity->updatePacket(packet);
 								net->signPacket(packet);
 								net->sendPacket(remote->id, packet);
 							}
@@ -599,6 +670,7 @@ static int console_serverReset(int argc, const char** argv) {
 static int console_serverMap(int argc, const char** argv) {
 	if( argc < 1 ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"A path is needed. ex: server.map TestWorld");
+		return 1;
 	}
 	Server* server = mainEngine->getLocalServer();
 	if( server ) {
@@ -646,7 +718,7 @@ static int console_serverSaveMap(int argc, const char** argv) {
 
 	int worldID = strtol(argv[0], nullptr, 10);
 	World* world = server->getWorld(worldID);
-	StringBuf<256> path("maps/%s",argv[1]);
+	StringBuf<256> path("maps/%s", 1, argv[1]);
 	path = mainEngine->buildPath(path.get()).get();
 	world->saveFile(path.get(), true);
 
@@ -666,6 +738,22 @@ static int console_serverCount(int argc, const char** argv) {
 	return 0;
 }
 
+static int console_serverCountEntities(int argc, const char** argv) {
+	Server* server = mainEngine->getLocalServer();
+	if (!server) {
+		return 1;
+	}
+	Uint32 count = 0;
+	for (Uint32 i = 0; i < server->getNumWorlds(); ++i) {
+		World* world = server->getWorld(i);
+		for (Uint32 c = 0; c < World::numBuckets; ++c) {
+			count += world->getEntities(c).getSize();
+		}
+	}
+	mainEngine->fmsg(Engine::MSG_INFO, "Server has %u entities", count);
+	return 0;
+}
+
 static Ccmd ccmd_host("host","inits a new local server",&console_host);
 static Ccmd ccmd_serverReset("server.reset","restarts the local server",&console_serverReset);
 static Ccmd ccmd_serverDisconnect("server.disconnect","disconnects the server from all remote hosts",&console_serverDisconnect);
@@ -673,3 +761,4 @@ static Ccmd ccmd_serverMap("server.map","loads a world file on the local server"
 static Ccmd ccmd_serverGen("server.gen","generates a level using the given properties",&console_serverGen);
 static Ccmd ccmd_serverSaveMap("server.savemap","saves the given level to disk",&console_serverSaveMap);
 static Ccmd ccmd_serverCount("server.count","counts the number of levels running on the server",&console_serverCount);
+static Ccmd ccmd_serverCountEntities("server.countentities", "count the number of entities in all worlds on the server", &console_serverCountEntities);

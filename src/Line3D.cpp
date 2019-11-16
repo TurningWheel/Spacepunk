@@ -61,8 +61,19 @@ Line3D::~Line3D() {
 	}
 }
 
-void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color) {
-	glLineWidth(width);
+void Line3D::drawLine(Camera& camera, const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color) {
+	//glLineWidth(width);
+	draw(camera, width, src, dest, color, "shaders/basic/line3D.json");
+}
+
+void Line3D::drawLaser(Camera& camera, const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color) {
+	draw(camera, width, src, dest, color, "shaders/basic/laser.json");
+}
+
+void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color, const char* material) {
+	if (width < 0.f) {
+		return;
+	}
 
 	// get difference of vectors
 	glm::vec3 diff(0.f);
@@ -73,20 +84,39 @@ void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const
 	// setup model matrix
 	const glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(src.x,-src.z,src.y));
 
-	// setup view matrix
-	const glm::mat4 viewMatrix = camera.getProjViewMatrix() * modelMatrix;
+	// setup viewproj matrix
+	const glm::mat4 viewProjMatrix = camera.getProjViewMatrix();
+
+	// setup modelview matrix
+	const glm::mat4 modelViewMatrix = camera.getViewMatrix() * modelMatrix;
 
 	// load shader
-	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/line3D.json");
+	Material* mat = mainEngine->getMaterialResource().dataForString(material);
 	if( mat ) {
-		const ShaderProgram& shader = mat->getShader();
+		ShaderProgram& shader = mat->getShader();
 		if( &shader != ShaderProgram::getCurrentShader() )
 			shader.mount();
 
 		// upload uniform variables
-		glUniformMatrix4fv(shader.getUniformLocation("gView"),1,GL_FALSE,glm::value_ptr(viewMatrix));
+		glUniformMatrix4fv(shader.getUniformLocation("gModel"),1,GL_FALSE,glm::value_ptr(modelMatrix));
+		glUniformMatrix4fv(shader.getUniformLocation("gViewProj"),1,GL_FALSE,glm::value_ptr(viewProjMatrix));
+		glUniformMatrix4fv(shader.getUniformLocation("gModelView"),1,GL_FALSE,glm::value_ptr(modelViewMatrix));
 		glUniform3fv(shader.getUniformLocation("gDiff"),1,glm::value_ptr(glm::vec3(diff.x,-diff.z,diff.y)));
 		glUniform4fv(shader.getUniformLocation("gColor"),1,glm::value_ptr(color));
+		glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+		glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
+		glUniform1f(shader.getUniformLocation("gWidth"), width);
+
+		// bind textures
+		if( camera.getDrawMode() == Camera::DRAW_STANDARD || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL || camera.getDrawMode() == Camera::DRAW_GLOW ) {
+			if( mat ) {
+				if( camera.getDrawMode() == Camera::DRAW_GLOW ) {
+					mat->bindTextures(Material::GLOW);
+				} else {
+					mat->bindTextures(Material::STANDARD);
+				}
+			}
+		}
 
 		// draw elements
 		glBindVertexArray(vao);

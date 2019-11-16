@@ -59,6 +59,7 @@ public:
             startY(_startY),
             endX(_endX),
             endY(_endY) {}
+		virtual ~Task() {}
 
         virtual PathFinder::Path* findPath() = 0;
 
@@ -138,8 +139,8 @@ protected:
 		}
 		~PathNode() {}
 
-		PathNode** add(PathNode& child, size_t pos);
-		PathNode** remove(PathNode& child, size_t pos);
+		PathNode** add(PathNode& child, Uint32 pos);
+		PathNode** remove(PathNode& child, Uint32 pos);
 
 		bool operator==(const PathNode& rhs) const {
 			if ( rhs.x == x && rhs.y == y ) {
@@ -159,7 +160,7 @@ protected:
     ArrayList<Uint32> map;
     Uint32 mapWidth = 0;
     Uint32 mapHeight = 0;
-    void generateSimpleMap(); //TODO: Make sure accessing this result is threadsafe...every thread should probably get a copy of the map on creation.
+    void generateSimpleMap(); //TODO Make sure accessing this result is threadsafe...every thread should probably get a copy of the map on creation.
 };
 
 // class pathTask

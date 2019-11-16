@@ -9,12 +9,16 @@
 #include "String.hpp"
 #include "LinkedList.hpp"
 #include "Rect.hpp"
+#include "WideVector.hpp"
+#include "Script.hpp"
+#include "Frame.hpp"
 
 class Chunk;
 class Entity;
 class Camera;
 class Light;
 class World;
+class Field;
 
 class Component {
 public:
@@ -28,10 +32,346 @@ public:
 		COMPONENT_SPEAKER,
 		COMPONENT_EMITTER,
 		COMPONENT_CHARACTER,
+		COMPONENT_MULTIMESH,
 		COMPONENT_MAX
 	};
 	static const char* typeStr[COMPONENT_MAX];
 	static const char* typeIcon[COMPONENT_MAX];
+
+	// An exposed attribute (modifiable in editor)
+	class Attribute {
+	public:
+		Attribute(const char* _label);
+
+		enum class Type {
+			TYPE_BOOLEAN,
+			TYPE_INTEGER,
+			TYPE_FLOAT,
+			TYPE_STRING,
+			TYPE_VECTOR,
+			TYPE_COLOR,
+			TYPE_ENUM,
+			TYPE_FILE,
+			TYPE_MAX
+		};
+
+		virtual const Type getType() const = 0;
+		const char* getLabel() const { return label.get(); }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const = 0;
+
+	protected:
+		String label;
+	};
+
+	// bool attribute
+	class AttributeBool : public Attribute {
+	public:
+		AttributeBool(const char* _label, bool& _value);
+		virtual ~AttributeBool() {}
+		virtual const Type getType() const override { return Type::TYPE_BOOLEAN; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(bool& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				value = !value;
+				return 0;
+			}
+		private:
+			bool& value;
+		};
+
+	private:
+		bool& value;
+	};
+
+	// integer attribute
+	class AttributeInt : public Attribute {
+	public:
+		AttributeInt(const char* _label, int& _value);
+		virtual ~AttributeInt() {}
+		virtual const Type getType() const override { return Type::TYPE_INTEGER; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(int& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = strtol(static_cast<Script::param_string_t*>(args.getList()[0])->value.get(), nullptr, 10);
+				return 0;
+			}
+		private:
+			int& value;
+		};
+
+	private:
+		int& value;
+	};
+
+	// float attribute
+	class AttributeFloat : public Attribute {
+	public:
+		AttributeFloat(const char* _label, float& _value);
+		virtual ~AttributeFloat() {}
+		virtual const Type getType() const override { return Type::TYPE_FLOAT; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(float& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = strtof(static_cast<Script::param_string_t*>(args.getList()[0])->value.get(), nullptr);
+				return 0;
+			}
+		private:
+			float& value;
+		};
+
+	private:
+		float& value;
+	};
+
+	// string attribute
+	class AttributeString : public Attribute {
+	public:
+		AttributeString(const char* _label, String& _value);
+		virtual ~AttributeString() {}
+		virtual const Type getType() const override { return Type::TYPE_STRING; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(String& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = static_cast<Script::param_string_t*>(args.getList()[0])->value.get();
+				return 0;
+			}
+		private:
+			String& value;
+		};
+
+	private:
+		String& value;
+	};
+
+	// vector attribute
+	class AttributeVector : public Attribute {
+	public:
+		AttributeVector(const char* _label, Vector& _value);
+		virtual ~AttributeVector() {}
+		virtual const Type getType() const override { return Type::TYPE_VECTOR; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(Vector& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 2 ||
+					args.getList()[0]->getType() != Script::var_t::TYPE_INTEGER ||
+					args.getList()[1]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				int dim = static_cast<Script::param_int_t*>(args.getList()[0])->value;
+				switch (dim) {
+				case 0:
+					value.x = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+					break;
+				case 1:
+					value.y = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+					break;
+				case 2:
+					value.z = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+					break;
+				default:
+					break;
+				}
+				return 0;
+			}
+		private:
+			Vector& value;
+		};
+
+	private:
+		Vector& value;
+	};
+
+	// color attribute
+	class AttributeColor : public Attribute {
+	public:
+		AttributeColor(const char* _label, ArrayList<GLfloat>& _value);
+		virtual ~AttributeColor() {}
+		virtual const Type getType() const override { return Type::TYPE_COLOR; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class Callback : public Script::Function {
+		public:
+			Callback(ArrayList<GLfloat>& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 2 ||
+					args.getList()[0]->getType() != Script::var_t::TYPE_INTEGER ||
+					args.getList()[1]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				int color = static_cast<Script::param_int_t*>(args.getList()[0])->value;
+				value[color] = strtof(static_cast<Script::param_string_t*>(args.getList()[1])->value.get(), nullptr);
+				return 0;
+			}
+		private:
+			ArrayList<GLfloat>& value;
+		};
+
+	private:
+		ArrayList<GLfloat>& value;
+	};
+
+	// enum attribute
+	template<typename E>
+	class AttributeEnum : public Attribute {
+	public:
+		AttributeEnum(const char* _label, const char** _values, Uint32 _maxValue, E& _value) :
+			Attribute(_label),
+			value(_value),
+			maxValue(_maxValue),
+			values(_values)
+		{}
+		virtual ~AttributeEnum() {}
+		virtual const Type getType() const override { return Type::TYPE_ENUM; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override {
+			static const int border = 3;
+
+			// label
+			{
+				Field* label = properties.addField(this->label.get(), this->label.length() + 1);
+
+				Rect<int> size;
+				size.x = border * 2 + x;
+				size.w = width - border * 4 - x;
+				size.y = y;
+				size.h = 20;
+				label->setSize(size);
+				label->setText(this->label.get());
+
+				y += size.h + border;
+			}
+
+			// box of entries
+			{
+				Frame* frame = properties.addFrame("");
+
+				Rect<int> size;
+				size.x = 0; size.w = width - border * 4 - x;
+				size.y = 0; size.h = 150;
+				frame->setActualSize(size);
+				size.x = x + border * 2; size.w = width - border * 4 - x;
+				size.y = y; size.h = 150;
+				frame->setSize(size);
+				frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+				frame->setHigh(false);
+				frame->setBorder(0);
+
+				// entry list
+				for (Uint32 c = 0; c < maxValue; ++c) {
+					Frame::entry_t* entry = frame->addEntry("entry", true);
+					entry->text = values[c];
+					entry->params.addInt(c);
+					entry->click = new Callback(value);
+					entry->ctrlClick = new Callback(value);
+					entry->color = glm::vec4(1.f);
+				}
+
+				y += size.h + border;
+			}
+
+			y += border;
+		}
+		class Callback : public Script::Function {
+		public:
+			Callback(E& _value) :
+				value(_value)
+			{}
+			virtual ~Callback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_INTEGER) {
+					return 1;
+				}
+				int i = static_cast<Script::param_int_t*>(args.getList()[0])->value;
+				value = static_cast<E>(i);
+				return 0;
+			}
+		private:
+			E& value;
+		};
+
+	private:
+		const char** values;
+		Uint32 maxValue;
+		E& value;
+	};
+
+	// file attribute
+	class AttributeFile : public Attribute {
+	public:
+		AttributeFile(const char* _label, const char* _extensions, String& _value);
+		virtual ~AttributeFile() {}
+		virtual const Type getType() const override { return Type::TYPE_FILE; }
+		virtual void createAttributeUI(Frame& properties, int x, int& y, int width) const override;
+		class FieldCallback : public Script::Function {
+		public:
+			FieldCallback(String& _value) :
+				value(_value)
+			{}
+			virtual ~FieldCallback() {}
+			virtual int operator()(Script::Args& args) const override {
+				if (args.getSize() < 1 || args.getList()[0]->getType() != Script::var_t::TYPE_STRING) {
+					return 1;
+				}
+				value = static_cast<Script::param_string_t*>(args.getList()[0])->value.get();
+				return 0;
+			}
+		private:
+			String& value;
+		};
+		class ButtonCallback : public Script::Function {
+		public:
+			ButtonCallback(String& _value, const char* _extensions, Field* _field) :
+				value(_value),
+				extensions(_extensions),
+				field(_field)
+			{}
+			virtual ~ButtonCallback() {}
+			virtual int operator()(Script::Args& args) const override;
+		private:
+			String& value;
+			const char* extensions = nullptr;
+			Field* field = nullptr;
+		};
+
+	private:
+		String& value;
+		const char* extensions = nullptr;
+	};
 
 	// bbox rect
 	struct bboxrect_t {
@@ -45,19 +385,19 @@ public:
 	virtual ~Component();
 
 	// draws the component
-	// @param camera: the camera through which to draw the component
-	// @param light: the light by which the component should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, Light* light);
+	// @param camera the camera through which to draw the component
+	// @param light the light by which the component should be illuminated (or nullptr for no illumination)
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights);
 
 	// update the component
 	virtual void process();
 
 	// called just before the parent is inserted into a new world
-	// @param world: the world we will be placed into, if any
+	// @param world the world we will be placed into, if any
 	virtual void beforeWorldInsertion(const World* world);
 
 	// called just after the parent is inserted into a new world
-	// @param world: the world we have been placed into, if any
+	// @param world the world we have been placed into, if any
 	virtual void afterWorldInsertion(const World* world);
 
 	// check whether the component collides with anything at the current location
@@ -65,13 +405,13 @@ public:
 	virtual bool checkCollision() const;
 
 	// marks tiles, chunks, and sectors that are visible to the component
-	// @param range: maximum range to test occlusion with
-	// @param accuracy: resolution for the occlusion test
+	// @param range maximum range to test occlusion with
+	// @param accuracy resolution for the occlusion test
 	void occlusionTest(float range, int accuracy);
 
 	// determine if the component has culled the given entity from LOS
-	// @param entity: the entity to test visibility of
-	// @param accuracy: bitfield:
+	// @param entity the entity to test visibility of
+	// @param accuracy bitfield:
 	//		* 1: also cast from immediate neighbors
 	//		* 2: neighbor tiles always visible by extension
 	//		* 4: respect entities with OCCLUDE flag
@@ -89,16 +429,23 @@ public:
 	virtual void update();
 
 	// checks the component for any components with the given type
-	// @param type: the type to look for
+	// @param type the type to look for
 	// @return true if the component was found, false otherwise
 	bool hasComponent(type_t type) const;
 
+	// shoots a laser forward from the component origin until an obstacle is hit
+	// @param mat The start location of the laser
+	// @param color The laser's color
+	// @param size The laser's size
+	// @param life The laser's lifespan (in ticks, 60 ticks = 1 sec)
+	void shootLaser(const glm::mat4& mat, WideVector& color, float size, float life);
+
 	// find all components of a given type
-	// @param type: the type of component to search for
-	// @param list: list to populate
+	// @param type the type of component to search for
+	// @param list list to populate
 	template <typename T>
 	void findAllComponents(Component::type_t type, LinkedList<T*>& list) const {
-		for( size_t c = 0; c < components.getSize(); ++c ) {
+		for( Uint32 c = 0; c < components.getSize(); ++c ) {
 			if( components[c]->getType() == type ) {
 				list.addNodeLast(dynamic_cast<T*>(components[c]));
 			}
@@ -107,14 +454,14 @@ public:
 	}
 
 	// find the component with the given name
-	// @param name: the name of the component
+	// @param name the name of the component
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByName(const char* name) {
 		if( name == nullptr || strcmp(name,"")==0 ) {
 			return nullptr;
 		}
-		for( size_t c = 0; c < components.getSize(); ++c ) {
+		for( Uint32 c = 0; c < components.getSize(); ++c ) {
 			if( strcmp( components[c]->getName(), name ) == 0 ) {
 				return static_cast<T*>(components[c]);
 			} else {
@@ -128,14 +475,14 @@ public:
 	}
 
 	// find the component with the given uid
-	// @param uid: the uid of the component
+	// @param uid the uid of the component
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByUID(const Uint32 uid) {
 		if( uid == nuid ) {
 			return nullptr;
 		}
-		for( size_t c = 0; c < components.getSize(); ++c ) {
+		for( Uint32 c = 0; c < components.getSize(); ++c ) {
 			if( components[c]->getUID() == uid ) {
 				return static_cast<T*>(components[c]);
 			} else {
@@ -149,12 +496,12 @@ public:
 	}
 
 	// find the component with the given name and remove it
-	// @param uid: the name of the component
+	// @param uid the name of the component
 	// @return true if the component was removed, otherwise false
 	bool removeComponentByName(const char* name);
 
 	// find the component with the given uid and remove it
-	// @param uid: the uid of the component
+	// @param uid the uid of the component
 	// @return true if the component was removed, otherwise false
 	bool removeComponentByUID(const Uint32 uid);
 
@@ -172,8 +519,16 @@ public:
 		return component;
 	}
 
+	// copy this component and all sub-components into another component
+	// @param dest the component which will contain our copies
+	void copy(Component* dest);
+
+	// copy this component and all sub-components into another entity
+	// @param dest the entity which will contain our copies
+	void copy(Entity* dest);
+
 	// copy sub-components into another component
-	// @param dest: the component which will contain our copies
+	// @param dest the component which will contain our copies
 	void copyComponents(Component& dest);
 
 	// clears the node pointing to us in the chunk we are occupying
@@ -183,7 +538,7 @@ public:
 	void clearAllChunkNodes();
 
 	// load the component from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	virtual void load(FILE* fp);
 
 	// save/load this object to a file
@@ -191,15 +546,15 @@ public:
 	virtual void serialize(FileInterface* file);
 
 	// rotate the component by a given amount
-	// @param ang: the amount to rotate
+	// @param ang the amount to rotate
 	void rotate(const Angle& ang);
 
 	// translate the component by a given amount
-	// @param vec: the amount to translate
+	// @param vec the amount to translate
 	void translate(const Vector& vec);
 
 	// scale the component by a given amount
-	// @param vec: the amount to scale
+	// @param vec the amount to scale
 	void scale(const Vector& vec);
 
 	// reverts rotation to 0, 0, 0
@@ -215,29 +570,31 @@ public:
 	void revertToIdentity();
 
 	// getters & setters
-	virtual type_t				getType() const							{ return COMPONENT_BASIC; }
-	const Entity*				getEntity() const						{ return entity; }
-	Entity*						getEntity()								{ return entity; }
-	const Component*			getParent() const						{ return parent; }
-	bool						isToBeDeleted() const					{ return toBeDeleted; }
-	bool						isEditorOnly() const					{ return editorOnly; }
-	bool						isUpdateNeeded() const					{ return updateNeeded; }
-	ArrayList<Component*>&		getComponents()							{ return components; }
-	Uint32						getUID() const							{ return uid; }
-	const char*					getName() const							{ return name.get(); }
-	const Vector&				getLocalPos() const						{ return lPos; }
-	const Angle&				getLocalAng() const						{ return lAng; }
-	const Vector&				getLocalScale() const					{ return lScale; }
-	const glm::mat4&			getLocalMat() const						{ return lMat; }
-	const Vector&				getGlobalPos() const					{ return gPos; }
-	const Angle&				getGlobalAng() const					{ return gAng; }
-	const Vector&				getGlobalScale() const					{ return gScale; }
-	const glm::mat4&			getGlobalMat() const					{ return gMat; }
-	bool						isCollapsed() const						{ return collapsed; }
-	const bool*					getTilesVisible() const					{ return tilesVisible; }
-	const bool*					getChunksVisible() const				{ return chunksVisible; }
-	const ArrayList<Chunk*>&	getVisibleChunks() const				{ return visibleChunks; }
-	bool						isLocalMatSet() const					{ return lMatSet; }
+	virtual type_t					getType() const						{ return COMPONENT_BASIC; }
+	const Entity*					getEntity() const					{ return entity; }
+	Entity*							getEntity()							{ return entity; }
+	const Component*				getParent() const					{ return parent; }
+	Component*						getParent()							{ return parent; }
+	bool							isToBeDeleted() const				{ return toBeDeleted; }
+	bool							isEditorOnly() const				{ return editorOnly; }
+	bool							isUpdateNeeded() const				{ return updateNeeded; }
+	ArrayList<Component*>&			getComponents()						{ return components; }
+	Uint32							getUID() const						{ return uid; }
+	const char*						getName() const						{ return name.get(); }
+	const Vector&					getLocalPos() const					{ return lPos; }
+	const Angle&					getLocalAng() const					{ return lAng; }
+	const Vector&					getLocalScale() const				{ return lScale; }
+	const glm::mat4&				getLocalMat() const					{ return lMat; }
+	const Vector&					getGlobalPos() const				{ return gPos; }
+	const Angle&					getGlobalAng() const				{ return gAng; }
+	const Vector&					getGlobalScale() const				{ return gScale; }
+	const glm::mat4&				getGlobalMat() const				{ return gMat; }
+	bool							isCollapsed() const					{ return collapsed; }
+	const bool*						getTilesVisible() const				{ return tilesVisible; }
+	const bool*						getChunksVisible() const			{ return chunksVisible; }
+	const ArrayList<Chunk*>&		getVisibleChunks() const			{ return visibleChunks; }
+	bool							isLocalMatSet() const				{ return lMatSet; }
+	const ArrayList<Attribute*>&	getAttributes() const				{ return attributes; }
 
 	void				setEditorOnly(bool _editorOnly)			{ editorOnly = _editorOnly; }
 	void				setName(const char* _name)				{ name = _name; }
@@ -270,7 +627,7 @@ protected:
 	bool collapsed = true;
 
 	// load sub-components from a file
-	// @param fp: the file to read from
+	// @param fp the file to read from
 	void loadSubComponents(FILE* fp);
 
 	// save/load this object to a file
@@ -307,4 +664,7 @@ protected:
 	void occlusionTestTiles(float range, int accuracy);
 	void occlusionTestTilesStep(float range, Sint32 tX, Sint32 tY, int accuracy);
 	bool occlusionTestTilesLine(Sint32 sX, Sint32 sY, Sint32 eX, Sint32 eY, bool entities);
+
+	// attributes available for reflection
+	ArrayList<Attribute*> attributes;
 };

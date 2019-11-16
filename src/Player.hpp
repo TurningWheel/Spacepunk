@@ -45,10 +45,10 @@ public:
 	static const Vector crouchOrigin;
 
 	// spawns the player if they have not already been spawned
-	// @param _world: the world to spawn in
-	// @param pos: the location to spawn at
-	// @param ang: the orientation to spawn with
-	// @param _uid: the uid that our entity will have
+	// @param _world the world to spawn in
+	// @param pos the location to spawn at
+	// @param ang the orientation to spawn with
+	// @param _uid the uid that our entity will have
 	// @return true if successfully spawned the player, false otherwise
 	bool spawn(World& _world, const Vector& pos, const Angle& ang);
 
@@ -59,23 +59,32 @@ public:
 	// control the player (preprocess)
 	void control();
 
+	// update the player (process)
+	void process();
+
 	// move the camera (postprocess)
 	void updateCamera();
 
 	// when one of my entities is deleted, this gets called so I can clear the pointer
-	// @param entity: the entity that was deleted
+	// @param entity the entity that was deleted
 	void onEntityDeleted(Entity* entity);
 
 	// puts the player in a crouch or standing position
-	// @param crouch: if true, player will crouch, otherwise player will stand
+	// @param crouch if true, player will crouch, otherwise player will stand
 	void putInCrouch(bool crouch);
 
 	// updates the player's colors
-	// @param _colors: the colors to use
+	// @param _colors the colors to use
 	void updateColors(const colors_t& _colors);
 
 	// used by other clients to set the entity for this player
 	void setEntity(Entity* _entity);
+
+	// setup player gui
+	void setupGUI();
+
+	// update player gui
+	void updateGUI();
 
 	// getters & setters
 	const char*				getName() const			{ return name.get(); }
@@ -89,6 +98,7 @@ public:
 	bool					isMoving() const		{ return moving; }
 	bool					hasJumped() const		{ return jumped; }
 	const Angle&			getLookDir() const		{ return lookDir; }
+	bool					isInvVisible() const	{ return inventoryVisible;  }
 
 	void	setName(const char* _name)				{ name = _name; }
 	void	setServerID(Uint32 id)					{ serverID = id; }
@@ -114,6 +124,9 @@ private:
 	Model* feet = nullptr;
 	BBox* bbox = nullptr;
 	Camera* camera = nullptr;
+	Model* lTool = nullptr;
+	Model* rTool = nullptr;
+	Light* lamp = nullptr;
 
 	// player controller vars
 	float buttonRight = 0.f;
@@ -123,9 +136,17 @@ private:
 	bool buttonJump = false;
 	bool buttonCrouch = false;
 
+	// inventory vars
+	bool inventoryVisible = false;
+	bool holdingInteract = false;
+	float interactHoldTime = 0;
+	const float HOLD_TO_PICKUP_TIME = 0;
+	Entity* previousInteractedEntity = nullptr;
+
 	bool moving = false;
 	bool crouching = false;
 	bool jumped = false;
 	Angle lookDir;
 	Angle oldLookDir;
+	Vector originalVel;
 };

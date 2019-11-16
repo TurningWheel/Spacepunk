@@ -7,11 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#ifdef PLATFORM_LINUX
 #include <btBulletDynamicsCommon.h>
-#else
-#include <bullet3/btBulletDynamicsCommon.h>
-#endif
 
 #include "LinkedList.hpp"
 #include "Node.hpp"
@@ -33,6 +29,7 @@
 #include "Camera.hpp"
 #include "Speaker.hpp"
 #include "Character.hpp"
+#include "Multimesh.hpp"
 
 const char* Entity::flagStr[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
 	"VISIBLE",
@@ -48,7 +45,8 @@ const char* Entity::flagStr[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
 	"GLOWING",
 	"DEPTHFAIL",
 	"OCCLUDE",
-	"INTERACTABLE"
+	"INTERACTABLE",
+	"STATIC"
 };
 
 const char* Entity::flagDesc[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
@@ -65,7 +63,8 @@ const char* Entity::flagDesc[static_cast<int>(Entity::flag_t::FLAG_NUM)] = {
 	"Enables drawing in the glow pass",
 	"Enables drawing in the depth fail pass",
 	"Causes the entity to block occlusion tests",
-	"Indicates to clients whether an entity is interactible"
+	"Indicates to clients whether an entity is interactible",
+	"Heavily optimize the entity but render it immobile"
 };
 
 const char* Entity::sortStr[SORT_MAX] = {
@@ -86,9 +85,12 @@ Entity::Entity(World* _world, Uint32 _uid) {
 			uid = world->getNewUID();
 		} else {
 			uid = _uid;
+			world->setMaxUID(_uid);
 		}
 		node = world->getEntities(uid&(World::numBuckets-1)).addNodeLast(this);
 	}
+
+	item.InitInventory();
 
 	// initialize a few things
 	scale = Vector(1.f);
@@ -99,10 +101,6 @@ Entity::Entity(World* _world, Uint32 _uid) {
 	snprintf(newName, 32, "Entity #%d", uid);
 	name = newName;
 
-	// create script engine
-	script = new Script(*this);
-
-	//pathTask = nullptr;
 	pathRequested = false;
 	path = nullptr;
 }
@@ -117,7 +115,7 @@ Entity::~Entity() {
 	}
 
 	// delete components
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c] ) {
 			delete components[c];
 			components[c] = nullptr;
@@ -140,9 +138,17 @@ Entity::~Entity() {
 	}
 }
 
+Game* Entity::getGame() {
+	if (world) {
+		return world->getGame();
+	} else {
+		return nullptr;
+	}
+}
+
 void Entity::clearAllChunkNodes() {
 	clearChunkNode();
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->clearAllChunkNodes();
 	}
 }
@@ -169,17 +175,49 @@ void Entity::addToEditorList() {
 					entry->color = glm::vec4(1.f);
 				}
 
-				listener = std::make_shared<Entity::listener_t>((void*) entry);
+				listener = std::make_shared<Frame::listener_t>((void*) entry);
 				entry->listener = listener;
 			}
 		}
 	}
 }
 
-void Entity::insertIntoWorld(World* _world) {
+void Entity::insertIntoWorld(World* _world, const Entity* _anchor, const Vector& _offset) {
+	newWorld = _world;
+	anchor = _anchor;
+	offset = _offset;
+}
+
+void Entity::finishInsertIntoWorld() {
+	if (!newWorld) {
+		return;
+	}
+
+	// hack... derive an entity def from our current name
+	if (defIndex == UINT32_MAX) {
+		defName = name.get();
+		defIndex = mainEngine->findEntityDefIndexByName(defName.get());
+		if (defIndex == UINT32_MAX) {
+			mainEngine->fmsg(Engine::MSG_WARN, "entity '%s' moved from one world to another without a known def", name.get());
+		}
+	}
+
+	// inform all clients that the original entity is toast
+	if (world) {
+		Game* game = getGame();
+		if (game && game->isServer()) {
+			Packet packet;
+			packet.write32(uid);
+			packet.write32(world->getID());
+			packet.write("ENTD");
+			game->getNet()->signPacket(packet);
+			game->getNet()->broadcastSafe(packet);
+		}
+	}
+
 	// signal components
-	for( size_t c = 0; c < components.getSize(); ++c ) {
-		components[c]->beforeWorldInsertion(_world);
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+		components[c]->beforeWorldInsertion(newWorld);
 	}
 
 	// insert to new world
@@ -188,7 +226,7 @@ void Entity::insertIntoWorld(World* _world) {
 			world->getEntities(uid&(World::numBuckets-1)).removeNode(node);
 		}
 	}
-	world = _world;
+	world = newWorld;
 	if( world ) {
 		uid = world->getNewUID();
 		node = world->getEntities(uid&(World::numBuckets-1)).addNodeLast(this);
@@ -198,21 +236,42 @@ void Entity::insertIntoWorld(World* _world) {
 	}
 
 	// signal components again
-	for( size_t c = 0; c < components.getSize(); ++c ) {
-		components[c]->afterWorldInsertion(_world);
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+		components[c]->afterWorldInsertion(newWorld);
 	}
 
-	// run init script
-	if( script && !scriptStr.empty() && world ) {
-		StringBuf<64> path;
-		if( world->isClientObj() && mainEngine->isRunningClient() ) {
-			path.format("scripts/client/entities/%s.lua", scriptStr.get());
-		} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
-			path.format("scripts/server/entities/%s.lua", scriptStr.get());
+	// if we're moving a player, we need to signal that client
+	if (player) {
+		Game* game = getGame();
+		if (game && game->isServer()) {
+			Packet packet;
+
+			packet.write32(offset.z);
+			packet.write32(offset.y);
+			packet.write32(offset.x);
+			packet.write32(anchor ? anchor->getUID() : World::nuid);
+
+			packet.write(world->getShortname().get());
+			packet.write32((Uint32)world->getShortname().length());
+
+			packet.write32(player->getServerID());
+			packet.write32(player->getLocalID());
+			packet.write32(player->getClientID());
+			packet.write("PLVL");
+
+			game->getNet()->signPacket(packet);
+			game->getNet()->sendPacketSafe(player->getClientID(), packet);
 		}
-		script->load(path.get());
-		script->dispatch("init");
 	}
+
+	// use anchor
+	if (anchor) {
+		pos = anchor->getPos() + offset;
+		updateNeeded = true;
+		warp();
+	}
+
+	newWorld = nullptr;
 }
 
 void Entity::remove() {
@@ -220,7 +279,7 @@ void Entity::remove() {
 }
 
 void Entity::deleteAllVisMaps() {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->deleteAllVisMaps();
 	}
 }
@@ -283,25 +342,44 @@ void Entity::findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) co
 void Entity::update() {
 	updateNeeded = false;
 
-	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
-	glm::mat4 rotationM = glm::mat4( 1.f );
-	rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansYaw()), glm::vec3(0.f, 1.f, 0.f));
-	rotationM = glm::rotate(rotationM, (float)(PI*2 - ang.radiansPitch()), glm::vec3(0.f, 0.f, 1.f));
-	rotationM = glm::rotate(rotationM, (float)(ang.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-	glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
-	mat = translationM * rotationM * scaleM;
+	// static entities never update
+	if (ticks && isFlag(Entity::FLAG_STATIC) && !mainEngine->isEditorRunning()) {
+		return;
+	}
+
+	if (!matSet) {
+		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
+		glm::mat4 rotationM = glm::mat4( 1.f );
+		rotationM = glm::rotate(rotationM, (float)(ang.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
+		rotationM = glm::rotate(rotationM, (float)(ang.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
+		rotationM = glm::rotate(rotationM, (float)(ang.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
+		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
+		mat = translationM * rotationM * scaleM;
+	} else {
+		pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+		scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
+		ang.yaw = PI/2.f - atan2f(mat[0][0], mat[0][2]);
+		ang.pitch = asinf(mat[1][1]) - PI/2.f;
+		ang.roll = 0.f;
+		ang.bindAngles();
+		/*glm::extractEulerAngleXYZ(mat, ang.roll, ang.yaw, ang.pitch);
+		ang.yaw *= -1.f;
+		ang.pitch *= -.1f;
+		ang.roll *= -.1f;
+		ang.bindAngles();*/
+	}
 
 	// update the chunk node
 	if( world && world->getType() == World::WORLD_TILES ) {
 		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		if( tileworld->getChunks() ) {
+		if (tileworld && tileworld->getChunks().getSize()) {
 			Sint32 cW = tileworld->calcChunksWidth();
 			Sint32 cH = tileworld->calcChunksHeight();
-			if( cW > 0 && cH > 0 ) {
-				Sint32 cX = std::min( std::max( 0, (Sint32)floor((pos.x / Tile::size) / Chunk::size) ), cW - 1 );
-				Sint32 cY = std::min( std::max( 0, (Sint32)floor((pos.y / Tile::size) / Chunk::size) ), cH - 1 );
+			if (cW > 0 && cH > 0) {
+				Sint32 cX = std::min(std::max(0, (Sint32)floor((pos.x / Tile::size) / Chunk::size)), cW - 1);
+				Sint32 cY = std::min(std::max(0, (Sint32)floor((pos.y / Tile::size) / Chunk::size)), cH - 1);
 
-				if( cX != currentCX || cY != currentCY ) {
+				if (cX != currentCX || cY != currentCY) {
 					clearChunkNode();
 
 					currentCX = cX;
@@ -313,7 +391,7 @@ void Entity::update() {
 		}
 	}
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->isToBeDeleted() ) {
 			delete components[c];
 			components.remove(c);
@@ -324,56 +402,185 @@ void Entity::update() {
 	}
 }
 
+void Entity::updatePacket(Packet& packet) const {
+	if (player) {
+		packet.write32((Sint32)(getLookDir().degreesRoll() * 32));
+		packet.write32((Sint32)(getLookDir().degreesPitch() * 32));
+		packet.write32((Sint32)(getLookDir().degreesYaw() * 32));
+		packet.write8(player->hasJumped() ? 1 : 0);
+		packet.write8(player->isMoving() ? 1 : 0);
+		packet.write8(player->isCrouching() ? 1 : 0);
+		packet.write32(player->getServerID());
+		packet.write8(1); // signifies this is a player
+	}
+	else {
+		packet.write8(0); // signifies this is not a player, stop here
+	}
+	packet.write8(falling ? 1U : 0U);
+	packet.write32((Sint32)(ang.degreesRoll() * 32));
+	packet.write32((Sint32)(ang.degreesPitch() * 32));
+	packet.write32((Sint32)(ang.degreesYaw() * 32));
+	packet.write32((Sint32)(vel.z * 128));
+	packet.write32((Sint32)(vel.y * 128));
+	packet.write32((Sint32)(vel.x * 128));
+	packet.write32((Sint32)(pos.z * 32));
+	packet.write32((Sint32)(pos.y * 32));
+	packet.write32((Sint32)(pos.x * 32));
+	packet.write32(defIndex);
+	packet.write32(uid);
+	packet.write32(world->getID());
+	packet.write("ENTU");
+}
+
+void Entity::remoteExecute(const char* funcName, const Script::Args& args) {
+	Game* game = getGame();
+	if (!game) {
+		return;
+	}
+	Packet packet;
+	if (args.getList().getSize()) {
+		for (int c = args.getList().getSize() - 1; c >= 0; --c) {
+			auto arg = args.getList()[c];
+			const char* str = arg->str();
+			packet.write(str, arg->strSize());
+		}
+	}
+	packet.write32(args.getSize());
+	packet.write(funcName);
+	packet.write32((Uint32)strlen(funcName));
+	packet.write32(uid);
+	packet.write32(world->getID());
+	packet.write("ENTF");
+	game->getNet()->signPacket(packet);
+	game->getNet()->broadcastSafe(packet);
+}
+
+void Entity::dispatch(const char* funcName, Script::Args& args) {
+	if (script) {
+		script->dispatch(funcName, &args);
+	}
+}
+
+void Entity::preProcess() {
+	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
+		if (script && !scriptStr.empty() && world && ranScript && ticks != 0) {
+			script->dispatch("preprocess");
+		}
+	}
+}
+
 void Entity::process() {
 	++ticks;
 
 	// correct orientations
 	ang.wrapAngles();
 
-	// run entity script
-	bool processed = false;
-	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
-		if( script && !scriptStr.empty() && world ) {
-			StringBuf<128> path;
-			if( world->isClientObj() && mainEngine->isRunningClient() ) {
-				path.format("scripts/client/entities/%s.lua", scriptStr.get());
-			} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
-				path.format("scripts/server/entities/%s.lua", scriptStr.get());
-			}
+	// update path request
+	if( path ) {
+		pathRequested = false;
+		if (path->getSize() == 0) {
+			delete path;
+			path = nullptr;
+		} else {
+			const PathFinder::PathWaypoint& node = path->getFirst()->getData();
 
-			// first time
-			if( !ranScript ) {
+			if (world->getType() != World::type_t::WORLD_TILES) {
+				TileWorld* tileWorld = static_cast<TileWorld*>(world);
+
+				// place dest coordinates in the middle of the tile
+				pathNode.x = node.x * Tile::size + Tile::size / 2.f; float& x = pathNode.x;
+				pathNode.y = node.y * Tile::size + Tile::size / 2.f; float& y = pathNode.y;
+				pathNode.z = tileWorld->getTiles()[y + x * tileWorld->getHeight()].getFloorHeight(); float& z = pathNode.z;
+				float epsilon = Tile::size / 4.f;
+
+				if (pos.x >= x-epsilon && pos.x <= x-epsilon &&
+					pos.y >= y-epsilon && pos.y <= y-epsilon) {
+					path->removeNode(path->getFirst());
+
+					//Finished pathfinding.
+					if (path->getSize() == 0) {
+						mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' reached goal tile (%d, %d)!", getName().get(), node.x, node.y);
+						pathNode = Vector(0.f);
+						pathDir = Vector(0.f);
+
+						delete path;
+						path = nullptr;
+					}
+				}
+				else {
+					//Move to the target tile.
+					//Stop moving once reached destination.
+					Vector pathDir = (pathNode - pos).normal();
+				}
+			}
+		}
+	}
+
+	// run entity script
+	bool editor = mainEngine->isEditorRunning() && !mainEngine->isPlayTest();
+	if (!editor) {
+		if (script && !scriptStr.empty() && world) {
+			if (!ranScript) {
 				ranScript = true;
-				script->load(path.get());
+				script->load(StringBuf<64>("scripts/entities/%s.lua", 1, scriptStr.get()));
 				script->dispatch("init");
 			} else {
 				script->dispatch("process");
-				processed = true;
-			}
-		}
-
-		// interpolate between new and old positions
-		if( ticks - lastUpdate <= mainEngine->getTicksPerSecond()/15 && !isFlag(flag_t::FLAG_LOCAL) ) {
-			Vector vDiff = newPos - pos;
-			pos += vDiff / 4.f;
-
-			Angle aDiff;
-			aDiff.yaw = newAng.yaw - ang.yaw;
-			aDiff.pitch = newAng.pitch - ang.pitch;
-			aDiff.roll = newAng.roll - ang.roll;
-			aDiff.wrapAngles();
-			ang.yaw += aDiff.yaw / 4.f;
-			ang.pitch += aDiff.pitch / 4.f;
-			ang.roll += aDiff.roll / 4.f;
-
-			if( vDiff.lengthSquared() > 0.f ) {
-				updateNeeded = true;
 			}
 		}
 	}
 
 	// move entity
 	move();
+
+	if (!editor) {
+		// interpolate between new and old positions
+		if (ticks - lastUpdate <= mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
+			Vector oPos = pos;
+			Angle oAng = ang;
+
+			// interpolate position
+			Vector vDiff = newPos - pos;
+			if (vDiff.lengthSquared() > 64.f || vel.lengthSquared() < 1.f) {
+				pos += vDiff / 4.f;
+			}
+			ang = newAng;
+
+			// correct illegal move from clients, or alawys accept from server
+			Game* game = getGame();
+			bool illegal = false;
+			if (game && game->isServer()) {
+				/*BBox* bbox = findComponentByName<BBox>("physics");
+				if (bbox) {
+					LinkedList<World::hit_t> result;
+					auto convexShape = static_cast<const btConvexShape*>(bbox->getCollisionShapePtr());
+					if (convexShape) {
+						world->convexSweepList(convexShape, bbox->getGlobalPos(), bbox->getGlobalAng(), pos + bbox->getLocalPos(), ang + bbox->getLocalAng(), result);
+						if (result.getSize()) {
+							//Packet packet;
+							//updatePacket(packet);
+							//game->getNet()->signPacket(packet);
+							//game->getNet()->broadcastSafe(packet);
+							illegal = true;
+						}
+					}
+				}
+				if (!illegal) {
+					updateNeeded = true;
+					warp();
+				}
+				else {
+					pos = oPos;
+					ang = oAng;
+				}*/
+				updateNeeded = true;
+				warp();
+			} else {
+				updateNeeded = true;
+				warp();
+			}
+		}
+	}
 
 	// correct orientation again
 	ang.wrapAngles();
@@ -384,74 +591,20 @@ void Entity::process() {
 	}
 
 	// process components
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		components[c]->process();
 	}
+}
 
-	if ( (pathRequested && pathFinished()) || nullptr != path )
-	{
-		pathRequested = false;
-		if (nullptr == path)
-		{
-			mainEngine->fmsg(Engine::MSG_WARN, "Entity %s is pathing but path is nullptr! Removing path request...", getName().get());
-			//Stop moving once reached destination.
-			Vector moveVel = Vector(0, 0, 0);
-			setVel(moveVel);
-		}
-		else if (path->getSize() == 0)
-		{
-			delete path;
-			path = nullptr;
-			//Stop moving once reached destination.
-			Vector moveVel = Vector(0, 0, 0);
-			setVel(moveVel);
-		}
-		else
-		{
-			//mainEngine->fmsg(Engine::MSG_WARN, "Entity %s is pathing!", getName().get());
-			PathFinder::PathWaypoint node = path->getFirst()->getData();
-			if (getCurrentTileX() == node.x && getCurrentTileY() == node.y)
-			{
-				mainEngine->fmsg(Engine::MSG_WARN, "Entity %s reached goal tile (%d, %d)!", getName().get(), node.x, node.y);
-				//Reached the goal tile!
-				path->removeNode(static_cast<size_t>(0));
-
-				if (path->getSize() == 0)
-				{
-					//Finished pathfinding.
-					delete path;
-					path = nullptr;
-					Vector moveVel = Vector(0, 0, 0);
-					setVel(moveVel);
-				}
-			}
-			else
-			{
-				//Move to the target tile.
-				//Stop moving once reached destination.
-				Vector moveVel = Vector((node.x - getCurrentTileX()), (node.y - getCurrentTileY()), 0);
-				setVel(moveVel);
-				//mainEngine->fmsg(Engine::MSG_WARN, "Entity %s is moving towards (%d, %d) and is on (%d, %d)!", getName().get(), node.x, node.y, getCurrentTileX(), getCurrentTileY());
-			}
-		}
-	}
-
-	// run post process script
-	if( !mainEngine->isEditorRunning() || mainEngine->isPlayTest() ) {
-		if( script && !scriptStr.empty() && world && processed ) {
-			StringBuf<128> path;
-			if( world->isClientObj() && mainEngine->isRunningClient() ) {
-				path.format("scripts/client/entities/%s.lua", scriptStr.get());
-			} else if( world->isServerObj() && mainEngine->isRunningServer() ) {
-				path.format("scripts/server/entities/%s.lua", scriptStr.get());
-			}
-
+void Entity::postProcess() {
+	if (!mainEngine->isEditorRunning() || mainEngine->isPlayTest()) {
+		if (script && !scriptStr.empty() && world && ranScript && ticks != 0) {
 			script->dispatch("postprocess");
 		}
 	}
 }
 
-void Entity::draw(Camera& camera, Light* light) const {
+void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 	bool editorRunning = mainEngine->isEditorRunning();
 	if( !isFlag(flag_t::FLAG_VISIBLE) && (!editorRunning || !shouldSave) ) {
 		return;
@@ -464,7 +617,7 @@ void Entity::draw(Camera& camera, Light* light) const {
 
 	// in editor, skip entities at too great a distance
 	if( editorRunning && world->isShowTools() ) {
-		if( (camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() ) {
+		if( (camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() / 4.f ) {
 			return;
 		}
 	}
@@ -476,7 +629,7 @@ void Entity::draw(Camera& camera, Light* light) const {
 
 	// draw components
 	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		components[c]->draw(camera, light);
+		components[c]->draw(camera, lights);
 	}
 
 	// reset overdraw characteristics
@@ -490,7 +643,7 @@ bool Entity::checkCollision(const Vector& newPos) {
 	pos = newPos;
 	update();
 
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->checkCollision() ) {
 			pos = oldPos;
 			update();
@@ -510,99 +663,79 @@ void Entity::animate(const char* name, bool blend) {
 	}
 }
 
+void Entity::warp() {
+	BBox* bbox = findComponentByName<BBox>("physics");
+	if (bbox) {
+		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang);
+	}
+}
+
+void Entity::depositItem(Entity * entityToDeposit, String invSlot)
+{
+	item.depositItem(entityToDeposit, invSlot);
+	entityToDeposit->insertIntoWorld(nullptr, entityToDeposit, Vector());
+}
+
+void Entity::depositInAvailableSlot(Entity* entityToDeposit)
+{
+	if (!item.isSlotFilled("RightHand"))
+	{
+		depositItem(entityToDeposit, "RightHand");
+	}
+	else if (!item.isSlotFilled("LeftHand"))
+	{
+		depositItem(entityToDeposit, "LeftHand");
+	}
+	else if (!item.isSlotFilled("Back"))
+	{
+		depositItem(entityToDeposit, "Back");
+	}
+	else if (!item.isSlotFilled("RightHip"))
+	{
+		depositItem(entityToDeposit, "RightHip");
+	}
+	else if (!item.isSlotFilled("LeftHip"))
+	{
+		depositItem(entityToDeposit, "LeftHip");
+	}
+	else if (!item.isSlotFilled("Waist"))
+	{
+		depositItem(entityToDeposit, "Waist");
+	}
+	else
+	{
+		depositItem(entityToDeposit, "RightHand");
+	}
+}
+
+void Entity::setInventoryVisibility(bool visible)
+{
+	item.setInventoryVisibility(visible);
+}
+
 bool Entity::move() {
-	if( rot.yaw || rot.pitch || rot.roll ) {
-		updateNeeded = true;
-		ang += rot;
-		ang.wrapAngles();
-	}
-
-	if( vel.lengthSquared() == 0.f ) {
-		return true;
-	}
-
-	// speed limit
-	vel.x = min( max( Tile::size*-16.f, vel.x ), Tile::size*16.f );
-	vel.y = min( max( Tile::size*-16.f, vel.y ), Tile::size*16.f );
-	vel.z = min( max( Tile::size*-16.f, vel.z ), Tile::size*16.f );
-
-	if( flags&static_cast<int>(flag_t::FLAG_PASSABLE) ) {
-		updateNeeded = true;
-		pos += vel;
-		return true;
-	} else {
-		{
-			Vector newPos = pos + vel;
-			if(!checkCollision(newPos)) {
+	if( !isFlag(Entity::FLAG_STATIC) ) {
+		if( rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
+			BBox* bbox = findComponentByName<BBox>("physics");
+			if (bbox && bbox->getMass() < 0.f && !bbox->getParent()) {
+				bbox->applyMoveForces(vel, rot);
 				updateNeeded = true;
-				pos = newPos;
-				return true;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(0.f, vel.y, vel.z);
-			if(!checkCollision(newPos)) {
+			} else {
+				ang += rot;
+				pos += vel;
+				ang.wrapAngles();
 				updateNeeded = true;
-				vel.x = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(vel.x, 0.f, vel.z);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.y = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(vel.x, vel.y, 0.f);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.z = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(vel.x, 0.f, 0.f);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.y = 0;
-				vel.z = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(0.f, vel.y, 0.f);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.x = 0;
-				vel.z = 0;
-				pos = newPos;
-				return false;
-			}
-		}
-		{
-			Vector newPos = pos + Vector(0.f, 0.f, vel.z);
-			if(!checkCollision(newPos)) {
-				updateNeeded = true;
-				vel.x = 0;
-				vel.y = 0;
-				pos = newPos;
-				return false;
 			}
 		}
 	}
+	return true;
+}
 
-	// completely blocked
-	vel.x = 0;
-	vel.y = 0;
-	vel.z = 0;
-	return false;
+void Entity::applyForce(const Vector& force, const Vector& origin) {
+	BBox* bbox = findComponentByName<BBox>("physics");
+	if (bbox) {
+		bbox->applyForce(force, origin);
+	}
 }
 
 Entity::def_t* Entity::loadDef(const char* filename) {
@@ -650,12 +783,17 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 	entity->setAng(ang);
 	entity->setNewAng(ang);
 
+	BBox* bbox = entity->findComponentByName<BBox>("physics");
+	if (bbox && bbox->getMass() != 0.f && !bbox->getParent()) {
+		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang - bbox->getLocalAng());
+	}
+
 	mainEngine->fmsg(Engine::MSG_DEBUG, "spawned entity '%s'", entity->getName().get());
 	return entity;
 }
 
 bool Entity::hasComponent(Component::type_t type) const {
-	for( size_t c = 0; c < components.getSize(); ++c ) {
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
 		if( components[c]->getType() == type ) {
 			return true;
 		}
@@ -667,10 +805,9 @@ bool Entity::hasComponent(Component::type_t type) const {
 }
 
 Entity* Entity::copy(World* world, Entity* entity) const {
-	if( !entity ) {
+	if (!entity) {
 		entity = new Entity(world);
 	}
-
 	entity->setPlayer(player);
 	entity->setFlags(flags);
 	entity->setPos(pos);
@@ -686,78 +823,10 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	entity->setScriptStr(scriptStr);
 	entity->setFalling(falling);
 	entity->setSort(sort);
-
-	Component* component = nullptr;
-	for( size_t c = 0; c < components.getSize(); ++c ) {
-		switch( components[c]->getType() ) {
-			case Component::COMPONENT_BASIC:
-			{
-				component = entity->addComponent<Component>();
-				break;
-			}
-			case Component::COMPONENT_BBOX:
-			{
-				component = entity->addComponent<BBox>();
-				BBox* bbox0 = static_cast<BBox*>(components[c]);
-				BBox* bbox1 = static_cast<BBox*>(component);
-				*bbox1 = *bbox0;
-				break;
-			}
-			case Component::COMPONENT_MODEL:
-			{
-				component = entity->addComponent<Model>();
-				Model* model0 = static_cast<Model*>(components[c]);
-				Model* model1 = static_cast<Model*>(component);
-				*model1 = *model0;
-				break;
-			}
-			case Component::COMPONENT_LIGHT:
-			{
-				component = entity->addComponent<Light>();
-				Light* light0 = static_cast<Light*>(components[c]);
-				Light* light1 = static_cast<Light*>(component);
-				*light1 = *light0;
-				break;
-			}
-			case Component::COMPONENT_CAMERA:
-			{
-				component = entity->addComponent<Camera>();
-				Camera* camera0 = static_cast<Camera*>(components[c]);
-				Camera* camera1 = static_cast<Camera*>(component);
-				*camera1 = *camera0;
-				break;
-			}
-			case Component::COMPONENT_SPEAKER:
-			{
-				component = entity->addComponent<Speaker>();
-				Speaker* speaker0 = static_cast<Speaker*>(components[c]);
-				Speaker* speaker1 = static_cast<Speaker*>(component);
-				*speaker1 = *speaker0;
-				break;
-			}
-			case Component::COMPONENT_CHARACTER:
-			{
-				component = entity->addComponent<Character>();
-				Character* character0 = static_cast<Character*>(components[c]);
-				Character* character1 = static_cast<Character*>(component);
-				*character1 = *character0;
-				break;
-			}
-			default:
-			{
-				mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from '%s' with unknown type", entity->getName().get());
-				break;
-			}
-		}
-		if( !component ) {
-			mainEngine->fmsg(Engine::MSG_WARN,"failed to copy component from entity '%s'", entity->getName());
-		} else {
-			*component = *components[c];
-			components[c]->copyComponents(*component);
-			mainEngine->fmsg(Engine::MSG_DEBUG,"copied %s component from '%s'", Component::typeStr[(int)component->getType()], entity->getName().get());
-		}
+	entity->keyvalues.copy(keyvalues);
+	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+		components[c]->copy(entity);
 	}
-
 	entity->update();
 	entity->animate("idle", false);
 
@@ -801,8 +870,10 @@ Component* Entity::addComponent(Component::type_t type) {
 		return addComponent<Speaker>();
 	case Component::COMPONENT_CHARACTER:
 		return addComponent<Character>();
+	case Component::COMPONENT_MULTIMESH:
+		return addComponent<Multimesh>();
 	default:
-		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown entity type %u", (Uint32)type);
+		mainEngine->fmsg(Engine::MSG_ERROR, "addComponent: Unknown component type %u", (Uint32)type);
 		return nullptr;
 	}
 }
@@ -818,21 +889,22 @@ const World::hit_t Entity::lineTrace( const Vector& origin, const Vector& dest )
 	return world->lineTrace(origin, dest);
 }
 
-bool Entity::interact(Entity& user)
+bool Entity::interact(Entity& user, BBox& bbox)
 {
-	if ( !isFlag(flag_t::FLAG_INTERACTABLE) )
+	if ( !isFlag(flag_t::FLAG_INTERACTABLE) || !script )
 	{
 		return false;
 	}
 
 	Script::Args args;
-	args.addPointer(&user);
+	args.addInt(user.getUID());
+	args.addString(bbox.getName());
 
-	return (script->dispatch("interact", &args) == 0);
+	return script->dispatch("interact", &args) == 0;
 }
 
 void Entity::serialize(FileInterface * file) {
-	Uint32 version = 1;
+	Uint32 version = 2;
 	file->property("Entity::version", version);
 
 	file->property("name", name);
@@ -843,6 +915,9 @@ void Entity::serialize(FileInterface * file) {
 	file->property("flags", flags);
 	file->property("falling", falling);
 	file->property("sort", sort);
+	if (version >= 2) {
+		file->property("EntityItem", item);
+	}
 	if( version >= 1 ) {
 		file->property("keys", keyvalues);
 	}
@@ -863,6 +938,9 @@ void Entity::serialize(FileInterface * file) {
 			file->endObject();
 		}
 		file->endArray();
+
+		// important to init script engine
+		setScriptStr(scriptStr.get());
 		
 		// post
 		setNewPos(pos);
@@ -901,12 +979,9 @@ void Entity::serialize(FileInterface * file) {
 void Entity::setKeyValue(const char* key, const char* value)
 {
 	String* exists = keyvalues[key];
-	if ( exists )
-	{
+	if (exists) {
 		*exists = value;
-	}
-	else
-	{
+	} else {
 		keyvalues.insert(key, value);
 	}
 }
@@ -946,56 +1021,50 @@ int Entity::getKeyValueAsInt(const char* key) const
 	}
 }
 
+bool Entity::getKeyValueAsBool(const char* key) const
+{
+	const String* value = keyvalues.find(key);
+	if (value) {
+		return *value == "true";
+	} else {
+		return false;
+	}
+}
+
 const char* Entity::getKeyValue(const char* key) const
 {
 	return getKeyValueAsString(key);
 }
 
-void Entity::listener_t::onDeleted() {
-	if( !entry ) {
-		return;
-	}
-	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
-	entryCast->suicide = true;
-}
-
-void Entity::listener_t::onChangeColor(bool selected, bool highlighted) {
-	if( !entry ) {
-		return;
-	}
-	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
-	if( selected ) {
-		entryCast->color = glm::vec4(1.f,0.f,0.f,1.f);
-	} else if( highlighted ) {
-		entryCast->color = glm::vec4(1.f,1.f,0.f,1.f);
-	} else {
-		entryCast->color = glm::vec4(1.f);
-	}
-}
-
-void Entity::listener_t::onChangeName(const char* name) {
-	if( !entry ) {
-		return;
-	}
-	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
-	entryCast->text = name;
-}
-
 void Entity::findAPath(int endX, int endY) {
 	if (!world)
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s attempted to path without world object.", getName().get());
+		mainEngine->fmsg(Engine::MSG_WARN, "Entity '%s' attempted to path without world object.", getName().get());
 		return;
 	}
 	if (pathRequested)
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s cannot calculate more than one path at a time! Please wait for previous request to complete.", getName().get());
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' cannot calculate more than one path at a time! Please wait for previous request to complete.", getName().get());
 		return; //Can only do one path at a time!
 	}
-	mainEngine->fmsg(Engine::MSG_WARN, "Entity %s requested a path from (%d, %d) to (%d, %d)!", getName().get(), getCurrentTileX(), getCurrentTileY(), endX, endY);
+	mainEngine->fmsg(Engine::MSG_WARN, "Entity '%s' requested a path from (%d, %d) to (%d, %d)!", getName().get(), getCurrentTileX(), getCurrentTileY(), endX, endY);
 	pathRequested = true;
 
 	pathTask = world->findAPath(getCurrentTileX(), getCurrentTileY(), endX, endY);
+}
+
+void Entity::findRandomPath() {
+	if (!world || world->getType() != World::WORLD_TILES) {
+		return;
+	}
+	TileWorld* tileWorld = static_cast<TileWorld*>(world);
+
+	Sint32 x = -1;
+	Sint32 y = -1;
+	tileWorld->findRandomTile(Tile::size, x, y);
+	if (x >= 0 && y >= 0) {
+		findAPath(x, y);
+	}
 }
 
 bool Entity::pathFinished() {
@@ -1006,7 +1075,7 @@ bool Entity::pathFinished() {
 
 	if (!pathTask.valid())
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s received invalid future pathtask!", getName().get());
+		mainEngine->fmsg(Engine::MSG_WARN, "Entity '%s' received invalid future pathtask!", getName().get());
 		if (nullptr != path)
 		{
 			delete path;
@@ -1016,9 +1085,9 @@ bool Entity::pathFinished() {
 	}
 	if (pathTask.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
 	{
-		mainEngine->fmsg(Engine::MSG_WARN, "Entity %s finished pathing!", getName().get());
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' finished pathing!", getName().get());
 		path = pathTask.get();
-		mainEngine->fmsg(Engine::MSG_WARN, "Path size is %d", path->getSize());
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Path size is %d", path->getSize());
 		return true;
 	}
 
@@ -1031,5 +1100,43 @@ void Entity::def_t::serialize(FileInterface * file) {
 	file->property("Entity::def_t::version", version);
 	if (version >= 1)
 		file->property("editor", exposedInEditor);
+	Model::dontLoadMesh = true;
 	file->property("entity", entity);
+	Model::dontLoadMesh = false;
+}
+
+bool Entity::isLocalPlayer() const {
+	if (player) {
+		if (player->getClientID() == Player::invalidID) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void Entity::setScriptStr(const char* _scriptStr) {
+	scriptStr = _scriptStr;
+	if (script) {
+		delete script;
+	}
+	if (!scriptStr.empty() && world) {
+		script = new Script(*this);
+	}
+	ranScript = false;
+}
+
+bool Entity::isClientObj() const {
+	if (world) {
+		return world->isClientObj();
+	} else {
+		return false;
+	}
+}
+
+bool Entity::isServerObj() const {
+	if (world) {
+		return !world->isClientObj();
+	} else {
+		return false;
+	}
 }

@@ -16,11 +16,11 @@ public:
 	void listDevices();
 
 	// set the 3D listener properties for the mixer
-	// @param camera: the viewpoint to set the listener properties to
-	void setListener(Camera& camera);
+	// @param camera the viewpoint to set the listener properties to
+	void setListener(Camera* camera);
 
 	// play the given sound effect
-	// @param loop: if true, the sound will loop indefinitely; otherwise, it will only play once
+	// @param loop if true, the sound will loop indefinitely; otherwise, it will only play once
 	// @return the Mix_Channel the sound is playing on, or -1 for errors
 	int playSound(const char* name, const bool loop);
 

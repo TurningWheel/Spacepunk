@@ -12,6 +12,8 @@
 #include "Model.hpp"
 #include "BBox.hpp"
 #include "Camera.hpp"
+#include "Frame.hpp"
+#include "Renderer.hpp"
 
 const char* Player::defaultName = "Player";
 const float Player::standFeetHeight = 48.f;
@@ -28,6 +30,7 @@ static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_crouchSpeed("player.crouchspeed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
 static Cvar cvar_jumpPower("player.jumppower", "player jump strength", "4.0");
+static Cvar cvar_canCrouch("player.cancrouch", "whether player can crouch at all or not", "1");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -80,8 +83,11 @@ void Player::setEntity(Entity* _entity) {
 		torso = entity->findComponentByName<Model>("Torso");
 		arms = entity->findComponentByName<Model>("Arms");
 		feet = entity->findComponentByName<Model>("Feet");
-		bbox = entity->findComponentByName<BBox>("BBox");
+		bbox = entity->findComponentByName<BBox>("physics");
 		camera = entity->findComponentByName<Camera>("Camera");
+		rTool = entity->findComponentByName<Model>("RightTool");
+		lTool = entity->findComponentByName<Model>("LeftTool");
+		lamp = entity->findComponentByName<Light>("Lamp");
 		if( !models || !bbox || !camera ) {
 			mainEngine->fmsg(Engine::MSG_WARN,"failed to setup player for third party client: missing bodypart");
 		}
@@ -123,14 +129,19 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	torso = entity->findComponentByName<Model>("Torso");
 	arms = entity->findComponentByName<Model>("Arms");
 	feet = entity->findComponentByName<Model>("Feet");
-	bbox = entity->findComponentByName<BBox>("BBox");
+	bbox = entity->findComponentByName<BBox>("physics");
 	camera = entity->findComponentByName<Camera>("Camera");
+	rTool = entity->findComponentByName<Model>("RightTool");
+	lTool = entity->findComponentByName<Model>("LeftTool");
+	lamp = entity->findComponentByName<Light>("Lamp");
 	if( !models || !bbox || !camera ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: missing bodypart");
 		entity->remove();
 		entity = nullptr;
 		return false;
 	}
+
+	camera->setLocalAng(lookDir);
 
 	// update colors
 	updateColors(colors);
@@ -146,8 +157,6 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_UPDATE));
 	if( _world.isClientObj() ) {
 		if( clientID == invalidID ) {
-			// this means the player belongs to us.
-
 			Rect<Sint32> rect;
 			rect.x = 0;
 			rect.y = 0;
@@ -155,7 +164,15 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 			rect.h = mainEngine->getYres();
 			camera->setWin(rect);
 
-			//entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_GENIUS)); // not sure why this isn't getting set???
+			setupGUI();
+		} else {
+			// we don't own this player and shouldn't see their camera
+			Rect<Sint32> rect;
+			rect.x = 0;
+			rect.y = 0;
+			rect.w = 0;
+			rect.h = 0;
+			camera->setWin(rect);
 		}
 
 		mainEngine->fmsg(Engine::MSG_INFO,"Client spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
@@ -164,6 +181,43 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 	}
 
 	return true;
+}
+
+void Player::process() {
+	updateGUI();
+}
+
+void Player::setupGUI() {
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Frame* gui = client->getGUI(); assert(gui);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+
+	// create reticle
+	Image* reticle = mainEngine->getImageResource().dataForString("images/gui/reticle_1.png");
+	int w = reticle->getWidth();
+	int h = reticle->getHeight();
+	int x = camera->getWin().x + camera->getWin().w / 2 - w / 2;
+	int y = camera->getWin().y + camera->getWin().h / 2 - h / 2;
+	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
+	gui->addImage(Rect<Sint32>(x, y, w, h), glm::vec4(1.f), reticle, name);
+}
+
+void Player::updateGUI() {
+	if (!entity) {
+		return;
+	}
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Frame* gui = client->getGUI(); assert(gui);
+
+	// update reticle position (in-case it moves)
+	Rect<Sint32> pos;
+	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
+	auto reticle = gui->findImage(name); assert(reticle);
+	pos.w = reticle->image->getWidth();
+	pos.h = reticle->image->getHeight();
+	pos.x = camera->getWin().x + camera->getWin().w / 2 - pos.w / 2;
+	pos.y = camera->getWin().y + camera->getWin().h / 2 - pos.h / 2;
+	reticle->pos = pos;
 }
 
 void Player::updateColors(const colors_t& _colors) {
@@ -225,7 +279,7 @@ void Player::putInCrouch(bool crouch) {
 	}
 }
 
-Cvar cvar_maxHTurn("player.turn.horizontal", "maximum turn range for player, horizontal", "45.0");
+Cvar cvar_maxHTurn("player.turn.horizontal", "maximum turn range for player, horizontal", "0.0");
 Cvar cvar_maxVTurn("player.turn.vertical", "maximum turn range for player, vertical", "90.0");
 
 void Player::control() {
@@ -241,12 +295,15 @@ void Player::control() {
 	}
 
 	Angle rot = entity->getRot();
-	Vector vel = entity->getVel();
+	//Vector vel = entity->getVel();
+	Vector vel = originalVel;
 	Vector pos = entity->getPos();
+
+	Entity* entityStandingOn = nullptr;
 
 	float totalHeight = standScale.z - standOrigin.z;
 	float nearestCeiling = bbox->nearestCeiling();
-	float nearestFloor = bbox->nearestFloor();
+	float nearestFloor = bbox->nearestFloor(entityStandingOn);
 	float distToFloor = bbox->distToFloor(nearestFloor);
 	float distToCeiling = max( 0.f, pos.z - nearestCeiling );
 
@@ -257,7 +314,7 @@ void Player::control() {
 	buttonForward = 0.f;
 	buttonBackward = 0.f;
 	buttonJump = false;
-	buttonCrouch = distToCeiling < totalHeight;
+	buttonCrouch = cvar_canCrouch.toInt() ? distToCeiling < totalHeight : false;
 	float feetHeight = buttonCrouch ? crouchFeetHeight : standFeetHeight;
 	if( !client->isConsoleActive() ) {
 		if( !entity->isFalling() ) {
@@ -300,6 +357,9 @@ void Player::control() {
 	} else {
 		crouching = false;
 	}
+	if (cvar_canCrouch.toInt() == 0) {
+		crouching = false;
+	}
 
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
@@ -314,26 +374,28 @@ void Player::control() {
 	// set falling state and do attach-to-ground
 	if( entity->isFalling() ) {
 		vel.z += cvar_gravity.toFloat() * timeFactor;
-		if( distToFloor <= feetHeight ) {
+		if( distToFloor <= feetHeight && vel.z >= 0.f ) {
 			entity->setFalling(false);
-			pos.z = nearestFloor;
 			distToFloor = feetHeight;
-			vel.z = 0;
+			//pos.z = nearestFloor;
+			//vel.z = 0;
+			vel.z = (nearestFloor - pos.z) / 10.f;
 		}
 	} else {
 		if( buttonJump && distToFloor <= feetHeight+16 ) {
 			jumped = true;
 			entity->setFalling(true);
-			pos.z = nearestFloor;
+			//pos.z = nearestFloor;
 			distToFloor = feetHeight;
 			vel.z = -cvar_jumpPower.toFloat();
 		} else {
 			if( distToFloor > feetHeight+16 ) {
 				entity->setFalling(true);
 			} else {
-				pos.z = nearestFloor;
 				distToFloor = feetHeight;
-				vel.z = 0.f;
+				//pos.z = nearestFloor;
+				//vel.z = 0.f;
+				vel.z = (nearestFloor - pos.z) / 10.f;
 			}
 		}
 	}
@@ -398,46 +460,109 @@ void Player::control() {
 	// don't actually turn the entity vertically
 	rot.pitch = 0.f;
 
-	//Interacting with entities.
-	if ( !client->isConsoleActive() ) {
-		World* world = entity->getWorld();
-		if ( input.binaryToggle(Input::INTERACT) && camera && world ) {
-			input.consumeBinaryToggle(Input::INTERACT);
-			Vector start = camera->getGlobalPos();
-			Vector dest = start + camera->getGlobalAng().toVector() * 128;
-			World::hit_t hit = entity->lineTrace(start, dest);
 
-			if ( hit.hitEntity )
-			{
-				Entity* hitEntity = nullptr;
-				if ( (hitEntity = world->uidToEntity(hit.index)) != nullptr )
+	if ( !client->isConsoleActive() ) {
+		//Interacting with entities.
+		World* world = entity->getWorld();
+		if(camera && world)
+		{
+			if (input.binaryToggle(Input::INTERACT)) {
+				if (holdingInteract)
 				{
-					if ( hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE) )
+					// 60hz
+					interactHoldTime += 1 / 60;
+				}
+				holdingInteract = true;
+				input.consumeBinaryToggle(Input::INTERACT);
+				Vector start = camera->getGlobalPos();
+				Vector dest = start + camera->getGlobalAng().toVector() * 128;
+				World::hit_t hit = entity->lineTrace(start, dest);
+
+				if (hit.hitEntity)
+				{
+					Entity* hitEntity = nullptr;
+					if ((hitEntity = world->uidToEntity(hit.index)) != nullptr)
 					{
-						mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
-						Packet packet;
-						packet.write32(hitEntity->getUID());
-						packet.write32(client->indexForWorld(world));
-						packet.write32(localID);
-						packet.write("ESEL");
-						client->getNet()->signPacket(packet);
-						client->getNet()->sendPacketSafe(0, packet);
+						previousInteractedEntity = hitEntity;
+
+						if (previousInteractedEntity->isPickupable())
+						{
+							entity->depositInAvailableSlot(previousInteractedEntity);
+						}
+
+						auto hitBBox = static_cast<BBox*>(hit.pointer);
+						if (hitBBox)
+						{
+							if (hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE))
+							{
+								mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
+								Packet packet;
+								packet.write32(hitBBox->getUID());
+								packet.write32(hitEntity->getUID());
+								packet.write32(client->indexForWorld(world));
+								packet.write32(localID);
+								packet.write("ESEL");
+								client->getNet()->signPacket(packet);
+								client->getNet()->sendPacketSafe(0, packet);
+							}
+						}
 					}
 				}
+			}
+			else
+			{
+				holdingInteract = false;
+
+				interactHoldTime = 0;
+			}
+			// Toggling inventory
+			if (input.binaryToggle(Input::TOGGLE_INVENTORY))
+			{
+				input.consumeBinaryToggle(Input::TOGGLE_INVENTORY);
+				entity->setInventoryVisibility(!inventoryVisible);
+				inventoryVisible = !inventoryVisible;
 			}
 		}
 	}
 
-	// speed limit
-	vel.x = min( max( -64.f, vel.x ), 64.f );
-	vel.y = min( max( -64.f, vel.y ), 64.f );
-	vel.z = min( max( -64.f, vel.z ), 64.f );
-
 	// update entity vectors
-	entity->setPos(pos);
-	entity->setVel(vel);
+	if (bbox->getMass() == 0.f) {
+		entity->setPos(pos);
+	}
+	Vector standingOnVel;
+	originalVel = vel;
+	if (entityStandingOn) {
+		standingOnVel = entityStandingOn->getVel();
+	}
+	entity->setVel(vel + standingOnVel);
 	entity->setRot(rot);
 	entity->update();
+
+	// using hand items (shooting)
+	if (lTool && input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
+		Model::bone_t bone = lTool->findBone("emitter");
+		glm::mat4 mat = lTool->getGlobalMat();
+		if (bone.valid) {
+			 mat *= bone.mat;
+		}
+		lTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
+	}
+	if (rTool && input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
+		Model::bone_t bone = rTool->findBone("emitter");
+		glm::mat4 mat = rTool->getGlobalMat();
+		if (bone.valid) {
+			mat *= bone.mat;
+		}
+		rTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
+	}
+	input.consumeBinaryToggle(Input::bindingenum_t::HAND_LEFT);
+	input.consumeBinaryToggle(Input::bindingenum_t::HAND_RIGHT);
+
+	// lamp
+	if (lamp && input.binaryToggle(Input::bindingenum_t::INVENTORY1)) {
+		lamp->setIntensity(lamp->getIntensity() == 0.f ? 1.f : 0.f);
+	}
+	input.consumeBinaryToggle(Input::bindingenum_t::INVENTORY1);
 }
 
 void Player::updateCamera() {
@@ -453,7 +578,9 @@ void Player::updateCamera() {
 		head->updateSkin();
 		Model::bone_t bone = head->findBone("Bone_Head");
 		if( bone.valid ) {
-			camera->setLocalPos(bone.pos);
+			models->setLocalPos(Vector(-bone.pos.x, 0.f, 0.f));
+			models->update();
+			camera->setLocalPos(bone.pos + models->getLocalPos());
 			camera->update();
 		}
 
@@ -474,7 +601,7 @@ void Player::updateCamera() {
 		}*/
 
 		if( localID == 0 ) {
-			client->getMixer()->setListener(*camera);
+			client->getMixer()->setListener(camera);
 		}
 
 		int localPlayerCount = client->numLocalPlayers();
@@ -497,7 +624,9 @@ void Player::updateCamera() {
 			rect.h = mainEngine->getYres() / 2;
 		}
 		camera->setWin(rect);
-		camera->translate(Vector(16.f, 4.f, 0.f));
+		if( bone.valid ) {
+			camera->translate(Vector(16.f, 4.f, 0.f));
+		}
 		camera->update();
 
 		/*if( bone.valid ) {

@@ -73,6 +73,7 @@
     <ClCompile Include="..\..\src\Sector.cpp" />
     <ClCompile Include="..\..\src\SectorVertex.cpp" />
     <ClCompile Include="..\..\src\SectorWorld.cpp" />
+    <ClCompile Include="..\..\src\Shadow.cpp" />
     <ClCompile Include="..\..\src\Texture.cpp" />
     <ClCompile Include="..\..\src\Tile.cpp" />
     <ClCompile Include="..\..\src\Server.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="..\..\src\Sector.hpp" />
     <ClInclude Include="..\..\src\SectorVertex.hpp" />
     <ClInclude Include="..\..\src\SectorWorld.hpp" />
+    <ClInclude Include="..\..\src\Shadow.hpp" />
     <ClInclude Include="..\..\src\Texture.hpp" />
     <ClInclude Include="..\..\src\Tile.hpp" />
     <ClInclude Include="..\..\src\Server.hpp" />
@@ -227,42 +229,42 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\GameLibs\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\build\$(ProjectName)_debug</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\GameLibs\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\..\build\$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\GameLibs\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\build\$(ProjectName)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|Win32'">
-    <IncludePath>C:\GameLibs\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\build\$(ProjectName)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\GameLibs\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\..\build\$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'">
-    <IncludePath>C:\GameLibs\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
     <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>..\..\..\..\build\$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>

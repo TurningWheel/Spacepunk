@@ -47,7 +47,7 @@ void Material::serialize(FileInterface* file) {
 	}
 }
 
-void Material::bindTextures(texturekind_t textureKind) {
+unsigned int Material::bindTextures(texturekind_t textureKind) {
 	ArrayList<Image*>& images = (textureKind==STANDARD) ? stdTextures : glowTextures;
 	unsigned int textureNum = 0;
 
@@ -55,13 +55,13 @@ void Material::bindTextures(texturekind_t textureKind) {
 	if( images.getSize()==0 ) {
 		Client* client = mainEngine->getLocalClient();
 		if( !client ) {
-			return;
+			return 0;
 		}
 		Renderer* renderer = client->getRenderer();
 		if( !renderer ) {
-			return;
+			return 0;
 		} else if( !renderer->isInitialized() ) {
-			return;
+			return 0;
 		}
 
 		glUniform1i(shader.getUniformLocation("gTexture"), 0);
@@ -74,7 +74,7 @@ void Material::bindTextures(texturekind_t textureKind) {
 		glBindTexture(GL_TEXTURE_2D,images[0]->getTexID());
 		++textureNum;
 	} else if( images.getSize()>1 ) {
-		for( size_t index = 0; index < images.getSize() && textureNum < 32; ++index, ++textureNum ) {
+		for( Uint32 index = 0; index < images.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
 			Image* image = images[index];
 
 			char buf[32] = { 0 };
@@ -89,10 +89,11 @@ void Material::bindTextures(texturekind_t textureKind) {
 	// bind cubemap textures
 	if( cubemaps.getSize() == 1 ) {
 		glUniform1i(shader.getUniformLocation("gCubemap"), textureNum);
-		glActiveTexture(GL_TEXTURE0 + std::min(textureNum, 31U));
+		glActiveTexture(GL_TEXTURE0 + std::min(textureNum, (unsigned int)GL_MAX_TEXTURE_IMAGE_UNITS));
 		glBindTexture(GL_TEXTURE_CUBE_MAP,cubemaps[0]->getTexID());
+		++textureNum;
 	} else if( cubemaps.getSize() > 1 ) {
-		for( size_t index = 0; index < cubemaps.getSize() && textureNum < 32; ++index, ++textureNum ) {
+		for( Uint32 index = 0; index < cubemaps.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
 			Cubemap* cubemap = cubemaps[index];
 
 			char buf[32] = { 0 };
@@ -103,4 +104,6 @@ void Material::bindTextures(texturekind_t textureKind) {
 			glBindTexture(GL_TEXTURE_CUBE_MAP,cubemap->getTexID());
 		}
 	}
+
+	return textureNum;
 }

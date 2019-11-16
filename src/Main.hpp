@@ -44,7 +44,9 @@
 #include <ctime>
 
 // OpenGL headers
+#ifndef PLATFORM_LINUX
 #include <GL/glew.h>
+#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glext.h>

@@ -1,0 +1,9 @@
+{
+	"Cubemap::version": 0,
+	"front": "assets/skybox/miramar_ft.tga",
+	"back": "assets/skybox/miramar_bk.tga",
+	"up": "assets/skybox/miramar_up.tga",
+	"down": "assets/skybox/miramar_dn.tga",
+	"right": "assets/skybox/miramar_rt.tga",
+	"left": "assets/skybox/miramar_lf.tga"
+}

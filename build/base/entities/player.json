@@ -308,7 +308,7 @@
                 "type": 1,
                 "data": {
                     "Component::version": 0,
-                    "name": "BBox",
+                    "name": "physics",
                     "lPos": {
                         "x": 0.0,
                         "y": 0.0,
@@ -325,9 +325,10 @@
                         "z": 32.0
                     },
                     "components": [],
-                    "BBox::version": 0,
-                    "shape": 0,
-                    "enabled": true
+                    "BBox::version": 1,
+                    "shape": 2,
+                    "enabled": true,
+                    "mass": -1.0
                 }
             },
             {
@@ -357,8 +358,8 @@
                     "win": {
                         "x": 0,
                         "y": 0,
-                        "w": 1600,
-                        "h": 900
+                        "w": 0,
+                        "h": 0
                     },
                     "fov": 70,
                     "ortho": false

@@ -30,8 +30,8 @@ struct Rect {
 	}
 
 	// determines if the given point lies within the bounds of the rectangle
-	// @param pointX: the x coordinate of the point to test
-	// @param pointY: the y coordinate of the point to test
+	// @param pointX the x coordinate of the point to test
+	// @param pointY the y coordinate of the point to test
 	// @return true if the point is within the rectangle, and false if it is not
 	bool containsPoint( T pointX, T pointY ) const {
 		if( pointX >= x && pointX < x+w &&
@@ -46,8 +46,24 @@ struct Rect {
 	// @param file interface to serialize with
 	void serialize(FileInterface * file) {
 		file->property("x", x);
-		file->property("y", x);
-		file->property("w", x);
-		file->property("h", x);
+		file->property("y", y);
+		file->property("w", w);
+		file->property("h", h);
+	}
+
+	// exposes this rect type to a script
+	// @param lua The script engine to expose to
+	// @param name The type name in lua
+	static void exposeToScript(lua_State* lua, const char* name) {
+		luabridge::getGlobalNamespace(lua)
+			.beginClass<Rect<T>>(name)
+			.addConstructor<void (*)(T, T, T, T)>()
+			.addData("x", &Rect<T>::x, true)
+			.addData("y", &Rect<T>::y, true)
+			.addData("w", &Rect<T>::w, true)
+			.addData("h", &Rect<T>::h, true)
+			.addFunction("containsPoint", &Rect<T>::containsPoint)
+			.endClass()
+		;
 	}
 };

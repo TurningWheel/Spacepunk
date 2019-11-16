@@ -20,6 +20,8 @@
 #include "Editor.hpp"
 #include "Path.hpp"
 #include "AnimationState.hpp"
+#include "Vector.hpp"
+#include "WideVector.hpp"
 
 //Component headers
 #include "Component.hpp"
@@ -29,6 +31,7 @@
 #include "Camera.hpp"
 #include "Speaker.hpp"
 #include "Character.hpp"
+#include "Multimesh.hpp"
 
 int Script::load(const char* _filename) {
 	filename = mainEngine->buildPath(_filename);
@@ -51,7 +54,7 @@ int Script::dispatch(const char* function, Args* args) {
 	}
 	lua_getglobal(lua, function);
 
-	size_t numArgs = 0;
+	Uint32 numArgs = 0;
 	if (args)
 	{
 		numArgs = args->getSize();
@@ -118,7 +121,9 @@ Script::Script(Entity& _entity) {
 	exposeEngine();
 	exposeAngle();
 	exposeVector();
+	exposeGame();
 	exposeEntity();
+	exposeWorld();
 }
 
 Script::Script(Frame& _frame) {
@@ -179,6 +184,20 @@ void Script::exposeEngine() {
 		.addFunction("msg", &Engine::msg)
 		.addStaticFunction("triangleCoords", &Engine::triangleCoords)
 		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
+		.addStaticFunction("strcmp", &Engine::strCompare)
+		.endClass()
+	;
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<Script::Args>("ScriptArgs")
+		.addConstructor<void (*)()>()
+		.addFunction("getSize", &Script::Args::getSize)
+		.addFunction("addBool", &Script::Args::addBool)
+		.addFunction("addInt", &Script::Args::addInt)
+		.addFunction("addFloat", &Script::Args::addFloat)
+		.addFunction("addString", &Script::Args::addString)
+		.addFunction("addPointer", &Script::Args::addPointer)
+		.addFunction("addNil", &Script::Args::addNil)
 		.endClass()
 	;
 
@@ -193,6 +212,11 @@ void Script::exposeEngine() {
 	}
 
 	exposeString();
+
+	Rect<Sint32>::exposeToScript(lua, "RectSint32");
+	Rect<Uint32>::exposeToScript(lua, "RectUint32");
+	ArrayList<int>::exposeToScript(lua, "ArrayListInt");
+	ArrayList<float>::exposeToScript(lua, "ArrayListFloat");
 }
 
 void Script::exposeFrame() {
@@ -230,10 +254,10 @@ void Script::exposeFrame() {
 }
 
 void Script::exposeString() {
-	typedef size_t (String::*FindFn)(const char*, size_t) const;
+	typedef Uint32 (String::*FindFn)(const char*, Uint32) const;
 	FindFn find = static_cast<FindFn>(&String::find);
 
-	typedef size_t (String::*FindCharFn)(const char, size_t) const;
+	typedef Uint32 (String::*FindCharFn)(const char, Uint32) const;
 	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
 
 	luabridge::getGlobalNamespace(lua)
@@ -291,6 +315,9 @@ void Script::exposeVector() {
 		.addData("x", &Vector::x, true)
 		.addData("y", &Vector::y, true)
 		.addData("z", &Vector::z, true)
+		.addData("r", &Vector::x, true)
+		.addData("g", &Vector::y, true)
+		.addData("b", &Vector::z, true)
 		.addFunction("hasVolume", &Vector::hasVolume)
 		.addFunction("dot", &Vector::dot)
 		.addFunction("cross", &Vector::cross)
@@ -305,6 +332,32 @@ void Script::exposeVector() {
 	LinkedList<Vector*>::exposeToScript(lua, "LinkedListVectorPtr", "NodeVectorPtr");
 	ArrayList<Vector>::exposeToScript(lua, "ArrayListVector");
 	ArrayList<Vector*>::exposeToScript(lua, "ArrayListVectorPtr");
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<WideVector>("WideVector")
+		.addConstructor<void (*) (float, float, float, float)>()
+		.addData("x", &WideVector::x, true)
+		.addData("y", &WideVector::y, true)
+		.addData("z", &WideVector::z, true)
+		.addData("w", &WideVector::w, true)
+		.addData("r", &WideVector::x, true)
+		.addData("g", &WideVector::y, true)
+		.addData("b", &WideVector::z, true)
+		.addData("a", &WideVector::w, true)
+		.addFunction("hasVolume", &WideVector::hasVolume)
+		.addFunction("dot", &WideVector::dot)
+		.addFunction("cross", &WideVector::cross)
+		.addFunction("length", &WideVector::length)
+		.addFunction("lengthSquared", &WideVector::lengthSquared)
+		.addFunction("normal", &WideVector::normal)
+		.addFunction("normalize", &WideVector::normalize)
+		.endClass()
+	;
+
+	LinkedList<WideVector>::exposeToScript(lua, "LinkedListWideVector", "NodeWideVector");
+	LinkedList<WideVector*>::exposeToScript(lua, "LinkedListWideVectorPtr", "NodeWideVectorPtr");
+	ArrayList<WideVector>::exposeToScript(lua, "ArrayListWideVector");
+	ArrayList<WideVector*>::exposeToScript(lua, "ArrayListWideVectorPtr");
 }
 
 void Script::exposeGame() {
@@ -357,48 +410,7 @@ void Script::exposeEditor(Editor& _editor) {
 		.addFunction("entityKeyValueSelect", &Editor::entityKeyValueSelect)
 		.addFunction("entityAddComponent", &Editor::entityAddComponent)
 		.addFunction("entityRemoveComponent", &Editor::entityRemoveComponent)
-		.addFunction("entityBBoxShape", &Editor::entityBBoxShape)
-		.addFunction("entityBBoxEnabled", &Editor::entityBBoxEnabled)
-		.addFunction("entityModelLoadMesh", &Editor::entityModelLoadMesh)
-		.addFunction("entityModelLoadMaterial", &Editor::entityModelLoadMaterial)
-		.addFunction("entityModelLoadDepthFailMat", &Editor::entityModelLoadDepthFailMat)
-		.addFunction("entityModelLoadAnimation", &Editor::entityModelLoadAnimation)
-		.addFunction("entityModelCustomColor", &Editor::entityModelCustomColor)
-		.addFunction("entityModelCustomColorChannel", &Editor::entityModelCustomColorChannel)
-		.addFunction("entityLightColorR", &Editor::entityLightColorR)
-		.addFunction("entityLightColorG", &Editor::entityLightColorG)
-		.addFunction("entityLightColorB", &Editor::entityLightColorB)
-		.addFunction("entityLightIntensity", &Editor::entityLightIntensity)
-		.addFunction("entityLightRadius", &Editor::entityLightRadius)
-		.addFunction("entityLightShape", &Editor::entityLightShape)
-		.addFunction("entityCameraClipNear", &Editor::entityCameraClipNear)
-		.addFunction("entityCameraClipFar", &Editor::entityCameraClipFar)
-		.addFunction("entityCameraWinX", &Editor::entityCameraWinX)
-		.addFunction("entityCameraWinY", &Editor::entityCameraWinY)
-		.addFunction("entityCameraWinW", &Editor::entityCameraWinW)
-		.addFunction("entityCameraWinH", &Editor::entityCameraWinH)
-		.addFunction("entityCameraFOV", &Editor::entityCameraFOV)
-		.addFunction("entityCameraOrtho", &Editor::entityCameraOrtho)
-		.addFunction("entitySpeakerDefaultSound", &Editor::entitySpeakerDefaultSound)
-		.addFunction("entitySpeakerDefaultRange", &Editor::entitySpeakerDefaultRange)
-		.addFunction("entitySpeakerDefaultLoop", &Editor::entitySpeakerDefaultLoop)
-		.addFunction("entityCharacterHp", &Editor::entityCharacterHp)
-		.addFunction("entityCharacterMp", &Editor::entityCharacterMp)
-		.addFunction("entityCharacterSex", &Editor::entityCharacterSex)
-		.addFunction("entityCharacterLevel", &Editor::entityCharacterLevel)
-		.addFunction("entityCharacterXp", &Editor::entityCharacterXp)
-		.addFunction("entityCharacterHunger", &Editor::entityCharacterHunger)
-		.addFunction("entityCharacterNanoMatter", &Editor::entityCharacterNanoMatter)
-		.addFunction("entityCharacterBioMatter", &Editor::entityCharacterBioMatter)
-		.addFunction("entityCharacterNeuroThread", &Editor::entityCharacterNeuroThread)
-		.addFunction("entityCharacterGold", &Editor::entityCharacterGold)
-		.addFunction("entityCharacterStrength", &Editor::entityCharacterStrength)
-		.addFunction("entityCharacterDexterity", &Editor::entityCharacterDexterity)
-		.addFunction("entityCharacterIntelligence", &Editor::entityCharacterIntelligence)
-		.addFunction("entityCharacterConstitution", &Editor::entityCharacterConstitution)
-		.addFunction("entityCharacterPerception", &Editor::entityCharacterPerception)
-		.addFunction("entityCharacterCharisma", &Editor::entityCharacterCharisma)
-		.addFunction("entityCharacterLuck", &Editor::entityCharacterLuck)
+		.addFunction("entityCopyComponent", &Editor::entityCopyComponent)
 		.addFunction("entityComponentExpand", &Editor::entityComponentExpand)
 		.addFunction("entityComponentCollapse", &Editor::entityComponentCollapse)
 		.addFunction("entityComponentName", &Editor::entityComponentName)
@@ -458,6 +470,7 @@ void Script::exposeWorld() {
 		.beginClass<World>("World")
 		.addFunction("getTicks", &World::getTicks)
 		.addFunction("getFilename", &World::getFilename)
+		.addFunction("getShortname", &World::getShortname)
 		.addFunction("getNameStr", &World::getNameStr)
 		.addFunction("isClientObj", &World::isClientObj)
 		.addFunction("isServerObj", &World::isServerObj)
@@ -471,6 +484,8 @@ void Script::exposeWorld() {
 		.addFunction("selectEntity", &World::selectEntity)
 		.addFunction("selectEntities", &World::selectEntities)
 		.addFunction("deselectGeometry", &World::deselectGeometry)
+		.addFunction("getEntitiesByName", &World::getEntitiesByName)
+		.addFunction("generateDungeon", &World::generateDungeon)
 		.endClass()
 	;
 
@@ -484,8 +499,13 @@ void Script::exposeWorld() {
 }
 
 void Script::exposeEntity() {
+	typedef World* (Entity::*GetWorldFn)();
+	GetWorldFn getWorld = static_cast<GetWorldFn>(&Entity::getWorld);
+
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Entity>("Entity")
+		.addFunction("getGame", &Entity::getGame)
+		.addFunction("getWorld", getWorld)
 		.addFunction("getName", &Entity::getName)
 		.addFunction("getUID", &Entity::getUID)
 		.addFunction("getTicks", &Entity::getTicks)
@@ -502,6 +522,7 @@ void Script::exposeEntity() {
 		.addFunction("getKeyValueAsString", &Entity::getKeyValueAsString)
 		.addFunction("getKeyValueAsFloat", &Entity::getKeyValueAsFloat)
 		.addFunction("getKeyValueAsInt", &Entity::getKeyValueAsInt)
+		.addFunction("getKeyValueAsBool", &Entity::getKeyValueAsBool)
 		.addFunction("getKeyValue", &Entity::getKeyValue)
 		.addFunction("isFlag", &Entity::isFlag)
 		.addFunction("isFalling", &Entity::isFalling)
@@ -544,6 +565,7 @@ void Script::exposeEntity() {
 		.addFunction("addLight", &Entity::addComponent<Light>)
 		.addFunction("addSpeaker", &Entity::addComponent<Speaker>)
 		.addFunction("addCharacter", &Entity::addComponent<Character>)
+		.addFunction("addMultimesh", &Entity::addComponent<Multimesh>)
 		.addFunction("findComponentByName", &Entity::findComponentByName<Component>)
 		.addFunction("findBBoxByName", &Entity::findComponentByName<BBox>)
 		.addFunction("findModelByName", &Entity::findComponentByName<Model>)
@@ -551,12 +573,23 @@ void Script::exposeEntity() {
 		.addFunction("findCameraByName", &Entity::findComponentByName<Camera>)
 		.addFunction("findSpeakerByName", &Entity::findComponentByName<Speaker>)
 		.addFunction("findCharacterByName", &Entity::findComponentByName<Character>)
+		.addFunction("findMultimeshByName", &Entity::findComponentByName<Multimesh>)
 		.addFunction("lineTrace", &Entity::lineTrace)
 		.addFunction("findAPath", &Entity::findAPath)
+		.addFunction("findRandomPath", &Entity::findRandomPath)
 		.addFunction("pathFinished", &Entity::pathFinished)
+		.addFunction("hasPath", &Entity::hasPath)
+		.addFunction("getPathNodePosition", &Entity::getPathNodePosition)
+		.addFunction("getPathNodeDir", &Entity::getPathNodeDir)
 		.addFunction("getCurrentTileX", &Entity::getCurrentTileX)
 		.addFunction("getCurrentTileY", &Entity::getCurrentTileY)
 		.addFunction("getCurrentTileZ", &Entity::getCurrentTileZ)
+		.addFunction("isLocalPlayer", &Entity::isLocalPlayer)
+		.addFunction("insertIntoWorld", &Entity::insertIntoWorld)
+		.addFunction("warp", &Entity::warp)
+		.addFunction("remoteExecute", &Entity::remoteExecute)
+		.addFunction("isClientObj", &Entity::isClientObj)
+		.addFunction("isServerObj", &Entity::isServerObj)
 		.endClass()
 	;
 
@@ -568,6 +601,7 @@ void Script::exposeEntity() {
 	exposeCamera();
 	exposeSpeaker();
 	exposeCharacter();
+	exposeMultimesh();
 
 	if( entity ) {
 		luabridge::push(lua, entity);
@@ -579,10 +613,17 @@ void Script::exposeEntity() {
 }
 
 void Script::exposeComponent() {
+	typedef Component* (Component::*GetParentFn)();
+	GetParentFn getParent = static_cast<GetParentFn>(&Component::getParent);
+	typedef void (Component::*CopyComponentFn)(Component*);
+	CopyComponentFn copyToComponent = static_cast<CopyComponentFn>(&Component::copy);
+	typedef void (Component::*CopyEntityFn)(Entity*);
+	CopyEntityFn copyToEntity = static_cast<CopyEntityFn>(&Component::copy);
+
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Component>("Component")
 		.addFunction("getType", &Component::getType)
-		.addFunction("getParent", &Component::getParent)
+		.addFunction("getParent", getParent)
 		.addFunction("isEditorOnly", &Component::isEditorOnly)
 		.addFunction("isUpdateNeeded", &Component::isUpdateNeeded)
 		.addFunction("getUID", &Component::getUID)
@@ -605,6 +646,9 @@ void Script::exposeComponent() {
 		.addFunction("hasComponent", &Component::hasComponent)
 		.addFunction("removeComponentByName", &Component::removeComponentByName)
 		.addFunction("removeComponentByUID", &Component::removeComponentByUID)
+		.addFunction("copyToEntity", copyToEntity)
+		.addFunction("copyToComponent", copyToComponent)
+		.addFunction("copyComponents", &Component::copyComponents)
 		.addFunction("addComponent", &Component::addComponent<Component>)
 		.addFunction("addBBox", &Component::addComponent<BBox>)
 		.addFunction("addModel", &Component::addComponent<Model>)
@@ -626,6 +670,7 @@ void Script::exposeComponent() {
 		.addFunction("revertTranslation", &Component::revertTranslation)
 		.addFunction("revertScale", &Component::revertScale)
 		.addFunction("revertToIdentity", &Component::revertToIdentity)
+		.addFunction("shootLaser", &Component::shootLaser)
 		.endClass()
 	;
 
@@ -636,16 +681,18 @@ void Script::exposeComponent() {
 void Script::exposeBBox() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<BBox, Component>("BBox")
-		.addFunction("containsPoint", &BBox::containsPoint)
 		.addFunction("nearestCeiling", &BBox::nearestCeiling)
 		.addFunction("nearestFloor", &BBox::nearestFloor)
 		.addFunction("distToCeiling", &BBox::distToCeiling)
 		.addFunction("distToFloor", &BBox::distToFloor)
 		.addFunction("getShape", &BBox::getShape)
+		.addFunction("getMass", &BBox::getMass)
 		.addFunction("isEnabled", &BBox::isEnabled)
 		.addFunction("setEnabled", &BBox::setEnabled)
 		.addFunction("setShape", &BBox::setShape)
+		.addFunction("setMass", &BBox::setMass)
 		.addFunction("findAllOverlappingEntities", &BBox::findAllOverlappingEntities)
+		.addFunction("createRigidBody", &BBox::createRigidBody)
 		.endClass()
 	;
 
@@ -723,10 +770,14 @@ void Script::exposeLight() {
 		.addFunction("getColor", &Light::getColor)
 		.addFunction("getIntensity", &Light::getIntensity)
 		.addFunction("getRadius", &Light::getRadius)
+		.addFunction("getArc", &Light::getArc)
+		.addFunction("isShadow", &Light::isShadow)
 		.addFunction("setColor", &Light::setColor)
 		.addFunction("setIntensity", &Light::setIntensity)
 		.addFunction("setRadius", &Light::setRadius)
 		.addFunction("setShape", &Light::setShape)
+		.addFunction("setArc", &Light::setArc)
+		.addFunction("setShadow", &Light::setShadow)
 		.endClass()
 	;
 
@@ -766,6 +817,7 @@ void Script::exposeSpeaker() {
 		.addFunction("getDefaultSound", &Speaker::getDefaultSound)
 		.addFunction("getDefaultRange", &Speaker::getDefaultRange)
 		.addFunction("isDefaultLoop", &Speaker::isDefaultLoop)
+		.addFunction("isPlaying", &Speaker::isPlaying)
 		.endClass()
 	;
 
@@ -819,4 +871,20 @@ void Script::exposeCharacter() {
 
 void Script::exposeEmitter() {
 	// todo
+}
+
+void Script::exposeMultimesh() {
+	luabridge::getGlobalNamespace(lua)
+		.deriveClass<Multimesh, Component>("Multimesh")
+		.addFunction("getMaterial", &Model::getMaterial)
+		.addFunction("getDepthFailMat", &Model::getDepthFailMat)
+		.addFunction("getShaderVars", &Model::getShaderVars)
+		.addFunction("setMaterial", &Model::setMaterial)
+		.addFunction("setDepthFailMat", &Model::setDepthFailMat)
+		.addFunction("setShaderVars", &Model::setShaderVars)
+		.endClass()
+	;
+
+	LinkedList<Multimesh*>::exposeToScript(lua, "LinkedListMultimeshPtr", "NodeMultimeshPtr");
+	ArrayList<Multimesh*>::exposeToScript(lua, "ArrayListMultimeshPtr");
 }

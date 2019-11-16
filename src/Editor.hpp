@@ -12,11 +12,11 @@ class Renderer;
 class Sector;
 class World;
 class TileWorld;
-class SectorWorld;
 
 class Editor {
 public:
-	Editor() {}
+	Editor();
+	~Editor();
 
 	// editing mode
 	enum editingmode_t {
@@ -40,27 +40,27 @@ public:
 	};
 
 	// sets up the editor
-	// @param _client: the client that the editor is attached to
+	// @param _client the client that the editor is attached to
 	void init(Client& _client);
 
 	// sets up the editor
-	// @param _client: the client that the editor is attached to
-	// @param name: the name of the new world to create and edit
-	// @param tiles: if true, the world is tile-based
-	// @param w: the width of the new world, in tiles (unused for sector worlds)
-	// @param h: the height of the new world, in  (unused for sector worlds)
+	// @param _client the client that the editor is attached to
+	// @param name the name of the new world to create and edit
+	// @param tiles if true, the world is tile-based
+	// @param w the width of the new world, in tiles (unused for sector worlds)
+	// @param h the height of the new world, in  (unused for sector worlds)
 	void init(Client& _client, const char* name, bool tiles, int w, int h);
 
 	// sets up the editor
-	// @param _client: the client that the editor is attached to
-	// @param path: file path to the world to load
+	// @param _client the client that the editor is attached to
+	// @param path file path to the world to load
 	void init(Client& _client, const char* path);
 
 	// toggles the entity properties window
 	void buttonEntityProperties();
 
 	// opens the entity add component window
-	// @param uid: the uid of the component which will get the new component
+	// @param uid the uid of the component which will get the new component
 	void buttonEntityAddComponent(unsigned int uid);
 		
 	// confirms creation of a new world
@@ -94,341 +94,131 @@ public:
 	void buttonWorldRotate(int rotate);
 
 	// play a sound effect, if they are enabled
-	// @param path: path to the sound to play
+	// @param path path to the sound to play
 	void playSound(const char* path);
 
 	// selects an entity in the editor
-	// @param uid: the uid of the entity to select
-	// @param selected: if true, the entity will be selected, otherwise it will be deselected
+	// @param uid the uid of the entity to select
+	// @param selected if true, the entity will be selected, otherwise it will be deselected
 	void selectEntity(const Uint32 uid, const bool selected);
 
 	// toggles the selection of an entity in the editor
-	// @param uid: the uid of the entity to select
+	// @param uid the uid of the entity to select
 	void toggleSelectEntity(const Uint32 uid);
 
 	// selects all entities in the editor
-	// @param selected: if true, the entities will be selected, otherwise they will be deselected
+	// @param selected if true, the entities will be selected, otherwise they will be deselected
 	void selectAllEntities(const bool selected);
 
 	// selects an entity def to spawn (assigns pointer)
-	// @param name: the name of the entity to spawn
+	// @param name the name of the entity to spawn
 	void selectEntityForSpawn(const char* name);
 
 	// rename all selected entities
-	// @param name: the name to give to the entities
+	// @param name the name to give to the entities
 	void entitiesName(const char* name);
 
 	// set the script for all selected entities
-	// @param script: the script to give to the entities
+	// @param script the script to give to the entities
 	void entitiesScript(const char* script);
 
 	// toggles the given flag on all selected entities
-	// @param flag: the flag to toggle
+	// @param flag the flag to toggle
 	void entitiesFlag(const Uint32 flag);
 
 	// exports each selected entity to a separate json file
 	void entitiesSave();
 
 	// set a key value pair on an entity
-	// @param pair: the encoded pair
+	// @param pair the encoded pair
 	void entityKeyValueEnter(const char* pair);
 
 	// remove a key value pair on an entity
-	// @param key: the key to search for and remove
+	// @param key the key to search for and remove
 	void entityKeyValueRemove(const char* pair);
 
 	// update the editor field with the given pair
-	// @param pair: the encoded pair
+	// @param pair the encoded pair
 	void entityKeyValueSelect(const char* pair);
 
-	// set a shape on a bbox
-	// @param uid: the uid of the component
-	// @param shape: the new shape
-	void entityBBoxShape(unsigned int uid, const char* shape);
-
-	// toggles enabled/disabled on a bbox
-	// @param uid: the uid of the component to change
-	void entityBBoxEnabled(unsigned int uid);
-
-	// loads a mesh on a model
-	// @param name: the filename of the mesh to use
-	// @param uid: the uid of the component (model)
-	void entityModelLoadMesh(unsigned int uid, const char* name);
-
-	// loads a material on a model
-	// @param name: the filename of the material to load
-	// @param uid: the uid of the component (model)
-	void entityModelLoadMaterial(unsigned int uid, const char* name);
-
-	// loads a depth fail material on a model
-	// @param name: the filename of the material to load
-	// @param uid: the uid of the component (model)
-	void entityModelLoadDepthFailMat(unsigned int uid, const char* name);
-
-	// loads an animation key file on a model
-	// @param name: the filename of the animation to load
-	// @param uid: the uid of the component (model)
-	void entityModelLoadAnimation(unsigned int uid, const char* name);
-
-	// toggles custom colors on a model
-	// @param uid: the uid of the component (model)
-	void entityModelCustomColor(unsigned int uid);
-
-	// fills a custom color channel on a model
-	// @param uid: the uid of the component (model)
-	// @param channel: the base channel that the custom color is for
-	// @param color: the color channel within the base channel whose value is being set
-	// @param f: the color value to use
-	void entityModelCustomColorChannel(unsigned int uid, int channel, int color, float f);
-
-	// sets the red color of a light
-	// @param uid: the uid of the component to change
-	// @param r: the value to use
-	void entityLightColorR(unsigned int uid, float r);
-
-	// sets the green color of a light
-	// @param uid: the uid of the component to change
-	// @param g: the value to use
-	void entityLightColorG(unsigned int uid, float g);
-
-	// sets the blue color of a light
-	// @param uid: the uid of the component to change
-	// @param b: the value to use
-	void entityLightColorB(unsigned int uid, float b);
-
-	// sets the intensity of a light
-	// @param uid: the uid of the component to change
-	// @param intensity: the value to use
-	void entityLightIntensity(unsigned int uid, float intensity);
-
-	// sets the radius of a light
-	// @param uid: the uid of the component to change
-	// @param radius: the value to use
-	void entityLightRadius(unsigned int uid, float radius);
-
-	// set a shape on a light
-	// @param uid: the uid of the component
-	// @param shape: the new shape
-	void entityLightShape(unsigned int uid, const char* shape);
-
-	// sets the clip near value of a camera
-	// @param uid: the uid of the component to change
-	// @param f: the value to use
-	void entityCameraClipNear(unsigned int uid, float f);
-
-	// sets the clip far value of a camera
-	// @param uid: the uid of the component to change
-	// @param f: the value to use
-	void entityCameraClipFar(unsigned int uid, float f);
-
-	// sets the win x value of a camera
-	// @param uid: the uid of the component to change
-	// @param i: the value to use
-	void entityCameraWinX(unsigned int uid, int i);
-
-	// sets the win y value of a camera
-	// @param uid: the uid of the component to change
-	// @param i: the value to use
-	void entityCameraWinY(unsigned int uid, int i);
-
-	// sets the win w value of a camera
-	// @param uid: the uid of the component to change
-	// @param i: the value to use
-	void entityCameraWinW(unsigned int uid, int i);
-
-	// sets the win h value of a camera
-	// @param uid: the uid of the component to change
-	// @param i: the value to use
-	void entityCameraWinH(unsigned int uid, int i);
-
-	// sets the fov value of a camera
-	// @param uid: the uid of the component to change
-	// @param i: the value to use
-	void entityCameraFOV(unsigned int uid, int i);
-
-	// toggles orthographic mode on a camera
-	// @param uid: the uid of the component to change
-	void entityCameraOrtho(unsigned int uid);
-
-	// sets the filename of the sound to play by default
-	// @param uid: the uid of the component to change
-	// @param name: filename of the sound
-	void entitySpeakerDefaultSound(unsigned int uid, const char* name);
-
-	// sets the range of the sound to play by default
-	// @param uid: the uid of the component to change
-	// @param range: the range of the speaker
-	void entitySpeakerDefaultRange(unsigned int uid, const float range);
-
-	// toggles default loop on a speaker
-	// @param uid: the uid of the component to change
-	void entitySpeakerDefaultLoop(unsigned int uid);
-
-	//Character general attributes.
-
-	// sets the hp of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterHp(unsigned int uid, Sint32 value);
-
-	// sets the mp of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterMp(unsigned int uid, Sint32 value);
-
-	// sets the sex of a character
-	// @param uid: the uid of the component to change
-	// @param sex: the new sex
-	void entityCharacterSex(unsigned int uid, const char* sex);
-
-	// sets the level of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterLevel(unsigned int uid, Sint32 value);
-
-	// sets the xp of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterXp(unsigned int uid, Sint32 value);
-
-	// sets the hunger of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterHunger(unsigned int uid, Sint32 value);
-
-	//Character resource attributes.
-
-	// sets the nano matter of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterNanoMatter(unsigned int uid, Sint32 value);
-
-	// sets the bio matter of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterBioMatter(unsigned int uid, Sint32 value);
-
-	// sets the neuro thread of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterNeuroThread(unsigned int uid, Sint32 value);
-
-	// sets the gold of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterGold(unsigned int uid, Sint32 value);
-
-	//Character attribute attributes.
-
-	// sets the strength of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterStrength(unsigned int uid, Sint32 value);
-
-	// sets the dexterity of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterDexterity(unsigned int uid, Sint32 value);
-
-	// sets the intelligence of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterIntelligence(unsigned int uid, Sint32 value);
-
-	// sets the constitution of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterConstitution(unsigned int uid, Sint32 value);
-
-	// sets the perception of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterPerception(unsigned int uid, Sint32 value);
-
-	// sets the charisma of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterCharisma(unsigned int uid, Sint32 value);
-
-	// sets the luck of a character
-	// @param uid: the uid of the component to change
-	// @param value: the value to use
-	void entityCharacterLuck(unsigned int uid, Sint32 value);
-
 	// expands a given component on selected entities
-	// @param uid: the uid of the component to expand
+	// @param uid the uid of the component to expand
 	void entityComponentExpand(unsigned int uid);
 
 	// collapses a given component on selected entities
-	// @param uid: the uid of the component to expand
+	// @param uid the uid of the component to expand
 	void entityComponentCollapse(unsigned int uid);
 
 	// add a new component to an entity
-	// @param uid: uid of the new component's parent (0 = entity root)
-	// @param type: the type of component to add
+	// @param uid uid of the new component's parent (0 = entity root)
+	// @param type the type of component to add
 	void entityAddComponent(unsigned int uid, Uint32 type);
 
+	// duplicate a component in the entity
+	// @param uid the uid of the component to duplicate
+	void entityCopyComponent(unsigned int uid);
+
 	// removes a component from an entity
-	// @param uid: the uid of the component to remove
+	// @param uid the uid of the component to remove
 	void entityRemoveComponent(unsigned int uid);
 
 	// renames a given component on selected entities
-	// @param uid: the uid of the component
-	// @param name: the new name
+	// @param uid the uid of the component
+	// @param name the new name
 	void entityComponentName(unsigned int uid, const char* name);
 
 	// translates a given component on selected entities
-	// @param uid: the uid of the component
-	// @param dimension: the dimension to translate
-	// @param value: the value to use
+	// @param uid the uid of the component
+	// @param dimension the dimension to translate
+	// @param value the value to use
 	void entityComponentTranslate(unsigned int uid, int dimension, float value);
 
 	// rotates a given component on selected entities
-	// @param uid: the uid of the component
-	// @param dimension: the dimension to rotate
-	// @param value: the value to use
+	// @param uid the uid of the component
+	// @param dimension the dimension to rotate
+	// @param value the value to use
 	void entityComponentRotate(unsigned int uid, int dimension, float value);
 
 	// scales a given component on selected entities
-	// @param uid: the uid of the component
-	// @param dimension: the dimension to scale
-	// @param value: the value to use
+	// @param uid the uid of the component
+	// @param dimension the dimension to scale
+	// @param value the value to use
 	void entityComponentScale(unsigned int uid, int dimension, float value);
 
 	// sets the x position of all selected entities
-	// @param x: the position value to use
+	// @param x the position value to use
 	void widgetTranslateX(float x);
 
 	// sets the y position of all selected entities
-	// @param y: the position value to use
+	// @param y the position value to use
 	void widgetTranslateY(float y);
 
 	// sets the z position of all selected entities
-	// @param z: the position value to use
+	// @param z the position value to use
 	void widgetTranslateZ(float z);
 
 	// sets the yaw of all selected entities
-	// @param yaw: the rotation value to use
+	// @param yaw the rotation value to use
 	void widgetRotateYaw(float yaw);
 
 	// sets the yaw of all selected entities
-	// @param pitch: the rotation value to use
+	// @param pitch the rotation value to use
 	void widgetRotatePitch(float pitch);
 
 	// sets the yaw of all selected entities
-	// @param roll: the rotation value to use
+	// @param roll the rotation value to use
 	void widgetRotateRoll(float roll);
 
 	// sets the x scale of all selected entities
-	// @param x: the scale value to use
+	// @param x the scale value to use
 	void widgetScaleX(float x);
 
 	// sets the y scale of all selected entities
-	// @param y: the scale value to use
+	// @param y the scale value to use
 	void widgetScaleY(float y);
 
 	// sets the z scale of all selected entities
-	// @param z: the scale value to use
+	// @param z the scale value to use
 	void widgetScaleZ(float z);
 
 	// optimizes the chunks of a tile world
@@ -438,14 +228,14 @@ public:
 	void preProcess();
 
 	// run a frame in the editor
-	// @param usable: if true, pointer is usable; if false, pointer is not usable
+	// @param usable if true, pointer is usable; if false, pointer is not usable
 	void process(const bool usable);
 
 	// end-frame actions
 	void postProcess();
 
 	// draw hud elements in the 3D view
-	// @param renderer: the renderer to draw with
+	// @param renderer the renderer to draw with
 	void draw(Renderer& renderer);
 
 	// getters & setters
@@ -525,53 +315,58 @@ private:
 
 	// clipboard
 	LinkedList<Entity*> copiedEntities;
+	TileWorld* copiedTiles = nullptr;
 
 	// for rotating the widget to face the camera
 	static const Angle widgetRot[8][7];
 
 	// sets up widgets and pointers for the given world
-	// @param world: the world to put the new widgets in
+	// @param world the world to put the new widgets in
 	void initWidgets();
 
 	// sets up the editor GUI
-	// @param camRect: the main viewport to build the editor gui around
+	// @param camRect the main viewport to build the editor gui around
 	void initGUI(const Rect<int>& camRect);
 
 	// updates the images in the given widget frame
-	// @param parent: the frame containing the widget icon
-	// @param translateImg: the path to the translate icon
-	// @param rotateImg: the path to the rotate icon
-	// @param scaleImg: the path to the scale icon
+	// @param parent the frame containing the widget icon
+	// @param translateImg the path to the translate icon
+	// @param rotateImg the path to the rotate icon
+	// @param scaleImg the path to the scale icon
 	void updateWidgetImages(Frame* parent, const char* translateImg, const char* rotateImg, const char* scaleImg);
 
 	// update tile pane
-	// @param world: world we are editing
-	// @param pointerX: pointer X coord
-	// @param pointerY: pointer Y coord
+	// @param world world we are editing
+	// @param pointerX pointer X coord
+	// @param pointerY pointer Y coord
 	void updateTileFields(TileWorld& world, Sint32 pointerX, Sint32 pointerY);
 
+	// update tiles in the given world
+	// @param world world we are editing
+	void updateTiles(TileWorld& world);
+
 	// edit the tiles in the world
-	void editTiles();
+	void editTiles(bool usable);
 
 	// edit the entities in the world
-	void editEntities();
+	void editEntities(bool usable);
 
 	// edit the sectors in the world
-	void editSectors();
+	void editSectors(bool usable);
 
 	// widget controls
-	// @param world: the world to edit
+	// @param world the world to edit
 	void handleWidget(World& world);
 
 	// update the editor gui (lists, etc)
-	// @param gui: the gui to update
+	// @param gui the gui to update
 	void updateGUI(Frame& gui);
 
 	// add GUI for a component
-	// @param properties: the properties window
-	// @param component: the component to propertify
-	// @param x: x window offset
-	// @param y: y window offset
+	// @param properties the properties window
+	// @param component the component to propertify
+	// @param x x window offset
+	// @param y y window offset
 	void componentGUI(Frame& properties, Component* component, int& x, int& y);
 };
 

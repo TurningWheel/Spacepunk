@@ -240,7 +240,7 @@ void Sector::connectSectors(int myFace, int theirFace) {
 void Sector::countVertices() {
 	numVertices = 0;
 	numIndices = 0;
-	for( size_t c = 0; c < faces.getSize(); ++c ) {
+	for( Uint32 c = 0; c < faces.getSize(); ++c ) {
 		if( !faces[c]->neighbor ) {
 			numVertices += 3;
 			numIndices += 3;
@@ -251,7 +251,7 @@ void Sector::countVertices() {
 int Sector::findFaceWithNormal(const Vector& normal) {
 	static const float epsilon = 0.0001f;
 	glm::vec3 gNormal(normal);
-	for( int c = 0; c < faces.getSize(); ++c ) {
+	for( Uint32 c = 0; c < faces.getSize(); ++c ) {
 		if( faces[c]->normal.x >= gNormal.x - epsilon &&
 			faces[c]->normal.x <= gNormal.x + epsilon ) {
 			if( faces[c]->normal.y >= gNormal.y - epsilon &&
@@ -288,9 +288,9 @@ void Sector::buildPhysicsMesh() {
 	vlist.alloc(3);
 
 	// build mesh
-	for( size_t face = 0; face < faces.getSize(); ++face ) {
+	for( Uint32 face = 0; face < faces.getSize(); ++face ) {
 		if( !faces[face]->neighbor ) {
-			for( size_t vertex = 0; vertex < 3; ++vertex ) {
+			for( Uint32 vertex = 0; vertex < 3; ++vertex ) {
 				vertex_t& v = faces[face]->vertices[vertex];
 
 				Vector pos(v.position.x,v.position.y,v.position.z);
@@ -350,7 +350,7 @@ void Sector::uploadBuffers() {
 
 	if( numVertices > 0 ) {
 		GLuint index = 0;
-		for( size_t face = 0; face < faces.getSize(); ++face ) {
+		for( Uint32 face = 0; face < faces.getSize(); ++face ) {
 			if( !faces[face]->neighbor ) {
 				glm::vec3 e0 = faces[face]->vertices[1].position - faces[face]->vertices[0].position;
 				glm::vec3 e1 = faces[face]->vertices[2].position - faces[face]->vertices[0].position;
@@ -364,7 +364,7 @@ void Sector::uploadBuffers() {
 				float r = 1.0f / (uv0.x * uv1.y - uv0.y * uv1.x);
 				tangent = (e0 * uv1.y - e1 * uv0.y) * r;
 
-				for( size_t vertex = 0; vertex < 3; ++vertex ) {
+				for( Uint32 vertex = 0; vertex < 3; ++vertex ) {
 					glm::vec3& position = faces[face]->vertices[vertex].position;
 					positionBuffer.push(glm::vec3(position.x, -position.z, position.y));
 
@@ -500,8 +500,8 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 		}
 	}
 
-	const ShaderProgram& shader = material->getShader();
-	glLineWidth(1);
+	ShaderProgram& shader = material->getShader();
+	//glLineWidth(1);
 
 	if( &shader != ShaderProgram::getCurrentShader() ) {
 		shader.mount();
@@ -580,7 +580,7 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 
 Sector::vertex_t::~vertex_t() {
 	if( joined ) {
-		for (size_t c = 0; c < joined->vertices.getSize(); ++c) {
+		for (Uint32 c = 0; c < joined->vertices.getSize(); ++c) {
 			if( joined->vertices[c] == this ) {
 				joined->vertices.remove(c);
 				--c;
