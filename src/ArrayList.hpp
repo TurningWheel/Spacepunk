@@ -488,8 +488,8 @@ public:
 	}
 
 	virtual ~StaticArrayList() {
-		if (arr == defaultArr) {
-			arr = nullptr;
+		if (this->arr == defaultArr) {
+			this->arr = nullptr;
 		}
 	}
 

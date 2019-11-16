@@ -545,7 +545,8 @@ void Player::control() {
 		if (bone.valid) {
 			 mat *= bone.mat;
 		}
-		lTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
+		auto red = WideVector(1.f, 0.f, 0.f, 1.f);
+		lTool->shootLaser(mat, red, 8.f, 20.f);
 	}
 	if (rTool && input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
 		Model::bone_t bone = rTool->findBone("emitter");
@@ -553,7 +554,8 @@ void Player::control() {
 		if (bone.valid) {
 			mat *= bone.mat;
 		}
-		rTool->shootLaser(mat, WideVector(1.f, 0.f, 0.f, 1.f), 8.f, 20.f);
+		auto red = WideVector(1.f, 0.f, 0.f, 1.f);
+		rTool->shootLaser(mat, red, 8.f, 20.f);
 	}
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_LEFT);
 	input.consumeBinaryToggle(Input::bindingenum_t::HAND_RIGHT);

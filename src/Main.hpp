@@ -98,4 +98,5 @@ template <typename T> int sgn(T val) {
 //Fixes for Windows/Linux incompatibilities
 #ifdef PLATFORM_LINUX
 #define strcmpi strcasecmp
+#include <unistd.h>
 #endif

@@ -57,7 +57,8 @@ struct Rect {
 	static void exposeToScript(lua_State* lua, const char* name) {
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<Rect<T>>(name)
-			.addConstructor<void (*)(T, T, T, T)>()
+			//.addConstructor<void (*)(T, T, T, T)>()
+			.addConstructor()
 			.addData("x", &Rect<T>::x, true)
 			.addData("y", &Rect<T>::y, true)
 			.addData("w", &Rect<T>::w, true)

@@ -53,25 +53,25 @@ void Item::InitInventory()
 	Inventory::Slot slotRightHand;
 	Inventory::Slot slotLeftHand;
 
-	Inventory.items.insert("Helmet", &slotHelmet);
-	Inventory.items.insert("Suit", &slotSuit);
-	Inventory.items.insert("Gloves", &slotGloves);
-	Inventory.items.insert("Boots", &slotBoots);
-	Inventory.items.insert("Back", &slotBack);
-	Inventory.items.insert("RightHip", &slotRightHip);
-	Inventory.items.insert("LeftHip", &slotLeftHip);
-	Inventory.items.insert("Waist", &slotWaist);
-	Inventory.items.insert("RightHand", &slotRightHand);
-	Inventory.items.insert("LeftHand", &slotLeftHand);
+	inventory.items.insert("Helmet", &slotHelmet);
+	inventory.items.insert("Suit", &slotSuit);
+	inventory.items.insert("Gloves", &slotGloves);
+	inventory.items.insert("Boots", &slotBoots);
+	inventory.items.insert("Back", &slotBack);
+	inventory.items.insert("RightHip", &slotRightHip);
+	inventory.items.insert("LeftHip", &slotLeftHip);
+	inventory.items.insert("Waist", &slotWaist);
+	inventory.items.insert("RightHand", &slotRightHand);
+	inventory.items.insert("LeftHand", &slotLeftHand);
 }
 
 void Item::depositItem(Entity* itemToDeposit, String invSlot)
 {
-	if (Inventory.items.find(invSlot))
+	if (inventory.items.find(invSlot))
 	{
 		Inventory::Slot slot;
 		slot.entity = itemToDeposit;
-		Inventory.items.insert(invSlot, &slot);
+		inventory.items.insert(invSlot, &slot);
 	}
 }
 
@@ -82,13 +82,13 @@ bool Item::isSlotFilled(String invSlot)
 
 Entity* Item::getSlottedItem(String invSlot)
 {
-	Inventory::Slot* slot = *Inventory.items.find(invSlot);
+	Inventory::Slot* slot = *inventory.items.find(invSlot);
 	return slot->entity;
 }
 
 void Item::setInventoryVisibility(bool visible)
 {
-	Inventory.setVisibility(visible);
+	inventory.setVisibility(visible);
 }
 
 void Item::Action::serialize(FileInterface* file) {

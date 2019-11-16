@@ -154,7 +154,7 @@ public:
 	// copy one list to another (also copies data)
 	void copy(const LinkedList<T>& src) {
 		for( const Node<T>* node = src.getFirst(); node != nullptr; node = node->getNext() ) {
-			Node<T>* newNode = addNodeLast(node->getData());
+			addNodeLast(node->getData());
 		}
 	}
 
@@ -170,11 +170,10 @@ public:
 		Node<T>* node;
 		LinkedList<T> left, right;
 		for( i=0, node = first; node!=nullptr && i<len; ++i, node=node->getNext() ) {
-			Node<T>* newNode = nullptr;
 			if( i%2==0 ) {
-				newNode = right.addNodeLast(node->getData());
+				right.addNodeLast(node->getData());
 			} else {
-				newNode = left.addNodeLast(node->getData());
+				left.addNodeLast(node->getData());
 			}
 		}
 
@@ -315,17 +314,17 @@ private:
 
 		while( left.getFirst() != nullptr && right.getFirst() != nullptr ) {
 			if( left.getFirst()->getData() <= right.getFirst()->getData() ) {
-				Node<T>* newNode = result.addNodeLast(left.getFirst()->getData());
+				result.addNodeLast(left.getFirst()->getData());
 			} else {
-				Node<T>* newNode = result.addNodeLast(right.getFirst()->getData());
+				result.addNodeLast(right.getFirst()->getData());
 			}
 		}
 
 		while( left.getFirst() != nullptr ) {
-			Node<T>* newNode = result.addNodeLast(left.getFirst()->getData());
+			result.addNodeLast(left.getFirst()->getData());
 		}
 		while( right.getFirst() != nullptr ) {
-			Node<T>* newNode = result.addNodeLast(right.getFirst()->getData());
+			result.addNodeLast(right.getFirst()->getData());
 		}
 
 		return result;
