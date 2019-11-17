@@ -268,6 +268,16 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		broken = true;
 	}
 
+	// transparent objects not rendered to depth buffer
+	if (camera.getDrawMode() == Camera::DRAW_DEPTH && mat && mat->isTransparent()) {
+		return;
+	}
+
+	// non-shadow-casting materials don't cast shadows
+	if (camera.getDrawMode() == Camera::DRAW_SHADOW && mat && !mat->isShadowing()) {
+		return;
+	}
+
 	if( mesh ) {
 		// skip models that aren't glowing in the "glow" pass...
 		if( camera.getDrawMode() == Camera::DRAW_GLOW ) {

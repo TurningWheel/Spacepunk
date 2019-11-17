@@ -272,6 +272,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 		}
 
 		// load common shader vars
+		glUniform1i(shader.getUniformLocation("gTime"), (GLint)mainEngine->getTicks());
 		if( camera.getDrawMode() == Camera::DRAW_DEPTH ) {
 
 			// load model matrix into shader

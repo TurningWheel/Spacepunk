@@ -9,11 +9,10 @@ in vec3 Tangent;
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 FragColorBright;
 
-uniform bool gAnimated;
-uniform bool gActiveLight;
 uniform vec3 gCameraPos;
 
 #define MAX_LIGHTS 12
+uniform bool gActiveLight;
 uniform vec3 gLightPos[MAX_LIGHTS];
 uniform vec3 gLightColor[MAX_LIGHTS];
 uniform float gLightIntensity[MAX_LIGHTS];
