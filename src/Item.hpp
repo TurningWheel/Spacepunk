@@ -120,5 +120,5 @@ private:
 
 	Map<String, Action> actions;						// map actions by name (eg "tap", "hold")
 
-	Inventory Inventory;
+	Inventory inventory;
 };

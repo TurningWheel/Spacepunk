@@ -375,7 +375,7 @@ public:
 
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<ArrayList<T>>(name)
-			.addConstructor<void (*)()>()
+			.addConstructor()
 			.addFunction("getArray", getArray)
 			.addFunction("getArrayConst", getArrayConst)
 			.addFunction("getSize", &ArrayList<T>::getSize)
@@ -488,8 +488,8 @@ public:
 	}
 
 	virtual ~StaticArrayList() {
-		if (arr == defaultArr) {
-			arr = nullptr;
+		if (this->arr == defaultArr) {
+			this->arr = nullptr;
 		}
 	}
 

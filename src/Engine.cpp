@@ -1114,8 +1114,8 @@ const char* Engine::getRunningDir() {
 		char szTmp[64];
 		snprintf(szTmp, 64, "/proc/%d/exe", getpid());
 		char pBuf[256];
-		int len = (int)sizeof(pBuf);
-		int bytes = std::min(readlink(szTmp, pBuf, len), len - 1);
+		ssize_t len = sizeof(pBuf);
+		int bytes = std::min(readlink(szTmp, pBuf, len), len - 1u);
 		if (bytes >= 0) {
 			pBuf[bytes] = '\0';
 			runDir = pBuf;

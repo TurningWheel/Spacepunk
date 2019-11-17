@@ -441,6 +441,9 @@ static EFileFormat GetFileFormat(FILE * file) {
 
 bool FileHelper::writeObjectInternal(const char * filename, EFileFormat format, const SerializationFunc& serialize) {
 	FILE * file = fopen(filename, "wb");
+	if (mainEngine) {
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Opening file '%s' for write", filename);
+	}
 	if (!file) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Unable to open file '%s' for write (%d)", filename, errno);
 		return false;
@@ -464,6 +467,9 @@ bool FileHelper::writeObjectInternal(const char * filename, EFileFormat format, 
 
 bool FileHelper::readObjectInternal(const char * filename, const SerializationFunc& serialize) {
 	FILE * file = fopen(filename, "rb");
+	if (mainEngine) {
+		mainEngine->fmsg(Engine::MSG_DEBUG, "Opening file '%s' for read", filename);
+	}
 	if (!file) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Unable to open file '%s' for read (%d)", filename, errno);
 		return false;
