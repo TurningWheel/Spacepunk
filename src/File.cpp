@@ -78,7 +78,7 @@ public:
 private:
 
 	void save(FILE * file) {
-		writer.Flush();
+		buffer.Flush();
 		fputs(buffer.GetString(), file);
 	}
 
