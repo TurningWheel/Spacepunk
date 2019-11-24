@@ -1,0 +1,97 @@
+{
+	"Animation::version": 0,
+	"animations": [
+		{
+			"Animation::entry_t::version": 0,
+			"name": "run forward",
+			"begin": 0,
+			"end": 30,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "run backwards",
+			"begin": 40,
+			"end": 70,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "walk forward",
+			"begin": 80,
+			"end": 110,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "walk backwards",
+			"begin": 120,
+			"end": 150,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "strafe right",
+			"begin": 160,
+			"end": 190,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "strafe left",
+			"begin": 190,
+			"end": 220,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "jump",
+			"begin": 230,
+			"end": 260,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "bullet hit",
+			"begin": 260,
+			"end": 270,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "fire",
+			"begin": 270,
+			"end": 290,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "reload gun",
+			"begin": 300,
+			"end": 370,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "death-01",
+			"begin": 380,
+			"end": 430,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "death-02",
+			"begin": 440,
+			"end": 500,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "idle",
+			"begin": 510,
+			"end": 650,
+			"loop": true
+		}
+	],
+	"sounds": []
+}

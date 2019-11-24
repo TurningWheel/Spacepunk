@@ -1,0 +1,31 @@
+{
+	"Material::version": 0,
+	"transparent": false,
+	"shadow": true,
+	"program": {
+		"ShaderProgram::version": 0,
+		"shaders": [
+			{
+				"Shader::version": 0,
+				"type": 0,
+				"path": "shaders/actor/std_v.glsl",
+				"defines": []
+			},
+			{
+				"Shader::version": 0,
+				"type": 2,
+				"path": "shaders/actor/std_f.glsl",
+				"defines": [
+					"BUMPMAP"
+				]
+			}
+		]
+	},
+	"textures": [
+		"assets/josh/trooper3.png",
+		"assets/josh/trooper_nrm.png",
+		"assets/josh/trooper_spec.png"
+	],
+	"glowTextures": [],
+	"cubemaps": []
+}
