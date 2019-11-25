@@ -72,8 +72,11 @@ private:
 	// destroys rendering objects for the world grid
 	void destroyGrid();
 
-	// how many tiles a "large" grid section is
+	// grid data
 	static const int largeGridSize = 8;
+	static const Uint32 gridWidth = 256;
+	static const Uint32 gridHeight = 256;
+	static const Uint32 lines = gridWidth + 1 + gridHeight + 1;
 
 	// editing grid graphics data
 	enum buffer_t {

@@ -576,14 +576,17 @@ void Player::updateCamera() {
 	Input& input = mainEngine->getInput(localID);
 
 	// move camera
-	if( camera && head ) {
-		head->updateSkin();
-		Model::bone_t bone = head->findBone("Bone_Head");
-		if( bone.valid ) {
-			models->setLocalPos(Vector(-bone.pos.x, 0.f, 0.f));
-			models->update();
-			camera->setLocalPos(bone.pos + models->getLocalPos());
-			camera->update();
+	if( camera ) {
+		Model::bone_t headBone;
+		if (head) {
+			head->updateSkin();
+			headBone = head->findBone("Bone_Head");
+			if( headBone.valid ) {
+				models->setLocalPos(Vector(-headBone.pos.x, 0.f, 0.f));
+				models->update();
+				camera->setLocalPos(headBone.pos + models->getLocalPos());
+				camera->update();
+			}
 		}
 
 		Angle ang = camera->getLocalAng();
@@ -626,7 +629,7 @@ void Player::updateCamera() {
 			rect.h = mainEngine->getYres() / 2;
 		}
 		camera->setWin(rect);
-		if( bone.valid ) {
+		if( headBone.valid ) {
 			camera->translate(Vector(16.f, 4.f, 0.f));
 		}
 		camera->update();

@@ -18,6 +18,7 @@
 #include "BBox.hpp"
 #include "Mesh.hpp"
 #include "Mixer.hpp"
+#include "Console.hpp"
 
 const char* Camera::meshStr = "assets/editor/camera/camera.FBX";
 const char* Camera::materialStr = "assets/editor/camera/material.json";
@@ -80,6 +81,8 @@ glm::mat4 Camera::makeInfReversedZProj(float radians, float aspect, float zNear)
 		0.0f, 0.0f, zNear, 0.0f);
 }
 
+static Cvar cvar_cameraAllOrtho("camera.allortho", "make all cameras orthographic", "0");
+
 void Camera::setupProjection(bool scissor) {
 	World* world = entity->getWorld();
 	if( !renderer ) {
@@ -88,22 +91,24 @@ void Camera::setupProjection(bool scissor) {
 	if( !win.w || !win.h ) {
 		return;
 	}
-	if( ortho ) {
+	if( ortho || cvar_cameraAllOrtho.toInt() ) {
 		if( !world )
 			return;
 		float width = (float)(fov) * ( (float)win.w / win.h );
 		float height = (float)(fov);
-		float depth = clipFar;
 
 		// get camera transformation
+		Vector pos = gPos + gAng.toVector() * clipFar * .5f;
+		Vector dir = gPos - gAng.toVector();
+		Vector up  = Vector(0.f, 0.f, 1.f);
 		viewMatrix = glm::lookAt(
-			glm::vec3( gPos.x, 0.f, gPos.y ), // origin
-			glm::vec3( gPos.x, 1.f, gPos.y ), // target vector
-			glm::vec3( 0.f,    0.f, 1.f    )  // up vector
+			glm::vec3( pos.x, -pos.z, pos.y ), // origin
+			glm::vec3( dir.x, -dir.z, dir.y ), // target vector
+			glm::vec3(  up.x,  -up.z,  up.y )  // up vector
 		); 
 
 		// get projection transformation
-		projMatrix = glm::ortho( -width, width, height, -height, depth, -depth );
+		projMatrix = glm::ortho( -width, width, height, -height, -clipFar, clipFar );
 	} else {
 		// get camera transformation
 		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f),glm::vec3( -gPos.x, gPos.z, -gPos.y ));

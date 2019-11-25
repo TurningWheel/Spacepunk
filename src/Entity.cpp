@@ -616,7 +616,7 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 	}
 
 	// in editor, skip entities at too great a distance
-	if( editorRunning && world->isShowTools() ) {
+	if( editorRunning && world->isShowTools() && !camera.isOrtho() ) {
 		if( (camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() / 4.f ) {
 			return;
 		}

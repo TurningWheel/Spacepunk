@@ -380,71 +380,73 @@ void BasicWorld::createGrid() {
 	glBindVertexArray(vao);
 
 	// create vertex data
-	GLfloat* vertices = new GLfloat[(largeGridSize + 1 + largeGridSize + 1) * 3 * 2];
-	GLfloat* colors = new GLfloat[(largeGridSize + 1 + largeGridSize + 1) * 4 * 2];
-	for (Uint32 x = 0; x <= largeGridSize; ++x) {
+	glm::vec4 color(1.f, 0.4f, 0.1f, 1.f);
+	glm::vec4 highlightColor(1.f, 0.2f, 0.2f, 1.f);
+	GLfloat* vertices = new GLfloat[lines * 3 * 2];
+	GLfloat* colors = new GLfloat[lines * 4 * 2];
+	for (Uint32 x = 0; x <= gridWidth; ++x) {
 		vertices[x * 6] = x * tileSize;
 		vertices[x * 6 + 1] = 0;
 		vertices[x * 6 + 2] = 0;
 		vertices[x * 6 + 3] = x * tileSize;
 		vertices[x * 6 + 4] = 0;
-		vertices[x * 6 + 5] = largeGridSize * tileSize;
+		vertices[x * 6 + 5] = gridHeight * tileSize;
 
 		if (x%largeGridSize) {
-			colors[x * 8] = 1.f;
-			colors[x * 8 + 1] = 0.f;
-			colors[x * 8 + 2] = 0.f;
-			colors[x * 8 + 3] = 1.f;
-			colors[x * 8 + 4] = 1.f;
-			colors[x * 8 + 5] = 0.f;
-			colors[x * 8 + 6] = 0.f;
-			colors[x * 8 + 7] = 1.f;
+			colors[x * 8] = color.r;
+			colors[x * 8 + 1] = color.g;
+			colors[x * 8 + 2] = color.b;
+			colors[x * 8 + 3] = color.a;
+			colors[x * 8 + 4] = color.r;
+			colors[x * 8 + 5] = color.g;
+			colors[x * 8 + 6] = color.b;
+			colors[x * 8 + 7] = color.a;
 		}
 		else {
-			colors[x * 8] = 0.f;
-			colors[x * 8 + 1] = 1.f;
-			colors[x * 8 + 2] = 1.f;
-			colors[x * 8 + 3] = 1.f;
-			colors[x * 8 + 4] = 0.f;
-			colors[x * 8 + 5] = 1.f;
-			colors[x * 8 + 6] = 1.f;
-			colors[x * 8 + 7] = 1.f;
+			colors[x * 8] = highlightColor.r;
+			colors[x * 8 + 1] = highlightColor.g;
+			colors[x * 8 + 2] = highlightColor.b;
+			colors[x * 8 + 3] = highlightColor.a;
+			colors[x * 8 + 4] = highlightColor.r;
+			colors[x * 8 + 5] = highlightColor.g;
+			colors[x * 8 + 6] = highlightColor.b;
+			colors[x * 8 + 7] = highlightColor.a;
 		}
 	}
-	for (Uint32 y = 0; y <= largeGridSize; ++y) {
-		vertices[(largeGridSize + 1) * 6 + y * 6] = 0;
-		vertices[(largeGridSize + 1) * 6 + y * 6 + 1] = 0;
-		vertices[(largeGridSize + 1) * 6 + y * 6 + 2] = y * tileSize;
-		vertices[(largeGridSize + 1) * 6 + y * 6 + 3] = largeGridSize * tileSize;
-		vertices[(largeGridSize + 1) * 6 + y * 6 + 4] = 0;
-		vertices[(largeGridSize + 1) * 6 + y * 6 + 5] = y * tileSize;
+	for (Uint32 y = 0; y <= gridHeight; ++y) {
+		vertices[(gridWidth + 1) * 6 + y * 6] = 0;
+		vertices[(gridWidth + 1) * 6 + y * 6 + 1] = 0;
+		vertices[(gridWidth + 1) * 6 + y * 6 + 2] = y * tileSize;
+		vertices[(gridWidth + 1) * 6 + y * 6 + 3] = gridWidth * tileSize;
+		vertices[(gridWidth + 1) * 6 + y * 6 + 4] = 0;
+		vertices[(gridWidth + 1) * 6 + y * 6 + 5] = y * tileSize;
 
 		if (y%largeGridSize) {
-			colors[(largeGridSize + 1) * 8 + y * 8] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 1] = 0.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 2] = 0.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 3] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 4] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 5] = 0.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 6] = 0.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 7] = 1.f;
+			colors[(gridWidth + 1) * 8 + y * 8] = color.r;
+			colors[(gridWidth + 1) * 8 + y * 8 + 1] = color.g;
+			colors[(gridWidth + 1) * 8 + y * 8 + 2] = color.b;
+			colors[(gridWidth + 1) * 8 + y * 8 + 3] = color.a;
+			colors[(gridWidth + 1) * 8 + y * 8 + 4] = color.r;
+			colors[(gridWidth + 1) * 8 + y * 8 + 5] = color.g;
+			colors[(gridWidth + 1) * 8 + y * 8 + 6] = color.b;
+			colors[(gridWidth + 1) * 8 + y * 8 + 7] = color.a;
 		}
 		else {
-			colors[(largeGridSize + 1) * 8 + y * 8] = 0.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 1] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 2] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 3] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 4] = 0.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 5] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 6] = 1.f;
-			colors[(largeGridSize + 1) * 8 + y * 8 + 7] = 1.f;
+			colors[(gridWidth + 1) * 8 + y * 8] = highlightColor.r;
+			colors[(gridWidth + 1) * 8 + y * 8 + 1] = highlightColor.g;
+			colors[(gridWidth + 1) * 8 + y * 8 + 2] = highlightColor.b;
+			colors[(gridWidth + 1) * 8 + y * 8 + 3] = highlightColor.a;
+			colors[(gridWidth + 1) * 8 + y * 8 + 4] = highlightColor.r;
+			colors[(gridWidth + 1) * 8 + y * 8 + 5] = highlightColor.g;
+			colors[(gridWidth + 1) * 8 + y * 8 + 6] = highlightColor.b;
+			colors[(gridWidth + 1) * 8 + y * 8 + 7] = highlightColor.a;
 		}
 	}
 
 	// upload vertex data
 	glGenBuffers(1, &vbo[BUFFER_VERTEX]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[BUFFER_VERTEX]);
-	glBufferData(GL_ARRAY_BUFFER, (largeGridSize + 1 + largeGridSize + 1) * 3 * 2 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, lines * 3 * 2 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(0);
 	delete[] vertices;
@@ -452,21 +454,21 @@ void BasicWorld::createGrid() {
 	// upload color data
 	glGenBuffers(1, &vbo[BUFFER_COLOR]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[BUFFER_COLOR]);
-	glBufferData(GL_ARRAY_BUFFER, (largeGridSize + 1 + largeGridSize + 1) * 4 * 2 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, lines * 4 * 2 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(1);
 	delete[] colors;
 
 	// create index data
-	GLuint* indices = new GLuint[(largeGridSize + 1 + largeGridSize + 1) * 2];
-	for (Uint32 i = 0; i < (largeGridSize + 1 + largeGridSize + 1) * 2; ++i) {
+	GLuint* indices = new GLuint[lines * 2];
+	for (Uint32 i = 0; i < lines * 2; ++i) {
 		indices[i] = i;
 	}
 
 	// upload index data
 	glGenBuffers(1, &vbo[BUFFER_INDEX]);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[BUFFER_INDEX]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (largeGridSize + 1 + largeGridSize + 1) * 2 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, lines * 2 * sizeof(GLuint), indices, GL_STATIC_DRAW);
 	delete[] indices;
 
 	// unbind vertex array
@@ -497,10 +499,12 @@ void BasicWorld::drawGrid(Camera& camera) {
 
 		// upload uniform variables
 		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
+		glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+		glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
 
 		// draw elements
 		glBindVertexArray(vao);
-		glDrawElements(GL_LINES, (largeGridSize + 1 + largeGridSize + 1) * 2, GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_LINES, lines * 2, GL_UNSIGNED_INT, NULL);
 		glBindVertexArray(0);
 
 		shader.unmount();

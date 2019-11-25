@@ -501,6 +501,11 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		}
 	}
 
+	// don't draw unselected bboxes - it makes things very ugly
+	if (!entity->isSelected()) {
+		return;
+	}
+
 	// do not render for these fx passes
 	if( camera.getDrawMode() >= Camera::DRAW_GLOW ) {
 		return;

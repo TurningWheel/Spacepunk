@@ -1473,7 +1473,7 @@ void Editor::initWidgets() {
 	entity->setShouldSave(false);
 	entity->setFlags(static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_VISIBLE));
 	editingCamera = entity->addComponent<Camera>();
-	editingCamera->setClipFar(10240.f);
+	editingCamera->setClipFar(99999.f);
 	client->getMixer()->setListener(editingCamera);
 
 	// set camera window
@@ -1505,7 +1505,9 @@ void Editor::initWidgets() {
 	mapRect.y = camRect.y+9; mapRect.h = mapRect.w;
 	minimap->setWin(mapRect);
 	minimap->setOrtho(true);
+	minimap->setClipFar(999999.f);
 	minimap->setFov(Tile::size*8);
+	minimap->setLocalAng(Angle(PI / 2.f, PI / 2.f, 0.f));
 
 	// clear widget variables
 	widgetMode = TRANSLATE;
@@ -3839,12 +3841,24 @@ void Editor::process(const bool usable) {
 				Frame* frame = gui->findFrame("editor_Minimap");
 				if( frame ) {
 					if( frame->capturesMouse() ) {
+						// zoom-in / zoom-out
 						if( mainEngine->getMouseWheelY()>0 ) {
-							Sint32 newFov = max( minimap->getFov() - Tile::size*2, Tile::size * 4 );
+							Sint32 newFov = max( minimap->getFov() - Tile::size*2, Tile::size );
 							minimap->setFov( newFov );
 						} else if( mainEngine->getMouseWheelY()<0 ) {
 							Sint32 newFov = min( minimap->getFov() + Tile::size*2, Tile::size * 128 );
 							minimap->setFov( newFov );
+						}
+
+						// change perspective
+						if (mainEngine->pressKey(SDL_SCANCODE_1)) {
+							minimap->setLocalAng(Angle(PI / 2.f, PI / 2.f, 0.f));
+						}
+						if (mainEngine->pressKey(SDL_SCANCODE_2)) {
+							minimap->setLocalAng(Angle(3 * PI / 2.f, 0.f, 0.f));
+						}
+						if (mainEngine->pressKey(SDL_SCANCODE_3)) {
+							minimap->setLocalAng(Angle(0.f, 0.f, 0.f));
 						}
 					}
 				}

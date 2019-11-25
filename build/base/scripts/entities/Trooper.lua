@@ -1,24 +1,23 @@
--- Main player actor script!
+-- Trooper
 
 function animate(name, blend)
 	model:animate(name, blend)
 	gun:animate(name, blend)
-	animation = name;
 end
 
 function init()
 	model = entity:findModelByName("model")
 	gun = entity:findModelByName("gun")
 	bbox = entity:findBBoxByName("physics")
-	animate("idle", false)
+
+	animate("walk forward", false)
 end
 
 function process()
-	if (entity:isMoving() and animation ~= "walk forward") then
-		animate("walk forward", true)
-	elseif (not entity:isMoving() and animation ~= "idle") then
-		animate("idle", true)
-	end
+	local forwardAng = Angle(entity:getAng().yaw,entity:getAng().pitch,entity:getAng().roll)
+	forwardAng.pitch = 0
+	forwardAng.roll = 0
+	entity:setVel(forwardAng:toVector())
 end
 
 function postprocess()
