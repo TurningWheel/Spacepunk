@@ -11,11 +11,12 @@ layout (location = 1) out vec4 FragColorBright;
 
 uniform vec3 gCameraPos;
 uniform samplerCube gCubemap;
+uniform mat4 gModel;
 
 void main() {
 	vec3 lNormal     = normalize(Normal);
 	vec3 lWorldPos   = WorldPos;
-	vec3 lCameraDir  = normalize(gCameraPos - lWorldPos);
+	vec3 lCameraDir  = (gModel * vec4(normalize(gCameraPos - lWorldPos), 0.0)).xyz;
 	FragColor = texture(gCubemap, lCameraDir * -1.f);
 	
 	// check whether fragment output is higher than threshold, if so output to bloom buffer
