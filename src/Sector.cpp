@@ -106,7 +106,6 @@ void Sector::splitFace(int faceIndex, const Vector& splitPoint) {
 
 	// add new unique vertex
 	SectorVertex* vertex = new SectorVertex(*world);
-	vertex->setOldPos(splitPoint);
 	vertex->setPos(splitPoint);
 
 	// setup first new face
@@ -173,7 +172,6 @@ Sector* Sector::addSector(int faceIndex, const Vector& splitPoint) {
 
 	// add new unique vertex
 	SectorVertex* vertex = new SectorVertex(*world);
-	vertex->setOldPos(splitPoint);
 	vertex->setPos(splitPoint);
 
 	sector->faces[0]->sector = sector;

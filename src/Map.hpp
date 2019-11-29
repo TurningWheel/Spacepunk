@@ -204,6 +204,10 @@ public:
 			}
 			return *this;
 		}
+		Iterator& operator--() {
+			--position;
+			return *this;
+		}
 		bool operator!=(const Iterator& it) const {
 			return position != it.position || bucket != it.bucket;
 		}
@@ -232,6 +236,10 @@ public:
 				++bucket;
 				position = 0;
 			}
+			return *this;
+		}
+		ConstIterator& operator--() {
+			--position;
 			return *this;
 		}
 		bool operator!=(const ConstIterator& it) const {
@@ -275,10 +283,13 @@ private:
 	ArrayList<ArrayList<OrderedPair<K, T>>> data;
 	Uint32 numBuckets = 4;
 	Uint32 size = 0;
-	
-	typename std::enable_if<std::is_class<K>::value, unsigned long>::type
-	hash(const K& key) const {
+
+	template <typename Key, std::enable_if_t<std::is_class<Key>::value, unsigned long> = 0>
+	unsigned long hash(const Key& key) const {
 		return key.hash();
+	}
+	unsigned long hash(void* key) const {
+		return static_cast<unsigned long>(reinterpret_cast<uintptr_t>(key));
 	}
 	unsigned long hash(Sint32 key) const {
 		return static_cast<unsigned long>(key);

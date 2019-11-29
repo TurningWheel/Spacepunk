@@ -42,12 +42,11 @@ World::~World() {
 	}
 
 	// delete entities
-	for( Uint32 c=0; c<numBuckets; ++c ) {
-		while( entities[c].getFirst() ) {
-			delete entities[c].getFirst()->getData();
-			entities[c].removeNode(entities[c].getFirst());
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		delete entity;
 	}
+	entities.clear();
 
 	// delete script engine
 	if( script ) {
@@ -89,17 +88,15 @@ void World::initialize(bool empty) {
 }
 
 void World::getSelectedEntities(LinkedList<Entity*>& outResult) {
-	for( int c=0; c<numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
 
-			// skip editor entities
-			if( !entity->isShouldSave() )
-				continue;
+		// skip editor entities
+		if( !entity->isShouldSave() )
+			continue;
 
-			if( entity->isSelected() ) {
-				outResult.addNodeLast(entity);
-			}
+		if( entity->isSelected() ) {
+			outResult.addNodeLast(entity);
 		}
 	}
 }
@@ -189,14 +186,11 @@ const bool World::selectEntity(const Uint32 uid, const bool b) {
 }
 
 void World::selectEntities(const bool b) {
-	for( unsigned int c=0; c<numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( entity->isSelected() ) {
-				entity->setSelected(b);
-				entity->setHighlighted(b);
-			}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		if( entity->isSelected() ) {
+			entity->setSelected(b);
+			entity->setHighlighted(b);
 		}
 	}
 
@@ -450,48 +444,34 @@ ArrayList<Entity*> World::getEntitiesByName(const char* name) {
 		return ArrayList<Entity*>();
 	}
 	ArrayList<Entity*> result;
-	for (Uint32 c = 0; c < numBuckets; ++c) {
-		for (auto entity : entities[c]) {
-			if (entity->getName() == name) {
-				result.push(entity);
-			}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		if (entity->getName() == name) {
+			result.push(entity);
 		}
 	}
 	return result;
 }
 
 Entity* World::uidToEntity(const Uint32 uid) {
-	if( uid==nuid ) {
-		return nullptr;
-	}
-	for( Node<Entity*>* node=entities[uid&(World::numBuckets-1)].getFirst(); node!=nullptr; node=node->getNext() ) {
-		Entity* entity = node->getData();
-		if( entity->getUID()==uid ) {
-			return entity;
-		}
-	}
-	return nullptr;
+	auto result = entities.find(uid);
+	return result ? *result : nullptr;
 }
 
 void World::findSelectedEntities(LinkedList<Entity*>& outList) {
 	outList.removeAll();
-	for( Uint32 c=0; c<World::numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-
-			if( entity->isSelected() ) {
-				outList.addNodeLast(entity);
-			}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		if( entity->isSelected() ) {
+			outList.addNodeLast(entity);
 		}
 	}
 }
 
 void World::preProcess() {
-	for (Uint32 c = 0; c < World::numBuckets; ++c) {
-		for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-			Entity* entity = node->getData();
-			entity->preProcess();
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->preProcess();
 	}
 }
 
@@ -535,11 +515,9 @@ void World::process() {
 		bulletDynamicsWorld->stepSimulation(step, 1, step);
 
 		LinkedList<BBox*> bboxes;
-		for( Uint32 c = 0; c < numBuckets; ++c ) {
-			for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-				Entity* entity = node->getData();
-				entity->findAllComponents<BBox>(Component::COMPONENT_BBOX, bboxes);
-			}
+		for (auto& pair : entities) {
+			Entity* entity = pair.b;
+			entity->findAllComponents<BBox>(Component::COMPONENT_BBOX, bboxes);
 		}
 		for (auto bbox : bboxes) {
 			if (!bbox->getParent() && bbox->getMass() != 0.f && strcmp(bbox->getName(), "physics") == 0) {
@@ -571,51 +549,44 @@ void World::process() {
 	}
 
 	// iterate through entities
-	for( Uint32 c=0; c<World::numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->process();
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->process();
 	}
 
 	// delete entities marked for removal and transfer entities marked for level change
-	for( Uint32 c=0; c<World::numBuckets; ++c ) {
-		Node<Entity*>* nextnode = nullptr;
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=nextnode ) {
-			Entity* entity = node->getData();
-			nextnode = node->getNext();
+	for (auto& it = entities.begin(); it != entities.end(); ++it) {
+		Entity* entity = (*it).b;
 
-			if( entity->isToBeDeleted() ) {
-				bool updateNeeded = entity->isFlag(Entity::flag_t::FLAG_UPDATE) && !entity->isFlag(Entity::flag_t::FLAG_LOCAL);
-				Uint32 uid = entity->getUID();
-				entities[c].removeNode(node);
-				delete entity;
+		if( entity->isToBeDeleted() ) {
+			bool updateNeeded = entity->isFlag(Entity::flag_t::FLAG_UPDATE) && !entity->isFlag(Entity::flag_t::FLAG_LOCAL);
+			Uint32 uid = entity->getUID();
+			entities.remove((*it).a);
+			delete entity;
+			--it;
 
-				// inform clients of entity deletion
-				if( !clientObj && updateNeeded ) {
-					Server* server = mainEngine->getLocalServer();
-					if( server ) {
-						Packet packet;
-						packet.write32(uid);
-						packet.write32(id);
-						packet.write("ENTD");
-						server->getNet()->signPacket(packet);
-						server->getNet()->broadcastSafe(packet);
-					}
+			// inform clients of entity deletion
+			if( !clientObj && updateNeeded ) {
+				Server* server = mainEngine->getLocalServer();
+				if( server ) {
+					Packet packet;
+					packet.write32(uid);
+					packet.write32(id);
+					packet.write("ENTD");
+					server->getNet()->signPacket(packet);
+					server->getNet()->broadcastSafe(packet);
 				}
-			} else {
-				entity->finishInsertIntoWorld();
 			}
+		} else {
+			entity->finishInsertIntoWorld();
 		}
 	}
 }
 
 void World::postProcess() {
-	for (Uint32 c = 0; c < World::numBuckets; ++c) {
-		for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-			Entity* entity = node->getData();
-			entity->postProcess();
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->postProcess();
 	}
 }
 

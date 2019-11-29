@@ -226,11 +226,9 @@ void Editor::init(Client& _client, const char* path) {
 	}
 
 	// add existing entities to level navigator
-	for( Uint32 c = 0; c < World::numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->addToEditorList();
-		}
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
+		entity->addToEditorList();
 	}
 
 	// enter edit mode
@@ -1273,11 +1271,9 @@ void Editor::buttonLoad() {
 	initWidgets();
 
 	// add existing entities to level navigator
-	for( Uint32 c = 0; c < World::numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->addToEditorList();
-		}
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
+		entity->addToEditorList();
 	}
 
 	mainEngine->setPaused(false);
@@ -1452,12 +1448,10 @@ void Editor::selectEntity(const Uint32 uid, const bool selected) {
 }
 
 void Editor::selectAllEntities(const bool selected) {
-	for( Uint32 c=0; c<World::numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->setSelected(selected);
-			entity->setHighlighted(selected);
-		}
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
+		entity->setSelected(selected);
+		entity->setHighlighted(selected);
 	}
 
 	if( selected ) {
@@ -3360,33 +3354,32 @@ void Editor::handleWidget(World& world) {
 
 		Vector intersection;
 		if( Engine::lineIntersectPlane( rayStart, rayEnd, planeOrigin, planeNormal, intersection ) ) {
+			if( !draggingWidget ) {
+				draggingWidget = true;
+				oldIntersection = intersection;
+			}
 
 			// translation
 			if( widgetMode == TRANSLATE ) {
-				if( !draggingWidget ) {
-					draggingWidget = true;
-					oldIntersection = intersection;
-				}
 				if( editingMode == ENTITIES ) {
-					for( int c=0; c<World::numBuckets; ++c ) {
-						for( Node<Entity*>* node = world.getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-							Entity* entity = node->getData();
+					for (auto pair : world.getEntities()) {
+						Entity* entity = pair.b;
 
-							bool isWidget = !entity->isShouldSave() && entity->getName().find("widget") != UINT32_MAX;
+						bool isWidget = !entity->isShouldSave() && entity->getName().find("widget") != UINT32_MAX;
 
-							if( entity->isSelected() && !isWidget ) {
-								Vector diff = (intersection - oldIntersection);
-								Vector newPos = entity->getOldPos() + diff * affect;
+						if( entity->isSelected() && !isWidget ) {
+							Vector* oldPos = oldVecs.find(entity);
+							Vector diff = (intersection - oldIntersection);
+							Vector newPos = (oldPos ? *oldPos : Vector()) + diff * affect;
 
-								// grid snapping
-								if( cvar_snapEnabled.toInt() && !isWidget ) {
-									newPos.x -= fmod(newPos.x,cvar_snapTranslate.toFloat());
-									newPos.y -= fmod(newPos.y,cvar_snapTranslate.toFloat());
-									newPos.z -= fmod(newPos.z,cvar_snapTranslate.toFloat());
-								}
-
-								entity->setPos(newPos);
+							// grid snapping
+							if( cvar_snapEnabled.toInt() && !isWidget ) {
+								newPos.x -= fmod(newPos.x,cvar_snapTranslate.toFloat());
+								newPos.y -= fmod(newPos.y,cvar_snapTranslate.toFloat());
+								newPos.z -= fmod(newPos.z,cvar_snapTranslate.toFloat());
 							}
+
+							entity->setPos(newPos);
 						}
 					}
 				} else if( editingMode == SECTORS ) {
@@ -3395,8 +3388,9 @@ void Editor::handleWidget(World& world) {
 						SectorVertex* vertex = sectorWorld.getVertices()[c];
 
 						if( vertex->isSelected() ) {
+							Vector* oldPos = oldVecs.find(vertex);
 							Vector diff = (intersection - oldIntersection);
-							Vector newPos = vertex->getOldPos() + diff * affect;
+							Vector newPos = (oldPos ? *oldPos : Vector()) + diff * affect;
 
 							// grid snapping
 							if( cvar_snapEnabled.toInt() ) {
@@ -3413,44 +3407,44 @@ void Editor::handleWidget(World& world) {
 
 			// rotation
 			if( widgetMode == ROTATE ) {
-				for( int c=0; c<World::numBuckets; ++c ) {
-					for( Node<Entity*>* node = world.getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-						Entity* entity = node->getData();
+				for (auto pair : world.getEntities()) {
+					Entity* entity = pair.b;
 
-						bool isWidget = !entity->isShouldSave() && entity->getName().find("widget") != UINT32_MAX;
+					bool isWidget = !entity->isShouldSave() && entity->getName().find("widget") != UINT32_MAX;
 
-						if( entity->isSelected() || isWidget ) {
-							Angle newAng = entity->getAng();
+					if( entity->isSelected() || isWidget ) {
+						Vector* oldPos = oldVecs.find(entity);
+						Vector diff = (intersection - oldIntersection);
 
-							Vector dir = intersection - planeOrigin;
+						Angle* oldAng = oldAngs.find(entity);
+						Angle newAng = oldAng ? *oldAng : Angle();
 
-							if( planeNormal.x==1.f ) {
-								newAng.roll = atan2( dir.y, dir.z );
-							}
-							else if( planeNormal.y==1.f ) {
-								newAng.pitch = atan2( dir.x, dir.z );
-							}
-							else if( planeNormal.z==1.f ) {
-								newAng.yaw = atan2( dir.y, dir.x );
-							}
+						if( planeNormal.x==1.f ) {
+							newAng.roll += (diff.y + diff.z) / 100.f;
+						}
+						else if( planeNormal.y==1.f ) {
+							newAng.pitch += (diff.x + diff.z) / 100.f;
+						}
+						else if( planeNormal.z==1.f ) {
+							newAng.yaw += (diff.x + diff.y) / 100.f;
+						}
 
-							// grid snapping
-							if( cvar_snapEnabled.toInt() ) {
-								newAng.yaw = ( static_cast<int>( floor(newAng.degreesYaw()) ) / cvar_snapRotate.toInt() ) * cvar_snapRotate.toFloat();
-								newAng.pitch = ( static_cast<int>( floor(newAng.degreesPitch()) ) / cvar_snapRotate.toInt() ) * cvar_snapRotate.toFloat();
-								newAng.roll = ( static_cast<int>( floor(newAng.degreesRoll()) ) / cvar_snapRotate.toInt() ) * cvar_snapRotate.toFloat();
+						// grid snapping
+						if( cvar_snapEnabled.toInt() ) {
+							newAng.yaw = ( static_cast<int>( floor(newAng.degreesYaw()) ) / cvar_snapRotate.toInt() ) * cvar_snapRotate.toFloat();
+							newAng.pitch = ( static_cast<int>( floor(newAng.degreesPitch()) ) / cvar_snapRotate.toInt() ) * cvar_snapRotate.toFloat();
+							newAng.roll = ( static_cast<int>( floor(newAng.degreesRoll()) ) / cvar_snapRotate.toInt() ) * cvar_snapRotate.toFloat();
 
-								newAng.yaw *= PI / 180.f;
-								newAng.pitch *= PI / 180.f;
-								newAng.roll *= PI / 180.f;
-							}
-							newAng.bindAngles();
+							newAng.yaw *= PI / 180.f;
+							newAng.pitch *= PI / 180.f;
+							newAng.roll *= PI / 180.f;
+						}
+						newAng.bindAngles();
 
-							if( isWidget ) {
-								widgetAng = newAng;
-							} else {
-								entity->setAng(newAng);
-							}
+						if( isWidget ) {
+							widgetAng = newAng;
+						} else {
+							entity->setAng(newAng);
 						}
 					}
 				}
@@ -3458,51 +3452,34 @@ void Editor::handleWidget(World& world) {
 
 			// scaling
 			if( widgetMode == SCALE ) {
-				if( !draggingWidget ) {
-					draggingWidget = true;
-					oldIntersection = intersection;
-				}
-				for( int c=0; c<World::numBuckets; ++c ) {
-					for( Node<Entity*>* node = world.getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-						Entity* entity = node->getData();
+				for (auto pair : world.getEntities()) {
+					Entity* entity = pair.b;
 
-						bool isWidget = !entity->isShouldSave() && entity->getName().find("widget") != UINT32_MAX;
+					bool isWidget = !entity->isShouldSave() && entity->getName().find("widget") != UINT32_MAX;
 
-						if( entity->isSelected() || isWidget ) {
-							Vector newScale = isWidget ? Vector(1.f) : entity->getScale();
-							Vector size = ( intersection - oldIntersection ) / static_cast<float>(Tile::size);
-							size.x = fabs(size.x);
-							size.y = fabs(size.y);
-							size.z = fabs(size.z);
-							float common = fmax(fmax(size.x,size.y),size.z);
+					if( entity->isSelected() || isWidget ) {
+						Vector newScale = isWidget ? Vector(1.f) : entity->getScale();
+						Vector size = ( intersection - oldIntersection ) / static_cast<float>(Tile::size);
+						size = size * affect;
+						newScale += size;
 
-							if( affect.x != 0.f ) {
-								newScale.x = common;
-							}
-							if( affect.y != 0.f ) {
-								newScale.y = common;
-							}
-							if( affect.z != 0.f ) {
-								newScale.z = common;
-							}
+						if( cvar_snapEnabled.toInt() ) {
+							float divisor = 100.f / cvar_snapScale.toFloat();
+							Vector remainder;
+							remainder.x = static_cast<float>(static_cast<int>(floor(newScale.x * divisor))) / divisor;
+							remainder.y = static_cast<float>(static_cast<int>(floor(newScale.y * divisor))) / divisor;
+							remainder.z = static_cast<float>(static_cast<int>(floor(newScale.z * divisor))) / divisor;
+							newScale = remainder;
+						}
 
-							if( cvar_snapEnabled.toInt() ) {
-								float divisor = 100.f / cvar_snapScale.toFloat();
-								Vector remainder;
-								remainder.x = static_cast<float>(static_cast<int>(floor(newScale.x * divisor))) / divisor;
-								remainder.y = static_cast<float>(static_cast<int>(floor(newScale.y * divisor))) / divisor;
-								remainder.z = static_cast<float>(static_cast<int>(floor(newScale.z * divisor))) / divisor;
-								newScale = remainder;
-							}
-
-							if( isWidget ) {
-								widgetScale = newScale;
-							} else {
-								entity->setScale(newScale);
-							}
+						if( isWidget ) {
+							widgetScale = newScale;
+						} else {
+							entity->setScale(newScale);
 						}
 					}
 				}
+				oldIntersection = intersection;
 			}
 		}
 	}
@@ -3524,9 +3501,10 @@ void Editor::editSectors(bool usable) {
 			if( draggingWidget ) {
 				draggingWidget = false;
 
+				oldVecs.clear();
 				for( Uint32 c = 0; c < sectorWorld.getVertices().getSize(); ++c ) {
 					SectorVertex* vertex = sectorWorld.getVertices()[c];
-					vertex->setOldPos(vertex->getPos());
+					oldVecs.insert(vertex, vertex->getPos());
 				}
 			}
 		}
@@ -3597,15 +3575,11 @@ void Editor::editEntities(bool usable) {
 	if( !mainEngine->getInputStr() ) {
 		if( mainEngine->pressKey(SDL_SCANCODE_DELETE) ) {
 			playSound("editor/close.wav");
-			for( Uint32 c=0; c<World::numBuckets; ++c ) {
-				Node<Entity*>* nextnode;
-				for( Node<Entity*>* node=world.getEntities(c).getFirst(); node!=nullptr; node=nextnode ) {
-					nextnode = node->getNext();
-					Entity* entity = node->getData();
-					if( entity->isSelected() ) {
-						mainEngine->fmsg(Engine::MSG_INFO,"Deleting %s",entity->getName().get());
-						entity->remove();
-					}
+			for (auto pair : world.getEntities()) {
+				Entity* entity = pair.b;
+				if( entity->isSelected() ) {
+					mainEngine->fmsg(Engine::MSG_INFO,"Deleting %s",entity->getName().get());
+					entity->remove();
 				}
 			}
 		}
@@ -3703,11 +3677,12 @@ void Editor::editEntities(bool usable) {
 		} else {
 			draggingWidget = false;
 
-			for( Uint32 c=0; c<World::numBuckets; ++c ) {
-				for( Node<Entity*>* node = world.getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-					Entity* entity = node->getData();
-					entity->setOldPos(entity->getPos());
-				}
+			oldVecs.clear();
+			oldAngs.clear();
+			for (auto pair : world.getEntities()) {
+				Entity* entity = pair.b;
+				oldVecs.insert(entity, entity->getPos());
+				oldAngs.insert(entity, entity->getAng());
 			}
 		}
 	}
@@ -4263,344 +4238,309 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 }
 
 void Editor::entityComponentExpand(unsigned int uid) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-
-			component->setCollapsed(false);
-			guiNeedsUpdate = true;
+		if( !entity->isSelected() ) {
+			continue;
 		}
+		Component* component = entity->findComponentByUID<Component>(uid);
+
+		component->setCollapsed(false);
+		guiNeedsUpdate = true;
 	}
 }
 
 void Editor::entityComponentCollapse(unsigned int uid) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-
-			component->setCollapsed(true);
-			guiNeedsUpdate = true;
+		if( !entity->isSelected() ) {
+			continue;
 		}
+		Component* component = entity->findComponentByUID<Component>(uid);
+
+		component->setCollapsed(true);
+		guiNeedsUpdate = true;
 	}
 }
 
 void Editor::entityRemoveComponent(unsigned int uid) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			entity->removeComponentByUID(uid);
-			entity->update();
-			guiNeedsUpdate = true;
+		if( !entity->isSelected() ) {
+			continue;
+		}
+		entity->removeComponentByUID(uid);
+		entity->update();
+		guiNeedsUpdate = true;
 
-			// prevents user trying to add sub-components to removed components...
-			Frame* frame = client->getGUI()->findFrame("editor_FrameEntityAddComponent");
-			if( frame ) {
-				frame->removeSelf();
-			}
+		// prevents user trying to add sub-components to removed components...
+		Frame* frame = client->getGUI()->findFrame("editor_FrameEntityAddComponent");
+		if( frame ) {
+			frame->removeSelf();
 		}
 	}
 }
 
 void Editor::entityCopyComponent(unsigned int uid) {
-	for (Uint32 c = 0; c < world->numBuckets; ++c) {
-		for (Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext()) {
-			Entity* entity = node->getData();
-			if (!entity->isSelected()) {
-				continue;
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
+
+		if (!entity->isSelected()) {
+			continue;
+		}
+		Component* component = entity->findComponentByUID<Component>(uid);
+		if (component)
+		{
+			if (component->getParent()) {
+				component->copy(component->getParent());
+			} else {
+				component->copy(component->getEntity());
 			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-			if (component)
-			{
-				if (component->getParent()) {
-					component->copy(component->getParent());
-				} else {
-					component->copy(component->getEntity());
-				}
-				entity->update();
-				guiNeedsUpdate = true;
-			}
+			entity->update();
+			guiNeedsUpdate = true;
 		}
 	}
 }
 
 void Editor::entityAddComponent(unsigned int uid, Uint32 type) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
+		if( !entity->isSelected() ) {
+			continue;
+		}
 
-			if( uid ) {
-				Component* component = entity->findComponentByUID<Component>(uid);
-				component->addComponent(static_cast<Component::type_t>(type));
-			} else {
-				entity->addComponent(static_cast<Component::type_t>(type));
-			}
+		if( uid ) {
+			Component* component = entity->findComponentByUID<Component>(uid);
+			component->addComponent(static_cast<Component::type_t>(type));
+		} else {
+			entity->addComponent(static_cast<Component::type_t>(type));
+		}
 
-			entity->update();
-			guiNeedsUpdate = true;
+		entity->update();
+		guiNeedsUpdate = true;
 
-			playSound("editor/mount.wav");
-			Frame* frame = client->getGUI()->findFrame("editor_FrameEntityAddComponent");
-			if( frame ) {
-				frame->removeSelf();
-			}
+		playSound("editor/mount.wav");
+		Frame* frame = client->getGUI()->findFrame("editor_FrameEntityAddComponent");
+		if( frame ) {
+			frame->removeSelf();
 		}
 	}
 }
 
 void Editor::entityComponentName(unsigned int uid, const char* name) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-
-			component->setName(name);
+		if( !entity->isSelected() ) {
+			continue;
 		}
+		Component* component = entity->findComponentByUID<Component>(uid);
+
+		component->setName(name);
 	}
 }
 
 void Editor::entityComponentTranslate(unsigned int uid, int dimension, float value) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-
-			Vector pos = component->getLocalPos();
-			switch( dimension ) {
-				case 0:
-					pos.x = value;
-					break;
-				case 1:
-					pos.y = value;
-					break;
-				case 2:
-					pos.z = value;
-					break;
-				default:
-					break;
-			}
-			component->setLocalPos(pos);
-			component->update();
+		if( !entity->isSelected() ) {
+			continue;
 		}
+		Component* component = entity->findComponentByUID<Component>(uid);
+
+		Vector pos = component->getLocalPos();
+		switch( dimension ) {
+			case 0:
+				pos.x = value;
+				break;
+			case 1:
+				pos.y = value;
+				break;
+			case 2:
+				pos.z = value;
+				break;
+			default:
+				break;
+		}
+		component->setLocalPos(pos);
+		component->update();
 	}
 }
 
 void Editor::entityComponentRotate(unsigned int uid, int dimension, float value) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-
-			Angle ang = component->getLocalAng();
-			switch( dimension ) {
-				case 0:
-					ang.roll = value * PI / 180.f;
-					break;
-				case 1:
-					ang.pitch = value * PI / 180.f;
-					break;
-				case 2:
-					ang.yaw = value * PI / 180.f;
-					break;
-				default:
-					break;
-			}
-			component->setLocalAng(ang);
-			component->update();
+		if( !entity->isSelected() ) {
+			continue;
 		}
+		Component* component = entity->findComponentByUID<Component>(uid);
+
+		Angle ang = component->getLocalAng();
+		switch( dimension ) {
+			case 0:
+				ang.roll = value * PI / 180.f;
+				break;
+			case 1:
+				ang.pitch = value * PI / 180.f;
+				break;
+			case 2:
+				ang.yaw = value * PI / 180.f;
+				break;
+			default:
+				break;
+		}
+		component->setLocalAng(ang);
+		component->update();
 	}
 }
 
 void Editor::entityComponentScale(unsigned int uid, int dimension, float value) {
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( !entity->isSelected() ) {
-				continue;
-			}
-			Component* component = entity->findComponentByUID<Component>(uid);
-
-			Vector scale = component->getLocalScale();
-			switch( dimension ) {
-				case 0:
-					scale.x = value;
-					break;
-				case 1:
-					scale.y = value;
-					break;
-				case 2:
-					scale.z = value;
-					break;
-				default:
-					break;
-			}
-			component->setLocalScale(scale);
-			component->update();
+		if( !entity->isSelected() ) {
+			continue;
 		}
+		Component* component = entity->findComponentByUID<Component>(uid);
+
+		Vector scale = component->getLocalScale();
+		switch( dimension ) {
+			case 0:
+				scale.x = value;
+				break;
+			case 1:
+				scale.y = value;
+				break;
+			case 2:
+				scale.z = value;
+				break;
+			default:
+				break;
+		}
+		component->setLocalScale(scale);
+		component->update();
 	}
 }
 
 void Editor::widgetTranslateX(float x) {
 	widgetPos.x = x;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Vector newPos = entity->getPos();
-				newPos.x = x;
-				entity->setPos(newPos);
-			}
+		if( entity->isSelected() ) {
+			Vector newPos = entity->getPos();
+			newPos.x = x;
+			entity->setPos(newPos);
 		}
 	}
 }
 
 void Editor::widgetTranslateY(float y) {
 	widgetPos.y = y;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Vector newPos = entity->getPos();
-				newPos.y = y;
-				entity->setPos(newPos);
-			}
+		if( entity->isSelected() ) {
+			Vector newPos = entity->getPos();
+			newPos.y = y;
+			entity->setPos(newPos);
 		}
 	}
 }
 
 void Editor::widgetTranslateZ(float z) {
 	widgetPos.z = z;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Vector newPos = entity->getPos();
-				newPos.z = z;
-				entity->setPos(newPos);
-			}
+		if( entity->isSelected() ) {
+			Vector newPos = entity->getPos();
+			newPos.z = z;
+			entity->setPos(newPos);
 		}
 	}
 }
 
 void Editor::widgetRotateYaw(float yaw) {
 	widgetAng.yaw = yaw * PI / 180.f;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Angle newAng = entity->getAng();
-				newAng.yaw = yaw * PI / 180.f;
-				entity->setAng(newAng);
-			}
+		if( entity->isSelected() ) {
+			Angle newAng = entity->getAng();
+			newAng.yaw = yaw * PI / 180.f;
+			entity->setAng(newAng);
 		}
 	}
 }
 
 void Editor::widgetRotatePitch(float pitch) {
 	widgetAng.pitch = pitch * PI / 180.f;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Angle newAng = entity->getAng();
-				newAng.pitch = pitch * PI / 180.f;
-				entity->setAng(newAng);
-			}
+		if( entity->isSelected() ) {
+			Angle newAng = entity->getAng();
+			newAng.pitch = pitch * PI / 180.f;
+			entity->setAng(newAng);
 		}
 	}
 }
 
 void Editor::widgetRotateRoll(float roll) {
 	widgetAng.roll = roll * PI / 180.f;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Angle newAng = entity->getAng();
-				newAng.roll = roll * PI / 180.f;
-				entity->setAng(newAng);
-			}
+		if( entity->isSelected() ) {
+			Angle newAng = entity->getAng();
+			newAng.roll = roll * PI / 180.f;
+			entity->setAng(newAng);
 		}
 	}
 }
 
 void Editor::widgetScaleX(float x) {
 	widgetScale.x = x;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Vector newScale = entity->getScale();
-				newScale.x = x;
-				entity->setScale(newScale);
-			}
+		if( entity->isSelected() ) {
+			Vector newScale = entity->getScale();
+			newScale.x = x;
+			entity->setScale(newScale);
 		}
 	}
 }
 
 void Editor::widgetScaleY(float y) {
 	widgetScale.y = y;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Vector newScale = entity->getScale();
-				newScale.y = y;
-				entity->setScale(newScale);
-			}
+		if( entity->isSelected() ) {
+			Vector newScale = entity->getScale();
+			newScale.y = y;
+			entity->setScale(newScale);
 		}
 	}
 }
 
 void Editor::widgetScaleZ(float z) {
 	widgetScale.z = z;
-	for( Uint32 c=0; c<world->numBuckets; ++c ) {
-		for( Node<Entity*>* node = world->getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
 
-			if( entity->isSelected() ) {
-				Vector newScale = entity->getScale();
-				newScale.z = z;
-				entity->setScale(newScale);
-			}
+		if( entity->isSelected() ) {
+			Vector newScale = entity->getScale();
+			newScale.z = z;
+			entity->setScale(newScale);
 		}
 	}
 }
@@ -6456,15 +6396,15 @@ void Editor::optimizeChunks() {
 		TileWorld* tileworld = static_cast<TileWorld*>(world);
 		tileworld->optimizeChunks();
 
-		for( Uint32 c = 0; c < World::numBuckets; ++c ) {
-			for( auto entity : tileworld->getEntities(c) ) {
-				LinkedList<Light*> list;
-				entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, list);
-				for( auto light : list ) {
-					light->update();
-				}
-				list.removeAll();
+		for (auto pair : world->getEntities()) {
+			Entity* entity = pair.b;
+
+			LinkedList<Light*> list;
+			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, list);
+			for( auto light : list ) {
+				light->update();
 			}
+			list.removeAll();
 		}
 	}
 }

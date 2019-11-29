@@ -1220,9 +1220,7 @@ static int console_clientCountEntities(int argc, const char** argv) {
 	Uint32 count = 0;
 	for (Uint32 i = 0; i < client->getNumWorlds(); ++i) {
 		World* world = client->getWorld(i);
-		for (Uint32 c = 0; c < World::numBuckets; ++c) {
-			count += world->getEntities(c).getSize();
-		}
+		count += world->getEntities().getSize();
 	}
 	mainEngine->fmsg(Engine::MSG_INFO, "Client has %u entities", count);
 	return 0;

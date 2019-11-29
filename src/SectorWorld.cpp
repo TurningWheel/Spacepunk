@@ -58,7 +58,6 @@ void SectorWorld::initialize(bool empty) {
 		vertex->own(sector->faces[0]->vertices[0]);
 		vertex->own(sector->faces[1]->vertices[0]);
 		vertex->own(sector->faces[2]->vertices[0]);
-		vertex->setOldPos(vertex->getPos());
 		vertex->updateRigidBody();
 		vertices.push(vertex);
 	}
@@ -68,7 +67,6 @@ void SectorWorld::initialize(bool empty) {
 		vertex->own(sector->faces[0]->vertices[1]);
 		vertex->own(sector->faces[2]->vertices[2]);
 		vertex->own(sector->faces[3]->vertices[2]);
-		vertex->setOldPos(vertex->getPos());
 		vertex->updateRigidBody();
 		vertices.push(vertex);
 	}
@@ -78,7 +76,6 @@ void SectorWorld::initialize(bool empty) {
 		vertex->own(sector->faces[0]->vertices[2]);
 		vertex->own(sector->faces[1]->vertices[1]);
 		vertex->own(sector->faces[3]->vertices[1]);
-		vertex->setOldPos(vertex->getPos());
 		vertex->updateRigidBody();
 		vertices.push(vertex);
 	}
@@ -88,17 +85,14 @@ void SectorWorld::initialize(bool empty) {
 		vertex->own(sector->faces[1]->vertices[2]);
 		vertex->own(sector->faces[2]->vertices[1]);
 		vertex->own(sector->faces[3]->vertices[0]);
-		vertex->setOldPos(vertex->getPos());
 		vertex->updateRigidBody();
 		vertices.push(vertex);
 	}
 
 	// initialize entities
-	for( Uint32 c=0; c<numBuckets; ++c ) {
-		for( Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->update();
-		}
+	for (auto pair : entities) {
+		Entity* entity = pair.b;
+		entity->update();
 	}
 
 	// create grid object
@@ -186,20 +180,18 @@ void SectorWorld::drawSceneObjects(Camera& camera, Light* light) {
 
 	// draw entities
 	if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
-		for( Uint32 c = 0; c < numBuckets; ++c ) {
-			for( const Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-				const Entity* entity = node->getData();
+		for (auto pair : entities) {
+			Entity* entity = pair.b;
 
-				// in silhouette mode, skip unhighlighted or unselected actors
-				if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
-					if( !entity->isHighlighted() && entity->getUID() != highlightedObj ) {
-						continue;
-					}
+			// in silhouette mode, skip unhighlighted or unselected actors
+			if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
+				if( !entity->isHighlighted() && entity->getUID() != highlightedObj ) {
+					continue;
 				}
-
-				// draw the entity
-				entity->draw(camera,ArrayList<Light*>({light}));
 			}
+
+			// draw the entity
+			entity->draw(camera,ArrayList<Light*>({light}));
 		}
 	}
 
@@ -224,21 +216,17 @@ void SectorWorld::draw() {
 
 	// build camera list
 	LinkedList<Camera*> cameras;
-	for( Uint32 c = 0; c < numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->findAllComponents<Camera>(Component::COMPONENT_CAMERA, cameras);
-		}
+	for (auto pair : entities) {
+		Entity* entity = pair.b;
+		entity->findAllComponents<Camera>(Component::COMPONENT_CAMERA, cameras);
 	}
 
 	// build light list
 	LinkedList<Light*> lights;
-	for( Uint32 c = 0; c < numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-			if( entity->isFlag(Entity::flag_t::FLAG_VISIBLE) ) {
-				entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
-			}
+	for (auto pair : entities) {
+		Entity* entity = pair.b;
+		if( entity->isFlag(Entity::flag_t::FLAG_VISIBLE) ) {
+			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
 		}
 	}
 

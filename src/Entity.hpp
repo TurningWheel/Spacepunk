@@ -80,7 +80,6 @@ public:
 	const String&						getName() const						{ return name; }
 	const Uint32&						getUID() const						{ return uid; }
 	const Uint32&						getTicks() const					{ return ticks; }
-	const Vector&						getOldPos() const					{ return oldPos; }
 	const Vector&						getPos() const						{ return pos; }
 	const Vector&						getNewPos() const					{ return newPos; }
 	const Vector&						getVel() const						{ return vel; }
@@ -121,7 +120,6 @@ public:
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
 	void					setMat(const glm::mat4& _mat)					{ if( mat != _mat ) { mat = _mat; updateNeeded = true; matSet = true; } }
 	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; matSet = false; } }
-	void					setOldPos(const Vector& _oldPos)				{ oldPos = _oldPos; }
 	void					setVel(const Vector& _vel)						{ vel = _vel; }
 	void					setNewPos(const Vector& _newPos)				{ newPos = _newPos; }
 	void					setAng(const Angle& _ang)						{ if( ang != _ang ) { ang = _ang; updateNeeded = true; matSet = false; } }
@@ -459,7 +457,6 @@ public:
 	void setInventoryVisibility(bool visible);
 
 protected:
-	Node<Entity*>* node			= nullptr;	// node to the world entity list
 	World* world				= nullptr;	// parent world object
 	Script* script				= nullptr;	// scripting engine
 	Player* player				= nullptr;	// player associated with this entity, if any
@@ -472,7 +469,6 @@ protected:
 	Uint32 componentIDs = 0;
 	ArrayList<Component*> components;		// component list
 
-	Vector oldPos;							// mostly used by the editor and audio engines
 	Vector pos;								// position
 	Vector newPos;							// new position to interpolate towards (net)
 	Vector vel;								// velocity

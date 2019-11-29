@@ -312,6 +312,8 @@ private:
 	Entity* widgetZ = nullptr;
 	Entity* widgetZX = nullptr;
 	LinkedList<Entity*> widgetActors;
+	Map<void*, Vector> oldVecs;
+	Map<void*, Angle> oldAngs;
 
 	// clipboard
 	LinkedList<Entity*> copiedEntities;

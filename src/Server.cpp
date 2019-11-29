@@ -181,14 +181,12 @@ void Server::handleNetMessages() {
 
 							// count spawn locations in world
 							LinkedList<Entity*> spawnLocations;
-							for( Uint32 c=0; c<world->numBuckets; ++c ) {
-								for( Node<Entity*>* node = world->getEntities(c).getFirst(); node != nullptr; node = node->getNext() ) {
-									Entity* entity = node->getData();
+							for (auto pair : world->getEntities()) {
+								Entity* entity = pair.b;
 
-									if( strcmp(entity->getScriptStr(),"PlayerStart")==0 ) {
-										if( !entity->checkCollision(entity->getPos()) ) {
-											spawnLocations.addNodeLast(entity);
-										}
+								if( strcmp(entity->getScriptStr(),"PlayerStart")==0 ) {
+									if( !entity->checkCollision(entity->getPos()) ) {
+										spawnLocations.addNodeLast(entity);
 									}
 								}
 							}
@@ -614,28 +612,28 @@ void Server::postProcess() {
 		if( net->isConnected() ) {
 			if( ticks % (mainEngine->getTicksPerSecond()/10) == 0 ) {
 				for( auto world : worlds ) {
-					for( Uint32 c=0; c<World::numBuckets; ++c ) {
-						for( auto entity : world->getEntities(c) ) {
-							if( !entity->isFlag(Entity::flag_t::FLAG_UPDATE) || entity->isFlag(Entity::flag_t::FLAG_LOCAL) ) {
-								// don't update local-only entities
+					for (auto pair : world->getEntities()) {
+						auto entity = pair.b;
+
+						if( !entity->isFlag(Entity::flag_t::FLAG_UPDATE) || entity->isFlag(Entity::flag_t::FLAG_LOCAL) ) {
+							// don't update local-only entities
+							continue;
+						}
+
+						for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
+							const Net::remote_t* remote = net->getRemoteHosts()[c];
+
+							Player* player = entity->getPlayer();
+							if( player && player->getClientID() == remote->id ) {
+								// do not (normally) tell a client where their players are!
 								continue;
 							}
 
-							for( Uint32 c = 0; c < net->getRemoteHosts().getSize(); ++c ) {
-								const Net::remote_t* remote = net->getRemoteHosts()[c];
-
-								Player* player = entity->getPlayer();
-								if( player && player->getClientID() == remote->id ) {
-									// do not (normally) tell a client where their players are!
-									continue;
-								}
-
-								// update entity for client
-								Packet packet;
-								entity->updatePacket(packet);
-								net->signPacket(packet);
-								net->sendPacket(remote->id, packet);
-							}
+							// update entity for client
+							Packet packet;
+							entity->updatePacket(packet);
+							net->signPacket(packet);
+							net->sendPacket(remote->id, packet);
 						}
 					}
 				}
@@ -746,9 +744,7 @@ static int console_serverCountEntities(int argc, const char** argv) {
 	Uint32 count = 0;
 	for (Uint32 i = 0; i < server->getNumWorlds(); ++i) {
 		World* world = server->getWorld(i);
-		for (Uint32 c = 0; c < World::numBuckets; ++c) {
-			count += world->getEntities(c).getSize();
-		}
+		count += world->getEntities().getSize();
 	}
 	mainEngine->fmsg(Engine::MSG_INFO, "Server has %u entities", count);
 	return 0;

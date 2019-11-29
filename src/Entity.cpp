@@ -87,7 +87,7 @@ Entity::Entity(World* _world, Uint32 _uid) {
 			uid = _uid;
 			world->setMaxUID(_uid);
 		}
-		node = world->getEntities(uid&(World::numBuckets-1)).addNodeLast(this);
+		world->getEntities().insert(uid, this);
 	}
 
 	item.InitInventory();
@@ -221,18 +221,15 @@ void Entity::finishInsertIntoWorld() {
 	}
 
 	// insert to new world
-	if( node ) {
-		if( world ) {
-			world->getEntities(uid&(World::numBuckets-1)).removeNode(node);
-		}
+	if( world ) {
+		world->getEntities().remove(uid);
 	}
 	world = newWorld;
 	if( world ) {
 		uid = world->getNewUID();
-		node = world->getEntities(uid&(World::numBuckets-1)).addNodeLast(this);
+		world->getEntities().insert(uid, this);
 	} else {
 		uid = World::nuid;
-		node = nullptr;
 	}
 
 	// signal components again

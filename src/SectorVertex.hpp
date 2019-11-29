@@ -41,12 +41,10 @@ public:
 	const ArrayList<Sector::vertex_t*>&		getVertices() const			{ return vertices; }
 	ArrayList<Sector::vertex_t*>&			getVertices()				{ return vertices; }
 	const Vector&							getPos() const				{ return pos; }
-	const Vector&							getOldPos() const			{ return oPos; }
 
 	void	setSelected(bool _b)		{ selected = _b; }
 	void	setHighlighted(bool _b)		{ highlighted = _b; }
 	void	setPos(const Vector& v)		{ pos = v; }
-	void	setOldPos(const Vector& v)	{ oPos = v; }
 
 private:
 	SectorWorld* world = nullptr;
@@ -56,7 +54,6 @@ private:
 
 	ArrayList<Sector::vertex_t*> vertices;
 	Vector pos;
-	Vector oPos;
 
 	// bullet physics objects
 	btDiscreteDynamicsWorld* dynamicsWorld = nullptr;

@@ -63,7 +63,6 @@ public:
 	};
 
 	// const variables
-	static const int numBuckets = 128;
 	static const char* fileExtensions[FILE_MAX];
 
 	// invalid uid for any entity
@@ -192,8 +191,8 @@ public:
 	const String&				getFilename() const						{ return filename; }
 	const String&				getShortname() const					{ return shortname; }
 	const String&				getNameStr() const						{ return nameStr; }
-	LinkedList<Entity*>&		getEntities(const Uint32 index)			{ return entities[index]; }
-	const LinkedList<Entity*>&	getEntities(const Uint32 index) const	{ return entities[index]; }
+	Map<Uint32, Entity*>&		getEntities()							{ return entities; }
+	const Map<Uint32, Entity*>&	getEntities() const						{ return entities; }
 	btDiscreteDynamicsWorld*&	getBulletDynamicsWorld()				{ return bulletDynamicsWorld; }
 	const bool					isClientObj() const						{ return clientObj; }
 	const bool					isServerObj() const						{ return !clientObj; }
@@ -242,7 +241,7 @@ protected:
 
 	// entities
 	Uint32 uids=0;
-	LinkedList<Entity*> entities[numBuckets];
+	Map<Uint32, Entity*> entities;
 
 	// lasers
 	ArrayList<laser_t> lasers;

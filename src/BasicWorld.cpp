@@ -43,11 +43,9 @@ void BasicWorld::initialize(bool empty) {
 	World::initialize(empty);
 
 	// initialize entities
-	for (Uint32 c = 0; c < numBuckets; ++c) {
-		for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-			Entity* entity = node->getData();
-			entity->update();
-		}
+	for (auto pair : entities) {
+		Entity* entity = pair.b;
+		entity->update();
 	}
 
 	// create grid object
@@ -61,12 +59,11 @@ void BasicWorld::findEntitiesInRadius(const Vector& origin, float radius, Linked
 	if (radius <= 0) {
 		return;
 	}
-	for (int c = 0; c < numBuckets; ++c) {
-		for (auto entity : entities[c]) {
-			const Vector& pos = flat ? Vector(entity->getPos().x, entity->getPos().y, origin.z) : entity->getPos();
-			if ((pos - origin).lengthSquared() <= radius * radius) {
-				outList.addNodeFirst(entity);
-			}
+	for (auto pair : entities) {
+		Entity* entity = pair.b;
+		const Vector& pos = flat ? Vector(entity->getPos().x, entity->getPos().y, origin.z) : entity->getPos();
+		if ((pos - origin).lengthSquared() <= radius * radius) {
+			outList.addNodeFirst(entity);
 		}
 	}
 }
@@ -102,18 +99,18 @@ void BasicWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& light
 	// draw entities
 	if (camera.getDrawMode() != Camera::DRAW_STENCIL) {
 		if (camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools) {
-			for (int c = 0; c < numBuckets; ++c) {
-				for (auto entity : entities[c]) {
-					// in silhouette mode, skip unhighlighted or unselected actors
-					if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
-						if (!entity->isHighlighted() && entity->getUID() != highlightedObj) {
-							continue;
-						}
-					}
+			for (auto pair : entities) {
+				Entity* entity = pair.b;
 
-					// draw the entity
-					entity->draw(camera, lights);
+				// in silhouette mode, skip unhighlighted or unselected actors
+				if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
+					if (!entity->isHighlighted() && entity->getUID() != highlightedObj) {
+						continue;
+					}
 				}
+
+				// draw the entity
+				entity->draw(camera, lights);
 			}
 		}
 	}
@@ -140,20 +137,16 @@ void BasicWorld::draw() {
 
 	// build camera list
 	LinkedList<Camera*> cameras;
-	for (Uint32 c = 0; c < numBuckets; ++c) {
-		for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-			Entity* entity = node->getData();
-			entity->findAllComponents<Camera>(Component::COMPONENT_CAMERA, cameras);
-		}
+	for (auto pair : entities) {
+		Entity* entity = pair.b;
+		entity->findAllComponents<Camera>(Component::COMPONENT_CAMERA, cameras);
 	}
 
 	// build light list
 	LinkedList<Light*> lights;
-	for (Uint32 c = 0; c < numBuckets; ++c) {
-		for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-			Entity* entity = node->getData();
-			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
-		}
+	for (auto pair : entities) {
+		Entity* entity = pair.b;
+		entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
 	}
 
 	// cull unselected cameras (editor)
@@ -558,28 +551,24 @@ void BasicWorld::serialize(FileInterface * file) {
 	else {
 		// write number of entities
 		Uint32 numEntities = 0;
-		for (Uint32 c = 0; c < numBuckets; ++c) {
-			for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-				Entity* entity = node->getData();
-				if (entity->isToBeDeleted() || !entity->isShouldSave()) {
-					continue;
-				}
-
-				++numEntities;
+		for (auto pair : entities) {
+			Entity* entity = pair.b;
+			if (entity->isToBeDeleted() || !entity->isShouldSave()) {
+				continue;
 			}
+
+			++numEntities;
 		}
 
 		file->beginArray(numEntities);
 
-		for (Uint32 c = 0; c < numBuckets; ++c) {
-			for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-				Entity* entity = node->getData();
-				if (entity->isToBeDeleted() || !entity->isShouldSave()) {
-					continue;
-				}
-
-				file->value(*entity);
+		for (auto pair : entities) {
+			Entity* entity = pair.b;
+			if (entity->isToBeDeleted() || !entity->isShouldSave()) {
+				continue;
 			}
+
+			file->value(*entity);
 		}
 
 		file->endArray();

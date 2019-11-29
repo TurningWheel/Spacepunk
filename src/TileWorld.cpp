@@ -1280,44 +1280,42 @@ void TileWorld::rotate(Tile::side_t orientation) {
 	}
 	
 	// rotate entities
-	for( Uint32 c=0; c<numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
 
-			if (!entity->isShouldSave())
-				continue;
+		if (!entity->isShouldSave())
+			continue;
 
-			// update position
-			float temp = 0.f;
-			Vector pos = entity->getPos();
-			float x = (pos.x * cos(rot)) - (pos.y * sin(rot));
-			float y = (pos.x * sin(rot)) + (pos.y * cos(rot));
-			switch( orientation ) {
-				case Tile::SIDE_SOUTH:
-					x += width * Tile::size;
-					break;
-				case Tile::SIDE_WEST:
-					x += width * Tile::size;
-					y += height * Tile::size;
-					break;
-				case Tile::SIDE_NORTH:
-					y += height * Tile::size;
-					break;
-				default:
-					break;
-			}
-			pos.x = x;
-			pos.y = y;
-			entity->setPos(pos);
-			entity->setNewPos(pos);
-
-			// update angle
-			Angle ang = entity->getAng();
-			ang.yaw += rot;
-			entity->setAng(ang);
-			entity->setNewAng(ang);
-			entity->update();
+		// update position
+		float temp = 0.f;
+		Vector pos = entity->getPos();
+		float x = (pos.x * cos(rot)) - (pos.y * sin(rot));
+		float y = (pos.x * sin(rot)) + (pos.y * cos(rot));
+		switch( orientation ) {
+			case Tile::SIDE_SOUTH:
+				x += width * Tile::size;
+				break;
+			case Tile::SIDE_WEST:
+				x += width * Tile::size;
+				y += height * Tile::size;
+				break;
+			case Tile::SIDE_NORTH:
+				y += height * Tile::size;
+				break;
+			default:
+				break;
 		}
+		pos.x = x;
+		pos.y = y;
+		entity->setPos(pos);
+		entity->setNewPos(pos);
+
+		// update angle
+		Angle ang = entity->getAng();
+		ang.yaw += rot;
+		entity->setAng(ang);
+		entity->setNewAng(ang);
+		entity->update();
 	}
 }
 
@@ -1400,11 +1398,9 @@ void TileWorld::initialize(bool empty) {
 	selectedRect.h = 0;
 
 	// initialize entities
-	for( Uint32 c=0; c<numBuckets; ++c ) {
-		for( Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->update();
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->update();
 	}
 }
 
@@ -1663,28 +1659,24 @@ void TileWorld::serialize(FileInterface * file) {
 	else {
 		// write number of entities
 		Uint32 numEntities = 0;
-		for (Uint32 c = 0; c<numBuckets; ++c) {
-			for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-				Entity* entity = node->getData();
-				if (entity->isToBeDeleted() || !entity->isShouldSave()) {
-					continue;
-				}
-
-				++numEntities;
+		for (auto& pair : entities) {
+			Entity* entity = pair.b;
+			if (entity->isToBeDeleted() || !entity->isShouldSave()) {
+				continue;
 			}
+
+			++numEntities;
 		}
 
 		file->beginArray(numEntities);
 
-		for (Uint32 c = 0; c<numBuckets; ++c) {
-			for (Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext()) {
-				Entity* entity = node->getData();
-				if (entity->isToBeDeleted() || !entity->isShouldSave()) {
-					continue;
-				}
-
-				file->value(*entity);
+		for (auto& pair : entities) {
+			Entity* entity = pair.b;
+			if (entity->isToBeDeleted() || !entity->isShouldSave()) {
+				continue;
 			}
+
+			file->value(*entity);
 		}
 
 		file->endArray();
@@ -1698,12 +1690,10 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	}
 
 	// delete occlusion data for all entities
-	for( Uint32 c = 0; c < numBuckets; ++c ) {
-		for( Node<Entity*>* node = entities[c].getFirst(); node != nullptr; node = node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->deleteAllVisMaps();
-			entity->clearAllChunkNodes();
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->deleteAllVisMaps();
+		entity->clearAllChunkNodes();
 	}
 
 	// create new tile array
@@ -1838,11 +1828,9 @@ void TileWorld::resize(int left, int right, int up, int down) {
 
 	// clear chunk pointers from lights
 	LinkedList<Light*> lights;
-	for( Uint32 c = 0; c < numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
 	}
 	for (auto light : lights) {
 		light->getChunksLit().clear();
@@ -1850,16 +1838,14 @@ void TileWorld::resize(int left, int right, int up, int down) {
 
 	// move entities, if necessary
 	if( left || up ) {
-		for( int c=0; c<numBuckets; ++c ) {
-			for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-				Entity* entity = node->getData();
+		for (auto& pair : entities) {
+			Entity* entity = pair.b;
 
-				Vector pos = entity->getPos();
-				pos.x += left * Tile::size;
-				pos.y += up * Tile::size;
-				entity->setPos(pos);
-				entity->update();
-			}
+			Vector pos = entity->getPos();
+			pos.x += left * Tile::size;
+			pos.y += up * Tile::size;
+			entity->setPos(pos);
+			entity->update();
 		}
 	}
 
@@ -2002,20 +1988,16 @@ void TileWorld::draw() {
 
 	// build camera list
 	LinkedList<Camera*> cameras;
-	for( Uint32 c = 0; c < numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->findAllComponents<Camera>(Component::COMPONENT_CAMERA, cameras);
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->findAllComponents<Camera>(Component::COMPONENT_CAMERA, cameras);
 	}
 
 	// build light list
 	LinkedList<Light*> lights;
-	for( Uint32 c = 0; c < numBuckets; ++c ) {
-		for( Node<Entity*>* node=entities[c].getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* entity = node->getData();
-			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
-		}
+	for (auto& pair : entities) {
+		Entity* entity = pair.b;
+		entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, lights);
 	}
 
 	// cull unselected cameras (editor)
@@ -2324,19 +2306,17 @@ void TileWorld::placeRoom(const TileWorld& world, Uint32 pickedExitIndex, Uint32
 	}
 
 	// copy entities
-	for( int c=0; c<numBuckets; ++c ) {
-		for( const Node<Entity*>* node=world.getEntities(c).getFirst(); node!=nullptr; node=node->getNext() ) {
-			Entity* src = node->getData();
+	for (auto& pair : entities) {
+		Entity* src = pair.b;
 
-			Entity* entity = src->copy(this);
+		Entity* entity = src->copy(this);
 
-			Vector pos = entity->getPos();
-			pos.x += x * Tile::size;
-			pos.y += y * Tile::size;
-			pos.z += (float)floorDiff;
-			entity->setPos(pos);
-			entity->setNewPos(pos);
-		}
+		Vector pos = entity->getPos();
+		pos.x += x * Tile::size;
+		pos.y += y * Tile::size;
+		pos.z += (float)floorDiff;
+		entity->setPos(pos);
+		entity->setNewPos(pos);
 	}
 }
 
