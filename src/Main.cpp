@@ -2,13 +2,13 @@
 
 #include "Main.hpp"
 #include "Engine.hpp"
-#include "Angle.hpp"
+#include "Rotation.hpp"
 #include "LinkedList.hpp"
 #include "Console.hpp"
 
 Engine* mainEngine = nullptr;
 
-const float Angle::radiansToDegrees = 180.f / PI;
+const float Rotation::radiansToDegrees = 180.f / PI;
 const float PI = 3.14159265358979323f;
 const float SQRT2 = 1.41421356237309504f;
 const char* versionStr = "0.0.0.1";

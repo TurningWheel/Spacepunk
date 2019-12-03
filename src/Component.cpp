@@ -486,7 +486,7 @@ Component::Component(Entity& _entity, Component* _parent) {
 
 	name = typeStr[COMPONENT_BASIC];
 	lPos = Vector(0.f, 0.f, 0.f);
-	lAng = Angle(0.f, 0.f, 0.f);
+	lAng = Quaternion(0.f, 0.f, 0.f, 1.f);
 	lScale = Vector(1.f, 1.f, 1.f);
 	lMat = glm::mat4(1.f);
 
@@ -910,42 +910,40 @@ bool Component::hasComponent(type_t type) const {
 	return false;
 }
 
-void Component::rotate(const Angle& ang) {
-	lMat *= glm::eulerAngleYXZ(ang.yaw, ang.pitch, ang.roll);
+void Component::rotate(const Rotation& ang) {
+	lAng *= Quaternion(lMat);
 	updateNeeded = true;
-	lMatSet = true;
 }
 
 void Component::translate(const Vector& vec) {
-	lMat = glm::translate(lMat, glm::vec3(vec.x, vec.y, vec.z));
+	lPos += vec;
 	updateNeeded = true;
-	lMatSet = true;
 }
 
 void Component::scale(const Vector& vec) {
-	lMat = glm::scale(lMat, glm::vec3(vec.x, vec.y, vec.z));
+	lScale *= vec;
 	updateNeeded = true;
-	lMatSet = true;
 }
 
 void Component::revertRotation() {
-	lMat[0] = { 1.f, 0.f, 0.f, 0.f };
-	lMat[1] = { 0.f, 1.f, 0.f, 0.f };
-	lMat[2] = { 0.f, 0.f, 2.f, 0.f };
+	lAng = Quaternion(0.f, 0.f, 0.f, 1.f);
+	updateNeeded = true;
 }
 
 void Component::revertTranslation() {
-	lMat[3] = { 0.f, 0.f, 0.f, 1.f };
+	lPos = Vector(0.f, 0.f, 0.f);
+	updateNeeded = true;
 }
 
 void Component::revertScale() {
-	lMat[0] = glm::normalize(lMat[0]);
-	lMat[1] = glm::normalize(lMat[1]);
-	lMat[2] = glm::normalize(lMat[2]);
+	lScale = Vector(1.f, 1.f, 1.f);
+	updateNeeded = true;
 }
 
 void Component::revertToIdentity() {
-	lMat = glm::mat4();
+	revertTranslation();
+	revertRotation();
+	revertScale();
 }
 
 void Component::update() {
@@ -953,31 +951,19 @@ void Component::update() {
 	
 	deleteVisMaps();
 
-	if (!lMatSet) {
-		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
-		glm::mat4 rotationM = glm::mat4( 1.f );
-		rotationM = glm::rotate(rotationM, (float)(lAng.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-		rotationM = glm::rotate(rotationM, (float)(lAng.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-		rotationM = glm::rotate(rotationM, (float)(lAng.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
-		lMat = translationM * rotationM * scaleM;
-	}
+	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
+	glm::mat4 rotationM(glm::quat(lAng.w, lAng.x, lAng.y, lAng.z));
+	glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
+	lMat = translationM * rotationM * scaleM;
 
 	if( parent ) {
 		gMat = parent->getGlobalMat() * lMat;
-		gAng.yaw = lAng.yaw + parent->getGlobalAng().yaw;
-		gAng.pitch = lAng.pitch + parent->getGlobalAng().pitch;
-		gAng.roll = lAng.roll + parent->getGlobalAng().roll;
-		gAng.wrapAngles();
 	} else {
 		gMat = entity->getMat() * lMat;
-		gAng.yaw = lAng.yaw + entity->getAng().yaw;
-		gAng.pitch = lAng.pitch + entity->getAng().pitch;
-		gAng.roll = lAng.roll + entity->getAng().roll;
-		gAng.wrapAngles();
 	}
 	gPos = Vector( gMat[3][0], gMat[3][2], -gMat[3][1] );
 	gScale = Vector( glm::length( gMat[0] ), glm::length( gMat[2] ), glm::length( gMat[1] ) );
+	gAng = Quaternion(gMat);
 
 	// update the chunk node
 	World* world = entity->getWorld();
@@ -1210,40 +1196,8 @@ void Component::remove() {
 }
 
 void Component::load(FILE* fp) {
-	Uint32 reserved = 0;
-	Uint32 len = 0;
-
-	char* nameStr = nullptr;
-	Engine::freadl(&len, sizeof(Uint32), 1, fp, nullptr, "Component::load()");
-	if( len > 0 && len < 128 ) {
-		nameStr = (char *) calloc( len+1, sizeof(char));
-		Engine::freadl(nameStr, sizeof(char), len, fp, nullptr, "Component::load()");
-	} else if( len >= 128 ) {
-		assert(0);
-	}
-
-	Vector pos;
-	Engine::freadl(&pos, sizeof(Vector), 1, fp, nullptr, "Component::load()");
-
-	Angle ang;
-	Engine::freadl(&ang, sizeof(Angle), 1, fp, nullptr, "Component::load()");
-
-	Vector scale;
-	Engine::freadl(&scale, sizeof(Vector), 1, fp, nullptr, "Component::load()");
-
-	// reserved 4 bytes
-	Engine::freadl(&reserved, sizeof(Uint32), 1, fp, nullptr, "Component::load()");
-
-	name = nameStr;
-	lPos = pos;
-	lAng = ang;
-	lScale = scale;
-
-	free(nameStr);
-
-	if( getType() == COMPONENT_BASIC ) {
-		loadSubComponents(fp);
-	}
+	// DEPRECATED
+	return;
 }
 
 void Component::loadSubComponents(FILE* fp) {
@@ -1288,11 +1242,17 @@ Component* Component::addComponent(Component::type_t type) {
 }
 
 void Component::serialize(FileInterface * file) {
-	Uint32 version = 0;
+	Uint32 version = 1;
 	file->property("Component::version", version);
 	file->property("name", name);
 	file->property("lPos", lPos);
-	file->property("lAng", lAng);
+	if (version == 0) {
+		Rotation rotation;
+		file->property("lAng", rotation);
+		lAng = Quaternion(rotation);
+	} else {
+		file->property("lAng", lAng);
+	}
 	file->property("lScale", lScale);
 	serializeComponents(file);
 }
@@ -1347,7 +1307,9 @@ void Component::serializeComponents(FileInterface* file) {
 void Component::shootLaser(const glm::mat4& mat, WideVector& color, float size, float life) {
 	Vector start = Vector(mat[3].x, mat[3].z, -mat[3].y);
 	//glm::mat4 endMat = glm::translate(mat, glm::vec3(-1024.f, 0.f, 0.f));
-	Vector end = start + (entity->getAng() + entity->getLookDir()).toVector() * 10000.f;
+	Quaternion q = entity->getAng();
+	q = q.rotate(entity->getLookDir());
+	Vector end = start + q.toVector() * 10000.f;
 	World* world = entity->getWorld();
 	World::hit_t hit = world->lineTrace(start, end);
 	end = hit.pos;

@@ -82,7 +82,7 @@ void World::initialize(bool empty) {
 
 	// create shadow camera
 	const Entity::def_t* def = Entity::findDef("Shadow Camera");
-	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Angle());
+	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Rotation());
 	shadowCamera->setShouldSave(false);
 	defaultShadow.init();
 }
@@ -199,7 +199,7 @@ void World::selectEntities(const bool b) {
 	}
 }
 
-const World::hit_t World::convexSweep( const btConvexShape* shape, const Vector& originPos, const Angle& originAng, const Vector& destPos, const Angle& destAng ) {
+const World::hit_t World::convexSweep( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng ) {
 	hit_t emptyResult;
 	emptyResult.pos = destPos;
 
@@ -256,15 +256,13 @@ struct AllHitsConvexResultCallback : public btCollisionWorld::ConvexResultCallba
 	}
 };
 
-void World::convexSweepList( const btConvexShape* shape, const Vector& originPos, const Angle& originAng, const Vector& destPos, const Angle& destAng, LinkedList<hit_t>& outResult ) {
+void World::convexSweepList( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng, LinkedList<hit_t>& outResult ) {
 	btVector3 btOriginPos(originPos);
-	btQuaternion btOriginQuat;
-	btOriginQuat.setEulerZYX(originAng.yaw, -originAng.pitch, -originAng.roll);
+	btQuaternion btOriginQuat(originAng.x, originAng.y, originAng.z, originAng.w);
 	btTransform btOrigin(btOriginQuat, btOriginPos);
 
 	btVector3 btDestPos(destPos);
-	btQuaternion btDestQuat;
-	btDestQuat.setEulerZYX(destAng.yaw, -destAng.pitch, -destAng.roll);
+	btQuaternion btDestQuat(destAng.x, destAng.y, destAng.z, destAng.w);
 	btTransform btDest(btDestQuat, btDestPos);
 
 	// perform raycast

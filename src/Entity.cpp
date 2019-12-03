@@ -321,14 +321,6 @@ bool Entity::hasJumped() const {
 	}
 }
 
-Angle Entity::getLookDir() const {
-	if( player ) {
-		return player->getLookDir();
-	} else {
-		return Angle();
-	}
-}
-
 void Entity::findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) const {
 	if( !world ) {
 		return;
@@ -344,27 +336,10 @@ void Entity::update() {
 		return;
 	}
 
-	if (!matSet) {
-		glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
-		glm::mat4 rotationM = glm::mat4( 1.f );
-		rotationM = glm::rotate(rotationM, (float)(ang.radiansYaw()), glm::vec3(0.f, -1.f, 0.f));
-		rotationM = glm::rotate(rotationM, (float)(ang.radiansPitch()), glm::vec3(0.f, 0.f, -1.f));
-		rotationM = glm::rotate(rotationM, (float)(ang.radiansRoll()), glm::vec3(1.f, 0.f, 0.f));
-		glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
-		mat = translationM * rotationM * scaleM;
-	} else {
-		pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
-		scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
-		ang.yaw = PI/2.f - atan2f(mat[0][0], mat[0][2]);
-		ang.pitch = asinf(mat[1][1]) - PI/2.f;
-		ang.roll = 0.f;
-		ang.bindAngles();
-		/*glm::extractEulerAngleXYZ(mat, ang.roll, ang.yaw, ang.pitch);
-		ang.yaw *= -1.f;
-		ang.pitch *= -.1f;
-		ang.roll *= -.1f;
-		ang.bindAngles();*/
-	}
+	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
+	glm::mat4 rotationM = glm::mat4(glm::quat(ang.w, ang.x, ang.y, ang.z));
+	glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
+	mat = translationM * rotationM * scaleM;
 
 	// update the chunk node
 	if( world && world->getType() == World::WORLD_TILES ) {
@@ -414,15 +389,16 @@ void Entity::updatePacket(Packet& packet) const {
 		packet.write8(0); // signifies this is not a player, stop here
 	}
 	packet.write8(falling ? 1U : 0U);
-	packet.write32((Sint32)(ang.degreesRoll() * 32));
-	packet.write32((Sint32)(ang.degreesPitch() * 32));
-	packet.write32((Sint32)(ang.degreesYaw() * 32));
-	packet.write32((Sint32)(vel.z * 128));
-	packet.write32((Sint32)(vel.y * 128));
-	packet.write32((Sint32)(vel.x * 128));
-	packet.write32((Sint32)(pos.z * 32));
-	packet.write32((Sint32)(pos.y * 32));
-	packet.write32((Sint32)(pos.x * 32));
+	packet.write32((Sint32)(ang.w * 256.f));
+	packet.write32((Sint32)(ang.z * 256.f));
+	packet.write32((Sint32)(ang.y * 256.f));
+	packet.write32((Sint32)(ang.x * 256.f));
+	packet.write32((Sint32)(vel.z * 128.f));
+	packet.write32((Sint32)(vel.y * 128.f));
+	packet.write32((Sint32)(vel.x * 128.f));
+	packet.write32((Sint32)(pos.z * 32.f));
+	packet.write32((Sint32)(pos.y * 32.f));
+	packet.write32((Sint32)(pos.x * 32.f));
 	packet.write32(defIndex);
 	packet.write32(uid);
 	packet.write32(world->getID());
@@ -468,9 +444,6 @@ void Entity::preProcess() {
 
 void Entity::process() {
 	++ticks;
-
-	// correct orientations
-	ang.wrapAngles();
 
 	// update path request
 	if( path ) {
@@ -534,7 +507,7 @@ void Entity::process() {
 		// interpolate between new and old positions
 		if (ticks - lastUpdate <= mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
 			Vector oPos = pos;
-			Angle oAng = ang;
+			Quaternion oAng = ang;
 
 			// interpolate position
 			Vector vDiff = newPos - pos;
@@ -578,9 +551,6 @@ void Entity::process() {
 			}
 		}
 	}
-
-	// correct orientation again
-	ang.wrapAngles();
 
 	// update component matrices
 	if( updateNeeded ) {
@@ -718,14 +688,22 @@ bool Entity::move() {
 				bbox->applyMoveForces(vel, rot);
 				updateNeeded = true;
 			} else {
-				ang += rot;
+				ang = ang.rotate(rot);
 				pos += vel;
-				ang.wrapAngles();
 				updateNeeded = true;
 			}
 		}
 	}
 	return true;
+}
+
+void Entity::setMat(const glm::mat4& _mat) {
+	if( mat != _mat ) {
+		mat = _mat;
+		pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+		scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
+		ang = Quaternion(mat);
+	}
 }
 
 void Entity::applyForce(const Vector& force, const Vector& origin) {
@@ -769,20 +747,22 @@ const Entity::def_t* Entity::findDef(const Uint32 index) {
 	return nullptr;
 }
 
-Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vector& pos, const Angle& ang, Uint32 uid) {
+Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vector& pos, const Rotation& ang, Uint32 uid) {
 	Entity* entity = new Entity(world, uid);
 	def.entity.copy(world, entity);
 	entity->defIndex = def.index;
 	entity->animate("idle", false);
 
+	Quaternion q;
+	q = q.rotate(ang);
 	entity->setPos(pos);
 	entity->setNewPos(pos);
-	entity->setAng(ang);
-	entity->setNewAng(ang);
+	entity->setAng(q);
+	entity->setNewAng(q);
 
 	BBox* bbox = entity->findComponentByName<BBox>("physics");
 	if (bbox && bbox->getMass() != 0.f && !bbox->getParent()) {
-		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang - bbox->getLocalAng());
+		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), q * bbox->getLocalAng());
 	}
 
 	mainEngine->fmsg(Engine::MSG_DEBUG, "spawned entity '%s'", entity->getName().get());
@@ -901,12 +881,18 @@ bool Entity::interact(Entity& user, BBox& bbox)
 }
 
 void Entity::serialize(FileInterface * file) {
-	Uint32 version = 2;
+	Uint32 version = 3;
 	file->property("Entity::version", version);
 
 	file->property("name", name);
 	file->property("pos", pos);
-	file->property("ang", ang);
+	if (version <= 2) {
+		Rotation rotation;
+		file->property("ang", rotation);
+		ang = Quaternion(rotation);
+	} else {
+		file->property("ang", ang);
+	}
 	file->property("scale", scale);
 	file->property("scriptStr", scriptStr);
 	file->property("flags", flags);

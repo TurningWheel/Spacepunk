@@ -4,7 +4,6 @@
 
 #include "Main.hpp"
 #include "Vector.hpp"
-#include "Angle.hpp"
 #include "ArrayList.hpp"
 #include "String.hpp"
 #include "LinkedList.hpp"
@@ -12,6 +11,8 @@
 #include "WideVector.hpp"
 #include "Script.hpp"
 #include "Frame.hpp"
+#include "Rotation.hpp"
+#include "Quaternion.hpp"
 
 class Chunk;
 class Entity;
@@ -547,7 +548,7 @@ public:
 
 	// rotate the component by a given amount
 	// @param ang the amount to rotate
-	void rotate(const Angle& ang);
+	void rotate(const Rotation& ang);
 
 	// translate the component by a given amount
 	// @param vec the amount to translate
@@ -582,26 +583,25 @@ public:
 	Uint32							getUID() const						{ return uid; }
 	const char*						getName() const						{ return name.get(); }
 	const Vector&					getLocalPos() const					{ return lPos; }
-	const Angle&					getLocalAng() const					{ return lAng; }
+	const Quaternion&				getLocalAng() const					{ return lAng; }
 	const Vector&					getLocalScale() const				{ return lScale; }
 	const glm::mat4&				getLocalMat() const					{ return lMat; }
 	const Vector&					getGlobalPos() const				{ return gPos; }
-	const Angle&					getGlobalAng() const				{ return gAng; }
+	const Quaternion&				getGlobalAng() const				{ return gAng; }
 	const Vector&					getGlobalScale() const				{ return gScale; }
 	const glm::mat4&				getGlobalMat() const				{ return gMat; }
 	bool							isCollapsed() const					{ return collapsed; }
 	const bool*						getTilesVisible() const				{ return tilesVisible; }
 	const bool*						getChunksVisible() const			{ return chunksVisible; }
 	const ArrayList<Chunk*>&		getVisibleChunks() const			{ return visibleChunks; }
-	bool							isLocalMatSet() const				{ return lMatSet; }
 	const ArrayList<Attribute*>&	getAttributes() const				{ return attributes; }
 
 	void				setEditorOnly(bool _editorOnly)			{ editorOnly = _editorOnly; }
 	void				setName(const char* _name)				{ name = _name; }
-	void				setLocalPos(const Vector& _pos)			{ lPos = _pos; updateNeeded = true; lMatSet = false; }
-	void				setLocalAng(const Angle& _ang)			{ lAng = _ang; updateNeeded = true; lMatSet = false; }
-	void				setLocalScale(const Vector& _scale)		{ lScale = _scale; updateNeeded = true; lMatSet = false; }
-	void				setLocalMat(const glm::mat4& _mat)		{ lMat = _mat; updateNeeded = true; lMatSet = true; }
+	void				setLocalPos(const Vector& _pos)			{ lPos = _pos; updateNeeded = true; }
+	void				setLocalAng(const Quaternion& _ang)		{ lAng = _ang; updateNeeded = true; }
+	void				setLocalScale(const Vector& _scale)		{ lScale = _scale; updateNeeded = true; }
+	void				setLocalMat(const glm::mat4& _mat)		{ lMat = _mat; updateNeeded = true; }
 	void				setCollapsed(bool _collapsed)			{ collapsed = _collapsed; }
 
 	Component& operator=(const Component& src) {
@@ -641,14 +641,13 @@ protected:
 
 	// local space
 	Vector		lPos;		// position
-	Angle		lAng;		// angle
+	Quaternion	lAng;		// angle
 	Vector		lScale;		// scale
 	glm::mat4	lMat;		// matrix (position * angle * scale)
-	bool		lMatSet = false;
 
 	// global space
 	Vector		gPos;		// position
-	Angle		gAng;		// angle
+	Quaternion	gAng;		// angle
 	Vector		gScale;		// scale
 	glm::mat4	gMat;		// matrix (position * angle * scale)
 

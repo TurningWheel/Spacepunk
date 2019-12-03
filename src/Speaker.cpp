@@ -83,10 +83,7 @@ int Speaker::playSound( const char* _name, const bool loop, float range ) {
 		}
 
 		// position and orient the sound in 3D space
-		glm::mat4 rotation = glm::mat4(1.f);
-		rotation = glm::rotate(rotation, (float)(gAng.radiansYaw()),   glm::vec3(0.f, 1.f, 0.f));
-		rotation = glm::rotate(rotation, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, 1.f));
-		rotation = glm::rotate(rotation, (float)(gAng.radiansRoll()),  glm::vec3(1.f, 0.f, 0.f));
+		glm::mat4 rotation = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
 		glm::vec4 rotationV = glm::vec4(1.f) * rotation;
 		ALfloat orientation[6] = { rotationV.x, rotationV.y, rotationV.z, 0.f, 1.f, 0.f };
 
@@ -171,10 +168,7 @@ void Speaker::process() {
 			ALint state = AL_STOPPED;
 			alGetSourcei(sources[i],AL_SOURCE_STATE,&state);
 			if( state==AL_PLAYING ) {
-				glm::mat4 rotation = glm::mat4(1.f);
-				rotation = glm::rotate(rotation, (float)(gAng.radiansYaw()),   glm::vec3(0.f, 1.f, 0.f));
-				rotation = glm::rotate(rotation, (float)(gAng.radiansPitch()), glm::vec3(0.f, 0.f, 1.f));
-				rotation = glm::rotate(rotation, (float)(gAng.radiansRoll()),  glm::vec3(1.f, 0.f, 0.f));
+				glm::mat4 rotation = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
 				glm::vec4 rotationV = glm::vec4(1.f) * rotation;
 				ALfloat orientation[6] = { rotationV.x, rotationV.y, rotationV.z, 0.f, 1.f, 0.f };
 

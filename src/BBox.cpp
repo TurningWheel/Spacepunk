@@ -167,9 +167,8 @@ btTransform BBox::getPhysicsTransform() const {
 	return transform;
 }
 
-void BBox::setPhysicsTransform(const Vector& v, const Angle& a) {
-	btQuaternion btQuat;
-	btQuat.setEulerZYX(a.yaw, -a.pitch, -a.roll);
+void BBox::setPhysicsTransform(const Vector& v, const Quaternion& a) {
+	btQuaternion btQuat(a.x, a.y, a.z, a.w);
 	btTransform btTrans(btQuat, btVector3(v.x, v.y, v.z));
 	if (ghostObject) {
 		ghostObject->setWorldTransform(btTrans);
@@ -205,16 +204,14 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 				if (shape == SHAPE_MESH) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
-				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				ghostObject->setWorldTransform(btTrans);
 			} else if (motionState) {
 				if (shape == SHAPE_MESH) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
-				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				motionState->setWorldTransform(btTrans);
 			}
@@ -296,8 +293,7 @@ void BBox::createRigidBody() {
 				if( shape == SHAPE_MESH ) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
-				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				motionState = new btDefaultMotionState(btTrans);
 
@@ -320,8 +316,7 @@ void BBox::createRigidBody() {
 			} else if (mass < 0.f) {
 				// create kinematic body
 				ghostObject = new btPairCachingGhostObject();
-				btQuaternion btQuat;
-				btQuat.setEulerZYX(gAng.yaw, -gAng.pitch, gAng.roll);
+				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
 				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
 				ghostObject->setWorldTransform(btTrans);
 				ghostObject->setUserIndex(entity->getUID());
@@ -345,7 +340,7 @@ void BBox::createRigidBody() {
 	}
 }
 
-void BBox::applyMoveForces(const Vector& vel, const Angle& ang) {
+void BBox::applyMoveForces(const Vector& vel, const Rotation& ang) {
 	if (ghostObject && controller) {
 		ghostObject->activate();
 		Vector newVel = vel;

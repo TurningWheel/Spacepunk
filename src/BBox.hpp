@@ -55,8 +55,8 @@ public:
 
 	// move the bbox to the given location
 	// @param v The new position
-	// @param a The new rotation
-	void setPhysicsTransform(const Vector& v, const Angle& a);
+	// @param a The new orientation
+	void setPhysicsTransform(const Vector& v, const Quaternion& a);
 
 	// generate list of all entities whose bboxes overlap this bbox
 	// @return list of entities overlapping this one
@@ -84,7 +84,7 @@ public:
 	float distToCeiling(float ceilingHeight);
 
 	// apply movement forces (velocity and rotation) to bbox's physics component
-	void applyMoveForces(const Vector& vel, const Angle& rot);
+	void applyMoveForces(const Vector& vel, const Rotation& rot);
 
 	// apply a force to the bbox's physics component
 	// @param force the force to apply in world coordinates

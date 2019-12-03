@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Angle.hpp"
+#include "Rotation.hpp"
 #include "Vector.hpp"
 #include "Entity.hpp"
 
@@ -50,7 +50,7 @@ public:
 	// @param ang the orientation to spawn with
 	// @param _uid the uid that our entity will have
 	// @return true if successfully spawned the player, false otherwise
-	bool spawn(World& _world, const Vector& pos, const Angle& ang);
+	bool spawn(World& _world, const Vector& pos, const Rotation& ang);
 
 	// despawns the player, removing their presence from the world
 	// @return true if successfully despawned, false otherwise
@@ -97,7 +97,6 @@ public:
 	bool					isCrouching() const		{ return crouching; }
 	bool					isMoving() const		{ return moving; }
 	bool					hasJumped() const		{ return jumped; }
-	const Angle&			getLookDir() const		{ return lookDir; }
 	bool					isInvVisible() const	{ return inventoryVisible;  }
 
 	void	setName(const char* _name)				{ name = _name; }
@@ -106,7 +105,6 @@ public:
 	void	setClientID(Uint32 id)					{ clientID = id; }
 	void	setMoving(bool b)						{ moving = b; }
 	void	setJumped(bool b)						{ jumped = b; }
-	void	setLookDir(const Angle& ang)			{ lookDir = ang; }
 
 private:
 	StringBuf<64> name = defaultName;	// the player's name
@@ -146,7 +144,6 @@ private:
 	bool moving = false;
 	bool crouching = false;
 	bool jumped = false;
-	Angle lookDir;
-	Angle oldLookDir;
+	Rotation oldLookDir;
 	Vector originalVel;
 };

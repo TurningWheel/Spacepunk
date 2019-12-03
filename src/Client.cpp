@@ -275,13 +275,13 @@ void Client::handleNetMessages() {
 						packet.read32(posInt[2]);
 						Vector pos((Sint32)posInt[0], (Sint32)posInt[1], (Sint32)posInt[2]);
 
-						Angle ang = player->getEntity()->getAng();
+						Quaternion ang = player->getEntity()->getAng();
 						Vector vel = player->getEntity()->getVel();
 
 						// move to new level
 						if (clientID == Player::invalidID) {
 							player->despawn();
-							player->spawn(*world, anchor->getPos() + pos, ang);
+							player->spawn(*world, anchor->getPos() + pos, ang.toRotation());
 							player->getEntity()->setVel(vel);
 						}
 						continue;
@@ -327,7 +327,7 @@ void Client::handleNetMessages() {
 						packet.read32(angInt[0]);
 						packet.read32(angInt[1]);
 						packet.read32(angInt[2]);
-						Angle ang((Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f);
+						Rotation ang((Sint32)angInt[0] * PI / 180.f, (Sint32)angInt[1] * PI / 180.f, (Sint32)angInt[2] * PI / 180.f);
 
 						// only actually spawn the player if they belong to us
 						if (clientID == Player::invalidID) {
@@ -462,7 +462,7 @@ void Client::handleNetMessages() {
 							packet.read32(angInt[0]);
 							packet.read32(angInt[1]);
 							packet.read32(angInt[2]);
-							Angle ang( (((Sint32)angInt[0]) * PI / 180.f) / 32.f, (((Sint32)angInt[1]) * PI / 180.f) / 32.f, (((Sint32)angInt[2]) * PI / 180.f) / 32.f );
+							Rotation ang( (((Sint32)angInt[0]) * PI / 180.f) / 32.f, (((Sint32)angInt[1]) * PI / 180.f) / 32.f, (((Sint32)angInt[2]) * PI / 180.f) / 32.f );
 
 							// read isFalling
 							Uint8 isFalling;
@@ -512,8 +512,8 @@ void Client::handleNetMessages() {
 									packet.read32(lookDirInt[0]);
 									packet.read32(lookDirInt[1]);
 									packet.read32(lookDirInt[2]);
-									Angle lookDir((((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f);
-									player->setLookDir(lookDir);
+									Rotation lookDir((((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f);
+									player->getEntity()->setLookDir(lookDir);
 								}
 							}
 
@@ -536,24 +536,7 @@ void Client::handleNetMessages() {
 									continue;
 								}
 							} else {
-								// the entity already exists. update it
-								entity->setNewPos(pos);
-								entity->setNewAng(ang);
-								entity->setVel(vel);
-								entity->setLastUpdate(entity->getTicks());
-								/*if (player && player->getClientID() == Player::invalidID) {
-									// this is fairly serious: we're in an invalid spot! update immediately
-									entity->setPos(pos);
-									entity->setAng(ang);
-									entity->setVel(vel);
-									entity->warp();
-									//entity->setLastUpdate(entity->getTicks());
-								} else {
-									entity->setNewPos(pos);
-									entity->setNewAng(ang);
-									entity->setVel(vel);
-									entity->setLastUpdate(entity->getTicks());
-								}*/
+								mainEngine->fmsg(Engine::MSG_WARN, "received redundant SPWN packet");
 							}
 							if (entity) {
 								entity->setFalling((isFalling == 1) ? true : false);
@@ -1124,9 +1107,10 @@ void Client::postProcess() {
 								packet.write8(entity->isMoving() ? 1 : 0);
 								packet.write8(entity->isCrouching() ? 1 : 0);
 								packet.write8(entity->isFalling() ? 1 : 0);
-								packet.write32((Sint32)(entity->getAng().degreesRoll() * 32));
-								packet.write32((Sint32)(entity->getAng().degreesPitch() * 32));
-								packet.write32((Sint32)(entity->getAng().degreesYaw() * 32));
+								packet.write32((Sint32)(entity->getAng().w * 256.f));
+								packet.write32((Sint32)(entity->getAng().z * 256.f));
+								packet.write32((Sint32)(entity->getAng().y * 256.f));
+								packet.write32((Sint32)(entity->getAng().x * 256.f));
 								packet.write32((Sint32)(entity->getVel().z * 128));
 								packet.write32((Sint32)(entity->getVel().y * 128));
 								packet.write32((Sint32)(entity->getVel().x * 128));

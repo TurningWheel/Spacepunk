@@ -94,7 +94,7 @@ void Player::setEntity(Entity* _entity) {
 	}
 }
 
-bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
+bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 	if( entity ) {
 		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: already spawned");
 		return false;
@@ -141,7 +141,9 @@ bool Player::spawn(World& _world, const Vector& pos, const Angle& ang) {
 		return false;
 	}
 
-	camera->setLocalAng(lookDir);
+	Quaternion q;
+	q = q.rotate(entity->getLookDir());
+	camera->setLocalAng(q);
 
 	// update colors
 	updateColors(colors);
@@ -294,7 +296,7 @@ void Player::control() {
 		mainEngine->setMouseRelative(true);
 	}
 
-	Angle rot = entity->getRot();
+	Rotation rot = entity->getRot();
 	//Vector vel = entity->getVel();
 	Vector vel = originalVel;
 	Vector pos = entity->getPos();
@@ -401,12 +403,12 @@ void Player::control() {
 	}
 
 	// calculate movement vectors
-	Angle forwardAng = entity->getAng();
+	Rotation forwardAng = entity->getAng().toRotation();
 	forwardAng.pitch = 0;
 	forwardAng.roll = 0;
 	vel += forwardAng.toVector() * buttonForward * speedFactor * timeFactor;
 	vel -= forwardAng.toVector() * buttonBackward * speedFactor * timeFactor;
-	Angle rightAng = forwardAng;
+	Rotation rightAng = forwardAng;
 	rightAng.yaw += PI/2;
 	vel += rightAng.toVector() * buttonRight * speedFactor * timeFactor;
 	vel -= rightAng.toVector() * buttonLeft * speedFactor * timeFactor;
@@ -436,6 +438,7 @@ void Player::control() {
 	// change look dir
 	float hLimit = cvar_maxHTurn.toFloat() * PI / 180.f;
 	float vLimit = cvar_maxVTurn.toFloat() * PI / 180.f;
+	Rotation lookDir = entity->getLookDir();
 	lookDir.yaw += rot.yaw;
 	lookDir.yaw = fmod(lookDir.yaw, PI);
 	if (lookDir.yaw > hLimit) {
@@ -456,6 +459,7 @@ void Player::control() {
 	} else if (lookDir.pitch < -vLimit) {
 		lookDir.pitch = -vLimit;
 	}
+	entity->setLookDir(lookDir);
 
 	// don't actually turn the entity vertically
 	rot.pitch = 0.f;
@@ -589,8 +593,9 @@ void Player::updateCamera() {
 			}
 		}
 
-		Angle ang = camera->getLocalAng();
-		ang += lookDir - oldLookDir;
+		Rotation lookDir = entity->getLookDir();
+		Quaternion ang = camera->getLocalAng();
+		ang = ang.rotate(lookDir - oldLookDir);
 		oldLookDir = lookDir;
 		camera->setLocalAng(ang);
 

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Angle.hpp"
+#include "Rotation.hpp"
 #include "Vector.hpp"
 #include "Tile.hpp"
 
@@ -301,7 +301,7 @@ private:
 	widgetmode_t widgetMode = TRANSLATE;
 	Vector oldWidgetPos = Vector(0.f);
 	Vector widgetPos = Vector(0.f);
-	Angle widgetAng = Angle(0.f,0.f,0.f);
+	Rotation widgetAng = Rotation(0.f,0.f,0.f);
 	Vector widgetScale = Vector(1.f);
 	bool widgetVisible = false;
 	Entity* widget = nullptr;
@@ -313,14 +313,17 @@ private:
 	Entity* widgetZX = nullptr;
 	LinkedList<Entity*> widgetActors;
 	Map<void*, Vector> oldVecs;
-	Map<void*, Angle> oldAngs;
+	Map<void*, Quaternion> oldAngs;
 
 	// clipboard
 	LinkedList<Entity*> copiedEntities;
 	TileWorld* copiedTiles = nullptr;
 
 	// for rotating the widget to face the camera
-	static const Angle widgetRot[8][7];
+	static const Rotation widgetRot[8][7];
+
+	// 3 orientations for the minimap
+	static const Rotation minimapRot[3];
 
 	// sets up widgets and pointers for the given world
 	// @param world the world to put the new widgets in

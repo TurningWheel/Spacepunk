@@ -268,7 +268,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\Angle.hpp" />
+    <ClInclude Include="..\..\src\Quaternion.hpp" />
+    <ClInclude Include="..\..\src\Rotation.hpp" />
     <ClInclude Include="..\..\src\Animation.hpp" />
     <ClInclude Include="..\..\src\AnimationState.hpp" />
     <ClInclude Include="..\..\src\ArrayList.hpp" />

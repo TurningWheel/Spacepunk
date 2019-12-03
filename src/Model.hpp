@@ -36,7 +36,7 @@ public:
 		String name;
 		glm::mat4 mat;
 		Vector pos;
-		Angle ang;
+		Rotation ang;
 		Vector scale;
 	};
 

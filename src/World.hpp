@@ -13,6 +13,7 @@
 #include "Console.hpp"
 #include "Path.hpp"
 #include "Shadow.hpp"
+#include "Quaternion.hpp"
 
 class Script;
 class Entity;
@@ -123,7 +124,7 @@ public:
 	// @param destPos The ending position of the shape
 	// @param destAng The ending angle of the shape
 	// @return a hit_t structure containing information on the hit object
-	const hit_t convexSweep( const btConvexShape* shape, const Vector& originPos, const Angle& originAng, const Vector& destPos, const Angle& destAng );
+	const hit_t convexSweep( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng );
 
 	// perform a convex sweep test through the world which gets a list of all overlapped objects
 	// @param shape The convex shape to sweep with
@@ -132,7 +133,7 @@ public:
 	// @param destPos The ending position of the shape
 	// @param destAng The ending angle of the shape
 	// @param outResult the list which will contain all of the hit_t structures (sorted nearest to furthest)
-	void convexSweepList( const btConvexShape* shape, const Vector& originPos, const Angle& originAng, const Vector& destPos, const Angle& destAng, LinkedList<hit_t>& outResult );
+	void convexSweepList( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng, LinkedList<hit_t>& outResult );
 
 	// finds all entities within a given radius of the provided point
 	// @param origin position to search from

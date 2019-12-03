@@ -10,7 +10,7 @@
 #include "Engine.hpp"
 #include "Client.hpp"
 #include "Camera.hpp"
-#include "Angle.hpp"
+#include "Rotation.hpp"
 #include "Renderer.hpp"
 #include "World.hpp"
 #include "Tile.hpp"
@@ -112,10 +112,9 @@ void Camera::setupProjection(bool scissor) {
 	} else {
 		// get camera transformation
 		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f),glm::vec3( -gPos.x, gPos.z, -gPos.y ));
-		glm::mat4 cameraRotation = glm::mat4( 1.f );
-		cameraRotation = glm::rotate(cameraRotation, (float)(gAng.pitch), glm::vec3(1.f, 0.f, 0.f));
-		cameraRotation = glm::rotate(cameraRotation, (float)(gAng.yaw + PI/2.f), glm::vec3(0.f, 1.f, 0.f));
-		cameraRotation = glm::rotate(cameraRotation, (float)(gAng.roll), glm::vec3(cos(gAng.yaw), 0.f, sin(gAng.yaw)));
+		Quaternion q = gAng;
+		q = q.rotate(Rotation(PI/2.f, 0.f, 0.f));
+		glm::mat4 cameraRotation = glm::mat4(glm::quat(-q.w, q.z, q.y, -q.x));
 		viewMatrix = cameraRotation * cameraTranslation;
 
 		// get projection transformation

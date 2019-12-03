@@ -16,7 +16,7 @@
 #include "Frame.hpp"
 #include "Button.hpp"
 #include "Field.hpp"
-#include "Angle.hpp"
+#include "Rotation.hpp"
 #include "Editor.hpp"
 #include "Path.hpp"
 #include "AnimationState.hpp"
@@ -286,26 +286,26 @@ void Script::exposeString() {
 
 void Script::exposeAngle() {
 	luabridge::getGlobalNamespace(lua)
-		.beginClass<Angle>("Angle")
+		.beginClass<Rotation>("Rotation")
 		.addConstructor<void (*) (float, float, float)>()
-		.addData("yaw", &Angle::yaw, true)
-		.addData("pitch", &Angle::pitch, true)
-		.addData("roll", &Angle::roll, true)
-		.addFunction("radiansYaw", &Angle::radiansYaw)
-		.addFunction("radiansPitch", &Angle::radiansPitch)
-		.addFunction("radiansRoll", &Angle::radiansRoll)
-		.addFunction("degreesYaw", &Angle::degreesYaw)
-		.addFunction("degreesPitch", &Angle::degreesPitch)
-		.addFunction("degreesRoll", &Angle::degreesRoll)
-		.addFunction("wrapAngles", &Angle::wrapAngles)
-		.addFunction("toVector", &Angle::toVector)
+		.addData("yaw", &Rotation::yaw, true)
+		.addData("pitch", &Rotation::pitch, true)
+		.addData("roll", &Rotation::roll, true)
+		.addFunction("radiansYaw", &Rotation::radiansYaw)
+		.addFunction("radiansPitch", &Rotation::radiansPitch)
+		.addFunction("radiansRoll", &Rotation::radiansRoll)
+		.addFunction("degreesYaw", &Rotation::degreesYaw)
+		.addFunction("degreesPitch", &Rotation::degreesPitch)
+		.addFunction("degreesRoll", &Rotation::degreesRoll)
+		.addFunction("wrapAngles", &Rotation::wrapAngles)
+		.addFunction("toVector", &Rotation::toVector)
 		.endClass()
 	;
 
-	LinkedList<Angle>::exposeToScript(lua, "LinkedListAngle", "NodeAngle");
-	LinkedList<Angle*>::exposeToScript(lua, "LinkedListAnglePtr", "NodeAnglePtr");
-	ArrayList<Angle>::exposeToScript(lua, "ArrayListAngle");
-	ArrayList<Angle*>::exposeToScript(lua, "ArrayListAnglePtr");
+	LinkedList<Rotation>::exposeToScript(lua, "LinkedListAngle", "NodeAngle");
+	LinkedList<Rotation*>::exposeToScript(lua, "LinkedListAnglePtr", "NodeAnglePtr");
+	ArrayList<Rotation>::exposeToScript(lua, "ArrayListAngle");
+	ArrayList<Rotation*>::exposeToScript(lua, "ArrayListAnglePtr");
 }
 
 void Script::exposeVector() {

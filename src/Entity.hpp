@@ -11,7 +11,7 @@
 
 #include "LinkedList.hpp"
 #include "Node.hpp"
-#include "Angle.hpp"
+#include "Rotation.hpp"
 #include "Vector.hpp"
 #include "Rect.hpp"
 #include "String.hpp"
@@ -83,9 +83,9 @@ public:
 	const Vector&						getPos() const						{ return pos; }
 	const Vector&						getNewPos() const					{ return newPos; }
 	const Vector&						getVel() const						{ return vel; }
-	const Angle&						getAng() const						{ return ang; }
-	const Angle&						getNewAng() const					{ return newAng; }
-	const Angle&						getRot() const						{ return rot; }
+	const Quaternion&					getAng() const						{ return ang; }
+	const Quaternion&					getNewAng() const					{ return newAng; }
+	const Rotation&						getRot() const						{ return rot; }
 	const glm::mat4&					getMat() const						{ return mat; }
 	const char*							getScriptStr() const				{ return scriptStr.get(); }
 	const bool							isToBeDeleted() const				{ return toBeDeleted; }
@@ -116,17 +116,18 @@ public:
 	const Entity*						getAnchor() const					{ return anchor; }
 	const Vector&						getOffset() const					{ return offset; }
 	bool								isPickupable() const				{ return canBePickedUp; }
+	const Rotation&						getLookDir() const					{ return lookDir; }
 
 	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
-	void					setMat(const glm::mat4& _mat)					{ if( mat != _mat ) { mat = _mat; updateNeeded = true; matSet = true; } }
-	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; matSet = false; } }
+	void					setMat(const glm::mat4& _mat);
+	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; } }
 	void					setVel(const Vector& _vel)						{ vel = _vel; }
 	void					setNewPos(const Vector& _newPos)				{ newPos = _newPos; }
-	void					setAng(const Angle& _ang)						{ if( ang != _ang ) { ang = _ang; updateNeeded = true; matSet = false; } }
-	void					setRot(const Angle& _rot)						{ rot = _rot; }
-	void					setNewAng(const Angle& _newAng)					{ newAng = _newAng; }
+	void					setAng(const Quaternion& _ang)					{ if( ang != _ang ) { ang = _ang; updateNeeded = true; } }
+	void					setRot(const Rotation& _rot)					{ rot = _rot; }
+	void					setNewAng(const Quaternion& _newAng)			{ newAng = _newAng; }
 	void					setScriptStr(const char* _scriptStr);
-	void					setScale(const Vector& _scale)					{ if( scale != _scale ) { scale = _scale; updateNeeded = true; matSet = false; } }
+	void					setScale(const Vector& _scale)					{ if( scale != _scale ) { scale = _scale; updateNeeded = true; } }
 	void					setFlags(const Uint32 _flags)					{ flags = _flags; }
 	void					setFlag(const Uint32 flag)						{ flags |= flag; }
 	void					resetFlag(const Uint32 flag)					{ flags &= ~flag; }
@@ -139,6 +140,7 @@ public:
 	void					setDefIndex(Uint32 _defIndex)					{ defIndex = _defIndex; }
 	void					setSort(sort_t _sort)							{ sort = _sort; }
 	void					setPickupable(bool _pickupable)					{ canBePickedUp = _pickupable; }
+	void					setLookDir(const Rotation& _ang)				{ lookDir = _ang; }
 
 	// editor properties
 
@@ -276,7 +278,7 @@ public:
 	// @param ang the new entity's orientation
 	// @param uid the uid of the entity to be created, if any
 	// @return the entity, or nullptr if the associated def was not found
-	static Entity* spawnFromDef(World* world, const Entity::def_t& def, const Vector& pos, const Angle& ang, Uint32 uid = UINT32_MAX);
+	static Entity* spawnFromDef(World* world, const Entity::def_t& def, const Vector& pos, const Rotation& ang, Uint32 uid = UINT32_MAX);
 
 	// determines if we are near a character or not
 	// @param radius the search radius
@@ -294,10 +296,6 @@ public:
 	// only valid for player entities, determine if entity is jumping or not
 	// @return true if jumping, otherwise false
 	bool hasJumped() const;
-
-	// only valid for player entities, get the looking direction offset from the entity
-	// @return the look direction of the entity
-	Angle getLookDir() const;
 
 	// check whether the entity collides with anything at the given location
 	// @param newPos the position to test
@@ -472,12 +470,12 @@ protected:
 	Vector pos;								// position
 	Vector newPos;							// new position to interpolate towards (net)
 	Vector vel;								// velocity
-	Angle ang;								// angle
-	Angle newAng;							// new angle to interpolate towards (net)
-	Angle rot;								// angular velocity
+	Quaternion ang;							// angle
+	Quaternion newAng;						// new angle to interpolate towards (net)
+	Rotation rot;							// angular velocity
+	Rotation lookDir;						// euler-based look dir
 	Vector scale;							// visual scale
 	glm::mat4 mat;							// matrix (position * rotation * scale)
-	bool matSet = false;
 	bool updateNeeded = false;				// if true, matrix gets updated, and component matrices get updated
 
 	Sint32 currentCX = INT32_MAX;			// X coord of the chunk we are currently occupying

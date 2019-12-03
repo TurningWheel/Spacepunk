@@ -163,7 +163,9 @@ void Light::createShadowMap() {
 	shadowMap.init();
 	for (Uint32 c = 0; c < 6; ++c) {
 		shadowMap.bindForWriting(Shadow::cameraInfo[c].face);
-		shadowCamera->setAng(Shadow::cameraInfo[c].dir);
+		Quaternion q;
+		q = q.rotate(Shadow::cameraInfo[c].dir);
+		shadowCamera->setAng(q);
 		shadowCamera->update();
 		camera->setClipNear(1.f);
 		camera->setClipFar(radius);

@@ -5,7 +5,6 @@
 #include "Game.hpp"
 #include "Tile.hpp"
 #include "Vector.hpp"
-#include "Angle.hpp"
 #include "Console.hpp"
 
 class Renderer;

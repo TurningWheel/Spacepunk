@@ -196,15 +196,15 @@ void Server::handleNetMessages() {
 								Uint32 spawnIndex = mainEngine->getRandom().getUint32() % spawnLocations.getSize();
 								Node<Entity*>* node = spawnLocations.nodeForIndex(spawnIndex);
 								Entity* entity = node->getData();
-								playerSpawned = player->spawn(*world, entity->getPos(), entity->getAng());
+								playerSpawned = player->spawn(*world, entity->getPos(), entity->getAng().toRotation());
 
 								if( playerSpawned ) {
 									// tell client where to spawn their player
 									Packet packet;
 
-									packet.write32(entity->getAng().degreesRoll());
-									packet.write32(entity->getAng().degreesPitch());
-									packet.write32(entity->getAng().degreesYaw());
+									packet.write32(entity->getAng().toRotation().degreesRoll());
+									packet.write32(entity->getAng().toRotation().degreesPitch());
+									packet.write32(entity->getAng().toRotation().degreesYaw());
 									packet.write32(entity->getPos().z);
 									packet.write32(entity->getPos().y);
 									packet.write32(entity->getPos().x);
@@ -388,7 +388,12 @@ void Server::handleNetMessages() {
 									packet.read32(angInt[0]);
 									packet.read32(angInt[1]);
 									packet.read32(angInt[2]);
-									Angle ang( (((Sint32)angInt[0]) * PI / 180.f) / 32.f, (((Sint32)angInt[1]) * PI / 180.f) / 32.f, (((Sint32)angInt[2]) * PI / 180.f) / 32.f );
+									packet.read32(angInt[3]);
+									Quaternion ang(
+										(((Sint32)angInt[0]) * PI / 180.f) / 32.f,
+										(((Sint32)angInt[1]) * PI / 180.f) / 32.f,
+										(((Sint32)angInt[2]) * PI / 180.f) / 32.f,
+										(((Sint32)angInt[3]) * PI / 180.f) / 32.f );
 
 									entity->setNewPos(pos);
 									entity->setNewAng(ang);
@@ -420,8 +425,8 @@ void Server::handleNetMessages() {
 									packet.read32(lookDirInt[0]);
 									packet.read32(lookDirInt[1]);
 									packet.read32(lookDirInt[2]);
-									Angle lookDir( (((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f );
-									player->setLookDir(lookDir);
+									Rotation lookDir( (((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f );
+									player->getEntity()->setLookDir(lookDir);
 								}
 							}
 						}

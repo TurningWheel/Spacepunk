@@ -1,7 +1,7 @@
 // Shadow.hpp
 
 #include "Main.hpp"
-#include "Angle.hpp"
+#include "Rotation.hpp"
 #include "Rect.hpp"
 
 #pragma once
@@ -17,7 +17,7 @@ public:
 	// camera info
 	struct camerainfo_t {
 		GLenum face;
-		Angle dir;
+		Rotation dir;
 		static const float fov;
 		static const Rect<Sint32> win;
 		static const float clipNear;

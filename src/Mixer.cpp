@@ -82,9 +82,9 @@ void Mixer::setListener(Camera* camera) {
 	float f = 2.f / Tile::size;
 
 	// find orientation
-	Angle ang = camera->getGlobalAng();
+	Quaternion ang = camera->getGlobalAng();
 	Vector forward = ang.toVector();
-	ang.pitch -= PI/2;
+	ang = ang.rotate(Rotation(0.f, -PI/2.f, 0.f));
 	Vector up = ang.toVector();
 	ALfloat orientation[6] = { -forward.x, -forward.z, -forward.y, up.x, up.z, up.y };
 

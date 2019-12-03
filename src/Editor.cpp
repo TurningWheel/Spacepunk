@@ -38,79 +38,84 @@ const char* Editor::editingModeStr[Editor::EDITINGMODE_TYPE_LENGTH] = {
 	"Sector Mode"
 };
 
-// widget rotation states:
-const Angle Editor::widgetRot[8][7] = {
+const Rotation Editor::widgetRot[8][7] = {
 	// up, southeast
-	Angle( PI/2.f,    0.f,       0.f      ), // main
-	Angle( 0.f,       PI/2.f,    0.f      ), // X
-	Angle( PI,        3*PI/2.f,  0.f      ), // XY
-	Angle( PI,        0.f,       3*PI/2.f ), // Y
-	Angle( 0.f,       0.f,       PI/2.f   ), // YZ
-	Angle( 3*PI/2.f,  0.f,       0.f      ), // Z
-	Angle( PI/2.f,    0.f,       0.f      ), // ZX
+	Rotation( PI/2.f,    0.f,       0.f      ), // main
+	Rotation( 0.f,       PI/2.f,    0.f      ), // X
+	Rotation( PI,        3*PI/2.f,  0.f      ), // XY
+	Rotation( PI,        0.f,       3*PI/2.f ), // Y
+	Rotation( 0.f,       0.f,       PI/2.f   ), // YZ
+	Rotation( 3*PI/2.f,  0.f,       0.f      ), // Z
+	Rotation( PI/2.f,    0.f,       0.f      ), // ZX
 
 	// up, southwest
-	Angle( PI,        0.f,       0.f      ),
-	Angle( 3*PI/2.f,  0.f,       3*PI/2.f ),
-	Angle( 3*PI/2.f,  3*PI/2.f,  0.f      ),
-	Angle( PI/2.f,    PI/2.f,    0.f      ),
-	Angle( PI,        0.f,       0.f      ),
-	Angle( 0.f,       0.f,       0.f      ),
-	Angle( PI/2.f,    0.f,       PI/2.f   ),
+	Rotation( PI,        0.f,       0.f      ),
+	Rotation( 3*PI/2.f,  0.f,       3*PI/2.f ),
+	Rotation( 3*PI/2.f,  3*PI/2.f,  0.f      ),
+	Rotation( PI/2.f,    PI/2.f,    0.f      ),
+	Rotation( PI,        0.f,       0.f      ),
+	Rotation( 0.f,       0.f,       0.f      ),
+	Rotation( PI/2.f,    0.f,       PI/2.f   ),
 
 	// up, northwest
-	Angle( 3*PI/2.f,  0.f,       0.f      ),
-	Angle( PI,        PI/2.f,    0.f      ),
-	Angle( 0.f,       3*PI/2.f,  0.f      ),
-	Angle( 0.f,       0.f,       3*PI/2.f ),
-	Angle( PI,        0.f,       PI/2.f   ),
-	Angle( PI/2.f,    0.f,       0.f      ),
-	Angle( 3*PI/2.f,  0.f,       0.f      ),
+	Rotation( 3*PI/2.f,  0.f,       0.f      ),
+	Rotation( PI,        PI/2.f,    0.f      ),
+	Rotation( 0.f,       3*PI/2.f,  0.f      ),
+	Rotation( 0.f,       0.f,       3*PI/2.f ),
+	Rotation( PI,        0.f,       PI/2.f   ),
+	Rotation( PI/2.f,    0.f,       0.f      ),
+	Rotation( 3*PI/2.f,  0.f,       0.f      ),
 
 	// up, northeast
-	Angle( 0.f,       0.f,       0.f      ),
-	Angle( PI/2.f,    0.f,       3*PI/2.f ),
-	Angle( PI/2.f,    3*PI/2.f,  0.f      ),
-	Angle( 3*PI/2.f,  PI/2.f,    0.f      ),
-	Angle( 0.f,       0.f,       0.f      ),
-	Angle( PI,        0.f,       0.f      ),
-	Angle( 3*PI/2.f,  0.f,       PI/2.f   ),
+	Rotation( 0.f,       0.f,       0.f      ),
+	Rotation( PI/2.f,    0.f,       3*PI/2.f ),
+	Rotation( PI/2.f,    3*PI/2.f,  0.f      ),
+	Rotation( 3*PI/2.f,  PI/2.f,    0.f      ),
+	Rotation( 0.f,       0.f,       0.f      ),
+	Rotation( PI,        0.f,       0.f      ),
+	Rotation( 3*PI/2.f,  0.f,       PI/2.f   ),
 
 	// down, southeast
-	Angle( PI/2.f,    PI/2.f,    0.f      ),
-	Angle( 3*PI/2.f,  0.f,       PI/2.f   ),
-	Angle( PI/2.f,    PI/2.f,    0.f      ),
-	Angle( 3*PI/2.f,  3*PI/2.f,  0.f      ),
-	Angle( 0.f,       0.f,       PI       ),
-	Angle( 0.f,       PI,        0.f      ),
-	Angle( PI/2.f,    0.f,       3*PI/2.f ),
+	Rotation( PI/2.f,    PI/2.f,    0.f      ),
+	Rotation( 3*PI/2.f,  0.f,       PI/2.f   ),
+	Rotation( PI/2.f,    PI/2.f,    0.f      ),
+	Rotation( 3*PI/2.f,  3*PI/2.f,  0.f      ),
+	Rotation( 0.f,       0.f,       PI       ),
+	Rotation( 0.f,       PI,        0.f      ),
+	Rotation( PI/2.f,    0.f,       3*PI/2.f ),
 
 	// down, southwest
-	Angle( PI,      PI/2.f,    0.f      ),
-	Angle( 0.f,     3*PI/2.f,  0.f      ),
-	Angle( PI,      PI/2.f,    0.f      ),
-	Angle( 0.f,     0.f,       PI/2.f   ),
-	Angle( PI,      0.f,       3*PI/2.f ),
-	Angle( PI/2.f,  PI,        0.f      ),
-	Angle( PI/2.f,  0.f,       PI       ),
+	Rotation( PI,      PI/2.f,    0.f      ),
+	Rotation( 0.f,     3*PI/2.f,  0.f      ),
+	Rotation( PI,      PI/2.f,    0.f      ),
+	Rotation( 0.f,     0.f,       PI/2.f   ),
+	Rotation( PI,      0.f,       3*PI/2.f ),
+	Rotation( PI/2.f,  PI,        0.f      ),
+	Rotation( PI/2.f,  0.f,       PI       ),
 
 	// down, northwest
-	Angle( 3*PI/2.f,  PI/2.f,    0.f      ),
-	Angle( PI/2.f,    0.f,       PI/2.f   ),
-	Angle( 3*PI/2.f,  PI/2.f,    0.f      ),
-	Angle( PI/2.f,    3*PI/2.f,  0.f      ),
-	Angle( PI,        0.f,       PI       ),
-	Angle( PI,        PI,        0.f      ),
-	Angle( 3*PI/2.f,  0.f,       3*PI/2.f ),
+	Rotation( 3*PI/2.f,  PI/2.f,    0.f      ),
+	Rotation( PI/2.f,    0.f,       PI/2.f   ),
+	Rotation( 3*PI/2.f,  PI/2.f,    0.f      ),
+	Rotation( PI/2.f,    3*PI/2.f,  0.f      ),
+	Rotation( PI,        0.f,       PI       ),
+	Rotation( PI,        PI,        0.f      ),
+	Rotation( 3*PI/2.f,  0.f,       3*PI/2.f ),
 
 	// down, northeast
-	Angle( 0.f,       PI/2.f,    0.f      ),
-	Angle( PI,        3*PI/2.f,  0.f      ),
-	Angle( 0.f,       PI/2.f,    0.f      ),
-	Angle( PI,        0.f,       PI/2.f   ),
-	Angle( 0.f,       0.f,       3*PI/2.f ),
-	Angle( 3*PI/2.f,  PI,        0.f      ),
-	Angle( 3*PI/2.f,  0.f,       PI       )
+	Rotation( 0.f,       PI/2.f,    0.f      ),
+	Rotation( PI,        3*PI/2.f,  0.f      ),
+	Rotation( 0.f,       PI/2.f,    0.f      ),
+	Rotation( PI,        0.f,       PI/2.f   ),
+	Rotation( 0.f,       0.f,       3*PI/2.f ),
+	Rotation( 3*PI/2.f,  PI,        0.f      ),
+	Rotation( 3*PI/2.f,  0.f,       PI       )
+};
+
+const Rotation Editor::minimapRot[3] = {
+	Rotation( - PI / 2.f, PI / 2.f, 0.f ),
+	Rotation( - PI / 2.f, 0.f, 0.f ),
+	Rotation( 0.f, 0.f, 0.f )
 };
 
 Cvar cvar_snapEnabled("editor.snap.enabled", "Enable snap-to-grid", "1");
@@ -1483,11 +1488,12 @@ void Editor::initWidgets() {
 	// set camera orientation
 	Vector pos(0.f,0.f,-64.f);
 	entity->setPos(pos);
-	Angle ang;
-	ang.yaw = PI/4.f;
-	ang.pitch = PI/6.f;
-	ang.roll = 0.f;
-	entity->setAng(ang);
+	Rotation ang;
+	//ang.yaw = PI/4.f;
+	//ang.pitch = PI/6.f;
+	//ang.roll = 0.f;
+	Quaternion q(ang);
+	entity->setAng(q);
 
 	// minimap camera
 	entity = new Entity(world);
@@ -1501,7 +1507,7 @@ void Editor::initWidgets() {
 	minimap->setOrtho(true);
 	minimap->setClipFar(999999.f);
 	minimap->setFov(Tile::size*8);
-	minimap->setLocalAng(Angle(PI / 2.f, PI / 2.f, 0.f));
+	minimap->setLocalAng(minimapRot[0]);
 
 	// clear widget variables
 	widgetMode = TRANSLATE;
@@ -2558,7 +2564,7 @@ void Editor::selectEntityForSpawn(const char* name) {
 	entityToSpawn = nullptr;
 	const Entity::def_t* def = Entity::findDef(name);
 	if( def ) {
-		entityToSpawn = Entity::spawnFromDef(world, *def, world->getPointerPos(), Angle());
+		entityToSpawn = Entity::spawnFromDef(world, *def, world->getPointerPos(), Rotation());
 		if( entityToSpawn ) {
 			entityToSpawn->setSelected(true);
 			entityToSpawn->setHighlighted(true);
@@ -2772,7 +2778,7 @@ void Editor::editTiles(bool usable) {
 	Camera* camera = editingCamera;
 	if( !camera )
 		return;
-	Angle ang = camera->getEntity()->getAng();
+	Rotation ang = camera->getEntity()->getLookDir();
 	ang.bindAngles();
 
 	if( world->getType() != World::WORLD_TILES ) {
@@ -3416,8 +3422,8 @@ void Editor::handleWidget(World& world) {
 						Vector* oldPos = oldVecs.find(entity);
 						Vector diff = (intersection - oldIntersection);
 
-						Angle* oldAng = oldAngs.find(entity);
-						Angle newAng = oldAng ? *oldAng : Angle();
+						Quaternion* oldAng = oldAngs.find(entity);
+						Rotation newAng = oldAng ? (*oldAng).toRotation() : Rotation();
 
 						if( planeNormal.x==1.f ) {
 							newAng.roll += (diff.y + diff.z) / 100.f;
@@ -3827,13 +3833,13 @@ void Editor::process(const bool usable) {
 
 						// change perspective
 						if (mainEngine->pressKey(SDL_SCANCODE_1)) {
-							minimap->setLocalAng(Angle(PI / 2.f, PI / 2.f, 0.f));
+							minimap->setLocalAng(minimapRot[0]);
 						}
 						if (mainEngine->pressKey(SDL_SCANCODE_2)) {
-							minimap->setLocalAng(Angle(3 * PI / 2.f, 0.f, 0.f));
+							minimap->setLocalAng(minimapRot[1]);
 						}
 						if (mainEngine->pressKey(SDL_SCANCODE_3)) {
-							minimap->setLocalAng(Angle(0.f, 0.f, 0.f));
+							minimap->setLocalAng(minimapRot[2]);
 						}
 					}
 				}
@@ -3844,7 +3850,7 @@ void Editor::process(const bool usable) {
 		if( editingCamera && !mainEngine->getInputStr() ) {
 			Camera* camera = editingCamera;
 
-			Angle newAng(0.f, 0.f, 0.f);
+			Rotation newAng(0.f, 0.f, 0.f);
 			Vector newPos(0.f, 0.f, 0.f);
 
 			// keyboard controls
@@ -3858,17 +3864,17 @@ void Editor::process(const bool usable) {
 			// camera movement
 			float timeFactor = Tile::size * 6.f / mainEngine->getTicksPerSecond();
 
-			Angle forwardAng = camera->getEntity()->getAng();
+			Rotation forwardAng = camera->getEntity()->getLookDir();
 			newPos += forwardAng.toVector() * buttonForward * timeFactor;
 			newPos -= forwardAng.toVector() * buttonBackward * timeFactor;
 
-			Angle rightAng = forwardAng;
+			Rotation rightAng = forwardAng;
 			rightAng.pitch = 0;
 			rightAng.yaw += PI/2;
 			newPos += rightAng.toVector() * buttonRight * timeFactor;
 			newPos -= rightAng.toVector() * buttonLeft * timeFactor;
 
-			Angle upAng = forwardAng;
+			Rotation upAng = forwardAng;
 			upAng.pitch -= PI/2;
 			newPos += upAng.toVector() * buttonUp * timeFactor / 2.f;
 			newPos -= upAng.toVector() * buttonDown * timeFactor / 2.f;
@@ -3887,28 +3893,27 @@ void Editor::process(const bool usable) {
 			float buttonLookUp = (float)mainEngine->getKeyStatus(SDL_SCANCODE_UP) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
 			float buttonLookDown = (float)mainEngine->getKeyStatus(SDL_SCANCODE_DOWN) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
 
-			newAng.roll += (buttonLookRight - buttonLookLeft) * .05f;
+			newAng.roll += (buttonLookLeft - buttonLookRight) * .05f;
 			newAng.pitch += (buttonLookDown - buttonLookUp) * .05f;
 
-			// conform angles to a certain range
+			// apply translation + rotation
+			//camera->getEntity()->setRot(newAng);
+			newAng = newAng + camera->getEntity()->getLookDir();
 			newAng.wrapAngles();
-
+			if( newAng.pitch>PI/2.f ) {
+				newAng.pitch=PI/2.f;
+			} if( newAng.pitch<-PI/2.f ) {
+				newAng.pitch=-PI/2.f;
+			}
+			camera->getEntity()->setLookDir(newAng);
+			camera->getEntity()->setAng(Quaternion(newAng));
 			camera->getEntity()->setVel(newPos);
-			camera->getEntity()->setRot(newAng);
+			camera->getEntity()->update();
+			client->getMixer()->setListener(camera);
+
 			if( minimap ) {
 				minimap->getEntity()->setPos(camera->getEntity()->getPos());
 			}
-			if( camera->getEntity()->getAng().pitch>PI/2.f ) {
-				Angle ang = camera->getEntity()->getAng();
-				ang.pitch=PI/2.f;
-				camera->getEntity()->setAng(ang);
-			} if( camera->getEntity()->getAng().pitch<-PI/2.f ) {
-				Angle ang = camera->getEntity()->getAng();
-				ang.pitch=-PI/2.f;
-				camera->getEntity()->setAng(ang);
-			}
-			camera->getEntity()->update();
-			client->getMixer()->setListener(camera);
 
 			// move selector (mouse pointer)
 			if( !usable ) {
@@ -4381,20 +4386,22 @@ void Editor::entityComponentRotate(unsigned int uid, int dimension, float value)
 		}
 		Component* component = entity->findComponentByUID<Component>(uid);
 
-		Angle ang = component->getLocalAng();
+		Rotation rot;
+		Quaternion ang = component->getLocalAng();
 		switch( dimension ) {
 			case 0:
-				ang.roll = value * PI / 180.f;
+				rot.roll = value * PI / 180.f;
 				break;
 			case 1:
-				ang.pitch = value * PI / 180.f;
+				rot.pitch = value * PI / 180.f;
 				break;
 			case 2:
-				ang.yaw = value * PI / 180.f;
+				rot.yaw = value * PI / 180.f;
 				break;
 			default:
 				break;
 		}
+		ang = ang.rotate(rot);
 		component->setLocalAng(ang);
 		component->update();
 	}
@@ -4473,9 +4480,39 @@ void Editor::widgetRotateYaw(float yaw) {
 		Entity* entity = pair.b;
 
 		if( entity->isSelected() ) {
-			Angle newAng = entity->getAng();
+			Rotation newAng = entity->getAng().toRotation();
 			newAng.yaw = yaw * PI / 180.f;
 			entity->setAng(newAng);
+			
+			// update rotation fields
+			Frame* gui = client->getGUI(); assert(gui);
+			for (int c = 0; c < 3; ++c) {
+				const char* n = nullptr;
+				float v = 0.f;
+				switch (c) {
+				default:
+				case 0:
+					n = "editor_FrameEntityPropertiesYaw";
+					v = entity->getAng().toRotation().degreesYaw();
+					break;
+				case 1:
+					n = "editor_FrameEntityPropertiesPitch";
+					v = entity->getAng().toRotation().degreesPitch();
+					break;
+				case 2:
+					n = "editor_FrameEntityPropertiesRoll";
+					v = entity->getAng().toRotation().degreesRoll();
+					break;
+				}
+				assert(n);
+				Frame* f = gui->findFrame(n);
+				if (f) {
+					Field* field = f->findField("field"); assert(field);
+					char text[16];
+					snprintf(text,16,"%.1f",v);
+					field->setText(text);
+				}
+			}
 		}
 	}
 }
@@ -4486,9 +4523,39 @@ void Editor::widgetRotatePitch(float pitch) {
 		Entity* entity = pair.b;
 
 		if( entity->isSelected() ) {
-			Angle newAng = entity->getAng();
+			Rotation newAng = entity->getAng().toRotation();
 			newAng.pitch = pitch * PI / 180.f;
 			entity->setAng(newAng);
+
+			// update rotation fields
+			Frame* gui = client->getGUI(); assert(gui);
+			for (int c = 0; c < 3; ++c) {
+				const char* n = nullptr;
+				float v = 0.f;
+				switch (c) {
+				default:
+				case 0:
+					n = "editor_FrameEntityPropertiesYaw";
+					v = entity->getAng().toRotation().degreesYaw();
+					break;
+				case 1:
+					n = "editor_FrameEntityPropertiesPitch";
+					v = entity->getAng().toRotation().degreesPitch();
+					break;
+				case 2:
+					n = "editor_FrameEntityPropertiesRoll";
+					v = entity->getAng().toRotation().degreesRoll();
+					break;
+				}
+				assert(n);
+				Frame* f = gui->findFrame(n);
+				if (f) {
+					Field* field = f->findField("field"); assert(field);
+					char text[16];
+					snprintf(text,16,"%.1f",v);
+					field->setText(text);
+				}
+			}
 		}
 	}
 }
@@ -4499,9 +4566,39 @@ void Editor::widgetRotateRoll(float roll) {
 		Entity* entity = pair.b;
 
 		if( entity->isSelected() ) {
-			Angle newAng = entity->getAng();
+			Rotation newAng = entity->getAng().toRotation();
 			newAng.roll = roll * PI / 180.f;
 			entity->setAng(newAng);
+
+			// update rotation fields
+			Frame* gui = client->getGUI(); assert(gui);
+			for (int c = 0; c < 3; ++c) {
+				const char* n = nullptr;
+				float v = 0.f;
+				switch (c) {
+				default:
+				case 0:
+					n = "editor_FrameEntityPropertiesYaw";
+					v = entity->getAng().toRotation().degreesYaw();
+					break;
+				case 1:
+					n = "editor_FrameEntityPropertiesPitch";
+					v = entity->getAng().toRotation().degreesPitch();
+					break;
+				case 2:
+					n = "editor_FrameEntityPropertiesRoll";
+					v = entity->getAng().toRotation().degreesRoll();
+					break;
+				}
+				assert(n);
+				Frame* f = gui->findFrame(n);
+				if (f) {
+					Field* field = f->findField("field"); assert(field);
+					char text[16];
+					snprintf(text,16,"%.1f",v);
+					field->setText(text);
+				}
+			}
 		}
 	}
 }
@@ -4798,7 +4895,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char roll[16];
-			snprintf(roll,16,"%.1f",component->getLocalAng().degreesRoll());
+			snprintf(roll,16,"%.1f",component->getLocalAng().toRotation().degreesRoll());
 			field->setText(roll);
 		}
 
@@ -4838,7 +4935,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char pitch[16];
-			snprintf(pitch,16,"%.1f",component->getLocalAng().degreesPitch());
+			snprintf(pitch,16,"%.1f",component->getLocalAng().toRotation().degreesPitch());
 			field->setText(pitch);
 		}
 
@@ -4879,7 +4976,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char yaw[16];
-			snprintf(yaw,16,"%.1f",component->getLocalAng().degreesYaw());
+			snprintf(yaw,16,"%.1f",component->getLocalAng().toRotation().degreesYaw());
 			field->setText(yaw);
 		}
 
@@ -5485,7 +5582,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char roll[16];
-							snprintf(roll,16,"%.1f",firstEntity->getAng().degreesRoll());
+							snprintf(roll,16,"%.1f",firstEntity->getAng().toRotation().degreesRoll());
 							field->setText(roll);
 						}
 					}
@@ -5523,7 +5620,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char pitch[16];
-							snprintf(pitch,16,"%.1f",firstEntity->getAng().degreesPitch());
+							snprintf(pitch,16,"%.1f",firstEntity->getAng().toRotation().degreesPitch());
 							field->setText(pitch);
 						}
 					}
@@ -5562,7 +5659,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char yaw[16];
-							snprintf(yaw,16,"%.1f",firstEntity->getAng().degreesYaw());
+							snprintf(yaw,16,"%.1f",firstEntity->getAng().toRotation().degreesYaw());
 							field->setText(yaw);
 						}
 					}
@@ -6194,7 +6291,7 @@ void Editor::updateGUI(Frame& gui) {
 			Model* model = entity->findComponentByName<Model>("model");
 
 			// rotate widget
-			Angle ang = widgetRot[iDir + 4*(camPos.z>widgetPos.z)][i];
+			Rotation ang = widgetRot[iDir + 4*(camPos.z>widgetPos.z)][i];
 			entity->setAng(ang);
 
 			// check visibility for particular entities and update meshes
@@ -6334,7 +6431,7 @@ void Editor::draw(Renderer& renderer) {
 			if( !fullscreen ) {
 				if( world->isShowTools() ) {
 					if( cvar_showMatrix.toInt() ) {
-						/*const glm::mat4& mat = editingCamera->getGlobalMat();
+						const glm::mat4& mat = editingCamera->getGlobalMat();
 						char matrixChars[256];
 						snprintf(matrixChars, 256,
 							"%+07.1f %+07.1f %+07.1f %+07.1f\n"
@@ -6345,12 +6442,12 @@ void Editor::draw(Renderer& renderer) {
 							mat[ 1][ 0], mat[ 1][ 1], mat[ 1][ 2], mat[ 1][ 3],
 							mat[ 2][ 0], mat[ 2][ 1], mat[ 2][ 2], mat[ 2][ 3],
 							mat[ 3][ 0], mat[ 3][ 1], mat[ 3][ 2], mat[ 3][ 3]
-						);*/
-						char matrixChars[256];
+						);
+						/*char matrixChars[256];
 						snprintf(matrixChars, 256, "%.2f %.2f %.2f"
 							, editingCamera->getGlobalAng().yaw
 							, editingCamera->getGlobalAng().pitch
-							, editingCamera->getGlobalAng().roll);
+							, editingCamera->getGlobalAng().roll);*/
 						renderer.printText( pos, matrixChars );
 					} else {
 						renderer.printText( pos, Editor::editingModeStr[editingMode] );
