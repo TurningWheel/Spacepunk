@@ -319,9 +319,6 @@ private:
 	LinkedList<Entity*> copiedEntities;
 	TileWorld* copiedTiles = nullptr;
 
-	// for rotating the widget to face the camera
-	static const Rotation widgetRot[8][7];
-
 	// 3 orientations for the minimap
 	static const Rotation minimapRot[3];
 

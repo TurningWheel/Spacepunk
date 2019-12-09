@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <bullet3/LinearMath/btQuaternion.h>
+
 #include "File.hpp"
 
 class Quaternion {
@@ -37,6 +39,10 @@ public:
 	}
 
 	Quaternion(const glm::mat4& mat) {
+		glm::mat4 m = mat;
+		m[0] /= m[0].length();
+		m[1] /= m[1].length();
+		m[2] /= m[2].length();
 		glm::quat quat(mat);
 		x = quat.x;
 		y = quat.y;
@@ -68,43 +74,41 @@ public:
 	}
 
 	Rotation toRotation() const {
-		const float singularityTest = z*x-w*y;
-		const float yawY = 2.f*(w*z+x*y);
-		const float yawX = (1.f-2.f*(y*y + z*z));
-
-		// reference 
-		// http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+		// reference:
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
 
-		// this value was found from experience, the above websites recommend different values
-		// but that isn't the case for us, so I went through different testing, and finally found the case 
-		// where both of world lives happily. 
-		const float SINGULARITY_THRESHOLD = 0.4999995f;
 		Rotation result;
 
-		if (singularityTest < -SINGULARITY_THRESHOLD) {
-			result.yaw = - PI / 2.f;
-			result.pitch = - atan2f(yawY, yawX);
-			result.roll = - result.pitch - (2.f * atan2f(x, w));
-		} else if (singularityTest > SINGULARITY_THRESHOLD) {
-			result.yaw = PI / 2.f;
-			result.pitch = - atan2f(yawY, yawX);
-			result.roll = result.pitch - (2.f * atan2f(x, w));
+		const float singularityTest = x*y + z*w;
+		const float epsilon = 0.4999995f;
+
+		result.pitch = -asinf(2.f*x*y + 2.f*z*w);
+		if (singularityTest < -epsilon) {
+			result.yaw = 2.f * atan2f(x, w);
+			result.roll = 0.f;
+		} else if (singularityTest > epsilon) {
+			result.yaw = -2.f * atan2f(x, w);
+			result.roll = 0.f;
 		} else {
-			result.yaw = asinf(2.f*(singularityTest));
-			result.pitch = - atan2f(yawY, yawX);
-			result.roll = atan2f(-2.f*(w*x+y*z), (1.f-2.f*(x*x + y*y)));
+			result.yaw = -atan2f(2.f*y*w - 2.f*x*z, 1.f - 2.f*y*y - 2.f*z*z);
+			result.roll = -atan2f(2.f*x*w - 2.f*y*z, 1.f - 2.f*x*x - 2.f*z*z);
 		}
+
+		result.yaw = (result.yaw == -0.f) ? 0.f : result.yaw;
+		result.pitch = (result.pitch == -0.f) ? 0.f : result.pitch;
+		result.roll = (result.roll == -0.f) ? 0.f : result.roll;
 
 		return result;
 	}
 
 	Vector toVector() const {
-		Vector v(1.f, 0.f, 0.f);
+		/*Vector v(1.f, 0.f, 0.f);
 		const Vector q(x, y, z);
 		const Vector t = 2.f * q.cross(v);
 		const Vector result = v + (w * t) + q.cross(t);
-		return result;
+		return result;*/
+		Rotation r = toRotation();
+		return r.toVector();
 	}
 
 	Quaternion& operator*=(const Quaternion& q) {
@@ -143,3 +147,13 @@ public:
 		file->property("w", w);
 	}
 };
+
+inline btQuaternion btQuat(const Quaternion& q) {
+	Rotation r = q.toRotation();
+	btQuaternion btQ;
+	btQ.setEulerZYX(r.yaw, -r.pitch, -r.roll);
+	return btQ;
+	//return btQuaternion(-q.x, q.z, -q.y, -q.w);
+}
+
+//return btQuaternion(q.z, q.y, -q.x, -q.w);

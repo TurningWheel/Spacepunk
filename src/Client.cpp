@@ -458,11 +458,16 @@ void Client::handleNetMessages() {
 							Vector vel( ((Sint32)velInt[0]) / 128.f, ((Sint32)velInt[1]) / 128.f, ((Sint32)velInt[2]) / 128.f );
 
 							// read ang
-							Uint32 angInt[3];
+							Uint32 angInt[4];
 							packet.read32(angInt[0]);
 							packet.read32(angInt[1]);
 							packet.read32(angInt[2]);
-							Rotation ang( (((Sint32)angInt[0]) * PI / 180.f) / 32.f, (((Sint32)angInt[1]) * PI / 180.f) / 32.f, (((Sint32)angInt[2]) * PI / 180.f) / 32.f );
+							packet.read32(angInt[3]);
+							Quaternion ang(
+								(Sint32)angInt[0] / 256.f,
+								(Sint32)angInt[1] / 256.f,
+								(Sint32)angInt[2] / 256.f,
+								(Sint32)angInt[3] / 256.f);
 
 							// read isFalling
 							Uint8 isFalling;
@@ -523,7 +528,7 @@ void Client::handleNetMessages() {
 								// we need to spawn the entity
 								if( type != UINT32_MAX ) {
 									const Entity::def_t* def = Entity::findDef(type);
-									entity = Entity::spawnFromDef(&world, *def, pos, ang, uid);
+									entity = Entity::spawnFromDef(&world, *def, pos, ang.toRotation(), uid);
 									if( entity ) {
 										entity->setVel(vel);
 										entity->setLastUpdate(ticks);
@@ -536,7 +541,11 @@ void Client::handleNetMessages() {
 									continue;
 								}
 							} else {
-								mainEngine->fmsg(Engine::MSG_WARN, "received redundant SPWN packet");
+								// the entity already exists. update it
+								entity->setNewPos(pos);
+								entity->setNewAng(ang);
+								entity->setVel(vel);
+								entity->setLastUpdate(entity->getTicks());
 							}
 							if (entity) {
 								entity->setFalling((isFalling == 1) ? true : false);

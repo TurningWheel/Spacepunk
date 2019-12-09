@@ -258,11 +258,11 @@ struct AllHitsConvexResultCallback : public btCollisionWorld::ConvexResultCallba
 
 void World::convexSweepList( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng, LinkedList<hit_t>& outResult ) {
 	btVector3 btOriginPos(originPos);
-	btQuaternion btOriginQuat(originAng.x, originAng.y, originAng.z, originAng.w);
+	btQuaternion btOriginQuat = btQuat(originAng);
 	btTransform btOrigin(btOriginQuat, btOriginPos);
 
 	btVector3 btDestPos(destPos);
-	btQuaternion btDestQuat(destAng.x, destAng.y, destAng.z, destAng.w);
+	btQuaternion btDestQuat = btQuat(destAng);
 	btTransform btDest(btDestQuat, btDestPos);
 
 	// perform raycast
@@ -530,7 +530,7 @@ void World::process() {
 				const Vector& scale = bbox->getEntity()->getScale();
 
 				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
-				glm::mat4 rotationM = glm::mat4_cast(glm::quat(q.w(), q.x(), -q.z(), q.y()));
+				glm::mat4 rotationM = glm::mat4_cast(glm::quat(q.w(), q.x(), q.y(), q.z()));
 				glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
 				glm::mat4 mat = translationM * rotationM * scaleM;
 

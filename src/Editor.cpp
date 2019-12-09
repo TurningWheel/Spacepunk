@@ -38,80 +38,6 @@ const char* Editor::editingModeStr[Editor::EDITINGMODE_TYPE_LENGTH] = {
 	"Sector Mode"
 };
 
-const Rotation Editor::widgetRot[8][7] = {
-	// up, southeast
-	Rotation( PI/2.f,    0.f,       0.f      ), // main
-	Rotation( 0.f,       PI/2.f,    0.f      ), // X
-	Rotation( PI,        3*PI/2.f,  0.f      ), // XY
-	Rotation( PI,        0.f,       3*PI/2.f ), // Y
-	Rotation( 0.f,       0.f,       PI/2.f   ), // YZ
-	Rotation( 3*PI/2.f,  0.f,       0.f      ), // Z
-	Rotation( PI/2.f,    0.f,       0.f      ), // ZX
-
-	// up, southwest
-	Rotation( PI,        0.f,       0.f      ),
-	Rotation( 3*PI/2.f,  0.f,       3*PI/2.f ),
-	Rotation( 3*PI/2.f,  3*PI/2.f,  0.f      ),
-	Rotation( PI/2.f,    PI/2.f,    0.f      ),
-	Rotation( PI,        0.f,       0.f      ),
-	Rotation( 0.f,       0.f,       0.f      ),
-	Rotation( PI/2.f,    0.f,       PI/2.f   ),
-
-	// up, northwest
-	Rotation( 3*PI/2.f,  0.f,       0.f      ),
-	Rotation( PI,        PI/2.f,    0.f      ),
-	Rotation( 0.f,       3*PI/2.f,  0.f      ),
-	Rotation( 0.f,       0.f,       3*PI/2.f ),
-	Rotation( PI,        0.f,       PI/2.f   ),
-	Rotation( PI/2.f,    0.f,       0.f      ),
-	Rotation( 3*PI/2.f,  0.f,       0.f      ),
-
-	// up, northeast
-	Rotation( 0.f,       0.f,       0.f      ),
-	Rotation( PI/2.f,    0.f,       3*PI/2.f ),
-	Rotation( PI/2.f,    3*PI/2.f,  0.f      ),
-	Rotation( 3*PI/2.f,  PI/2.f,    0.f      ),
-	Rotation( 0.f,       0.f,       0.f      ),
-	Rotation( PI,        0.f,       0.f      ),
-	Rotation( 3*PI/2.f,  0.f,       PI/2.f   ),
-
-	// down, southeast
-	Rotation( PI/2.f,    PI/2.f,    0.f      ),
-	Rotation( 3*PI/2.f,  0.f,       PI/2.f   ),
-	Rotation( PI/2.f,    PI/2.f,    0.f      ),
-	Rotation( 3*PI/2.f,  3*PI/2.f,  0.f      ),
-	Rotation( 0.f,       0.f,       PI       ),
-	Rotation( 0.f,       PI,        0.f      ),
-	Rotation( PI/2.f,    0.f,       3*PI/2.f ),
-
-	// down, southwest
-	Rotation( PI,      PI/2.f,    0.f      ),
-	Rotation( 0.f,     3*PI/2.f,  0.f      ),
-	Rotation( PI,      PI/2.f,    0.f      ),
-	Rotation( 0.f,     0.f,       PI/2.f   ),
-	Rotation( PI,      0.f,       3*PI/2.f ),
-	Rotation( PI/2.f,  PI,        0.f      ),
-	Rotation( PI/2.f,  0.f,       PI       ),
-
-	// down, northwest
-	Rotation( 3*PI/2.f,  PI/2.f,    0.f      ),
-	Rotation( PI/2.f,    0.f,       PI/2.f   ),
-	Rotation( 3*PI/2.f,  PI/2.f,    0.f      ),
-	Rotation( PI/2.f,    3*PI/2.f,  0.f      ),
-	Rotation( PI,        0.f,       PI       ),
-	Rotation( PI,        PI,        0.f      ),
-	Rotation( 3*PI/2.f,  0.f,       3*PI/2.f ),
-
-	// down, northeast
-	Rotation( 0.f,       PI/2.f,    0.f      ),
-	Rotation( PI,        3*PI/2.f,  0.f      ),
-	Rotation( 0.f,       PI/2.f,    0.f      ),
-	Rotation( PI,        0.f,       PI/2.f   ),
-	Rotation( 0.f,       0.f,       3*PI/2.f ),
-	Rotation( 3*PI/2.f,  PI,        0.f      ),
-	Rotation( 3*PI/2.f,  0.f,       PI       )
-};
-
 const Rotation Editor::minimapRot[3] = {
 	Rotation( - PI / 2.f, PI / 2.f, 0.f ),
 	Rotation( - PI / 2.f, 0.f, 0.f ),
@@ -1527,7 +1453,6 @@ void Editor::initWidgets() {
 		widget->setName("widget");
 		widget->setShouldSave(false);
 		widget->setFlags(static_cast<int>(Entity::flag_t::FLAG_DEPTHFAIL) | static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_FULLYLIT));
-		widget->setAng(widgetRot[0][0]);
 		widget->update();
 
 		Mesh::shadervars_t shaderVars;
@@ -1540,6 +1465,7 @@ void Editor::initWidgets() {
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
+		model->rotate(Rotation(PI/2.f, 0.f, 0.f));
 
 		BBox* bbox = model->addComponent<BBox>();
 		bbox->setName("bbox");
@@ -1554,7 +1480,6 @@ void Editor::initWidgets() {
 		widgetX->setName("widgetX");
 		widgetX->setShouldSave(false);
 		widgetX->setFlags(static_cast<int>(Entity::flag_t::FLAG_DEPTHFAIL) | static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_FULLYLIT));
-		widgetX->setAng(widgetRot[1][0]);
 		widgetX->update();
 
 		Mesh::shadervars_t shaderVars;
@@ -1567,6 +1492,7 @@ void Editor::initWidgets() {
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
+		model->rotate(Rotation(0.f, PI/2.f, 0.f));
 
 		BBox* bbox = model->addComponent<BBox>();
 		bbox->setName("bbox");
@@ -1581,7 +1507,6 @@ void Editor::initWidgets() {
 		widgetXY->setName("widgetXY");
 		widgetXY->setShouldSave(false);
 		widgetXY->setFlags(static_cast<int>(Entity::flag_t::FLAG_DEPTHFAIL) | static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_FULLYLIT));
-		widgetXY->setAng(widgetRot[2][0]);
 		widgetXY->update();
 
 		Mesh::shadervars_t shaderVars;
@@ -1594,6 +1519,8 @@ void Editor::initWidgets() {
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
+		model->rotate(Rotation(0.f, 3*PI/2.f, 0.f));
+		model->rotate(Rotation(0.f, 0.f, PI));
 
 		BBox* bbox = model->addComponent<BBox>();
 		bbox->setName("bbox");
@@ -1608,7 +1535,6 @@ void Editor::initWidgets() {
 		widgetY->setName("widgetY");
 		widgetY->setShouldSave(false);
 		widgetY->setFlags(static_cast<int>(Entity::flag_t::FLAG_DEPTHFAIL) | static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_FULLYLIT));
-		widgetY->setAng(widgetRot[3][0]);
 		widgetY->update();
 
 		Mesh::shadervars_t shaderVars;
@@ -1621,6 +1547,12 @@ void Editor::initWidgets() {
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
+		model->rotate(Rotation(PI/2.f, PI/2.f, 0.f));
+		model->rotate(Rotation(PI/2.f, 0.f, 0.f));
+		//model->rotate(Rotation(0.f, 0.f, PI/2.f));
+
+		auto q = model->getLocalAng();
+		auto r = q.toRotation();
 
 		BBox* bbox = model->addComponent<BBox>();
 		bbox->setName("bbox");
@@ -1635,7 +1567,6 @@ void Editor::initWidgets() {
 		widgetYZ->setName("widgetYZ");
 		widgetYZ->setShouldSave(false);
 		widgetYZ->setFlags(static_cast<int>(Entity::flag_t::FLAG_DEPTHFAIL) | static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_FULLYLIT));
-		widgetYZ->setAng(widgetRot[4][0]);
 		widgetYZ->update();
 
 		Mesh::shadervars_t shaderVars;
@@ -1648,6 +1579,7 @@ void Editor::initWidgets() {
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
+		model->rotate(Rotation(0.f, 0.f, 3*PI/2.f));
 
 		BBox* bbox = model->addComponent<BBox>();
 		bbox->setName("bbox");
@@ -1662,7 +1594,6 @@ void Editor::initWidgets() {
 		widgetZ->setName("widgetZ");
 		widgetZ->setShouldSave(false);
 		widgetZ->setFlags(static_cast<int>(Entity::flag_t::FLAG_DEPTHFAIL) | static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_FULLYLIT));
-		widgetZ->setAng(widgetRot[5][0]);
 		widgetZ->update();
 
 		Mesh::shadervars_t shaderVars;
@@ -1675,6 +1606,7 @@ void Editor::initWidgets() {
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
+		model->rotate(Rotation(3*PI/2.f, 0.f, 0.f));
 
 		BBox* bbox = model->addComponent<BBox>();
 		bbox->setName("bbox");
@@ -1689,7 +1621,6 @@ void Editor::initWidgets() {
 		widgetZX->setName("widgetZX");
 		widgetZX->setShouldSave(false);
 		widgetZX->setFlags(static_cast<int>(Entity::flag_t::FLAG_DEPTHFAIL) | static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_FULLYLIT));
-		widgetZX->setAng(widgetRot[6][0]);
 		widgetZX->update();
 
 		Mesh::shadervars_t shaderVars;
@@ -1702,6 +1633,7 @@ void Editor::initWidgets() {
 		model->setMaterial("assets/editor/gizmo/material.json");
 		model->setDepthFailMat("assets/editor/gizmo/material_depth.json");
 		model->setShaderVars(shaderVars);
+		model->rotate(Rotation(PI/2.f, 0.f, 0.f));
 
 		BBox* bbox = model->addComponent<BBox>();
 		bbox->setName("bbox");
@@ -4386,8 +4318,7 @@ void Editor::entityComponentRotate(unsigned int uid, int dimension, float value)
 		}
 		Component* component = entity->findComponentByUID<Component>(uid);
 
-		Rotation rot;
-		Quaternion ang = component->getLocalAng();
+		Rotation rot = component->getLocalAng().toRotation();
 		switch( dimension ) {
 			case 0:
 				rot.roll = value * PI / 180.f;
@@ -4401,8 +4332,7 @@ void Editor::entityComponentRotate(unsigned int uid, int dimension, float value)
 			default:
 				break;
 		}
-		ang = ang.rotate(rot);
-		component->setLocalAng(ang);
+		component->setLocalAng(rot);
 		component->update();
 	}
 }
@@ -4482,37 +4412,31 @@ void Editor::widgetRotateYaw(float yaw) {
 		if( entity->isSelected() ) {
 			Rotation newAng = entity->getAng().toRotation();
 			newAng.yaw = yaw * PI / 180.f;
-			entity->setAng(newAng);
 			
-			// update rotation fields
+			// get other angles as well
 			Frame* gui = client->getGUI(); assert(gui);
-			for (int c = 0; c < 3; ++c) {
-				const char* n = nullptr;
-				float v = 0.f;
-				switch (c) {
-				default:
-				case 0:
-					n = "editor_FrameEntityPropertiesYaw";
-					v = entity->getAng().toRotation().degreesYaw();
-					break;
-				case 1:
-					n = "editor_FrameEntityPropertiesPitch";
-					v = entity->getAng().toRotation().degreesPitch();
-					break;
-				case 2:
-					n = "editor_FrameEntityPropertiesRoll";
-					v = entity->getAng().toRotation().degreesRoll();
-					break;
+			{
+				float f = 0.f;
+				const char* n = "editor_FrameEntityPropertiesPitch";
+				Frame* frame = gui->findFrame(n);
+				if (frame) {
+					Field* field = frame->findField("field"); assert(field);
+					Engine::readFloat(field->getText(), &f, 1);
 				}
-				assert(n);
-				Frame* f = gui->findFrame(n);
-				if (f) {
-					Field* field = f->findField("field"); assert(field);
-					char text[16];
-					snprintf(text,16,"%.1f",v);
-					field->setText(text);
-				}
+				newAng.pitch = f * PI / 180.f;
 			}
+			{
+				float f = 0.f;
+				const char* n = "editor_FrameEntityPropertiesRoll";
+				Frame* frame = gui->findFrame(n);
+				if (frame) {
+					Field* field = frame->findField("field"); assert(field);
+					Engine::readFloat(field->getText(), &f, 1);
+				}
+				newAng.roll = f * PI / 180.f;
+			}
+
+			entity->setAng(newAng);
 		}
 	}
 }
@@ -4525,37 +4449,31 @@ void Editor::widgetRotatePitch(float pitch) {
 		if( entity->isSelected() ) {
 			Rotation newAng = entity->getAng().toRotation();
 			newAng.pitch = pitch * PI / 180.f;
-			entity->setAng(newAng);
 
-			// update rotation fields
+			// get other angles as well
 			Frame* gui = client->getGUI(); assert(gui);
-			for (int c = 0; c < 3; ++c) {
-				const char* n = nullptr;
-				float v = 0.f;
-				switch (c) {
-				default:
-				case 0:
-					n = "editor_FrameEntityPropertiesYaw";
-					v = entity->getAng().toRotation().degreesYaw();
-					break;
-				case 1:
-					n = "editor_FrameEntityPropertiesPitch";
-					v = entity->getAng().toRotation().degreesPitch();
-					break;
-				case 2:
-					n = "editor_FrameEntityPropertiesRoll";
-					v = entity->getAng().toRotation().degreesRoll();
-					break;
+			{
+				float f = 0.f;
+				const char* n = "editor_FrameEntityPropertiesYaw";
+				Frame* frame = gui->findFrame(n);
+				if (frame) {
+					Field* field = frame->findField("field"); assert(field);
+					Engine::readFloat(field->getText(), &f, 1);
 				}
-				assert(n);
-				Frame* f = gui->findFrame(n);
-				if (f) {
-					Field* field = f->findField("field"); assert(field);
-					char text[16];
-					snprintf(text,16,"%.1f",v);
-					field->setText(text);
-				}
+				newAng.yaw = f * PI / 180.f;
 			}
+			{
+				float f = 0.f;
+				const char* n = "editor_FrameEntityPropertiesRoll";
+				Frame* frame = gui->findFrame(n);
+				if (frame) {
+					Field* field = frame->findField("field"); assert(field);
+					Engine::readFloat(field->getText(), &f, 1);
+				}
+				newAng.roll = f * PI / 180.f;
+			}
+
+			entity->setAng(newAng);
 		}
 	}
 }
@@ -4568,37 +4486,31 @@ void Editor::widgetRotateRoll(float roll) {
 		if( entity->isSelected() ) {
 			Rotation newAng = entity->getAng().toRotation();
 			newAng.roll = roll * PI / 180.f;
-			entity->setAng(newAng);
 
-			// update rotation fields
+			// get other angles as well
 			Frame* gui = client->getGUI(); assert(gui);
-			for (int c = 0; c < 3; ++c) {
-				const char* n = nullptr;
-				float v = 0.f;
-				switch (c) {
-				default:
-				case 0:
-					n = "editor_FrameEntityPropertiesYaw";
-					v = entity->getAng().toRotation().degreesYaw();
-					break;
-				case 1:
-					n = "editor_FrameEntityPropertiesPitch";
-					v = entity->getAng().toRotation().degreesPitch();
-					break;
-				case 2:
-					n = "editor_FrameEntityPropertiesRoll";
-					v = entity->getAng().toRotation().degreesRoll();
-					break;
+			{
+				float f = 0.f;
+				const char* n = "editor_FrameEntityPropertiesYaw";
+				Frame* frame = gui->findFrame(n);
+				if (frame) {
+					Field* field = frame->findField("field"); assert(field);
+					Engine::readFloat(field->getText(), &f, 1);
 				}
-				assert(n);
-				Frame* f = gui->findFrame(n);
-				if (f) {
-					Field* field = f->findField("field"); assert(field);
-					char text[16];
-					snprintf(text,16,"%.1f",v);
-					field->setText(text);
-				}
+				newAng.yaw = f * PI / 180.f;
 			}
+			{
+				float f = 0.f;
+				const char* n = "editor_FrameEntityPropertiesPitch";
+				Frame* frame = gui->findFrame(n);
+				if (frame) {
+					Field* field = frame->findField("field"); assert(field);
+					Engine::readFloat(field->getText(), &f, 1);
+				}
+				newAng.pitch = f * PI / 180.f;
+			}
+
+			entity->setAng(newAng);
 		}
 	}
 }
@@ -6291,8 +6203,8 @@ void Editor::updateGUI(Frame& gui) {
 			Model* model = entity->findComponentByName<Model>("model");
 
 			// rotate widget
-			Rotation ang = widgetRot[iDir + 4*(camPos.z>widgetPos.z)][i];
-			entity->setAng(ang);
+			//Rotation ang = widgetRot[iDir + 4*(camPos.z>widgetPos.z)][i];
+			//entity->rotate
 
 			// check visibility for particular entities and update meshes
 			bool overrideVisible = false;

@@ -911,7 +911,7 @@ bool Component::hasComponent(type_t type) const {
 }
 
 void Component::rotate(const Rotation& ang) {
-	lAng *= Quaternion(lMat);
+	lAng *= Quaternion(ang);
 	updateNeeded = true;
 }
 
@@ -958,12 +958,13 @@ void Component::update() {
 
 	if( parent ) {
 		gMat = parent->getGlobalMat() * lMat;
+		gAng = parent->getGlobalAng() * lAng;
 	} else {
 		gMat = entity->getMat() * lMat;
+		gAng = entity->getAng() * lAng;
 	}
 	gPos = Vector( gMat[3][0], gMat[3][2], -gMat[3][1] );
 	gScale = Vector( glm::length( gMat[0] ), glm::length( gMat[2] ), glm::length( gMat[1] ) );
-	gAng = Quaternion(gMat);
 
 	// update the chunk node
 	World* world = entity->getWorld();

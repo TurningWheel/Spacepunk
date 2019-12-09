@@ -168,8 +168,7 @@ btTransform BBox::getPhysicsTransform() const {
 }
 
 void BBox::setPhysicsTransform(const Vector& v, const Quaternion& a) {
-	btQuaternion btQuat(a.x, a.y, a.z, a.w);
-	btTransform btTrans(btQuat, btVector3(v.x, v.y, v.z));
+	btTransform btTrans(btQuat(a), btVector3(v.x, v.y, v.z));
 	if (ghostObject) {
 		ghostObject->setWorldTransform(btTrans);
 	} else if (motionState) {
@@ -204,15 +203,13 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 				if (shape == SHAPE_MESH) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
-				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
-				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
 				ghostObject->setWorldTransform(btTrans);
 			} else if (motionState) {
 				if (shape == SHAPE_MESH) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
-				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
-				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
 				motionState->setWorldTransform(btTrans);
 			}
 		}
@@ -293,8 +290,7 @@ void BBox::createRigidBody() {
 				if( shape == SHAPE_MESH ) {
 					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
 				}
-				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
-				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
 				motionState = new btDefaultMotionState(btTrans);
 
 				// create rigid body
@@ -316,8 +312,7 @@ void BBox::createRigidBody() {
 			} else if (mass < 0.f) {
 				// create kinematic body
 				ghostObject = new btPairCachingGhostObject();
-				btQuaternion btQuat(gAng.x, gAng.y, gAng.z, gAng.w);
-				btTransform btTrans(btQuat, btVector3(gPos.x, gPos.y, gPos.z));
+				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
 				ghostObject->setWorldTransform(btTrans);
 				ghostObject->setUserIndex(entity->getUID());
 				ghostObject->setUserIndex2(World::nuid);
@@ -414,8 +409,7 @@ ArrayList<Entity*> BBox::findAllOverlappingEntities() const {
 
 	auto dynamicsWorld = world->getBulletDynamicsWorld();
 	btPairCachingGhostObject* ghost = new btPairCachingGhostObject();
-	glm::quat q = glm::quat_cast(glm::mat3(gMat));
-	ghost->setWorldTransform(btTransform(btQuaternion(q.x, q.y, q.z, q.w), btVector3(gPos.x, gPos.y, gPos.z)));
+	ghost->setWorldTransform(btTransform(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z)));
 	ghost->setCollisionShape(collisionShapePtr);
 	ghost->setCollisionFlags(btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE);
 	dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::SensorTrigger, btBroadphaseProxy::AllFilter);

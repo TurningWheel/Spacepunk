@@ -141,8 +141,7 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 		return false;
 	}
 
-	Quaternion q;
-	q = q.rotate(entity->getLookDir());
+	Quaternion q(entity->getLookDir());
 	camera->setLocalAng(q);
 
 	// update colors
