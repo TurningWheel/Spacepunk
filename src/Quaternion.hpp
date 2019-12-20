@@ -148,12 +148,4 @@ public:
 	}
 };
 
-inline btQuaternion btQuat(const Quaternion& q) {
-	Rotation r = q.toRotation();
-	btQuaternion btQ;
-	btQ.setEulerZYX(r.yaw, -r.pitch, -r.roll);
-	return btQ;
-	//return btQuaternion(-q.x, q.z, -q.y, -q.w);
-}
-
-//return btQuaternion(q.z, q.y, -q.x, -q.w);
+btQuaternion btQuat(const Quaternion& q);

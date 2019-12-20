@@ -1415,11 +1415,10 @@ void Editor::initWidgets() {
 	Vector pos(0.f,0.f,-64.f);
 	entity->setPos(pos);
 	Rotation ang;
-	//ang.yaw = PI/4.f;
-	//ang.pitch = PI/6.f;
-	//ang.roll = 0.f;
-	Quaternion q(ang);
-	entity->setAng(q);
+	ang.yaw = PI/4.f;
+	ang.pitch = PI/6.f;
+	ang.roll = 0.f;
+	entity->setLookDir(ang);
 
 	// minimap camera
 	entity = new Entity(world);

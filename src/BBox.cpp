@@ -17,6 +17,10 @@
 #include "TileWorld.hpp"
 #include "Camera.hpp"
 
+btQuaternion btQuat(const Quaternion& q) {
+	return btQuaternion(-q.x, -q.z, q.y, -q.w);
+}
+
 const float BBox::collisionEpsilon = .1f;
 
 const char* BBox::meshCapsuleCylinderStr = "assets/editor/bbox/CapsuleCylinder.FBX";

@@ -81,12 +81,9 @@ void Mixer::setListener(Camera* camera) {
 
 	float f = 2.f / Tile::size;
 
-	// find orientation
-	Quaternion ang = camera->getGlobalAng();
-	Vector forward = ang.toVector();
-	ang = ang.rotate(Rotation(0.f, -PI/2.f, 0.f));
-	Vector up = ang.toVector();
-	ALfloat orientation[6] = { -forward.x, -forward.z, -forward.y, up.x, up.z, up.y };
+	// derive orientation
+	auto& m = camera->getGlobalMat();
+	ALfloat orientation[6] = { m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2] };
 
 	// set listener
 	const Vector& pos = camera->getGlobalPos();

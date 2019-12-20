@@ -511,39 +511,6 @@ void World::process() {
 	if( !mainEngine->isEditorRunning() ) {
 		float step = 1.f / (float)mainEngine->getTicksPerSecond();
 		bulletDynamicsWorld->stepSimulation(step, 1, step);
-
-		LinkedList<BBox*> bboxes;
-		for (auto& pair : entities) {
-			Entity* entity = pair.b;
-			entity->findAllComponents<BBox>(Component::COMPONENT_BBOX, bboxes);
-		}
-		for (auto bbox : bboxes) {
-			if (!bbox->getParent() && bbox->getMass() != 0.f && strcmp(bbox->getName(), "physics") == 0) {
-				btTransform transform = bbox->getPhysicsTransform();
-
-				Vector pos = static_cast<Vector>(-(bbox->getLocalPos()));
-				pos.x += transform.getOrigin().x();
-				pos.y += transform.getOrigin().y();
-				pos.z += transform.getOrigin().z();
-
-				const btQuaternion& q = transform.getRotation();
-				const Vector& scale = bbox->getEntity()->getScale();
-
-				glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
-				glm::mat4 rotationM = glm::mat4_cast(glm::quat(q.w(), q.x(), q.y(), q.z()));
-				glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
-				glm::mat4 mat = translationM * rotationM * scaleM;
-
-				if (bbox->getMass() > 0.f) {
-					const glm::mat4& currentMat = bbox->getEntity()->getMat();
-					Vector oldPos(currentMat[3][0], currentMat[3][2], -currentMat[3][1]);
-					Vector vel = pos - oldPos;
-					bbox->getEntity()->setVel(vel);
-				}
-
-				bbox->getEntity()->setMat(mat);
-			}
-		}
 	}
 
 	// iterate through entities

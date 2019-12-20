@@ -83,9 +83,8 @@ int Speaker::playSound( const char* _name, const bool loop, float range ) {
 		}
 
 		// position and orient the sound in 3D space
-		glm::mat4 rotation = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
-		glm::vec4 rotationV = glm::vec4(1.f) * rotation;
-		ALfloat orientation[6] = { rotationV.x, rotationV.y, rotationV.z, 0.f, 1.f, 0.f };
+		auto& m = gMat;
+		ALfloat orientation[6] = { m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2] };
 
 		float f = 2.f / Tile::size;
 		alSource3f(sources[index], AL_POSITION, gPos.x*f, -gPos.z*f, gPos.y*f);
@@ -168,9 +167,8 @@ void Speaker::process() {
 			ALint state = AL_STOPPED;
 			alGetSourcei(sources[i],AL_SOURCE_STATE,&state);
 			if( state==AL_PLAYING ) {
-				glm::mat4 rotation = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
-				glm::vec4 rotationV = glm::vec4(1.f) * rotation;
-				ALfloat orientation[6] = { rotationV.x, rotationV.y, rotationV.z, 0.f, 1.f, 0.f };
+				auto& m = gMat;
+				ALfloat orientation[6] = { m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2] };
 
 				float f = 2.f / Tile::size;
 				alSource3f(sources[i], AL_POSITION, gPos.x*f, -gPos.z*f, gPos.y*f);

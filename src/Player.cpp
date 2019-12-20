@@ -592,11 +592,7 @@ void Player::updateCamera() {
 			}
 		}
 
-		Rotation lookDir = entity->getLookDir();
-		Quaternion ang = camera->getLocalAng();
-		ang = ang.rotate(lookDir - oldLookDir);
-		oldLookDir = lookDir;
-		camera->setLocalAng(ang);
+		camera->setLocalAng(entity->getLookDir());
 
 		/*if( !client->isConsoleActive() ) {
 			if( input.binary(Input::LEAN_RIGHT) ||

@@ -503,8 +503,8 @@ void Entity::process() {
 	// move entity
 	move();
 
+	// interpolate between new and old positions
 	if (!editor) {
-		// interpolate between new and old positions
 		if (ticks - lastUpdate <= mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
 			Vector oPos = pos;
 			Quaternion oAng = ang;
@@ -682,10 +682,38 @@ void Entity::setInventoryVisibility(bool visible)
 
 bool Entity::move() {
 	if( !isFlag(Entity::FLAG_STATIC) ) {
-		if( rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
-			BBox* bbox = findComponentByName<BBox>("physics");
-			if (bbox && bbox->getMass() < 0.f && !bbox->getParent()) {
-				bbox->applyMoveForces(vel, rot);
+		// find physics component, if any
+		BBox* physics = nullptr;
+		for (auto& c : components) {
+			if (c->getType() == Component::COMPONENT_BBOX) {
+				auto bbox = static_cast<BBox*>(c);
+				if (strcmp(bbox->getName(), "physics") == 0) {
+					physics = bbox;
+					break;
+				}
+			}
+		}
+
+		// apply movement forces to entity
+		if( physics || rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
+			if (physics && physics->getMass() != 0.f) {
+				btTransform transform = physics->getPhysicsTransform();
+
+				Vector oldPos = pos;
+				pos = static_cast<Vector>(-(physics->getLocalPos()));
+				pos.x += transform.getOrigin().x();
+				pos.y += transform.getOrigin().y();
+				pos.z += transform.getOrigin().z();
+
+				const btQuaternion& q = transform.getRotation();
+				ang = Quaternion(q.x(), -q.z(), q.y(), q.w());
+				updateNeeded = true;
+
+				if (physics->getMass() > 0.f) {
+					vel = pos - oldPos;
+				} else {
+					physics->applyMoveForces(vel, rot);
+				}
 				updateNeeded = true;
 			} else {
 				ang = ang.rotate(rot);
@@ -762,7 +790,7 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 
 	BBox* bbox = entity->findComponentByName<BBox>("physics");
 	if (bbox && bbox->getMass() != 0.f && !bbox->getParent()) {
-		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), q * bbox->getLocalAng());
+		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), bbox->getLocalAng() * q);
 	}
 
 	mainEngine->fmsg(Engine::MSG_DEBUG, "spawned entity '%s'", entity->getName().get());
