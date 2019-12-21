@@ -3795,20 +3795,17 @@ void Editor::process(const bool usable) {
 			// camera movement
 			float timeFactor = Tile::size * 6.f / mainEngine->getTicksPerSecond();
 
-			Rotation forwardAng = camera->getEntity()->getLookDir();
-			newPos += forwardAng.toVector() * buttonForward * timeFactor;
-			newPos -= forwardAng.toVector() * buttonBackward * timeFactor;
+			Vector forward = camera->getEntity()->getAng().toVector();
+			newPos += forward * buttonForward * timeFactor;
+			newPos -= forward * buttonBackward * timeFactor;
 
-			Rotation rightAng = forwardAng;
-			rightAng.pitch = 0;
-			rightAng.yaw += PI/2;
-			newPos += rightAng.toVector() * buttonRight * timeFactor;
-			newPos -= rightAng.toVector() * buttonLeft * timeFactor;
+			Vector right = camera->getEntity()->getAng().rotate(Rotation(PI/2.f, 0.f, 0.f)).toVector();
+			newPos += right * buttonRight * timeFactor;
+			newPos -= right * buttonLeft * timeFactor;
 
-			Rotation upAng = forwardAng;
-			upAng.pitch -= PI/2;
-			newPos += upAng.toVector() * buttonUp * timeFactor / 2.f;
-			newPos -= upAng.toVector() * buttonDown * timeFactor / 2.f;
+			Vector up = camera->getEntity()->getAng().rotate(Rotation(0.f, -PI/2.f, 0.f)).toVector();
+			newPos += up * buttonUp * timeFactor / 2.f;
+			newPos -= up * buttonDown * timeFactor / 2.f;
 
 			// mouse controls
 			if( mainEngine->isMouseRelative() ) {

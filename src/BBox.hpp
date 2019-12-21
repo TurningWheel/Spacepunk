@@ -66,23 +66,6 @@ public:
 	// @return true if we collide, false if we do not
 	virtual bool checkCollision() const override;
 
-	// @param outEntity the entity we are standing on, if any
-	// @return the nearest floor, if any
-	float nearestFloor(Entity*& outEntity);
-
-	// @return the nearest ceiling, if any
-	float nearestCeiling();
-
-	// get the distance to the floor
-	// @param floorHeight floor height to test bbox against
-	// @return the distance to the nearest floor tile under the entity
-	float distToFloor(float floorHeight);
-
-	// get the distance to the ceiling
-	// @param ceilingHeight ceiling height to test bbox against
-	// @return the distance to the nearest ceiling tile above the entity
-	float distToCeiling(float ceilingHeight);
-
 	// apply movement forces (velocity and rotation) to bbox's physics component
 	void applyMoveForces(const Vector& vel, const Rotation& rot);
 

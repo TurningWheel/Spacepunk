@@ -71,14 +71,30 @@ Camera::~Camera() {
 	}
 }
 
-glm::mat4 Camera::makeInfReversedZProj(float radians, float aspect, float zNear)
-{
+glm::mat4 Camera::makeInfReversedZProj(float radians, float aspect, float zNear) {
 	float f = 1.f / tanf(radians / 2.f);
 	return glm::mat4(
 		f / aspect, 0.0f, 0.0f, 0.0f,
 		0.0f, f, 0.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, -1.0f,
 		0.0f, 0.0f, zNear, 0.0f);
+}
+
+glm::mat4 Camera::makeOrthoProj(float width, float height, float depth) {
+	float left = -width;
+	float right = width;
+	float top = height;
+	float bottom = -height;
+	float zNear = -depth;
+	float zFar = depth;
+	glm::mat4 m(1.f);
+	m[0][0] = 2.f / (right - left);
+	m[1][1] = 2.f / (top - bottom);
+	m[3][0] = - (right + left) / (right - left);
+	m[3][1] = - (top + bottom) / (top - bottom);
+	m[2][2] = 1.f / (zFar - zNear);
+	m[3][2] = - zNear / (zFar - zNear);
+	return m;
 }
 
 static Cvar cvar_cameraAllOrtho("camera.allortho", "make all cameras orthographic", "0");
@@ -91,35 +107,29 @@ void Camera::setupProjection(bool scissor) {
 	if( !win.w || !win.h ) {
 		return;
 	}
-	if( ortho || cvar_cameraAllOrtho.toInt() ) {
-		if( !world )
-			return;
+
+	bool o = ortho || cvar_cameraAllOrtho.toInt();
+
+	if (o) {
 		float width = (float)(fov) * ( (float)win.w / win.h );
 		float height = (float)(fov);
-
-		// get camera transformation
-		Vector pos = gPos + gAng.toVector() * clipFar * .5f;
-		Vector dir = gPos - gAng.toVector();
-		Vector up  = Vector(0.f, 0.f, 1.f);
-		viewMatrix = glm::lookAt(
-			glm::vec3( pos.x, -pos.z, pos.y ), // origin
-			glm::vec3( dir.x, -dir.z, dir.y ), // target vector
-			glm::vec3(  up.x,  -up.z,  up.y )  // up vector
-		); 
-
-		// get projection transformation
-		projMatrix = glm::ortho( -width, width, height, -height, -clipFar, clipFar );
+		float depth = clipFar;
+		projMatrix = makeOrthoProj(width, height, depth);
 	} else {
-		// get camera transformation
-		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f),glm::vec3( -gPos.x, gPos.z, -gPos.y ));
-		Quaternion q = gAng;
-		q = q.rotate(Rotation(PI/2.f, 0.f, 0.f));
-		glm::mat4 cameraRotation = glm::mat4(glm::quat(-q.w, q.z, q.y, -q.x));
-		viewMatrix = cameraRotation * cameraTranslation;
-
-		// get projection transformation
-		//projMatrix = glm::perspective( glm::radians((float)fov), (float)win.w/win.h, clipNear, clipFar );
 		projMatrix = makeInfReversedZProj(glm::radians((float)fov), (float)win.w / win.h, clipNear);
+	}
+
+	if (o) {
+		Vector pos = gPos - gAng.toVector() * clipFar * .5f;
+		Quaternion q = Quaternion(Rotation(PI/2.f, 0.f, 0.f)) * gAng;
+		glm::mat4 cameraRotation = glm::mat4(glm::quat(-q.w, q.z, q.y, -q.x));
+		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f),glm::vec3( -pos.x, pos.z, -pos.y ));
+		viewMatrix = cameraRotation * cameraTranslation;
+	} else {
+		Quaternion q = Quaternion(Rotation(PI/2.f, 0.f, 0.f)) * gAng;
+		glm::mat4 cameraRotation = glm::mat4(glm::quat(-q.w, q.z, q.y, -q.x));
+		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f),glm::vec3( -gPos.x, gPos.z, -gPos.y ));
+		viewMatrix = cameraRotation * cameraTranslation;
 	}
 
 	if( renderer && scissor ) {

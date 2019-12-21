@@ -590,6 +590,8 @@ void Script::exposeEntity() {
 		.addFunction("remoteExecute", &Entity::remoteExecute)
 		.addFunction("isClientObj", &Entity::isClientObj)
 		.addFunction("isServerObj", &Entity::isServerObj)
+		.addFunction("nearestCeiling", &Entity::nearestCeiling)
+		.addFunction("nearestFloor", &Entity::nearestFloor)
 		.endClass()
 	;
 
@@ -681,10 +683,6 @@ void Script::exposeComponent() {
 void Script::exposeBBox() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<BBox, Component>("BBox")
-		.addFunction("nearestCeiling", &BBox::nearestCeiling)
-		.addFunction("nearestFloor", &BBox::nearestFloor)
-		.addFunction("distToCeiling", &BBox::distToCeiling)
-		.addFunction("distToFloor", &BBox::distToFloor)
 		.addFunction("getShape", &BBox::getShape)
 		.addFunction("getMass", &BBox::getMass)
 		.addFunction("isEnabled", &BBox::isEnabled)

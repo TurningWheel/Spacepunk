@@ -81,14 +81,15 @@ public:
 	}
 
 	// formats the values of yaw, pitch, and roll so they lie between -PI*2 (exclusive) and PI*2 (exclusive)
-	void wrapAngles() {
+	Rotation wrapAngles() {
 		yaw		= fmod(yaw,		PI*2);
 		pitch	= fmod(pitch,	PI*2);
 		roll	= fmod(roll,	PI*2);
+		return *this;
 	}
 
 	// wraps the angles, then binds them to the range 0 (inclusive) and PI*2 (exclusive)
-	void bindAngles() {
+	Rotation bindAngles() {
 		wrapAngles();
 		if( yaw < 0 )
 			yaw += PI*2;
@@ -102,6 +103,7 @@ public:
 			pitch -= PI*2;
 		if( roll >= PI*2 )
 			roll -= PI*2;
+		return *this;
 	}
 
 	// converts the euler angle to a direction vector

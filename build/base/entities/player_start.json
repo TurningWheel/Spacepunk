@@ -1,17 +1,20 @@
 {
-    "Entity::def_t::version": 0,
+    "Entity::def_t::version": 1,
+    "editor": true,
     "entity": {
-        "Entity::version": 1,
+        "Entity::version": 3,
         "name": "Player Start",
         "pos": {
-            "x": 864.0,
-            "y": 1760.0,
-            "z": 0.0
+            "x": 55.471405029296878,
+            "y": -53.22541809082031,
+            "z": 117.2829360961914
         },
         "ang": {
-            "yaw": 0.0,
-            "pitch": 0.0,
-            "roll": 0.0
+            "Quaternion::version": 0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
         },
         "scale": {
             "x": 1.0,
@@ -19,9 +22,45 @@
             "z": 1.0
         },
         "scriptStr": "PlayerStart",
-        "flags": 1286,
+        "flags": 262,
         "falling": false,
         "sort": 0,
+        "EntityItem": {
+            "Item::version": 0,
+            "icon": "null.png",
+            "weight": 1.0,
+            "value": 1.0,
+            "throwable": false,
+            "throwLeadInTime": 1.0,
+            "throwRecovery": 1.0,
+            "throwDestroys": false,
+            "takesDamage": false,
+            "health": 0.0,
+            "damageImmunities": [],
+            "detonates": false,
+            "detonationDamageType": "",
+            "detonationRadius": 0.0,
+            "detonationDamage": 0.0,
+            "detonationFalloff": false,
+            "slotEffects": {
+                "data": []
+            },
+            "distance": 0.0,
+            "spread": 0.0,
+            "radius": 0.0,
+            "animLeadSpeed": 0.0,
+            "animRecovSpeed": 0.0,
+            "spendCharges": 0,
+            "currCharges": 0,
+            "maxCharges": 0,
+            "rechargeRate": 0.0,
+            "currCooldown": 0.0,
+            "maxCooldown": 0.0,
+            "slotRestrictions": [],
+            "actions": {
+                "data": []
+            }
+        },
         "keys": {
             "data": []
         },
@@ -29,17 +68,19 @@
             {
                 "type": 0,
                 "data": {
-                    "Component::version": 0,
+                    "Component::version": 1,
                     "name": "models",
                     "lPos": {
-                        "x": 0.0,
+                        "x": -16.0,
                         "y": 0.0,
                         "z": 0.0
                     },
                     "lAng": {
-                        "yaw": 0.0,
-                        "pitch": 0.0,
-                        "roll": 0.0
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
                     },
                     "lScale": {
                         "x": 1.0,
@@ -50,225 +91,60 @@
                         {
                             "type": 2,
                             "data": {
-                                "Component::version": 0,
-                                "name": "Head",
+                                "Component::version": 1,
+                                "name": "model",
                                 "lPos": {
                                     "x": 0.0,
                                     "y": 0.0,
                                     "z": 0.0
                                 },
                                 "lAng": {
-                                    "yaw": 0.0,
-                                    "pitch": 0.0,
-                                    "roll": 0.0
-                                },
-                                "lScale": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                },
-                                "components": [],
-                                "Model::version": 0,
-                                "meshStr": "",
-                                "materialStr": "",
-                                "depthfailStr": "",
-                                "animationStr": "",
-                                "shaderVars": {
-                                    "Mesh::version": 0,
-                                    "customColorEnabled": true,
-                                    "customColorR": [
-                                        0.699999988079071,
-                                        0.5,
-                                        0.20000000298023225,
-                                        1.0
-                                    ],
-                                    "customColorG": [
-                                        1.0,
-                                        1.0,
-                                        0.0,
-                                        1.0
-                                    ],
-                                    "customColorB": [
-                                        0.10000000149011612,
-                                        0.10000000149011612,
-                                        0.5,
-                                        1.0
-                                    ],
-                                    "customColorA": [
-                                        0.0,
-                                        1.0,
-                                        0.0,
-                                        1.0
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "type": 2,
-                            "data": {
-                                "Component::version": 0,
-                                "name": "Torso",
-                                "lPos": {
+                                    "Quaternion::version": 0,
                                     "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "lAng": {
-                                    "yaw": 0.0,
-                                    "pitch": 0.0,
-                                    "roll": 0.0
+                                    "y": -0.7071067690849304,
+                                    "z": 0.0,
+                                    "w": 0.7071067690849304
                                 },
                                 "lScale": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
+                                    "x": 64.0,
+                                    "y": 64.0,
+                                    "z": 64.0
                                 },
                                 "components": [],
-                                "Model::version": 0,
-                                "meshStr": "",
-                                "materialStr": "",
+                                "Model::version": 1,
+                                "meshStr": "assets/josh/trooper.FBX",
+                                "materialStr": "assets/josh/material_trooper1.json",
                                 "depthfailStr": "",
-                                "animationStr": "",
+                                "animationStr": "assets/josh/animation.json",
                                 "shaderVars": {
                                     "Mesh::version": 0,
-                                    "customColorEnabled": true,
+                                    "customColorEnabled": false,
                                     "customColorR": [
-                                        0.10000000149011612,
-                                        0.10000000149011612,
-                                        0.5,
+                                        1.0,
+                                        0.0,
+                                        0.0,
                                         1.0
                                     ],
                                     "customColorG": [
-                                        0.5,
-                                        0.5,
-                                        0.5,
-                                        1.0
-                                    ],
-                                    "customColorB": [
-                                        0.20000000298023225,
-                                        0.20000000298023225,
-                                        0.20000000298023225,
-                                        1.0
-                                    ],
-                                    "customColorA": [
                                         0.0,
                                         1.0,
                                         0.0,
                                         1.0
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "type": 2,
-                            "data": {
-                                "Component::version": 0,
-                                "name": "Arms",
-                                "lPos": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "lAng": {
-                                    "yaw": 0.0,
-                                    "pitch": 0.0,
-                                    "roll": 0.0
-                                },
-                                "lScale": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                },
-                                "components": [],
-                                "Model::version": 0,
-                                "meshStr": "",
-                                "materialStr": "",
-                                "depthfailStr": "",
-                                "animationStr": "",
-                                "shaderVars": {
-                                    "Mesh::version": 0,
-                                    "customColorEnabled": true,
-                                    "customColorR": [
-                                        0.10000000149011612,
-                                        0.10000000149011612,
-                                        0.5,
-                                        1.0
-                                    ],
-                                    "customColorG": [
-                                        0.5,
-                                        0.5,
-                                        0.5,
-                                        1.0
                                     ],
                                     "customColorB": [
-                                        0.20000000298023225,
-                                        0.20000000298023225,
-                                        0.20000000298023225,
+                                        0.0,
+                                        0.0,
+                                        1.0,
                                         1.0
                                     ],
                                     "customColorA": [
-                                        0.0,
                                         1.0,
+                                        0.0,
                                         0.0,
                                         1.0
                                     ]
-                                }
-                            }
-                        },
-                        {
-                            "type": 2,
-                            "data": {
-                                "Component::version": 0,
-                                "name": "Feet",
-                                "lPos": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
                                 },
-                                "lAng": {
-                                    "yaw": 0.0,
-                                    "pitch": 0.0,
-                                    "roll": 0.0
-                                },
-                                "lScale": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                },
-                                "components": [],
-                                "Model::version": 0,
-                                "meshStr": "",
-                                "materialStr": "",
-                                "depthfailStr": "",
-                                "animationStr": "",
-                                "shaderVars": {
-                                    "Mesh::version": 0,
-                                    "customColorEnabled": true,
-                                    "customColorR": [
-                                        0.10000000149011612,
-                                        0.10000000149011612,
-                                        0.5,
-                                        1.0
-                                    ],
-                                    "customColorG": [
-                                        0.5,
-                                        0.5,
-                                        0.5,
-                                        1.0
-                                    ],
-                                    "customColorB": [
-                                        0.20000000298023225,
-                                        0.20000000298023225,
-                                        0.20000000298023225,
-                                        1.0
-                                    ],
-                                    "customColorA": [
-                                        0.0,
-                                        1.0,
-                                        0.0,
-                                        1.0
-                                    ]
-                                }
+                                "genius": false
                             }
                         }
                     ]
@@ -277,7 +153,7 @@
             {
                 "type": 1,
                 "data": {
-                    "Component::version": 0,
+                    "Component::version": 1,
                     "name": "bbox",
                     "lPos": {
                         "x": 0.0,
@@ -285,9 +161,11 @@
                         "z": -64.0
                     },
                     "lAng": {
-                        "yaw": 0.0,
-                        "pitch": 0.0,
-                        "roll": 0.0
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
                     },
                     "lScale": {
                         "x": 32.0,
@@ -295,9 +173,10 @@
                         "z": 64.0
                     },
                     "components": [],
-                    "BBox::version": 0,
-                    "shape": 0,
-                    "enabled": true
+                    "BBox::version": 1,
+                    "shape": 2,
+                    "enabled": true,
+                    "mass": 0.0
                 }
             }
         ]

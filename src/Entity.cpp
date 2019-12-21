@@ -633,7 +633,7 @@ void Entity::animate(const char* name, bool blend) {
 void Entity::warp() {
 	BBox* bbox = findComponentByName<BBox>("physics");
 	if (bbox) {
-		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang);
+		bbox->setPhysicsTransform(pos + bbox->getLocalPos(), ang * bbox->getLocalAng());
 	}
 }
 
@@ -680,6 +680,58 @@ void Entity::setInventoryVisibility(bool visible)
 	item.setInventoryVisibility(visible);
 }
 
+float Entity::nearestFloor(Entity*& outEntity) {
+	float nearestFloor = FLT_MAX;
+	if( !world ) {
+		return nearestFloor;
+	}
+
+	// perform sweep
+	LinkedList<World::hit_t> hits;
+	Vector v = (ang * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+	world->lineTraceList(pos, pos + v * 10000.f, hits);
+	for (auto& hit : hits) {
+		nearestFloor = (hit.pos - pos).length();
+		outEntity = hit.hitEntity ? world->uidToEntity(hit.index) : nullptr;
+		if (outEntity == this) {
+			continue;
+		} else {
+			break;
+		}
+	}
+	if (outEntity == this) {
+		outEntity = nullptr;
+		nearestFloor = FLT_MAX;
+	}
+	return nearestFloor;
+}
+
+float Entity::nearestCeiling(Entity*& outEntity) {
+	float nearestCeiling = FLT_MAX;
+	if( !world ) {
+		return nearestCeiling;
+	}
+
+	// perform sweep
+	LinkedList<World::hit_t> hits;
+	Vector v = (ang * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
+	world->lineTraceList(pos, pos + v * 10000.f, hits);
+	for (auto& hit : hits) {
+		nearestCeiling = (hit.pos - pos).length();
+		outEntity = hit.hitEntity ? world->uidToEntity(hit.index) : nullptr;
+		if (outEntity == this) {
+			continue;
+		} else {
+			break;
+		}
+	}
+	if (outEntity == this) {
+		outEntity = nullptr;
+		nearestCeiling = FLT_MAX;
+	}
+	return nearestCeiling;
+}
+
 bool Entity::move() {
 	if( !isFlag(Entity::FLAG_STATIC) ) {
 		// find physics component, if any
@@ -716,7 +768,7 @@ bool Entity::move() {
 				}
 				updateNeeded = true;
 			} else {
-				ang = ang.rotate(rot);
+				ang = Quaternion(rot) * ang;
 				pos += vel;
 				updateNeeded = true;
 			}

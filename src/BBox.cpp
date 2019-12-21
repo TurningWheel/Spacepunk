@@ -344,8 +344,21 @@ void BBox::applyMoveForces(const Vector& vel, const Rotation& ang) {
 		ghostObject->activate();
 		Vector newVel = vel;
 		controller->setLinearVelocity(newVel);
-		float degrees = 180.f / PI;
-		controller->setAngularVelocity(btVector3(ang.roll * degrees, ang.pitch * degrees, ang.yaw * degrees));
+
+		float radians = 1.f / PI;
+		btTransform trans = ghostObject->getWorldTransform();
+		btQuaternion transrot = trans.getRotation();
+		btQuaternion rotquat;
+		rotquat = rotquat.getIdentity();
+		rotquat.setX(ang.roll * radians);
+		rotquat.setY(ang.pitch * radians);
+		rotquat.setZ(ang.yaw * radians);
+		transrot = transrot * rotquat;
+		trans.setRotation(transrot);
+		ghostObject->setWorldTransform(trans);
+
+		//float degrees = 180.f / PI;
+		//controller->setAngularVelocity(btVector3(ang.roll * degrees, ang.pitch * degrees, ang.yaw * degrees));
 	}
 }
 
@@ -354,53 +367,6 @@ void BBox::applyForce(const Vector& force, const Vector& origin) {
 		rigidBody->activate(true);
 		rigidBody->applyForce(force, origin - gPos);
 	}
-}
-
-float BBox::distToFloor(float floorHeight) {
-	float z = gPos.z + gScale.z;
-	return max( 0.f, floorHeight - z );
-}
-
-float BBox::nearestFloor(Entity*& outEntity) {
-	float nearestFloor = (float)(INT32_MAX);
-	World* world = entity->getWorld();
-	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
-	if( !world || !convexShape ) {
-		return nearestFloor;
-	}
-
-	// perform sweep
-	LinkedList<World::hit_t> hits;
-	world->lineTraceList(gPos, gPos + Vector(0.f, 0.f, gScale.z + 128.f), hits);
-	if (hits.getSize()) {
-		auto& hit = hits.getFirst()->getData();
-		nearestFloor = hit.pos.z;
-		outEntity = hit.hitEntity ? world->uidToEntity(hit.index) : nullptr;
-	}
-	return nearestFloor;
-}
-
-float BBox::distToCeiling(float ceilingHeight) {
-	float z = gPos.z - gScale.z;
-	return max( 0.f, z - ceilingHeight );
-}
-
-float BBox::nearestCeiling() {
-	float nearestCeiling = (float)(INT32_MIN);
-	World* world = entity->getWorld();
-	auto convexShape = static_cast<btConvexShape*>(collisionShapePtr);
-	if( !world || !convexShape ) {
-		return nearestCeiling;
-	}
-
-	// perform sweep
-	LinkedList<World::hit_t> hits;
-	world->lineTraceList(gPos, gPos - Vector(0.f, 0.f, gScale.z + 128.f), hits);
-	if (hits.getSize()) {
-		auto& hit = hits.getFirst()->getData();
-		nearestCeiling = hit.pos.z;
-	}
-	return nearestCeiling;
 }
 
 ArrayList<Entity*> BBox::findAllOverlappingEntities() const {

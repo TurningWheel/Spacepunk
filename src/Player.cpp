@@ -16,10 +16,8 @@
 #include "Renderer.hpp"
 
 const char* Player::defaultName = "Player";
-const float Player::standFeetHeight = 48.f;
 const Vector Player::standOrigin( 0.f, 0.f, -80.f );
 const Vector Player::standScale( 24.f, 24.f, 32.f );
-const float Player::crouchFeetHeight = 16.f;
 const Vector Player::crouchOrigin( 0.f, 0.f, -40.f );
 const Vector Player::crouchScale( 24.f, 24.f, 24.f );
 
@@ -30,7 +28,9 @@ static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_crouchSpeed("player.crouchspeed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
 static Cvar cvar_jumpPower("player.jumppower", "player jump strength", "4.0");
-static Cvar cvar_canCrouch("player.cancrouch", "whether player can crouch at all or not", "1");
+static Cvar cvar_canCrouch("player.cancrouch", "whether player can crouch at all or not", "0");
+static Cvar cvar_standHeight("player.standheight", "standing height of the player character", "64");
+static Cvar cvar_crouchHeight("player.crouchheight", "crouching height of the player character", "32");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -268,6 +268,9 @@ void Player::updateColors(const colors_t& _colors) {
 }
 
 void Player::putInCrouch(bool crouch) {
+	if (!cvar_canCrouch.toInt()) {
+		return;
+	}
 	crouching = crouch;
 	const Vector& scale = crouching ? crouchScale : standScale;
 	const Vector& origin = crouching ? crouchOrigin : standOrigin;
@@ -301,12 +304,11 @@ void Player::control() {
 	Vector pos = entity->getPos();
 
 	Entity* entityStandingOn = nullptr;
+	Entity* entityAbove = nullptr;
 
 	float totalHeight = standScale.z - standOrigin.z;
-	float nearestCeiling = bbox->nearestCeiling();
-	float nearestFloor = bbox->nearestFloor(entityStandingOn);
-	float distToFloor = bbox->distToFloor(nearestFloor);
-	float distToCeiling = max( 0.f, pos.z - nearestCeiling );
+	float nearestCeiling = entity->nearestCeiling(entityAbove);
+	float nearestFloor = entity->nearestFloor(entityStandingOn);
 
 	// collect movement inputs
 	Input& input = mainEngine->getInput(localID);
@@ -315,15 +317,15 @@ void Player::control() {
 	buttonForward = 0.f;
 	buttonBackward = 0.f;
 	buttonJump = false;
-	buttonCrouch = cvar_canCrouch.toInt() ? distToCeiling < totalHeight : false;
-	float feetHeight = buttonCrouch ? crouchFeetHeight : standFeetHeight;
+	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling > totalHeight : false;
+	float feetHeight = buttonCrouch ? cvar_crouchHeight.toFloat() : cvar_standHeight.toFloat();
 	if( !client->isConsoleActive() ) {
 		if( !entity->isFalling() ) {
 			buttonCrouch |= input.binary(Input::MOVE_DOWN);
 		}
 
 		if( input.binary(Input::MOVE_UP) && !jumped ) {
-			if( (nearestFloor - nearestCeiling) > totalHeight && !buttonCrouch ) {
+			if( nearestCeiling > totalHeight && !buttonCrouch ) {
 				buttonJump = true;
 			}
 		} else if( !input.binary(Input::MOVE_UP) && jumped ) {
@@ -362,55 +364,46 @@ void Player::control() {
 		crouching = false;
 	}
 
+	// direction vectors
+	Vector forward = entity->getAng().toVector();
+	Vector right = (entity->getAng() * Quaternion(Rotation(PI/2.f, 0.f, 0.f))).toVector();
+	Vector down = (entity->getAng() * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
 	float timeFactor = 1.f / 60.f;
 
 	// set bbox and origin
-	const Vector& scale = crouching ? crouchScale : standScale;
-	const Vector& origin = crouching ? crouchOrigin : standOrigin;
-	bbox->setLocalScale(scale);
-	bbox->setLocalPos(origin);
+	putInCrouch(crouching);
 
 	// set falling state and do attach-to-ground
+	float rebound = (feetHeight - nearestFloor - 8.f) / 15.f;
 	if( entity->isFalling() ) {
-		vel.z += cvar_gravity.toFloat() * timeFactor;
-		if( distToFloor <= feetHeight && vel.z >= 0.f ) {
+		if( nearestFloor <= feetHeight ) {
 			entity->setFalling(false);
-			distToFloor = feetHeight;
-			//pos.z = nearestFloor;
-			//vel.z = 0;
-			vel.z = (nearestFloor - pos.z) / 10.f;
+			vel -= down * rebound;
+		} else {
+			vel += down * cvar_gravity.toFloat() * timeFactor;
 		}
 	} else {
-		if( buttonJump && distToFloor <= feetHeight+16 ) {
+		if( buttonJump ) {
 			jumped = true;
 			entity->setFalling(true);
-			//pos.z = nearestFloor;
-			distToFloor = feetHeight;
-			vel.z = -cvar_jumpPower.toFloat();
+			vel -= down * cvar_jumpPower.toFloat();
 		} else {
-			if( distToFloor > feetHeight+16 ) {
+			if( nearestFloor > feetHeight + 4.f ) {
 				entity->setFalling(true);
 			} else {
-				distToFloor = feetHeight;
-				//pos.z = nearestFloor;
-				//vel.z = 0.f;
-				vel.z = (nearestFloor - pos.z) / 10.f;
+				vel -= down * rebound;
 			}
 		}
 	}
 
 	// calculate movement vectors
-	Rotation forwardAng = entity->getAng().toRotation();
-	forwardAng.pitch = 0;
-	forwardAng.roll = 0;
-	vel += forwardAng.toVector() * buttonForward * speedFactor * timeFactor;
-	vel -= forwardAng.toVector() * buttonBackward * speedFactor * timeFactor;
-	Rotation rightAng = forwardAng;
-	rightAng.yaw += PI/2;
-	vel += rightAng.toVector() * buttonRight * speedFactor * timeFactor;
-	vel -= rightAng.toVector() * buttonLeft * speedFactor * timeFactor;
+	vel += forward * buttonForward * speedFactor * timeFactor;
+	vel -= forward * buttonBackward * speedFactor * timeFactor;
+	vel += right * buttonRight * speedFactor * timeFactor;
+	vel -= right * buttonLeft * speedFactor * timeFactor;
 
 	// friction
 	if( !entity->isFalling() ) {

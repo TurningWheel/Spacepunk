@@ -88,6 +88,13 @@ public:
 	// @return projection matrix
 	static glm::mat4 makeInfReversedZProj(float radians, float aspect, float zNear);
 
+	// make an orthographic projection
+	// @param width the width of the view in pixels
+	// @param height the height of the view in pixels
+	// @param depth the depth of the view in pixels
+	// @return projection matrix
+	static glm::mat4 makeOrthoProj(float width, float height, float depth);
+
 	// sets up the 3D projection for drawing
 	// @param scissor True if you want scissoring
 	void setupProjection(bool scissor);

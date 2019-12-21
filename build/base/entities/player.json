@@ -1,8 +1,8 @@
 {
     "Entity::def_t::version": 1,
-    "editor": false,
+    "editor": true,
     "entity": {
-        "Entity::version": 1,
+        "Entity::version": 3,
         "name": "Player",
         "pos": {
             "x": 0.0,
@@ -10,9 +10,11 @@
             "z": 0.0
         },
         "ang": {
-            "yaw": 0.0,
-            "pitch": 0.0,
-            "roll": 0.0
+            "Quaternion::version": 0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
         },
         "scale": {
             "x": 1.0,
@@ -20,9 +22,45 @@
             "z": 1.0
         },
         "scriptStr": "Player",
-        "flags": 1425,
+        "flags": 401,
         "falling": false,
         "sort": 0,
+        "EntityItem": {
+            "Item::version": 0,
+            "icon": "null.png",
+            "weight": 1.0,
+            "value": 1.0,
+            "throwable": false,
+            "throwLeadInTime": 1.0,
+            "throwRecovery": 1.0,
+            "throwDestroys": false,
+            "takesDamage": false,
+            "health": 0.0,
+            "damageImmunities": [],
+            "detonates": false,
+            "detonationDamageType": "",
+            "detonationRadius": 0.0,
+            "detonationDamage": 0.0,
+            "detonationFalloff": false,
+            "slotEffects": {
+                "data": []
+            },
+            "distance": 0.0,
+            "spread": 0.0,
+            "radius": 0.0,
+            "animLeadSpeed": 0.0,
+            "animRecovSpeed": 0.0,
+            "spendCharges": 0,
+            "currCharges": 0,
+            "maxCharges": 0,
+            "rechargeRate": 0.0,
+            "currCooldown": 0.0,
+            "maxCooldown": 0.0,
+            "slotRestrictions": [],
+            "actions": {
+                "data": []
+            }
+        },
         "keys": {
             "data": []
         },
@@ -30,17 +68,19 @@
             {
                 "type": 0,
                 "data": {
-                    "Component::version": 0,
+                    "Component::version": 1,
                     "name": "models",
                     "lPos": {
-                        "x": 12.0,
+                        "x": 0.0,
                         "y": 0.0,
-                        "z": -64.0
+                        "z": 4.0
                     },
                     "lAng": {
-                        "yaw": 0.0,
-                        "pitch": 0.0,
-                        "roll": 0.0
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
                     },
                     "lScale": {
                         "x": 1.0,
@@ -51,7 +91,7 @@
                         {
                             "type": 2,
                             "data": {
-                                "Component::version": 0,
+                                "Component::version": 1,
                                 "name": "model",
                                 "lPos": {
                                     "x": -12.0,
@@ -59,9 +99,11 @@
                                     "z": 64.0
                                 },
                                 "lAng": {
-                                    "yaw": 1.5707963705062867,
-                                    "pitch": 0.0,
-                                    "roll": 0.0
+                                    "Quaternion::version": 0,
+                                    "x": 0.0,
+                                    "y": -0.7071067690849304,
+                                    "z": 0.0,
+                                    "w": 0.7071067690849304
                                 },
                                 "lScale": {
                                     "x": 64.0,
@@ -72,7 +114,7 @@
                                     {
                                         "type": 2,
                                         "data": {
-                                            "Component::version": 0,
+                                            "Component::version": 1,
                                             "name": "gun",
                                             "lPos": {
                                                 "x": 0.0,
@@ -80,9 +122,11 @@
                                                 "z": 0.0
                                             },
                                             "lAng": {
-                                                "yaw": 0.0,
-                                                "pitch": 0.0,
-                                                "roll": 0.0
+                                                "Quaternion::version": 0,
+                                                "x": 0.0,
+                                                "y": 0.0,
+                                                "z": 0.0,
+                                                "w": 1.0
                                             },
                                             "lScale": {
                                                 "x": 1.0,
@@ -169,22 +213,24 @@
             {
                 "type": 1,
                 "data": {
-                    "Component::version": 0,
+                    "Component::version": 1,
                     "name": "physics",
                     "lPos": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -80.0
+                        "z": 0.0
                     },
                     "lAng": {
-                        "yaw": 0.0,
-                        "pitch": 0.0,
-                        "roll": 0.0
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
                     },
                     "lScale": {
                         "x": 24.0,
                         "y": 24.0,
-                        "z": 32.0
+                        "z": 48.0
                     },
                     "components": [],
                     "BBox::version": 1,
@@ -196,17 +242,19 @@
             {
                 "type": 4,
                 "data": {
-                    "Component::version": 0,
+                    "Component::version": 1,
                     "name": "Camera",
                     "lPos": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -104.0
+                        "z": -24.0
                     },
                     "lAng": {
-                        "yaw": 0.0,
-                        "pitch": 0.0,
-                        "roll": 0.0
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
                     },
                     "lScale": {
                         "x": 1.0,

@@ -169,6 +169,14 @@ public:
 	// @param funcName the name of the function to execute
 	void dispatch(const char* funcName, Script::Args& args);
 
+	// @param outEntity the entity we are standing on, if any
+	// @return the nearest floor, if any
+	float nearestFloor(Entity*& outEntity);
+
+	// @param outEntity the entity above us, if any
+	// @return the nearest ceiling, if any
+	float nearestCeiling(Entity*& outEntity);
+
 	// removes the entity from the current simulation
 	void remove();
 

@@ -70,7 +70,7 @@ public:
 		q.z = -CR*SP*CY - SR*CP*SY; // x
 		q.y = -CR*CP*SY + SR*SP*CY; // y
 		q.w =  CR*CP*CY + SR*SP*SY;
-		return q * *this;
+		return *this * q;
 	}
 
 	Rotation toRotation() const {
@@ -102,13 +102,11 @@ public:
 	}
 
 	Vector toVector() const {
-		/*Vector v(1.f, 0.f, 0.f);
-		const Vector q(x, y, z);
+		Vector v(1.f, 0.f, 0.f);
+		const Vector q(-x, -z, y);
 		const Vector t = 2.f * q.cross(v);
-		const Vector result = v + (w * t) + q.cross(t);
-		return result;*/
-		Rotation r = toRotation();
-		return r.toVector();
+		const Vector result = v + (-w * t) + q.cross(t);
+		return result;
 	}
 
 	Quaternion& operator*=(const Quaternion& q) {
