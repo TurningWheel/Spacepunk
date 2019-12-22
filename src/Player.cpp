@@ -371,6 +371,7 @@ void Player::control() {
 	Vector forward = entity->getAng().toVector();
 	Vector right = (entity->getAng() * Quaternion(Rotation(PI/2.f, 0.f, 0.f))).toVector();
 	Vector down = (entity->getAng() * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+	Vector up = (entity->getAng() * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
 
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
@@ -384,7 +385,7 @@ void Player::control() {
 	if( entity->isFalling() ) {
 		if( nearestFloor <= feetHeight && vel.normal().dot(down) > 0.f) {
 			entity->setFalling(false);
-			vel -= vel * down;
+			vel -= vel * down.absolute();
 		} else {
 			vel += down * cvar_gravity.toFloat() * timeFactor;
 		}
@@ -392,13 +393,13 @@ void Player::control() {
 		if( buttonJump ) {
 			jumped = true;
 			entity->setFalling(true);
-			vel -= down * cvar_jumpPower.toFloat();
+			vel += up * cvar_jumpPower.toFloat();
 		} else {
 			if( nearestFloor > feetHeight ) {
 				entity->setFalling(true);
 			} else {
-				vel -= vel * down;
-				vel -= down * rebound;
+				vel -= vel * down.absolute();
+				vel += up * rebound;
 			}
 		}
 	}

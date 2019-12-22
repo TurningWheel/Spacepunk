@@ -74,6 +74,12 @@ public:
 		return x*x + y*y + z*z;
 	}
 
+	// create an absoluted copy of this vector
+	// @return an absoluted copy of this vector
+	Vector absolute() const {
+		return Vector (fabs(x), fabs(y), fabs(z));
+	}
+
 	// create a normalized copy of this vector
 	// @return a normalized version of this vector
 	Vector normal() const {
