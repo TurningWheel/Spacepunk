@@ -104,6 +104,9 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 	if( _world.isClientObj() && clientID == invalidID ) {
 		// this is for clients, and causes the entity to get a non-canonical uid.
 		uid = UINT32_MAX - 1;
+		while (_world.getEntities().find(uid) != nullptr) {
+			--uid;
+		}
 	} else {
 		// this is for the server, and causes the entity to get a new canonical uid.
 		uid = UINT32_MAX;
@@ -377,11 +380,11 @@ void Player::control() {
 	putInCrouch(crouching);
 
 	// set falling state and do attach-to-ground
-	float rebound = (feetHeight - nearestFloor - 8.f) / 15.f;
+	float rebound = (feetHeight - nearestFloor) / 10.f;
 	if( entity->isFalling() ) {
-		if( nearestFloor <= feetHeight ) {
+		if( nearestFloor <= feetHeight && vel.normal().dot(down) > 0.f) {
 			entity->setFalling(false);
-			vel -= down * rebound;
+			vel -= vel * down;
 		} else {
 			vel += down * cvar_gravity.toFloat() * timeFactor;
 		}
@@ -391,9 +394,10 @@ void Player::control() {
 			entity->setFalling(true);
 			vel -= down * cvar_jumpPower.toFloat();
 		} else {
-			if( nearestFloor > feetHeight + 4.f ) {
+			if( nearestFloor > feetHeight ) {
 				entity->setFalling(true);
 			} else {
+				vel -= vel * down;
 				vel -= down * rebound;
 			}
 		}

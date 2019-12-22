@@ -1,6 +1,6 @@
 {
     "Entity::def_t::version": 1,
-    "editor": true,
+    "editor": false,
     "entity": {
         "Entity::version": 3,
         "name": "Player",
@@ -73,7 +73,7 @@
                     "lPos": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 4.0
+                        "z": 0.0
                     },
                     "lAng": {
                         "Quaternion::version": 0,
@@ -230,7 +230,7 @@
                     "lScale": {
                         "x": 24.0,
                         "y": 24.0,
-                        "z": 48.0
+                        "z": 64.0
                     },
                     "components": [],
                     "BBox::version": 1,
@@ -247,7 +247,7 @@
                     "lPos": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -24.0
+                        "z": -40.0
                     },
                     "lAng": {
                         "Quaternion::version": 0,

@@ -461,8 +461,10 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	// don't draw unselected bboxes - it makes things very ugly
-	if (!entity->isSelected()) {
-		return;
+	if (mainEngine->isEditorRunning()) {
+		if (!entity->isSelected() && parent != nullptr) {
+			return;
+		}
 	}
 
 	// do not render for these fx passes
