@@ -409,9 +409,8 @@ void Player::control() {
 			if( nearestFloor > feetHeight ) {
 				entity->setFalling(true);
 			} else {
-				//float rebound = (feetHeight - nearestFloor) / 200.f;
-				//vel -= vel * down.absolute();
-				//vel += up * rebound;
+				float rebound = (feetHeight - nearestFloor) * timeFactor / 10.f;
+				vel += up * rebound;
 			}
 		}
 	}
