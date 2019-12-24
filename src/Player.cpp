@@ -184,6 +184,8 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 		mainEngine->fmsg(Engine::MSG_INFO,"Server spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
 	}
 
+	playerAng = entity->getAng();
+
 	return true;
 }
 
@@ -291,7 +293,11 @@ Cvar cvar_maxVTurn("player.turn.vertical", "maximum turn range for player, verti
 
 void Player::control() {
 	Client* client = mainEngine->getLocalClient();
-	if( !entity || !client ) {
+	if (!entity || !client) {
+		return;
+	}
+	World* world = entity->getWorld();
+	if (!world) {
 		return;
 	}
 
@@ -301,17 +307,21 @@ void Player::control() {
 		mainEngine->setMouseRelative(true);
 	}
 
-	Rotation rot = entity->getRot();
+	//Rotation rot = entity->getRot();
 	//Vector vel = entity->getVel();
 	Vector vel = originalVel;
 	Vector pos = entity->getPos();
 
-	Entity* entityStandingOn = nullptr;
-	Entity* entityAbove = nullptr;
-
+	World::hit_t floorHit, ceilingHit;
 	float totalHeight = standScale.z - standOrigin.z;
-	float nearestCeiling = entity->nearestCeiling(entityAbove);
-	float nearestFloor = entity->nearestFloor(entityStandingOn);
+	float nearestCeiling = entity->nearestCeiling(ceilingHit);
+	float nearestFloor = entity->nearestFloor(floorHit);
+	if (floorNormal.lengthSquared() == 0.f) {
+		floorNormal = floorHit.normal;
+	}
+
+	Entity* entityStandingOn = floorHit.hitEntity ? world->uidToEntity(floorHit.index) : nullptr;
+	Entity* entityAbove = ceilingHit.hitEntity ? world->uidToEntity(ceilingHit.index) : nullptr;
 
 	// collect movement inputs
 	Input& input = mainEngine->getInput(localID);
@@ -381,11 +391,12 @@ void Player::control() {
 	putInCrouch(crouching);
 
 	// set falling state and do attach-to-ground
-	float rebound = (feetHeight - nearestFloor) / 10.f;
 	if( entity->isFalling() ) {
 		if( nearestFloor <= feetHeight && vel.normal().dot(down) > 0.f) {
 			entity->setFalling(false);
+			float rebound = max(0.f, feetHeight - nearestFloor) / 4.f;
 			vel -= vel * down.absolute();
+			vel += up * rebound;
 		} else {
 			vel += down * cvar_gravity.toFloat() * timeFactor;
 		}
@@ -398,8 +409,9 @@ void Player::control() {
 			if( nearestFloor > feetHeight ) {
 				entity->setFalling(true);
 			} else {
-				vel -= vel * down.absolute();
-				vel += up * rebound;
+				//float rebound = (feetHeight - nearestFloor) / 200.f;
+				//vel -= vel * down.absolute();
+				//vel += up * rebound;
 			}
 		}
 	}
@@ -461,9 +473,39 @@ void Player::control() {
 	// don't actually turn the entity vertically
 	rot.pitch = 0.f;
 
+	// orient to ground
+	if (nearestFloor <= feetHeight+16.f && !floorNormal.close(floorHit.normal)) {
+		if (floorHit.normal.lengthSquared() > 0.f) {
+			if (floorNormal.dot(floorHit.normal) >= .5f) {
+				floorNormal = floorHit.normal;
+				Vector Y(floorNormal.x, -floorNormal.z, floorNormal.y);
+				Vector X = Y.cross(Vector(right.x, -right.z, right.y));
+				Vector Z = X.cross(Y);
+				glm::mat4 m = glm::mat4(glm::mat3(
+					X.x, X.y, X.z,
+					Y.x, Y.y, Y.z,
+					Z.x, Z.y, Z.z
+				));
+				Quaternion q(m);
+				playerAng = q;
+				orienting = true;
+				orient = 0.f;
+			}
+		}
+	}
+	if (orienting) {
+		playerAng = playerAng * Quaternion(rot);
+		orient += timeFactor;
+		if (orient > 1.f) {
+			orienting = false;
+			orient = 1.f;
+		}
+		entity->setAng(entity->getAng().slerp(playerAng, orient));
+		entity->warp();
+	}
 
+	//Interacting with entities.
 	if ( !client->isConsoleActive() ) {
-		//Interacting with entities.
 		World* world = entity->getWorld();
 		if(camera && world)
 		{
@@ -536,7 +578,11 @@ void Player::control() {
 		standingOnVel = entityStandingOn->getVel();
 	}
 	entity->setVel(vel + standingOnVel);
-	entity->setRot(rot);
+	if (orienting) {
+		entity->setRot(Rotation());
+	} else {
+		entity->setRot(rot);
+	}
 	entity->update();
 
 	// using hand items (shooting)

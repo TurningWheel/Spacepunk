@@ -9,6 +9,7 @@
 #include <bullet3/LinearMath/btQuaternion.h>
 
 #include "File.hpp"
+#include "WideVector.hpp"
 
 class Quaternion {
 public:
@@ -48,6 +49,57 @@ public:
 		y = quat.y;
 		z = quat.z;
 		w = quat.w;
+	}
+
+	Quaternion lerp(Quaternion q, float t) const {
+		if (t < 0.f) {
+			t = 0.f;
+		} else if (t > 1.f) {
+			t = 1.f;
+		}
+		WideVector wv0(x, y, z, w);
+		WideVector wv1(q.x, q.y, q.z, q.w);
+		wv0.normalize();
+		wv1.normalize();
+		WideVector r = wv0 + (wv1 - wv0) * t;
+		r.normalize();
+		return Quaternion(r.x, r.y, r.z, r.w);
+	}
+
+	Quaternion slerp(Quaternion q, float t) const {
+		if (t < 0.f) {
+			t = 0.f;
+		} else if (t > 1.f) {
+			t = 1.f;
+		}
+		WideVector wv0(x, y, z, w);
+		WideVector wv1(q.x, q.y, q.z, q.w);
+		wv0.normalize();
+		wv1.normalize();
+
+		float dot = wv0.dot(wv1);
+		if (dot < 0.f) {
+			wv1 *= -1.f;
+			dot = -dot;
+		}
+
+		const float epsilon = 0.9995f;
+		if (dot > epsilon) {
+			WideVector r = wv0 + (wv1 - wv0) * t;
+			r.normalize();
+			return Quaternion(r.x, r.y, r.z, r.w);
+		}
+
+		float theta0 = acosf(dot);
+		float theta1 = theta0 * t;
+		float sin_theta0 = sinf(theta0);
+		float sin_theta1 = sinf(theta1);
+		
+		float s0 = cosf(theta1) - dot * sin_theta1 / sin_theta0;
+		float s1 = sin_theta1 / sin_theta0;
+
+		WideVector r = (wv0 * s0) + (wv1 * s1);
+		return Quaternion(r.x, r.y, r.z, r.w);
 	}
 
 	Quaternion rotate(const Rotation& rot) const {

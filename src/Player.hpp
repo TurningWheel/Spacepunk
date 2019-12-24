@@ -141,9 +141,15 @@ private:
 	const float HOLD_TO_PICKUP_TIME = 0;
 	Entity* previousInteractedEntity = nullptr;
 
+	// controller vars
 	bool moving = false;
 	bool crouching = false;
 	bool jumped = false;
 	Rotation oldLookDir;
 	Vector originalVel;
+	Vector floorNormal;
+	Quaternion playerAng;
+	bool orienting = false;
+	float orient = 0.f;
+	Rotation rot;
 };

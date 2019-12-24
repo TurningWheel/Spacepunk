@@ -95,6 +95,14 @@ public:
 		z /= l;
 	}
 
+	// determines if this vector is "close" to another
+	// @param v the other vector to compare with
+	// @return true if their values are close, otherwise false
+	bool close(const Vector& v) {
+		Vector c = *this - v;
+		return c.lengthSquared() < .1f;
+	}
+
 	// conversion to glm::vec3
 	operator glm::vec3() const {
 		return glm::vec3(x,y,z);

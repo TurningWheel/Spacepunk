@@ -514,7 +514,7 @@ void Entity::process() {
 			if (vDiff.lengthSquared() > 64.f || vel.lengthSquared() < 1.f) {
 				pos += vDiff / 4.f;
 			}
-			ang = newAng;
+			ang = ang.lerp(newAng, 0.25f);
 
 			// correct illegal move from clients, or alawys accept from server
 			Game* game = getGame();
@@ -680,7 +680,7 @@ void Entity::setInventoryVisibility(bool visible)
 	item.setInventoryVisibility(visible);
 }
 
-float Entity::nearestFloor(Entity*& outEntity) {
+float Entity::nearestFloor(World::hit_t& hit) {
 	float nearestFloor = FLT_MAX;
 	if( !world ) {
 		return nearestFloor;
@@ -690,23 +690,19 @@ float Entity::nearestFloor(Entity*& outEntity) {
 	LinkedList<World::hit_t> hits;
 	Vector v = (ang * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
 	world->lineTraceList(pos, pos + v * 10000.f, hits);
-	for (auto& hit : hits) {
-		nearestFloor = (hit.pos - pos).length();
-		outEntity = hit.hitEntity ? world->uidToEntity(hit.index) : nullptr;
-		if (outEntity == this) {
+	for (auto& curr : hits) {
+		if (curr.hitEntity == true && curr.index == uid) {
 			continue;
 		} else {
+			nearestFloor = (curr.pos - pos).length();
+			hit = curr;
 			break;
 		}
-	}
-	if (outEntity == this) {
-		outEntity = nullptr;
-		nearestFloor = FLT_MAX;
 	}
 	return nearestFloor;
 }
 
-float Entity::nearestCeiling(Entity*& outEntity) {
+float Entity::nearestCeiling(World::hit_t& hit) {
 	float nearestCeiling = FLT_MAX;
 	if( !world ) {
 		return nearestCeiling;
@@ -716,18 +712,14 @@ float Entity::nearestCeiling(Entity*& outEntity) {
 	LinkedList<World::hit_t> hits;
 	Vector v = (ang * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
 	world->lineTraceList(pos, pos + v * 10000.f, hits);
-	for (auto& hit : hits) {
-		nearestCeiling = (hit.pos - pos).length();
-		outEntity = hit.hitEntity ? world->uidToEntity(hit.index) : nullptr;
-		if (outEntity == this) {
+	for (auto& curr : hits) {
+		if (curr.hitEntity == true && curr.index == uid) {
 			continue;
 		} else {
+			nearestCeiling = (curr.pos - pos).length();
+			hit = curr;
 			break;
 		}
-	}
-	if (outEntity == this) {
-		outEntity = nullptr;
-		nearestCeiling = FLT_MAX;
 	}
 	return nearestCeiling;
 }

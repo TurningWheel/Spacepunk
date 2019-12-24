@@ -169,13 +169,13 @@ public:
 	// @param funcName the name of the function to execute
 	void dispatch(const char* funcName, Script::Args& args);
 
-	// @param outEntity the entity we are standing on, if any
+	// @param hit information about the collision
 	// @return the nearest floor, if any
-	float nearestFloor(Entity*& outEntity);
+	float nearestFloor(World::hit_t& hit);
 
-	// @param outEntity the entity above us, if any
+	// @param hit information about the collision
 	// @return the nearest ceiling, if any
-	float nearestCeiling(Entity*& outEntity);
+	float nearestCeiling(World::hit_t& hit);
 
 	// removes the entity from the current simulation
 	void remove();
