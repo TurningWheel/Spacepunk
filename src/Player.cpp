@@ -378,10 +378,10 @@ void Player::control() {
 	}
 
 	// direction vectors
-	Vector forward = entity->getAng().toVector();
-	Vector right = (entity->getAng() * Quaternion(Rotation(PI/2.f, 0.f, 0.f))).toVector();
-	Vector down = (entity->getAng() * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
-	Vector up = (entity->getAng() * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
+	Vector forward = playerAng.toVector();
+	Vector right = (playerAng * Quaternion(Rotation(PI/2.f, 0.f, 0.f))).toVector();
+	Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+	Vector up = (playerAng * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
 
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
@@ -489,6 +489,12 @@ void Player::control() {
 				playerAng = q;
 				orienting = true;
 				orient = 0.f;
+
+				float rebound = 1.f;
+				Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+				Vector up = (playerAng * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
+				vel -= vel * down.absolute();
+				vel += up * rebound;
 			}
 		}
 	}
@@ -501,6 +507,8 @@ void Player::control() {
 		}
 		entity->setAng(entity->getAng().slerp(playerAng, orient));
 		entity->warp();
+	} else {
+		playerAng = entity->getAng();
 	}
 
 	//Interacting with entities.
