@@ -31,6 +31,8 @@ static Cvar cvar_jumpPower("player.jumppower", "player jump strength", "4.0");
 static Cvar cvar_canCrouch("player.cancrouch", "whether player can crouch at all or not", "0");
 static Cvar cvar_standHeight("player.standheight", "standing height of the player character", "64");
 static Cvar cvar_crouchHeight("player.crouchheight", "crouching height of the player character", "32");
+static Cvar cvar_wallWalk("player.wallwalk", "enable wall-walking ability on the player", "1");
+static Cvar cvar_zeroGravity("player.zerogravity", "enable zero-g effects on the player", "1");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -316,9 +318,6 @@ void Player::control() {
 	float totalHeight = standScale.z - standOrigin.z;
 	float nearestCeiling = entity->nearestCeiling(ceilingHit);
 	float nearestFloor = entity->nearestFloor(floorHit);
-	if (floorNormal.lengthSquared() == 0.f) {
-		floorNormal = floorHit.normal;
-	}
 
 	Entity* entityStandingOn = floorHit.hitEntity ? world->uidToEntity(floorHit.index) : nullptr;
 	Entity* entityAbove = ceilingHit.hitEntity ? world->uidToEntity(ceilingHit.index) : nullptr;
@@ -333,7 +332,7 @@ void Player::control() {
 	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling > totalHeight : false;
 	float feetHeight = buttonCrouch ? cvar_crouchHeight.toFloat() : cvar_standHeight.toFloat();
 	if( !client->isConsoleActive() ) {
-		if( !entity->isFalling() ) {
+		if( !entity->isFalling() || cvar_zeroGravity.toInt() ) {
 			buttonCrouch |= input.binary(Input::MOVE_DOWN);
 		}
 
@@ -388,29 +387,39 @@ void Player::control() {
 	float timeFactor = 1.f / 60.f;
 
 	// set bbox and origin
-	putInCrouch(crouching);
+	if (cvar_zeroGravity.toInt()) {
+		putInCrouch(false);
+	} else {
+		putInCrouch(crouching);
+	}
 
 	// set falling state and do attach-to-ground
-	if( entity->isFalling() ) {
-		if( nearestFloor <= feetHeight && vel.normal().dot(down) > 0.f) {
-			entity->setFalling(false);
-			float rebound = max(0.f, feetHeight - nearestFloor) / 4.f;
-			vel -= vel * down.absolute();
-			vel += up * rebound;
-		} else {
-			vel += down * cvar_gravity.toFloat() * timeFactor;
-		}
+	if (cvar_zeroGravity.toInt()) {
+		entity->setFalling(true);
+		vel += up * buttonJump * speedFactor * timeFactor;
+		vel -= up * buttonCrouch * speedFactor * timeFactor;
 	} else {
-		if( buttonJump ) {
-			jumped = true;
-			entity->setFalling(true);
-			vel += up * cvar_jumpPower.toFloat();
-		} else {
-			if( nearestFloor > feetHeight ) {
-				entity->setFalling(true);
-			} else {
-				float rebound = (feetHeight - nearestFloor) * timeFactor / 10.f;
+		if( entity->isFalling() ) {
+			if( nearestFloor <= feetHeight && vel.normal().dot(down) > 0.f) {
+				entity->setFalling(false);
+				float rebound = max(0.f, feetHeight - nearestFloor) / 4.f;
+				vel -= vel * down.absolute();
 				vel += up * rebound;
+			} else {
+				vel += down * cvar_gravity.toFloat() * timeFactor;
+			}
+		} else {
+			if( buttonJump ) {
+				jumped = true;
+				entity->setFalling(true);
+				vel += up * cvar_jumpPower.toFloat();
+			} else {
+				if( nearestFloor > feetHeight ) {
+					entity->setFalling(true);
+				} else {
+					float rebound = (feetHeight - nearestFloor) * timeFactor / 10.f;
+					vel += up * rebound;
+				}
 			}
 		}
 	}
@@ -436,64 +445,83 @@ void Player::control() {
 			float mousey = mainEngine->getMouseMoveY();
 			
 			rot.yaw += mousex * timeFactor * cvar_mouseSpeed.toFloat();
-			rot.pitch += mousey * timeFactor  * cvar_mouseSpeed.toFloat();
+			rot.pitch += mousey * timeFactor  * cvar_mouseSpeed.toFloat() * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 		}
 		rot.yaw += (input.analog(Input::LOOK_RIGHT) - input.analog(Input::LOOK_LEFT)) * timeFactor * 2.f;
-		rot.pitch += (input.analog(Input::LOOK_DOWN) - input.analog(Input::LOOK_UP)) * timeFactor * 2.f;
+		rot.pitch += (input.analog(Input::LOOK_DOWN) - input.analog(Input::LOOK_UP)) * timeFactor * 2.f * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 	}
 	rot.wrapAngles();
 
 	// change look dir
-	float hLimit = cvar_maxHTurn.toFloat() * PI / 180.f;
-	float vLimit = cvar_maxVTurn.toFloat() * PI / 180.f;
-	Rotation lookDir = entity->getLookDir();
-	lookDir.yaw += rot.yaw;
-	lookDir.yaw = fmod(lookDir.yaw, PI);
-	if (lookDir.yaw > hLimit) {
-		float diff = lookDir.yaw - hLimit;
-		lookDir.yaw = hLimit;
-		rot.yaw = diff;
-	} else if (lookDir.yaw < -hLimit) {
-		float diff = lookDir.yaw + hLimit;
-		lookDir.yaw = -hLimit;
-		rot.yaw = diff;
-	} else {
-		rot.yaw = 0.f;
-	}
-	lookDir.pitch += rot.pitch;
-	lookDir.pitch = fmod(lookDir.pitch, PI);
-	if (lookDir.pitch > vLimit) {
-		lookDir.pitch = vLimit;
-	} else if (lookDir.pitch < -vLimit) {
-		lookDir.pitch = -vLimit;
-	}
-	entity->setLookDir(lookDir);
 
-	// don't actually turn the entity vertically
-	rot.pitch = 0.f;
+	if (cvar_zeroGravity.toInt()) {
+		Rotation lookDir = entity->getLookDir();
+		if (lookDir.yaw > 0.f) {
+			lookDir.yaw = max(0.f, lookDir.yaw - 0.01f);
+		}
+		if (lookDir.yaw < 0.f) {
+			lookDir.yaw = min(0.f, lookDir.yaw + 0.01f);
+		}
+		if (lookDir.pitch > 0.f) {
+			lookDir.pitch = max(0.f, lookDir.pitch - 0.01f);
+		}
+		if (lookDir.pitch < 0.f) {
+			lookDir.pitch = min(0.f, lookDir.pitch + 0.01f);
+		}
+		entity->setLookDir(lookDir);
+	} else {
+		float hLimit = cvar_maxHTurn.toFloat() * PI / 180.f;
+		float vLimit = cvar_maxVTurn.toFloat() * PI / 180.f;
+		Rotation lookDir = entity->getLookDir();
+		lookDir.yaw += rot.yaw;
+		lookDir.yaw = fmod(lookDir.yaw, PI);
+		if (lookDir.yaw > hLimit) {
+			float diff = lookDir.yaw - hLimit;
+			lookDir.yaw = hLimit;
+			rot.yaw = diff;
+		} else if (lookDir.yaw < -hLimit) {
+			float diff = lookDir.yaw + hLimit;
+			lookDir.yaw = -hLimit;
+			rot.yaw = diff;
+		} else {
+			rot.yaw = 0.f;
+		}
+		lookDir.pitch += rot.pitch;
+		lookDir.pitch = fmod(lookDir.pitch, PI);
+		if (lookDir.pitch > vLimit) {
+			lookDir.pitch = vLimit;
+		} else if (lookDir.pitch < -vLimit) {
+			lookDir.pitch = -vLimit;
+		}
+		entity->setLookDir(lookDir);
+
+		// don't actually turn the entity vertically
+		rot.pitch = 0.f;
+	}
 
 	// orient to ground
-	if (nearestFloor <= feetHeight+16.f && !floorNormal.close(floorHit.normal)) {
-		if (floorHit.normal.lengthSquared() > 0.f) {
-			if (floorNormal.dot(floorHit.normal) >= .5f) {
-				floorNormal = floorHit.normal;
-				Vector Y(floorNormal.x, -floorNormal.z, floorNormal.y);
-				Vector X = Y.cross(Vector(right.x, -right.z, right.y));
-				Vector Z = X.cross(Y);
-				glm::mat4 m = glm::mat4(glm::mat3(
-					X.x, X.y, X.z,
-					Y.x, Y.y, Y.z,
-					Z.x, Z.y, Z.z
-				));
-				Quaternion q(m);
-				playerAng = q;
-				orienting = true;
-				orient = 0.f;
+	if (cvar_wallWalk.toInt() && !cvar_zeroGravity.toInt()) {
+		if (nearestFloor <= feetHeight+16.f && !up.close(floorHit.normal)) {
+			if (floorHit.normal.lengthSquared() > 0.f) {
+				if (up.dot(floorHit.normal) >= .5f) {
+					Vector Y(floorHit.normal.x, -floorHit.normal.z, floorHit.normal.y);
+					Vector X = Y.cross(Vector(right.x, -right.z, right.y));
+					Vector Z = X.cross(Y);
+					glm::mat4 m = glm::mat4(glm::mat3(
+						X.x, X.y, X.z,
+						Y.x, Y.y, Y.z,
+						Z.x, Z.y, Z.z
+					));
+					Quaternion q(m);
+					playerAng = q;
+					orienting = true;
+					orient = 0.f;
 
-				float rebound = 1.f;
-				Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
-				Vector up = (playerAng * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
-				vel -= vel * down.absolute();
+					float rebound = 1.f;
+					Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+					Vector up = (playerAng * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
+					vel -= vel * down.absolute();
+				}
 			}
 		}
 	}

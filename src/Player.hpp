@@ -147,7 +147,6 @@ private:
 	bool jumped = false;
 	Rotation oldLookDir;
 	Vector originalVel;
-	Vector floorNormal;
 	Quaternion playerAng;
 	bool orienting = false;
 	float orient = 0.f;
