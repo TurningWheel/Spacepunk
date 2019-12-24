@@ -494,7 +494,6 @@ void Player::control() {
 				Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
 				Vector up = (playerAng * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
 				vel -= vel * down.absolute();
-				vel += up * rebound;
 			}
 		}
 	}
