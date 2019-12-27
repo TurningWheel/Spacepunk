@@ -100,7 +100,7 @@ public:
 	// @return true if their values are close, otherwise false
 	bool close(const Vector& v) {
 		Vector c = *this - v;
-		return c.lengthSquared() < .01f;
+		return c.lengthSquared() < .001f;
 	}
 
 	// conversion to glm::vec3

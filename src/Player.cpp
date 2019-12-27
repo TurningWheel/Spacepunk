@@ -21,18 +21,20 @@ const Vector Player::standScale( 24.f, 24.f, 32.f );
 const Vector Player::crouchOrigin( 0.f, 0.f, -40.f );
 const Vector Player::crouchScale( 24.f, 24.f, 24.f );
 
-static Cvar cvar_mouseSpeed("player.mousespeed", "adjusts mouse sensitivity", "0.1");
-static Cvar cvar_mouselook("player.mouselook", "assigns mouse control to the given player", "0");
+static Cvar cvar_mouseSpeed("player.mouselook.speed", "adjusts mouse sensitivity", "0.1");
+static Cvar cvar_mouselook("player.mouselook.enabled", "assigns mouse control to the given player", "0");
 static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "9");
 static Cvar cvar_speed("player.speed", "player movement speed", "28");
-static Cvar cvar_crouchSpeed("player.crouchspeed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
-static Cvar cvar_jumpPower("player.jumppower", "player jump strength", "4.0");
-static Cvar cvar_canCrouch("player.cancrouch", "whether player can crouch at all or not", "0");
-static Cvar cvar_standHeight("player.standheight", "standing height of the player character", "64");
-static Cvar cvar_crouchHeight("player.crouchheight", "crouching height of the player character", "32");
-static Cvar cvar_wallWalk("player.wallwalk", "enable wall-walking ability on the player", "1");
-static Cvar cvar_zeroGravity("player.zerogravity", "enable zero-g effects on the player", "1");
+static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "4.0");
+static Cvar cvar_standHeight("player.stand.height", "standing height of the player character", "64");
+static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "0");
+static Cvar cvar_crouchHeight("player.crouch.height", "crouching height of the player character", "32");
+static Cvar cvar_crouchSpeed("player.crouch.speed", "movement speed modifier while crouching", ".25");
+static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "1");
+static Cvar cvar_wallWalkLimit("player.wallwalk.limit", "the maximum difference in slope that can be overcome with wall-walking", "45");
+static Cvar cvar_zeroGravity("player.zerog.enabled", "enable zero-g effects on the player", "0");
+static Cvar cvar_slopeLimit("player.slope.limit", "the maximum slope of a floor traversible by a player", "45");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -401,10 +403,13 @@ void Player::control() {
 	} else {
 		if( entity->isFalling() ) {
 			if( nearestFloor <= feetHeight && vel.normal().dot(down) > 0.f) {
-				entity->setFalling(false);
-				float rebound = max(0.f, feetHeight - nearestFloor) / 4.f;
-				vel -= vel * down.absolute();
-				vel += up * rebound;
+				const float slope = cosf(cvar_slopeLimit.toFloat() * PI / 180.f);
+				if (up.dot(floorHit.normal) > slope) {
+					entity->setFalling(false);
+					float rebound = max(0.f, feetHeight - nearestFloor) / 4.f;
+					vel -= vel * down.absolute();
+					vel += up * rebound;
+				}
 			} else {
 				vel += down * cvar_gravity.toFloat() * timeFactor;
 			}
@@ -503,7 +508,9 @@ void Player::control() {
 	if (cvar_wallWalk.toInt() && !cvar_zeroGravity.toInt()) {
 		if (nearestFloor <= feetHeight+16.f && !up.close(floorHit.normal)) {
 			if (floorHit.normal.lengthSquared() > 0.f) {
-				if (up.dot(floorHit.normal) >= .5f) {
+				const float dot = up.dot(floorHit.normal);
+				const float slopeLimit = cosf(cvar_wallWalkLimit.toFloat() * PI / 180.f);
+				if (dot > slopeLimit) {
 					Vector Y(floorHit.normal.x, -floorHit.normal.z, floorHit.normal.y);
 					Vector X = Y.cross(Vector(right.x, -right.z, right.y));
 					Vector Z = X.cross(Y);
