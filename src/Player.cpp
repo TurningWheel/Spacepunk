@@ -326,7 +326,7 @@ void Player::control() {
 	Vector pos = entity->getPos();
 
 	World::hit_t floorHit, ceilingHit;
-	float totalHeight = standScale.z;
+	float totalHeight = standScale.z + models->getLocalPos().z;
 	float nearestCeiling = entity->nearestCeiling(ceilingHit);
 	float nearestFloor = entity->nearestFloor(floorHit);
 
