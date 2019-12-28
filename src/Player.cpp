@@ -23,14 +23,14 @@ static Cvar cvar_gravity("player.gravity", "gravity that players are subjected t
 static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
 static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "4.0");
-static Cvar cvar_standHeight("player.stand.height", "standing height of the player character", "8");
 static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "1");
-static Cvar cvar_crouchHeight("player.crouch.height", "crouching height of the player character", "16");
 static Cvar cvar_crouchSpeed("player.crouch.speed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "1");
 static Cvar cvar_wallWalkLimit("player.wallwalk.limit", "the maximum difference in slope that can be overcome with wall-walking", "45");
 static Cvar cvar_zeroGravity("player.zerog.enabled", "enable zero-g effects on the player", "0");
 static Cvar cvar_slopeLimit("player.slope.limit", "the maximum slope of a floor traversible by a player", "45");
+static Cvar cvar_stepHeight("player.step.height", "maximum step height that a player can ascend", "8");
+static Cvar cvar_enableBob("player.bob.enabled", "enable view bobbing", "0");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -188,11 +188,14 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 
 	// set crouch scaling vars
 	standScale = bbox->getLocalScale();
-	standOrigin = models->getLocalPos();
+	standOrigin = Vector(0.f);
 	crouchScale = standScale;
 	crouchOrigin = standOrigin;
 	crouchScale.z = entity->getKeyValueAsFloat("crouchBBoxScale");
 	crouchOrigin.z += standScale.z - crouchScale.z;
+	crouchModelOffsetFactor = entity->getKeyValueAsFloat("crouchModelOffsetFactor");
+	originalModelsPos = models->getLocalPos();
+	originalCameraPos = camera->getLocalPos();
 
 	return true;
 }
@@ -286,7 +289,7 @@ void Player::putInCrouch(bool crouch) {
 	}
 	crouching = crouch;
 	Vector scale = bbox->getLocalScale();
-	Vector origin = models->getLocalPos();
+	Vector origin = originOffset;
 	const Vector& targetScale = crouching ? crouchScale : standScale;
 	const Vector& targetOrigin = crouching ? crouchOrigin : standOrigin;
 	if (scale.z < targetScale.z) {
@@ -300,7 +303,9 @@ void Player::putInCrouch(bool crouch) {
 		origin.z = max(origin.z - 1.f, targetOrigin.z);
 	}
 	bbox->setLocalScale(scale);
-	models->setLocalPos(origin);
+	originOffset = origin;
+	float stepHeight = cvar_stepHeight.toFloat();
+	models->setLocalPos(originalModelsPos + originOffset * crouchModelOffsetFactor + Vector(0.f, 0.f, stepHeight));
 }
 
 Cvar cvar_maxHTurn("player.turn.horizontal", "maximum turn range for player, horizontal", "0.0");
@@ -323,10 +328,10 @@ void Player::control() {
 	}
 
 	Vector vel = originalVel;
-	Vector pos = entity->getPos();
+	bool warpNeeded = false;
 
 	World::hit_t floorHit, ceilingHit;
-	float totalHeight = standScale.z + models->getLocalPos().z;
+	float totalHeight = standScale.z + originOffset.z;
 	float nearestCeiling = entity->nearestCeiling(ceilingHit);
 	float nearestFloor = entity->nearestFloor(floorHit);
 
@@ -402,21 +407,19 @@ void Player::control() {
 	}
 
 	// set falling state and do attach-to-ground
-	float feetHeight = bbox->getLocalScale().z;
-	feetHeight += buttonCrouch ? cvar_crouchHeight.toFloat() : cvar_standHeight.toFloat();
+	float stepHeight = cvar_stepHeight.toFloat();
+	float middleOfBody = standScale.z + stepHeight;
 	if (cvar_zeroGravity.toInt()) {
 		entity->setFalling(true);
 		vel += up * buttonJump * speedFactor * timeFactor;
 		vel -= up * buttonCrouch * speedFactor * timeFactor;
 	} else {
 		if( entity->isFalling() ) {
-			if( nearestFloor <= feetHeight && vel.normal().dot(down) > 0.f) {
+			if( nearestFloor <= middleOfBody && vel.normal().dot(down) > 0.f) {
 				const float slope = cosf(cvar_slopeLimit.toFloat() * PI / 180.f);
 				if (up.dot(floorHit.normal) > slope) {
 					entity->setFalling(false);
-					float rebound = max(0.f, feetHeight - nearestFloor) / 4.f;
 					vel -= vel * down.absolute();
-					vel += up * rebound;
 				}
 			} else {
 				vel += down * cvar_gravity.toFloat() * timeFactor;
@@ -427,11 +430,15 @@ void Player::control() {
 				entity->setFalling(true);
 				vel += up * cvar_jumpPower.toFloat();
 			} else {
-				if( nearestFloor > feetHeight ) {
+				if (nearestFloor > middleOfBody + 1.f) {
 					entity->setFalling(true);
 				} else {
-					float rebound = (feetHeight - nearestFloor) * timeFactor / 10.f;
-					vel += up * rebound;
+					float feetHeight = bbox->getLocalScale().z + stepHeight;
+					float rebound = min(1.f, feetHeight - nearestFloor);
+					Vector pos = entity->getPos();
+					pos = pos + up * rebound;
+					entity->setPos(pos);
+					warpNeeded = true;
 				}
 			}
 		}
@@ -514,7 +521,7 @@ void Player::control() {
 
 	// orient to ground
 	if (cvar_wallWalk.toInt() && !cvar_zeroGravity.toInt()) {
-		if (nearestFloor <= feetHeight+16.f && !up.close(floorHit.normal)) {
+		if (nearestFloor <= standScale.z+16.f && !up.close(floorHit.normal)) {
 			if (floorHit.normal.lengthSquared() > 0.f) {
 				const float dot = up.dot(floorHit.normal);
 				const float slopeLimit = cosf(cvar_wallWalkLimit.toFloat() * PI / 180.f);
@@ -532,9 +539,7 @@ void Player::control() {
 					orienting = true;
 					orient = 0.f;
 
-					float rebound = 1.f;
 					Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
-					Vector up = (playerAng * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
 					vel -= vel * down.absolute();
 				}
 			}
@@ -548,7 +553,7 @@ void Player::control() {
 			orient = 1.f;
 		}
 		entity->setAng(entity->getAng().slerp(playerAng, orient));
-		entity->warp();
+		warpNeeded = true;
 	} else {
 		playerAng = entity->getAng();
 	}
@@ -618,21 +623,21 @@ void Player::control() {
 	}
 
 	// update entity vectors
-	if (bbox->getMass() == 0.f) {
-		entity->setPos(pos);
-	}
 	Vector standingOnVel;
 	originalVel = vel;
 	if (entityStandingOn) {
 		standingOnVel = entityStandingOn->getVel();
 	}
 	entity->setVel(vel + standingOnVel);
-	if (orienting) {
-		entity->setRot(Rotation());
-	} else {
-		entity->setRot(rot);
-	}
+	Rotation finalRot = orienting ? Rotation() : rot;
+	entity->setRot(finalRot);
 	entity->update();
+	if (warpNeeded) {
+		Quaternion ang = entity->getAng();
+		ang = ang * Quaternion(finalRot);
+		entity->setAng(ang);
+		entity->warp();
+	}
 
 	// using hand items (shooting)
 	if (lTool && input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
@@ -671,6 +676,16 @@ void Player::updateCamera() {
 
 	Input& input = mainEngine->getInput(localID);
 
+	bobAngle += PI / 15.f;
+	if (bobAngle > PI*2.f) {
+		bobAngle -= PI*2.f;
+	}
+	if (moving && cvar_enableBob.toInt()) {
+		bobLength = min(bobLength + 0.1f, 1.f);
+	} else {
+		bobLength = max(bobLength - 0.1f, 0.f);
+	}
+
 	// move camera
 	if( camera ) {
 		Model::bone_t headBone;
@@ -678,13 +693,11 @@ void Player::updateCamera() {
 			head->updateSkin();
 			headBone = head->findBone("Bone_Head");
 			if( headBone.valid ) {
-				//models->setLocalPos(Vector(-headBone.pos.x, 0.f, 0.f));
-				//models->update();
 				camera->setLocalPos(headBone.pos + models->getLocalPos());
-				camera->update();
 			}
 		}
 
+		camera->setLocalPos(originalCameraPos);
 		camera->setLocalAng(entity->getLookDir());
 
 		if( localID == 0 ) {
@@ -712,8 +725,9 @@ void Player::updateCamera() {
 		}
 		camera->setWin(rect);
 		if( headBone.valid ) {
-			camera->translate(Vector(16.f, 4.f, 0.f));
+			camera->translate(Vector(16.f, 0.f, 0.f));
 		}
+		camera->translate(Vector(0.f, 0.f, sinf(bobAngle) * 4.f * bobLength));
 		camera->update();
 	}
 }

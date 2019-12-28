@@ -911,17 +911,32 @@ bool Component::hasComponent(type_t type) const {
 }
 
 void Component::rotate(const Rotation& ang) {
-	lAng *= Quaternion(ang);
+	if (updateNeeded) {
+		update();
+	}
+	lAng = lAng * Quaternion(ang);
 	updateNeeded = true;
 }
 
 void Component::translate(const Vector& vec) {
-	lPos += vec;
+	if (updateNeeded) {
+		update();
+	}
+	lMat = glm::translate(lMat, glm::vec3(vec.x, -vec.z, vec.y));
+	lPos = Vector(lMat[3][0], lMat[3][2], -lMat[3][1]);
+	lScale = Vector(glm::length( lMat[0] ), glm::length( lMat[2] ), glm::length( lMat[1] ));
+	lAng = Quaternion(lMat);
 	updateNeeded = true;
 }
 
 void Component::scale(const Vector& vec) {
-	lScale *= vec;
+	if (updateNeeded) {
+		update();
+	}
+	lMat = glm::scale(lMat, glm::vec3(vec.x, vec.z, vec.y));
+	lPos = Vector(lMat[3][0], lMat[3][2], -lMat[3][1]);
+	lScale = Vector(glm::length( lMat[0] ), glm::length( lMat[2] ), glm::length( lMat[1] ));
+	lAng = Quaternion(lMat);
 	updateNeeded = true;
 }
 
@@ -1321,4 +1336,12 @@ void Component::shootLaser(const glm::mat4& mat, WideVector& color, float size, 
 		}
 	}
 	world->addLaser(start, end, color, size, life);
+}
+
+void Component::setLocalMat(const glm::mat4& mat) {
+	lMat = mat;
+	lPos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+	lScale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
+	lAng = Quaternion(mat);
+	updateNeeded = true;
 }

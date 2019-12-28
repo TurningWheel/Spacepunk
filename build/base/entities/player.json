@@ -66,6 +66,10 @@
                 {
                     "key": "crouchBBoxScale",
                     "value": "20.0"
+                },
+                {
+                    "key": "crouchModelOffsetFactor",
+                    "value": "1.0"
                 }
             ]
         },
@@ -78,7 +82,7 @@
                     "lPos": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": -8.0
                     },
                     "lAng": {
                         "Quaternion::version": 0,

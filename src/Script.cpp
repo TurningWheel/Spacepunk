@@ -302,10 +302,31 @@ void Script::exposeAngle() {
 		.endClass()
 	;
 
-	LinkedList<Rotation>::exposeToScript(lua, "LinkedListAngle", "NodeAngle");
-	LinkedList<Rotation*>::exposeToScript(lua, "LinkedListAnglePtr", "NodeAnglePtr");
-	ArrayList<Rotation>::exposeToScript(lua, "ArrayListAngle");
-	ArrayList<Rotation*>::exposeToScript(lua, "ArrayListAnglePtr");
+	LinkedList<Rotation>::exposeToScript(lua, "LinkedListRotation", "NodeRotation");
+	LinkedList<Rotation*>::exposeToScript(lua, "LinkedListRotationPtr", "NodeRotationPtr");
+	ArrayList<Rotation>::exposeToScript(lua, "ArrayListRotation");
+	ArrayList<Rotation*>::exposeToScript(lua, "ArrayListRotationPtr");
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<Quaternion>("Quaternion")
+		.addConstructor<void (*) (float, float, float, float)>()
+		.addData("x", &Quaternion::x, true)
+		.addData("y", &Quaternion::y, true)
+		.addData("z", &Quaternion::z, true)
+		.addData("w", &Quaternion::w, true)
+		.addFunction("toVector", &Quaternion::toVector)
+		.addFunction("toRotation", &Quaternion::toRotation)
+		.addFunction("rotate", &Quaternion::rotate)
+		.addFunction("lerp", &Quaternion::lerp)
+		.addFunction("slerp", &Quaternion::slerp)
+		.addFunction("mul", &Quaternion::mul)
+		.endClass()
+	;
+
+	LinkedList<Quaternion>::exposeToScript(lua, "LinkedListQuaternion", "NodeQuaternion");
+	LinkedList<Quaternion*>::exposeToScript(lua, "LinkedListQuaternionPtr", "NodeQuaternionPtr");
+	ArrayList<Quaternion>::exposeToScript(lua, "ArrayListQuaternion");
+	ArrayList<Quaternion*>::exposeToScript(lua, "ArrayListQuaternionPtr");
 }
 
 void Script::exposeVector() {

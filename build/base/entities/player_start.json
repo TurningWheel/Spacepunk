@@ -73,7 +73,7 @@
                     "lPos": {
                         "x": -16.0,
                         "y": 0.0,
-                        "z": 0.0
+                        "z": 56.0
                     },
                     "lAng": {
                         "Quaternion::version": 0,
@@ -158,7 +158,7 @@
                     "lPos": {
                         "x": 0.0,
                         "y": 0.0,
-                        "z": -64.0
+                        "z": 0.0
                     },
                     "lAng": {
                         "Quaternion::version": 0,

@@ -40,10 +40,6 @@ public:
 	}
 
 	Quaternion(const glm::mat4& mat) {
-		glm::mat4 m = mat;
-		m[0] /= m[0].length();
-		m[1] /= m[1].length();
-		m[2] /= m[2].length();
 		glm::quat quat(mat);
 		x = quat.x;
 		y = quat.y;
@@ -159,6 +155,16 @@ public:
 		const Vector t = 2.f * q.cross(v);
 		const Vector result = v + (-w * t) + q.cross(t);
 		return result;
+	}
+
+	Quaternion mul(const Quaternion& q) {
+		Quaternion r;
+		Quaternion o(*this);
+		r.x = o.w * q.x + o.x * q.w + o.y * q.z - o.z * q.y;
+		r.y = o.w * q.y + o.y * q.w + o.z * q.x - o.x * q.z;
+		r.z = o.w * q.z + o.z * q.w + o.x * q.y - o.y * q.x;
+		r.w = o.w * q.w - o.x * q.x - o.y * q.y - o.z * q.z;
+		return r;
 	}
 
 	Quaternion& operator*=(const Quaternion& q) {

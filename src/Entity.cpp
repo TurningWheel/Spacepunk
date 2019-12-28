@@ -770,12 +770,11 @@ bool Entity::move() {
 }
 
 void Entity::setMat(const glm::mat4& _mat) {
-	if( mat != _mat ) {
-		mat = _mat;
-		pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
-		scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
-		ang = Quaternion(mat);
-	}
+	mat = _mat;
+	pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+	scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
+	ang = Quaternion(mat);
+	updateNeeded = true;
 }
 
 void Entity::applyForce(const Vector& force, const Vector& origin) {

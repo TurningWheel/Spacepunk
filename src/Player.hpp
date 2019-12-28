@@ -149,4 +149,10 @@ private:
 	Vector crouchOrigin;
 	Vector standScale;
 	Vector standOrigin;
+	Vector originOffset;
+	float crouchModelOffsetFactor = 0.f;
+	Vector originalModelsPos;
+	float bobAngle = 0.f;
+	float bobLength = 0.f;
+	Vector originalCameraPos;
 };

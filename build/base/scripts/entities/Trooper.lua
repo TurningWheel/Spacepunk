@@ -14,7 +14,7 @@ function init()
 end
 
 function process()
-	local forwardAng = Angle(entity:getAng().yaw,entity:getAng().pitch,entity:getAng().roll)
+	local forwardAng = Rotation(entity:getAng().yaw,entity:getAng().pitch,entity:getAng().roll)
 	forwardAng.pitch = 0
 	forwardAng.roll = 0
 	entity:setVel(forwardAng:toVector())

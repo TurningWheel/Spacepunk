@@ -601,7 +601,7 @@ public:
 	void				setLocalPos(const Vector& _pos)			{ lPos = _pos; updateNeeded = true; }
 	void				setLocalAng(const Quaternion& _ang)		{ lAng = _ang; updateNeeded = true; }
 	void				setLocalScale(const Vector& _scale)		{ lScale = _scale; updateNeeded = true; }
-	void				setLocalMat(const glm::mat4& _mat)		{ lMat = _mat; updateNeeded = true; }
+	void				setLocalMat(const glm::mat4& _mat);
 	void				setCollapsed(bool _collapsed)			{ collapsed = _collapsed; }
 
 	Component& operator=(const Component& src) {
