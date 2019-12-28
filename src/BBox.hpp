@@ -28,8 +28,6 @@ public:
 	BBox(Entity& _entity, Component* _parent);
 	virtual ~BBox();
 
-	static const float collisionEpsilon;
-
 	// bbox models
 	static const char* meshCapsuleCylinderStr;
 	static const char* meshCapsuleHalfSphereStr;
@@ -112,7 +110,6 @@ public:
 	BBox& operator=(const BBox& src) {
 		enabled = src.enabled;
 		shape = src.shape;
-		meshName = src.meshName;
 		mass = src.mass;
 		updateNeeded = true;
 		dirty = true;
@@ -123,7 +120,6 @@ private:
 	bool enabled = true;
 	shape_t shape = SHAPE_BOX;
 	float mass = 0.f;
-	String meshName;
 
 	bool dirty = false;
 
@@ -139,4 +135,6 @@ private:
 	// update the bbox to match the given model
 	// @param model the model to conform to
 	void conformToModel(const Model& model);
+
+	btVector3 convertScaleBasedOnShape(const Vector& scale);
 };

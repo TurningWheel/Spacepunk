@@ -16,20 +16,16 @@
 #include "Renderer.hpp"
 
 const char* Player::defaultName = "Player";
-const Vector Player::standOrigin( 0.f, 0.f, -80.f );
-const Vector Player::standScale( 24.f, 24.f, 32.f );
-const Vector Player::crouchOrigin( 0.f, 0.f, -40.f );
-const Vector Player::crouchScale( 24.f, 24.f, 24.f );
 
 static Cvar cvar_mouseSpeed("player.mouselook.speed", "adjusts mouse sensitivity", "0.1");
-static Cvar cvar_mouselook("player.mouselook.enabled", "assigns mouse control to the given player", "0");
+static Cvar cvar_mouselook("player.mouselook.playernum", "assigns mouse control to the given player", "0");
 static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "9");
 static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
 static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "4.0");
-static Cvar cvar_standHeight("player.stand.height", "standing height of the player character", "64");
-static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "0");
-static Cvar cvar_crouchHeight("player.crouch.height", "crouching height of the player character", "32");
+static Cvar cvar_standHeight("player.stand.height", "standing height of the player character", "8");
+static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "1");
+static Cvar cvar_crouchHeight("player.crouch.height", "crouching height of the player character", "16");
 static Cvar cvar_crouchSpeed("player.crouch.speed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "1");
 static Cvar cvar_wallWalkLimit("player.wallwalk.limit", "the maximum difference in slope that can be overcome with wall-walking", "45");
@@ -190,6 +186,14 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 
 	playerAng = entity->getAng();
 
+	// set crouch scaling vars
+	standScale = bbox->getLocalScale();
+	standOrigin = models->getLocalPos();
+	crouchScale = standScale;
+	crouchOrigin = standOrigin;
+	crouchScale.z = entity->getKeyValueAsFloat("crouchBBoxScale");
+	crouchOrigin.z += standScale.z - crouchScale.z;
+
 	return true;
 }
 
@@ -277,19 +281,26 @@ void Player::updateColors(const colors_t& _colors) {
 }
 
 void Player::putInCrouch(bool crouch) {
-	if (!cvar_canCrouch.toInt()) {
+	if (!cvar_canCrouch.toInt() || !bbox || !entity) {
 		return;
 	}
 	crouching = crouch;
-	const Vector& scale = crouching ? crouchScale : standScale;
-	const Vector& origin = crouching ? crouchOrigin : standOrigin;
-	if( bbox ) {
-		bbox->setLocalScale(scale);
-		bbox->setLocalPos(origin);
+	Vector scale = bbox->getLocalScale();
+	Vector origin = models->getLocalPos();
+	const Vector& targetScale = crouching ? crouchScale : standScale;
+	const Vector& targetOrigin = crouching ? crouchOrigin : standOrigin;
+	if (scale.z < targetScale.z) {
+		scale.z = min(scale.z + 1.f, targetScale.z);
+	} else if (scale.z > targetScale.z) {
+		scale.z = max(scale.z - 1.f, targetScale.z);
 	}
-	if( entity ) {
-		entity->update();
+	if (origin.z < targetOrigin.z) {
+		origin.z = min(origin.z + 1.f, targetOrigin.z);
+	} else if (origin.z > targetOrigin.z) {
+		origin.z = max(origin.z - 1.f, targetOrigin.z);
 	}
+	bbox->setLocalScale(scale);
+	models->setLocalPos(origin);
 }
 
 Cvar cvar_maxHTurn("player.turn.horizontal", "maximum turn range for player, horizontal", "0.0");
@@ -311,13 +322,11 @@ void Player::control() {
 		mainEngine->setMouseRelative(true);
 	}
 
-	//Rotation rot = entity->getRot();
-	//Vector vel = entity->getVel();
 	Vector vel = originalVel;
 	Vector pos = entity->getPos();
 
 	World::hit_t floorHit, ceilingHit;
-	float totalHeight = standScale.z - standOrigin.z;
+	float totalHeight = standScale.z;
 	float nearestCeiling = entity->nearestCeiling(ceilingHit);
 	float nearestFloor = entity->nearestFloor(floorHit);
 
@@ -331,12 +340,9 @@ void Player::control() {
 	buttonForward = 0.f;
 	buttonBackward = 0.f;
 	buttonJump = false;
-	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling > totalHeight : false;
-	float feetHeight = buttonCrouch ? cvar_crouchHeight.toFloat() : cvar_standHeight.toFloat();
+	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling <= totalHeight : false;
 	if( !client->isConsoleActive() ) {
-		if( !entity->isFalling() || cvar_zeroGravity.toInt() ) {
-			buttonCrouch |= input.binary(Input::MOVE_DOWN);
-		}
+		buttonCrouch |= input.binary(Input::MOVE_DOWN);
 
 		if( input.binary(Input::MOVE_UP) && !jumped ) {
 			if( nearestCeiling > totalHeight && !buttonCrouch ) {
@@ -396,6 +402,8 @@ void Player::control() {
 	}
 
 	// set falling state and do attach-to-ground
+	float feetHeight = bbox->getLocalScale().z;
+	feetHeight += buttonCrouch ? cvar_crouchHeight.toFloat() : cvar_standHeight.toFloat();
 	if (cvar_zeroGravity.toInt()) {
 		entity->setFalling(true);
 		vel += up * buttonJump * speedFactor * timeFactor;
@@ -670,25 +678,14 @@ void Player::updateCamera() {
 			head->updateSkin();
 			headBone = head->findBone("Bone_Head");
 			if( headBone.valid ) {
-				models->setLocalPos(Vector(-headBone.pos.x, 0.f, 0.f));
-				models->update();
+				//models->setLocalPos(Vector(-headBone.pos.x, 0.f, 0.f));
+				//models->update();
 				camera->setLocalPos(headBone.pos + models->getLocalPos());
 				camera->update();
 			}
 		}
 
 		camera->setLocalAng(entity->getLookDir());
-
-		/*if( !client->isConsoleActive() ) {
-			if( input.binary(Input::LEAN_RIGHT) ||
-				(input.binary(Input::MOVE_RIGHT) && input.binary(Input::LEAN_MODIFIER)) ) {
-				ang.roll -= .01f;
-			}
-			if( input.binary(Input::LEAN_LEFT) ||
-				(input.binary(Input::MOVE_LEFT) && input.binary(Input::LEAN_MODIFIER)) ) {
-				ang.roll += .01f;
-			}
-		}*/
 
 		if( localID == 0 ) {
 			client->getMixer()->setListener(camera);
@@ -718,40 +715,6 @@ void Player::updateCamera() {
 			camera->translate(Vector(16.f, 4.f, 0.f));
 		}
 		camera->update();
-
-		/*if( bone.valid ) {
-			World* world = entity->getWorld();
-
-			Vector start = camera->getGlobalPos();
-			Vector pos = bone.pos;
-			pos.x += 36.f;
-			camera->setLocalPos(pos);
-			camera->update();
-			Vector dest = camera->getGlobalPos();
-
-			bool traceEnabled = entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE);
-			entity->resetFlag(static_cast<int>(Entity::flag_t::FLAG_ALLOWTRACE));
-			World::hit_t hit = world->lineTrace( start, dest );
-			if( traceEnabled ) {
-				entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_ALLOWTRACE));
-			}
-
-			if( hit.hitTile || hit.hitEntity ) {
-				float x = (hit.pos - start).length() - 36.f;
-				bone.pos.x += x;
-				camera->setLocalPos(bone.pos);
-				camera->update();
-
-				models->setLocalPos(Vector(x - 16.f, 0.f, 0.f));
-				models->update();
-			} else {
-				bone.pos.x += 16.f;
-				camera->setLocalPos(bone.pos);
-				camera->update();
-				models->setLocalPos(Vector(0.f));
-				models->update();
-			}
-		}*/
 	}
 }
 

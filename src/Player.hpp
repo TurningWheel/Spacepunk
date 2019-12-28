@@ -37,12 +37,6 @@ public:
 	// static properties
 	static const Uint32 invalidID = UINT32_MAX;
 	static const char* defaultName;
-	static const float standFeetHeight;
-	static const Vector standScale;
-	static const Vector standOrigin;
-	static const float crouchFeetHeight;
-	static const Vector crouchScale;
-	static const Vector crouchOrigin;
 
 	// spawns the player if they have not already been spawned
 	// @param _world the world to spawn in
@@ -126,7 +120,7 @@ private:
 	Model* rTool = nullptr;
 	Light* lamp = nullptr;
 
-	// player controller vars
+	// input vars
 	float buttonRight = 0.f;
 	float buttonLeft = 0.f;
 	float buttonForward = 0.f;
@@ -151,4 +145,8 @@ private:
 	bool orienting = false;
 	float orient = 0.f;
 	Rotation rot;
+	Vector crouchScale;
+	Vector crouchOrigin;
+	Vector standScale;
+	Vector standOrigin;
 };

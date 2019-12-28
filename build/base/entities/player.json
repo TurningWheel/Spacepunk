@@ -62,7 +62,12 @@
             }
         },
         "keys": {
-            "data": []
+            "data": [
+                {
+                    "key": "crouchBBoxScale",
+                    "value": "24.0"
+                }
+            ]
         },
         "components": [
             {
@@ -88,6 +93,42 @@
                         "z": 1.0
                     },
                     "components": [
+			            {
+			                "type": 4,
+			                "data": {
+			                    "Component::version": 1,
+			                    "name": "Camera",
+			                    "lPos": {
+			                        "x": 0.0,
+			                        "y": 0.0,
+			                        "z": -40.0
+			                    },
+			                    "lAng": {
+			                        "Quaternion::version": 0,
+			                        "x": 0.0,
+			                        "y": 0.0,
+			                        "z": 0.0,
+			                        "w": 1.0
+			                    },
+			                    "lScale": {
+			                        "x": 1.0,
+			                        "y": 1.0,
+			                        "z": 1.0
+			                    },
+			                    "components": [],
+			                    "Camera::version": 0,
+			                    "clipNear": 4.0,
+			                    "clipFar": 5000.0,
+			                    "win": {
+			                        "x": 0,
+			                        "y": 0,
+			                        "w": 0,
+			                        "h": 0
+			                    },
+			                    "fov": 70,
+			                    "ortho": false
+			                }
+			            },
                         {
                             "type": 2,
                             "data": {
@@ -237,42 +278,6 @@
                     "shape": 2,
                     "enabled": true,
                     "mass": -1.0
-                }
-            },
-            {
-                "type": 4,
-                "data": {
-                    "Component::version": 1,
-                    "name": "Camera",
-                    "lPos": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": -40.0
-                    },
-                    "lAng": {
-                        "Quaternion::version": 0,
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "lScale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    },
-                    "components": [],
-                    "Camera::version": 0,
-                    "clipNear": 4.0,
-                    "clipFar": 5000.0,
-                    "win": {
-                        "x": 0,
-                        "y": 0,
-                        "w": 0,
-                        "h": 0
-                    },
-                    "fov": 70,
-                    "ortho": false
                 }
             }
         ]

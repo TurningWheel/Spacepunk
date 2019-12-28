@@ -21,8 +21,6 @@ btQuaternion btQuat(const Quaternion& q) {
 	return btQuaternion(-q.x, -q.z, q.y, -q.w);
 }
 
-const float BBox::collisionEpsilon = .1f;
-
 const char* BBox::meshCapsuleCylinderStr = "assets/editor/bbox/CapsuleCylinder.FBX";
 const char* BBox::meshCapsuleHalfSphereStr = "assets/editor/bbox/CapsuleHalfSphere.FBX";
 const char* BBox::meshConeStr = "assets/editor/bbox/Cone.FBX";
@@ -106,7 +104,6 @@ void BBox::conformToModel(const Model& model) {
 		return;
 	}
 
-	meshName = model.getMesh();
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(model.getMesh());
 	if( !mesh ) {
 		return;
@@ -181,41 +178,62 @@ void BBox::setPhysicsTransform(const Vector& v, const Quaternion& a) {
 	}
 }
 
-void BBox::updateRigidBody(const Vector& oldGScale) {
-	if (mainEngine->isEditorRunning() || mass == 0.f) {
-		dirty = true;
-	} else {
-		if( fabs(oldGScale.lengthSquared() - gScale.lengthSquared()) > collisionEpsilon) {
-			dirty = true;
-			if( shape == SHAPE_MESH ) {
-				if( parent && parent->getType() == Component::COMPONENT_MODEL ) {
-					Model* model = static_cast<Model*>(parent);
-					if( model ) {
-						meshName = model->getMesh();
-					}
-				}
-			}
-		}
+btVector3 BBox::convertScaleBasedOnShape(const Vector& _scale) {
+	Vector scale(fabs(_scale.x), fabs(_scale.y), fabs(_scale.z));
+	float maximum;
+	btVector3 result;
+	switch (shape) {
+	default:
+	case SHAPE_BOX:
+		result = btVector3(scale.x, scale.y, scale.z);
+		break;
+	case SHAPE_SPHERE:
+		maximum = max(max(scale.x, scale.y), scale.z);
+		result = btVector3(maximum, maximum, maximum);
+		break;
+	case SHAPE_CAPSULE:
+		maximum = max(scale.x, scale.y);
+		result = btVector3(maximum, maximum, scale.z);
+		break;
+	case SHAPE_CYLINDER:
+		result = btVector3(scale.x, scale.y, scale.z);
+		break;
+	case SHAPE_CONE:
+		maximum = max(scale.x, scale.y);
+		result = btVector3(maximum, maximum, scale.z);
+		break;
+	case SHAPE_MESH:
+		result = btVector3(scale.x, scale.y, scale.z);
+		break;
 	}
+	return result;
+}
 
-	if( dirty ) {
+void BBox::updateRigidBody(const Vector& oldGScale) {
+	if (mass == 0.f || mainEngine->isEditorRunning()) {
+		dirty = true;
+	}
+	if (mass > 0.f && !gScale.close(oldGScale)) {
+		dirty = true;
+	}
+	if (dirty) {
 		createRigidBody();
 		dirty = false;
-	} else {
-		if (parent != nullptr || mass == 0.f) {
-			if (ghostObject) {
-				if (shape == SHAPE_MESH) {
-					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
-				}
-				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
-				ghostObject->setWorldTransform(btTrans);
-			} else if (motionState) {
-				if (shape == SHAPE_MESH) {
-					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
-				}
-				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
-				motionState->setWorldTransform(btTrans);
-			}
+	}
+
+	// scale collision shape
+	if (collisionShapePtr && !gScale.close(oldGScale)) {
+		btVector3 scale = convertScaleBasedOnShape(gScale);
+		collisionShapePtr->setLocalScaling(scale);
+	}
+
+	if (parent != nullptr || mass == 0.f) {
+		if (ghostObject) {
+			btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
+			ghostObject->setWorldTransform(btTrans);
+		} else if (motionState) {
+			btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
+			motionState->setWorldTransform(btTrans);
 		}
 	}
 }
@@ -241,19 +259,19 @@ void BBox::createRigidBody() {
 	switch (shape) {
 	default:
 	case SHAPE_BOX:
-		collisionShapePtr = new btBoxShape(btVector3(gScale.x, gScale.y, gScale.z));
+		collisionShapePtr = new btBoxShape(btVector3(1.f, 1.f, 1.f));
 		break;
 	case SHAPE_SPHERE:
-		collisionShapePtr = new btSphereShape(max(max(gScale.x, gScale.y), gScale.z));
+		collisionShapePtr = new btSphereShape(1.f);
 		break;
 	case SHAPE_CAPSULE:
-		collisionShapePtr = new btCapsuleShapeZ(max(gScale.x, gScale.y), gScale.z);
+		collisionShapePtr = new btCapsuleShapeZ(1.f, 1.f);
 		break;
 	case SHAPE_CYLINDER:
-		collisionShapePtr = new btCylinderShapeZ(btVector3(gScale.x, gScale.y, gScale.z));
+		collisionShapePtr = new btCylinderShapeZ(btVector3(1.f, 1.f, 1.f));
 		break;
 	case SHAPE_CONE:
-		collisionShapePtr = new btConeShapeZ(max(gScale.x, gScale.y), gScale.z);
+		collisionShapePtr = new btConeShapeZ(1.f, 1.f);
 		break;
 	case SHAPE_MESH:
 		if (editorOnly && !mainEngine->isEditorRunning()) {
@@ -273,7 +291,7 @@ void BBox::createRigidBody() {
 			else {
 				shape = SHAPE_CYLINDER;
 				mainEngine->fmsg(Engine::MSG_DEBUG, "mesh shape assigned to bbox, but mesh is unavailable");
-				collisionShapePtr = new btCylinderShapeZ(btVector3(gScale.x, gScale.y, gScale.z));
+				collisionShapePtr = new btCylinderShapeZ(btVector3(1.f, 1.f, 1.f));
 			}
 		}
 		break;
@@ -291,9 +309,8 @@ void BBox::createRigidBody() {
 		if (dynamicsWorld) {
 			if (mass >= 0.f) {
 				// create motion state
-				if( shape == SHAPE_MESH ) {
-					collisionShapePtr->setLocalScaling(btVector3(fabs(gScale.x), fabs(gScale.y), fabs(gScale.z)));
-				}
+				auto scale = convertScaleBasedOnShape(gScale);
+				collisionShapePtr->setLocalScaling(scale);
 				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
 				motionState = new btDefaultMotionState(btTrans);
 
