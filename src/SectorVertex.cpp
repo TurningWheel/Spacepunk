@@ -77,9 +77,6 @@ void SectorVertex::updateRigidBody() {
 	btRigidBody::btRigidBodyConstructionInfo
 		rigidBodyCI(0, motionState, collisionShapePtr, btVector3(0.f, 0.f, 0.f));
 	rigidBody = new btRigidBody(rigidBodyCI);
-	rigidBody->setUserIndex(World::nuid);
-	rigidBody->setUserIndex2((int)index);
-	rigidBody->setUserPointer(nullptr);
 
 	// add a new rigid body to the simulation
 	if( world ) {

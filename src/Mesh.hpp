@@ -24,6 +24,14 @@ class ShaderProgram;
 class Camera;
 class Material;
 class Model;
+typedef Map<StringBuf<64>, AnimationState> AnimationMap;
+
+// skin cache
+struct skincache_t {
+	ArrayList<glm::mat4> anims;
+	ArrayList<glm::mat4> offsets;
+};
+typedef ArrayList<skincache_t> SkinCache;
 
 class Mesh : public Asset {
 public:
@@ -33,12 +41,6 @@ public:
 
 	// maximum number of lights that will fit in the tile shader
 	static const Uint32 maxLights = 12;
-
-	// skin cache
-	struct skincache_t {
-		ArrayList<glm::mat4> anims;
-		ArrayList<glm::mat4> offsets;
-	};
 
 	// shader vars
 	struct shadervars_t {
@@ -87,12 +89,12 @@ public:
 	// @param component optional component tied to the mesh
 	// @param skincache skincache to render with
 	// @param shader the shader program to draw the mesh with
-	void draw( Camera& camera, const Component* component, ArrayList<skincache_t>& skincache, ShaderProgram* shader );
+	void draw( Camera& camera, const Component* component, SkinCache& skincache, ShaderProgram* shader );
 
 	// skins the mesh
 	// @param animations animations to skin with
 	// @param skincache where to store resulting skin
-	void skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) const;
+	void skin( const AnimationMap& animations, SkinCache& skincache ) const;
 
 	// find the bone with the given name
 	// @param name the name of the bone to search for
@@ -163,8 +165,8 @@ public:
 		GLuint findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3);
 		void mapBones(const aiNode* node);
 
-		void boneTransform(const Map<String, AnimationState>& animations, skincache_t& skin) const;
-		void readNodeHierarchy(const Map<String, AnimationState>* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const;
+		void boneTransform(const AnimationMap& animations, skincache_t& skin) const;
+		void readNodeHierarchy(const AnimationMap* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const;
 		const aiNodeAnim* findNodeAnim(const aiAnimation* animation, const char* str) const;
 
 		void calcInterpolatedPosition(aiVector3D& out, const AnimationState& anim, float weight, const aiNodeAnim* nodeAnim) const;

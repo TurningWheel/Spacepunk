@@ -198,10 +198,12 @@ void Model::loadAnimations() {
 }
 
 void Model::updateSkin() {
-	skinUpdateNeeded = false;
-	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
-	if( mesh ) {
-		mesh->skin(animations, skincache);
+	if (skinUpdateNeeded) {
+		skinUpdateNeeded = false;
+		Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
+		if( mesh ) {
+			mesh->skin(animations, skincache);
+		}
 	}
 }
 

@@ -691,7 +691,7 @@ float Entity::nearestFloor(World::hit_t& hit) {
 	Vector v = (ang * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
 	world->lineTraceList(pos, pos + v * 10000.f, hits);
 	for (auto& curr : hits) {
-		if (curr.hitEntity == true && curr.index == uid) {
+		if (curr.manifest && curr.manifest->entity == this) {
 			continue;
 		} else {
 			nearestFloor = (curr.pos - pos).length();
@@ -713,7 +713,7 @@ float Entity::nearestCeiling(World::hit_t& hit) {
 	Vector v = (ang * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
 	world->lineTraceList(pos, pos + v * 10000.f, hits);
 	for (auto& curr : hits) {
-		if (curr.hitEntity == true && curr.index == uid) {
+		if (curr.manifest && curr.manifest->entity == this) {
 			continue;
 		} else {
 			nearestCeiling = (curr.pos - pos).length();

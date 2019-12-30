@@ -17,6 +17,10 @@ public:
 	Map() {
 		data.resize(numBuckets);
 	}
+	Map(const Map& src) {
+		data.resize(numBuckets);
+		copy(src);
+	}
 	~Map() {
 	}
 

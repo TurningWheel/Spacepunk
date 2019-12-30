@@ -335,8 +335,8 @@ void Player::control() {
 	float nearestCeiling = entity->nearestCeiling(ceilingHit);
 	float nearestFloor = entity->nearestFloor(floorHit);
 
-	Entity* entityStandingOn = floorHit.hitEntity ? world->uidToEntity(floorHit.index) : nullptr;
-	Entity* entityAbove = ceilingHit.hitEntity ? world->uidToEntity(ceilingHit.index) : nullptr;
+	Entity* entityStandingOn = floorHit.manifest ? floorHit.manifest->entity : nullptr;
+	Entity* entityAbove = ceilingHit.manifest ? ceilingHit.manifest->entity : nullptr;
 
 	// collect movement inputs
 	Input& input = mainEngine->getInput(localID);
@@ -575,33 +575,30 @@ void Player::control() {
 				Vector dest = start + camera->getGlobalAng().toVector() * 128;
 				World::hit_t hit = entity->lineTrace(start, dest);
 
-				if (hit.hitEntity)
+				if (hit.manifest && hit.manifest->entity)
 				{
-					Entity* hitEntity = nullptr;
-					if ((hitEntity = world->uidToEntity(hit.index)) != nullptr)
+					Entity* hitEntity = hit.manifest->entity;
+					previousInteractedEntity = hitEntity;
+
+					if (previousInteractedEntity->isPickupable())
 					{
-						previousInteractedEntity = hitEntity;
+						entity->depositInAvailableSlot(previousInteractedEntity);
+					}
 
-						if (previousInteractedEntity->isPickupable())
+					auto hitBBox = static_cast<BBox*>(hit.manifest->component);
+					if (hitBBox)
+					{
+						if (hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE))
 						{
-							entity->depositInAvailableSlot(previousInteractedEntity);
-						}
-
-						auto hitBBox = static_cast<BBox*>(hit.pointer);
-						if (hitBBox)
-						{
-							if (hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE))
-							{
-								mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
-								Packet packet;
-								packet.write32(hitBBox->getUID());
-								packet.write32(hitEntity->getUID());
-								packet.write32(client->indexForWorld(world));
-								packet.write32(localID);
-								packet.write("ESEL");
-								client->getNet()->signPacket(packet);
-								client->getNet()->sendPacketSafe(0, packet);
-							}
+							mainEngine->fmsg(Engine::MSG_DEBUG, "clicked on entity '%s': UID %d", hitEntity->getName().get(), hitEntity->getUID());
+							Packet packet;
+							packet.write32(hitBBox->getUID());
+							packet.write32(hitEntity->getUID());
+							packet.write32(client->indexForWorld(world));
+							packet.write32(localID);
+							packet.write("ESEL");
+							client->getNet()->signPacket(packet);
+							client->getNet()->sendPacketSafe(0, packet);
 						}
 					}
 				}
@@ -688,6 +685,9 @@ void Player::updateCamera() {
 
 	// move camera
 	if( camera ) {
+		camera->setLocalPos(originalCameraPos);
+		camera->setLocalAng(entity->getLookDir());
+
 		Model::bone_t headBone;
 		if (head) {
 			head->updateSkin();
@@ -696,9 +696,6 @@ void Player::updateCamera() {
 				camera->setLocalPos(headBone.pos + models->getLocalPos());
 			}
 		}
-
-		camera->setLocalPos(originalCameraPos);
-		camera->setLocalAng(entity->getLookDir());
 
 		if( localID == 0 ) {
 			client->getMixer()->setListener(camera);
@@ -727,7 +724,9 @@ void Player::updateCamera() {
 		if( headBone.valid ) {
 			camera->translate(Vector(16.f, 0.f, 0.f));
 		}
-		camera->translate(Vector(0.f, 0.f, sinf(bobAngle) * 4.f * bobLength));
+		if (cvar_enableBob.toInt()) {
+			camera->translate(Vector(0.f, 0.f, sinf(bobAngle) * 4.f * bobLength));
+		}
 		camera->update();
 	}
 }

@@ -67,6 +67,11 @@ void BBox::deleteRigidBody() {
 		if( dynamicsWorld ) {
 			dynamicsWorld->removeRigidBody(rigidBody);
 		}
+		auto manifest = static_cast<World::physics_manifest_t*>(rigidBody->getUserPointer());
+		if (manifest) {
+			delete manifest;
+			manifest = nullptr;
+		}
 		delete rigidBody;
 		rigidBody = nullptr;
 	}
@@ -307,6 +312,12 @@ void BBox::createRigidBody() {
 	if (world) {
 		dynamicsWorld = world->getBulletDynamicsWorld();
 		if (dynamicsWorld) {
+			// create physics manifest
+			auto manifest = new World::physics_manifest_t();
+			manifest->world = world;
+			manifest->entity = entity;
+			manifest->component = this;
+
 			if (mass >= 0.f) {
 				// create motion state
 				auto scale = convertScaleBasedOnShape(gScale);
@@ -320,9 +331,7 @@ void BBox::createRigidBody() {
 				btRigidBody::btRigidBodyConstructionInfo
 					rigidBodyCI(mass, motionState, collisionShapePtr, inertia);
 				rigidBody = new btRigidBody(rigidBodyCI);
-				rigidBody->setUserIndex(entity->getUID());
-				rigidBody->setUserIndex2(World::nuid);
-				rigidBody->setUserPointer(this);
+				rigidBody->setUserPointer(manifest);
 				if (mass > 0.f) {
 					rigidBody->setActivationState( DISABLE_DEACTIVATION );
 					rigidBody->setSleepingThresholds(0.f, 0.f);
@@ -335,9 +344,7 @@ void BBox::createRigidBody() {
 				ghostObject = new btPairCachingGhostObject();
 				btTransform btTrans(btQuat(gAng), btVector3(gPos.x, gPos.y, gPos.z));
 				ghostObject->setWorldTransform(btTrans);
-				ghostObject->setUserIndex(entity->getUID());
-				ghostObject->setUserIndex2(World::nuid);
-				ghostObject->setUserPointer(this);
+				ghostObject->setUserPointer(manifest);
 				ghostObject->setActivationState( DISABLE_DEACTIVATION );
 				ghostObject->setCollisionShape(collisionShapePtr);
 				ghostObject->setCollisionFlags(btCollisionObject::CollisionFlags::CF_CHARACTER_OBJECT);
@@ -403,19 +410,19 @@ ArrayList<Entity*> BBox::findAllOverlappingEntities() const {
 
 	for (int i = 0; i < ghost->getNumOverlappingObjects(); i++) {
 		btCollisionObject* obj = ghost->getOverlappingObject(i);
-		Uint32 uid = obj->getUserIndex();
-		if (uid != entity->getUID() && uid != World::nuid) {
-			bool found = false;
-			for (auto entity : outList) {
-				if (entity->getUID() == uid) {
-					found = true;
-					break;
+		auto manifest = static_cast<World::physics_manifest_t*>(obj->getUserPointer());
+		if (manifest) {
+			auto overlap = manifest->entity;
+			if (overlap && overlap != entity) {
+				bool found = false;
+				for (auto entity : outList) {
+					if (entity == overlap) {
+						found = true;
+						break;
+					}
 				}
-			}
-			if (!found) {
-				Entity* entity = world->uidToEntity(uid);
-				if (entity) {
-					outList.push(entity);
+				if (!found) {
+					outList.push(overlap);
 				}
 			}
 		}

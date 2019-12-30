@@ -18,11 +18,19 @@
 class Script;
 class Entity;
 class Game;
+class Component;
 
 class World {
 public:
 	World(Game* _game);
 	virtual ~World();
+
+	// data owned by every physics object in a world
+	struct physics_manifest_t {
+		World* world = nullptr;
+		Entity* entity = nullptr;
+		Component* component = nullptr;
+	};
 
 	// world type
 	enum type_t {
@@ -36,14 +44,7 @@ public:
 	struct hit_t {
 		Vector pos;
 		Vector normal;
-		Uint32 index = nuid;
-		Uint32 index2 = nuid;
-		void* pointer = nullptr;
-
-		bool hitEntity = false;
-		bool hitTile = false;
-		bool hitSector = false;
-		bool hitSectorVertex = false;
+		physics_manifest_t* manifest = nullptr;
 	};
 
 	// file type
@@ -265,6 +266,8 @@ protected:
 
 	// when a new world is spawned, it generates an obstacle map/cache of all static obstacles.
 	virtual void generateObstacleCache() = 0;
+
+	static void bulletCollisionCallback(btBroadphasePair& pair, btCollisionDispatcher& dispatcher, const btDispatcherInfo& info);
 
 	// shadow map stuff
 	Entity* shadowCamera = nullptr;

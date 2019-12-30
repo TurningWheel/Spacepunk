@@ -40,8 +40,6 @@ public:
 		Vector scale;
 	};
 
-	typedef ArrayList<Mesh::skincache_t> SkinCache;
-
 	Model(Entity& _entity, Component* _parent);
 	virtual ~Model();
 
@@ -103,8 +101,8 @@ public:
 	const char*							getMaterial() const					{ return materialStr.get(); }
 	const char*							getDepthFailMat() const				{ return depthfailStr.get(); }
 	const char*							getAnimation() const				{ return animationStr.get(); }
-	const Map<String, AnimationState>&	getAnimations() const				{ return animations; }
-	Map<String, AnimationState>&		getAnimations()						{ return animations; }
+	const AnimationMap&					getAnimations() const				{ return animations; }
+	AnimationMap&						getAnimations()						{ return animations; }
 	const Mesh::shadervars_t&			getShaderVars() const				{ return shaderVars; }
 	const SkinCache&					getSkinCache() const				{ return skincache; }
 	float								getAnimationSpeed() const			{ return animationSpeed; }
@@ -149,7 +147,7 @@ private:
 	bool broken = false;						// if true, assets were not found and the model won't be drawn
 	bool skinUpdateNeeded = false;				// if true, skin will get tossed on next draw call
 	SkinCache skincache;						// bone transforms
-	Map<String, AnimationState> animations;		// animation states
+	AnimationMap animations;					// animation states
 	float animationSpeed = 1.f;					// anim speed factor
 	String currentAnimation;					// currently playing animation (deprecated)
 	String previousAnimation;					// previously playing animation (deprecated)

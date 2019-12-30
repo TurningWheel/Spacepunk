@@ -1329,10 +1329,12 @@ void Component::shootLaser(const glm::mat4& mat, WideVector& color, float size, 
 	World* world = entity->getWorld();
 	World::hit_t hit = world->lineTrace(start, end);
 	end = hit.pos;
-	if (hit.hitEntity) {
-		Entity* hitEntity = entity->getWorld()->uidToEntity(hit.index);
-		if (hitEntity) {
-			hitEntity->applyForce((hit.pos - entity->getPos()).normal() * 1000.f, hit.pos);
+	if (hit.manifest) {
+		if (hit.manifest->entity) {
+			Entity* hitEntity = hit.manifest->entity;
+			if (hitEntity) {
+				hitEntity->applyForce((hit.pos - entity->getPos()).normal() * 1000.f, hit.pos);
+			}
 		}
 	}
 	world->addLaser(start, end, color, size, life);

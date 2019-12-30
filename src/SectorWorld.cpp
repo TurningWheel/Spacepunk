@@ -612,9 +612,6 @@ void SectorWorld::updateGridRigidBody(float z) {
 	btRigidBody::btRigidBodyConstructionInfo
 		rigidBodyCI(0, motionState, collisionShapePtr, btVector3(0.f, 0.f, 0.f));
 	rigidBody = new btRigidBody(rigidBodyCI);
-	rigidBody->setUserIndex(World::nuid);
-	rigidBody->setUserIndex2(World::nuid);
-	rigidBody->setUserPointer(nullptr);
 
 	// add a new rigid body to the simulation
 	bulletDynamicsWorld->addRigidBody(rigidBody);

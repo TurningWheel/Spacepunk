@@ -62,20 +62,21 @@ public:
 	void clearWeights();
 
 	// getters & setters
-	const char*					getName() const								{ return name.get(); }
-	float						getTicks() const							{ return ticks; }
-	float						getTicksRate() const						{ return ticksRate; }
-	float						getBegin() const							{ return begin; }
-	float						getEnd() const								{ return end; }
-	float						getLength() const							{ return length; }
-	float						getWeight(const char* bone) const			{ if (const state_t *state = weights[bone]) { return state->value; } else { return 0.f; } }
-	float						getWeightRate(const char* bone) const		{ if (const state_t *state = weights[bone]) { return state->rate; } else { return 0.f; } }
-	bool						isLoop() const								{ return loop; }
-	unsigned int				getBeginLastSoundFrame() const				{ return beginLastSoundFrame; }
-	unsigned int				getEndLastSoundFrame() const				{ return endLastSoundFrame; }
-	const ArrayList<sound_t>&	getSounds() const							{ return sounds; }
-	ArrayList<sound_t>&			getSounds()									{ return sounds; }
-	bool						isFinished() const							{ return ticks >= (end - begin) && !loop; }
+	const char*						getName() const								{ return name.get(); }
+	float							getTicks() const							{ return ticks; }
+	float							getTicksRate() const						{ return ticksRate; }
+	float							getBegin() const							{ return begin; }
+	float							getEnd() const								{ return end; }
+	float							getLength() const							{ return length; }
+	float							getWeight(const char* bone) const			{ if (const state_t *state = weights[bone]) { return state->value; } else { return 0.f; } }
+	float							getWeightRate(const char* bone) const		{ if (const state_t *state = weights[bone]) { return state->rate; } else { return 0.f; } }
+	bool							isLoop() const								{ return loop; }
+	unsigned int					getBeginLastSoundFrame() const				{ return beginLastSoundFrame; }
+	unsigned int					getEndLastSoundFrame() const				{ return endLastSoundFrame; }
+	const ArrayList<sound_t>&		getSounds() const							{ return sounds; }
+	ArrayList<sound_t>&				getSounds()									{ return sounds; }
+	bool							isFinished() const							{ return ticks >= (end - begin) && !loop; }
+	const Map<String, state_t>&		getWeights() const							{ return weights; }
 
 	void	setTicks(float _ticks)											{ ticks = _ticks; updated = true; }
 	void	setTicksRate(float _ticksRate)									{ ticksRate = _ticksRate; updated = true; }

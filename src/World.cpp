@@ -62,6 +62,21 @@ World::~World() {
 	delete bulletBroadphase;
 }
 
+void World::bulletCollisionCallback(btBroadphasePair& pair, btCollisionDispatcher& dispatcher, const btDispatcherInfo& info) {
+	auto obj0 = static_cast<btCollisionObject*>(pair.m_pProxy0->m_clientObject);
+	auto obj1 = static_cast<btCollisionObject*>(pair.m_pProxy1->m_clientObject);
+	auto manifest0 = static_cast<World::physics_manifest_t*>(obj0->getUserPointer());
+	auto manifest1 = static_cast<World::physics_manifest_t*>(obj1->getUserPointer());
+	btManifoldArray arr;
+	if (pair.m_algorithm) {
+		pair.m_algorithm->getAllContactManifolds(arr);
+		for (int c = 0; c < arr.size(); ++c) {
+			auto contact = arr.at(c);
+		}
+	}
+	dispatcher.defaultNearCallback(pair, dispatcher, info);
+}
+
 void World::initialize(bool empty) {
 	mainEngine->fmsg(Engine::MSG_INFO,"creating physics simulation...");
 
@@ -69,8 +84,10 @@ void World::initialize(bool empty) {
 	bulletBroadphase = new btDbvtBroadphase();
 
 	// set up the collision configuration and dispatcher
+	btNearCallback collisionCallback = bulletCollisionCallback;
 	bulletCollisionConfiguration = new btDefaultCollisionConfiguration();
 	bulletDispatcher = new btCollisionDispatcher(bulletCollisionConfiguration);
+	bulletDispatcher->setNearCallback(collisionCallback);
 
 	// the actual physics solver
 	bulletSolver = new btSequentialImpulseConstraintSolver;
@@ -279,40 +296,16 @@ void World::convexSweepList( const btConvexShape* shape, const Vector& originPos
 			hit.normal.x = normal.x;
 			hit.normal.y = normal.y;
 			hit.normal.z = normal.z;
-			hit.index = SweepCallback.m_collisionObjects[num]->getUserIndex();
-			hit.index2 = SweepCallback.m_collisionObjects[num]->getUserIndex2();
-			hit.pointer = SweepCallback.m_collisionObjects[num]->getUserPointer();
-
-			// determine if we hit an entity or a tile
-			hit.hitEntity = false;
-			hit.hitTile = false;
-			if( hit.index <= uids ) {
-				hit.hitEntity = true;
-			} else if( hit.index2 != World::nuid ) {
-				hit.hitSectorVertex = true;
-			} else if( hit.index == World::nuid ) {
-				if( getType() == WORLD_TILES ) {
-					hit.hitTile = true;
-				} else if( getType() == WORLD_SECTORS ) {
-					hit.hitSector = true;
-				}
-			}
-
-			// skip invalid "hits"
-			if( !hit.hitEntity && !hit.hitTile && !hit.hitSector && !hit.hitSectorVertex ) {
-				continue;
-			}
+			hit.manifest = static_cast<World::physics_manifest_t*>(SweepCallback.m_collisionObjects[num]->getUserPointer());
 
 			// skip untraceable entities
-			if( hit.hitEntity ) {
-				Entity* entity;
-				if( (entity=uidToEntity(hit.index)) != nullptr ) {
-					if( !entity->isShouldSave() ) {
-						continue;
-					}
-					if( entity==shadowCamera ) {
-						continue;
-					}
+			if( hit.manifest && hit.manifest->entity ) {
+				Entity* entity = hit.manifest->entity;
+				if( !entity->isShouldSave() ) {
+					continue;
+				}
+				if( entity==shadowCamera ) {
+					continue;
 				}
 			}
 
@@ -366,40 +359,16 @@ void World::lineTraceList( const Vector& origin, const Vector& dest, LinkedList<
 			hit.normal.x = normal.x;
 			hit.normal.y = normal.y;
 			hit.normal.z = normal.z;
-			hit.index = RayCallback.m_collisionObjects[num]->getUserIndex();
-			hit.index2 = RayCallback.m_collisionObjects[num]->getUserIndex2();
-			hit.pointer = RayCallback.m_collisionObjects[num]->getUserPointer();
-
-			// determine if we hit an entity or a tile
-			hit.hitEntity = false;
-			hit.hitTile = false;
-			if( hit.index <= uids ) {
-				hit.hitEntity = true;
-			} else if( hit.index2 != World::nuid ) {
-				hit.hitSectorVertex = true;
-			} else if( hit.index == World::nuid ) {
-				if( getType() == WORLD_TILES ) {
-					hit.hitTile = true;
-				} else if( getType() == WORLD_SECTORS ) {
-					hit.hitSector = true;
-				}
-			}
-
-			// skip invalid "hits"
-			if( !hit.hitEntity && !hit.hitTile && !hit.hitSector && !hit.hitSectorVertex ) {
-				continue;
-			}
+			hit.manifest = static_cast<World::physics_manifest_t*>(RayCallback.m_collisionObjects[num]->getUserPointer());
 
 			// skip untraceable entities
-			if( hit.hitEntity ) {
-				Entity* entity;
-				if( (entity=uidToEntity(hit.index)) != nullptr ) {
-					if( !entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE) && (!mainEngine->isEditorRunning() || !entity->isShouldSave()) ) {
-						continue;
-					}
-					if( entity==shadowCamera ) {
-						continue;
-					}
+			if( hit.manifest && hit.manifest->entity ) {
+				Entity* entity = hit.manifest->entity;
+				if( !entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE) && (!mainEngine->isEditorRunning() || !entity->isShouldSave()) ) {
+					continue;
+				}
+				if( entity==shadowCamera ) {
+					continue;
 				}
 			}
 
@@ -429,7 +398,7 @@ const World::hit_t World::lineTraceNoEntities( const Vector& origin, const Vecto
 	// return the first non-entity found
 	for( Node<hit_t>* node = list.getFirst(); node != nullptr; node = node->getNext() ) {
 		hit_t& hit = node->getData();
-		if( hit.hitTile || hit.hitSector || hit.hitSectorVertex ) {
+		if( !hit.manifest || !hit.manifest->entity ) {
 			return hit;
 		}
 	}

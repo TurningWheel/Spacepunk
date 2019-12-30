@@ -322,9 +322,6 @@ void Sector::buildPhysicsMesh() {
 	btRigidBody::btRigidBodyConstructionInfo
 		tileRigidBodyCI(0, motionState, triMeshShape, btVector3(0, 0, 0));
 	rigidBody = new btRigidBody(tileRigidBodyCI);
-	rigidBody->setUserIndex(World::nuid);
-	rigidBody->setUserIndex2(World::nuid);
-	rigidBody->setUserPointer((void*)this);
 
 	// add a new rigid body to the simulation
 	dynamicsWorld->addRigidBody(rigidBody);

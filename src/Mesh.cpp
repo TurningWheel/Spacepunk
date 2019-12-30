@@ -383,7 +383,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	}
 }
 
-void Mesh::skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>& skincache ) const {
+void Mesh::skin( const AnimationMap& animations, SkinCache& skincache ) const {
 	if( !hasAnimations() ) {
 		return;
 	}
@@ -391,11 +391,26 @@ void Mesh::skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>
 	skincache.clear();
 	skincache.resize(subMeshes.getSize());
 
+	// remove unused animations from the map
+	AnimationMap _anims;
+	for (auto& anim : animations) {
+		bool foundWeight = false;
+		for (auto& weight : anim.b.getWeights()) {
+			if (weight.b.value > 0.f) {
+				foundWeight = true;
+				break;
+			}
+		}
+		if (foundWeight) {
+			_anims.insert(anim.a, anim.b);
+		}
+	}
+
 	Uint32 index = 0;
 	for( auto& entry : subMeshes ) {
 		if( hasAnimations() ) {
 			if( skincache[index].anims.empty() ) {
-				entry->boneTransform(animations, skincache[index]);
+				entry->boneTransform(_anims, skincache[index]);
 			}
 		}
 
@@ -406,7 +421,7 @@ void Mesh::skin( Map<String, AnimationState>& animations, ArrayList<skincache_t>
 static Cvar cvar_showBones("showbones", "displays bones in animated models as dots for debug purposes", "0");
 static Cvar cvar_findBone("findbone", "used with showbones, displays only the bone with the given name", "");
 
-void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache_t>& skincache, ShaderProgram* shader ) {
+void Mesh::draw( Camera& camera, const Component* component, SkinCache& skincache, ShaderProgram* shader ) {
 	if( skincache.getSize() < subMeshes.getSize() ) {
 		skincache.resize(subMeshes.getSize());
 	}
@@ -454,7 +469,7 @@ void Mesh::draw( Camera& camera, const Component* component, ArrayList<skincache
 }
 
 void Mesh::draw(Camera& camera, const Component* component, ShaderProgram* shader) {
-	ArrayList<skincache_t> skincache;
+	SkinCache skincache;
 	for( Uint32 c=0; c<subMeshes.getSize(); ++c ) {
 		skincache.push(skincache_t());
 	}
@@ -947,7 +962,7 @@ void Mesh::SubMesh::mapBones(const aiNode* node) {
 	}
 }
 
-void Mesh::SubMesh::boneTransform(const Map<String, AnimationState>& animations, skincache_t& skin) const {
+void Mesh::SubMesh::boneTransform(const AnimationMap& animations, skincache_t& skin) const {
 	if( !scene || !scene->HasAnimations() )
 		return;
 	const glm::mat4 identity( 1.f );
@@ -962,7 +977,7 @@ void Mesh::SubMesh::boneTransform(const Map<String, AnimationState>& animations,
 #include <vector>
 #include <mutex>
 
-void Mesh::SubMesh::readNodeHierarchy(const Map<String, AnimationState>* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const {
+void Mesh::SubMesh::readNodeHierarchy(const AnimationMap* animations, skincache_t* skin, const aiNode* node, const glm::mat4* rootTransform) const {
 	assert(scene);
 
 	aiMatrix4x4 nodeTransform = node->mTransformation;

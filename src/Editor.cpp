@@ -3885,9 +3885,9 @@ void Editor::process(const bool usable) {
 							const World::hit_t& hit = node->getData();
 							nextNode = node->getNext();
 
-							if( hit.hitEntity==true ) {
-								Entity* entity = nullptr;
-								if( (entity=world.uidToEntity(hit.index))!=nullptr ) {
+							if (hit.manifest) {
+								if( hit.manifest->entity ) {
+									Entity* entity = hit.manifest->entity;
 									if( entity == entityToSpawn ) {
 										list.removeNode(node);
 										continue;
@@ -3904,9 +3904,9 @@ void Editor::process(const bool usable) {
 						// pick the thing we're pointing at
 						if( list.getSize() > 0 ) {
 							const World::hit_t& firstObjectHit = list[0]->getData();
-							const World::hit_t& hit = (widgetUnderMouse.index != World::nuid) ? widgetUnderMouse : firstObjectHit;
+							const World::hit_t& hit = (widgetUnderMouse.manifest && widgetUnderMouse.manifest->entity) ? widgetUnderMouse : firstObjectHit;
 
-							if( hit.hitTile ) {
+							if( !hit.manifest || !hit.manifest->entity ) {
 								world.setPointerActive(true);
 
 								if( editingMode==ENTITIES ) {
@@ -3938,26 +3938,11 @@ void Editor::process(const bool usable) {
 										}
 									}
 								}
-							} else if( hit.hitEntity ) {
+							} else if (hit.manifest && hit.manifest->entity) {
 								world.setPointerActive(true);
 								world.setPointerPos(hit.pos);
 								if( !leftClicking || leftClick ) {
-									highlightedObj = hit.index;
-								}
-							} else if( hit.hitSectorVertex ) {
-								world.setPointerActive(true);
-								world.setPointerPos(hit.pos);
-								if( !leftClicking || leftClick ) {
-									if( editingMode==SECTORS ) {
-										highlightedVertex = hit.index2;
-									}
-								}
-							} else if( hit.hitSector ) {
-								world.setPointerActive(true);
-								world.setPointerPos(hit.pos);
-								highlightedSector = (Sector*)hit.pointer;
-								if( highlightedSector ) {
-									highlightedFace = highlightedSector->findFaceWithNormal(hit.normal);
+									highlightedObj = hit.manifest->entity->getUID();
 								}
 							}
 						}
