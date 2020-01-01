@@ -281,6 +281,10 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 		} else if( camera.getDrawMode() == Camera::DRAW_SHADOW ) {
+			// load guid
+			Uint32 hashed = component.getEntity()->getUID();
+			hashed ^= component.getUID() + 0x9e3779b9 + (hashed<<6) + (hashed>>2);
+			glUniform1ui(shader.getUniformLocation("gUID"), hashed);
 
 			// load model matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
@@ -325,6 +329,10 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
 			}
 		} else {
+			// load guid
+			Uint32 hashed = component.getEntity()->getUID();
+			hashed ^= component.getUID() + 0x9e3779b9 + (hashed<<6) + (hashed>>2);
+			glUniform1ui(shader.getUniformLocation("gUID"), hashed);
 
 			// load model matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
@@ -348,9 +356,13 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 				char buf[32];
 				for (int index = 0; index < maxLights; ++textureUnit, ++index) {
-					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
 					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
-					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
+				}
+				for (int index = 0; index < maxLights; ++textureUnit, ++index) {
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
+					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
 				}
 			} else {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
@@ -371,10 +383,15 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				}
 
 				char buf[32];
-				for (int index = textureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
-					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+				unsigned int newTextureUnit = textureUnit;
+				for (int index = newTextureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
 					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
-					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
+				}
+				for (int index = newTextureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
+					glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
+					camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
 				}
 			}
 		}

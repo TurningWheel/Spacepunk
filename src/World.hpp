@@ -18,7 +18,7 @@
 class Script;
 class Entity;
 class Game;
-class Component;
+class BBox;
 
 class World {
 public:
@@ -29,7 +29,7 @@ public:
 	struct physics_manifest_t {
 		World* world = nullptr;
 		Entity* entity = nullptr;
-		Component* component = nullptr;
+		BBox* bbox = nullptr;
 	};
 
 	// world type

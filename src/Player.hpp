@@ -127,6 +127,8 @@ private:
 	float buttonBackward = 0.f;
 	bool buttonJump = false;
 	bool buttonCrouch = false;
+	float buttonLeanLeft = 0.f;
+	float buttonLeanRight = 0.f;
 
 	// inventory vars
 	bool inventoryVisible = false;

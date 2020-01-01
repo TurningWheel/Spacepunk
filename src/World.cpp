@@ -67,11 +67,63 @@ void World::bulletCollisionCallback(btBroadphasePair& pair, btCollisionDispatche
 	auto obj1 = static_cast<btCollisionObject*>(pair.m_pProxy1->m_clientObject);
 	auto manifest0 = static_cast<World::physics_manifest_t*>(obj0->getUserPointer());
 	auto manifest1 = static_cast<World::physics_manifest_t*>(obj1->getUserPointer());
-	btManifoldArray arr;
-	if (pair.m_algorithm) {
-		pair.m_algorithm->getAllContactManifolds(arr);
-		for (int c = 0; c < arr.size(); ++c) {
-			auto contact = arr.at(c);
+	Entity* entity0 = manifest0 ? manifest0->entity : nullptr;
+	Entity* entity1 = manifest1 ? manifest1->entity : nullptr;
+	BBox* bbox0 = manifest0 ? manifest0->bbox : nullptr;
+	BBox* bbox1 = manifest1 ? manifest1->bbox : nullptr;
+	if (bbox0 && bbox1 && entity0 && entity1 && 0) {
+		if (pair.m_algorithm) {
+			btManifoldArray arr;
+			pair.m_algorithm->getAllContactManifolds(arr);
+			for (int c = 0; c < arr.size(); ++c) {
+				auto contact = arr.at(c);
+				for (int i = 0; i < contact->getNumContacts(); ++i) {
+					auto& point = contact->getContactPoint(i);
+
+					float mass0 = fabs(bbox0->getMass());
+					float mass1 = fabs(bbox1->getMass());
+					float mass0over1 = mass1 ? mass0 / mass1 : 2.f;
+					float mass1over0 = mass0 ? mass1 / mass0 : 2.f;
+
+					Vector vel = entity0->getVel() - entity1->getVel();
+
+					// react entity0
+					if (bbox0->getMass()) {
+						const Vector point0 = Vector(point.m_positionWorldOnA.x(), point.m_positionWorldOnA.y(), point.m_positionWorldOnA.z());
+						Vector diff = point0 - entity0->getPos();
+						if (diff.dot(vel) > 0.f) {
+							Vector dir = diff.normal();
+							glm::vec3 r = glm::reflect(glm::vec3(vel.x, vel.y, vel.z), glm::vec3(dir.x, dir.y, dir.z));
+							Vector bounce(r.x, r.y, r.z);
+							Vector force = bounce * mass1over0;
+							if (bbox0->getMass() < 0.f) {
+								entity0->setVel(entity0->getVel() + force);
+							} else {
+								auto& v = point.m_localPointA;
+								entity0->applyForce(force, Vector(0.f));
+							}
+						}
+					}
+
+					// react entity1
+					if (bbox1->getMass()) {
+						const Vector point1 = Vector(point.m_positionWorldOnB.x(), point.m_positionWorldOnB.y(), point.m_positionWorldOnB.z());
+						Vector diff = point1 - entity1->getPos();
+						if (diff.dot(vel) > 0.f) {
+							Vector dir = diff.normal();
+							glm::vec3 r = glm::reflect(glm::vec3(vel.x, vel.y, vel.z), glm::vec3(dir.x, dir.y, dir.z));
+							Vector bounce(r.x, r.y, r.z);
+							Vector force = bounce * mass0over1;
+							if (bbox1->getMass() < 0.f) {
+								entity1->setVel(entity1->getVel() + force);
+							} else {
+								auto& v = point.m_localPointB;
+								entity1->applyForce(force, Vector(0.f));
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	dispatcher.defaultNearCallback(pair, dispatcher, info);

@@ -38,14 +38,15 @@ public:
 
 	// binds the shadow map for reading
 	// @param textureUnit The texture unit to bind for reading
-	void bindForReading(GLenum textureUnit) const;
+	// @param attachment The texture we wish to sample (GL_COLOR_ATTACHMENT0 or GL_DEPTH_ATTACHMENT or GL_STENCIL_ATTACHMENT)
+	void bindForReading(GLenum textureUnit, GLenum attachment) const;
 
 	// getters & setters
 	const GLuint	getFBO() const			{ return fbo; }
-	const GLuint	getShadowMap() const	{ return shadowMap; }
-	bool			isInitialized() const	{ return fbo != 0 && shadowMap != 0; }
+	bool			isInitialized() const	{ return fbo != 0; }
 
 private:
 	GLuint fbo = 0;
 	GLuint shadowMap = 0;
+	GLuint uidMap = 0;
 };

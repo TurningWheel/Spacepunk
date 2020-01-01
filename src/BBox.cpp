@@ -316,7 +316,7 @@ void BBox::createRigidBody() {
 			auto manifest = new World::physics_manifest_t();
 			manifest->world = world;
 			manifest->entity = entity;
-			manifest->component = this;
+			manifest->bbox = this;
 
 			if (mass >= 0.f) {
 				// create motion state

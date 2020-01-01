@@ -327,7 +327,8 @@ void Player::control() {
 		mainEngine->setMouseRelative(true);
 	}
 
-	Vector vel = originalVel;
+	//Vector vel = originalVel;
+	Vector vel = entity->getVel();
 	bool warpNeeded = false;
 
 	World::hit_t floorHit, ceilingHit;
@@ -344,6 +345,8 @@ void Player::control() {
 	buttonLeft = 0.f;
 	buttonForward = 0.f;
 	buttonBackward = 0.f;
+	buttonLeanLeft = 0.f;
+	buttonLeanRight = 0.f;
 	buttonJump = false;
 	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling <= totalHeight : false;
 	if( !client->isConsoleActive() ) {
@@ -362,15 +365,20 @@ void Player::control() {
 			buttonLeft = input.analog(Input::MOVE_LEFT);
 			buttonForward = input.analog(Input::MOVE_FORWARD);
 			buttonBackward = input.analog(Input::MOVE_BACKWARD);
+			buttonLeanLeft = input.analog(Input::LEAN_LEFT);
+			buttonLeanRight = input.analog(Input::LEAN_RIGHT);
 
-			float dir = atan2( buttonForward - buttonBackward, buttonRight - buttonLeft);
-			float cosDir = abs(cos(dir));
-			float sinDir = abs(sin(dir));
-
+			// restrict inputs to circle
+			float dir = atan2f( buttonForward - buttonBackward, buttonRight - buttonLeft);
+			float cosDir = fabs(cosf(dir));
+			float sinDir = fabs(sinf(dir));
 			buttonRight = min(cosDir,buttonRight);
 			buttonLeft = min(cosDir,buttonLeft);
 			buttonForward = min(sinDir,buttonForward);
 			buttonBackward = min(sinDir,buttonBackward);
+		} else {
+			buttonLeanLeft = input.analog(Input::MOVE_LEFT);
+			buttonLeanRight = input.analog(Input::MOVE_RIGHT);
 		}
 	}
 	if( buttonRight || buttonLeft || buttonForward || buttonBackward ) {
@@ -469,6 +477,11 @@ void Player::control() {
 		}
 		rot.yaw += (input.analog(Input::LOOK_RIGHT) - input.analog(Input::LOOK_LEFT)) * timeFactor * 2.f;
 		rot.pitch += (input.analog(Input::LOOK_DOWN) - input.analog(Input::LOOK_UP)) * timeFactor * 2.f * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
+		if (cvar_zeroGravity.toInt()) {
+			rot.roll += (buttonLeanRight - buttonLeanLeft) * timeFactor * .5f;
+		} else {
+			rot.roll = 0.f;
+		}
 	}
 	rot.wrapAngles();
 
@@ -585,7 +598,7 @@ void Player::control() {
 						entity->depositInAvailableSlot(previousInteractedEntity);
 					}
 
-					auto hitBBox = static_cast<BBox*>(hit.manifest->component);
+					auto hitBBox = hit.manifest->bbox;
 					if (hitBBox)
 					{
 						if (hitEntity->isFlag(Entity::flag_t::FLAG_INTERACTABLE))

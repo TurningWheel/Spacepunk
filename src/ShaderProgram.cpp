@@ -144,16 +144,16 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 		glUniform3fv(getUniformLocation(uniformArray(buf, "gLightDirection", 15, index)), 1, glm::value_ptr(lightDir));
 		glUniform1i(getUniformLocation(uniformArray(buf, "gLightShape", 11, index)), static_cast<GLint>(light->getShape()));
 		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
-			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_TRUE);
-			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit);
+			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
 			//glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
 			glm::mat4 lightProj = Camera::makeInfReversedZProj(glm::radians(90.f), 1.f, 1.f);
 			glUniformMatrix4fv(getUniformLocation(uniformArray(buf, "gLightProj", 10, index)), 1, GL_FALSE, glm::value_ptr(lightProj));
 		} else {
-			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
-			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
+			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
 		}
 
 		++index;
@@ -163,11 +163,34 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 		}
 	}
 	for ( ; index < maxLights; ++index) {
-		glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
 		glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
-		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit);
+		glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
+		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
 		++textureUnit;
 	}
+
+	index = 0u;
+	for (auto light : lights) {
+		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
+			glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
+			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
+		} else {
+			glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
+			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
+		}
+
+		++index;
+		++textureUnit;
+		if (index >= maxLights || textureUnit >= GL_MAX_TEXTURE_IMAGE_UNITS) {
+			break;
+		}
+	}
+	for ( ; index < maxLights; ++index) {
+		glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
+		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
+		++textureUnit;
+	}
+
 	glUniform1i(getUniformLocation("gNumLights"), (GLint)lights.getSize());
 
 	return textureUnit;

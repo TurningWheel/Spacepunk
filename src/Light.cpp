@@ -170,7 +170,7 @@ void Light::createShadowMap() {
 		camera->setClipNear(1.f);
 		camera->setClipFar(radius);
 		camera->setupProjection(false);
-		glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		if (world->getType() == World::type_t::WORLD_TILES) {
 			static_cast<TileWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
 		} else if (world->getType() == World::type_t::WORLD_BASIC) {

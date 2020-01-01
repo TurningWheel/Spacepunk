@@ -951,7 +951,7 @@
                         "lPos": {
                             "x": 0.0,
                             "y": 0.0,
-                            "z": 16.0
+                            "z": 33.0
                         },
                         "lAng": {
                             "Quaternion::version": 0,
@@ -961,14 +961,14 @@
                             "w": 1.0
                         },
                         "lScale": {
-                            "x": 1.0,
-                            "y": 1.0,
-                            "z": 1.0
+                            "x": 1.100000023841858,
+                            "y": 1.100000023841858,
+                            "z": 1.100000023841858
                         },
                         "components": [],
                         "Model::version": 1,
-                        "meshStr": "assets/block/block.FBX",
-                        "materialStr": "assets/materials/Rock.json",
+                        "meshStr": "assets/ball/spaceball_g.FBX",
+                        "materialStr": "",
                         "depthfailStr": "",
                         "animationStr": "",
                         "shaderVars": {
@@ -1020,13 +1020,13 @@
                             "w": 1.0
                         },
                         "lScale": {
-                            "x": 16.0,
-                            "y": 16.0,
-                            "z": 16.0
+                            "x": 32.0,
+                            "y": 32.0,
+                            "z": 32.0
                         },
                         "components": [],
                         "BBox::version": 1,
-                        "shape": 0,
+                        "shape": 1,
                         "enabled": true,
                         "mass": 1.0
                     }

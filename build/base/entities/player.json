@@ -281,7 +281,7 @@
                     "BBox::version": 1,
                     "shape": 2,
                     "enabled": true,
-                    "mass": -1.0
+                    "mass": -50.0
                 }
             }
         ]
