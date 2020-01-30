@@ -8,83 +8,50 @@
 Cvar cvar_sensitivity("input.sensitivity","look sensitivity","1.0");
 Cvar cvar_deadzone("input.deadzone","controller stick dead-zone range","0.2");
 
-const char* Input::bindingName[] = {
-	"Invalid",
-
-	"MoveForward",
-	"MoveLeft",
-	"MoveBackward",
-	"MoveRight",
-	"MoveUp",
-	"MoveDown",
-
-	"LookUp",
-	"LookLeft",
-	"LookDown",
-	"LookRight",
-
-	"Lean",
-	"LeanLeft",
-	"LeanRight",
-
-	"Interact",
-	"HandLeft",
-	"HandRight",
-
-	"Inventory1",
-	"Inventory2",
-	"Inventory3",
-	"Inventory4",
-	"Drop",
-	"Status",
-
-	"MenuUp",
-	"MenuLeft",
-	"MenuDown",
-	"MenuRight",
-	"MenuConfirm",
-	"MenuCancel",
-	"MenuToggle",
-	"MenuLobby",
-	"MenuPageLeft",
-	"MenuPageRight"
-};
-
 Map<String, SDL_Scancode> Input::scancodeNames;
 
-float Input::analog(Input::bindingenum_t binding) const {
-	return bindings[binding].analog;
+float Input::analog(const char* binding) const {
+	auto b = bindings[binding];
+	return b ? b->analog : 0.f;
 }
 
-bool Input::binary(Input::bindingenum_t binding) const {
-	return bindings[binding].binary;
+bool Input::binary(const char* binding) const {
+	auto b = bindings[binding];
+	return b ? b->binary : false;
 }
 
-bool Input::binaryToggle(bindingenum_t binding) const {
-	return bindings[binding].binary && !bindings[binding].consumed;
+bool Input::binaryToggle(const char* binding) const {
+	auto b = bindings[binding];
+	return b ? b->binary && !b->consumed : false;
 }
 
-void Input::consumeBinaryToggle(bindingenum_t binding) {
-	if ( bindings[binding].binary )
-	{
-		bindings[binding].consumed = true;
+void Input::consumeBinaryToggle(const char* binding) {
+	auto b = bindings[binding];
+	if (b && b->binary) {
+		b->consumed = true;
 	}
 }
 
-const char* Input::binding(Input::bindingenum_t binding) const {
-	return bindings[binding].input.get();
+const char* Input::binding(const char* binding) const {
+	auto b = bindings[binding];
+	return b ? b->input.get() : "";
 }
 
 void Input::refresh() {
-	for (int c = 0; c < bindingenum_t::BINDINGENUM_TYPE_LENGTH; ++c) {
-		rebind(static_cast<bindingenum_t>(c), bindings[c].input.get());
+	for (auto& pair : bindings) {
+		rebind(pair.a, pair.b.input.get());
 	}
 }
 
-void Input::rebind(Input::bindingenum_t binding, const char* input) {
-	bindings[binding].input.assign(input);
+void Input::rebind(const char* binding, const char* input) {
+	auto b = bindings[binding];
+	if (!b) {
+		bindings.insert(binding, binding_t());
+		b = bindings[binding];
+	}
+	b->input.assign(input);
 	if( input == nullptr ) {
-		bindings[binding].type = binding_t::INVALID;
+		b->type = binding_t::INVALID;
 		return;
 	}
 
@@ -98,168 +65,168 @@ void Input::rebind(Input::bindingenum_t binding, const char* input) {
 		Node<SDL_GameController*>* node = list.nodeForIndex(index);
 
 		if( node ) {
-			bindings[binding].pad = node->getData();
+			b->pad = node->getData();
 			SDL_GameController* pad = node->getData();
 			if( strncmp(type, "Button", 6) == 0 ) {
 				if( strcmp((const char*)(type+6), "A") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_A;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_A;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "B") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_B;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_B;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "X") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_X;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_X;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "Y") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_Y;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_Y;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "Back") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_BACK;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_BACK;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "Start") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_START;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_START;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "LeftStick") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_LEFTSTICK;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_LEFTSTICK;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "RightStick") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_RIGHTSTICK;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_RIGHTSTICK;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "LeftBumper") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_LEFTSHOULDER;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_LEFTSHOULDER;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+6), "RightBumper") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_RIGHTSHOULDER;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_RIGHTSHOULDER;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else {
-					bindings[binding].type = binding_t::INVALID;
+					b->type = binding_t::INVALID;
 					return;
 				}
 			}
 			else if( strncmp(type, "StickLeft", 9) == 0 ) {
 				if( strcmp((const char*)(type+9), "X-") == 0 ) {
-					bindings[binding].padAxisNegative = true;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_LEFTX;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = true;
+					b->padAxis = SDL_CONTROLLER_AXIS_LEFTX;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else if( strcmp((const char*)(type+9), "X+") == 0 ) {
-					bindings[binding].padAxisNegative = false;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_LEFTX;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = false;
+					b->padAxis = SDL_CONTROLLER_AXIS_LEFTX;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else if( strcmp((const char*)(type+9), "Y-") == 0 ) {
-					bindings[binding].padAxisNegative = true;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_LEFTY;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = true;
+					b->padAxis = SDL_CONTROLLER_AXIS_LEFTY;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else if( strcmp((const char*)(type+9), "Y+") == 0 ) {
-					bindings[binding].padAxisNegative = false;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_LEFTY;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = false;
+					b->padAxis = SDL_CONTROLLER_AXIS_LEFTY;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else {
-					bindings[binding].type = binding_t::INVALID;
+					b->type = binding_t::INVALID;
 					return;
 				}
 			}
 			else if( strncmp(type, "StickRight", 10) == 0 ) {
 				if( strcmp((const char*)(type+10), "X-") == 0 ) {
-					bindings[binding].padAxisNegative = true;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_RIGHTX;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = true;
+					b->padAxis = SDL_CONTROLLER_AXIS_RIGHTX;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else if( strcmp((const char*)(type+10), "X+") == 0 ) {
-					bindings[binding].padAxisNegative = false;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_RIGHTX;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = false;
+					b->padAxis = SDL_CONTROLLER_AXIS_RIGHTX;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else if( strcmp((const char*)(type+10), "Y-") == 0 ) {
-					bindings[binding].padAxisNegative = true;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_RIGHTY;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = true;
+					b->padAxis = SDL_CONTROLLER_AXIS_RIGHTY;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else if( strcmp((const char*)(type+10), "Y+") == 0 ) {
-					bindings[binding].padAxisNegative = false;
-					bindings[binding].padAxis = SDL_CONTROLLER_AXIS_RIGHTY;
-					bindings[binding].type = binding_t::CONTROLLER_AXIS;
+					b->padAxisNegative = false;
+					b->padAxis = SDL_CONTROLLER_AXIS_RIGHTY;
+					b->type = binding_t::CONTROLLER_AXIS;
 					return;
 				}
 				else {
-					bindings[binding].type = binding_t::INVALID;
+					b->type = binding_t::INVALID;
 					return;
 				}
 			}
 			else if( strncmp(type, "Dpad", 4) == 0 ) {
 				if( strcmp((const char*)(type+4), "X-") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_DPAD_LEFT;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_DPAD_LEFT;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+4), "X+") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_DPAD_RIGHT;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+4), "Y-") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_DPAD_UP;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_DPAD_UP;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else if( strcmp((const char*)(type+4), "Y+") == 0 ) {
-					bindings[binding].padButton = SDL_CONTROLLER_BUTTON_DPAD_DOWN;
-					bindings[binding].type = binding_t::CONTROLLER_BUTTON;
+					b->padButton = SDL_CONTROLLER_BUTTON_DPAD_DOWN;
+					b->type = binding_t::CONTROLLER_BUTTON;
 					return;
 				}
 				else {
-					bindings[binding].type = binding_t::INVALID;
+					b->type = binding_t::INVALID;
 					return;
 				}
 			}
 			else if( strncmp(type, "LeftTrigger", 11) == 0 ) {
-				bindings[binding].padAxisNegative = false;
-				bindings[binding].padAxis = SDL_CONTROLLER_AXIS_TRIGGERLEFT;
-				bindings[binding].type = binding_t::CONTROLLER_AXIS;
+				b->padAxisNegative = false;
+				b->padAxis = SDL_CONTROLLER_AXIS_TRIGGERLEFT;
+				b->type = binding_t::CONTROLLER_AXIS;
 				return;
 			}
 			else if( strncmp(type, "RightTrigger", 12) == 0 ) {
-				bindings[binding].padAxisNegative = false;
-				bindings[binding].padAxis = SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
-				bindings[binding].type = binding_t::CONTROLLER_AXIS;
+				b->padAxisNegative = false;
+				b->padAxis = SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
+				b->type = binding_t::CONTROLLER_AXIS;
 				return;
 			}
 			else {
-				bindings[binding].type = binding_t::INVALID;
+				b->type = binding_t::INVALID;
 				return;
 			}
 		} else {
-			bindings[binding].type = binding_t::INVALID;
+			b->type = binding_t::INVALID;
 			return;
 		}
 	}
@@ -268,46 +235,27 @@ void Input::rebind(Input::bindingenum_t binding, const char* input) {
 		Uint32 index = strtol((const char*)(input+5), nullptr, 10);
 		int result = min( max( 0U, index ), 4U );
 
-		bindings[binding].type = binding_t::MOUSE_BUTTON;
-		bindings[binding].mouseButton = result;
+		b->type = binding_t::MOUSE_BUTTON;
+		b->mouseButton = result;
 		return;
 	}
 	else {
 		// keyboard
-		bindings[binding].type = binding_t::KEYBOARD;
-		bindings[binding].scancode = getScancodeFromName(input);
+		b->type = binding_t::KEYBOARD;
+		b->scancode = getScancodeFromName(input);
 		return;
 	}
 }
 
-Input::bindingenum_t Input::enumForName(const char* name) {
-	if( !name ) {
-		return INVALID;
-	}
-	size_t theirLen = strlen(name);
-
-	for( int c = 0; c < (int)(BINDINGENUM_TYPE_LENGTH); ++c ) {
-		size_t ourLen = strlen(bindingName[c]);
-		if( theirLen != ourLen )
-			continue;
-
-		if( strncmp(bindingName[c], name, ourLen) == 0 ) {
-			return (bindingenum_t)c;
-		}
-	}
-	return INVALID;
-}
-
 void Input::update() {
-	for( int c = 0; c < (int)(BINDINGENUM_TYPE_LENGTH); ++c ) {
-		bindingenum_t binding = (bindingenum_t)c;
-		bindings[binding].analog = analogOf(bindings[binding]);
-		bool obinary = bindings[binding].binary;
-		bindings[binding].binary = binaryOf(bindings[binding]);
-		if ( obinary != bindings[binding].binary )
-		{
-			//Unconsume the input whenever it's released or pressed again.
-			bindings[binding].consumed = false;
+	for (auto& pair : bindings) {
+		auto& binding = pair.b;
+		binding.analog = analogOf(binding);
+		bool oldBinary = binding.binary;
+		binding.binary = binaryOf(binding);
+		if ( oldBinary != binding.binary ) {
+			// unconsume the input whenever it's released or pressed again.
+			binding.consumed = false;
 		}
 	}
 }
@@ -384,7 +332,7 @@ static int console_bind(int argc, const char** argv) {
 	}
 	int num = argv[0][0] - '0';
 	if( num >= 0 && num < 4 ) {
-		Input::bindingenum_t binding = Input::enumForName(argv[1]);
+		const char* binding = argv[1];
 		StringBuf<32> input(argv[2]);
 		for( int c=3; c<argc; ++c ) {
 			input.appendf(" %s",argv[c]);

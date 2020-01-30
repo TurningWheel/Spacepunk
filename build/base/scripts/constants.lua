@@ -10,6 +10,13 @@ function protect(tbl)
     })
 end
 
+UINT8_MAX = 0xff; UINT8_MAX = protect(UINT8_MAX)
+INT8_MAX = 0xff; INT8_MAX = protect(INT8_MAX)
+UINT16_MAX = 0xffff; UINT16_MAX = protect(UINT16_MAX)
+INT16_MAX = 0xffff; INT16_MAX = protect(INT16_MAX)
+UINT32_MAX = 0xffffffff; UINT32_MAX = protect(UINT32_MAX)
+INT32_MAX = 0xffffffff; INT32_MAX = protect(INT32_MAX)
+
 -- BBox collision shapes
 SHAPE = {
 	BOX = 0,

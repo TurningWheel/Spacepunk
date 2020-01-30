@@ -20,6 +20,7 @@ class Camera;
 class Light;
 class World;
 class Field;
+class Model;
 
 class Component {
 public:
@@ -570,6 +571,17 @@ public:
 	// resets rotation, translation, and scale at once
 	void revertToIdentity();
 
+	// binds the component to a bone on a model
+	// @param model the model to bind to
+	// @param bone the name of the bone to bind to
+	// @param translation positional offset from the bone
+	// @param rotation rotational offset from the bone
+	// @param scale scaling offset from the bone
+	void bindToBone(Model* model, const char* bone, const Vector& translation, const Rotation& rotation, const Vector& scale);
+
+	// unbinds the component from any bones it was bound to
+	void unbindFromBone();
+
 	// getters & setters
 	virtual type_t					getType() const						{ return COMPONENT_BASIC; }
 	const Entity*					getEntity() const					{ return entity; }
@@ -666,4 +678,13 @@ protected:
 
 	// attributes available for reflection
 	ArrayList<Attribute*> attributes;
+
+	// bone binding
+	bool boundToBone = false;
+	Model* boneModel = nullptr;
+	const char* boneName = nullptr;
+	Uint32 boneIndex = UINT32_MAX;
+	Vector boneTranslate;
+	Rotation boneRotate;
+	Vector boneScale;
 };

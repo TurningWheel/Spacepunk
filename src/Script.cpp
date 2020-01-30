@@ -694,6 +694,8 @@ void Script::exposeComponent() {
 		.addFunction("revertScale", &Component::revertScale)
 		.addFunction("revertToIdentity", &Component::revertToIdentity)
 		.addFunction("shootLaser", &Component::shootLaser)
+		.addFunction("bindToBone", &Component::bindToBone)
+		.addFunction("unbindFromBone", &Component::unbindFromBone)
 		.endClass()
 	;
 
@@ -723,6 +725,7 @@ void Script::exposeModel() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Model, Component>("Model")
 		.addFunction("findBone", &Model::findBone)
+		.addFunction("findBoneIndex", &Model::findBoneIndex)
 		.addFunction("findAnimation", &Model::findAnimation)
 		.addFunction("animate", &Model::animate)
 		.addFunction("hasAnimations", &Model::hasAnimations)
@@ -765,17 +768,6 @@ void Script::exposeModel() {
 		.addFunction("setWeights", &AnimationState::setWeights)
 		.addFunction("setWeightRates", &AnimationState::setWeightRates)
 		.addFunction("clearWeights", &AnimationState::clearWeights)
-		.endClass()
-	;
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<Model::bone_t>("bone_t")
-		.addData("valid", &Model::bone_t::valid, true)
-		.addData("name", &Model::bone_t::name, true)
-		.addData("mat", &Model::bone_t::mat, true)
-		.addData("pos", &Model::bone_t::pos, true)
-		.addData("ang", &Model::bone_t::ang, true)
-		.addData("scale", &Model::bone_t::scale, true)
 		.endClass()
 	;
 

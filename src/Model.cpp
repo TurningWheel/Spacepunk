@@ -91,39 +91,29 @@ void Model::process() {
 	}
 }
 
-Model::bone_t Model::findBone(const char* name) const {
+Uint32 Model::findBoneIndex(const char* name) const {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	if( mesh ) {
-		unsigned int bone = mesh->boneIndexForName(name);
-		if( bone != UINT32_MAX ) {
-			Uint32 c = 0;
-			for( ; c < skincache.getSize(); ++c ) {
-				if( bone >= skincache[c].anims.getSize() ) {
-					bone -= (unsigned int)skincache[c].anims.getSize();
-				} else {
-					break;
-				}
-			}
-			if( c >= skincache.getSize() ) {
-				return bone_t();
-			} else {
-				glm::mat4 mat = skincache[c].offsets[bone];
+		return (Uint32)mesh->boneIndexForName(name);
+	} else {
+		return UINT32_MAX;
+	}
+}
 
-				bone_t bone;
-				glm::extractEulerAngleXYZ(mat, bone.ang.roll, bone.ang.pitch, bone.ang.yaw);
-				bone.valid = true;
-				bone.name = name;
-				bone.mat = mat;
-				bone.pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
-				bone.scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
-
-				return bone;
-			}
+glm::mat4 Model::findBone(Uint32 bone) const {
+	Uint32 c = 0;
+	for( ; c < skincache.getSize(); ++c ) {
+		if( bone >= skincache[c].anims.getSize() ) {
+			bone -= (unsigned int)skincache[c].anims.getSize();
 		} else {
-			return bone_t();
+			break;
 		}
 	}
-	return bone_t();
+	if( c >= skincache.getSize() ) {
+		return glm::mat4(1.f);
+	} else {
+		return skincache[c].offsets[bone];
+	}
 }
 
 AnimationState* Model::findAnimation(const char* name) {

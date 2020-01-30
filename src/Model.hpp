@@ -6,6 +6,7 @@
 
 #define GLM_FORCE_RADIANS
 #include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
 
 #include <btBulletDynamicsCommon.h>
 
@@ -30,16 +31,6 @@ class Camera;
 
 class Model : public Component {
 public:
-	// bone data
-	struct bone_t {
-		bool valid = false;
-		String name;
-		glm::mat4 mat;
-		Vector pos;
-		Rotation ang;
-		Vector scale;
-	};
-
 	Model(Entity& _entity, Component* _parent);
 	virtual ~Model();
 
@@ -59,8 +50,13 @@ public:
 
 	// finds a bone with the given name
 	// @param name the name of the bone to search for
-	// @return a struct containing bone position, orientation, etc.
-	bone_t findBone(const char* name) const;
+	// @return the index of the bone in the skin cache, or UINT32_MAX if not found
+	Uint32 findBoneIndex(const char* name) const;
+
+	// get the position of the given bone
+	// @param index the index of the bone
+	// @return the bone's matrix
+	glm::mat4 findBone(Uint32 index) const;
 
 	// @return true if the model has any animation keyfile assigned
 	bool hasAnimations() const;

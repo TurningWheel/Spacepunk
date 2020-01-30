@@ -350,23 +350,23 @@ void Player::control() {
 	buttonJump = false;
 	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling <= totalHeight : false;
 	if( !client->isConsoleActive() ) {
-		buttonCrouch |= input.binary(Input::MOVE_DOWN);
+		buttonCrouch |= input.binary("MoveDown");
 
-		if( input.binary(Input::MOVE_UP) && !jumped ) {
+		if( input.binary("MoveUp") && !jumped ) {
 			if( nearestCeiling > totalHeight && !buttonCrouch ) {
 				buttonJump = true;
 			}
-		} else if( !input.binary(Input::MOVE_UP) && jumped ) {
+		} else if( !input.binary("MoveUp") && jumped ) {
 			jumped = false;
 		}
 
-		if( !input.binary(Input::LEAN_MODIFIER) ) {
-			buttonRight = input.analog(Input::MOVE_RIGHT);
-			buttonLeft = input.analog(Input::MOVE_LEFT);
-			buttonForward = input.analog(Input::MOVE_FORWARD);
-			buttonBackward = input.analog(Input::MOVE_BACKWARD);
-			buttonLeanLeft = input.analog(Input::LEAN_LEFT);
-			buttonLeanRight = input.analog(Input::LEAN_RIGHT);
+		if( !input.binary("Lean") ) {
+			buttonRight = input.analog("MoveRight");
+			buttonLeft = input.analog("MoveLeft");
+			buttonForward = input.analog("MoveForward");
+			buttonBackward = input.analog("MoveBackward");
+			buttonLeanLeft = input.analog("LeanLeft");
+			buttonLeanRight = input.analog("LeanRight");
 
 			// restrict inputs to circle
 			float dir = atan2f( buttonForward - buttonBackward, buttonRight - buttonLeft);
@@ -377,8 +377,8 @@ void Player::control() {
 			buttonForward = min(sinDir,buttonForward);
 			buttonBackward = min(sinDir,buttonBackward);
 		} else {
-			buttonLeanLeft = input.analog(Input::MOVE_LEFT);
-			buttonLeanRight = input.analog(Input::MOVE_RIGHT);
+			buttonLeanLeft = input.analog("MoveLeft");
+			buttonLeanRight = input.analog("MoveRight");
 		}
 	}
 	if( buttonRight || buttonLeft || buttonForward || buttonBackward ) {
@@ -475,8 +475,8 @@ void Player::control() {
 			rot.yaw += mousex * timeFactor * cvar_mouseSpeed.toFloat();
 			rot.pitch += mousey * timeFactor  * cvar_mouseSpeed.toFloat() * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 		}
-		rot.yaw += (input.analog(Input::LOOK_RIGHT) - input.analog(Input::LOOK_LEFT)) * timeFactor * 2.f;
-		rot.pitch += (input.analog(Input::LOOK_DOWN) - input.analog(Input::LOOK_UP)) * timeFactor * 2.f * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
+		rot.yaw += (input.analog("LookRight") - input.analog("LookLeft")) * timeFactor * 2.f;
+		rot.pitch += (input.analog("LookDown") - input.analog("LookUp")) * timeFactor * 2.f * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 		if (cvar_zeroGravity.toInt()) {
 			rot.roll += (buttonLeanRight - buttonLeanLeft) * timeFactor * .5f;
 		} else {
@@ -576,14 +576,14 @@ void Player::control() {
 		World* world = entity->getWorld();
 		if(camera && world)
 		{
-			if (input.binaryToggle(Input::INTERACT)) {
+			if (input.binaryToggle("Interact")) {
 				if (holdingInteract)
 				{
 					// 60hz
 					interactHoldTime += 1 / 60;
 				}
 				holdingInteract = true;
-				input.consumeBinaryToggle(Input::INTERACT);
+				input.consumeBinaryToggle("Interact");
 				Vector start = camera->getGlobalPos();
 				Vector dest = start + camera->getGlobalAng().toVector() * 128;
 				World::hit_t hit = entity->lineTrace(start, dest);
@@ -623,9 +623,9 @@ void Player::control() {
 				interactHoldTime = 0;
 			}
 			// Toggling inventory
-			if (input.binaryToggle(Input::TOGGLE_INVENTORY))
+			if (input.binaryToggle("Status"))
 			{
-				input.consumeBinaryToggle(Input::TOGGLE_INVENTORY);
+				input.consumeBinaryToggle("Status");
 				entity->setInventoryVisibility(!inventoryVisible);
 				inventoryVisible = !inventoryVisible;
 			}
@@ -650,32 +650,32 @@ void Player::control() {
 	}
 
 	// using hand items (shooting)
-	if (lTool && input.binaryToggle(Input::bindingenum_t::HAND_LEFT)) {
-		Model::bone_t bone = lTool->findBone("emitter");
+	if (lTool && input.binaryToggle("HandLeft")) {
+		Uint32 bone = lTool->findBoneIndex("emitter");
 		glm::mat4 mat = lTool->getGlobalMat();
-		if (bone.valid) {
-			 mat *= bone.mat;
+		if (bone != UINT32_MAX) {
+			 mat *= lTool->findBone(bone);
 		}
 		auto red = WideVector(1.f, 0.f, 0.f, 1.f);
 		lTool->shootLaser(mat, red, 8.f, 20.f);
 	}
-	if (rTool && input.binaryToggle(Input::bindingenum_t::HAND_RIGHT)) {
-		Model::bone_t bone = rTool->findBone("emitter");
+	if (rTool && input.binaryToggle("HandRight")) {
+		Uint32 bone = rTool->findBoneIndex("emitter");
 		glm::mat4 mat = rTool->getGlobalMat();
-		if (bone.valid) {
-			mat *= bone.mat;
+		if (bone != UINT32_MAX) {
+			mat *= rTool->findBone(bone);
 		}
 		auto red = WideVector(1.f, 0.f, 0.f, 1.f);
 		rTool->shootLaser(mat, red, 8.f, 20.f);
 	}
-	input.consumeBinaryToggle(Input::bindingenum_t::HAND_LEFT);
-	input.consumeBinaryToggle(Input::bindingenum_t::HAND_RIGHT);
+	input.consumeBinaryToggle("HandLeft");
+	input.consumeBinaryToggle("HandRight");
 
 	// lamp
-	if (lamp && input.binaryToggle(Input::bindingenum_t::INVENTORY1)) {
+	if (lamp && input.binaryToggle("Inventory1")) {
 		lamp->setIntensity(lamp->getIntensity() == 0.f ? 1.f : 0.f);
 	}
-	input.consumeBinaryToggle(Input::bindingenum_t::INVENTORY1);
+	input.consumeBinaryToggle("Inventory1");
 }
 
 void Player::updateCamera() {
@@ -701,12 +701,14 @@ void Player::updateCamera() {
 		camera->setLocalPos(originalCameraPos);
 		camera->setLocalAng(entity->getLookDir());
 
-		Model::bone_t headBone;
+		Uint32 headBone = UINT32_MAX;
 		if (head) {
 			head->updateSkin();
-			headBone = head->findBone("Bone_Head");
-			if( headBone.valid ) {
-				camera->setLocalPos(headBone.pos + models->getLocalPos());
+			headBone = head->findBoneIndex("Bone_Head");
+			if( headBone != UINT32_MAX ) {
+				auto mat = head->findBone(headBone);
+				auto pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+				camera->setLocalPos(pos + models->getLocalPos());
 			}
 		}
 
@@ -734,7 +736,7 @@ void Player::updateCamera() {
 			rect.h = mainEngine->getYres() / 2;
 		}
 		camera->setWin(rect);
-		if( headBone.valid ) {
+		if( headBone != UINT32_MAX ) {
 			camera->translate(Vector(16.f, 0.f, 0.f));
 		}
 		if (cvar_enableBob.toInt()) {

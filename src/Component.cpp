@@ -862,6 +862,14 @@ void Component::deleteAllVisMaps() {
 }
 
 void Component::process() {
+	if( boundToBone ) {
+		boneModel->updateSkin();
+		glm::mat4 mat = boneModel->findBone(boneIndex);
+		setLocalMat(mat);
+		rotate(boneRotate);
+		translate(boneTranslate);
+		scale(boneScale);
+	}
 	if( updateNeeded ) {
 		update();
 	}
@@ -1346,4 +1354,22 @@ void Component::setLocalMat(const glm::mat4& mat) {
 	lScale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
 	lAng = Quaternion(mat);
 	updateNeeded = true;
+}
+
+void Component::bindToBone(Model* model, const char* bone, const Vector& translation, const Rotation& rotation, const Vector& scale) {
+	if (!model || !bone) {
+		unbindFromBone();
+		return;
+	}
+	boundToBone = true;
+	boneModel = model;
+	boneName = bone;
+	boneIndex = model->findBoneIndex(bone);
+	boneTranslate = translation;
+	boneRotate = rotation;
+	boneScale = scale;
+}
+
+void Component::unbindFromBone() {
+	boundToBone = false;
 }
