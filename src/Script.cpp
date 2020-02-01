@@ -182,9 +182,25 @@ void Script::exposeEngine() {
 		.addFunction("editorPlaytest", &Engine::editorPlaytest)
 		.addFunction("smsg", &Engine::smsg)
 		.addFunction("msg", &Engine::msg)
+		.addFunction("getInput", &Engine::getInput)
 		.addStaticFunction("triangleCoords", &Engine::triangleCoords)
 		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
 		.addStaticFunction("strcmp", &Engine::strCompare)
+		.endClass()
+	;
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<Input>("Input")
+		.addFunction("analog", &Input::analog)
+		.addFunction("binary", &Input::binary)
+		.addFunction("binaryToggle", &Input::binaryToggle)
+		.addFunction("consumeBinaryToggle", &Input::consumeBinaryToggle)
+		.addFunction("binding", &Input::binding)
+		.addFunction("rebind", &Input::rebind)
+		.addFunction("refresh", &Input::refresh)
+		.addFunction("update", &Input::update)
+		.addFunction("isInverted", &Input::isInverted)
+		.addFunction("setInverted", &Input::setInverted)
 		.endClass()
 	;
 

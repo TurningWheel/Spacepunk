@@ -32,7 +32,6 @@ Speaker::Speaker(Entity& _entity, Component* _parent) :
 	if( mainEngine->isEditorRunning() ) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_SPHERE);
-		bbox->setLocalPos(Vector(0.f, 0.f, -16.f));
 		bbox->setLocalScale(Vector(16.f));
 		bbox->setEditorOnly(true);
 		bbox->update();
@@ -146,10 +145,11 @@ void Speaker::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		return;
 	}
 
+	glm::mat4 matrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -16.f, -4.f));
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
-		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat);
+		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat * matrix);
 		if( shader ) {
 			mesh->draw(camera, this, shader);
 		}

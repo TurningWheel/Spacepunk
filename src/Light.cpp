@@ -43,7 +43,6 @@ Light::Light(Entity& _entity, Component* _parent) :
 	if( mainEngine->isEditorRunning() ) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_SPHERE);
-		bbox->setLocalPos(Vector(0.f, 0.f, -8.f));
 		bbox->setLocalScale(Vector(8.f));
 		bbox->setEditorOnly(true);
 		bbox->update();
@@ -91,7 +90,8 @@ void Light::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	shaderVars.customColorEnabled = true;
 	shaderVars.customColorR = { color.x, color.y, color.z, 1.f };
 
-	glm::mat4 matrix = glm::scale(glm::mat4(1.f), glm::vec3(.5f));
+	glm::mat4 matrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -8.f, 0.f));
+	matrix = glm::scale(matrix, glm::vec3(.5f));
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
 	if( mesh && material ) {
