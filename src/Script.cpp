@@ -523,6 +523,7 @@ void Script::exposeWorld() {
 		.addFunction("deselectGeometry", &World::deselectGeometry)
 		.addFunction("getEntitiesByName", &World::getEntitiesByName)
 		.addFunction("generateDungeon", &World::generateDungeon)
+		.addFunction("spawnEntity", &World::spawnEntity)
 		.endClass()
 	;
 

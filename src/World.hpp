@@ -88,6 +88,9 @@ public:
 	// @return true if the entity could be found, false otherwise
 	const bool selectEntity(const Uint32 uid, const bool b);
 
+	// spawn an entity at the given location/orientation
+	Entity* spawnEntity(const char* name, const Vector& pos, const Rotation& ang);
+
 	// selects or deselects all entities in the world
 	// @param b if true, all entities are selected; if false, they are deselected
 	void selectEntities(const bool b);

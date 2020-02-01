@@ -240,6 +240,18 @@ bool World::isShowTools() const {
 	}
 }
 
+Entity* World::spawnEntity(const char* name, const Vector& pos, const Rotation& ang) {
+	if (!name) {
+		return nullptr;
+	}
+	const Entity::def_t* def = Entity::findDef(name);
+	if (!def) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "tried to spawn entity of unknown type '%s'", name);
+		return nullptr;
+	}
+	return Entity::spawnFromDef(this, *def, pos, ang);
+}
+
 const bool World::selectEntity(const Uint32 uid, const bool b) {
 	Entity* entity = uidToEntity(uid);
 	if( entity ) {
