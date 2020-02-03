@@ -743,18 +743,20 @@ bool Entity::move() {
 			if (physics && physics->getMass() != 0.f) {
 				btTransform transform = physics->getPhysicsTransform();
 
+				Vector newPos;
+				newPos.x = transform.getOrigin().x();
+				newPos.y = transform.getOrigin().y();
+				newPos.z = transform.getOrigin().z();
 				Vector oldPos = pos;
-				pos = static_cast<Vector>(-(physics->getLocalPos()));
-				pos.x += transform.getOrigin().x();
-				pos.y += transform.getOrigin().y();
-				pos.z += transform.getOrigin().z();
 
 				const btQuaternion& q = transform.getRotation();
-				ang = Quaternion(q.x(), -q.z(), q.y(), q.w());
-				updateNeeded = true;
+				Quaternion newAng(q.x(), -q.z(), q.y(), q.w());
+
+				pos = newPos;
+				ang = newAng;
 
 				if (physics->getMass() > 0.f) {
-					vel = pos - oldPos;
+					vel = newPos - oldPos;
 				} else {
 					physics->applyMoveForces(vel, rot);
 				}

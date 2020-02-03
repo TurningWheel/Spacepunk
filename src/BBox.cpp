@@ -221,6 +221,9 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 	if (mass > 0.f && !gScale.close(oldGScale)) {
 		dirty = true;
 	}
+	if (mass < 0.f && (ghostObject == nullptr || controller == nullptr)) {
+		dirty = true;
+	}
 	if (dirty) {
 		createRigidBody();
 		dirty = false;

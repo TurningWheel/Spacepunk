@@ -191,6 +191,7 @@ void Script::exposeEngine() {
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Input>("Input")
+		.addConstructor<void (*)()>()
 		.addFunction("analog", &Input::analog)
 		.addFunction("binary", &Input::binary)
 		.addFunction("binaryToggle", &Input::binaryToggle)
