@@ -559,9 +559,21 @@ void Engine::init() {
 	// open game controllers
 	fmsg(Engine::MSG_INFO,"opening game controllers...");
 	for( int c=0; c<SDL_NumJoysticks(); ++c ) {
-		SDL_GameController* pad = SDL_GameControllerOpen(c);
-		if( pad ) {
-			controllers.addNodeLast(pad);
+		if (SDL_IsGameController(c) == SDL_TRUE) {
+			SDL_GameController* pad = SDL_GameControllerOpen(c);
+			if( pad ) {
+				controllers.addNodeLast(pad);
+				fmsg(MSG_INFO, "Added gamepad: %s", SDL_GameControllerName(pad));
+			}
+		} else {
+			SDL_Joystick* joystick = SDL_JoystickOpen(c);
+			if (joystick) {
+				joysticks.addNodeLast(joystick);
+				fmsg(MSG_INFO, "Added joystick: %s", SDL_JoystickName(joystick));
+				fmsg(MSG_INFO, " NumAxes: %d", SDL_JoystickNumAxes(joystick));
+				fmsg(MSG_INFO, " NumButtons: %d", SDL_JoystickNumButtons(joystick));
+				fmsg(MSG_INFO, " NumHats: %d", SDL_JoystickNumHats(joystick));
+			}
 		}
 	}
 
@@ -714,6 +726,11 @@ void Engine::term() {
 		SDL_GameControllerClose(pad);
 	}
 	controllers.removeAll();
+	for (auto node = joysticks.getFirst(); node != nullptr; node = node->getNext()) {
+		SDL_Joystick* joystick = node->getData();
+		SDL_JoystickClose(joystick);
+	}
+	joysticks.removeAll();
 
 	// shutdown SDL subsystems
 	fmsg(MSG_INFO,"shutting down SDL and its subsystems...");
@@ -1162,6 +1179,8 @@ void Engine::preProcess() {
 	}
 
 	SDL_GameController* pad = nullptr;
+	SDL_Joystick* joystick = nullptr;
+
 	while( SDL_PollEvent(&event) ) {
 		switch (event.type) {
 		case SDL_QUIT: // if SDL receives the shutdown signal
@@ -1258,15 +1277,53 @@ void Engine::preProcess() {
 			}
 			break;
 		}
+		case SDL_JOYDEVICEADDED:
+		{
+			joystick = SDL_JoystickOpen(event.jdevice.which);
+			if (!joystick) {
+				fmsg(MSG_WARN, "A joystick was plugged in, but no handle is available!");
+			} else {
+				joysticks.addNode(event.jdevice.which, joystick);
+				fmsg(MSG_INFO, "Added joystick '%s' with device index (%d)", SDL_JoystickName(joystick), event.jdevice.which);
+				fmsg(MSG_INFO, " NumAxes: %d", SDL_JoystickNumAxes(joystick));
+				fmsg(MSG_INFO, " NumButtons: %d", SDL_JoystickNumButtons(joystick));
+				fmsg(MSG_INFO, " NumHats: %d", SDL_JoystickNumHats(joystick));
+				for (int c = 0; c < 4; ++c) {
+					inputs[c].refresh();
+				}
+			}
+			break;
+		}
+		case SDL_JOYDEVICEREMOVED:
+		{
+			joystick = SDL_JoystickFromInstanceID(event.jdevice.which);
+			if (joystick == nullptr) {
+				fmsg(MSG_WARN, "A joystick was removed, but I don't know which one!");
+			}
+			else {
+				Uint32 index = 0;
+				Node<SDL_Joystick*>* node = joysticks.getFirst();
+				for (; node != nullptr; node = node->getNext(), ++index) {
+					SDL_Joystick* curr = node->getData();
+					if (joystick == curr) {
+						SDL_JoystickClose(curr);
+						joysticks.removeNode(node);
+						fmsg(MSG_INFO, "Removed joystick with device index (%d), instance id (%d)", index, event.jdevice.which);
+						break;
+					}
+				}
+			}
+			break;
+		}
 		case SDL_CONTROLLERDEVICEADDED:
 		{
 			pad = SDL_GameControllerOpen(event.cdevice.which);
 			if (pad == nullptr) {
-				fmsg(MSG_WARN, "A controller was plugged in, but no handle is available!");
+				fmsg(MSG_WARN, "A gamepad was plugged in, but no handle is available!");
 			}
 			else {
 				controllers.addNode(event.cdevice.which, pad);
-				fmsg(MSG_INFO, "Added controller with device index (%d)", event.cdevice.which);
+				fmsg(MSG_INFO, "Added gamepad '%s' with device index (%d)", SDL_GameControllerName(pad), event.cdevice.which);
 				for (int c = 0; c < 4; ++c) {
 					inputs[c].refresh();
 				}
@@ -1278,7 +1335,7 @@ void Engine::preProcess() {
 		{
 			pad = SDL_GameControllerFromInstanceID(event.cdevice.which);
 			if (pad == nullptr) {
-				fmsg(MSG_WARN, "A controller was removed, but I don't know which one!");
+				fmsg(MSG_WARN, "A gamepad was removed, but I don't know which one!");
 			}
 			else {
 				Uint32 index = 0;
@@ -1288,7 +1345,7 @@ void Engine::preProcess() {
 					if (pad == curr) {
 						SDL_GameControllerClose(curr);
 						controllers.removeNode(node);
-						fmsg(MSG_INFO, "Removed controller with device index (%d), instance id (%d)", index, event.cdevice.which);
+						fmsg(MSG_INFO, "Removed gamepad with device index (%d), instance id (%d)", index, event.cdevice.which);
 						break;
 					}
 				}

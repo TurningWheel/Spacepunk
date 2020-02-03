@@ -25,6 +25,10 @@ public:
 			CONTROLLER_AXIS,
 			CONTROLLER_BUTTON,
 			MOUSE_BUTTON,
+			JOYSTICK_AXIS,
+			JOYSTICK_BUTTON,
+			JOYSTICK_HAT,
+			//JOYSTICK_BALL,
 			NUM
 		};
 		bindtype_t type = INVALID;
@@ -37,6 +41,14 @@ public:
 		SDL_GameControllerAxis padAxis = SDL_GameControllerAxis::SDL_CONTROLLER_AXIS_INVALID;
 		SDL_GameControllerButton padButton = SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_INVALID;
 		bool padAxisNegative = false;
+
+		// joystick binding info
+		SDL_Joystick* joystick = nullptr;
+		int joystickAxis = 0;
+		bool joystickAxisNegative = false;
+		int joystickButton = 0;
+		int joystickHat = 0;
+		Uint8 joystickHatState = 0;
 
 		// mouse button info
 		int mouseButton = 0;

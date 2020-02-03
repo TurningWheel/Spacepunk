@@ -69,6 +69,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_joystick.h>
 #include <SDL2/SDL_gamecontroller.h>
 #ifdef PLATFORM_WINDOWS
 #include <SDL2/SDL_syswm.h>

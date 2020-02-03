@@ -124,7 +124,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "scriptStr": "",
+            "scriptStr": "Walker",
             "flags": 385,
             "falling": false,
             "sort": 0,

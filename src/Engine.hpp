@@ -121,6 +121,7 @@ public:
 	Random&								getRandom()										{ return rand; }
 	const char*							getLastInput() const							{ return lastInput; }
 	LinkedList<SDL_GameController*>&	getControllers()								{ return controllers; }
+	LinkedList<SDL_Joystick*>&			getJoysticks()									{ return joysticks; }
 	Input&								getInput(int index)								{ return inputs[index]; }
 	const bool							isPlayTest() const								{ return playTest; }
 		
@@ -449,6 +450,7 @@ private:
 	Uint32 cursorflash = 0;
 	bool killSignal = false; // if true, engine received a quit signal from the OS
 	LinkedList<SDL_GameController*> controllers;
+	LinkedList<SDL_Joystick*> joysticks;
 	Input inputs[4];
 
 	// sound data

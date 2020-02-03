@@ -230,6 +230,88 @@ void Input::rebind(const char* binding, const char* input) {
 			return;
 		}
 	}
+	else if( len >= 3 && strncmp(input, "Joy", 3) == 0 ) {
+		// joystick
+
+		char* type = nullptr;
+		Uint32 index = strtol((const char*)(input+3), &type, 10);
+		LinkedList<SDL_Joystick*>& list = mainEngine->getJoysticks();
+		Node<SDL_Joystick*>* node = list.nodeForIndex(index);
+
+		if( node ) {
+			b->joystick = node->getData();
+			SDL_Joystick* joystick = node->getData();
+			if( strncmp(type, "Button", 6) == 0 ) {
+				b->type = binding_t::JOYSTICK_BUTTON;
+				b->joystickButton = strtol((const char*)(type + 6), nullptr, 10);
+				return;
+			}
+			else if( strncmp(type, "Axis-", 5) == 0 ) {
+				b->type = binding_t::JOYSTICK_AXIS;
+				b->joystickAxisNegative = true;
+				b->joystickAxis = strtol((const char*)(type + 5), nullptr, 10);
+				return;
+			}
+			else if( strncmp(type, "Axis+", 5) == 0 ) {
+				b->type = binding_t::JOYSTICK_AXIS;
+				b->joystickAxisNegative = false;
+				b->joystickAxis = strtol((const char*)(type + 5), nullptr, 10);
+				return;
+			}
+			else if( strncmp(type, "Hat", 3) == 0) {
+				b->type = binding_t::JOYSTICK_HAT;
+				b->joystickHat = strtol((const char*)(type + 3), nullptr, 10);
+				if (type[3]) {
+					if ( strncmp((const char*)(type+4), "LeftUp", 6 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_LEFTUP;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "Up", 2 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_UP;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "RightUp", 7 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_RIGHTUP;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "Right", 5 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_RIGHT;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "RightDown", 9 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_RIGHTDOWN;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "Down", 4 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_DOWN;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "LeftDown", 8 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_LEFTDOWN;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "Left", 4 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_LEFT;
+						return;
+					}
+					else if ( strncmp((const char*)(type+4), "Centered", 8 ) == 0 ) {
+						b->joystickHatState = SDL_HAT_CENTERED;
+						return;
+					}
+					else {
+						b->type = binding_t::INVALID;
+						return;
+					}
+				}
+			}
+			else {
+				b->type = binding_t::INVALID;
+				return;
+			}
+		}
+
+		return;
+	}
 	else if( len >= 5 && strncmp(input, "Mouse", 5) == 0 ) {
 		// mouse
 		Uint32 index = strtol((const char*)(input+5), nullptr, 10);
@@ -273,6 +355,22 @@ bool Input::binaryOf(binding_t& binding) {
 				return SDL_GameControllerGetAxis(pad, binding.padAxis) > 16384;
 			}
 		}
+	} else if(
+		binding.type == binding_t::JOYSTICK_AXIS ||
+		binding.type == binding_t::JOYSTICK_BUTTON ||
+		binding.type == binding_t::JOYSTICK_HAT ) {
+		SDL_Joystick* joystick = binding.joystick;
+		if (binding.type == binding_t::JOYSTICK_BUTTON) {
+			return SDL_JoystickGetButton(joystick, binding.joystickButton) == 1;
+		} else if (binding.type == binding_t::JOYSTICK_AXIS) {
+			if (binding.joystickAxisNegative) {
+				return SDL_JoystickGetAxis(joystick, binding.joystickAxis) < -16384;
+			} else {
+				return SDL_JoystickGetAxis(joystick, binding.joystickAxis) > 16384;
+			}
+		} else {
+			return SDL_JoystickGetHat(joystick, binding.joystickHat) == binding.joystickHatState;
+		}
 	} else if( binding.type == binding_t::MOUSE_BUTTON ) {
 		return mainEngine->getMouseStatus(binding.mouseButton);
 	} else if( binding.type == binding_t::KEYBOARD ) {
@@ -294,11 +392,29 @@ float Input::analogOf(binding_t& binding) {
 		} else {
 			if( binding.padAxisNegative ) {
 				float result = min(SDL_GameControllerGetAxis(pad, binding.padAxis) / 32768.f, 0.f) * -1.f;
-				return (result > cvar_deadzone.toFloat()) ? result : 0.f;
+				return (fabs(result) > cvar_deadzone.toFloat()) ? result : 0.f;
 			} else {
 				float result = max(SDL_GameControllerGetAxis(pad, binding.padAxis) / 32767.f, 0.f);
-				return (result > cvar_deadzone.toFloat()) ? result : 0.f;
+				return (fabs(result) > cvar_deadzone.toFloat()) ? result : 0.f;
 			}
+		}
+	} else if(
+		binding.type == binding_t::JOYSTICK_AXIS ||
+		binding.type == binding_t::JOYSTICK_BUTTON ||
+		binding.type == binding_t::JOYSTICK_HAT ) {
+		SDL_Joystick* joystick = binding.joystick;
+		if (binding.type == binding_t::JOYSTICK_BUTTON) {
+			return SDL_JoystickGetButton(joystick, binding.joystickButton) ? 1.f : 0.f;
+		} else if (binding.type == binding_t::JOYSTICK_AXIS) {
+			if (binding.joystickAxisNegative) {
+				float result = min(SDL_JoystickGetAxis(joystick, binding.joystickAxis) / 32768.f, 0.f) * -1.f;
+				return (fabs(result) > cvar_deadzone.toFloat()) ? result : 0.f;
+			} else {
+				float result = max(SDL_JoystickGetAxis(joystick, binding.joystickAxis) / 32767.f, 0.f);
+				return (fabs(result) > cvar_deadzone.toFloat()) ? result : 0.f;
+			}
+		} else {
+			return SDL_JoystickGetHat(joystick, binding.joystickHat) == binding.joystickHatState ? 1.f : 0.f;
 		}
 	} else if( binding.type == binding_t::MOUSE_BUTTON ) {
 		return mainEngine->getMouseStatus(binding.mouseButton) ? 1.f : 0.f;
