@@ -2,5 +2,8 @@ function process()
 end
 
 function field(dim, uid, str)
-	editor:entityComponentTranslate(uid, dim, tonumber(str))
+	local num = tonumber(str)
+	if num ~= nil then
+		editor:entityComponentTranslate(uid, dim, num)
+	end
 end

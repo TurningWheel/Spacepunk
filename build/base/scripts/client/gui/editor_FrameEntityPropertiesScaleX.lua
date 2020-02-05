@@ -2,5 +2,8 @@ function process()
 end
 
 function field(str)
-	editor:widgetScaleX(tonumber(str))
+	local num = tonumber(str)
+	if num ~= nil then
+		editor:widgetScaleX(num)
+	end
 end

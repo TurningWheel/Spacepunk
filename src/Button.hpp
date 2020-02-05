@@ -71,7 +71,7 @@ public:
 	void	setTooltip(const char* _tooltip)			{ tooltip = _tooltip; }
 	void	setDisabled(const bool _disabled)			{ disabled = _disabled; }
 	void	setStyle(const style_t _style)				{ style = _style; }
-	void	setPressed(const bool _pressed)				{ reallyPressed = _pressed; }
+	void	setPressed(const bool _pressed)				{ reallyPressed = pressed = _pressed; }
 	void	setCallback(const Script::Function* fn)		{ callback = fn; }
 
 private:
@@ -86,7 +86,7 @@ private:
 	Rect<int> size;									// size and position of the button within its parent frame
 	bool pressed = false;							// button pressed state
 	bool reallyPressed = false;						// the "actual" button state, pre-mouse process
-	bool highlighted = true;						// true if mouse is hovering over button; false otherwise
+	bool highlighted = false;						// true if mouse is hovering over button; false otherwise
 	glm::vec4 color;								// the button's color
 	glm::vec4 textColor;							// text color
 	style_t style = STYLE_NORMAL;					// button style

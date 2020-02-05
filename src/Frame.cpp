@@ -137,16 +137,9 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	if( _size.w <= 0 || _size.h <= 0 )
 		return;
 
-	if( border>0 ) {
-		if( high ) {
-			renderer.drawHighFrame( _size, border, color, hollow );
-		} else {
-			renderer.drawLowFrame( _size, border, color, hollow );
-		}
-	} else {
-		if( !hollow ) {
-			renderer.drawRect( &_size, color );
-		}
+	// draw frame background
+	if( !hollow ) {
+		renderer.drawRect( &_size, color );
 	}
 
 	Sint32 omousex = mainEngine->getOldMouseX();
@@ -248,10 +241,18 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 	}
 
+	Rect<Sint32> scroll = actualSize;
+	if (size.x-_actualSize.x < 0) {
+		scroll.x -= size.x-_actualSize.x;
+	}
+	if (size.y-_actualSize.y < 0) {
+		scroll.y -= size.y-_actualSize.y;
+	}
+
 	// render fields
 	for( Node<Field*>* node=fields.getFirst(); node!=nullptr; node=node->getNext() ) {
 		Field& field = *node->getData();
-		field.draw(renderer,_size,actualSize);
+		field.draw(renderer,_size,scroll);
 	}
 
 	// render images
@@ -269,8 +270,8 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 
 		Rect<int> pos;
-		pos.x = _size.x + image.pos.x - actualSize.x;
-		pos.y =  _size.y + image.pos.y - actualSize.y;
+		pos.x = _size.x + image.pos.x - scroll.x;
+		pos.y =  _size.y + image.pos.y - scroll.y;
 		pos.w = image.pos.w > 0 ? image.pos.w : actualImage->getWidth();
 		pos.h = image.pos.h > 0 ? image.pos.h : actualImage->getHeight();
 
@@ -290,7 +291,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	}
 
 	// render list entries
-	int listStart = std::min( std::max( 0, actualSize.y / entrySize ), (int)list.getSize() - 1 );
+	int listStart = std::min( std::max( 0, scroll.y / entrySize ), (int)list.getSize() - 1 );
 	int i = listStart;
 	Node<entry_t*>* node = node=list.nodeForIndex(listStart);
 	for( ; node!=nullptr; node=node->getNext(), ++i ) {
@@ -310,8 +311,8 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		int textSizeH = entrySize;
 
 		Rect<int> pos;
-		pos.x = _size.x + border - actualSize.x;
-		pos.y = _size.y + border + i*entrySize - actualSize.y;
+		pos.x = _size.x + border - scroll.x;
+		pos.y = _size.y + border + i*entrySize - scroll.y;
 		pos.w = textSizeW;
 		pos.h = textSizeH;
 
@@ -342,13 +343,13 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	// draw buttons
 	for( Node<Button*>* node=buttons.getFirst(); node!=nullptr; node=node->getNext() ) {
 		Button& button = *node->getData();
-		button.draw(renderer,_size,actualSize);
+		button.draw(renderer,_size,scroll);
 	}
 
 	// draw subframes
 	for( Node<Frame*>* node=frames.getFirst(); node!=nullptr; node=node->getNext() ) {
 		Frame& frame = *node->getData();
-		frame.draw(renderer,_size,actualSize);
+		frame.draw(renderer,_size,scroll);
 	}
 
 	// root frame draws tooltip
@@ -364,6 +365,15 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			Rect<int> src2(src.x + 3, src.y + 3, src.w - 6, src.h - 6);
 			renderer.drawRect(&src2, glm::vec4(0.f,0.f,0.f,.9f));
 			text->draw(Rect<int>(), Rect<int>(src.x,src.y,0,0));
+		}
+	}
+	
+	// draw frame borders, if any
+	if( border>0 ) {
+		if( high ) {
+			renderer.drawHighFrame( _size, border, color, true );
+		} else {
+			renderer.drawLowFrame( _size, border, color, true );
 		}
 	}
 }

@@ -163,6 +163,7 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	if( selectAll && selected ) {
 		renderer.drawRect(&rect,glm::vec4(.5f,.5f,0.f,1.f));
 	}
+
 	text->drawColor( src, dest, color );
 }
 

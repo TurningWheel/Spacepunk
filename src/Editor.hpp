@@ -241,9 +241,9 @@ public:
 	// getters & setters
 	const bool				isInitialized() const				{ return initialized; }
 	const bool				isCeilingMode() const				{ return ceilingMode; }
-	const Uint32			getEditingMode() const				{ return static_cast<Uint32>(editingMode); }
+	Sint32					getEditingMode() const				{ return static_cast<Sint32>(editingMode); }
 	const Uint32			getHighlightedObj() const			{ return highlightedObj; }
-	const Uint32			getWidgetMode() const				{ return static_cast<Uint32>(widgetMode); }
+	Sint32					getWidgetMode() const				{ return static_cast<Sint32>(widgetMode); }
 	const int				getTextureSide() const				{ return textureSide; }
 	const Camera*			getEditingCamera() const			{ return editingCamera; }
 	const Camera*			getMinimapCamera() const			{ return minimap; }

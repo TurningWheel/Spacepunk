@@ -74,7 +74,17 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 				if( pos.w <= 0 || pos.h <= 0 ) {
 					return;
 				}
-				iconImg->draw(nullptr,pos);
+
+				float w = iconImg->getWidth();
+				float h = iconImg->getHeight();
+
+				Rect<Sint32> section;
+				section.x = size.x - _actualSize.x < 0 ? -(size.x - _actualSize.x) * (w / (size.w-border*2)) : 0;
+				section.y = size.y - _actualSize.y < 0 ? -(size.y - _actualSize.y) * (h / (size.h-border*2)) : 0;
+				section.w = ((float)pos.w / (size.w-border*2)) * w;
+				section.h = ((float)pos.h / (size.h-border*2)) * h;
+
+				iconImg->draw(&section,pos);
 			}
 		}
 	}

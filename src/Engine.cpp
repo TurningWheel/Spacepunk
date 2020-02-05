@@ -1143,8 +1143,6 @@ const char* Engine::getRunningDir() {
 }
 
 void Engine::preProcess() {
-	anykeystatus = false;
-
 	// lock mouse to window?
 	SDL_SetRelativeMouseMode((SDL_bool)mainEngine->isMouseRelative());
 
@@ -1199,6 +1197,7 @@ void Engine::preProcess() {
 			if (SDL_IsTextInputActive()) {
 				if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(inputstr) > 0) {
 					inputstr[strlen(inputstr) - 1] = 0;
+					strcpy(lastInput, "");
 					cursorflash = ticks;
 				}
 				else if (event.key.keysym.sym == SDLK_c && SDL_GetModState()&KMOD_CTRL) {
@@ -1220,6 +1219,7 @@ void Engine::preProcess() {
 		case SDL_KEYUP: // if a key is unpressed...
 		{
 			keystatus[event.key.keysym.scancode] = false;
+			anykeystatus = false;
 			break;
 		}
 		case SDL_TEXTINPUT:
