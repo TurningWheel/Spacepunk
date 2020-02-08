@@ -133,7 +133,13 @@ bool Model::animate(const char* name, bool blend) {
 		return false;
 	}
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
-	if (!mesh || !animations.exists(name)) {
+	if (!mesh) {
+		return false;
+	}
+	if (!mesh->hasAnimations()) {
+		return false;
+	}
+	if (!animations.exists(name)) {
 		if (strcmp(name,"__tpose")) {
 			animate("__tpose", false);
 		}
@@ -254,10 +260,16 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	Material* depthfailmat = mainEngine->getMaterialResource().dataForString(depthfailStr.get());
 
 	// mark model as "broken"
-	if( (!mesh && !meshStr.empty()) ||
+	resource_error_t error = mainEngine->getMeshResource().getError();
+	bool hadError = error == resource_error_t::ERROR_CACHEFAILED;
+	if( (!mesh && !meshStr.empty() && hadError) ||
 		(!mat && !materialStr.empty()) ||
 		(!depthfailmat && !depthfailStr.empty()) ) {
 		broken = true;
+	}
+
+	if (currentAnimation.empty() && mesh && mesh->hasAnimations()) {
+		animate("idle", false);
 	}
 
 	// transparent objects not rendered to depth buffer

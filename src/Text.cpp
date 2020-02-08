@@ -12,6 +12,9 @@
 #include "Client.hpp"
 #include "Text.hpp"
 
+GLuint Text::vao = 0;
+GLuint Text::vbo[BUFFER_TYPE_LENGTH] = { 0 };
+
 const GLfloat Text::positions[8] {
 	0.f, 0.f,
 	0.f, 1.f,
@@ -102,6 +105,21 @@ Text::Text(const char* _name) : Asset(_name) {
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
 	SDL_UnlockSurface(surf);
 
+	loaded = true;
+}
+
+Text::~Text() {
+	if( surf ) {
+		SDL_FreeSurface(surf);
+		surf = nullptr;
+	}
+	if( texid ) {
+		glDeleteTextures(1,&texid);
+		texid = 0;
+	}
+}
+
+void Text::createStaticData() {
 	// initialize buffer names
 	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
 		vbo[static_cast<buffer_t>(i)] = 0;
@@ -132,19 +150,9 @@ Text::Text(const char* _name) : Asset(_name) {
 
 	// unbind vertex array
 	glBindVertexArray(0);
-
-	loaded = true;
 }
 
-Text::~Text() {
-	if( surf ) {
-		SDL_FreeSurface(surf);
-		surf = nullptr;
-	}
-	if( texid ) {
-		glDeleteTextures(1,&texid);
-		texid = 0;
-	}
+void Text::deleteStaticData() {
 	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
 		buffer_t buffer = static_cast<buffer_t>(i);
 		if( vbo[buffer] ) {

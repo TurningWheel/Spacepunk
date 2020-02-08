@@ -31,6 +31,10 @@ Asset::Asset(const char* _name) {
 Asset::~Asset() {
 }
 
+bool Asset::finalize() {
+	return loaded = true;
+}
+
 void Asset::serialize(FileInterface * file) {
 	mainEngine->fmsg(Engine::MSG_WARN, "serialize() called on unsupported asset '%s'", name.get());
 }

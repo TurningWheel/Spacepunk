@@ -23,6 +23,12 @@ public:
 	// @param color a 32-bit color to mix with the image
 	void drawColor(const Rect<int>* src, const Rect<int>& dest, const glm::vec4& color) const;
 
+	// create static geometry data for rendering images
+	static void createStaticData();
+
+	// delete static geometry data for rendering images
+	static void deleteStaticData();
+
 	// getters & setters
 	virtual const type_t	getType() const		{ return ASSET_IMAGE; }
 	const GLuint			getTexID() const	{ return texid; }
@@ -34,6 +40,7 @@ private:
 	GLuint texid = 0;
 	SDL_Surface* surf = nullptr;
 
+	// static geometry data for rendering the image to a quad
 	static const GLuint indices[6];
 	static const GLfloat positions[8];
 	static const GLfloat texcoords[8];
@@ -43,6 +50,6 @@ private:
 		INDEX_BUFFER,
 		BUFFER_TYPE_LENGTH
 	};
-	GLuint vbo[BUFFER_TYPE_LENGTH];
-	GLuint vao = 0;
+	static GLuint vbo[BUFFER_TYPE_LENGTH];
+	static GLuint vao;
 };

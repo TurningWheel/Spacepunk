@@ -10,6 +10,9 @@
 #include "Engine.hpp"
 #include "Image.hpp"
 
+GLuint Image::vao = 0;
+GLuint Image::vbo[BUFFER_TYPE_LENGTH] = { 0 };
+
 const GLfloat Image::positions[8] {
 	0.f, 0.f,
 	0.f, 1.f,
@@ -89,6 +92,21 @@ Image::Image(const char* _name) : Asset(_name) {
 	}
 	SDL_UnlockSurface(surf);
 
+	loaded = true;
+}
+
+Image::~Image() {
+	if( surf ) {
+		SDL_FreeSurface(surf);
+		surf = nullptr;
+	}
+	if( texid ) {
+		glDeleteTextures(1,&texid);
+		texid = 0;
+	}
+}
+
+void Image::createStaticData() {
 	// initialize buffer names
 	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
 		vbo[static_cast<buffer_t>(i)] = 0;
@@ -119,19 +137,9 @@ Image::Image(const char* _name) : Asset(_name) {
 
 	// unbind vertex array
 	glBindVertexArray(0);
-
-	loaded = true;
 }
 
-Image::~Image() {
-	if( surf ) {
-		SDL_FreeSurface(surf);
-		surf = nullptr;
-	}
-	if( texid ) {
-		glDeleteTextures(1,&texid);
-		texid = 0;
-	}
+void Image::deleteStaticData() {
 	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
 		buffer_t buffer = static_cast<buffer_t>(i);
 		if( vbo[buffer] ) {

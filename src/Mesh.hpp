@@ -39,6 +39,8 @@ public:
 	Mesh(const char* _name);
 	virtual ~Mesh();
 
+	virtual bool finalize() override;
+
 	// maximum number of lights that will fit in the tile shader
 	static const Uint32 maxLights = 12;
 
@@ -179,6 +181,7 @@ public:
 
 		// getters & setters
 		virtual const type_t				getType() const				{ return ASSET_MESH; }
+		virtual const bool					isStreamable() const		{ return true; }
 		const unsigned int					getNumVertices() const		{ return numVertices; }
 		const unsigned int					getNumIndices() const		{ return elementCount; }
 		const unsigned int					getNumBones() const			{ return numBones; }
@@ -205,6 +208,7 @@ public:
 		Vector minBox, maxBox;
 
 		// raw data
+		VertexBoneData* vertexbonedata = nullptr;
 		float* vertices = nullptr;		// position  3 floats per vertex
 		float* texCoords = nullptr;		// texCoords 2 floats per vertex
 		float* normals = nullptr;		// normals   3 floats per vertex

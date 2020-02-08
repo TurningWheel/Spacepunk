@@ -1146,6 +1146,9 @@ void Engine::preProcess() {
 	// lock mouse to window?
 	SDL_SetRelativeMouseMode((SDL_bool)mainEngine->isMouseRelative());
 
+	// update resources
+	meshResource.update();
+
 	// restart timer
 	unsigned int newTicksPerSecond = cvar_tickrate.toInt();
 	if( newTicksPerSecond != ticksPerSecond ) {

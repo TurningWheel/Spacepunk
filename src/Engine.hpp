@@ -100,7 +100,7 @@ public:
 	const double						getTimeSync() const								{ return timesync; }
 	const Uint32						getTicks() const								{ return ticks; }
 	const unsigned int					getTicksPerSecond() const						{ return ticksPerSecond; }
-	Resource<Mesh>&						getMeshResource()								{ return meshResource; }
+	Resource<Mesh, true>&				getMeshResource()								{ return meshResource; }
 	Resource<Image>&					getImageResource()								{ return imageResource; }
 	Resource<Material>&					getMaterialResource()							{ return materialResource; }
 	Resource<Texture>&					getTextureResource()							{ return textureResource; }
@@ -391,7 +391,7 @@ private:
 	Server* localServer = nullptr;
 
 	// resource caches
-	Resource<Mesh> meshResource;
+	Resource<Mesh, true> meshResource;
 	Resource<Image> imageResource;
 	Resource<Material> materialResource;
 	Resource<Texture> textureResource;

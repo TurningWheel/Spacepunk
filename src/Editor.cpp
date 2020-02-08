@@ -6183,10 +6183,6 @@ void Editor::updateGUI(Frame& gui) {
 			// get components
 			Model* model = entity->findComponentByName<Model>("model");
 
-			// rotate widget
-			//Rotation ang = widgetRot[iDir + 4*(camPos.z>widgetPos.z)][i];
-			//entity->rotate
-
 			// check visibility for particular entities and update meshes
 			bool overrideVisible = false;
 			if( widgetMode==TRANSLATE ) {

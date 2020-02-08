@@ -109,13 +109,20 @@ void BBox::conformToModel(const Model& model) {
 		return;
 	}
 
-	Mesh* mesh = mainEngine->getMeshResource().dataForString(model.getMesh());
-	if( !mesh ) {
-		return;
-	}
 	if( triMesh != nullptr ) {
 		delete triMesh;
 		triMesh = nullptr;
+	}
+
+	Mesh* mesh = mainEngine->getMeshResource().dataForString(model.getMesh());
+	if( !mesh ) {
+		if (mainEngine->getMeshResource().getError() == resource_error_t::ERROR_CACHEFAILED) {
+			meshDirty = false;
+		}
+		if (mainEngine->getMeshResource().getError() == resource_error_t::ERROR_CACHEINPROGRESS) {
+			meshDirty = true;
+		}
+		return;
 	}
 
 	// iterate through every submesh
@@ -124,8 +131,10 @@ void BBox::conformToModel(const Model& model) {
 
 		if (!entry->getVertices()) {
 			continue;
-		} else if (entry->getNumVertices() / 3 > 10000) {
-			mainEngine->fmsg(Engine::MSG_WARN, "submesh has an excessive number of faces, no physics mesh has been generated");
+		} else if (entry->getNumVertices() > 10000) {
+			if (meshDirty) {
+				mainEngine->fmsg(Engine::MSG_WARN, "submesh has an excessive number of faces, no physics mesh has been generated");
+			}
 			continue;
 		}
 
@@ -161,6 +170,8 @@ void BBox::conformToModel(const Model& model) {
 		// clear the vertex list (in case there are leftovers)
 		vlist.removeAll();
 	}
+
+	meshDirty = false;
 }
 
 btTransform BBox::getPhysicsTransform() const {
@@ -224,7 +235,7 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 	if (mass < 0.f && (ghostObject == nullptr || controller == nullptr)) {
 		dirty = true;
 	}
-	if (dirty) {
+	if (dirty || meshDirty) {
 		createRigidBody();
 		dirty = false;
 	}
@@ -285,22 +296,18 @@ void BBox::createRigidBody() {
 		if (editorOnly && !mainEngine->isEditorRunning()) {
 			return;
 		}
-		if (triMesh) {
+		if (parent && parent->getType() == Component::COMPONENT_MODEL) {
+			Model* model = static_cast<Model*>(parent);
+			conformToModel(*model);
+		}
+		if (triMesh && triMesh->getNumTriangles() > 0) {
 			collisionShapePtr = new btBvhTriangleMeshShape(triMesh, true, true);
 		}
 		else {
-			if (parent && parent->getType() == Component::COMPONENT_MODEL) {
-				Model* model = static_cast<Model*>(parent);
-				conformToModel(*model);
-			}
-			if (triMesh && triMesh->getNumTriangles() > 0) {
-				collisionShapePtr = new btBvhTriangleMeshShape(triMesh, true, true);
-			}
-			else {
-				shape = SHAPE_CYLINDER;
+			if (!meshDirty) {
 				mainEngine->fmsg(Engine::MSG_DEBUG, "mesh shape assigned to bbox, but mesh is unavailable");
-				collisionShapePtr = new btCylinderShapeZ(btVector3(1.f, 1.f, 1.f));
 			}
+			return;
 		}
 		break;
 	}

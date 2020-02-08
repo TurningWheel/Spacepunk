@@ -32,10 +32,17 @@ public:
 	// @param dest the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
 	void drawColor( Rect<int> src, Rect<int> dest, const glm::vec4& color) const;
 
+	// create static geometry data for rendering images
+	static void createStaticData();
+
+	// delete static geometry data for rendering images
+	static void deleteStaticData();
+
 private:
 	GLuint texid = 0;
 	SDL_Surface* surf = nullptr;
 
+	// static geometry data for rendering the image to a quad
 	static const GLuint indices[6];
 	static const GLfloat positions[8];
 	static const GLfloat texcoords[8];
@@ -45,8 +52,8 @@ private:
 		INDEX_BUFFER,
 		BUFFER_TYPE_LENGTH
 	};
-	GLuint vbo[BUFFER_TYPE_LENGTH];
-	GLuint vao = 0;
+	static GLuint vbo[BUFFER_TYPE_LENGTH];
+	static GLuint vao;
 
 	int width = 0;
 	int height = 0;

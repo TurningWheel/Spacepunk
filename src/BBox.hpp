@@ -122,6 +122,7 @@ private:
 	float mass = 0.f;
 
 	bool dirty = false;
+	bool meshDirty = false;
 
 	// bullet physics objects
 	btDiscreteDynamicsWorld* dynamicsWorld = nullptr;

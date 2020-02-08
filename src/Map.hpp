@@ -65,6 +65,19 @@ public:
 		}
 	}
 
+	// insert a key/value pair into the Map, presuming uniqueness
+	// @param key The key
+	// @param value The value associated with the key
+	void insertUnique(const K& key, const T& value) {
+		if (size + 1 >= numBuckets * maxBucketSize) {
+			rehash(numBuckets * 2);
+		}
+
+		auto& list = data[hash(key) & (numBuckets - 1)];
+		list.push(OrderedPair<K, T>(key, value));
+		++size;
+	}
+
 	// resize and rebuild the hash map
 	// @param newBucketCount Updated number of buckets in the map
 	void rehash(Uint32 newBucketCount) {

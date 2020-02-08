@@ -98,6 +98,8 @@ Renderer::~Renderer() {
 	if (vao) {
 		glDeleteVertexArrays(1, &vao);
 	}
+	Image::deleteStaticData();
+	Text::deleteStaticData();
 	if( window ) {
 		SDL_DestroyWindow(window);
 		window = nullptr;
@@ -274,6 +276,9 @@ int Renderer::initVideo() {
 }
 
 int Renderer::initResources() {
+	Image::createStaticData();
+	Text::createStaticData();
+
 	// load null texture
 	if( nullImg ) {
 		delete nullImg;

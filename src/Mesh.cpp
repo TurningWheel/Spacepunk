@@ -29,7 +29,6 @@ Mesh::Mesh(const char* _name) : Asset(_name) {
 	}
 	if (_name[0] == '#') {
 		mainEngine->fmsg(Engine::MSG_DEBUG, "allocating composite mesh '%s'...", name.get());
-		loaded = true;
 		return;
 	} else {
 		mainEngine->fmsg(Engine::MSG_DEBUG, "loading mesh '%s'...", name.get());
@@ -91,13 +90,19 @@ Mesh::Mesh(const char* _name) : Asset(_name) {
 			}
 		}
 		mainEngine->fmsg(Engine::MSG_DEBUG, "loaded mesh '%s': %d entries, %d verts, %d bones", name.get(), subMeshes.getSize(), numVertices, numBones);
-		loaded = true;
 		return;
 	}
 }
 
 Mesh::~Mesh(void) {
 	clear();
+}
+
+bool Mesh::finalize() {
+	for (auto& submesh : subMeshes) {
+		submesh->finalize();
+	}
+	return loaded = subMeshes.getSize() != 0;
 }
 
 void Mesh::clear() {
@@ -501,9 +506,6 @@ Mesh::SubMesh::SubMesh(unsigned int _numIndices, unsigned int _numVertices) {
 	elementCount = _numIndices;
 	numVertices = _numVertices;
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
 	vertices = new float[numVertices * 3];
 	texCoords = new float[numVertices * 2];
 	normals = new float[numVertices * 3];
@@ -524,50 +526,64 @@ Mesh::SubMesh::SubMesh(unsigned int _numIndices, unsigned int _numVertices) {
 	for (unsigned int c = 0; c < numVertices * 4; ++c) {
 		colors[c] = 0.f;
 	}
-
-	glBindVertexArray(0);
 }
 
 Mesh::SubMesh::SubMesh(const SubMesh& submesh, const glm::mat4& root) :
 	SubMesh(submesh.getNumIndices(), submesh.getNumVertices()) {
 	append(submesh, root);
-	finalize();
 }
 
 void Mesh::SubMesh::finalize() {
+	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	if (vbo[VERTEX_BUFFER]) {
+	if (vertices) {
+		glGenBuffers(1, &vbo[VERTEX_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(0);
 	}
-	if (vbo[TEXCOORD_BUFFER]) {
+	if (texCoords) {
+		glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, 2 * numVertices * sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(1);
 	}
-	if (vbo[NORMAL_BUFFER]) {
+	if (normals) {
+		glGenBuffers(1, &vbo[NORMAL_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[NORMAL_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), normals, GL_STATIC_DRAW);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(2);
 	}
-	if (vbo[COLOR_BUFFER]) {
+	if (colors) {
+		glGenBuffers(1, &vbo[COLOR_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[COLOR_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, 4 * numVertices * sizeof(GLfloat), colors, GL_STATIC_DRAW);
 		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(3);
 	}
-	if (vbo[TANGENT_BUFFER]) {
+	if (vertexbonedata) {
+		glGenBuffers(1, &vbo[BONE_BUFFER]);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[BONE_BUFFER]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * numVertices, vertexbonedata, GL_STATIC_DRAW);
+
+		glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), NULL);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(GLint)*4));
+		glEnableVertexAttribArray(5);
+	}
+	if (tangents) {
+		glGenBuffers(1, &vbo[TANGENT_BUFFER]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[TANGENT_BUFFER]);
 		glBufferData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), tangents, GL_STATIC_DRAW);
 		glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 		glEnableVertexAttribArray(6);
 	}
-	if (vbo[INDEX_BUFFER]) {
+	if (indices) {
+		glGenBuffers(1, &vbo[INDEX_BUFFER]);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementCount * sizeof(GLuint), indices, GL_STATIC_DRAW);
 	}
@@ -580,8 +596,6 @@ void Mesh::SubMesh::append(const SubMesh& submesh, const glm::mat4& root) {
 	glm::mat4 normalMat = root;
 	normalMat[3] = glm::vec4(0.f, 0.f, 0.f, 1.f);
 
-	glBindVertexArray(vao);
-
 	// positions
 	if (submesh.getVertices()) {
 		memcpy(&vertices[lastVertex * 3], submesh.getVertices(), sizeof(float) * submesh.getNumVertices() * 3);
@@ -592,17 +606,11 @@ void Mesh::SubMesh::append(const SubMesh& submesh, const glm::mat4& root) {
 			vertices[c * 3 + 1] = vertex.y;
 			vertices[c * 3 + 2] = vertex.z;
 		}
-		if (!vbo[VERTEX_BUFFER]) {
-			glGenBuffers(1, &vbo[VERTEX_BUFFER]);
-		}
 	}
 
 	// texcoords
 	if (submesh.getTexCoords()) {
 		memcpy(&texCoords[lastVertex * 2], submesh.getTexCoords(), sizeof(float) * submesh.getNumVertices() * 2);
-		if (!vbo[TEXCOORD_BUFFER]) {
-			glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
-		}
 	}
 
 	// normals
@@ -615,17 +623,11 @@ void Mesh::SubMesh::append(const SubMesh& submesh, const glm::mat4& root) {
 			normals[c * 3 + 1] = normal.y;
 			normals[c * 3 + 2] = normal.z;
 		}
-		if (!vbo[NORMAL_BUFFER]) {
-			glGenBuffers(1, &vbo[NORMAL_BUFFER]);
-		}
 	}
 
 	// colors
 	if (submesh.getColors()) {
 		memcpy(&colors[lastVertex * 4], submesh.getColors(), sizeof(float) * submesh.getNumVertices() * 4);
-		if (!vbo[COLOR_BUFFER]) {
-			glGenBuffers(1, &vbo[COLOR_BUFFER]);
-		}
 	}
 
 	// tangents
@@ -638,9 +640,6 @@ void Mesh::SubMesh::append(const SubMesh& submesh, const glm::mat4& root) {
 			tangents[c * 3 + 1] = tangent.y;
 			tangents[c * 3 + 2] = tangent.z;
 		}
-		if (!vbo[TANGENT_BUFFER]) {
-			glGenBuffers(1, &vbo[TANGENT_BUFFER]);
-		}
 	}
 
 	// indices
@@ -649,15 +648,10 @@ void Mesh::SubMesh::append(const SubMesh& submesh, const glm::mat4& root) {
 		for (unsigned int c = lastIndex; c < lastIndex + submesh.getNumIndices(); ++c) {
 			indices[c] += lastVertex;
 		}
-		if (!vbo[INDEX_BUFFER]) {
-			glGenBuffers(1, &vbo[INDEX_BUFFER]);
-		}
 	}
 
 	lastVertex += submesh.getNumVertices();
 	lastIndex += submesh.getNumIndices();
-
-	glBindVertexArray(0);
 }
 
 Mesh::SubMesh::SubMesh(const VoxelMeshData& data) {
@@ -668,59 +662,29 @@ Mesh::SubMesh::SubMesh(const VoxelMeshData& data) {
 	elementCount = (unsigned int)data.indexCount;
 	numVertices = (unsigned int)data.vertexCount;
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
 	// positions
 	{
 		vertices = new float[numVertices * 3];
 		memcpy(vertices, data.positions.get(), sizeof(float) * numVertices * 3);
-
-		glGenBuffers(1, &vbo[VERTEX_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, data.size * sizeof(GLfloat), data.positions.get(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(0);
 	}
 
 	// colors
 	{
 		colors = new float[numVertices * 3];
 		memcpy(colors, data.colors.get(), sizeof(float) * numVertices * 3);
-
-		glGenBuffers(1, &vbo[COLOR_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[COLOR_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, data.size * sizeof(GLfloat), data.colors.get(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(1);
 	}
 
 	// normals
 	{
 		normals = new float[numVertices * 3];
 		memcpy(normals, data.normals.get(), sizeof(float) * numVertices * 3);
-
-		glGenBuffers(1, &vbo[NORMAL_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[NORMAL_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, data.size * sizeof(GLfloat), data.normals.get(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(2);
 	}
 
 	// indices
 	{
 		indices = new GLuint[elementCount];
 		memcpy(indices, data.indices.get(), sizeof(GLuint) * elementCount);
-
-		glGenBuffers(1, &vbo[INDEX_BUFFER]);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.indexCount * sizeof(GLuint), data.indices.get(), GL_STATIC_DRAW);
 	}
-
-	glBindVertexArray(0);
 }
 
 Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
@@ -729,8 +693,6 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
 
 	numVertices = mesh->mNumVertices;
 	elementCount = mesh->mNumFaces * 3 * 2;
@@ -757,13 +719,6 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 				maxBox.z = max(maxBox.z,(float)vertices[i * 3 + 1]);
 			}
 		}
-
-		glGenBuffers(1, &vbo[VERTEX_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(0);
 	}
 
 	if( mesh->HasTextureCoords(0) ) {
@@ -774,13 +729,6 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 			texCoords[i * 2] = mesh->mTextureCoords[0][i].x;
 			texCoords[i * 2 + 1] = mesh->mTextureCoords[0][i].y;
 		}
-
-		glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, 2 * mesh->mNumVertices * sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(1);
 	}
 
 	if( mesh->HasNormals() ) {
@@ -792,13 +740,6 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 			normals[i * 3 + 1] = mesh->mNormals[i].y;
 			normals[i * 3 + 2] = mesh->mNormals[i].z;
 		}
-
-		glGenBuffers(1, &vbo[NORMAL_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[NORMAL_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat), normals, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(2);
 	}
 
 	if( mesh->HasVertexColors(0) ) {
@@ -811,17 +752,12 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 			colors[i * 4 + 2] = mesh->mColors[0][i].b;
 			colors[i * 4 + 3] = mesh->mColors[0][i].a;
 		}
-
-		glGenBuffers(1, &vbo[COLOR_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[COLOR_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, 4 * mesh->mNumVertices * sizeof(GLfloat), colors, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(3);
 	}
 
 	if( mesh->HasBones() ) {
-		VertexBoneData* vertexbonedata = new VertexBoneData[mesh->mNumVertices];
+		if (vertexbonedata)
+			delete[] vertexbonedata;
+		vertexbonedata = new VertexBoneData[mesh->mNumVertices];
 		for( unsigned int i=0; i < mesh->mNumVertices; ++i ) {
 			for( unsigned int k=0; k < numBonesPerVertex; ++k ) {
 				vertexbonedata[i].ids[k] = 0;
@@ -860,17 +796,6 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 		if (scene) {
 			mapBones(scene->mRootNode);
 		}
-
-		glGenBuffers(1, &vbo[BONE_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[BONE_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * mesh->mNumVertices, vertexbonedata, GL_STATIC_DRAW);
-
-		glVertexAttribIPointer(4, 4, GL_INT, sizeof(VertexBoneData), NULL);
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)(sizeof(GLint)*4));
-		glEnableVertexAttribArray(5);
-
-		delete[] vertexbonedata;
 	}
 
 	if( mesh->HasTangentsAndBitangents() ) {
@@ -882,13 +807,6 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 			tangents[i * 3 + 1] = mesh->mTangents[i].y;
 			tangents[i * 3 + 2] = mesh->mTangents[i].z;
 		}
-
-		glGenBuffers(1, &vbo[TANGENT_BUFFER]);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[TANGENT_BUFFER]);
-		glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat), tangents, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(6, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(6);
 	}
 
 	if( mesh->HasFaces() ) {
@@ -906,13 +824,7 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 			indices[i*6+3] = findAdjacentIndex( *mesh, indices[i*6+2], indices[i*6+4], indices[i*6] );
 			indices[i*6+5] = findAdjacentIndex( *mesh, indices[i*6+4], indices[i*6], indices[i*6+2] );
 		}
-
-		glGenBuffers(1, &vbo[INDEX_BUFFER]);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * mesh->mNumFaces * sizeof(GLuint), indices, GL_STATIC_DRAW);
 	}
-
-	glBindVertexArray(0);
 }
 
 unsigned int Mesh::SubMesh::boneIndexForName(const char* name) const {
@@ -1264,6 +1176,8 @@ Mesh::SubMesh::~SubMesh() {
 		delete[] indices;
 	if( tangents )
 		delete[] tangents;
+	if( vertexbonedata )
+		delete[] vertexbonedata;
 }
 
 void Mesh::SubMesh::draw(const Camera& camera) {
