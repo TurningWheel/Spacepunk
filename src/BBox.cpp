@@ -304,9 +304,6 @@ void BBox::createRigidBody() {
 			collisionShapePtr = new btBvhTriangleMeshShape(triMesh, true, true);
 		}
 		else {
-			if (!meshDirty) {
-				mainEngine->fmsg(Engine::MSG_DEBUG, "mesh shape assigned to bbox, but mesh is unavailable");
-			}
 			return;
 		}
 		break;
