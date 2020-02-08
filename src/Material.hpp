@@ -34,7 +34,7 @@ public:
 	virtual const type_t		getType() const				{ return ASSET_MATERIAL; }
 	const ShaderProgram&		getShader() const			{ return shader; }
 	ShaderProgram&				getShader()					{ return shader; }
-	const bool					isGlowing() const			{ return glowTextures.getSize()>0; }
+	const bool					isGlowing() const			{ return glowTextureStrs.getSize()>0; }
 	const bool					isTransparent()				{ return transparent; }
 	const bool					isShadowing()				{ return shadow; }
 
@@ -43,9 +43,6 @@ public:
 
 private:
 	ShaderProgram shader;
-	ArrayList<Image*> stdTextures;
-	ArrayList<Image*> glowTextures;
-	ArrayList<Cubemap*> cubemaps;
 	ArrayList<String> stdTextureStrs;
 	ArrayList<String> glowTextureStrs;
 	ArrayList<String> cubemapStrs;

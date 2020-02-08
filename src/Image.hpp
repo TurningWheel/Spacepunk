@@ -12,6 +12,8 @@ public:
 	Image(const char* _name);
 	virtual ~Image();
 
+	virtual bool finalize() override;
+
 	// draws the image
 	// @param src the section of the image to be used for drawing, or nullptr for the whole image
 	// @param dest the location and size by which the image should be drawn
@@ -30,15 +32,19 @@ public:
 	static void deleteStaticData();
 
 	// getters & setters
-	virtual const type_t	getType() const		{ return ASSET_IMAGE; }
-	const GLuint			getTexID() const	{ return texid; }
-	const SDL_Surface*		getSurf() const		{ return surf; }
-	const unsigned int		getWidth() const	{ return surf ? surf->w : 0U; }
-	const unsigned int		getHeight()	const	{ return surf ? surf->h : 0U; }
+	virtual const type_t	getType() const			{ return ASSET_IMAGE; }
+	virtual const bool		isStreamable() const	{ return true; }
+	const GLuint			getTexID() const		{ return texid; }
+	const SDL_Surface*		getSurf() const			{ return surf; }
+	const unsigned int		getWidth() const		{ return surf ? surf->w : 0U; }
+	const unsigned int		getHeight()	const		{ return surf ? surf->h : 0U; }
 
 private:
 	GLuint texid = 0;
 	SDL_Surface* surf = nullptr;
+
+	bool clamp = false;
+	bool point = false;
 
 	// static geometry data for rendering the image to a quad
 	static const GLuint indices[6];

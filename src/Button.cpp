@@ -29,7 +29,6 @@ Button::~Button() {
 
 void Button::setIcon(const char* _icon) {
 	icon = _icon;
-	iconImg = mainEngine->getImageResource().dataForString(icon.get());
 }
 
 void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
@@ -63,9 +62,9 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			}
 			_text->drawColor(Rect<int>(), pos, textColor);
 		}
-	} else if( iconImg ) {
+	} else if( icon.get() ) {
 		// we check a second time, just incase the cache was dumped and the original pointer invalidated.
-		iconImg = mainEngine->getImageResource().dataForString(icon.get());
+		Image* iconImg = mainEngine->getImageResource().dataForString(icon.get());
 		if( iconImg ) {
 			if( style!=STYLE_CHECKBOX || pressed==true ) {
 				Rect<int> pos;

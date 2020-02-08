@@ -216,7 +216,7 @@ void Player::setupGUI() {
 	int x = camera->getWin().x + camera->getWin().w / 2 - w / 2;
 	int y = camera->getWin().y + camera->getWin().h / 2 - h / 2;
 	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
-	gui->addImage(Rect<Sint32>(x, y, w, h), glm::vec4(1.f), reticle, name);
+	gui->addImage(Rect<Sint32>(x, y, w, h), glm::vec4(1.f), reticle->getName(), name);
 }
 
 void Player::updateGUI() {
@@ -230,8 +230,11 @@ void Player::updateGUI() {
 	Rect<Sint32> pos;
 	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
 	auto reticle = gui->findImage(name); assert(reticle);
-	pos.w = reticle->image->getWidth();
-	pos.h = reticle->image->getHeight();
+	auto img = mainEngine->getImageResource().dataForString(reticle->name);
+	if (img) {
+		pos.w = img->getWidth();
+		pos.h = img->getHeight();
+	}
 	pos.x = camera->getWin().x + camera->getWin().w / 2 - pos.w / 2;
 	pos.y = camera->getWin().y + camera->getWin().h / 2 - pos.h / 2;
 	reticle->pos = pos;

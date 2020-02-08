@@ -25,29 +25,23 @@ void Material::serialize(FileInterface* file) {
 	file->property("textures", stdTextureStrs);
 	file->property("glowTextures", glowTextureStrs);
 	file->property("cubemaps", cubemapStrs);
-	if (file->isReading()) {
-		for (auto& path : stdTextureStrs) {
-			Image* image = mainEngine->getImageResource().dataForString(path.get());
-			if (image) {
-				stdTextures.push(image);
-			}
-		}
-		for (auto& path : glowTextureStrs) {
-			Image* image = mainEngine->getImageResource().dataForString(path.get());
-			if (image) {
-				glowTextures.push(image);
-			}
-		}
-		for (auto& path : cubemapStrs) {
-			Cubemap* cubemap = mainEngine->getCubemapResource().dataForString(path.get());
-			if (cubemap) {
-				cubemaps.push(cubemap);
-			}
-		}
-	}
 }
 
 unsigned int Material::bindTextures(texturekind_t textureKind) {
+	ArrayList<Image*> stdTextures;
+	ArrayList<Image*> glowTextures;
+	for (auto& path : stdTextureStrs) {
+		Image* image = mainEngine->getImageResource().dataForString(path.get());
+		if (image) {
+			stdTextures.push(image);
+		}
+	}
+	for (auto& path : glowTextureStrs) {
+		Image* image = mainEngine->getImageResource().dataForString(path.get());
+		if (image) {
+			glowTextures.push(image);
+		}
+	}
 	ArrayList<Image*>& images = (textureKind==STANDARD) ? stdTextures : glowTextures;
 	unsigned int textureNum = 0;
 
@@ -83,6 +77,14 @@ unsigned int Material::bindTextures(texturekind_t textureKind) {
 			glUniform1i(shader.getUniformLocation(buf), textureNum);
 			glActiveTexture(GL_TEXTURE0+textureNum);
 			glBindTexture(GL_TEXTURE_2D, image->getTexID());
+		}
+	}
+
+	ArrayList<Cubemap*> cubemaps;
+	for (auto& path : cubemapStrs) {
+		Cubemap* cubemap = mainEngine->getCubemapResource().dataForString(path.get());
+		if (cubemap) {
+			cubemaps.push(cubemap);
 		}
 	}
 

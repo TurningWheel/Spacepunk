@@ -92,5 +92,4 @@ private:
 	style_t style = STYLE_NORMAL;					// button style
 	bool disabled=false;							// if true, the button is invisible and unusable
 	Uint32 highlightTime = 0;						// records the time since the button was highlighted
-	Image* iconImg = nullptr;						// the icon image
 };

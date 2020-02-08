@@ -5,8 +5,8 @@
 #include "World.hpp"
 #include "Tile.hpp"
 #include "Rect.hpp"
+#include "Chunk.hpp"
 
-class Chunk;
 class Generator;
 
 class TileWorld : public World {

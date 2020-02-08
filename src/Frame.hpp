@@ -30,7 +30,6 @@ public:
 		String name;
 		String path;
 		glm::vec4 color;
-		Image* image;
 		Rect<Sint32> pos;
 	};
 
@@ -54,7 +53,7 @@ public:
 		String text;
 		Script::Args params;
 		glm::vec4 color;
-		Image* image = nullptr;
+		String image;
 		String path;
 		bool pressed = false;
 		bool highlighted = false;
@@ -130,7 +129,7 @@ public:
 	// @param image the image to draw
 	// @param name the name of the image (unique id)
 	// @return the newly created image object
-	image_t* addImage( const Rect<Sint32>& pos, const glm::vec4& color, Image* image, const char* name = "" );
+	image_t* addImage( const Rect<Sint32>& pos, const glm::vec4& color, String image, const char* name = "" );
 
 	// adds a new entry to the frame's list
 	// @param name internal name of the new entry

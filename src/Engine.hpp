@@ -101,7 +101,7 @@ public:
 	const Uint32						getTicks() const								{ return ticks; }
 	const unsigned int					getTicksPerSecond() const						{ return ticksPerSecond; }
 	Resource<Mesh, true>&				getMeshResource()								{ return meshResource; }
-	Resource<Image>&					getImageResource()								{ return imageResource; }
+	Resource<Image, true>&				getImageResource()								{ return imageResource; }
 	Resource<Material>&					getMaterialResource()							{ return materialResource; }
 	Resource<Texture>&					getTextureResource()							{ return textureResource; }
 	Resource<Text>&						getTextResource()								{ return textResource; }
@@ -392,7 +392,7 @@ private:
 
 	// resource caches
 	Resource<Mesh, true> meshResource;
-	Resource<Image> imageResource;
+	Resource<Image, true> imageResource;
 	Resource<Material> materialResource;
 	Resource<Texture> textureResource;
 	Resource<Text> textResource;

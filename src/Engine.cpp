@@ -1148,6 +1148,7 @@ void Engine::preProcess() {
 
 	// update resources
 	meshResource.update();
+	imageResource.update();
 
 	// restart timer
 	unsigned int newTicksPerSecond = cvar_tickrate.toInt();

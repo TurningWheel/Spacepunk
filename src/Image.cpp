@@ -33,8 +33,6 @@ const GLuint Image::indices[6] {
 };
 
 Image::Image(const char* _name) : Asset(_name) {
-	bool clamp = false;
-	bool point = false;
 	if (_name) {
 		switch (_name[0]) {
 		case '#':
@@ -67,7 +65,9 @@ Image::Image(const char* _name) : Asset(_name) {
 	SDL_BlitSurface(surf, nullptr, newSurf, nullptr); // blit onto a purely RGBA Surface
 	SDL_FreeSurface(surf);
 	surf = newSurf;
+}
 
+bool Image::finalize() {
 	// load the new surface as a GL texture
 	SDL_LockSurface(surf);
 	glGenTextures(1,&texid);
@@ -92,7 +92,7 @@ Image::Image(const char* _name) : Asset(_name) {
 	}
 	SDL_UnlockSurface(surf);
 
-	loaded = true;
+	return loaded = true;
 }
 
 Image::~Image() {
@@ -156,6 +156,10 @@ void Image::draw( const Rect<int>* src, const Rect<int>& dest ) const {
 }
 
 void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::vec4& color ) const {
+	if (!loaded) {
+		return;
+	}
+
 	int yres = mainEngine->getYres();
 	int xres = mainEngine->getXres();
 

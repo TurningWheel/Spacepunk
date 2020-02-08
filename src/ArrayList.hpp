@@ -107,7 +107,7 @@ public:
 	// resize the internal list
 	// @param len number of elements to size the list for
 	// @return *this
-	ArrayList& alloc(Uint32 len) {
+	virtual ArrayList& alloc(Uint32 len) {
 		maxSize = len;
 		Uint32 newSize = std::min( maxSize, size );
 		T* newArr = nullptr;
@@ -491,6 +491,32 @@ public:
 		if (this->arr == defaultArr) {
 			this->arr = nullptr;
 		}
+	}
+
+	// resize the internal list
+	// @param len number of elements to size the list for
+	// @return *this
+	virtual ArrayList& alloc(Uint32 len) override {
+		maxSize = len;
+		Uint32 newSize = std::min( maxSize, size );
+		T* newArr = nullptr;
+		if( len ) {
+			newArr = new T[len];
+			assert(newArr);
+			Uint32 copyLen = min(size, len);
+			for( Uint32 c = 0; c < copyLen; ++c ) {
+				newArr[c] = std::move(this->arr[c]);
+			}
+		}
+		if( this->arr ) {
+			if (this->arr != defaultArr) {
+				delete[] this->arr;
+			}
+			this->arr = nullptr;
+		}
+		size = newSize;
+		this->arr = newArr;
+		return *this;
 	}
 
 	// getters & setters
