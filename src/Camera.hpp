@@ -63,7 +63,7 @@ public:
 	Renderer*&			getRenderer()				{ return renderer; }
 	const float&		getClipNear() const			{ return clipNear; }
 	const float&		getClipFar() const			{ return clipFar; }
-	const Rect<Sint32>&	getWin() const				{ return win; }
+	const Rect<float>&	getWin() const				{ return win; }
 	const Sint32&		getFov() const				{ return fov; }
 	const glm::mat4&	getProjMatrix() const		{ return projMatrix; }
 	const glm::mat4&	getViewMatrix() const		{ return viewMatrix; }
@@ -75,7 +75,7 @@ public:
 
 	void	setClipNear(float _clipNear)		{ clipNear = _clipNear; }
 	void	setClipFar(float _clipFar)			{ clipFar = _clipFar; }
-	void	setWin(const Rect<Sint32>& rect)	{ win = rect; }
+	void	setWin(const Rect<float>& rect)		{ win = rect; }
 	void	setFov(Sint32 _fov)					{ fov = _fov; }
 	void	setDrawMode(drawmode_t _drawMode)	{ drawMode = _drawMode; }
 	void	setOrtho(const bool _ortho)			{ ortho = _ortho; }
@@ -158,10 +158,6 @@ public:
 	// draws all marked points, lines, etc.
 	void drawDebug();
 
-	// load the component from a file
-	// @param fp the file to read from
-	virtual void load(FILE* fp) override;
-
 	// save/load this object to a file
 	// @param file interface to serialize with
 	virtual void serialize(FileInterface* file) override;
@@ -196,7 +192,7 @@ protected:
 	// viewport and projection variables
 	float clipNear = 8.f;
 	float clipFar = 1024.f;
-	Rect<Sint32> win;
+	Rect<float> win;
 	Sint32 fov = 70;
 	bool ortho = false;
 	bool enabled = true;

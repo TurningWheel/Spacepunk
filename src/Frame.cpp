@@ -12,7 +12,19 @@
 #include "Field.hpp"
 
 bool Frame::tabbing = false;
-const Sint32 Frame::sliderSize = 15;
+const float Frame::sliderSize = 0.05f;
+const float Frame::entrySize = 0.05f;
+
+Rect<int> Frame::convertToPx(const Renderer& renderer, const Rect<float>& dimensions) {
+	int xres = renderer.getXres();
+	int yres = renderer.getYres();
+	Rect<int> px;
+	px.x *= dimensions.x * xres;
+	px.y *= dimensions.y * yres;
+	px.w *= dimensions.x * xres;
+	px.h *= dimensions.h * yres;
+	return px;
+}
 
 void Frame::listener_t::onDeleted() {
 	if( !entry ) {
@@ -118,28 +130,33 @@ void Frame::draw(Renderer& renderer) {
 	Frame::draw(renderer, size, actualSize);
 }
 
-void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
+void Frame::draw(Renderer& renderer, Rect<float> _size, Rect<float> _actualSize) {
 	if( disabled )
 		return;
 
-	_size.x += max(0,size.x-_actualSize.x);
-	_size.y += max(0,size.y-_actualSize.y);
+	_size.x += max(0.f,size.x-_actualSize.x);
+	_size.y += max(0.f,size.y-_actualSize.y);
 	if( size.h < actualSize.h ) {
-		_size.w = min( size.w-sliderSize, _size.w-sliderSize-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
+		_size.w = min( size.w-sliderSize, _size.w-sliderSize-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
 	} else {
-		_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
+		_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
 	}
 	if( size.w < actualSize.w ) {
-		_size.h = min( size.h-sliderSize, _size.h-sliderSize-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+		_size.h = min( size.h-sliderSize, _size.h-sliderSize-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 	} else {
-		_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+		_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 	}
 	if( _size.w <= 0 || _size.h <= 0 )
 		return;
 
+	int xres = renderer.getXres();
+	int yres = renderer.getYres();
+
+	auto _sizePx = convertToPx(renderer, _size);
+
 	// draw frame background
 	if( !hollow ) {
-		renderer.drawRect( &_size, color );
+		renderer.drawRect( &_sizePx, color );
 	}
 
 	Sint32 omousex = mainEngine->getOldMouseX();
@@ -150,9 +167,9 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 		// slider rail
 		Rect<int> barRect;
-		barRect.x = _size.x;
-		barRect.y = _size.y+_size.h;
-		barRect.w = _size.w;
+		barRect.x = _sizePx.x;
+		barRect.y = _sizePx.y+_sizePx.h;
+		barRect.w = _sizePx.w;
 		barRect.h = sliderSize;
 		if( border>0 ) {
 			renderer.drawLowFrame( barRect, border, color * glm::vec4(.75f,.75f,.75f,1.f) );
@@ -162,12 +179,12 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 		// handle
 		float winFactor = ((float)_size.w / (float)actualSize.w);
-		int handleSize = max( (int)(size.w * winFactor), sliderSize );
-		int sliderPos = winFactor * actualSize.x;
+		int handleSize = max( (int)(size.w * xres * winFactor), sliderSize );
+		int sliderPos = winFactor * xres * actualSize.x;
 
 		Rect<int> handleRect;
-		handleRect.x = _size.x + sliderPos;
-		handleRect.y = _size.y + _size.h;
+		handleRect.x = _sizePx.x + sliderPos;
+		handleRect.y = _sizePx.y + _sizePx.h;
 		handleRect.w = handleSize;
 		handleRect.h = sliderSize;
 		if( border>0 ) {
@@ -188,10 +205,10 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	// vertical slider
 	if( actualSize.h > size.h && _size.y ) {
 		Rect<int> barRect;
-		barRect.x = _size.x+_size.w;
-		barRect.y = _size.y;
+		barRect.x = _sizePx.x+_sizePx.w;
+		barRect.y = _sizePx.y;
 		barRect.w = sliderSize;
-		barRect.h = _size.h;
+		barRect.h = _sizePx.h;
 		if( border>0 ) {
 			renderer.drawLowFrame( barRect, border, color * glm::vec4(.75f,.75f,.75f,1.f) );
 		} else {
@@ -200,12 +217,12 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 		// handle
 		float winFactor = ((float)_size.h / (float)actualSize.h);
-		int handleSize = max( (int)(size.h * winFactor), sliderSize );
-		int sliderPos = winFactor * actualSize.y;
+		int handleSize = max( (int)(size.h * yres * winFactor), sliderSize );
+		int sliderPos = winFactor * yres * actualSize.y;
 
 		Rect<int> handleRect;
-		handleRect.x = _size.x + _size.w;
-		handleRect.y = _size.y + sliderPos;
+		handleRect.x = _sizePx.x + _sizePx.w;
+		handleRect.y = _sizePx.y + sliderPos;
 		handleRect.w = sliderSize;
 		handleRect.h = handleSize;
 		if( border>0 ) {
@@ -226,8 +243,8 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	// slider filler (at the corner between sliders)
 	if( actualSize.w > size.w && actualSize.h > size.h ) {
 		Rect<int> barRect;
-		barRect.x = _size.x+_size.w;
-		barRect.y = _size.y+_size.h;
+		barRect.x = _sizePx.x+_sizePx.w;
+		barRect.y = _sizePx.y+_sizePx.h;
 		barRect.w = sliderSize;
 		barRect.h = sliderSize;
 		if( border>0 ) {
@@ -241,13 +258,14 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 	}
 
-	Rect<Sint32> scroll = actualSize;
+	Rect<float> scroll = actualSize;
 	if (size.x-_actualSize.x < 0) {
 		scroll.x -= size.x-_actualSize.x;
 	}
 	if (size.y-_actualSize.y < 0) {
 		scroll.y -= size.y-_actualSize.y;
 	}
+	Rect<int> scrollPx = convertToPx(renderer, scroll);
 
 	// render fields
 	for( Node<Field*>* node=fields.getFirst(); node!=nullptr; node=node->getNext() ) {
@@ -264,28 +282,28 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 
 		Rect<int> pos;
-		pos.x = _size.x + image.pos.x - scroll.x;
-		pos.y =  _size.y + image.pos.y - scroll.y;
+		pos.x = _sizePx.x + image.pos.x - scrollPx.x;
+		pos.y =  _sizePx.y + image.pos.y - scrollPx.y;
 		pos.w = image.pos.w > 0 ? image.pos.w : actualImage->getWidth();
 		pos.h = image.pos.h > 0 ? image.pos.h : actualImage->getHeight();
 
 		Rect<int> dest;
-		dest.x = max( _size.x, pos.x );
-		dest.y = max( _size.y, pos.y );
-		dest.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _size.x + _size.w ) );
-		dest.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _size.y + _size.h ) );
+		dest.x = max( _sizePx.x, pos.x );
+		dest.y = max( _sizePx.y, pos.y );
+		dest.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _sizePx.x + _sizePx.w ) );
+		dest.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _sizePx.y + _sizePx.h ) );
 
 		Rect<int> src;
-		src.x = max( 0, _size.x - pos.x );
-		src.y = max( 0, _size.y - pos.y );
-		src.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _size.x + _size.w ) );
-		src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _size.y + _size.h ) );
+		src.x = max( 0, _sizePx.x - pos.x );
+		src.y = max( 0, _sizePx.y - pos.y );
+		src.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _sizePx.x + _sizePx.w ) );
+		src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _sizePx.y + _sizePx.h ) );
 
 		actualImage->drawColor(&src,dest,image.color);
 	}
 
 	// render list entries
-	int listStart = std::min( std::max( 0, scroll.y / entrySize ), (int)list.getSize() - 1 );
+	int listStart = std::min( std::max( 0, scrollPx.y / entrySize ), (int)list.getSize() - 1 );
 	int i = listStart;
 	Node<entry_t*>* node = node=list.nodeForIndex(listStart);
 	for( ; node!=nullptr; node=node->getNext(), ++i ) {
@@ -305,22 +323,22 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		int textSizeH = entrySize;
 
 		Rect<int> pos;
-		pos.x = _size.x + border - scroll.x;
-		pos.y = _size.y + border + i*entrySize - scroll.y;
+		pos.x = _sizePx.x + border - scrollPx.x;
+		pos.y = _sizePx.y + border + i*entrySize - scrollPx.y;
 		pos.w = textSizeW;
 		pos.h = textSizeH;
 
 		Rect<int> dest;
-		dest.x = max( _size.x, pos.x );
-		dest.y = max( _size.y, pos.y );
-		dest.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _size.x + _size.w ) );
-		dest.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _size.y + _size.h ) );
+		dest.x = max( _sizePx.x, pos.x );
+		dest.y = max( _sizePx.y, pos.y );
+		dest.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _sizePx.x + _sizePx.w ) );
+		dest.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _sizePx.y + _sizePx.h ) );
 
 		Rect<int> src;
-		src.x = max( 0, _size.x - pos.x );
-		src.y = max( 0, _size.y - pos.y );
-		src.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _size.x + _size.w ) );
-		src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _size.y + _size.h ) );
+		src.x = max( 0, _sizePx.x - pos.x );
+		src.y = max( 0, _sizePx.y - pos.y );
+		src.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( _sizePx.x + _sizePx.w ) );
+		src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( _sizePx.y + _sizePx.h ) );
 
 		if( src.w<=0 || src.h<=0 || dest.w<=0 || dest.h<=0 )
 			break;
@@ -365,9 +383,9 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	// draw frame borders, if any
 	if( border>0 ) {
 		if( high ) {
-			renderer.drawHighFrame( _size, border, color, true );
+			renderer.drawHighFrame( _sizePx, border, color, true );
 		} else {
-			renderer.drawLowFrame( _size, border, color, true );
+			renderer.drawLowFrame( _sizePx, border, color, true );
 		}
 	}
 }
@@ -387,7 +405,7 @@ Frame::result_t Frame::process() {
 	return result;
 }
 
-Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usable) {
+Frame::result_t Frame::process(Rect<float> _size, Rect<float> _actualSize, bool usable) {
 	result_t result;
 	result.removed = false;
 	result.usable = usable;
@@ -401,17 +419,17 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		return result;
 	}
 
-	_size.x += max(0,size.x-_actualSize.x);
-	_size.y += max(0,size.y-_actualSize.y);
+	_size.x += max(0.f,size.x-_actualSize.x);
+	_size.y += max(0.f,size.y-_actualSize.y);
 	if( size.h < actualSize.h ) {
-		_size.w = min( size.w-sliderSize, _size.w-sliderSize-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
+		_size.w = min( size.w-sliderSize, _size.w-sliderSize-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
 	} else {
-		_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
+		_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
 	}
 	if( size.w < actualSize.w ) {
-		_size.h = min( size.h-sliderSize, _size.h-sliderSize-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+		_size.h = min( size.h-sliderSize, _size.h-sliderSize-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 	} else {
-		_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+		_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 	}
 	if( _size.w <= 0 || _size.h <= 0 )
 		return result;
@@ -634,8 +652,8 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		// filler in between sliders
 		if( actualSize.w > size.w && actualSize.h > size.h ) {
 			Rect<int> sliderRect;
-			sliderRect.x = _size.x+_size.w; sliderRect.w = sliderSize;
-			sliderRect.y = _size.y+_size.h; sliderRect.h = sliderSize;
+			sliderRect.x = xres * (_size.x+_size.w); sliderRect.w = xres * sliderSize;
+			sliderRect.y = yres * (_size.y+_size.h); sliderRect.h = yres * sliderSize;
 			if( sliderRect.containsPoint(omousex,omousey) ) {
 				result.usable = false;
 			}
@@ -644,13 +662,13 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		// horizontal slider
 		if( actualSize.w > size.w ) {
 			Rect<int> sliderRect;
-			sliderRect.x = _size.x; sliderRect.w = _size.w;
-			sliderRect.y = _size.y+_size.h; sliderRect.h = sliderSize;
+			sliderRect.x = xres * _size.x; sliderRect.w = xres * _size.w;
+			sliderRect.y = yres * (_size.y+_size.h); sliderRect.h = yres * sliderSize;
 			if( sliderRect.containsPoint(omousex,omousey) ) {
 				if( mainEngine->getMouseStatus(SDL_BUTTON_LEFT) ) {
 					float winFactor = ((float)_size.w / (float)actualSize.w);
 					actualSize.x = (mousex-_size.x) / winFactor - _size.w/2;
-					actualSize.x = min( max( 0, actualSize.x ), max( 0, actualSize.w-size.w ) );
+					actualSize.x = min( max( 0.f, actualSize.x ), max( 0.f, actualSize.w-size.w ) );
 				}
 				result.usable = false;
 			}
@@ -696,7 +714,7 @@ Field* Frame::addField(const char* name, const int len) {
 	return field;
 }
 
-Frame::image_t* Frame::addImage( const Rect<Sint32>& pos, const glm::vec4& color, String image, const char* name ) {
+Frame::image_t* Frame::addImage( const Rect<float>& pos, const glm::vec4& color, String image, const char* name ) {
 	if (!image || !name) {
 		return nullptr;
 	}
@@ -867,36 +885,36 @@ Frame::entry_t* Frame::findEntry( const char* name ) {
 
 void Frame::resizeForEntries() {
 	actualSize.h = (Uint32)list.getSize() * entrySize;
-	actualSize.y = min( max( 0, actualSize.y ), max( 0, actualSize.h-size.h ) );
+	actualSize.y = min( max( 0.f, actualSize.y ), max( 0.f, actualSize.h-size.h ) );
 }
 
-bool Frame::capturesMouse(Rect<int>* curSize, Rect<int>* curActualSize) {
+bool Frame::capturesMouse(Rect<float>* curSize, Rect<float>* curActualSize) {
 	int xres = mainEngine->getXres();
 	int yres = mainEngine->getYres();
-	Rect<int> newSize = Rect<int>(0, 0, xres, yres);
-	Rect<int> newActualSize = Rect<int>(0, 0, xres, yres);
-	Rect<int>& _size = curSize ? *curSize : newSize;
-	Rect<int>& _actualSize = curActualSize ? *curActualSize : newActualSize;
+	Rect<float> newSize = Rect<float>(0.f, 0.f, 1.f, 1.f);
+	Rect<float> newActualSize = Rect<float>(0.f, 0.f, 1.f, 1.f);
+	Rect<float>& _size = curSize ? *curSize : newSize;
+	Rect<float>& _actualSize = curActualSize ? *curActualSize : newActualSize;
 	
 	if( parent ) {
 		if( parent->capturesMouse(&_size, &_actualSize) ) {
-			_size.x += max(0,size.x-_actualSize.x);
-			_size.y += max(0,size.y-_actualSize.y);
+			_size.x += max(0.f,size.x-_actualSize.x);
+			_size.y += max(0.f,size.y-_actualSize.y);
 			if( size.h < actualSize.h ) {
-				_size.w = min( size.w-sliderSize, _size.w-sliderSize-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
+				_size.w = min( size.w-sliderSize, _size.w-sliderSize-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
 			} else {
-				_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
+				_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
 			}
 			if( size.w < actualSize.w ) {
-				_size.h = min( size.h-sliderSize, _size.h-sliderSize-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+				_size.h = min( size.h-sliderSize, _size.h-sliderSize-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 			} else {
-				_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+				_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 			}
-			if( _size.w <= 0 || _size.h <= 0 ) {
+			if( _size.w <= 0.f || _size.h <= 0.f ) {
 				return false;
 			} else {
-				int omousex = mainEngine->getOldMouseX();
-				int omousey = mainEngine->getOldMouseY();
+				float omousex = mainEngine->getOldMouseX() / xres;
+				float omousey = mainEngine->getOldMouseY() / yres;
 				if( _size.containsPoint(omousex,omousey) ) {
 					return true;
 				} else {

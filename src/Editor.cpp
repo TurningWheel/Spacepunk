@@ -1642,7 +1642,7 @@ void Editor::initWidgets() {
 	}
 }
 
-void Editor::initGUI(const Rect<int>& camRect) {
+void Editor::initGUI() {
 	// setup gui
 	Sint32 xres = mainEngine->getXres();
 	Sint32 yres = mainEngine->getYres();

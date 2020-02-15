@@ -40,19 +40,19 @@ public:
 	// @param renderer the renderer object used to draw the button
 	// @param _size size and position of button's parent frame
 	// @param _actualSize offset into the parent frame space (scroll)
-	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
+	void draw(Renderer& renderer, Rect<float> _size, Rect<float> _actualSize);
 
 	// handles button clicks, etc.
 	// @param _size size and position of button's parent frame
 	// @param _actualSize offset into the parent frame space (scroll)
 	// @param usable true if another object doesn't have the mouse's attention, false otherwise
 	// @return resultant state of the button after processing
-	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
+	result_t process(Rect<float> _size, Rect<float> _actualSize, const bool usable);
 
 	// getters & setters
 	const char*					getName() const				{ return name.get(); }
 	const int					getBorder() const			{ return border; }
-	const Rect<int>&			getSize() const				{ return size; }
+	const Rect<float>&			getSize() const				{ return size; }
 	const bool					isPressed() const			{ return pressed; }
 	const bool					isHighlighted() const		{ return highlighted; }
 	const bool					isDisabled() const			{ return disabled; }
@@ -62,7 +62,7 @@ public:
 
 	void	setBorder(const int _border)				{ border = _border; }
 	void	setPos(const int x, const int y)			{ size.x = x; size.y = y; }
-	void	setSize(Rect<int>& _size)					{ size = _size; }
+	void	setSize(Rect<float>& _size)					{ size = _size; }
 	void	setColor(const glm::vec4& _color)			{ color = _color; }
 	void	setTextColor(const glm::vec4& _color)		{ textColor = _color; }
 	void	setName(const char* _name)					{ name = _name; }
@@ -83,7 +83,7 @@ private:
 	String tooltip;									// if empty, button has no tooltip; otherwise, it does
 	Script::Args params;							// optional function parameters to use when the button function is called	
 	int border = 3;									// size of the button border in pixels
-	Rect<int> size;									// size and position of the button within its parent frame
+	Rect<float> size;								// size and position of the button within its parent frame
 	bool pressed = false;							// button pressed state
 	bool reallyPressed = false;						// the "actual" button state, pre-mouse process
 	bool highlighted = false;						// true if mouse is hovering over button; false otherwise

@@ -31,12 +31,10 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 	}
 
 	name = typeStr[COMPONENT_CAMERA];
-	if( renderer ) {
-		win.x = 0;
-		win.y = 0;
-		win.w = renderer->getXres();
-		win.h = renderer->getYres();
-	}
+	win.x = 0.f;
+	win.y = 0.f;
+	win.w = 1.f;
+	win.h = 1.f;
 
 	// add a bbox for editor usage
 	if( mainEngine->isEditorRunning() && entity->isShouldSave() ) {
@@ -50,10 +48,10 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 	// exposed attributes
 	attributes.push(new AttributeFloat("Clip Near", clipNear));
 	attributes.push(new AttributeFloat("Clip Far", clipFar));
-	attributes.push(new AttributeInt("Window X", win.x));
-	attributes.push(new AttributeInt("Window Y", win.y));
-	attributes.push(new AttributeInt("Window W", win.w));
-	attributes.push(new AttributeInt("Window H", win.h));
+	attributes.push(new AttributeFloat("Window X", win.x));
+	attributes.push(new AttributeFloat("Window Y", win.y));
+	attributes.push(new AttributeFloat("Window W", win.w));
+	attributes.push(new AttributeFloat("Window H", win.h));
 	attributes.push(new AttributeInt("Vertical FOV in Degrees", fov));
 	attributes.push(new AttributeBool("Orthogonal", ortho));
 }
@@ -110,12 +108,12 @@ void Camera::setupProjection(bool scissor) {
 	bool o = ortho || cvar_cameraAllOrtho.toInt();
 
 	if (o) {
-		float width = (float)(fov) * ( (float)win.w / win.h );
+		float width = (float)(fov) * ( win.w / win.h );
 		float height = (float)(fov);
 		float depth = clipFar;
 		projMatrix = makeOrthoProj(width, height, depth);
 	} else {
-		projMatrix = makeInfReversedZProj(glm::radians((float)fov), (float)win.w / win.h, clipNear);
+		projMatrix = makeInfReversedZProj(glm::radians((float)fov), win.w / win.h, clipNear);
 	}
 
 	if (o) {
@@ -131,12 +129,24 @@ void Camera::setupProjection(bool scissor) {
 		viewMatrix = cameraRotation * cameraTranslation;
 	}
 
+	int xres = renderer->getXres();
+	int yres = renderer->getYres();
+
 	if( renderer && scissor ) {
-		int yres = renderer->getYres();
-		glViewport( win.x, yres-win.h-win.y, win.w, win.h );
-		glScissor( win.x, yres-win.h-win.y, win.w, win.h );
+		Rect<int> coords;
+		coords.x = win.x * xres;
+		coords.y = yres - (win.h - win.y) * yres;
+		coords.w = win.w * xres;
+		coords.h = win.h * yres;
+		glViewport( coords.x, coords.y, coords.w, coords.h );
+		glScissor( coords.x, coords.y, coords.w, coords.h );
 		glEnable(GL_SCISSOR_TEST);
 	} else {
+		Rect<int> coords;
+		coords.x = win.x * xres;
+		coords.y = -win.y * yres;
+		coords.w = win.w * xres;
+		coords.h = win.h * yres;
 		glViewport( win.x, -win.y, win.w, win.h );
 		glDisable(GL_SCISSOR_TEST);
 	}
@@ -153,10 +163,13 @@ Vector Camera::worldPosToScreenPos( const Vector& original ) const {
 	// get object position
 	glm::vec3 position(original.x, -original.z, original.y);
 
+	int xres = renderer->getXres();
+	int yres = renderer->getYres();
+
 	// project object
-	glm::vec4 viewport = glm::vec4( (float)win.x, (float)win.y, (float)win.w, (float)win.h );
+	glm::vec4 viewport = glm::vec4( win.x * xres, win.y * yres, win.w * xres, win.h * yres );
 	glm::vec3 projected = glm::project( position, glm::mat4(1.f), projMatrix * viewMatrix, viewport);
-	return Vector(projected.x, win.h - (projected.y - win.y*2), projected.z);
+	return Vector(projected.x, win.h * yres - (projected.y - win.y*2 * yres), projected.z);
 }
 
 void Camera::screenPosToWorldRay( int x, int y, Vector& out_origin, Vector& out_direction ) const {
@@ -164,24 +177,27 @@ void Camera::screenPosToWorldRay( int x, int y, Vector& out_origin, Vector& out_
 		return;
 	}
 
-	x = x - win.x;
-	y = win.h - (y - win.y);
+	int xres = renderer->getXres();
+	int yres = renderer->getYres();
+
+	x = x - win.x * xres;
+	y = win.h * yres - (y - win.y * yres);
 
 	// create ray screen vectors
 	glm::vec4 rayStart(
-		((float)x/(float)win.w  - 0.5f) * 2.0f,
-		((float)y/(float)win.h - 0.5f) * 2.0f,
+		((float)x/(float)(win.w * xres)  - 0.5f) * 2.0f,
+		((float)y/(float)(win.h * yres) - 0.5f) * 2.0f,
 		-1.0,
 		1.0f
 	);
 	glm::vec4 rayEnd(
-		((float)x/(float)win.w  - 0.5f) * 2.0f,
-		((float)y/(float)win.h - 0.5f) * 2.0f,
+		((float)x/(float)(win.w * xres) - 0.5f) * 2.0f,
+		((float)y/(float)(win.h * yres) - 0.5f) * 2.0f,
 		0.0,
 		1.0f
 	);
 
-	glm::mat4 projMatrix = glm::perspective(glm::radians((float)fov), (float)win.w / win.h, clipNear, clipFar);
+	glm::mat4 projMatrix = glm::perspective(glm::radians((float)fov), win.w / win.h, clipNear, clipFar);
 	glm::mat4 inversePMM    = glm::inverse(projMatrix * viewMatrix);
 	glm::vec4 rayStartWorld = inversePMM * rayStart; rayStartWorld /= rayStartWorld.w;
 	glm::vec4 rayEndWorld   = inversePMM * rayEnd  ; rayEndWorld   /= rayEndWorld.w;
@@ -243,24 +259,6 @@ void Camera::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 }
 
-void Camera::load(FILE* fp) {
-	Component::load(fp);
-
-	Engine::freadl(&clipNear, sizeof(float), 1, fp, nullptr, "Camera::load()");
-	Engine::freadl(&clipFar, sizeof(float), 1, fp, nullptr, "Camera::load()");
-	Engine::freadl(&win.x, sizeof(Sint32), 1, fp, nullptr, "Camera::load()");
-	Engine::freadl(&win.y, sizeof(Sint32), 1, fp, nullptr, "Camera::load()");
-	Engine::freadl(&win.w, sizeof(Sint32), 1, fp, nullptr, "Camera::load()");
-	Engine::freadl(&win.h, sizeof(Sint32), 1, fp, nullptr, "Camera::load()");
-	Engine::freadl(&fov, sizeof(Sint32), 1, fp, nullptr, "Camera::load()");
-	Engine::freadl(&ortho, sizeof(bool), 1, fp, nullptr, "Camera::load()");
-
-	Uint32 reserved = 0;
-	Engine::freadl(&reserved, sizeof(Uint32), 1, fp, nullptr, "Camera::load()");
-
-	loadSubComponents(fp);
-}
-
 void Camera::serialize(FileInterface* file) {
 	Component::serialize(file);
 
@@ -282,6 +280,11 @@ void Camera::markPoint(unsigned int x, unsigned int y, const glm::vec4& color) {
 }
 
 void Camera::markPoint(const Vector& pos, const glm::vec4& color) {
+	if (!renderer) {
+		return;
+	}
+	int xres = renderer->getXres();
+	int yres = renderer->getYres();
 	Vector diff = pos - gPos;
 	float dot = diff.dot(gAng.toVector());
 	if( dot > 0 ) {
@@ -289,7 +292,7 @@ void Camera::markPoint(const Vector& pos, const glm::vec4& color) {
 		Rect<int> src;
 		src.x = proj.x-4; src.y = proj.y-4;
 		src.w = 8; src.h = 8;
-		if( win.containsPoint(src.x,src.y) ) {
+		if( win.containsPoint(src.x / xres, src.y / yres) ) {
 			markPoint(src.x, src.y, color);
 		}
 	}

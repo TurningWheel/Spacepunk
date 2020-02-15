@@ -30,7 +30,7 @@ public:
 		String name;
 		String path;
 		glm::vec4 color;
-		Rect<Sint32> pos;
+		Rect<float> pos;
 	};
 
 	struct listener_t {
@@ -80,10 +80,10 @@ public:
 	static const Uint32 tooltipTime = 500;
 
 	// width/height of the slider(s) that appear when actualSize > size (in pixels)
-	static const Sint32 sliderSize;
+	static const float sliderSize;
 
 	// vertical size of a list entry
-	static const int entrySize = 20;
+	static const float entrySize;
 
 	// draws the frame and all of its subelements
 	// @param renderer the renderer object used to draw the frame
@@ -93,7 +93,7 @@ public:
 	// @param renderer the renderer object used to draw the frame
 	// @param _size real position of the frame onscreen
 	// @param _actualSize offset into the frame space (scroll)
-	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
+	void draw(Renderer& renderer, Rect<float> _size, Rect<float> _actualSize);
 
 	// handle clicks and other events
 	// @return compiled results of frame processing
@@ -104,7 +104,7 @@ public:
 	// @param _actualSize offset into the frame space (scroll)
 	// @param usable true if another object doesn't have the mouse's attention, false otherwise
 	// @return compiled results of frame processing
-	result_t process(Rect<int> _size, Rect<int> actualSize, const bool usable);
+	result_t process(Rect<float> _size, Rect<float> actualSize, const bool usable);
 
 	// adds a new frame to the current frame
 	// @param name internal name of the new frame
@@ -129,7 +129,7 @@ public:
 	// @param image the image to draw
 	// @param name the name of the image (unique id)
 	// @return the newly created image object
-	image_t* addImage( const Rect<Sint32>& pos, const glm::vec4& color, String image, const char* name = "" );
+	image_t* addImage( const Rect<float>& pos, const glm::vec4& color, String image, const char* name = "" );
 
 	// adds a new entry to the frame's list
 	// @param name internal name of the new entry
@@ -186,18 +186,24 @@ public:
 	// @param curSize used by the recursion algorithm, ignore or always pass nullptr
 	// @param curActualSize used by the recursion algorithm, ignore or always pass nullptr
 	// @return true if it is, false otherwise
-	bool capturesMouse(Rect<int>* curSize=nullptr, Rect<int>* curActualSize=nullptr);
+	bool capturesMouse(Rect<float>* curSize=nullptr, Rect<float>* curActualSize=nullptr);
 
 	// recursively locates the head frame (ie root gui) for this frame
 	// @return the head frame, which may be the current frame if we have no parent
 	Frame* findHead();
 
+	// convert the given universal dimensions to actual screen dimensions
+	// @param renderer the renderer to use as baseline for the conversion
+	// @param dimensions the dimensions to convert
+	// @return the dimensions in pixels
+	static Rect<int> convertToPx(const Renderer& renderer, const Rect<float>& dimensions);
+
 	// getters & setters
 	Frame*						getParent()				{ return parent; }
 	const char*					getName() const			{ return name.get(); }
 	const int					getBorder() const		{ return border; }
-	const Rect<int>&			getSize() const			{ return size; }
-	const Rect<int>&			getActualSize() const	{ return actualSize; }
+	const Rect<float>&			getSize() const			{ return size; }
+	const Rect<float>&			getActualSize() const	{ return actualSize; }
 	const bool					isHigh() const			{ return high; }
 	LinkedList<Frame*>&			getFrames()				{ return frames; }
 	LinkedList<Field*>&			getFields()				{ return fields; }
@@ -208,8 +214,8 @@ public:
 
 	void	setBorder(const int _border)			{ border = _border; }
 	void	setPos(const int x, const int y)		{ size.x = x; size.y = y; }
-	void	setSize(Rect<int>& _size)				{ size = _size; }
-	void	setActualSize(Rect<int>& _actualSize)	{ actualSize = _actualSize; }
+	void	setSize(Rect<float>& _size)				{ size = _size; }
+	void	setActualSize(Rect<float>& _actualSize)	{ actualSize = _actualSize; }
 	void	setHigh(const bool _high)				{ high = _high; }
 	void	setColor(const glm::vec4& _color)		{ color = _color; }
 	void	setDisabled(const bool _disabled)		{ disabled = _disabled; }
@@ -220,8 +226,8 @@ private:
 	Script* script = nullptr;		// script engine
 	String name;					// internal name of the frame
 	int border = 3;					// size of the frame's border
-	Rect<int> size;					// size and position of the frame in its parent frame
-	Rect<int> actualSize;			// size of the frame's whole contents. when larger than size, activates sliders
+	Rect<float> size;				// size and position of the frame in its parent frame
+	Rect<float> actualSize;			// size of the frame's whole contents. when larger than size, activates sliders
 	bool high = true;				// use Renderer::drawHighFrame(); else use Renderer::drawLowFrame()
 	glm::vec4 color;				// the frame's color
 	String scriptStr;				// name of the frame's script (sans path and extension)

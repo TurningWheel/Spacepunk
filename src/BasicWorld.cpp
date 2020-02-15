@@ -176,7 +176,7 @@ void BasicWorld::draw() {
 
 		// in editor, skip minimap if any other cameras are selected
 		// replace it with our selected camera(s)
-		Rect<Sint32> oldWin;
+		Rect<float> oldWin;
 		if (editor && editor->isInitialized()) {
 			if (camera != editor->getEditingCamera() &&
 				camera != editor->getMinimapCamera()) {
@@ -221,8 +221,14 @@ void BasicWorld::draw() {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		// clear the window area
+		int xres = renderer->getXres();
+		int yres = renderer->getYres();
 		glClear(GL_DEPTH_BUFFER_BIT);
-		Rect<int> backgroundRect = camera->getWin();
+		Rect<int> backgroundRect;
+		backgroundRect.x = camera->getWin().x * xres;
+		backgroundRect.y = camera->getWin().y * yres;
+		backgroundRect.w = camera->getWin().w * xres;
+		backgroundRect.h = camera->getWin().h * yres;
 		renderer->drawRect(&backgroundRect, glm::vec4(0.f, 0.f, 0.f, 1.f));
 
 		// set proper light blending function

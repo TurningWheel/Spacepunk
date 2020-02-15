@@ -49,21 +49,21 @@ public:
 	// @param renderer the renderer object used to draw the field
 	// @param _size size and position of field's parent frame
 	// @param _actualSize offset into the parent frame space (scroll)
-	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
+	void draw(Renderer& renderer, Rect<float> _size, Rect<float> _actualSize);
 
 	// handles clicks, etc.
 	// @param _size size and position of field's parent frame
 	// @param _actualSize offset into the parent frame space (scroll)
 	// @param usable true if another object doesn't have the mouse's attention, false otherwise
 	// @return resultant state of the field after processing
-	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
+	result_t process(Rect<float> _size, Rect<float> _actualSize, const bool usable);
 
 	// getters & setters
 	const char*					getName() const						{ return name.get(); }
 	const char*					getText() const						{ return text; }
 	const Uint32				getTextLen() const					{ return textLen; }
 	const glm::vec4&			getColor() const					{ return color; }
-	const Rect<int>				getSize() const						{ return size; }
+	const Rect<float>			getSize() const						{ return size; }
 	const justify_t				getJustify() const					{ return justify; }
 	const bool					isSelected() const					{ return selected; }
 	const bool					isEditable() const					{ return editable; }
@@ -76,7 +76,7 @@ public:
 	void	setName(const char* _name)							{ name = _name; }
 	void	setText(const char* _text)							{ memset(text, '\0', textLen); strncpy(text,_text,textLen); }
 	void	setPos(const int x, const int y)					{ size.x = x; size.y = y; }
-	void	setSize(const Rect<int>& _size)						{ size = _size; }
+	void	setSize(const Rect<float>& _size)					{ size = _size; }
 	void	setColor(const glm::vec4& _color)					{ color = _color; }
 	void	setEditable(const bool _editable)					{ editable = _editable; }
 	void	setNumbersOnly(const bool _numbersOnly)				{ numbersOnly = _numbersOnly; }
@@ -87,22 +87,20 @@ public:
 	void	setCallback(const Script::Function* fn)				{ callback = fn; }
 
 private:
-	Frame* parent = nullptr;	// parent frame
-
-	String name;
-	Script::Args params;
-	char* text = nullptr;
-	Uint32 textLen = 0;
-	glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f);
-	Rect<int> size;
-	justify_t justify = LEFT;
-	bool selected = false;
-	bool editable = false;
-	bool numbersOnly = false;
-	bool scroll = true;
-	bool selectAll = false;
-	const Script::Function* callback = nullptr;
-
-	String tabDestFrame = invalidName;
-	String tabDestField = invalidName;
+	Frame* parent = nullptr;							// parent frame
+	String name;										// field name (also function name base)
+	Script::Args params;								// script parameters
+	char* text = nullptr;								// text buffer
+	Uint32 textLen = 0;									// text buffer size
+	glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f);		// text color
+	Rect<float> size;									// size in universal dimensions
+	justify_t justify = LEFT;							// text justification
+	bool selected = false;								// whether the text is selected or not
+	bool editable = false;								// whether the text is read-only
+	bool numbersOnly = false;							// whether only number inputs is allowed
+	bool scroll = true;									// whether the text should scroll as input extends past the parent frame
+	bool selectAll = false;								// if true, all text is selected and next input will clear buffer
+	const Script::Function* callback = nullptr;			// C callback, if any
+	String tabDestFrame = invalidName;					// destination frame to tab to
+	String tabDestField = invalidName;					// destination field to tab to
 };

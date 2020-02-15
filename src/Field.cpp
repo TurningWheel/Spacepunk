@@ -2,6 +2,7 @@
 
 #include "Main.hpp"
 #include "Engine.hpp"
+#include "Client.hpp"
 #include "Renderer.hpp"
 #include "Frame.hpp"
 #include "Field.hpp"
@@ -71,17 +72,22 @@ void Field::deselect() {
 	}
 }
 
-void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
-	Rect<int> rect;
-	rect.x = _size.x + max(0,size.x-_actualSize.x);
-	rect.y = _size.y + max(0,size.y-_actualSize.y);
-	rect.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
-	rect.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+void Field::draw(Renderer& renderer, Rect<float> _size, Rect<float> _actualSize) {
+	Rect<float> rect;
+	rect.x = _size.x + max(0.f,size.x-_actualSize.x);
+	rect.y = _size.y + max(0.f,size.y-_actualSize.y);
+	rect.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
+	rect.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 	if( rect.w <= 0 || rect.h <= 0 )
 		return;
 
+	Rect<int> _actualSizePx = Frame::convertToPx(renderer, _actualSize);
+	Rect<int> _sizePx = Frame::convertToPx(renderer, _size);
+	Rect<int> sizePx = Frame::convertToPx(renderer, size);
+	Rect<int> rectPx = Frame::convertToPx(renderer, rect);
+
 	if( selected ) {
-		renderer.drawRect(&rect,glm::vec4(0.f,0.f,.5f,1.f));
+		renderer.drawRect(&rectPx,glm::vec4(0.f,0.f,.5f,1.f));
 	}
 
 	String str;
@@ -128,46 +134,46 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 	Rect<int> pos;
 	if( justify==LEFT ) {
-		pos.x = _size.x + size.x - _actualSize.x;
-		pos.y = _size.y + size.y - _actualSize.y;
+		pos.x = _sizePx.x + sizePx.x - _actualSizePx.x;
+		pos.y = _sizePx.y + sizePx.y - _actualSizePx.y;
 	} else if( justify==CENTER ) {
-		pos.x = _size.x + size.x + size.w/2 - textSizeW/2 - _actualSize.x;
-		pos.y = _size.y + size.y + size.h/2 - textSizeH/2 - _actualSize.y;
+		pos.x = _sizePx.x + sizePx.x + sizePx.w/2 - textSizeW/2 - _actualSizePx.x;
+		pos.y = _sizePx.y + sizePx.y + sizePx.h/2 - textSizeH/2 - _actualSizePx.y;
 	} else if( justify==RIGHT ) {
-		pos.x = _size.x + size.x + size.w - textSizeW - _actualSize.x;
-		pos.y = _size.y + size.y + size.h - textSizeH - _actualSize.y;
+		pos.x = _sizePx.x + sizePx.x + sizePx.w - textSizeW - _actualSizePx.x;
+		pos.y = _sizePx.y + sizePx.y + sizePx.h - textSizeH - _actualSizePx.y;
 	}
 	pos.w = textSizeW;
 	pos.h = textSizeH;
 
 	Rect<int> dest;
-	dest.x = max( rect.x, pos.x );
-	dest.y = max( rect.y, pos.y );
-	dest.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( rect.x + rect.w ) );
-	dest.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( rect.y + rect.h ) );
+	dest.x = max( rectPx.x, pos.x );
+	dest.y = max( rectPx.y, pos.y );
+	dest.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( rectPx.x + rectPx.w ) );
+	dest.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( rectPx.y + rectPx.h ) );
 
 	Rect<int> src;
-	src.x = max( 0, rect.x - pos.x );
-	src.y = max( 0, rect.y - pos.y );
-	src.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( rect.x + rect.w ) );
-	src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( rect.y + rect.h ) );
+	src.x = max( 0, rectPx.x - pos.x );
+	src.y = max( 0, rectPx.y - pos.y );
+	src.w = pos.w - ( dest.x - pos.x ) - max( 0, ( pos.x + pos.w ) - ( rectPx.x + rectPx.w ) );
+	src.h = pos.h - ( dest.y - pos.y ) - max( 0, ( pos.y + pos.h ) - ( rectPx.y + rectPx.h ) );
 
 	// fit text to window
 	if( justify==LEFT && scroll ) {
-		src.x = max( src.x, textSizeW - rect.w );
+		src.x = max( src.x, textSizeW - rectPx.w );
 	}
 
 	if( src.w<=0 || src.h<=0 || dest.w<=0 || dest.h<=0 )
 		return;
 
 	if( selectAll && selected ) {
-		renderer.drawRect(&rect,glm::vec4(.5f,.5f,0.f,1.f));
+		renderer.drawRect(&rectPx,glm::vec4(.5f,.5f,0.f,1.f));
 	}
 
 	text->drawColor( src, dest, color );
 }
 
-Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const bool usable) {
+Field::result_t Field::process(Rect<float> _size, Rect<float> _actualSize, const bool usable) {
 	result_t result;
 	result.highlighted = false;
 	result.entered = false;
@@ -179,13 +185,17 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 		return result;
 	}
 
-	_size.x += max(0,size.x-_actualSize.x);
-	_size.y += max(0,size.y-_actualSize.y);
-	_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0,size.x-_actualSize.x);
-	_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0,size.y-_actualSize.y);
+	_size.x += max(0.f,size.x-_actualSize.x);
+	_size.y += max(0.f,size.y-_actualSize.y);
+	_size.w = min( size.w, _size.w-size.x+_actualSize.x ) + min(0.f,size.x-_actualSize.x);
+	_size.h = min( size.h, _size.h-size.y+_actualSize.y ) + min(0.f,size.y-_actualSize.y);
 	if( _size.w <= 0 || _size.h <= 0 ) {
 		return result;
 	}
+
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+	auto _sizePx = Frame::convertToPx(*renderer, _size);
 
 	Sint32 omousex = mainEngine->getOldMouseX();
 	Sint32 omousey = mainEngine->getOldMouseY();
@@ -220,8 +230,7 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 		}
 	}
 
-	if( omousex >= _size.x && omousex < _size.x+_size.w &&
-		omousey >= _size.y && omousey < _size.y+_size.h ) {
+	if( _sizePx.containsPoint(omousex, omousey) ) {
 		result.highlighted = true;
 	}
 

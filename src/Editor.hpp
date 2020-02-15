@@ -328,7 +328,7 @@ private:
 
 	// sets up the editor GUI
 	// @param camRect the main viewport to build the editor gui around
-	void initGUI(const Rect<int>& camRect);
+	void initGUI();
 
 	// updates the images in the given widget frame
 	// @param parent the frame containing the widget icon
