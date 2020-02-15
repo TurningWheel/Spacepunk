@@ -92,7 +92,7 @@ void BasicWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& light
 
 	float offset = cvar_depthOffset.toFloat();
 	if (camera.getDrawMode() == Camera::DRAW_DEPTH && offset) {
-		glPolygonOffset(1.f, offset);
+		glPolygonOffset(offset, 0.f);
 		glEnable(GL_POLYGON_OFFSET_FILL);
 	}
 

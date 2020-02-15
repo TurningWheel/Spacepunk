@@ -518,7 +518,9 @@ void Client::handleNetMessages() {
 									packet.read32(lookDirInt[1]);
 									packet.read32(lookDirInt[2]);
 									Rotation lookDir((((Sint32)lookDirInt[0]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[1]) * PI / 180.f) / 32.f, (((Sint32)lookDirInt[2]) * PI / 180.f) / 32.f);
-									player->getEntity()->setLookDir(lookDir);
+									if (player->getEntity()) {
+										player->getEntity()->setLookDir(lookDir);
+									}
 								}
 							}
 
