@@ -280,7 +280,7 @@ public:
 
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<LinkedList<T>>(listName)
-			.addConstructor()
+			.addConstructor<void (*)()>()
 			.addFunction("getFirst", getFirst)
 			.addFunction("getFirstConst", getFirstConst)
 			.addFunction("getLast", getLast)

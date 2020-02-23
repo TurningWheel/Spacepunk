@@ -1,0 +1,25 @@
+{
+	"EditorHelp::version": 0,
+	"help": [
+		"Controls:\n\n",
+
+		"`                  - Open / close console\n",
+		"Right click        - Toggle mouselook\n",
+		"WASDEQ             - Move forward, left, backward, right, up, down\n",
+		"Mouse              - Move cursor / do mouselook\n",
+		"Backspace/Escape   - Deselect everything\n",
+		"F6                 - Take screenshot\n\n",
+
+		"Entity mode:\n\n",
+
+		"Left click         - Select entity / manipulate widget\n\n",
+
+		"Console:\n\n",
+
+		"Type 'help' and press enter for a full list of commands and cvars.\n\n",
+
+		"Contact:\n\n",
+
+		"Send all suggestions and comments to sheridan.rathbun@gmail.com"
+	]
+}

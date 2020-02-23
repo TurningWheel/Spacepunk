@@ -232,7 +232,7 @@ void BBox::updateRigidBody(const Vector& oldGScale) {
 	if (mass > 0.f && !gScale.close(oldGScale)) {
 		dirty = true;
 	}
-	if (mass < 0.f && (ghostObject == nullptr || controller == nullptr)) {
+	if (!mainEngine->isEditorRunning() && mass < 0.f && (ghostObject == nullptr || controller == nullptr)) {
 		dirty = true;
 	}
 	if (dirty || meshDirty) {
@@ -325,7 +325,7 @@ void BBox::createRigidBody() {
 			manifest->entity = entity;
 			manifest->bbox = this;
 
-			if (mass >= 0.f) {
+			if (mainEngine->isEditorRunning() || mass >= 0.f) {
 				// create motion state
 				auto scale = convertScaleBasedOnShape(gScale);
 				collisionShapePtr->setLocalScaling(scale);

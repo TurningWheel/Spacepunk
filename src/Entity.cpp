@@ -728,12 +728,14 @@ bool Entity::move() {
 	if( !isFlag(Entity::FLAG_STATIC) ) {
 		// find physics component, if any
 		BBox* physics = nullptr;
-		for (auto& c : components) {
-			if (c->getType() == Component::COMPONENT_BBOX) {
-				auto bbox = static_cast<BBox*>(c);
-				if (strcmp(bbox->getName(), "physics") == 0) {
-					physics = bbox;
-					break;
+		if (!mainEngine->isEditorRunning()) {
+			for (auto& c : components) {
+				if (c->getType() == Component::COMPONENT_BBOX) {
+					auto bbox = static_cast<BBox*>(c);
+					if (strcmp(bbox->getName(), "physics") == 0) {
+						physics = bbox;
+						break;
+					}
 				}
 			}
 		}

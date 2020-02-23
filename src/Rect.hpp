@@ -58,7 +58,7 @@ struct Rect {
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<Rect<T>>(name)
 			//.addConstructor<void (*)(T, T, T, T)>()
-			.addConstructor()
+			.addConstructor<void (*)()>()
 			.addData("x", &Rect<T>::x, true)
 			.addData("y", &Rect<T>::y, true)
 			.addData("w", &Rect<T>::w, true)

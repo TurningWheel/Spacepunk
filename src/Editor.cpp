@@ -1269,59 +1269,40 @@ void Editor::buttonHelp() {
 		frame->setColor(glm::vec4(.25f,.25f,.25f,1.f));
 		frame->setHigh(false);
 
-		Field* field = frame->addField("field",1600);
+		struct EditorHelp {
+			ArrayList<String> help;
+			String compose() {
+				Uint32 size = 1;
+				for (auto& str : help) {
+					size += str.getSize();
+				}
+				String result;
+				result.alloc(size);
+				for (auto& str : help) {
+					result.append(str.get());
+				}
+				return result;
+			}
+			void serialize(FileInterface* file) {
+				int version = 0;
+				file->property("EditorHelp::version", version);
+				file->property("help", help);
+			}
+		} editorHelp;
+
+		String editorHelpFilename = mainEngine->buildPath("assets/editor/editorHelp.json");
+		FileHelper::readObject(editorHelpFilename.get(), editorHelp);
+		String help = editorHelp.compose();
+
+		Field* field = frame->addField("field",help.getSize() + 1);
+		assert(field);
 
 		Rect<int> size;
 		size.x = 3; size.w = rect.w - 6;
 		size.y = 3; size.h = rect.h - 6;
 		field->setSize(size);
 		field->setScroll(false);
-		field->setText(
-			"Controls:\n\n"
-
-			"`                  - Open / close console\n"
-			"Right click        - Toggle mouselook\n"
-			"WASDEQ             - Move forward, left, backward, right, up, down\n"
-			"Mouse              - Move selection cursor / do mouselook\n"
-			"Backspace/Escape   - Deselect everything\n"
-			"F6                 - Take screenshot\n\n"
-
-			"Tiles mode:\n\n"
-
-			"Left click         - Begin/end rectangle selection of tiles\n"
-			"Mousewheel         - Raise/lower selected tiles\n"
-			"Numpad 8, 4, 6, 2  - Slope selected tiles\n"
-			"Numpad Enter       - Remove slope from selected tiles\n"
-			"Numpad -, +        - Raise/lower selected tiles\n\n"
-
-			"Texture mode:\n\n"
-
-			"Left click         - Begin/end rectangle selection of tiles\n"
-			"Numpad 8, 4, 6, 2  - Choose texture for wall in given direction\n"
-			"Numpad Enter       - Choose texture for floor/ceiling\n\n"
-
-			"Entity mode:\n\n"
-
-			"Left click         - Select entity / manipulate widget\n\n"
-
-			"Console:\n\n"
-
-			"windowed           - toggle window mode\n"
-			"fullscreen         - toggle fullscreen mode\n"
-			"size=<res>         - where <res> is the desired resolution (eg 1280x720)\n"
-			"clear              - clear the console\n"
-			"version            - print engine version info\n"
-			"dedicated          - (init only) puts the engine in dedicated server (headless) mode\n"
-			"game=<path>        - (init only) set game assets folder (used for mods)\n"
-			"editor             - start game editor\n"
-			"play <snd>         - where <snd> is the filename of a sound to play\n"
-			"loadconfig <path>  - where <path> is the name of a config file to execute\n"
-			"exit               - exit the game\n\n"
-
-			"Contact:\n\n"
-
-			"Send all suggestions and comments to sheridan.rathbun@gmail.com"
-		);
+		field->setText(help.get());
 	}
 }
 

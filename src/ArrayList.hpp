@@ -375,7 +375,7 @@ public:
 
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<ArrayList<T>>(name)
-			.addConstructor()
+			.addConstructor<void (*)()>()
 			.addFunction("getArray", getArray)
 			.addFunction("getArrayConst", getArrayConst)
 			.addFunction("getSize", &ArrayList<T>::getSize)

@@ -222,8 +222,8 @@ void Camera::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		return;
 	}
 
-	// don't render ortho cameras
-	if( ortho ) {
+	// don't render the editor minimap
+	if( ortho && !entity->isShouldSave() ) {
 		return;
 	}
 

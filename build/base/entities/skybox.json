@@ -1,0 +1,129 @@
+{
+    "Entity::def_t::version": 1,
+    "editor": true,
+    "entity": {
+        "Entity::version": 3,
+        "name": "Skybox",
+        "pos": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "ang": {
+            "Quaternion::version": 0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        },
+        "scale": {
+            "x": 1000.0,
+            "y": 1000.0,
+            "z": 1000.0
+        },
+        "scriptStr": "",
+        "flags": 16903,
+        "falling": false,
+        "sort": 0,
+        "EntityItem": {
+            "Item::version": 0,
+            "icon": "null.png",
+            "weight": 1.0,
+            "value": 1.0,
+            "throwable": false,
+            "throwLeadInTime": 1.0,
+            "throwRecovery": 1.0,
+            "throwDestroys": false,
+            "takesDamage": false,
+            "health": 0.0,
+            "damageImmunities": [],
+            "detonates": false,
+            "detonationDamageType": "",
+            "detonationRadius": 0.0,
+            "detonationDamage": 0.0,
+            "detonationFalloff": false,
+            "slotEffects": {
+                "data": []
+            },
+            "distance": 0.0,
+            "spread": 0.0,
+            "radius": 0.0,
+            "animLeadSpeed": 0.0,
+            "animRecovSpeed": 0.0,
+            "spendCharges": 0,
+            "currCharges": 0,
+            "maxCharges": 0,
+            "rechargeRate": 0.0,
+            "currCooldown": 0.0,
+            "maxCooldown": 0.0,
+            "slotRestrictions": [],
+            "actions": {
+                "data": []
+            }
+        },
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 1,
+                    "name": "model",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 16.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "lScale": {
+                        "x": -1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [],
+                    "Model::version": 1,
+                    "meshStr": "assets/block/block.FBX",
+                    "materialStr": "assets/skybox/material.json",
+                    "depthfailStr": "",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": false,
+                        "customColorR": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            1.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            1.0,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            }
+        ]
+    }
+}
