@@ -158,7 +158,7 @@ void Light::createShadowMap() {
 	camera->setDrawMode(Camera::DRAW_SHADOW);
 	shadowCamera->setPos(gPos);
 
-	glPolygonOffset(1.f, cvar_shadowDepthOffset.toFloat());
+	glPolygonOffset(cvar_shadowDepthOffset.toFloat(), 0.f);
 	glEnable(GL_DEPTH_TEST);
 	shadowMap.init();
 	for (Uint32 c = 0; c < 6; ++c) {
