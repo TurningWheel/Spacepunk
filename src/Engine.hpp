@@ -29,6 +29,9 @@ public:
 	Engine(int argc, char **argv);
 	~Engine();
 
+	static const int stackTraceSize = 100;
+	static const int stackTraceStrSize = 256;
+
 	// log message codes
 	enum msg_t {
 		MSG_DEBUG = 0,		// only printed when NDEBUG is undefined
@@ -316,6 +319,10 @@ public:
 	// perform post-processing on the current frame
 	void postProcess();
 
+	// generate a stack trace
+	// @return a list of strings representing stack frames
+	ArrayList<StringBuf<Engine::stackTraceStrSize>> stackTrace() const;
+
 	// return the value of a key and reset it if it's been pressed
 	// !IMPORTANT! should generally NOT be used, as it "locks" the key for the rest of the frame after being pressed
 	// use a local variable to record the press for your object instead!
@@ -361,6 +368,9 @@ private:
 
 	// shuts down the engine
 	void term();
+
+	// handles segfault
+	static void handleSIGSEGV(int input);
 
 	// general data
 	bool playTest = false;

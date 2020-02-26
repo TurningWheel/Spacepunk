@@ -42,6 +42,7 @@
 #include <cstring>
 #include <cmath>
 #include <ctime>
+#include <csignal>
 
 // OpenGL headers
 #ifndef PLATFORM_LINUX

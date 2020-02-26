@@ -8,16 +8,25 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Hybrid|x64 = Hybrid|x64
+		Hybrid|x86 = Hybrid|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Debug|x64.ActiveCfg = Debug|x64
 		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Debug|x64.Build.0 = Debug|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Debug|x86.ActiveCfg = Debug|Win32
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Debug|x86.Build.0 = Debug|Win32
 		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Hybrid|x64.ActiveCfg = Hybrid|x64
 		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Hybrid|x64.Build.0 = Hybrid|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Hybrid|x86.ActiveCfg = Hybrid|Win32
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Hybrid|x86.Build.0 = Hybrid|Win32
 		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Release|x64.ActiveCfg = Release|x64
 		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Release|x64.Build.0 = Release|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Release|x86.ActiveCfg = Release|Win32
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

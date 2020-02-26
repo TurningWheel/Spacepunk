@@ -1,0 +1,13 @@
+{
+	"Animation::version": 0,
+	"animations": [
+		{
+			"Animation::entry_t::version": 0,
+			"name": "drive",
+			"begin": 0,
+			"end": 150,
+			"loop": true
+		}
+	],
+	"sounds": []
+}

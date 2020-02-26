@@ -10,6 +10,10 @@
 #include "TileWorld.hpp"
 #include "Console.hpp"
 
+#ifdef PLATFORM_WINDOWS
+#include <DbgHelp.h>
+#endif
+
 std::atomic_bool Engine::paused(false);
 
 // log message code strings
@@ -503,6 +507,16 @@ void Engine::init() {
 	if( isInitialized() )
 		return;
 
+#ifdef PLATFORM_WINDOWS
+	// get symbols
+	HANDLE process = GetCurrentProcess();
+	int result = SymInitialize(process, NULL, 1);
+	assert(result);
+#endif
+
+	// setup signal handlers
+	signal(SIGSEGV, handleSIGSEGV);
+
 	// print version data
 	fmsg(Engine::MSG_INFO,"game version:");
 	fmsg(Engine::MSG_INFO,"%s",version());
@@ -748,6 +762,12 @@ void Engine::term() {
 
 	if( logFile )
 		fclose(logFile);
+
+#ifdef PLATFORM_WINDOWS
+	// unload symbols
+	HANDLE process = GetCurrentProcess();
+	SymCleanup(process);
+#endif
 }
 
 bool Engine::isEditorRunning() {
@@ -1704,4 +1724,62 @@ Engine::mod_t::mod_t(const char* _path):
 void Engine::mod_t::serialize(FileInterface* file) {
 	file->property("name", name);
 	file->property("author", author);
+}
+
+#ifdef PLATFORM_WINDOWS
+
+ArrayList<StringBuf<Engine::stackTraceStrSize>> Engine::stackTrace() const {
+	HANDLE process = GetCurrentProcess();
+
+	void* stack[stackTraceSize];
+	unsigned short frames;
+	frames = CaptureStackBackTrace(0, stackTraceSize, stack, NULL);
+
+	SYMBOL_INFO* symbol = (SYMBOL_INFO *) malloc(
+		sizeof(SYMBOL_INFO) + stackTraceStrSize * sizeof(char));
+	assert(symbol);
+	symbol->MaxNameLen = stackTraceStrSize - 1;
+	symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+	ArrayList<StringBuf<Engine::stackTraceStrSize>> result;
+	for (int c = 0; c < frames; ++c) {
+		SymFromAddr(process, (DWORD64)(stack[c]), 0, symbol);
+		StringBuf<Engine::stackTraceStrSize> str;
+		str.format("#%d %s (%p)", c + 1, symbol->Name, symbol->Address);
+		result.push(str);
+	}
+
+	free(symbol);
+	return result;
+}
+
+#else // POSIX
+
+#include <execinfo.h>
+
+ArrayList<StringBuf<Engine::stackTraceStrSize>> Engine::stackTrace() const {
+	void* funcs[stackTraceSize];
+	int numCalls = backtrace(funcs, stackTraceSize);
+	char** strings = backtrace_symbols(funcs, numCalls);
+
+	ArrayList<StringBuf<Engine::stackTraceStrSize>> result;
+	for (int c = 0; c < numCalls; ++c) {
+		StringBuf<Engine::stackTraceStrSize> str;
+		str.format("#%d %s (%p)", c + 1, strings[c], funcs[c]);
+		result.push(str);
+	}
+
+	free(strings);
+	return result;
+}
+
+#endif
+
+void Engine::handleSIGSEGV(int input) {
+	auto stack = mainEngine->stackTrace();
+	mainEngine->fmsg(Engine::MSG_FATAL, "Segmentation fault. Stack dump:");
+	for (auto& str : stack) {
+		mainEngine->fmsg(Engine::MSG_FATAL, " %s", str.get());
+	}
+	exit(input);
 }

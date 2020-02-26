@@ -3,18 +3,18 @@
     "editor": true,
     "entity": {
         "Entity::version": 3,
-        "name": "Tank",
+        "name": "RedTank",
         "pos": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
+            "x": 200.0,
+            "y": -200.0,
+            "z": 150.3000030517578
         },
         "ang": {
             "Quaternion::version": 0,
             "x": 0.0,
-            "y": 0.0,
+            "y": 0.3826834559440613,
             "z": 0.0,
-            "w": 1.0
+            "w": 0.9238795042037964
         },
         "scale": {
             "x": 1.0,
@@ -62,68 +62,14 @@
             }
         },
         "keys": {
-            "data": []
+            "data": [
+                {
+                    "key": "joystick",
+                    "value": "Joy0"
+                }
+            ]
         },
         "components": [
-            {
-                "type": 2,
-                "data": {
-                    "Component::version": 1,
-                    "name": "model",
-                    "lPos": {
-                        "x": -16.0,
-                        "y": 0.0,
-                        "z": 32.0
-                    },
-                    "lAng": {
-                        "Quaternion::version": 0,
-                        "x": 0.0,
-                        "y": 0.7071067690849304,
-                        "z": 0.0,
-                        "w": 0.7071067690849304
-                    },
-                    "lScale": {
-                        "x": 16.0,
-                        "y": 16.0,
-                        "z": 16.0
-                    },
-                    "components": [],
-                    "Model::version": 1,
-                    "meshStr": "assets/tank/ToonTankPack.FBX",
-                    "materialStr": "assets/tank/material.json",
-                    "depthfailStr": "",
-                    "animationStr": "",
-                    "shaderVars": {
-                        "Mesh::version": 0,
-                        "customColorEnabled": false,
-                        "customColorR": [
-                            1.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "customColorG": [
-                            0.0,
-                            1.0,
-                            0.0,
-                            1.0
-                        ],
-                        "customColorB": [
-                            0.0,
-                            0.0,
-                            1.0,
-                            1.0
-                        ],
-                        "customColorA": [
-                            1.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ]
-                    },
-                    "genius": false
-                }
-            },
             {
                 "type": 1,
                 "data": {
@@ -142,7 +88,7 @@
                         "w": 1.0
                     },
                     "lScale": {
-                        "x": 64.0,
+                        "x": 40.0,
                         "y": 40.0,
                         "z": 32.0
                     },
@@ -151,6 +97,187 @@
                     "shape": 0,
                     "enabled": true,
                     "mass": -1.0
+                }
+            },
+            {
+                "type": 0,
+                "data": {
+                    "Component::version": 1,
+                    "name": "basic",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 32.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.7071067690849304,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "lScale": {
+                        "x": 0.25,
+                        "y": 0.25,
+                        "z": 0.25
+                    },
+                    "components": [
+                        {
+                            "type": 2,
+                            "data": {
+                                "Component::version": 1,
+                                "name": "body",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "Quaternion::version": 0,
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 1.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [
+                                    {
+                                        "type": 3,
+                                        "data": {
+                                            "Component::version": 1,
+                                            "name": "light",
+                                            "lPos": {
+                                                "x": -70.0,
+                                                "y": 100.0,
+                                                "z": -300.0
+                                            },
+                                            "lAng": {
+                                                "Quaternion::version": 0,
+                                                "x": 0.0,
+                                                "y": -0.7071067690849304,
+                                                "z": 0.0,
+                                                "w": 0.7071067690849304
+                                            },
+                                            "lScale": {
+                                                "x": 1.0,
+                                                "y": 1.0,
+                                                "z": 1.0
+                                            },
+                                            "components": [],
+                                            "Light::version": 2,
+                                            "color": {
+                                                "x": 1.0,
+                                                "y": 1.0,
+                                                "z": 1.0
+                                            },
+                                            "intensity": 1.0,
+                                            "radius": 1000.0,
+                                            "shape": 4,
+                                            "shadow": true,
+                                            "arc": 30.0
+                                        }
+                                    }
+                                ],
+                                "Model::version": 1,
+                                "meshStr": "assets/tank/tank1.FBX",
+                                "materialStr": "assets/tank/material_red.json",
+                                "depthfailStr": "",
+                                "animationStr": "assets/tank/animation.json",
+                                "shaderVars": {
+                                    "Mesh::version": 0,
+                                    "customColorEnabled": false,
+                                    "customColorR": [
+                                        1.0,
+                                        0.0,
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "customColorG": [
+                                        0.0,
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "customColorB": [
+                                        0.0,
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "customColorA": [
+                                        1.0,
+                                        0.0,
+                                        0.0,
+                                        1.0
+                                    ]
+                                },
+                                "genius": false
+                            }
+                        },
+                        {
+                            "type": 2,
+                            "data": {
+                                "Component::version": 1,
+                                "name": "treads",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "Quaternion::version": 0,
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 1.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [],
+                                "Model::version": 1,
+                                "meshStr": "assets/tank/treads.FBX",
+                                "materialStr": "assets/tank/material_treads.json",
+                                "depthfailStr": "",
+                                "animationStr": "",
+                                "shaderVars": {
+                                    "Mesh::version": 0,
+                                    "customColorEnabled": false,
+                                    "customColorR": [
+                                        1.0,
+                                        0.0,
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "customColorG": [
+                                        0.0,
+                                        1.0,
+                                        0.0,
+                                        1.0
+                                    ],
+                                    "customColorB": [
+                                        0.0,
+                                        0.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "customColorA": [
+                                        1.0,
+                                        0.0,
+                                        0.0,
+                                        1.0
+                                    ]
+                                },
+                                "genius": false
+                            }
+                        }
+                    ]
                 }
             }
         ]
