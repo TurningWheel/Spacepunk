@@ -1,8 +1,0 @@
-{
-	"Texture::version": 0,
-	"textures": [
-		"images/tile/diffuse/null.png",
-		"images/tile/normal/null.png",
-		"images/tile/fx/empty.png"
-	]
-}

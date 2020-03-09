@@ -128,7 +128,11 @@ static int console_version(int argc, const char** argv) {
 }
 
 static int console_dump(int argc, const char** argv) {
-	mainEngine->dumpResources();
+	if (argc > 0) {
+		mainEngine->dumpResources(argv[0]);
+	} else {
+		mainEngine->dumpResources(nullptr);
+	}
 	mainEngine->loadAllResources();
 	return 0;
 }
@@ -161,7 +165,7 @@ static int console_mount(int argc, const char** argv) {
 		return 1;
 	}
 	if (mainEngine->addMod(argv[0])) {
-		mainEngine->dumpResources();
+		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
 		return 0;
@@ -176,7 +180,7 @@ static int console_unmount(int argc, const char** argv) {
 		return 1;
 	}
 	if (mainEngine->removeMod(argv[0])) {
-		mainEngine->dumpResources();
+		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
 		return 0;
@@ -242,14 +246,11 @@ static Cvar cvar_tickrate("tickrate", "number of frames processed in a second", 
 
 void Engine::printCacheSize() const {
 	Uint32 total = 0;
-	mainEngine->fmsg(Engine::MSG_INFO, "meshes: %u bytes", meshResource.getSizeInBytes()); total += meshResource.getSizeInBytes();
-	mainEngine->fmsg(Engine::MSG_INFO, "images: %u bytes", imageResource.getSizeInBytes()); total += imageResource.getSizeInBytes();
-	mainEngine->fmsg(Engine::MSG_INFO, "materials: %u bytes", materialResource.getSizeInBytes()); total += materialResource.getSizeInBytes();
-	mainEngine->fmsg(Engine::MSG_INFO, "textures: %u bytes", textureResource.getSizeInBytes()); total += textureResource.getSizeInBytes();
-	mainEngine->fmsg(Engine::MSG_INFO, "text: %u bytes", textResource.getSizeInBytes()); total += textResource.getSizeInBytes();
-	mainEngine->fmsg(Engine::MSG_INFO, "sounds: %u bytes", soundResource.getSizeInBytes()); total += soundResource.getSizeInBytes();
-	mainEngine->fmsg(Engine::MSG_INFO, "animations: %u bytes", animationResource.getSizeInBytes()); total += animationResource.getSizeInBytes();
-	mainEngine->fmsg(Engine::MSG_INFO, "cubemaps: %u bytes", cubemapResource.getSizeInBytes()); total += cubemapResource.getSizeInBytes();
+	for (auto& pair : resources) {
+		auto resource = pair.b;
+		total += resource->getSizeInBytes();
+		mainEngine->fmsg(Engine::MSG_INFO, "%s: %u bytes", Asset::typeStr[resource->getType()], resource->getSizeInBytes());
+	}
 	Client* client = mainEngine->getLocalClient();
 	if (client) {
 		Renderer* renderer = client->getRenderer(); assert(renderer);
@@ -489,7 +490,7 @@ void Engine::chat(const char* msg) {
 void Engine::playSound(const char* name) {
 	StringBuf<64> path("sounds/");
 	path.append(name);
-	Sound* sound = soundResource.dataForString(path.get());
+	Sound* sound = getSoundResource().dataForString(name);
 	if (sound) {
 		sound->play(0);
 	}
@@ -607,9 +608,19 @@ void Engine::init() {
 		localClient->init();
 	}
 
+	// init resource managers
+	resources.insertUnique("mesh", new Resource<Mesh, true>());
+	resources.insertUnique("image", new Resource<Image, true>());
+	resources.insertUnique("material", new Resource<Material>());
+	resources.insertUnique("texture", new Resource<Texture>());
+	resources.insertUnique("text", new Resource<Text>());
+	resources.insertUnique("sound", new Resource<Sound>());
+	resources.insertUnique("animation", new Resource<Animation>());
+	resources.insertUnique("cubemap", new Resource<Cubemap>());
+
 	// cache resources
 	fmsg(Engine::MSG_INFO, "game folder is '%s'", game.path.get());
-	textureDictionary.insert(Tile::defaultTexture);
+	//textureDictionary.insert(Tile::defaultTexture);
 	tileDiffuseTextures.init();
 	tileNormalTextures.init();
 	tileEffectsTextures.init();
@@ -633,7 +644,7 @@ void Engine::loadResources(const char* folder) {
 			if (str.length() >= 5 && str.substr(str.length() - 5) == ".json") {
 				StringBuf<64> name("images/tile/");
 				name.append(str.get());
-				textureResource.dataForString(name.get());
+				getTextureResource().dataForString(name.get());
 			}
 		}
 	}
@@ -746,6 +757,13 @@ void Engine::term() {
 	}
 	joysticks.removeAll();
 
+	// dump engine resources
+	dumpResources(nullptr);
+	for (auto& pair : resources) {
+		delete pair.b;
+	}
+	resources.clear();
+
 	// shutdown SDL subsystems
 	fmsg(MSG_INFO, "shutting down SDL and its subsystems...");
 	SDLNet_Quit();
@@ -753,9 +771,6 @@ void Engine::term() {
 	IMG_Quit();
 	Mix_CloseAudio();
 	SDL_Quit();
-
-	// dump engine resources
-	dumpResources();
 
 	fmsg(MSG_INFO, "successfully shut down game engine.");
 	fmsg(MSG_INFO, "goodbye.");
@@ -783,6 +798,8 @@ bool Engine::isEditorRunning() {
 }
 
 void Engine::loadAllResources() {
+	return; // DEPRECATED
+
 	fmsg(MSG_INFO, "loading engine resources...");
 
 	// reload the important assets
@@ -819,18 +836,20 @@ void Engine::loadAllDefs() {
 	}
 }
 
-void Engine::dumpResources() {
-	fmsg(MSG_INFO, "dumping engine resources...");
+void Engine::dumpResources(const char* type) {
+	auto resource = type ? resources.find(type) : nullptr;
+	if (resource) {
+		fmsg(MSG_INFO, "dumping all %s assets...", Asset::typeStr[(*resource)->getType()]);
+		(*resource)->dumpCache();
+	} else {
+		fmsg(MSG_INFO, "dumping all resources...");
+		for (auto& pair : resources) {
+			auto resource = pair.b;
+			resource->dumpCache();
+		}
+	}
 
-	// dump all resources
-	meshResource.dumpCache();
-	imageResource.dumpCache();
-	materialResource.dumpCache();
-	textureResource.dumpCache();
-	textResource.dumpCache();
-	soundResource.dumpCache();
-	animationResource.dumpCache();
-	cubemapResource.dumpCache();
+	return; // below not used
 
 	tileDiffuseTextures.cleanup();
 	tileDiffuseTextures.init();
@@ -1167,8 +1186,8 @@ void Engine::preProcess() {
 	SDL_SetRelativeMouseMode((SDL_bool)mainEngine->isMouseRelative());
 
 	// update resources
-	meshResource.update();
-	imageResource.update();
+	getMeshResource().update();
+	getImageResource().update();
 
 	// restart timer
 	unsigned int newTicksPerSecond = cvar_tickrate.toInt();
@@ -1501,7 +1520,7 @@ void Engine::postProcess() {
 			}
 
 			// some resources will be corrupted when the client is dropped, anyway
-			dumpResources();
+			dumpResources(nullptr);
 			loadAllResources();
 		}
 	}

@@ -17,20 +17,39 @@ enum resource_error_t {
 	ERROR_CACHEINPROGRESS	// resource cache is in progress
 };
 
-template <typename T, bool stream = false> class Resource {
+class ResourceBase {
 public:
-	Resource() {}
-	~Resource() {
+	ResourceBase() {}
+	virtual ~ResourceBase() {}
+
+	const resource_error_t		getError() const { return error; }
+	virtual Asset::type_t		getType() const = 0;
+	virtual Uint32				size() const = 0;
+	virtual void				update() = 0;
+	virtual void				dumpCache() = 0;
+	virtual void				deleteData(const char* name) = 0;
+	virtual Uint32				getSizeInBytes() const = 0;
+
+protected:
+	resource_error_t error = resource_error_t::ERROR_NONE;
+};
+
+template <typename T, bool stream = false> class Resource : public ResourceBase {
+public:
+	Resource() {
+		defaultAsset = new T();
+	}
+	virtual ~Resource() {
+		delete defaultAsset;
 		dumpCache();
 	}
 
 	// getters & setters
 	Map<String, T*>&			getCache() { return cache; }
-	const resource_error_t		getError() const { return error; }
 
 	// number of items in the resource
 	// @return the number of cached items in the resource
-	Uint32 size() const {
+	virtual Uint32 size() const override {
 		return cache.getSize();
 	}
 
@@ -84,7 +103,7 @@ public:
 	}
 
 	// finishes jobs
-	void update() {
+	virtual void update() override {
 		std::vector<std::string> keys;
 		for (auto& pair : jobs) {
 			auto& name = pair.first;
@@ -106,7 +125,7 @@ public:
 	}
 
 	// completely clears all data elements stored in the cache
-	void dumpCache() {
+	virtual void dumpCache() override {
 		for (auto& job : jobs) {
 			job.second.wait();
 		}
@@ -117,7 +136,7 @@ public:
 	}
 
 	// delete some specific data from the cache
-	void deleteData(const char* name) {
+	virtual void deleteData(const char* name) override {
 		T** data = cache.find(name);
 		if (data) {
 			delete *data;
@@ -126,15 +145,21 @@ public:
 	}
 
 	// calculate the size of this resource cache
-	Uint32 getSizeInBytes() const {
-		// need something better than sizeof
+	virtual Uint32 getSizeInBytes() const override {
+		// TODO need something better than sizeof
 		return (Uint32)(cache.getSize() * sizeof(T));
+	}
+
+	// get the type of asset we are dealing with
+	// @return the asset type
+	virtual Asset::type_t getType() const override {
+		return defaultAsset->getType();
 	}
 
 private:
 	Map<String, T*> cache;
 	std::unordered_map<std::string, std::future<T*>> jobs;
-	resource_error_t error = resource_error_t::ERROR_NONE;
+	T* defaultAsset = nullptr;
 
 	T* load(const char* name) {
 		return new T(name);

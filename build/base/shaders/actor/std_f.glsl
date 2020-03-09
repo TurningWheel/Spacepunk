@@ -84,18 +84,17 @@ float ShadowFactor(int light)
 }
 #endif
 
-#ifndef VERTEX_COLORS
-#ifdef BUMPMAP
-vec3 CalcBumpedNormal() {
-    vec3 lNormal = normalize(Normal);
-    vec3 lTangent = normalize(Tangent);
+mat3 CalcTBN(vec3 lNormal, vec3 lTangent) {
     lTangent = normalize(lTangent - dot(lTangent, lNormal) * lNormal);
     vec3 lBitangent = cross(lTangent, lNormal);
+    return mat3(lTangent, lBitangent, lNormal);
+}
 
-    vec3 lBumpMapNormal = texture(gTexture[1], TexCoord).xyz;
+#ifndef VERTEX_COLORS
+#ifdef BUMPMAP
+vec3 CalcBumpedNormal(mat3 lTBN, vec2 lTexCoord) {
+    vec3 lBumpMapNormal = texture(gTexture[1], lTexCoord).xyz;
     lBumpMapNormal = 2.0 * lBumpMapNormal - vec3(1.0, 1.0, 1.0);
-
-    mat3 lTBN = mat3(lTangent, lBitangent, lNormal);
     vec3 lNewNormal = lTBN * lBumpMapNormal;
     lNewNormal = normalize(lNewNormal);
     return lNewNormal;
@@ -104,13 +103,20 @@ vec3 CalcBumpedNormal() {
 #endif
 
 void main() {
-	vec2   lTexCoord  = TexCoord;
-#ifdef BUMPMAP
-	vec3   lNormal    = CalcBumpedNormal();
+	vec3 lWorldPos  = WorldPos;
+	mat3 lTBN = CalcTBN(normalize(Normal), normalize(Tangent));
+#ifndef TILED_TEXTURE
+	vec2 lTexCoord = TexCoord;
 #else
-	vec3   lNormal    = Normal;
+	vec3 lWorldTexturePos = lWorldPos / 256.f;
+	vec2 lTexCoord = (lWorldTexturePos * lTBN).xy;
+	//vec2 lTexCoord = (lWorldTexturePos).xz;
 #endif
-	vec3   lWorldPos  = WorldPos;
+#ifdef BUMPMAP
+	vec3 lNormal = CalcBumpedNormal(lTBN, lTexCoord);
+#else
+	vec3 lNormal = Normal;
+#endif
 
 	// do custom colors
 	if( gCustomColorEnabled ) {

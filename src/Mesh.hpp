@@ -221,6 +221,7 @@ public:
 	};
 
 	// getters & setters
+	virtual const Asset::type_t				getType() const override { return Asset::ASSET_MESH; }
 	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const { return subMeshes; }
 	const Vector&							getMinBox() const { return minBox; }
 	const Vector&							getMaxBox() const { return maxBox; }

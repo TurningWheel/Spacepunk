@@ -1160,7 +1160,7 @@ static int console_clientReset(int argc, const char** argv) {
 	if (client) {
 		mainEngine->setInputStr(nullptr);
 		mainEngine->setPlayTest(false);
-		mainEngine->dumpResources();
+		mainEngine->dumpResources(nullptr);
 		client->reset();
 		return 0;
 	} else {

@@ -16,14 +16,15 @@
 				"type": 2,
 				"path": "shaders/actor/std_f.glsl",
 				"defines": [
-					"BUMPMAP"
+					"BUMPMAP",
+					"TILED_TEXTURE"
 				]
 			}
 		]
 	},
 	"textures": [
-		"images/tile/diffuse/Rock_028_COLOR.png",
-		"images/tile/normal/Rock_028_NORM.png"
+		"assets/materials/Rock025_2K-JPG/Rock025_2K_Color.jpg",
+		"assets/materials/Rock025_2K-JPG/Rock025_2K_Normal.jpg"
 	],
 	"glowTextures": [],
 	"cubemaps": []

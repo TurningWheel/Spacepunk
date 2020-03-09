@@ -103,14 +103,14 @@ public:
 	const double						getTimeSync() const { return timesync; }
 	const Uint32						getTicks() const { return ticks; }
 	const unsigned int					getTicksPerSecond() const { return ticksPerSecond; }
-	Resource<Mesh, true>&				getMeshResource() { return meshResource; }
-	Resource<Image, true>&				getImageResource() { return imageResource; }
-	Resource<Material>&					getMaterialResource() { return materialResource; }
-	Resource<Texture>&					getTextureResource() { return textureResource; }
-	Resource<Text>&						getTextResource() { return textResource; }
-	Resource<Sound>&					getSoundResource() { return soundResource; }
-	Resource<Animation>&				getAnimationResource() { return animationResource; }
-	Resource<Cubemap>&					getCubemapResource() { return cubemapResource; }
+	auto&								getMeshResource() { return *static_cast<Resource<Mesh, true>*>(*resources.find("mesh")); }
+	auto&								getImageResource() { return *static_cast<Resource<Image, true>*>(*resources.find("image")); }
+	auto&								getMaterialResource() { return *static_cast<Resource<Material, false>*>(*resources.find("material")); }
+	auto&								getTextureResource() { return *static_cast<Resource<Texture, false>*>(*resources.find("texture")); }
+	auto&								getTextResource() { return *static_cast<Resource<Text, false>*>(*resources.find("text")); }
+	auto&								getSoundResource() { return *static_cast<Resource<Sound, false>*>(*resources.find("sound")); }
+	auto&								getAnimationResource() { return *static_cast<Resource<Animation, false>*>(*resources.find("animation")); }
+	auto&								getCubemapResource() { return *static_cast<Resource<Cubemap, false>*>(*resources.find("cubemap")); }
 	Dictionary&							getTextureDictionary() { return textureDictionary; }
 	const Atlas&						getTileDiffuseTextures() { return tileDiffuseTextures; }
 	const Atlas&						getTileNormalTextures() { return tileNormalTextures; }
@@ -160,7 +160,8 @@ public:
 
 	// clears all resource caches, effectively starting the engine "fresh"
 	// this does NOT unmount mods! It simply causes the engine to recache any loaded resources
-	void dumpResources();
+	// @param type if not nullptr, tries to clear a specific resource cache by name
+	void dumpResources(const char* type);
 
 	// shuts down any active games and starts the editor
 	// @param path optional path to a level to startup
@@ -401,14 +402,7 @@ private:
 	Server* localServer = nullptr;
 
 	// resource caches
-	Resource<Mesh, true> meshResource;
-	Resource<Image, true> imageResource;
-	Resource<Material> materialResource;
-	Resource<Texture> textureResource;
-	Resource<Text> textResource;
-	Resource<Sound> soundResource;
-	Resource<Animation> animationResource;
-	Resource<Cubemap> cubemapResource;
+	Map<StringBuf<32>, ResourceBase*> resources;
 
 	// tile texture data
 	Atlas tileDiffuseTextures;

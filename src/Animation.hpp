@@ -46,9 +46,9 @@ public:
 	virtual void serialize(FileInterface * file) override;
 
 	// getters & setters
-	virtual const type_t		getType() const { return ASSET_ANIMATION; }
-	const ArrayList<entry_t>&	getEntries() const { return entries; }
-	const ArrayList<sound_t>&	getSounds() const { return sounds; }
+	virtual const Asset::type_t		getType() const { return Asset::ASSET_ANIMATION; }
+	const ArrayList<entry_t>&		getEntries() const { return entries; }
+	const ArrayList<sound_t>&		getSounds() const { return sounds; }
 
 private:
 	ArrayList<entry_t> entries;

@@ -16,14 +16,15 @@
 				"type": 2,
 				"path": "shaders/actor/std_f.glsl",
 				"defines": [
-					"BUMPMAP"
+					"BUMPMAP",
+					"TILED_TEXTURE"
 				]
 			}
 		]
 	},
 	"textures": [
-		"images/tile/diffuse/Marble_Gray_001_COLOR.png",
-		"images/tile/normal/Marble_Gray_001_NORM.png"
+		"assets/materials/Marble011_2K-JPG/Marble011_2K_Color.jpg",
+		"assets/materials/Marble011_2K-JPG/Marble011_2K_Normal.jpg"
 	],
 	"glowTextures": [],
 	"cubemaps": []

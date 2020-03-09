@@ -16,14 +16,15 @@
 				"type": 2,
 				"path": "shaders/actor/std_f.glsl",
 				"defines": [
-					"BUMPMAP"
+					"BUMPMAP",
+					"TILED_TEXTURE"
 				]
 			}
 		]
 	},
 	"textures": [
-		"images/tile/diffuse/Wood_011_basecolor.png",
-		"images/tile/normal/Wood_011_normal.png"
+		"assets/materials/Planks019_2K-JPG/Planks019_2K_Color.jpg",
+		"assets/materials/Planks019_2K-JPG/Planks019_2K_Normal.jpg"
 	],
 	"glowTextures": [],
 	"cubemaps": []

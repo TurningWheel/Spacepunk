@@ -1,8 +1,0 @@
-{
-	"Texture::version": 0,
-	"textures": [
-		"images/tile/diffuse/Sand_004_COLOR.png",
-		"images/tile/normal/Sand_004_Normal.png",
-		"images/tile/fx/empty.png"
-	]
-}
