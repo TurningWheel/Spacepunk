@@ -49,11 +49,11 @@ public:
 	// remote host
 	struct remote_t {
 		virtual ~remote_t() {
-			while( packetStack.getSize() > 0 ) {
+			while (packetStack.getSize() > 0) {
 				Packet* packet = packetStack.pop();
 				delete packet;
 			}
-			while( resendStack.getSize() > 0 ) {
+			while (resendStack.getSize() > 0) {
 				safepacket_t* safePacket = resendStack.pop();
 				delete safePacket;
 			}
@@ -99,7 +99,7 @@ public:
 	// @param remoteID the remote host to disconnect from
 	// @param inform if true, remote host will be notified of disconnect; otherwise it will not
 	// @return true if the disconnect succeeded, false otherwise
-	virtual bool disconnect(Uint32 remoteID, bool inform=true) = 0;
+	virtual bool disconnect(Uint32 remoteID, bool inform = true) = 0;
 
 	// shuts down an open localhost connection, if any are open
 	// @return true if the disconnect succeeded, false otherwise
@@ -170,13 +170,13 @@ public:
 	void unlockThread();
 
 	// getters & setters
-	const bool					isConnected() const			{ return connected; }
-	const bool					isHosting() const			{ return hosting; }
-	const Uint32				getLocalID() const			{ return localID; }
-	const Uint32				getLocalGID() const			{ return localGID; }
-	ArrayList<remote_t*>&		getRemoteHosts()			{ return remotes; }
+	const bool					isConnected() const { return connected; }
+	const bool					isHosting() const { return hosting; }
+	const Uint32				getLocalID() const { return localID; }
+	const Uint32				getLocalGID() const { return localGID; }
+	ArrayList<remote_t*>&		getRemoteHosts() { return remotes; }
 
-	void					setParent(Game* _parent)	{ parent = _parent; }
+	void					setParent(Game* _parent) { parent = _parent; }
 
 protected:
 	Game* parent = nullptr;

@@ -233,7 +233,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator
 
 			bool e = false;
 			if (x < options.dungeonWidth - 1) {
-				Uint32 index = y + (x+1) * options.dungeonHeight;
+				Uint32 index = y + (x + 1) * options.dungeonHeight;
 				if (!placed[index] || placed[index] & 2) {
 					e = true;
 				}
@@ -241,7 +241,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator
 
 			bool s = false;
 			if (y < options.dungeonHeight - 1) {
-				Uint32 index = (y+1) + x * options.dungeonHeight;
+				Uint32 index = (y + 1) + x * options.dungeonHeight;
 				if (!placed[index] || placed[index] & 2) {
 					s = true;
 				}
@@ -249,7 +249,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator
 
 			bool w = false;
 			if (x > 0) {
-				Uint32 index = y + (x-1) * options.dungeonHeight;
+				Uint32 index = y + (x - 1) * options.dungeonHeight;
 				if (!placed[index] || placed[index] & 2) {
 					w = true;
 				}
@@ -257,7 +257,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator
 
 			bool n = false;
 			if (y > 0) {
-				Uint32 index = (y-1) + x * options.dungeonHeight;
+				Uint32 index = (y - 1) + x * options.dungeonHeight;
 				if (!placed[index] || placed[index] & 2) {
 					n = true;
 				}
@@ -394,13 +394,13 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 	path = mainEngine->buildPath(path.get()).get();
 	Directory dir(path.get());
 	StringBuf<16> startLvl("Start");
-	for( auto& str : dir.getList() ) {
+	for (auto& str : dir.getList()) {
 		// don't include the start room
-		if( str == startLvl.get() ) {
+		if (str == startLvl.get()) {
 			continue;
 		}
 
-		for( int sideInt=Tile::SIDE_EAST; sideInt<Tile::SIDE_TYPE_LENGTH; ++sideInt ) {
+		for (int sideInt = Tile::SIDE_EAST; sideInt < Tile::SIDE_TYPE_LENGTH; ++sideInt) {
 			Tile::side_t side = static_cast<Tile::side_t>(sideInt);
 
 			StringBuf<128> path("maps/%s/%s", 2, _zone, str.get());
@@ -408,16 +408,16 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 			TileWorld* world = new TileWorld(game, true, UINT32_MAX, side, path.get());
 
 			// discard rooms that failed to load or are too big
-			if( !world->isLoaded() ) {
+			if (!world->isLoaded()) {
 				delete world;
-			} else if( world->getWidth() > width || world->getHeight() > height ) {
+			} else if (world->getWidth() > width || world->getHeight() > height) {
 				delete world;
 			} else {
 				rooms.addNodeLast(world);
 			}
 		}
 	}
-	if( rooms.getSize() == 0 ) {
+	if (rooms.getSize() == 0) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Can't generate level, no rooms available!");
 		return;
 	}
@@ -427,10 +427,10 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 	sRoomPath = mainEngine->buildPath(sRoomPath.get()).get();
 	TileWorld* sRoom = new TileWorld(game, true, UINT32_MAX, Tile::SIDE_EAST, sRoomPath.get());
 
-	if( !sRoom->isLoaded() ) {
+	if (!sRoom->isLoaded()) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Can't generate level, start room too big!");
 		return;
-	} else if( sRoom->getWidth() > width || sRoom->getHeight() > height ) {
+	} else if (sRoom->getWidth() > width || sRoom->getHeight() > height) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Can't generate level, start room too big!");
 		return;
 	}
@@ -445,19 +445,19 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 	Uint32 exitsPlaced = 0;
 
 	// start adjoining rooms
-	for( const Node<exit_t>* nodeExit = exits.getFirst(); nodeExit != nullptr; nodeExit = nodeExit->getNext() ) {
+	for (const Node<exit_t>* nodeExit = exits.getFirst(); nodeExit != nullptr; nodeExit = nodeExit->getNext()) {
 		const exit_t& exit = nodeExit->getData();
 
 		// build a list of candidate rooms to fit the exit
 		LinkedList<candidate_t> candidates;
-		for( Node<TileWorld*>* nodeRoom = rooms.getFirst(); nodeRoom != nullptr; nodeRoom = nodeRoom->getNext() ) {
+		for (Node<TileWorld*>* nodeRoom = rooms.getFirst(); nodeRoom != nullptr; nodeRoom = nodeRoom->getNext()) {
 			TileWorld* world = nodeRoom->getData();
 
 			candidate_t room;
 			room.world = world;
 
 			// find matching exits for the given room...
-			for( const Node<exit_t>* node = world->getExits().getFirst(); node != nullptr; node = node->getNext() ) {
+			for (const Node<exit_t>* node = world->getExits().getFirst(); node != nullptr; node = node->getNext()) {
 				const exit_t& candExit = node->getData();
 
 				bool locked = false;
@@ -466,92 +466,92 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 				Sint32 endX = 0;
 				Sint32 endY = 0;
 
-				switch( exit.side ) {
-					case Tile::SIDE_EAST:
-						if( candExit.side == Tile::SIDE_WEST && exit.size.h == candExit.size.h ) {
-							startX = exit.size.x + 1;
-							startY = exit.size.y - candExit.size.y;
-							endX = startX + world->getWidth();
-							endY = startY + world->getHeight();
-						} else {
-							locked = true;
-						}
-						break;
-					case Tile::SIDE_SOUTH:
-						if( candExit.side == Tile::SIDE_NORTH && exit.size.w == candExit.size.w ) {
-							startX = exit.size.x - candExit.size.x;
-							startY = exit.size.y + 1;
-							endX = startX + world->getWidth();
-							endY = startY + world->getHeight();
-						} else {
-							locked = true;
-						}
-						break;
-					case Tile::SIDE_WEST:
-						if( candExit.side == Tile::SIDE_EAST && exit.size.h == candExit.size.h ) {
-							startX = exit.size.x - world->getWidth();
-							startY = exit.size.y - candExit.size.y;
-							endX = startX + world->getWidth();
-							endY = startY + world->getHeight();
-						} else {
-							locked = true;
-						}
-						break;
-					case Tile::SIDE_NORTH:
-						if( candExit.side == Tile::SIDE_SOUTH && exit.size.w == candExit.size.w ) {
-							startX = exit.size.x - candExit.size.x;
-							startY = exit.size.y - world->getHeight();
-							endX = startX + world->getWidth();
-							endY = startY + world->getHeight();
-						} else {
-							locked = true;
-						}
-						break;
-					default:
-						assert(0); // shouldn't happen
-						break;
+				switch (exit.side) {
+				case Tile::SIDE_EAST:
+					if (candExit.side == Tile::SIDE_WEST && exit.size.h == candExit.size.h) {
+						startX = exit.size.x + 1;
+						startY = exit.size.y - candExit.size.y;
+						endX = startX + world->getWidth();
+						endY = startY + world->getHeight();
+					} else {
+						locked = true;
+					}
+					break;
+				case Tile::SIDE_SOUTH:
+					if (candExit.side == Tile::SIDE_NORTH && exit.size.w == candExit.size.w) {
+						startX = exit.size.x - candExit.size.x;
+						startY = exit.size.y + 1;
+						endX = startX + world->getWidth();
+						endY = startY + world->getHeight();
+					} else {
+						locked = true;
+					}
+					break;
+				case Tile::SIDE_WEST:
+					if (candExit.side == Tile::SIDE_EAST && exit.size.h == candExit.size.h) {
+						startX = exit.size.x - world->getWidth();
+						startY = exit.size.y - candExit.size.y;
+						endX = startX + world->getWidth();
+						endY = startY + world->getHeight();
+					} else {
+						locked = true;
+					}
+					break;
+				case Tile::SIDE_NORTH:
+					if (candExit.side == Tile::SIDE_SOUTH && exit.size.w == candExit.size.w) {
+						startX = exit.size.x - candExit.size.x;
+						startY = exit.size.y - world->getHeight();
+						endX = startX + world->getWidth();
+						endY = startY + world->getHeight();
+					} else {
+						locked = true;
+					}
+					break;
+				default:
+					assert(0); // shouldn't happen
+					break;
 				}
 
-				if( locked ) {
+				if (locked) {
 					continue;
 				}
 
-				if( startX < 0 || startY < 0 || endX > (Sint32)width || endY > (Sint32)height ) {
+				if (startX < 0 || startY < 0 || endX >(Sint32)width || endY >(Sint32)height) {
 					locked = true;
 				} else {
-					for( Sint32 x = startX; x < endX; ++x ) {
-						for( Sint32 y = startY; y < endY; ++y ) {
-							if( tiles[y + x * height].isLocked() ) {
+					for (Sint32 x = startX; x < endX; ++x) {
+						for (Sint32 y = startY; y < endY; ++y) {
+							if (tiles[y + x * height].isLocked()) {
 								locked = true;
 								break;
 							}
 						}
-						if( locked ) {
+						if (locked) {
 							break;
 						}
 					}
 				}
 
-				if( !locked ) {
+				if (!locked) {
 					room.exits.push(candExit);
 				}
 			}
 
 			// we have matching exits, so add it to our list of candidates...
-			if( room.exits.getSize() > 0 ) {
+			if (room.exits.getSize() > 0) {
 				candidates.addNodeLast(room);
 			}
 		}
 
 		// no rooms will fit this exit!
-		if( candidates.getSize() == 0 ) {
+		if (candidates.getSize() == 0) {
 #if 0
 			Uint32 startX = exit.size.x;
 			Uint32 startY = exit.size.y;
 			Uint32 endX = exit.size.x + exit.size.w;
 			Uint32 endY = exit.size.y + exit.size.h;
-			for( Uint32 u = startX; u < endX; ++u ) {
-				for( Uint32 v = startY; v < endY; ++v ) {
+			for (Uint32 u = startX; u < endX; ++u) {
+				for (Uint32 v = startY; v < endY; ++v) {
 					Tile& tile = tiles[v + u * height];
 					tile.setFloorHeight(tile.getFloorHeight() + tile.getFloorSlopeSize());
 					tile.setCeilingHeight(tile.getFloorHeight());
@@ -573,34 +573,34 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 		// determine placement location
 		Sint32 roomX = 0;
 		Sint32 roomY = 0;
-		switch( exit.side ) {
-			case Tile::SIDE_EAST:
-				if( pickedExit.side == Tile::SIDE_WEST ) {
-					roomX = exit.size.x + 1;
-					roomY = exit.size.y - pickedExit.size.y;
-				}
-				break;
-			case Tile::SIDE_SOUTH:
-				if( pickedExit.side == Tile::SIDE_NORTH ) {
-					roomX = exit.size.x - pickedExit.size.x;
-					roomY = exit.size.y + 1;
-				}
-				break;
-			case Tile::SIDE_WEST:
-				if( pickedExit.side == Tile::SIDE_EAST ) {
-					roomX = exit.size.x - pickedRoom.world->getWidth();
-					roomY = exit.size.y - pickedExit.size.y;
-				}
-				break;
-			case Tile::SIDE_NORTH:
-				if( pickedExit.side == Tile::SIDE_SOUTH ) {
-					roomX = exit.size.x - pickedExit.size.x;
-					roomY = exit.size.y - pickedRoom.world->getHeight();
-				}
-				break;
-			default:
-				assert(0); // shouldn't happen
-				break;
+		switch (exit.side) {
+		case Tile::SIDE_EAST:
+			if (pickedExit.side == Tile::SIDE_WEST) {
+				roomX = exit.size.x + 1;
+				roomY = exit.size.y - pickedExit.size.y;
+			}
+			break;
+		case Tile::SIDE_SOUTH:
+			if (pickedExit.side == Tile::SIDE_NORTH) {
+				roomX = exit.size.x - pickedExit.size.x;
+				roomY = exit.size.y + 1;
+			}
+			break;
+		case Tile::SIDE_WEST:
+			if (pickedExit.side == Tile::SIDE_EAST) {
+				roomX = exit.size.x - pickedRoom.world->getWidth();
+				roomY = exit.size.y - pickedExit.size.y;
+			}
+			break;
+		case Tile::SIDE_NORTH:
+			if (pickedExit.side == Tile::SIDE_SOUTH) {
+				roomX = exit.size.x - pickedExit.size.x;
+				roomY = exit.size.y - pickedRoom.world->getHeight();
+			}
+			break;
+		default:
+			assert(0); // shouldn't happen
+			break;
 		}
 
 		// finally, place the room
@@ -611,16 +611,16 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 		// place door entity
 #if 0
 		const Entity::def_t* def = nullptr;
-		if( exit.side == Tile::SIDE_EAST || exit.side == Tile::SIDE_WEST ) {
-			if( exit.size.h == 6 ) {
+		if (exit.side == Tile::SIDE_EAST || exit.side == Tile::SIDE_WEST) {
+			if (exit.size.h == 6) {
 				def = Entity::findDef("Door (Small) (E/W)");
 			}
-		} else if( exit.side == Tile::SIDE_NORTH || exit.side == Tile::SIDE_SOUTH ) {
-			if( exit.size.w == 6 ) {
+		} else if (exit.side == Tile::SIDE_NORTH || exit.side == Tile::SIDE_SOUTH) {
+			if (exit.size.w == 6) {
 				def = Entity::findDef("Door (Small) (N/S)");
 			}
 		}
-		if( def ) {
+		if (def) {
 			Vector pos;
 			pos.x = ((float)exit.size.x + (float)exit.size.w / 2.f) * Tile::size;
 			pos.y = ((float)exit.size.y + (float)exit.size.h / 2.f) * Tile::size;
@@ -635,7 +635,7 @@ TileWorld::TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, U
 	}
 
 	// finalize
-	while( rooms.getFirst() ) {
+	while (rooms.getFirst()) {
 		delete rooms.getFirst()->getData();
 		rooms.removeNode(rooms.getFirst());
 	}
@@ -661,15 +661,14 @@ TileWorld::TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orienta
 	if (!silent) {
 		if (shortname.empty()) {
 			mainEngine->fmsg(Engine::MSG_INFO, "creating new world");
-		}
-		else {
+		} else {
 			mainEngine->fmsg(Engine::MSG_INFO, "opening world file '%s'", shortname.get());
 		}
 	}
 
 	// get texture dictionary
 	Dictionary& textureStrings = mainEngine->getTextureDictionary();
-	if( filetype != FILE_WLD && !filename.empty() ) {
+	if (filetype != FILE_WLD && !filename.empty()) {
 		FileHelper::readObject(filename, *this);
 
 		int w = calcChunksWidth();
@@ -694,47 +693,47 @@ TileWorld::~TileWorld() {
 }
 
 void TileWorld::rotate(Tile::side_t orientation) {
-	if( orientation == Tile::SIDE_EAST ) {
+	if (orientation == Tile::SIDE_EAST) {
 		return; // no rotation needed
 	}
 
-	if( orientation == Tile::SIDE_SOUTH ) {
+	if (orientation == Tile::SIDE_SOUTH) {
 		ArrayList<Tile> newTiles;
 		newTiles.resize(width * height);
-		for( Uint32 u = 0; u < width; ++u ) {
-			for( Uint32 v = 0; v < height; ++v ) {
+		for (Uint32 u = 0; u < width; ++u) {
+			for (Uint32 v = 0; v < height; ++v) {
 				Tile& tile0 = newTiles[u + (height - v - 1) * width];
 				const Tile& tile1 = tiles[v + u * height];
 				tile0 = tile1;
 
 				// switch slope sides
-				switch( tile0.getCeilingSlopeSide() ) {
-					case Tile::SIDE_EAST:
-						tile0.setCeilingSlopeSide(Tile::SIDE_SOUTH);
-						break;
-					case Tile::SIDE_SOUTH:
-						tile0.setCeilingSlopeSide(Tile::SIDE_WEST);
-						break;
-					case Tile::SIDE_WEST:
-						tile0.setCeilingSlopeSide(Tile::SIDE_NORTH);
-						break;
-					case Tile::SIDE_NORTH:
-						tile0.setCeilingSlopeSide(Tile::SIDE_EAST);
-						break;
+				switch (tile0.getCeilingSlopeSide()) {
+				case Tile::SIDE_EAST:
+					tile0.setCeilingSlopeSide(Tile::SIDE_SOUTH);
+					break;
+				case Tile::SIDE_SOUTH:
+					tile0.setCeilingSlopeSide(Tile::SIDE_WEST);
+					break;
+				case Tile::SIDE_WEST:
+					tile0.setCeilingSlopeSide(Tile::SIDE_NORTH);
+					break;
+				case Tile::SIDE_NORTH:
+					tile0.setCeilingSlopeSide(Tile::SIDE_EAST);
+					break;
 				}
-				switch( tile0.getFloorSlopeSide() ) {
-					case Tile::SIDE_EAST:
-						tile0.setFloorSlopeSide(Tile::SIDE_SOUTH);
-						break;
-					case Tile::SIDE_SOUTH:
-						tile0.setFloorSlopeSide(Tile::SIDE_WEST);
-						break;
-					case Tile::SIDE_WEST:
-						tile0.setFloorSlopeSide(Tile::SIDE_NORTH);
-						break;
-					case Tile::SIDE_NORTH:
-						tile0.setFloorSlopeSide(Tile::SIDE_EAST);
-						break;
+				switch (tile0.getFloorSlopeSide()) {
+				case Tile::SIDE_EAST:
+					tile0.setFloorSlopeSide(Tile::SIDE_SOUTH);
+					break;
+				case Tile::SIDE_SOUTH:
+					tile0.setFloorSlopeSide(Tile::SIDE_WEST);
+					break;
+				case Tile::SIDE_WEST:
+					tile0.setFloorSlopeSide(Tile::SIDE_NORTH);
+					break;
+				case Tile::SIDE_NORTH:
+					tile0.setFloorSlopeSide(Tile::SIDE_EAST);
+					break;
 				}
 
 				// fix textures
@@ -754,43 +753,43 @@ void TileWorld::rotate(Tile::side_t orientation) {
 		tiles = newTiles;
 	}
 
-	if( orientation == Tile::SIDE_NORTH ) {
+	if (orientation == Tile::SIDE_NORTH) {
 		ArrayList<Tile> newTiles;
 		newTiles.resize(width * height);
-		for( Uint32 u = 0; u < width; ++u ) {
-			for( Uint32 v = 0; v < height; ++v ) {
+		for (Uint32 u = 0; u < width; ++u) {
+			for (Uint32 v = 0; v < height; ++v) {
 				Tile& tile0 = newTiles[(width - u - 1) + v * width];
 				const Tile& tile1 = tiles[v + u * height];
 				tile0 = tile1;
 
 				// switch slope sides
-				switch( tile0.getCeilingSlopeSide() ) {
-					case Tile::SIDE_EAST:
-						tile0.setCeilingSlopeSide(Tile::SIDE_NORTH);
-						break;
-					case Tile::SIDE_SOUTH:
-						tile0.setCeilingSlopeSide(Tile::SIDE_EAST);
-						break;
-					case Tile::SIDE_WEST:
-						tile0.setCeilingSlopeSide(Tile::SIDE_SOUTH);
-						break;
-					case Tile::SIDE_NORTH:
-						tile0.setCeilingSlopeSide(Tile::SIDE_WEST);
-						break;
+				switch (tile0.getCeilingSlopeSide()) {
+				case Tile::SIDE_EAST:
+					tile0.setCeilingSlopeSide(Tile::SIDE_NORTH);
+					break;
+				case Tile::SIDE_SOUTH:
+					tile0.setCeilingSlopeSide(Tile::SIDE_EAST);
+					break;
+				case Tile::SIDE_WEST:
+					tile0.setCeilingSlopeSide(Tile::SIDE_SOUTH);
+					break;
+				case Tile::SIDE_NORTH:
+					tile0.setCeilingSlopeSide(Tile::SIDE_WEST);
+					break;
 				}
-				switch( tile0.getFloorSlopeSide() ) {
-					case Tile::SIDE_EAST:
-						tile0.setFloorSlopeSide(Tile::SIDE_NORTH);
-						break;
-					case Tile::SIDE_SOUTH:
-						tile0.setFloorSlopeSide(Tile::SIDE_EAST);
-						break;
-					case Tile::SIDE_WEST:
-						tile0.setFloorSlopeSide(Tile::SIDE_SOUTH);
-						break;
-					case Tile::SIDE_NORTH:
-						tile0.setFloorSlopeSide(Tile::SIDE_WEST);
-						break;
+				switch (tile0.getFloorSlopeSide()) {
+				case Tile::SIDE_EAST:
+					tile0.setFloorSlopeSide(Tile::SIDE_NORTH);
+					break;
+				case Tile::SIDE_SOUTH:
+					tile0.setFloorSlopeSide(Tile::SIDE_EAST);
+					break;
+				case Tile::SIDE_WEST:
+					tile0.setFloorSlopeSide(Tile::SIDE_SOUTH);
+					break;
+				case Tile::SIDE_NORTH:
+					tile0.setFloorSlopeSide(Tile::SIDE_WEST);
+					break;
 				}
 
 				// fix textures
@@ -809,44 +808,44 @@ void TileWorld::rotate(Tile::side_t orientation) {
 		height = temp;
 		tiles = newTiles;
 	}
-	
-	if( orientation == Tile::SIDE_WEST ) {
+
+	if (orientation == Tile::SIDE_WEST) {
 		ArrayList<Tile> newTiles;
 		newTiles.resize(width * height);
-		for( Uint32 u = 0; u < width; ++u ) {
-			for( Uint32 v = 0; v < height; ++v ) {
+		for (Uint32 u = 0; u < width; ++u) {
+			for (Uint32 v = 0; v < height; ++v) {
 				Tile& tile0 = newTiles[(height - v - 1) + (width - u - 1) * height];
 				const Tile& tile1 = tiles[v + u * height];
 				tile0 = tile1;
 
 				// switch slope sides
-				switch( tile0.getCeilingSlopeSide() ) {
-					case Tile::SIDE_EAST:
-						tile0.setCeilingSlopeSide(Tile::SIDE_WEST);
-						break;
-					case Tile::SIDE_SOUTH:
-						tile0.setCeilingSlopeSide(Tile::SIDE_NORTH);
-						break;
-					case Tile::SIDE_WEST:
-						tile0.setCeilingSlopeSide(Tile::SIDE_EAST);
-						break;
-					case Tile::SIDE_NORTH:
-						tile0.setCeilingSlopeSide(Tile::SIDE_SOUTH);
-						break;
+				switch (tile0.getCeilingSlopeSide()) {
+				case Tile::SIDE_EAST:
+					tile0.setCeilingSlopeSide(Tile::SIDE_WEST);
+					break;
+				case Tile::SIDE_SOUTH:
+					tile0.setCeilingSlopeSide(Tile::SIDE_NORTH);
+					break;
+				case Tile::SIDE_WEST:
+					tile0.setCeilingSlopeSide(Tile::SIDE_EAST);
+					break;
+				case Tile::SIDE_NORTH:
+					tile0.setCeilingSlopeSide(Tile::SIDE_SOUTH);
+					break;
 				}
-				switch( tile0.getFloorSlopeSide() ) {
-					case Tile::SIDE_EAST:
-						tile0.setFloorSlopeSide(Tile::SIDE_WEST);
-						break;
-					case Tile::SIDE_SOUTH:
-						tile0.setFloorSlopeSide(Tile::SIDE_NORTH);
-						break;
-					case Tile::SIDE_WEST:
-						tile0.setFloorSlopeSide(Tile::SIDE_EAST);
-						break;
-					case Tile::SIDE_NORTH:
-						tile0.setFloorSlopeSide(Tile::SIDE_SOUTH);
-						break;
+				switch (tile0.getFloorSlopeSide()) {
+				case Tile::SIDE_EAST:
+					tile0.setFloorSlopeSide(Tile::SIDE_WEST);
+					break;
+				case Tile::SIDE_SOUTH:
+					tile0.setFloorSlopeSide(Tile::SIDE_NORTH);
+					break;
+				case Tile::SIDE_WEST:
+					tile0.setFloorSlopeSide(Tile::SIDE_EAST);
+					break;
+				case Tile::SIDE_NORTH:
+					tile0.setFloorSlopeSide(Tile::SIDE_SOUTH);
+					break;
 				}
 
 				// fix textures
@@ -864,20 +863,20 @@ void TileWorld::rotate(Tile::side_t orientation) {
 	}
 
 	float rot = 0.f;
-	switch( orientation ) {
-		case Tile::SIDE_SOUTH:
-			rot = PI/2.f;
-			break;
-		case Tile::SIDE_WEST:
-			rot = PI;
-			break;
-		case Tile::SIDE_NORTH:
-			rot = 3*PI/2.f;
-			break;
-		default:
-			break;
+	switch (orientation) {
+	case Tile::SIDE_SOUTH:
+		rot = PI / 2.f;
+		break;
+	case Tile::SIDE_WEST:
+		rot = PI;
+		break;
+	case Tile::SIDE_NORTH:
+		rot = 3 * PI / 2.f;
+		break;
+	default:
+		break;
 	}
-	
+
 	// rotate entities
 	for (auto& pair : entities) {
 		Entity* entity = pair.b;
@@ -890,19 +889,19 @@ void TileWorld::rotate(Tile::side_t orientation) {
 		Vector pos = entity->getPos();
 		float x = (pos.x * cos(rot)) - (pos.y * sin(rot));
 		float y = (pos.x * sin(rot)) + (pos.y * cos(rot));
-		switch( orientation ) {
-			case Tile::SIDE_SOUTH:
-				x += width * Tile::size;
-				break;
-			case Tile::SIDE_WEST:
-				x += width * Tile::size;
-				y += height * Tile::size;
-				break;
-			case Tile::SIDE_NORTH:
-				y += height * Tile::size;
-				break;
-			default:
-				break;
+		switch (orientation) {
+		case Tile::SIDE_SOUTH:
+			x += width * Tile::size;
+			break;
+		case Tile::SIDE_WEST:
+			x += width * Tile::size;
+			y += height * Tile::size;
+			break;
+		case Tile::SIDE_NORTH:
+			y += height * Tile::size;
+			break;
+		default:
+			break;
 		}
 		pos.x = x;
 		pos.y = y;
@@ -922,9 +921,9 @@ void TileWorld::initialize(bool empty) {
 	World::initialize(empty);
 
 	// initialize tiles
-	for( Uint32 x=0; x<width; ++x ) {
-		for( Uint32 y=0; y<height; ++y ) {
-			Tile& tile = tiles[y+x*height];
+	for (Uint32 x = 0; x < width; ++x) {
+		for (Uint32 y = 0; y < height; ++y) {
+			Tile& tile = tiles[y + x * height];
 
 			tile.setWorld(*this);
 			tile.setX(x*Tile::size);
@@ -932,41 +931,41 @@ void TileWorld::initialize(bool empty) {
 			tile.setDynamicsWorld(*bulletDynamicsWorld);
 
 			// assign chunks to tiles and vice versa
-			Uint32 cX = x/Chunk::size;
-			Uint32 cY = y/Chunk::size;
+			Uint32 cX = x / Chunk::size;
+			Uint32 cY = y / Chunk::size;
 			Uint32 cH = calcChunksHeight();
-			Chunk& chunk = chunks[cY+cX*cH];
-			chunk.setTile((y%Chunk::size)+(x%Chunk::size)*Chunk::size,&tile);
+			Chunk& chunk = chunks[cY + cX * cH];
+			chunk.setTile((y%Chunk::size) + (x%Chunk::size)*Chunk::size, &tile);
 			tile.setChunk(chunk);
 		}
 	}
 
 	// compile tile vertices
-	for( Uint32 x=0; x<width; ++x ) {
-		for( Uint32 y=0; y<height; ++y ) {
-			Tile& tile = tiles[y+x*height];
+	for (Uint32 x = 0; x < width; ++x) {
+		for (Uint32 y = 0; y < height; ++y) {
+			Tile& tile = tiles[y + x * height];
 
 			tile.compileFloorVertices();
 			tile.compileCeilingVertices();
-			if( x<width-1 ) {
-				Tile& neighbor = tiles[y+(x+1)*height];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_EAST);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_EAST);
+			if (x < width - 1) {
+				Tile& neighbor = tiles[y + (x + 1)*height];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_EAST);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_EAST);
 			}
-			if( y<height-1 ) {
-				Tile& neighbor = tiles[(y+1)+x*height];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_SOUTH);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_SOUTH);
+			if (y < height - 1) {
+				Tile& neighbor = tiles[(y + 1) + x * height];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_SOUTH);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_SOUTH);
 			}
-			if( x>0 ) {
-				Tile& neighbor = tiles[y+(x-1)*height];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_WEST);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_WEST);
+			if (x > 0) {
+				Tile& neighbor = tiles[y + (x - 1)*height];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_WEST);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_WEST);
 			}
-			if( y>0 ) {
-				Tile& neighbor = tiles[(y-1)+x*height];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_NORTH);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_NORTH);
+			if (y > 0) {
+				Tile& neighbor = tiles[(y - 1) + x * height];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_NORTH);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_NORTH);
 			}
 			tile.buildBuffers();
 			tile.compileBulletPhysicsMesh();
@@ -976,12 +975,12 @@ void TileWorld::initialize(bool empty) {
 	// initialize chunks
 	Uint32 w = calcChunksWidth();
 	Uint32 h = calcChunksHeight();
-	for( Uint32 x=0; x<w; ++x ) {
-		for( Uint32 y=0; y<h; ++y ) {
-			Chunk& chunk = chunks[y+x*h];
+	for (Uint32 x = 0; x < w; ++x) {
+		for (Uint32 y = 0; y < h; ++y) {
+			Chunk& chunk = chunks[y + x * h];
 			chunk.setWorld(*this);
 			chunk.buildBuffers();
-			if( !empty ) {
+			if (!empty) {
 				chunk.optimizeBuffers();
 			}
 		}
@@ -1007,7 +1006,7 @@ void TileWorld::createGrid() {
 	if (vao)
 		return;
 
-	for( int i=0; i<BUFFER_MAX; ++i ) {
+	for (int i = 0; i < BUFFER_MAX; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
 
@@ -1016,83 +1015,83 @@ void TileWorld::createGrid() {
 	glBindVertexArray(vao);
 
 	// create vertex data
-	GLfloat* vertices = new GLfloat[(width+1+height+1)*3*2];
-	GLfloat* colors = new GLfloat[(width+1+height+1)*4*2];
-	for( Uint32 x=0; x<=width; ++x ) {
-		vertices[x*6]   = x*Tile::size;
-		vertices[x*6+1] = 0;
-		vertices[x*6+2] = 0;
-		vertices[x*6+3] = x*Tile::size;
-		vertices[x*6+4] = 0;
-		vertices[x*6+5] = height*Tile::size;
+	GLfloat* vertices = new GLfloat[(width + 1 + height + 1) * 3 * 2];
+	GLfloat* colors = new GLfloat[(width + 1 + height + 1) * 4 * 2];
+	for (Uint32 x = 0; x <= width; ++x) {
+		vertices[x * 6] = x * Tile::size;
+		vertices[x * 6 + 1] = 0;
+		vertices[x * 6 + 2] = 0;
+		vertices[x * 6 + 3] = x * Tile::size;
+		vertices[x * 6 + 4] = 0;
+		vertices[x * 6 + 5] = height * Tile::size;
 
-		if( x%Chunk::size ) {
-			colors[x*8]   = .5f;
-			colors[x*8+1] = 0.f;
-			colors[x*8+2] = 0.f;
-			colors[x*8+3] = 1.f;
-			colors[x*8+4] = .5f;
-			colors[x*8+5] = 0.f;
-			colors[x*8+6] = 0.f;
-			colors[x*8+7] = 1.f;
+		if (x%Chunk::size) {
+			colors[x * 8] = .5f;
+			colors[x * 8 + 1] = 0.f;
+			colors[x * 8 + 2] = 0.f;
+			colors[x * 8 + 3] = 1.f;
+			colors[x * 8 + 4] = .5f;
+			colors[x * 8 + 5] = 0.f;
+			colors[x * 8 + 6] = 0.f;
+			colors[x * 8 + 7] = 1.f;
 		} else {
-			if( x%largeGridSize ) {
-				colors[x*8]   = 1.f;
-				colors[x*8+1] = 0.f;
-				colors[x*8+2] = 0.f;
-				colors[x*8+3] = 1.f;
-				colors[x*8+4] = 1.f;
-				colors[x*8+5] = 0.f;
-				colors[x*8+6] = 0.f;
-				colors[x*8+7] = 1.f;
+			if (x%largeGridSize) {
+				colors[x * 8] = 1.f;
+				colors[x * 8 + 1] = 0.f;
+				colors[x * 8 + 2] = 0.f;
+				colors[x * 8 + 3] = 1.f;
+				colors[x * 8 + 4] = 1.f;
+				colors[x * 8 + 5] = 0.f;
+				colors[x * 8 + 6] = 0.f;
+				colors[x * 8 + 7] = 1.f;
 			} else {
-				colors[x*8]   = 0.f;
-				colors[x*8+1] = 1.f;
-				colors[x*8+2] = 1.f;
-				colors[x*8+3] = 1.f;
-				colors[x*8+4] = 0.f;
-				colors[x*8+5] = 1.f;
-				colors[x*8+6] = 1.f;
-				colors[x*8+7] = 1.f;
+				colors[x * 8] = 0.f;
+				colors[x * 8 + 1] = 1.f;
+				colors[x * 8 + 2] = 1.f;
+				colors[x * 8 + 3] = 1.f;
+				colors[x * 8 + 4] = 0.f;
+				colors[x * 8 + 5] = 1.f;
+				colors[x * 8 + 6] = 1.f;
+				colors[x * 8 + 7] = 1.f;
 			}
 		}
 	}
-	for( Uint32 y=0; y<=height; ++y ) {
-		vertices[(width+1)*6+y*6]   = 0;
-		vertices[(width+1)*6+y*6+1] = 0;
-		vertices[(width+1)*6+y*6+2] = y*Tile::size;
-		vertices[(width+1)*6+y*6+3] = width*Tile::size;
-		vertices[(width+1)*6+y*6+4] = 0;
-		vertices[(width+1)*6+y*6+5] = y*Tile::size;
+	for (Uint32 y = 0; y <= height; ++y) {
+		vertices[(width + 1) * 6 + y * 6] = 0;
+		vertices[(width + 1) * 6 + y * 6 + 1] = 0;
+		vertices[(width + 1) * 6 + y * 6 + 2] = y * Tile::size;
+		vertices[(width + 1) * 6 + y * 6 + 3] = width * Tile::size;
+		vertices[(width + 1) * 6 + y * 6 + 4] = 0;
+		vertices[(width + 1) * 6 + y * 6 + 5] = y * Tile::size;
 
-		if( y%Chunk::size ) {
-			colors[(width+1)*8+y*8]   = .5f;
-			colors[(width+1)*8+y*8+1] = 0.f;
-			colors[(width+1)*8+y*8+2] = 0.f;
-			colors[(width+1)*8+y*8+3] = 1.f;
-			colors[(width+1)*8+y*8+4] = .5f;
-			colors[(width+1)*8+y*8+5] = 0.f;
-			colors[(width+1)*8+y*8+6] = 0.f;
-			colors[(width+1)*8+y*8+7] = 1.f;
+		if (y%Chunk::size) {
+			colors[(width + 1) * 8 + y * 8] = .5f;
+			colors[(width + 1) * 8 + y * 8 + 1] = 0.f;
+			colors[(width + 1) * 8 + y * 8 + 2] = 0.f;
+			colors[(width + 1) * 8 + y * 8 + 3] = 1.f;
+			colors[(width + 1) * 8 + y * 8 + 4] = .5f;
+			colors[(width + 1) * 8 + y * 8 + 5] = 0.f;
+			colors[(width + 1) * 8 + y * 8 + 6] = 0.f;
+			colors[(width + 1) * 8 + y * 8 + 7] = 1.f;
 		} else {
-			if( y%largeGridSize ) {
-				colors[(width+1)*8+y*8]   = 1.f;
-				colors[(width+1)*8+y*8+1] = 0.f;
-				colors[(width+1)*8+y*8+2] = 0.f;
-				colors[(width+1)*8+y*8+3] = 1.f;
-				colors[(width+1)*8+y*8+4] = 1.f;
-				colors[(width+1)*8+y*8+5] = 0.f;
-				colors[(width+1)*8+y*8+6] = 0.f;
-				colors[(width+1)*8+y*8+7] = 1.f;
+			if (y%largeGridSize) {
+				colors[(width + 1) * 8 + y * 8] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 1] = 0.f;
+				colors[(width + 1) * 8 + y * 8 + 2] = 0.f;
+				colors[(width + 1) * 8 + y * 8 + 3] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 4] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 5] = 0.f;
+				colors[(width + 1) * 8 + y * 8 + 6] = 0.f;
+				colors[(width + 1) * 8 + y * 8 + 7] = 1.f;
 			} else {
-				colors[(width+1)*8+y*8]   = 0.f;
-				colors[(width+1)*8+y*8+1] = 1.f;
-				colors[(width+1)*8+y*8+2] = 1.f;
-				colors[(width+1)*8+y*8+3] = 1.f;
-				colors[(width+1)*8+y*8+4] = 0.f;
-				colors[(width+1)*8+y*8+5] = 1.f;
-				colors[(width+1)*8+y*8+6] = 1.f;
-				colors[(width+1)*8+y*8+7] = 1.f;
+				colors[(width + 1) * 8 + y * 8] = 0.f;
+				colors[(width + 1) * 8 + y * 8 + 1] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 2] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 3] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 4] = 0.f;
+				colors[(width + 1) * 8 + y * 8 + 5] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 6] = 1.f;
+				colors[(width + 1) * 8 + y * 8 + 7] = 1.f;
 			}
 		}
 	}
@@ -1100,7 +1099,7 @@ void TileWorld::createGrid() {
 	// upload vertex data
 	glGenBuffers(1, &vbo[BUFFER_VERTEX]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[BUFFER_VERTEX]);
-	glBufferData(GL_ARRAY_BUFFER, (width+1+height+1) * 3 * 2 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, (width + 1 + height + 1) * 3 * 2 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(0);
 	delete[] vertices;
@@ -1108,21 +1107,21 @@ void TileWorld::createGrid() {
 	// upload color data
 	glGenBuffers(1, &vbo[BUFFER_COLOR]);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[BUFFER_COLOR]);
-	glBufferData(GL_ARRAY_BUFFER, (width+1+height+1) * 4 * 2 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, (width + 1 + height + 1) * 4 * 2 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, NULL);
 	glEnableVertexAttribArray(1);
 	delete[] colors;
 
 	// create index data
-	GLuint* indices = new GLuint[(width+1+height+1)*2];
-	for( Uint32 i=0; i<(width+1+height+1)*2; ++i ) {
+	GLuint* indices = new GLuint[(width + 1 + height + 1) * 2];
+	for (Uint32 i = 0; i < (width + 1 + height + 1) * 2; ++i) {
 		indices[i] = i;
 	}
 
 	// upload index data
 	glGenBuffers(1, &vbo[BUFFER_INDEX]);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[BUFFER_INDEX]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (width+1+height+1) * 2 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, (width + 1 + height + 1) * 2 * sizeof(GLuint), indices, GL_STATIC_DRAW);
 	delete[] indices;
 
 	// unbind vertex array
@@ -1130,25 +1129,25 @@ void TileWorld::createGrid() {
 }
 
 void TileWorld::destroyGrid() {
-	for( int i=0; i<BUFFER_MAX; ++i ) {
+	for (int i = 0; i < BUFFER_MAX; ++i) {
 		buffer_t buffer = static_cast<buffer_t>(i);
-		if( vbo[buffer] ) {
-			glDeleteBuffers(1,&vbo[buffer]);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
 			vbo[buffer] = 0;
 		}
 	}
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 		vao = 0;
 	}
 }
 
 int TileWorld::calcChunksWidth() const {
-	return width/Chunk::size + ((width%Chunk::size)>0 ? 1 : 0);
+	return width / Chunk::size + ((width%Chunk::size) > 0 ? 1 : 0);
 }
 
 int TileWorld::calcChunksHeight() const {
-	return height/Chunk::size + ((height%Chunk::size)>0 ? 1 : 0);
+	return height / Chunk::size + ((height%Chunk::size) > 0 ? 1 : 0);
 }
 
 void TileWorld::deselectGeometry() {
@@ -1158,30 +1157,30 @@ void TileWorld::deselectGeometry() {
 	selectedRect.h = 0;
 }
 
-void TileWorld::findEntitiesInRadius( const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat ) {
-	if( radius <= 0 ) {
+void TileWorld::findEntitiesInRadius(const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat) {
+	if (radius <= 0) {
 		return;
 	}
 
 	Sint32 cX = origin.x / (Chunk::size * Tile::size);
 	Sint32 cY = origin.y / (Chunk::size * Tile::size);
-	Sint32 cW = max( 1, (Sint32)(width / Chunk::size) );
-	Sint32 cH = max( 1, (Sint32)(height / Chunk::size) );
+	Sint32 cW = max(1, (Sint32)(width / Chunk::size));
+	Sint32 cH = max(1, (Sint32)(height / Chunk::size));
 	Sint32 chunkRadius = floor((radius / Tile::size) / Chunk::size) + 1;
-	Sint32 startX = min( max( 0, cX - chunkRadius), cW - 1);
-	Sint32 startY = min( max( 0, cY - chunkRadius), cH - 1);
-	Sint32 endX = min( max( 0, cX + chunkRadius), cW - 1);
-	Sint32 endY = min( max( 0, cY + chunkRadius), cH - 1);
+	Sint32 startX = min(max(0, cX - chunkRadius), cW - 1);
+	Sint32 startY = min(max(0, cY - chunkRadius), cH - 1);
+	Sint32 endX = min(max(0, cX + chunkRadius), cW - 1);
+	Sint32 endY = min(max(0, cY + chunkRadius), cH - 1);
 
-	for( Sint32 x = startX; x <= endX; ++x ) {
-		for( Sint32 y = startY; y <= endY; ++y ) {
+	for (Sint32 x = startX; x <= endX; ++x) {
+		for (Sint32 y = startY; y <= endY; ++y) {
 			LinkedList<Entity*>& population = chunks[y + x * cH].getEPopulation();
-			for( auto entity : population ) {
+			for (auto entity : population) {
 				Vector diff = origin - entity->getPos();
 				float dist = flat ?
-					sqrt( diff.x * diff.x + diff.y * diff.y ) :
-					sqrt( diff.x * diff.x + diff.y * diff.y + diff.z * diff.z );
-				if( dist <= radius ) {
+					sqrt(diff.x * diff.x + diff.y * diff.y) :
+					sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+				if (dist <= radius) {
 					outList.addNodeLast(entity);
 				}
 			}
@@ -1192,9 +1191,9 @@ void TileWorld::findEntitiesInRadius( const Vector& origin, float radius, Linked
 void TileWorld::optimizeChunks() {
 	unsigned int w = calcChunksWidth();
 	unsigned int h = calcChunksHeight();
-	for( unsigned int x=0; x<w; ++x ) {
-		for( unsigned int y=0; y<h; ++y ) {
-			chunks[y+x*h].optimizeBuffers();
+	for (unsigned int x = 0; x < w; ++x) {
+		for (unsigned int y = 0; y < h; ++y) {
+			chunks[y + x * h].optimizeBuffers();
 		}
 	}
 }
@@ -1202,29 +1201,29 @@ void TileWorld::optimizeChunks() {
 void TileWorld::rebuildChunks() {
 	unsigned int w = calcChunksWidth();
 	unsigned int h = calcChunksHeight();
-	for( unsigned int x=0; x<w; ++x ) {
-		for( unsigned int y=0; y<h; ++y ) {
-			chunks[y+x*h].buildBuffers();
-			chunks[y+x*h].optimizeBuffers();
+	for (unsigned int x = 0; x < w; ++x) {
+		for (unsigned int y = 0; y < h; ++y) {
+			chunks[y + x * h].buildBuffers();
+			chunks[y + x * h].optimizeBuffers();
 		}
 	}
 }
 
-bool TileWorld::saveFile(const char* _filename, bool updateFilename ) {
+bool TileWorld::saveFile(const char* _filename, bool updateFilename) {
 	const String& path = (_filename == nullptr || _filename[0] == '\0') ? filename : StringBuf<256>(_filename);
-	if( updateFilename ) {
+	if (updateFilename) {
 		changeFilename(path.get());
 	}
 
 	// open file for saving
-	if( path.empty() ) {
-		mainEngine->fmsg(Engine::MSG_WARN,"attempted to save world without filename");
+	if (path.empty()) {
+		mainEngine->fmsg(Engine::MSG_WARN, "attempted to save world without filename");
 		return false;
 	}
-	if( _filename == nullptr || _filename[0] == '\0' ) {
-		mainEngine->fmsg(Engine::MSG_INFO,"saving world file '%s'...",shortname.get());
+	if (_filename == nullptr || _filename[0] == '\0') {
+		mainEngine->fmsg(Engine::MSG_INFO, "saving world file '%s'...", shortname.get());
 	} else {
-		mainEngine->fmsg(Engine::MSG_INFO,"saving world file '%s'...",_filename);
+		mainEngine->fmsg(Engine::MSG_INFO, "saving world file '%s'...", _filename);
 	}
 
 	if (filetype == FILE_BINARY) {
@@ -1254,8 +1253,7 @@ void TileWorld::serialize(FileInterface * file) {
 		}
 
 		file->endArray();
-	}
-	else {
+	} else {
 		// write number of entities
 		Uint32 numEntities = 0;
 		for (auto& pair : entities) {
@@ -1283,7 +1281,7 @@ void TileWorld::serialize(FileInterface * file) {
 }
 
 void TileWorld::resize(int left, int right, int up, int down) {
-	if( left==0 && right==0 && up==0 && down==0 ) {
+	if (left == 0 && right == 0 && up == 0 && down == 0) {
 		// no resizing needed
 		return;
 	}
@@ -1298,7 +1296,7 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	// create new tile array
 	int newWidth = width + left + right;
 	int newHeight = height + up + down;
-	if( newWidth<=0 || newHeight<=0 ) {
+	if (newWidth <= 0 || newHeight <= 0) {
 		// bad size!
 		return;
 	}
@@ -1306,15 +1304,15 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	newTiles.resize(newWidth*newHeight);
 
 	// create new chunk array
-	int newChunkWidth = newWidth/Chunk::size + ((newWidth%Chunk::size)>0 ? 1 : 0);
-	int newChunkHeight = newHeight/Chunk::size + ((newHeight%Chunk::size)>0 ? 1 : 0);
+	int newChunkWidth = newWidth / Chunk::size + ((newWidth%Chunk::size) > 0 ? 1 : 0);
+	int newChunkHeight = newHeight / Chunk::size + ((newHeight%Chunk::size) > 0 ? 1 : 0);
 	ArrayList<Chunk> newChunks;
 	newChunks.resize(newChunkWidth * newChunkHeight);
 
 	// initialize new tile array
-	for( int x=0; x<newWidth; ++x ) {
-		for( int y=0; y<newHeight; ++y ) {
-			Tile& tile = newTiles[y+x*newHeight];
+	for (int x = 0; x < newWidth; ++x) {
+		for (int y = 0; y < newHeight; ++y) {
+			Tile& tile = newTiles[y + x * newHeight];
 
 			tile.setWorld(*this);
 			tile.setX(x*Tile::size);
@@ -1322,10 +1320,10 @@ void TileWorld::resize(int left, int right, int up, int down) {
 			tile.setDynamicsWorld(*bulletDynamicsWorld);
 
 			// assign chunks to tiles and vice versa
-			Uint32 cX = x/Chunk::size;
-			Uint32 cY = y/Chunk::size;
-			Chunk& chunk = newChunks[cY+cX*newChunkHeight];
-			chunk.setTile((y%Chunk::size)+(x%Chunk::size)*Chunk::size,&tile);
+			Uint32 cX = x / Chunk::size;
+			Uint32 cY = y / Chunk::size;
+			Chunk& chunk = newChunks[cY + cX * newChunkHeight];
+			chunk.setTile((y%Chunk::size) + (x%Chunk::size)*Chunk::size, &tile);
 			tile.setChunk(chunk);
 		}
 	}
@@ -1333,33 +1331,33 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	// copy tile data from old tiles array to the new
 	int newX;
 	int newY;
-	int newStartX = max(0,left);
-	int newStartY = max(0,up);
-	int newEndX = newWidth - max(0,right);
-	int newEndY = newHeight - max(0,down);
+	int newStartX = max(0, left);
+	int newStartY = max(0, up);
+	int newEndX = newWidth - max(0, right);
+	int newEndY = newHeight - max(0, down);
 
 	int oldX;
 	int oldY;
-	int oldStartX = max(0,-left);
-	int oldStartY = max(0,-up);
-	int oldEndX = width - max(0,-right);
-	int oldEndY = height - max(0,-down);
-	for( oldX=oldStartX, newX=newStartX; oldX<oldEndX && newX<newEndX; ++oldX, ++newX ) {
-		for( oldY=oldStartY, newY=newStartY; oldY<oldEndY && newY<newEndY; ++oldY, ++newY ) {
-			Tile& newTile = newTiles[newY+newX*newHeight];
-			Tile& oldTile = tiles[oldY+oldX*height];
+	int oldStartX = max(0, -left);
+	int oldStartY = max(0, -up);
+	int oldEndX = width - max(0, -right);
+	int oldEndY = height - max(0, -down);
+	for (oldX = oldStartX, newX = newStartX; oldX < oldEndX && newX < newEndX; ++oldX, ++newX) {
+		for (oldY = oldStartY, newY = newStartY; oldY < oldEndY && newY < newEndY; ++oldY, ++newY) {
+			Tile& newTile = newTiles[newY + newX * newHeight];
+			Tile& oldTile = tiles[oldY + oldX * height];
 
 			newTile.setCeilingHeight(oldTile.getCeilingHeight());
 			newTile.setFloorHeight(oldTile.getFloorHeight());
-			
-			newTile.setUpperTexture(Tile::SIDE_EAST,oldTile.getUpperTexture(Tile::SIDE_EAST));
-			newTile.setLowerTexture(Tile::SIDE_EAST,oldTile.getLowerTexture(Tile::SIDE_EAST));
-			newTile.setUpperTexture(Tile::SIDE_SOUTH,oldTile.getUpperTexture(Tile::SIDE_SOUTH));
-			newTile.setLowerTexture(Tile::SIDE_SOUTH,oldTile.getLowerTexture(Tile::SIDE_SOUTH));
-			newTile.setUpperTexture(Tile::SIDE_WEST,oldTile.getUpperTexture(Tile::SIDE_WEST));
-			newTile.setLowerTexture(Tile::SIDE_WEST,oldTile.getLowerTexture(Tile::SIDE_WEST));
-			newTile.setUpperTexture(Tile::SIDE_NORTH,oldTile.getUpperTexture(Tile::SIDE_NORTH));
-			newTile.setLowerTexture(Tile::SIDE_NORTH,oldTile.getLowerTexture(Tile::SIDE_NORTH));
+
+			newTile.setUpperTexture(Tile::SIDE_EAST, oldTile.getUpperTexture(Tile::SIDE_EAST));
+			newTile.setLowerTexture(Tile::SIDE_EAST, oldTile.getLowerTexture(Tile::SIDE_EAST));
+			newTile.setUpperTexture(Tile::SIDE_SOUTH, oldTile.getUpperTexture(Tile::SIDE_SOUTH));
+			newTile.setLowerTexture(Tile::SIDE_SOUTH, oldTile.getLowerTexture(Tile::SIDE_SOUTH));
+			newTile.setUpperTexture(Tile::SIDE_WEST, oldTile.getUpperTexture(Tile::SIDE_WEST));
+			newTile.setLowerTexture(Tile::SIDE_WEST, oldTile.getLowerTexture(Tile::SIDE_WEST));
+			newTile.setUpperTexture(Tile::SIDE_NORTH, oldTile.getUpperTexture(Tile::SIDE_NORTH));
+			newTile.setLowerTexture(Tile::SIDE_NORTH, oldTile.getLowerTexture(Tile::SIDE_NORTH));
 
 			newTile.setCeilingTexture(oldTile.getCeilingTexture());
 			newTile.setFloorTexture(oldTile.getFloorTexture());
@@ -1372,31 +1370,31 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	}
 
 	// finalize copied tiles
-	for( int x=0; x<newWidth; ++x ) {
-		for( int y=0; y<newHeight; ++y ) {
-			Tile& tile = newTiles[y+x*newHeight];
+	for (int x = 0; x < newWidth; ++x) {
+		for (int y = 0; y < newHeight; ++y) {
+			Tile& tile = newTiles[y + x * newHeight];
 
 			tile.compileFloorVertices();
 			tile.compileCeilingVertices();
-			if( x<(int)newWidth-1 ) {
-				Tile& neighbor = newTiles[y+(x+1)*newHeight];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_EAST);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_EAST);
+			if (x < (int)newWidth - 1) {
+				Tile& neighbor = newTiles[y + (x + 1)*newHeight];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_EAST);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_EAST);
 			}
-			if( y<(int)newHeight-1 ) {
-				Tile& neighbor = newTiles[(y+1)+x*newHeight];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_SOUTH);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_SOUTH);
+			if (y < (int)newHeight - 1) {
+				Tile& neighbor = newTiles[(y + 1) + x * newHeight];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_SOUTH);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_SOUTH);
 			}
-			if( x>0 ) {
-				Tile& neighbor = newTiles[y+(x-1)*newHeight];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_WEST);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_WEST);
+			if (x > 0) {
+				Tile& neighbor = newTiles[y + (x - 1)*newHeight];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_WEST);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_WEST);
 			}
-			if( y>0 ) {
-				Tile& neighbor = newTiles[(y-1)+x*newHeight];
-				tile.compileLowerVertices(neighbor,Tile::SIDE_NORTH);
-				tile.compileUpperVertices(neighbor,Tile::SIDE_NORTH);
+			if (y > 0) {
+				Tile& neighbor = newTiles[(y - 1) + x * newHeight];
+				tile.compileLowerVertices(neighbor, Tile::SIDE_NORTH);
+				tile.compileUpperVertices(neighbor, Tile::SIDE_NORTH);
 			}
 			tile.buildBuffers();
 			tile.compileBulletPhysicsMesh();
@@ -1416,9 +1414,9 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	chunks = newChunks;
 
 	// initialize chunks
-	for( int x=0; x<newChunkWidth; ++x ) {
-		for( int y=0; y<newChunkHeight; ++y ) {
-			Chunk& chunk = newChunks[y+x*newChunkHeight];
+	for (int x = 0; x < newChunkWidth; ++x) {
+		for (int y = 0; y < newChunkHeight; ++y) {
+			Chunk& chunk = newChunks[y + x * newChunkHeight];
 			chunk.setWorld(*this);
 			chunk.buildBuffers();
 			chunk.optimizeBuffers();
@@ -1436,7 +1434,7 @@ void TileWorld::resize(int left, int right, int up, int down) {
 	}
 
 	// move entities, if necessary
-	if( left || up ) {
+	if (left || up) {
 		for (auto& pair : entities) {
 			Entity* entity = pair.b;
 
@@ -1457,31 +1455,31 @@ void TileWorld::drawGrid(Camera& camera, float z) {
 	//glLineWidth(2.f);
 
 	// setup model matrix
-	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(0,-z,0));
+	glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -z, 0));
 
 	// setup view matrix
 	const glm::mat4 viewMatrix = camera.getProjViewMatrix() * modelMatrix;
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/grid.json");
-	if( mat ) {
+	if (mat) {
 		ShaderProgram& shader = mat->getShader();
-		if( &shader != ShaderProgram::getCurrentShader() )
+		if (&shader != ShaderProgram::getCurrentShader())
 			shader.mount();
 
 		// upload uniform variables
-		glUniformMatrix4fv(shader.getUniformLocation("gView"),1,GL_FALSE,glm::value_ptr(viewMatrix));
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
 		// draw elements
 		glBindVertexArray(vao);
-		glDrawElements(GL_LINES, (width+1+height+1)*2, GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_LINES, (width + 1 + height + 1) * 2, GL_UNSIGNED_INT, NULL);
 		glBindVertexArray(0);
 	}
 }
 
 void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Chunk*>& chunkDrawList) {
 	Client* client = mainEngine->getLocalClient();
-	if( !client )
+	if (!client)
 		return;
 
 	// editor variables
@@ -1489,7 +1487,7 @@ void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights
 	bool ceilingMode = false;
 	Editor::editingmode_t editingMode = Editor::editingmode_t::TILES;
 	Uint32 highlightedObj = nuid;
-	if( client->isEditorActive() ) {
+	if (client->isEditorActive()) {
 		editorActive = true;
 		Editor* editor = client->getEditor();
 		ceilingMode = editor->isCeilingMode();
@@ -1497,75 +1495,75 @@ void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights
 		editingMode = static_cast<Editor::editingmode_t>(editor->getEditingMode());
 	}
 
-	if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
-		if( camera.getDrawMode() <= Camera::DRAW_GLOW ||
+	if (camera.getDrawMode() != Camera::DRAW_STENCIL) {
+		if (camera.getDrawMode() <= Camera::DRAW_GLOW ||
 			camera.getDrawMode() == Camera::DRAW_TRIANGLES ||
-			(camera.getDrawMode() == Camera::DRAW_SILHOUETTE && cvar_showEdges.toInt()) ) {
+			(camera.getDrawMode() == Camera::DRAW_SILHOUETTE && cvar_showEdges.toInt())) {
 			// draw editor selector cube things
-			if( camera.getDrawMode() != Camera::DRAW_DEPTH ) {
-				if( client->isEditorActive() && !camera.isOrtho() && showTools && selectedRect.x!=-1 && selectedRect.y!=-1 ) {
-					Sint32 startX = min( max( 0, selectedRect.x + min(0,selectedRect.w) ), (int)width );
-					Sint32 endX = min( max( 0, selectedRect.x + max(0,selectedRect.w) ), (int)width );
-					Sint32 startY = min( max( 0, selectedRect.y + min(0,selectedRect.h) ), (int)height );
-					Sint32 endY = min( max( 0, selectedRect.y + max(0,selectedRect.h) ), (int)height );
-					for( Sint32 x=startX; x<=endX; ++x ) {
-						for( Sint32 y=startY; y<=endY; ++y ) {
+			if (camera.getDrawMode() != Camera::DRAW_DEPTH) {
+				if (client->isEditorActive() && !camera.isOrtho() && showTools && selectedRect.x != -1 && selectedRect.y != -1) {
+					Sint32 startX = min(max(0, selectedRect.x + min(0, selectedRect.w)), (int)width);
+					Sint32 endX = min(max(0, selectedRect.x + max(0, selectedRect.w)), (int)width);
+					Sint32 startY = min(max(0, selectedRect.y + min(0, selectedRect.h)), (int)height);
+					Sint32 endY = min(max(0, selectedRect.y + max(0, selectedRect.h)), (int)height);
+					for (Sint32 x = startX; x <= endX; ++x) {
+						for (Sint32 y = startY; y <= endY; ++y) {
 							Tile& tile = tiles[y + x * height];
 
 							glm::vec3 pos;
-							pos.x = x*Tile::size + Tile::size/2;
-							pos.y = y*Tile::size + Tile::size/2;
-							if( ceilingMode ) {
+							pos.x = x * Tile::size + Tile::size / 2;
+							pos.y = y * Tile::size + Tile::size / 2;
+							if (ceilingMode) {
 								pos.z = tile.getCeilingHeight() + tile.getCeilingSlopeSize();
 							} else {
 								pos.z = tile.getFloorHeight();
 							}
-							glm::mat4 cubeM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
-							cubeM = glm::scale(cubeM,glm::vec3(Tile::size, 8.f, Tile::size));
+							glm::mat4 cubeM = glm::translate(glm::mat4(1.f), glm::vec3(pos.x, -pos.z, pos.y));
+							cubeM = glm::scale(cubeM, glm::vec3(Tile::size, 8.f, Tile::size));
 							glm::vec4 color = (editingMode == Editor::editingmode_t::TILES) ?
-								glm::vec4(0.f,0.f,1.f,.25f):
-								glm::vec4(1.f,0.f,1.f,.25f);
-							camera.drawCube(cubeM,color);
+								glm::vec4(0.f, 0.f, 1.f, .25f) :
+								glm::vec4(1.f, 0.f, 1.f, .25f);
+							camera.drawCube(cubeM, color);
 						}
 					}
 				}
 			}
 
 			// draw chunks
-			auto shader = Tile::loadShader(*this,camera,lights);
+			auto shader = Tile::loadShader(*this, camera, lights);
 			assert(shader);
-			for( auto chunk : chunkDrawList ) {
+			for (auto chunk : chunkDrawList) {
 				chunk->draw(camera, *shader);
 			}
 		}
 	}
-	
+
 	float offset = cvar_depthOffset.toFloat();
-	if( camera.getDrawMode() == Camera::DRAW_DEPTH && offset ) {
+	if (camera.getDrawMode() == Camera::DRAW_DEPTH && offset) {
 		glPolygonOffset(1.f, offset);
 		glEnable(GL_POLYGON_OFFSET_FILL);
 	}
 
 	// draw entities
-	if( camera.getDrawMode() != Camera::DRAW_STENCIL ) {
-		if( camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools ) {
-			for( auto chunk : chunkDrawList ) {
-				for( auto entity : chunk->getEPopulation() ) {
+	if (camera.getDrawMode() != Camera::DRAW_STENCIL) {
+		if (camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools) {
+			for (auto chunk : chunkDrawList) {
+				for (auto entity : chunk->getEPopulation()) {
 					// in silhouette mode, skip unhighlighted or unselected actors
-					if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
-						if( !entity->isHighlighted() && entity->getUID() != highlightedObj ) {
+					if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
+						if (!entity->isHighlighted() && entity->getUID() != highlightedObj) {
 							continue;
 						}
 					}
 
 					// draw the entity
-					entity->draw(camera,lights);
+					entity->draw(camera, lights);
 				}
 			}
 		}
 	}
 
-	if( camera.getDrawMode() == Camera::DRAW_DEPTH && offset ) {
+	if (camera.getDrawMode() == Camera::DRAW_DEPTH && offset) {
 		glPolygonOffset(1.f, 0.f);
 		glDisable(GL_POLYGON_OFFSET_FILL);
 	}
@@ -1578,10 +1576,10 @@ void TileWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights
 
 void TileWorld::draw() {
 	Client* client = mainEngine->getLocalClient();
-	if( !client )
+	if (!client)
 		return;
 	Renderer* renderer = client->getRenderer();
-	if( !renderer || !renderer->isInitialized() )
+	if (!renderer || !renderer->isInitialized())
 		return;
 	Editor* editor = client->getEditor();
 
@@ -1600,50 +1598,50 @@ void TileWorld::draw() {
 	}
 
 	// cull unselected cameras (editor)
-	if( editor && editor->isInitialized() ) {
+	if (editor && editor->isInitialized()) {
 		Node<Camera*>* nextNode = nullptr;
-		for( Node<Camera*>* node=cameras.getFirst(); node!=nullptr; node=nextNode ) {
+		for (Node<Camera*>* node = cameras.getFirst(); node != nullptr; node = nextNode) {
 			Camera* camera = node->getData();
 			nextNode = node->getNext();
 
 			// in editor, skip all but selected cams and the main cams
-			if( camera != editor->getEditingCamera() && 
+			if (camera != editor->getEditingCamera() &&
 				camera != editor->getMinimapCamera() &&
-				!camera->getEntity()->isSelected() ) {
+				!camera->getEntity()->isSelected()) {
 				cameras.removeNode(node);
 			}
 		}
 	}
-	
+
 	// iterate cameras
-	for( Node<Camera*>* node=cameras.getFirst(); node!=nullptr; node=node->getNext() ) {
+	for (Node<Camera*>* node = cameras.getFirst(); node != nullptr; node = node->getNext()) {
 		Camera* camera = node->getData();
 
 		// skip deactivated cameras
-		if( !camera->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || !camera->isEnabled() ) {
+		if (!camera->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || !camera->isEnabled()) {
 			continue;
 		}
 
 		// in editor, skip minimap if any other cameras are selected
 		// replace it with our selected camera(s)
 		Rect<Sint32> oldWin;
-		if( editor && editor->isInitialized() ) {
-			if( camera != editor->getEditingCamera() && 
-				camera != editor->getMinimapCamera() ) {
+		if (editor && editor->isInitialized()) {
+			if (camera != editor->getEditingCamera() &&
+				camera != editor->getMinimapCamera()) {
 				oldWin = camera->getWin();
 				camera->setWin(editor->getMinimapCamera()->getWin());
-			} else if( camera == editor->getMinimapCamera() && cameras.getSize() > 2 ) {
+			} else if (camera == editor->getMinimapCamera() && cameras.getSize() > 2) {
 				continue;
 			}
 		}
 
 		// skip cameras whose window is too small
-		if( camera->getWin().w <= 0 || camera->getWin().h <= 0 ) {
+		if (camera->getWin().w <= 0 || camera->getWin().h <= 0) {
 			continue;
 		}
 
 		// occlusion test
-		if( !camera->getChunksVisible() ) {
+		if (!camera->getChunksVisible()) {
 			camera->occlusionTest(camera->getClipFar(), cvar_renderCull.toInt());
 		}
 
@@ -1656,25 +1654,25 @@ void TileWorld::draw() {
 		// build relevant light list
 		// this could be done better
 		bool shadowsEnabled = (!client->isEditorActive() || !showTools) && !cvar_renderFullbright.toInt() && cvar_shadowsEnabled.toInt();
-		for( Node<Light*>* node=lights.getFirst(); node!=nullptr; node=node->getNext() ) {
+		for (Node<Light*>* node = lights.getFirst(); node != nullptr; node = node->getNext()) {
 			Light* light = node->getData();
 
 			light->setChosen(false);
 			light->getChunksLit().clear();
 
 			// don't render invisible lights
-			if (!light->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || light->getIntensity() <= 0.f || light->getRadius() <= 0.f || light->getArc() <= 0.f ) {
+			if (!light->getEntity()->isFlag(Entity::flag_t::FLAG_VISIBLE) || light->getIntensity() <= 0.f || light->getRadius() <= 0.f || light->getArc() <= 0.f) {
 				continue;
 			}
 
-			for( auto lightChunk : light->getVisibleChunks() ) {
+			for (auto lightChunk : light->getVisibleChunks()) {
 				Sint32 chunkX = lightChunk->getTile(0)->getX() / chunkSize;
 				Sint32 chunkY = lightChunk->getTile(0)->getY() / chunkSize;
 
 				// add to list of lit chunks
-				if( camera->getChunksVisible()[chunkY + chunkX * h] ) {
+				if (camera->getChunksVisible()[chunkY + chunkX * h]) {
 					light->getChunksLit().push(lightChunk);
-					if( !light->isChosen() ) {
+					if (!light->isChosen()) {
 						light->setChosen(true);
 						cameraLightList.push(light);
 						if (shadowsEnabled) {
@@ -1691,7 +1689,7 @@ void TileWorld::draw() {
 		// clear the window area
 		glClear(GL_DEPTH_BUFFER_BIT);
 		Rect<int> backgroundRect = camera->getWin();
-		renderer->drawRect(&backgroundRect,glm::vec4(0.f,0.f,0.f,1.f));
+		renderer->drawRect(&backgroundRect, glm::vec4(0.f, 0.f, 0.f, 1.f));
 
 		// set proper light blending function
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -1704,9 +1702,9 @@ void TileWorld::draw() {
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDrawBuffer(GL_NONE);
-		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+		drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 
-		if( (client->isEditorActive() && showTools) || cvar_renderFullbright.toInt() ) {
+		if ((client->isEditorActive() && showTools) || cvar_renderFullbright.toInt()) {
 			// render fullbright scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
 			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
@@ -1716,7 +1714,7 @@ void TileWorld::draw() {
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_GEQUAL);
-			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+			drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 		} else {
 			// render shadowed scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
@@ -1727,7 +1725,7 @@ void TileWorld::draw() {
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_GEQUAL);
-			drawSceneObjects(*camera,cameraLightList,camera->getVisibleChunks());
+			drawSceneObjects(*camera, cameraLightList, camera->getVisibleChunks());
 		}
 
 		// render scene with glow textures
@@ -1735,7 +1733,7 @@ void TileWorld::draw() {
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_GEQUAL);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
-		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+		drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 		glDrawBuffer(GL_COLOR_ATTACHMENT1);
 		drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 
@@ -1755,20 +1753,20 @@ void TileWorld::draw() {
 		}
 
 		// render triangle lines
-		if( cvar_showVerts.toInt() ) {
+		if (cvar_showVerts.toInt()) {
 			camera->setDrawMode(Camera::DRAW_TRIANGLES);
-			drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+			drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 		}
 
 		// render depth fail scene
 		camera->setDrawMode(Camera::DRAW_DEPTHFAIL);
 		glDepthFunc(GL_LESS);
-		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+		drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 		glDepthFunc(GL_GEQUAL);
 
 		// render silhouettes
 		camera->setDrawMode(Camera::DRAW_SILHOUETTE);
-		drawSceneObjects(*camera,ArrayList<Light*>(),camera->getVisibleChunks());
+		drawSceneObjects(*camera, ArrayList<Light*>(), camera->getVisibleChunks());
 
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);
@@ -1776,23 +1774,23 @@ void TileWorld::draw() {
 		glDisable(GL_STENCIL_TEST);
 
 		// draw editing grid
-		if( client->isEditorActive() && showTools && gridVisible ) {
-			if( camera->isOrtho() ) {
-				drawGrid(*camera,camera->getClipFar()-1.f);
+		if (client->isEditorActive() && showTools && gridVisible) {
+			if (camera->isOrtho()) {
+				drawGrid(*camera, camera->getClipFar() - 1.f);
 			} else {
-				if( client->getEditor()->getEditingMode() != Editor::ENTITIES ) {
+				if (client->getEditor()->getEditingMode() != Editor::ENTITIES) {
 					float z = pointerActive ? pointerPos.z : 0;
-					drawGrid(*camera,z);
+					drawGrid(*camera, z);
 				} else {
-					drawGrid(*camera,0.f);
+					drawGrid(*camera, 0.f);
 				}
 			}
 		}
 
 		// reset selected cam in editor
-		if( editor && editor->isInitialized() ) {
-			if( camera != editor->getEditingCamera() &&
-				camera != editor->getMinimapCamera() ) {
+		if (editor && editor->isInitialized()) {
+			if (camera != editor->getEditingCamera() &&
+				camera != editor->getMinimapCamera()) {
 				camera->setWin(oldWin);
 			}
 		}
@@ -1804,9 +1802,9 @@ void TileWorld::draw() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		int xres = renderer->getXres();
 		int yres = renderer->getYres();
-		glViewport( 0, 0, xres, yres );
-		glScissor( 0, 0, xres, yres );
-		glEnable( GL_SCISSOR_TEST );
+		glViewport(0, 0, xres, yres);
+		glScissor(0, 0, xres, yres);
+		glEnable(GL_SCISSOR_TEST);
 		ShaderProgram::unmount();
 
 		cameraLightList.clear();
@@ -1824,12 +1822,12 @@ void TileWorld::findExits() {
 	bool buildingExit = false;
 
 	// find north/south exits
-	for( Uint32 c = 0; c < 2; ++c ) {
-		for( Uint32 u = 0; u < width; ++u ) {
+	for (Uint32 c = 0; c < 2; ++c) {
+		for (Uint32 u = 0; u < width; ++u) {
 			Uint32 v = (c == 0) ? 0 : height - 1;
 			Tile& tile = tiles[v + u * height];
-			if( tile.hasVolume() ) {
-				if( buildingExit ) {
+			if (tile.hasVolume()) {
+				if (buildingExit) {
 					exit_t& exit = exits.getLast()->getData();
 					++exit.size.w;
 				} else {
@@ -1851,12 +1849,12 @@ void TileWorld::findExits() {
 
 	// find east/west exits
 	buildingExit = false;
-	for( Uint32 c = 0; c < 2; ++c ) {
-		for( Uint32 v = 0; v < height; ++v ) {
+	for (Uint32 c = 0; c < 2; ++c) {
+		for (Uint32 v = 0; v < height; ++v) {
 			Uint32 u = (c == 0) ? 0 : width - 1;
 			Tile& tile = tiles[v + u * height];
-			if( tile.hasVolume() ) {
-				if( buildingExit ) {
+			if (tile.hasVolume()) {
+				if (buildingExit) {
 					exit_t& exit = exits.getLast()->getData();
 					++exit.size.h;
 				} else {
@@ -1879,9 +1877,9 @@ void TileWorld::findExits() {
 
 void TileWorld::placeRoom(const TileWorld& world, Uint32 pickedExitIndex, Uint32 x, Uint32 y, Sint32 floorDiff) {
 	// copy tiles
-	for( Uint32 u = 0; u < world.getWidth(); ++u ) {
-		for( Uint32 v = 0; v < world.getHeight(); ++v ) {
-			Tile& tile0 = tiles[(v+y) + (u+x) * height];
+	for (Uint32 u = 0; u < world.getWidth(); ++u) {
+		for (Uint32 v = 0; v < world.getHeight(); ++v) {
+			Tile& tile0 = tiles[(v + y) + (u + x) * height];
 			const Tile& tile1 = world.getTiles()[v + u * world.getHeight()];
 			tile0 = tile1;
 			tile0.setFloorHeight(tile0.getFloorHeight() + floorDiff);
@@ -1891,9 +1889,9 @@ void TileWorld::placeRoom(const TileWorld& world, Uint32 pickedExitIndex, Uint32
 	}
 
 	// copy exits
-	for( const Node<exit_t>* node = world.getExits().getFirst(); node != nullptr; node = node->getNext() ) {
+	for (const Node<exit_t>* node = world.getExits().getFirst(); node != nullptr; node = node->getNext()) {
 		const exit_t& exit = node->getData();
-		if( exit.id == pickedExitIndex ) {
+		if (exit.id == pickedExitIndex) {
 			continue;
 		}
 		exit_t newExit = exit;

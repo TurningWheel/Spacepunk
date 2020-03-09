@@ -16,7 +16,7 @@ public:
 	// @param transform the transformation to apply to the cube
 	// @param color the cube's color
 	void draw(Camera& camera, const glm::mat4& transform, const glm::vec4& color);
-		
+
 private:
 	static const GLfloat vertices[72];
 	static const GLfloat texcoord[48];

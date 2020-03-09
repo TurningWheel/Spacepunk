@@ -16,7 +16,7 @@ Shader::Shader(const ArrayList<String>& _defines, shadertype_t _shaderType, cons
 }
 
 Shader::~Shader() {
-	if( shaderObject ) {
+	if (shaderObject) {
 		glDeleteShader(shaderObject);
 		shaderObject = 0;
 	}
@@ -24,13 +24,13 @@ Shader::~Shader() {
 
 bool Shader::init() {
 	// load shader source
-	int error=0;
-	if( (error=load()) != 0 ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load shader '%s': error code (%d)", name.get(), error);
+	int error = 0;
+	if ((error = load()) != 0) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load shader '%s': error code (%d)", name.get(), error);
 		return false;
 	}
-	if( (error=compile()) != 0 ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to compile shader '%s': error code (%d)", name.get(), error);
+	if ((error = compile()) != 0) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to compile shader '%s': error code (%d)", name.get(), error);
 		return false;
 	}
 	return true;
@@ -40,8 +40,8 @@ int Shader::load() {
 	FILE* fp;
 
 	// open file
-	fp = fopen(path.get(),"r");
-	if( fp==NULL )
+	fp = fopen(path.get(), "r");
+	if (fp == NULL)
 		return 1; // file not found
 	clearerr(fp);
 
@@ -57,27 +57,27 @@ int Shader::load() {
 
 	// determine length of file
 	Uint32 len = 0;
-	for( ; !feof(fp); ++len )
+	for (; !feof(fp); ++len)
 		fgetc(fp);
 
 	// reset to beginning of file
-	fseek(fp,0,SEEK_SET);
+	fseek(fp, 0, SEEK_SET);
 	clearerr(fp);
 
 	// error if empty file
-	if( len<=0 ) {
+	if (len <= 0) {
 		fclose(fp);
 		return 2; // empty file
 	}
 
 	// allocate memory for source
-	shaderSource.alloc(len+definesLength+1);
-	shaderSource[len+definesLength] = '\0';
+	shaderSource.alloc(len + definesLength + 1);
+	shaderSource[len + definesLength] = '\0';
 	int i = 0;
 
 	// read version directive from source
 	if (defines.getSize() > 0) {
-		for( ; !feof(fp); ++i ) {
+		for (; !feof(fp); ++i) {
 			GLchar c = (GLchar)fgetc(fp);
 			shaderSource[i] = c;
 			if (c == '\n') {
@@ -99,10 +99,10 @@ int Shader::load() {
 	}
 
 	// read rest of shader source
-	for( ; !feof(fp); ++i )
+	for (; !feof(fp); ++i)
 		shaderSource[i] = (GLchar)fgetc(fp);
 	shaderSource[i] = '\0';
-	shaderSource[i-1] = '\0';
+	shaderSource[i - 1] = '\0';
 
 	// store off final length
 	this->len = (GLint)shaderSource.getSize() - 1;
@@ -116,19 +116,19 @@ int Shader::compile() {
 	GLenum glShaderType = GL_GEOMETRY_SHADER;
 
 	// determine shader type
-	switch( shaderType ) {
-		case VERTEX:
-			glShaderType = GL_VERTEX_SHADER;
-			break;
-		case GEOMETRY:
-			glShaderType = GL_GEOMETRY_SHADER;
-			break;
-		case FRAGMENT:
-			glShaderType = GL_FRAGMENT_SHADER;
-			break;
-		default:
-			mainEngine->fmsg(Engine::MSG_ERROR,"attempted to load shader of invalid type: '%s'",name.get());
-			return 1;
+	switch (shaderType) {
+	case VERTEX:
+		glShaderType = GL_VERTEX_SHADER;
+		break;
+	case GEOMETRY:
+		glShaderType = GL_GEOMETRY_SHADER;
+		break;
+	case FRAGMENT:
+		glShaderType = GL_FRAGMENT_SHADER;
+		break;
+	default:
+		mainEngine->fmsg(Engine::MSG_ERROR, "attempted to load shader of invalid type: '%s'", name.get());
+		return 1;
 	}
 
 	// create shader object
@@ -140,22 +140,22 @@ int Shader::compile() {
 	GLint compiled;
 	glCompileShader(shaderObject);
 	glGetShaderiv(shaderObject, GL_COMPILE_STATUS, &compiled);
-	if( compiled ) {
+	if (compiled) {
 		// successfully compiled
-		mainEngine->fmsg(Engine::MSG_DEBUG,"compiled shader '%s'",name.get());
+		mainEngine->fmsg(Engine::MSG_DEBUG, "compiled shader '%s'", name.get());
 	} else {
 		// show error message
 		GLint blen = 0;
 		GLsizei slen = 0;
 
 		glGetShaderiv(shaderObject, GL_INFO_LOG_LENGTH, &blen);
-		if( blen > 1 ) {
-			GLchar* compilerLog = new GLchar[blen+1];
-			if( compilerLog ) {
+		if (blen > 1) {
+			GLchar* compilerLog = new GLchar[blen + 1];
+			if (compilerLog) {
 				compilerLog[blen] = 0;
 				glGetShaderInfoLog(shaderObject, blen, &slen, compilerLog);
 				compilerLog[blen] = 0;
-				mainEngine->fmsg(Engine::MSG_ERROR,"failed to compile shader '%s': %s",name.get(),compilerLog);
+				mainEngine->fmsg(Engine::MSG_ERROR, "failed to compile shader '%s': %s", name.get(), compilerLog);
 				delete[] compilerLog;
 			}
 		}

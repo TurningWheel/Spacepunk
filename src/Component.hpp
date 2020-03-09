@@ -447,11 +447,11 @@ public:
 	// @param list list to populate
 	template <typename T>
 	void findAllComponents(Component::type_t type, LinkedList<T*>& list) const {
-		for( Uint32 c = 0; c < components.getSize(); ++c ) {
-			if( components[c]->getType() == type ) {
+		for (Uint32 c = 0; c < components.getSize(); ++c) {
+			if (components[c]->getType() == type) {
 				list.addNodeLast(dynamic_cast<T*>(components[c]));
 			}
-			components[c]->findAllComponents(type,list);
+			components[c]->findAllComponents(type, list);
 		}
 	}
 
@@ -460,15 +460,15 @@ public:
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByName(const char* name) {
-		if( name == nullptr || strcmp(name,"")==0 ) {
+		if (name == nullptr || strcmp(name, "") == 0) {
 			return nullptr;
 		}
-		for( Uint32 c = 0; c < components.getSize(); ++c ) {
-			if( strcmp( components[c]->getName(), name ) == 0 ) {
+		for (Uint32 c = 0; c < components.getSize(); ++c) {
+			if (strcmp(components[c]->getName(), name) == 0) {
 				return static_cast<T*>(components[c]);
 			} else {
 				T* result = components[c]->findComponentByName<T>(name);
-				if( result ) {
+				if (result) {
 					return static_cast<T*>(result);
 				}
 			}
@@ -481,15 +481,15 @@ public:
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByUID(const Uint32 uid) {
-		if( uid == nuid ) {
+		if (uid == nuid) {
 			return nullptr;
 		}
-		for( Uint32 c = 0; c < components.getSize(); ++c ) {
-			if( components[c]->getUID() == uid ) {
+		for (Uint32 c = 0; c < components.getSize(); ++c) {
+			if (components[c]->getUID() == uid) {
 				return static_cast<T*>(components[c]);
 			} else {
 				T* result = components[c]->findComponentByUID<T>(uid);
-				if( result ) {
+				if (result) {
 					return static_cast<T*>(result);
 				}
 			}
@@ -534,7 +534,7 @@ public:
 	void copyComponents(Component& dest);
 
 	// clears the node pointing to us in the chunk we are occupying
-	void clearChunkNode() { if( chunkNode ) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
+	void clearChunkNode() { if (chunkNode) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
 
 	// clears the chunk nodes of all components
 	void clearAllChunkNodes();
@@ -583,38 +583,38 @@ public:
 	void unbindFromBone();
 
 	// getters & setters
-	virtual type_t					getType() const						{ return COMPONENT_BASIC; }
-	const Entity*					getEntity() const					{ return entity; }
-	Entity*							getEntity()							{ return entity; }
-	const Component*				getParent() const					{ return parent; }
-	Component*						getParent()							{ return parent; }
-	bool							isToBeDeleted() const				{ return toBeDeleted; }
-	bool							isEditorOnly() const				{ return editorOnly; }
-	bool							isUpdateNeeded() const				{ return updateNeeded; }
-	ArrayList<Component*>&			getComponents()						{ return components; }
-	Uint32							getUID() const						{ return uid; }
-	const char*						getName() const						{ return name.get(); }
-	const Vector&					getLocalPos() const					{ return lPos; }
-	const Quaternion&				getLocalAng() const					{ return lAng; }
-	const Vector&					getLocalScale() const				{ return lScale; }
-	const glm::mat4&				getLocalMat() const					{ return lMat; }
-	const Vector&					getGlobalPos() const				{ return gPos; }
-	const Quaternion&				getGlobalAng() const				{ return gAng; }
-	const Vector&					getGlobalScale() const				{ return gScale; }
-	const glm::mat4&				getGlobalMat() const				{ return gMat; }
-	bool							isCollapsed() const					{ return collapsed; }
-	const bool*						getTilesVisible() const				{ return tilesVisible; }
-	const bool*						getChunksVisible() const			{ return chunksVisible; }
-	const ArrayList<Chunk*>&		getVisibleChunks() const			{ return visibleChunks; }
-	const ArrayList<Attribute*>&	getAttributes() const				{ return attributes; }
+	virtual type_t					getType() const { return COMPONENT_BASIC; }
+	const Entity*					getEntity() const { return entity; }
+	Entity*							getEntity() { return entity; }
+	const Component*				getParent() const { return parent; }
+	Component*						getParent() { return parent; }
+	bool							isToBeDeleted() const { return toBeDeleted; }
+	bool							isEditorOnly() const { return editorOnly; }
+	bool							isUpdateNeeded() const { return updateNeeded; }
+	ArrayList<Component*>&			getComponents() { return components; }
+	Uint32							getUID() const { return uid; }
+	const char*						getName() const { return name.get(); }
+	const Vector&					getLocalPos() const { return lPos; }
+	const Quaternion&				getLocalAng() const { return lAng; }
+	const Vector&					getLocalScale() const { return lScale; }
+	const glm::mat4&				getLocalMat() const { return lMat; }
+	const Vector&					getGlobalPos() const { return gPos; }
+	const Quaternion&				getGlobalAng() const { return gAng; }
+	const Vector&					getGlobalScale() const { return gScale; }
+	const glm::mat4&				getGlobalMat() const { return gMat; }
+	bool							isCollapsed() const { return collapsed; }
+	const bool*						getTilesVisible() const { return tilesVisible; }
+	const bool*						getChunksVisible() const { return chunksVisible; }
+	const ArrayList<Chunk*>&		getVisibleChunks() const { return visibleChunks; }
+	const ArrayList<Attribute*>&	getAttributes() const { return attributes; }
 
-	void				setEditorOnly(bool _editorOnly)			{ editorOnly = _editorOnly; }
-	void				setName(const char* _name)				{ name = _name; }
-	void				setLocalPos(const Vector& _pos)			{ lPos = _pos; updateNeeded = true; }
-	void				setLocalAng(const Quaternion& _ang)		{ lAng = _ang; updateNeeded = true; }
-	void				setLocalScale(const Vector& _scale)		{ lScale = _scale; updateNeeded = true; }
+	void				setEditorOnly(bool _editorOnly) { editorOnly = _editorOnly; }
+	void				setName(const char* _name) { name = _name; }
+	void				setLocalPos(const Vector& _pos) { lPos = _pos; updateNeeded = true; }
+	void				setLocalAng(const Quaternion& _ang) { lAng = _ang; updateNeeded = true; }
+	void				setLocalScale(const Vector& _scale) { lScale = _scale; updateNeeded = true; }
 	void				setLocalMat(const glm::mat4& _mat);
-	void				setCollapsed(bool _collapsed)			{ collapsed = _collapsed; }
+	void				setCollapsed(bool _collapsed) { collapsed = _collapsed; }
 
 	Component& operator=(const Component& src) {
 		toBeDeleted = src.toBeDeleted;

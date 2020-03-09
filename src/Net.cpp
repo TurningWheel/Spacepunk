@@ -46,16 +46,16 @@ void Net::unlockThread() {
 }
 
 void Net::update() {
-	for( Uint32 remoteIndex = 0; remoteIndex < remotes.getSize(); ++remoteIndex ) {
+	for (Uint32 remoteIndex = 0; remoteIndex < remotes.getSize(); ++remoteIndex) {
 		remote_t* remote = remotes[remoteIndex];
 
-		for( Uint32 c = 0; c < remote->resendStack.getSize(); ++c ) {
+		for (Uint32 c = 0; c < remote->resendStack.getSize(); ++c) {
 			safepacket_t* safepacket = remote->resendStack[c];
 
-			if( SDL_GetTicks() - safepacket->lastTimeSent >= msBeforeResend ) {
-				if( sendPacket(remote->id,safepacket->packet) ) {
+			if (SDL_GetTicks() - safepacket->lastTimeSent >= msBeforeResend) {
+				if (sendPacket(remote->id, safepacket->packet)) {
 					++safepacket->resends;
-					if( safepacket->resends >= maxPacketRetries ) {
+					if (safepacket->resends >= maxPacketRetries) {
 						remote->resendStack.remove(c);
 						delete safepacket;
 						--c;
@@ -69,9 +69,9 @@ void Net::update() {
 }
 
 Uint32 Net::getRemoteWithID(const Uint32 remoteID) {
-	for( Uint32 c = 0; c < remotes.getSize(); ++c ) {
+	for (Uint32 c = 0; c < remotes.getSize(); ++c) {
 		remote_t* remote = remotes[c];
-		if( remote->id == remoteID ) {
+		if (remote->id == remoteID) {
 			return c;
 		}
 	}
@@ -80,9 +80,9 @@ Uint32 Net::getRemoteWithID(const Uint32 remoteID) {
 }
 
 Uint32 Net::getRemoteWithID(const Uint32 remoteID) const {
-	for( Uint32 c = 0; c < remotes.getSize(); ++c ) {
+	for (Uint32 c = 0; c < remotes.getSize(); ++c) {
 		const remote_t* remote = remotes[c];
-		if( remote->id == remoteID ) {
+		if (remote->id == remoteID) {
 			return c;
 		}
 	}
@@ -91,8 +91,8 @@ Uint32 Net::getRemoteWithID(const Uint32 remoteID) const {
 }
 
 static int console_join(int argc, const char** argv) {
-	if( argc < 1 ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"A remote address is needed. ex: join localhost");
+	if (argc < 1) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A remote address is needed. ex: join localhost");
 		return 1;
 	}
 	mainEngine->joinServer(argv[0]);
@@ -100,13 +100,13 @@ static int console_join(int argc, const char** argv) {
 }
 
 static int console_say(int argc, const char** argv) {
-	if( argc < 1 ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"A message is needed. ex: say Hello World!");
+	if (argc < 1) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A message is needed. ex: say Hello World!");
 		return 1;
 	}
 	mainEngine->chat(argv[0]);
 	return 0;
 }
 
-static Ccmd ccmd_join("join","connects to a remote server",&console_join);
-static Ccmd ccmd_say("say","transmit a chat message to the remote server",&console_say);
+static Ccmd ccmd_join("join", "connects to a remote server", &console_join);
+static Ccmd ccmd_say("say", "transmit a chat message to the remote server", &console_say);

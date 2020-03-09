@@ -25,17 +25,17 @@ public:
 	}
 
 	virtual ~ArrayList() {
-		if( arr ) {
+		if (arr) {
 			delete[] arr;
 			arr = nullptr;
 		}
 	}
 
 	// getters & setters
-	const T*		getArray() const		{ return arr; }
-	T*				getArray()				{ return arr; }
-	Uint32			getSize() const			{ return size; }
-	Uint32			getMaxSize() const		{ return maxSize; }
+	const T*		getArray() const { return arr; }
+	T*				getArray() { return arr; }
+	Uint32			getSize() const { return size; }
+	Uint32			getMaxSize() const { return maxSize; }
 
 	// @return true if list is empty
 	bool empty() const {
@@ -109,17 +109,17 @@ public:
 	// @return *this
 	virtual ArrayList& alloc(Uint32 len) {
 		maxSize = len;
-		Uint32 newSize = std::min( maxSize, size );
+		Uint32 newSize = std::min(maxSize, size);
 		T* newArr = nullptr;
-		if( len ) {
+		if (len) {
 			newArr = new T[len];
 			assert(newArr);
 			Uint32 copyLen = min(size, len);
-			for( Uint32 c = 0; c < copyLen; ++c ) {
+			for (Uint32 c = 0; c < copyLen; ++c) {
 				newArr[c] = std::move(arr[c]);
 			}
 		}
-		if( arr ) {
+		if (arr) {
 			delete[] arr;
 			arr = nullptr;
 		}
@@ -132,11 +132,11 @@ public:
 	// @param len number of elements to size the list for
 	// @return *this
 	ArrayList& resize(Uint32 len) {
-		if( len > maxSize ) {
+		if (len > maxSize) {
 			alloc(len);
 		}
-		if( len > size ) {
-			for( Uint32 c = size; c < len; ++c ) {
+		if (len > size) {
+			for (Uint32 c = size; c < len; ++c) {
 				arr[c] = T();
 			}
 		}
@@ -157,7 +157,7 @@ public:
 	ArrayList& copy(const ArrayList& src) {
 		alloc(src.getSize());
 		size = src.getSize();
-		for( Uint32 c = 0; c < src.getSize(); ++c ) {
+		for (Uint32 c = 0; c < src.getSize(); ++c) {
 			arr[c] = src[c];
 		}
 		return *this;
@@ -171,7 +171,7 @@ public:
 		size = static_cast<Uint32>(src.size());
 		const T* it;
 		Uint32 c;
-		for( c = 0, it = std::begin(src); it != std::end(src); ++it, ++c ) {
+		for (c = 0, it = std::begin(src); it != std::end(src); ++it, ++c) {
 			arr[c] = *it;
 		}
 		return *this;
@@ -196,11 +196,11 @@ public:
 	// push a value onto the list
 	// @param val the value to push
 	void push(const T& val) {
-		if( size==maxSize ) {
-			alloc(std::max((unsigned int)size*2U, 4U));
+		if (size == maxSize) {
+			alloc(std::max((unsigned int)size * 2U, 4U));
 		}
 		++size;
-		arr[size-1] = std::move(val);
+		arr[size - 1] = std::move(val);
 	}
 
 	// insert a value into the list
@@ -208,11 +208,11 @@ public:
 	// @param pos the index to displace (move to the end of the list)
 	void insert(const T& val, Uint32 pos) {
 		assert(pos <= size);
-		if( size==maxSize ) {
-			alloc(std::max((unsigned int)size*2U, 4U));
+		if (size == maxSize) {
+			alloc(std::max((unsigned int)size * 2U, 4U));
 		}
 		++size;
-		arr[size-1] = arr[pos];
+		arr[size - 1] = arr[pos];
 		arr[pos] = val;
 	}
 
@@ -221,12 +221,12 @@ public:
 	// @param pos the index to displace (move all elements starting here 1 index forward)
 	void insertAndRearrange(const T& val, Uint32 pos) {
 		assert(pos <= size);
-		if( size==maxSize ) {
-			alloc(std::max((unsigned int)size*2U, 4U));
+		if (size == maxSize) {
+			alloc(std::max((unsigned int)size * 2U, 4U));
 		}
 		++size;
-		for( Uint32 c = size-1; c > pos; --c ) {
-			arr[c] = arr[c-1];
+		for (Uint32 c = size - 1; c > pos; --c) {
+			arr[c] = arr[c - 1];
 		}
 		arr[pos] = val;
 	}
@@ -243,14 +243,14 @@ public:
 	// @return the element
 	const T& peek() const {
 		assert(size > 0);
-		return arr[size-1];
+		return arr[size - 1];
 	}
 
 	// returns the last element in the list without removing it
 	// @return the element
 	T& peek() {
 		assert(size > 0);
-		return arr[size-1];
+		return arr[size - 1];
 	}
 
 	// removes and returns an element from the list without moving the rest of the list
@@ -272,8 +272,8 @@ public:
 		T result = arr[pos];
 
 		Uint32 newSize = size - 1;
-		for( Uint32 c = pos; c < newSize; ++c ) {
-			arr[c] = arr[c+1];
+		for (Uint32 c = pos; c < newSize; ++c) {
+			arr[c] = arr[c + 1];
 		}
 
 		--size;
@@ -367,15 +367,15 @@ public:
 		typedef const T& (ArrayList<T>::*PeekConstFn)() const;
 		PeekConstFn peekConst = static_cast<PeekConstFn>(&ArrayList<T>::peek);
 
-		typedef T (ArrayList<T>::*GetFn)(int);
+		typedef T(ArrayList<T>::*GetFn)(int);
 		GetFn get = static_cast<GetFn>(&ArrayList<T>::get);
 
-		typedef const T (ArrayList<T>::*GetConstFn)(int) const;
+		typedef const T(ArrayList<T>::*GetConstFn)(int) const;
 		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
 
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<ArrayList<T>>(name)
-			.addConstructor<void (*)()>()
+			.addConstructor<void(*)()>()
 			.addFunction("getArray", getArray)
 			.addFunction("getArrayConst", getArrayConst)
 			.addFunction("getSize", &ArrayList<T>::getSize)
@@ -395,7 +395,7 @@ public:
 			.addFunction("get", get)
 			.addFunction("getConst", getConst)
 			.endClass()
-		;
+			;
 	}
 
 protected:
@@ -498,17 +498,17 @@ public:
 	// @return *this
 	virtual ArrayList& alloc(Uint32 len) override {
 		maxSize = len;
-		Uint32 newSize = std::min( maxSize, size );
+		Uint32 newSize = std::min(maxSize, size);
 		T* newArr = nullptr;
-		if( len ) {
+		if (len) {
 			newArr = new T[len];
 			assert(newArr);
 			Uint32 copyLen = min(size, len);
-			for( Uint32 c = 0; c < copyLen; ++c ) {
+			for (Uint32 c = 0; c < copyLen; ++c) {
 				newArr[c] = std::move(this->arr[c]);
 			}
 		}
-		if( this->arr ) {
+		if (this->arr) {
 			if (this->arr != defaultArr) {
 				delete[] this->arr;
 			}

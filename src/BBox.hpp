@@ -82,7 +82,7 @@ public:
 
 	// updates matrices and rigid body
 	virtual void update() override;
-		
+
 	// draws the component
 	// @param camera the camera through which to draw the component
 	// @param light the light by which the component should be illuminated (or nullptr for no illumination)
@@ -97,15 +97,15 @@ public:
 	virtual void serialize(FileInterface* file) override;
 
 	// getters & setters
-	virtual type_t					getType() const override		{ return COMPONENT_BBOX; }
-	shape_t							getShape() const				{ return shape; }
-	bool							isEnabled() const				{ return enabled; }
-	float							getMass() const					{ return mass; }
-	const btCollisionShape*			getCollisionShapePtr() const	{ return collisionShapePtr; }
+	virtual type_t					getType() const override { return COMPONENT_BBOX; }
+	shape_t							getShape() const { return shape; }
+	bool							isEnabled() const { return enabled; }
+	float							getMass() const { return mass; }
+	const btCollisionShape*			getCollisionShapePtr() const { return collisionShapePtr; }
 
-	void		setShape(Uint32 _shape)				{ shape = (shape_t)_shape; dirty = true; updateNeeded = true; }
-	void		setEnabled(bool _enabled)			{ enabled = _enabled; dirty = true; updateNeeded = true; }
-	void		setMass(float _mass)				{ mass = _mass; dirty = true; updateNeeded = true; }
+	void		setShape(Uint32 _shape) { shape = (shape_t)_shape; dirty = true; updateNeeded = true; }
+	void		setEnabled(bool _enabled) { enabled = _enabled; dirty = true; updateNeeded = true; }
+	void		setMass(float _mass) { mass = _mass; dirty = true; updateNeeded = true; }
 
 	BBox& operator=(const BBox& src) {
 		enabled = src.enabled;

@@ -200,8 +200,8 @@ public:
 		}
 
 		// getters & setters
-		const ArrayList<param_t*>&		getList() const		{ return list; }
-		const Uint32					getSize() const		{ return list.getSize(); }
+		const ArrayList<param_t*>&		getList() const { return list; }
+		const Uint32					getSize() const { return list.getSize(); }
 
 		// push all args onto the lua stack
 		// @param lua the lua stack to push args into
@@ -214,7 +214,7 @@ public:
 				delete list.pop();
 			}
 		}
-		
+
 		// add a bool to the args list
 		// @param value the value to init with
 		void addBool(const bool value) {
@@ -283,9 +283,9 @@ private:
 	Client* client = nullptr;
 	Editor* editor = nullptr;
 	Server* server = nullptr;
-	World*  world  = nullptr;
+	World*  world = nullptr;
 	Entity* entity = nullptr;
-	Frame*  frame  = nullptr;
+	Frame*  frame = nullptr;
 
 	// script filename
 	String filename;

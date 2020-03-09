@@ -182,8 +182,7 @@ void BasicWorld::draw() {
 				camera != editor->getMinimapCamera()) {
 				oldWin = camera->getWin();
 				camera->setWin(editor->getMinimapCamera()->getWin());
-			}
-			else if (camera == editor->getMinimapCamera() && cameras.getSize() > 2) {
+			} else if (camera == editor->getMinimapCamera() && cameras.getSize() > 2) {
 				continue;
 			}
 		}
@@ -249,8 +248,7 @@ void BasicWorld::draw() {
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_GEQUAL);
 			drawSceneObjects(*camera, ArrayList<Light*>());
-		}
-		else {
+		} else {
 			// render shadowed scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
 			static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
@@ -282,8 +280,7 @@ void BasicWorld::draw() {
 				glm::vec4 color = laser.color;
 				color.a *= laser.life / laser.maxLife;
 				camera->drawLaser(laser.size, laser.start, laser.end, color);
-			}
-			else {
+			} else {
 				camera->drawLaser(laser.size, laser.start, laser.end, laser.color);
 			}
 		}
@@ -394,8 +391,7 @@ void BasicWorld::createGrid() {
 			colors[x * 8 + 5] = color.g;
 			colors[x * 8 + 6] = color.b;
 			colors[x * 8 + 7] = color.a;
-		}
-		else {
+		} else {
 			colors[x * 8] = highlightColor.r;
 			colors[x * 8 + 1] = highlightColor.g;
 			colors[x * 8 + 2] = highlightColor.b;
@@ -423,8 +419,7 @@ void BasicWorld::createGrid() {
 			colors[(gridWidth + 1) * 8 + y * 8 + 5] = color.g;
 			colors[(gridWidth + 1) * 8 + y * 8 + 6] = color.b;
 			colors[(gridWidth + 1) * 8 + y * 8 + 7] = color.a;
-		}
-		else {
+		} else {
 			colors[(gridWidth + 1) * 8 + y * 8] = highlightColor.r;
 			colors[(gridWidth + 1) * 8 + y * 8 + 1] = highlightColor.g;
 			colors[(gridWidth + 1) * 8 + y * 8 + 2] = highlightColor.b;
@@ -492,7 +487,7 @@ void BasicWorld::drawGrid(Camera& camera) {
 
 		// upload uniform variables
 		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
-		glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+		glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
 		glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
 
 		// draw elements
@@ -517,15 +512,13 @@ bool BasicWorld::saveFile(const char* _filename, bool updateFilename) {
 	}
 	if (_filename == nullptr || _filename[0] == '\0') {
 		mainEngine->fmsg(Engine::MSG_INFO, "saving world file '%s'...", shortname.get());
-	}
-	else {
+	} else {
 		mainEngine->fmsg(Engine::MSG_INFO, "saving world file '%s'...", _filename);
 	}
 
 	if (filetype == FILE_BINARY) {
 		return FileHelper::writeObject(path.get(), EFileFormat::Binary, *this);
-	}
-	else {
+	} else {
 		return FileHelper::writeObject(path.get(), EFileFormat::Json, *this);
 	}
 }
@@ -547,8 +540,7 @@ void BasicWorld::serialize(FileInterface * file) {
 		}
 
 		file->endArray();
-	}
-	else {
+	} else {
 		// write number of entities
 		Uint32 numEntities = 0;
 		for (auto pair : entities) {

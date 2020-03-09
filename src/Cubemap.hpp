@@ -16,8 +16,8 @@ public:
 	virtual void serialize(FileInterface * file) override;
 
 	// getters & setters
-	virtual const type_t	getType() const		{ return ASSET_CUBEMAP; }
-	const GLuint			getTexID() const	{ return texid; }
+	virtual const type_t	getType() const { return ASSET_CUBEMAP; }
+	const GLuint			getTexID() const { return texid; }
 
 private:
 	GLuint texid = 0;

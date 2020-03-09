@@ -37,9 +37,9 @@ int Script::load(const char* _filename) {
 	filename = mainEngine->buildPath(_filename);
 
 	int result = luaL_dofile(lua, filename.get());
-	if( result ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load script '%s':", filename.get());
-		mainEngine->fmsg(Engine::MSG_ERROR," %s", lua_tostring(lua, -1));
+	if (result) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load script '%s':", filename.get());
+		mainEngine->fmsg(Engine::MSG_ERROR, " %s", lua_tostring(lua, -1));
 		broken = true;
 		return 1;
 	} else {
@@ -63,8 +63,8 @@ int Script::dispatch(const char* function, Args* args) {
 
 	int status = lua_pcall(lua, (int)numArgs, 0, 0);
 	if (status) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"script error in '%s' (dispatch '%s'):", filename.get(), function);
-		mainEngine->fmsg(Engine::MSG_ERROR," %s", lua_tostring(lua, -1));
+		mainEngine->fmsg(Engine::MSG_ERROR, "script error in '%s' (dispatch '%s'):", filename.get(), function);
+		mainEngine->fmsg(Engine::MSG_ERROR, " %s", lua_tostring(lua, -1));
 		broken = true;
 		return -2;
 	}
@@ -137,7 +137,7 @@ Script::Script(Frame& _frame) {
 	// expose functions
 	exposeEngine();
 	exposeClient();
-	if( client->getEditor() ) {
+	if (client->getEditor()) {
 		exposeEditor(*client->getEditor());
 		exposeEntity();
 	}
@@ -146,7 +146,7 @@ Script::Script(Frame& _frame) {
 }
 
 Script::~Script() {
-	if ( lua ) {
+	if (lua) {
 		lua_close(lua);
 		lua = nullptr;
 	}
@@ -187,11 +187,11 @@ void Script::exposeEngine() {
 		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
 		.addStaticFunction("strcmp", &Engine::strCompare)
 		.endClass()
-	;
+		;
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Input>("Input")
-		.addConstructor<void (*)()>()
+		.addConstructor<void(*)()>()
 		.addFunction("analog", &Input::analog)
 		.addFunction("binary", &Input::binary)
 		.addFunction("binaryToggle", &Input::binaryToggle)
@@ -203,11 +203,11 @@ void Script::exposeEngine() {
 		.addFunction("isInverted", &Input::isInverted)
 		.addFunction("setInverted", &Input::setInverted)
 		.endClass()
-	;
+		;
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Script::Args>("ScriptArgs")
-		.addConstructor<void (*)()>()
+		.addConstructor<void(*)()>()
 		.addFunction("getSize", &Script::Args::getSize)
 		.addFunction("addBool", &Script::Args::addBool)
 		.addFunction("addInt", &Script::Args::addInt)
@@ -216,14 +216,14 @@ void Script::exposeEngine() {
 		.addFunction("addPointer", &Script::Args::addPointer)
 		.addFunction("addNil", &Script::Args::addNil)
 		.endClass()
-	;
+		;
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<glm::mat4>("matrix4x4")
 		.endClass()
-	;
+		;
 
-	if( engine ) {
+	if (engine) {
 		luabridge::push(lua, engine);
 		lua_setglobal(lua, "engine");
 	}
@@ -262,24 +262,24 @@ void Script::exposeFrame() {
 		.addFunction("findEntry", &Frame::findEntry)
 		.addFunction("findFrame", &Frame::findFrame)
 		.endClass()
-	;
+		;
 
-	if( frame ) {
+	if (frame) {
 		luabridge::push(lua, frame);
 		lua_setglobal(lua, "frame");
 	}
 }
 
 void Script::exposeString() {
-	typedef Uint32 (String::*FindFn)(const char*, Uint32) const;
+	typedef Uint32(String::*FindFn)(const char*, Uint32) const;
 	FindFn find = static_cast<FindFn>(&String::find);
 
-	typedef Uint32 (String::*FindCharFn)(const char, Uint32) const;
+	typedef Uint32(String::*FindCharFn)(const char, Uint32) const;
 	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<String>("String")
-		.addConstructor<void (*) (const char*)>()
+		.addConstructor<void(*) (const char*)>()
 		.addFunction("get", &String::get)
 		.addFunction("getSize", &String::getSize)
 		.addFunction("alloc", &String::alloc)
@@ -293,7 +293,7 @@ void Script::exposeString() {
 		.addFunction("toInt", &String::toInt)
 		.addFunction("toFloat", &String::toFloat)
 		.endClass()
-	;
+		;
 
 	LinkedList<String>::exposeToScript(lua, "LinkedListString", "NodeString");
 	LinkedList<String*>::exposeToScript(lua, "LinkedListStringPtr", "NodeStringPtr");
@@ -304,7 +304,7 @@ void Script::exposeString() {
 void Script::exposeAngle() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Rotation>("Rotation")
-		.addConstructor<void (*) (float, float, float)>()
+		.addConstructor<void(*) (float, float, float)>()
 		.addData("yaw", &Rotation::yaw, true)
 		.addData("pitch", &Rotation::pitch, true)
 		.addData("roll", &Rotation::roll, true)
@@ -317,7 +317,7 @@ void Script::exposeAngle() {
 		.addFunction("wrapAngles", &Rotation::wrapAngles)
 		.addFunction("toVector", &Rotation::toVector)
 		.endClass()
-	;
+		;
 
 	LinkedList<Rotation>::exposeToScript(lua, "LinkedListRotation", "NodeRotation");
 	LinkedList<Rotation*>::exposeToScript(lua, "LinkedListRotationPtr", "NodeRotationPtr");
@@ -326,7 +326,7 @@ void Script::exposeAngle() {
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Quaternion>("Quaternion")
-		.addConstructor<void (*) (float, float, float, float)>()
+		.addConstructor<void(*) (float, float, float, float)>()
 		.addData("x", &Quaternion::x, true)
 		.addData("y", &Quaternion::y, true)
 		.addData("z", &Quaternion::z, true)
@@ -338,7 +338,7 @@ void Script::exposeAngle() {
 		.addFunction("slerp", &Quaternion::slerp)
 		.addFunction("mul", &Quaternion::mul)
 		.endClass()
-	;
+		;
 
 	LinkedList<Quaternion>::exposeToScript(lua, "LinkedListQuaternion", "NodeQuaternion");
 	LinkedList<Quaternion*>::exposeToScript(lua, "LinkedListQuaternionPtr", "NodeQuaternionPtr");
@@ -349,7 +349,7 @@ void Script::exposeAngle() {
 void Script::exposeVector() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Vector>("Vector")
-		.addConstructor<void (*) (float, float, float)>()
+		.addConstructor<void(*) (float, float, float)>()
 		.addData("x", &Vector::x, true)
 		.addData("y", &Vector::y, true)
 		.addData("z", &Vector::z, true)
@@ -364,7 +364,7 @@ void Script::exposeVector() {
 		.addFunction("normal", &Vector::normal)
 		.addFunction("normalize", &Vector::normalize)
 		.endClass()
-	;
+		;
 
 	LinkedList<Vector>::exposeToScript(lua, "LinkedListVector", "NodeVector");
 	LinkedList<Vector*>::exposeToScript(lua, "LinkedListVectorPtr", "NodeVectorPtr");
@@ -373,7 +373,7 @@ void Script::exposeVector() {
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<WideVector>("WideVector")
-		.addConstructor<void (*) (float, float, float, float)>()
+		.addConstructor<void(*) (float, float, float, float)>()
 		.addData("x", (float WideVector::*)&WideVector::x, true)
 		.addData("y", (float WideVector::*)&WideVector::y, true)
 		.addData("z", (float WideVector::*)&WideVector::z, true)
@@ -390,7 +390,7 @@ void Script::exposeVector() {
 		.addFunction("normal", &WideVector::normal)
 		.addFunction("normalize", &WideVector::normalize)
 		.endClass()
-	;
+		;
 
 	LinkedList<WideVector>::exposeToScript(lua, "LinkedListWideVector", "NodeWideVector");
 	LinkedList<WideVector*>::exposeToScript(lua, "LinkedListWideVectorPtr", "NodeWideVectorPtr");
@@ -406,7 +406,7 @@ void Script::exposeGame() {
 		.addFunction("loadWorld", &Game::loadWorld)
 		.addFunction("closeAllWorlds", &Game::closeAllWorlds)
 		.endClass()
-	;
+		;
 }
 
 void Script::exposeClient() {
@@ -420,9 +420,9 @@ void Script::exposeClient() {
 		.addFunction("getGUI", &Client::getGUI)
 		.addFunction("startEditor", &Client::startEditor)
 		.endClass()
-	;
+		;
 
-	if( client ) {
+	if (client) {
 		luabridge::push(lua, client);
 		lua_setglobal(lua, "client");
 	}
@@ -482,7 +482,7 @@ void Script::exposeEditor(Editor& _editor) {
 		.addFunction("playSound", &Editor::playSound)
 		.addFunction("optimizeChunks", &Editor::optimizeChunks)
 		.endClass()
-	;
+		;
 
 	editor = &_editor;
 	luabridge::push(lua, editor);
@@ -495,9 +495,9 @@ void Script::exposeServer() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Server, Game>("Server")
 		.endClass()
-	;
+		;
 
-	if( server ) {
+	if (server) {
 		luabridge::push(lua, server);
 		lua_setglobal(lua, "server");
 	}
@@ -526,9 +526,9 @@ void Script::exposeWorld() {
 		.addFunction("generateDungeon", &World::generateDungeon)
 		.addFunction("spawnEntity", &World::spawnEntity)
 		.endClass()
-	;
+		;
 
-	if( world ) {
+	if (world) {
 		luabridge::push(lua, world);
 		lua_setglobal(lua, "world");
 	}
@@ -632,7 +632,7 @@ void Script::exposeEntity() {
 		.addFunction("nearestCeiling", &Entity::nearestCeiling)
 		.addFunction("nearestFloor", &Entity::nearestFloor)
 		.endClass()
-	;
+		;
 
 	// expose components
 	exposeComponent();
@@ -644,7 +644,7 @@ void Script::exposeEntity() {
 	exposeCharacter();
 	exposeMultimesh();
 
-	if( entity ) {
+	if (entity) {
 		luabridge::push(lua, entity);
 		lua_setglobal(lua, "entity");
 	}
@@ -715,7 +715,7 @@ void Script::exposeComponent() {
 		.addFunction("bindToBone", &Component::bindToBone)
 		.addFunction("unbindFromBone", &Component::unbindFromBone)
 		.endClass()
-	;
+		;
 
 	LinkedList<Component*>::exposeToScript(lua, "LinkedListComponentPtr", "NodeComponentPtr");
 	ArrayList<Component*>::exposeToScript(lua, "ArrayListComponentPtr");
@@ -733,7 +733,7 @@ void Script::exposeBBox() {
 		.addFunction("findAllOverlappingEntities", &BBox::findAllOverlappingEntities)
 		.addFunction("createRigidBody", &BBox::createRigidBody)
 		.endClass()
-	;
+		;
 
 	LinkedList<BBox*>::exposeToScript(lua, "LinkedListBBoxPtr", "NodeBBoxPtr");
 	ArrayList<BBox*>::exposeToScript(lua, "ArrayListBBoxPtr");
@@ -765,7 +765,7 @@ void Script::exposeModel() {
 		.addFunction("getCurrentAnimation", &Model::getCurrentAnimation)
 		.addFunction("getPreviousAnimation", &Model::getPreviousAnimation)
 		.endClass()
-	;
+		;
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<AnimationState>("AnimationState")
@@ -787,7 +787,7 @@ void Script::exposeModel() {
 		.addFunction("setWeightRates", &AnimationState::setWeightRates)
 		.addFunction("clearWeights", &AnimationState::clearWeights)
 		.endClass()
-	;
+		;
 
 	LinkedList<Model*>::exposeToScript(lua, "LinkedListModelPtr", "NodeModelPtr");
 	ArrayList<Model*>::exposeToScript(lua, "ArrayListModelPtr");
@@ -808,7 +808,7 @@ void Script::exposeLight() {
 		.addFunction("setArc", &Light::setArc)
 		.addFunction("setShadow", &Light::setShadow)
 		.endClass()
-	;
+		;
 
 	LinkedList<Light*>::exposeToScript(lua, "LinkedListLightPtr", "NodeLightPtr");
 	ArrayList<Light*>::exposeToScript(lua, "ArrayListLightPtr");
@@ -831,7 +831,7 @@ void Script::exposeCamera() {
 		.addFunction("setFov", &Camera::setFov)
 		.addFunction("setOrtho", &Camera::setOrtho)
 		.endClass()
-	;
+		;
 
 	LinkedList<Camera*>::exposeToScript(lua, "LinkedListCameraPtr", "NodeCameraPtr");
 	ArrayList<Camera*>::exposeToScript(lua, "ArrayListCameraPtr");
@@ -848,7 +848,7 @@ void Script::exposeSpeaker() {
 		.addFunction("isDefaultLoop", &Speaker::isDefaultLoop)
 		.addFunction("isPlaying", &Speaker::isPlaying)
 		.endClass()
-	;
+		;
 
 	LinkedList<Speaker*>::exposeToScript(lua, "LinkedListSpeakerPtr", "NodeSpeakerPtr");
 	ArrayList<Speaker*>::exposeToScript(lua, "ArrayListSpeakerPtr");
@@ -892,7 +892,7 @@ void Script::exposeCharacter() {
 		.addFunction("setCharisma", &Character::setCharisma)
 		.addFunction("setLuck", &Character::setLuck)
 		.endClass()
-	;
+		;
 
 	LinkedList<Character*>::exposeToScript(lua, "LinkedListCharacterPtr", "NodeCharacterPtr");
 	ArrayList<Character*>::exposeToScript(lua, "ArrayListCharacterPtr");
@@ -912,7 +912,7 @@ void Script::exposeMultimesh() {
 		.addFunction("setDepthFailMat", &Model::setDepthFailMat)
 		.addFunction("setShaderVars", &Model::setShaderVars)
 		.endClass()
-	;
+		;
 
 	LinkedList<Multimesh*>::exposeToScript(lua, "LinkedListMultimeshPtr", "NodeMultimeshPtr");
 	ArrayList<Multimesh*>::exposeToScript(lua, "ArrayListMultimeshPtr");

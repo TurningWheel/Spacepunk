@@ -40,7 +40,7 @@ Light::Light(Entity& _entity, Component* _parent) :
 	name = typeStr[COMPONENT_LIGHT];
 
 	// add a bbox for editor usage
-	if( mainEngine->isEditorRunning() ) {
+	if (mainEngine->isEditorRunning()) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_SPHERE);
 		bbox->setLocalScale(Vector(8.f));
@@ -67,8 +67,8 @@ void Light::update() {
 
 	// occlusion test
 	World* world = entity->getWorld();
-	if( world && world->isLoaded() ) {
-		if( lastUpdate != entity->getTicks() || !chunksVisible ) {
+	if (world && world->isLoaded()) {
+		if (lastUpdate != entity->getTicks() || !chunksVisible) {
 			occlusionTest(radius, cvar_lightCull.toInt());
 			lastUpdate = entity->getTicks();
 		}
@@ -77,12 +77,12 @@ void Light::update() {
 
 void Light::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
-	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
+	if (!mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho()) {
 		return;
 	}
 
 	// do not render for these fx passes
-	if( camera.getDrawMode() >= Camera::DRAW_GLOW ) {
+	if (camera.getDrawMode() >= Camera::DRAW_GLOW) {
 		return;
 	}
 
@@ -94,9 +94,9 @@ void Light::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	matrix = glm::scale(matrix, glm::vec3(.5f));
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
-	if( mesh && material ) {
+	if (mesh && material) {
 		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat * matrix);
-		if( shader ) {
+		if (shader) {
 			mesh->draw(camera, this, shader);
 		}
 	}
@@ -133,7 +133,7 @@ void Light::serialize(FileInterface * file) {
 	}
 }
 
-static Cvar cvar_shadowDepthOffset("render.shadowdepthoffset","shadow depth buffer adjustment","0");
+static Cvar cvar_shadowDepthOffset("render.shadowdepthoffset", "shadow depth buffer adjustment", "0");
 
 void Light::createShadowMap() {
 	if (!entity || !entity->getWorld()) {
@@ -172,13 +172,13 @@ void Light::createShadowMap() {
 		camera->setupProjection(false);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		if (world->getType() == World::type_t::WORLD_TILES) {
-			static_cast<TileWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({this}), visibleChunks);
+			static_cast<TileWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({ this }), visibleChunks);
 		} else if (world->getType() == World::type_t::WORLD_BASIC) {
-			static_cast<BasicWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({this}));
+			static_cast<BasicWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({ this }));
 		}
 	}
 	glPolygonOffset(1.f, 0.f);
-	
+
 	Client* client = mainEngine->getLocalClient(); assert(client);
 	Renderer* renderer = client->getRenderer(); assert(renderer);
 	Framebuffer* fbo = renderer->getFramebufferResource().dataForString(renderer->getCurrentFramebuffer()); assert(fbo);

@@ -16,11 +16,11 @@ class TileWorld;
  * Then you just keep querying the pathTask via wait_for with 0 duration
  */
 
-/*
- * Class PathFinder
- *
- * There is one pathfinder per world. It provides asynchronous pathfinding.
- */
+ /*
+  * Class PathFinder
+  *
+  * There is one pathfinder per world. It provides asynchronous pathfinding.
+  */
 class PathFinder {
 protected:
 	class PathNode;
@@ -31,12 +31,12 @@ public:
 	// Path Waypoint
 	class PathWaypoint {
 	public:
-		PathWaypoint(int x, int y):
-            x(x), y(y) {}
+		PathWaypoint(int x, int y) :
+			x(x), y(y) {}
 		~PathWaypoint() {}
 
 		bool operator==(const PathNode& rhs) const {
-			if ( rhs.x == x && rhs.y == y ) {
+			if (rhs.x == x && rhs.y == y) {
 				return true;
 			} else {
 				return false;
@@ -46,33 +46,33 @@ public:
 		Sint32 x = 0, y = 0;
 	};
 	using Path = LinkedList<PathWaypoint>;
-    
-    // Asynchronous Path Task (Path process)
-    class Task {
-    public:
-        Task(const ArrayList<Uint32>& _map, Uint32 _mapWidth, Uint32 _mapHeight,
-        Sint32 _startX, Sint32 _startY, Sint32 _endX, Sint32 _endY) :
-            map(_map),
-            mapWidth(_mapWidth),
-            mapHeight(_mapHeight),
-            startX(_startX),
-            startY(_startY),
-            endX(_endX),
-            endY(_endY) {}
+
+	// Asynchronous Path Task (Path process)
+	class Task {
+	public:
+		Task(const ArrayList<Uint32>& _map, Uint32 _mapWidth, Uint32 _mapHeight,
+			Sint32 _startX, Sint32 _startY, Sint32 _endX, Sint32 _endY) :
+			map(_map),
+			mapWidth(_mapWidth),
+			mapHeight(_mapHeight),
+			startX(_startX),
+			startY(_startY),
+			endX(_endX),
+			endY(_endY) {}
 		virtual ~Task() {}
 
-        virtual PathFinder::Path* findPath() = 0;
+		virtual PathFinder::Path* findPath() = 0;
 
-        Path* operator()() {
-            return findPath();
-        }
+		Path* operator()() {
+			return findPath();
+		}
 
-    protected:
-        ArrayList<Uint32> map;
-        Uint32 mapWidth, mapHeight;
-        Sint32 startX, startY;
-        Sint32 endX, endY;
-    };
+	protected:
+		ArrayList<Uint32> map;
+		Uint32 mapWidth, mapHeight;
+		Sint32 startX, startY;
+		Sint32 endX, endY;
+	};
 
 	// class Future : pathTask {
 	// public:
@@ -82,28 +82,28 @@ public:
 	// 	std::future<Path> pathFuture;
 	// };
 
-    // A* Path Task (derived from above)
-    class AStarTask : public Task {
-    public:
-        static const Uint32 COST_STRAIGHT = 10;
-        static const Uint32 COST_DIAGONAL = 14;
-        static const Uint32 MAX_TRIES = 10000;
+	// A* Path Task (derived from above)
+	class AStarTask : public Task {
+	public:
+		static const Uint32 COST_STRAIGHT = 10;
+		static const Uint32 COST_DIAGONAL = 14;
+		static const Uint32 MAX_TRIES = 10000;
 
-        AStarTask(const ArrayList<Uint32>& _map, Uint32 _mapWidth, Uint32 _mapHeight,
-        Sint32 _startX, Sint32 _startY, Sint32 _endX, Sint32 _endY) :
-            Task(_map, _mapWidth, _mapHeight, _startX, _startY, _endX, _endY) {}
+		AStarTask(const ArrayList<Uint32>& _map, Uint32 _mapWidth, Uint32 _mapHeight,
+			Sint32 _startX, Sint32 _startY, Sint32 _endX, Sint32 _endY) :
+			Task(_map, _mapWidth, _mapHeight, _startX, _startY, _endX, _endY) {}
 
-        Path* findPath() override;
+		Path* findPath() override;
 
-    protected:
-        static Uint32 heuristic(Sint32 x1, Sint32 y1, Sint32 x2, Sint32 y2) {
-            return (std::abs(x2 - x1) + std::abs(y2 - y1)) * COST_STRAIGHT;
-        }
-    };
+	protected:
+		static Uint32 heuristic(Sint32 x1, Sint32 y1, Sint32 x2, Sint32 y2) {
+			return (std::abs(x2 - x1) + std::abs(y2 - y1)) * COST_STRAIGHT;
+		}
+	};
 
 	/*
 	 * Creates a PathTask object. Asynchronous pathfinding.
-	 * 
+	 *
 	 * (You can use wait_for with 0 duration :) )
 	 */
 	std::future<Path*> generateAStarPath(Sint32 startX, Sint32 startY, Sint32 endX, Sint32 endY);
@@ -111,7 +111,7 @@ public:
 protected:
 	TileWorld& world;
 
-    ArrayList<std::future<PathFinder::Path*>> tasks;
+	ArrayList<std::future<PathFinder::Path*>> tasks;
 
 	// Path node
 	class PathNode {
@@ -126,13 +126,12 @@ protected:
 
 			if (nullptr != list)
 			{
-				if ( 0 == pos ) {
+				if (0 == pos) {
 					node = list->addNodeFirst(this);
 				} else {
 					node = list->addNodeLast(this);
 				}
-			}
-			else
+			} else
 			{
 				node = nullptr;
 			}
@@ -143,7 +142,7 @@ protected:
 		PathNode** remove(PathNode& child, Uint32 pos);
 
 		bool operator==(const PathNode& rhs) const {
-			if ( rhs.x == x && rhs.y == y ) {
+			if (rhs.x == x && rhs.y == y) {
 				return true;
 			} else {
 				return false;
@@ -157,10 +156,10 @@ protected:
 		Node<PathNode*>* node = nullptr;
 	};
 
-    ArrayList<Uint32> map;
-    Uint32 mapWidth = 0;
-    Uint32 mapHeight = 0;
-    void generateSimpleMap(); //TODO Make sure accessing this result is threadsafe...every thread should probably get a copy of the map on creation.
+	ArrayList<Uint32> map;
+	Uint32 mapWidth = 0;
+	Uint32 mapHeight = 0;
+	void generateSimpleMap(); //TODO Make sure accessing this result is threadsafe...every thread should probably get a copy of the map on creation.
 };
 
 // class pathTask

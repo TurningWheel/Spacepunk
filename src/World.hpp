@@ -102,19 +102,19 @@ public:
 	// @param origin the starting point of the ray
 	// @param dest the ending point of the ray
 	// @return a hit_t structure containing information on the hit object
-	const hit_t lineTrace( const Vector& origin, const Vector& dest );
+	const hit_t lineTrace(const Vector& origin, const Vector& dest);
 
 	// perform a line test (raytrace) through the world and gets a list of all objects in the ray's path
 	// @param origin the starting point of the ray
 	// @param dest the ending point of the ray
 	// @param outResult the list which will contain all of the hit_t structures (sorted nearest to furthest)
-	void lineTraceList( const Vector& origin, const Vector& dest, LinkedList<hit_t>& outResult );
+	void lineTraceList(const Vector& origin, const Vector& dest, LinkedList<hit_t>& outResult);
 
 	// perform a line test (raytrace) through the world, skipping entities
 	// @param origin the starting point of the ray
 	// @param dest the ending point of the ray
 	// @return a hit_t structure containing information on the hit object
-	const hit_t lineTraceNoEntities( const Vector& origin, const Vector& dest );
+	const hit_t lineTraceNoEntities(const Vector& origin, const Vector& dest);
 
 	// get a list of all the entities with the given name
 	// @param name The name of the entities
@@ -128,7 +128,7 @@ public:
 	// @param destPos The ending position of the shape
 	// @param destAng The ending angle of the shape
 	// @return a hit_t structure containing information on the hit object
-	const hit_t convexSweep( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng );
+	const hit_t convexSweep(const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng);
 
 	// perform a convex sweep test through the world which gets a list of all overlapped objects
 	// @param shape The convex shape to sweep with
@@ -137,14 +137,14 @@ public:
 	// @param destPos The ending position of the shape
 	// @param destAng The ending angle of the shape
 	// @param outResult the list which will contain all of the hit_t structures (sorted nearest to furthest)
-	void convexSweepList( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng, LinkedList<hit_t>& outResult );
+	void convexSweepList(const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng, LinkedList<hit_t>& outResult);
 
 	// finds all entities within a given radius of the provided point
 	// @param origin position to search from
 	// @param radius the radius to search in
 	// @param outList the list to populate
 	// @param flat if true, the search radius is 2-dimensional
-	virtual void findEntitiesInRadius( const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false ) = 0;
+	virtual void findEntitiesInRadius(const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false) = 0;
 
 	// generates a tilemap using the dungeon generator
 	// @param filename The filename to the generator options json
@@ -171,7 +171,7 @@ public:
 	// @param _filename the filename to write to, or blank to use our last filename
 	// @param updateFilename if true, our current filename is changed, otherwise, it is not
 	// @return true on success, false on failure
-	virtual bool saveFile(const char* _filename="", bool updateFilename = false) = 0;
+	virtual bool saveFile(const char* _filename = "", bool updateFilename = false) = 0;
 
 	// update filename and shortname members
 	// @param _filename the new full filename for the world
@@ -191,38 +191,38 @@ public:
 
 	// getters & setters
 	virtual const type_t		getType() const = 0;
-	Game*						getGame()								{ return game; }
-	const Uint32				getTicks() const						{ return ticks; }
-	const String&				getFilename() const						{ return filename; }
-	const String&				getShortname() const					{ return shortname; }
-	const String&				getNameStr() const						{ return nameStr; }
-	Map<Uint32, Entity*>&		getEntities()							{ return entities; }
-	const Map<Uint32, Entity*>&	getEntities() const						{ return entities; }
-	btDiscreteDynamicsWorld*&	getBulletDynamicsWorld()				{ return bulletDynamicsWorld; }
-	const bool					isClientObj() const						{ return clientObj; }
-	const bool					isServerObj() const						{ return !clientObj; }
-	const String&				getZone() const							{ return zone; }
-	Uint32						getID() const							{ return id; }
-	const filetype_t			getFiletype() const						{ return filetype; }
-	Entity*						getShadowCamera()						{ return shadowCamera; }
-	Shadow&						getDefaultShadow()						{ return defaultShadow; }
-	const Shadow&				getDefaultShadow() const				{ return defaultShadow; }
-	void						setMaxUID(Uint32 uid)					{ uids = std::max(uids, uid); }
+	Game*						getGame() { return game; }
+	const Uint32				getTicks() const { return ticks; }
+	const String&				getFilename() const { return filename; }
+	const String&				getShortname() const { return shortname; }
+	const String&				getNameStr() const { return nameStr; }
+	Map<Uint32, Entity*>&		getEntities() { return entities; }
+	const Map<Uint32, Entity*>&	getEntities() const { return entities; }
+	btDiscreteDynamicsWorld*&	getBulletDynamicsWorld() { return bulletDynamicsWorld; }
+	const bool					isClientObj() const { return clientObj; }
+	const bool					isServerObj() const { return !clientObj; }
+	const String&				getZone() const { return zone; }
+	Uint32						getID() const { return id; }
+	const filetype_t			getFiletype() const { return filetype; }
+	Entity*						getShadowCamera() { return shadowCamera; }
+	Shadow&						getDefaultShadow() { return defaultShadow; }
+	const Shadow&				getDefaultShadow() const { return defaultShadow; }
+	void						setMaxUID(Uint32 uid) { uids = std::max(uids, uid); }
 
 	// editing properties
-	bool				isPointerActive() const				{ return pointerActive; }
-	const Vector&		getPointerPos() const				{ return pointerPos; }
-	bool				isGenerated() const					{ return generated; }
-	Uint32				getSeed() const						{ return seed; }
-	bool				isLoaded() const					{ return loaded; }
-	bool				isGridVisible() const				{ return gridVisible; }
+	bool				isPointerActive() const { return pointerActive; }
+	const Vector&		getPointerPos() const { return pointerPos; }
+	bool				isGenerated() const { return generated; }
+	Uint32				getSeed() const { return seed; }
+	bool				isLoaded() const { return loaded; }
+	bool				isGridVisible() const { return gridVisible; }
 	bool				isShowTools() const;
 
-	void	setPointerActive(bool _pointerActive)			{ pointerActive = _pointerActive; }
-	void	setPointerPos(const Vector& _pointerPos)		{ pointerPos = _pointerPos; }
-	void	setShowTools(const bool _showTools)				{ showTools = _showTools; }
-	void	setNameStr(const char* _nameStr)				{ nameStr = _nameStr; }
-	void	setGridVisible(const bool _gridVisible)			{ gridVisible = _gridVisible; }
+	void	setPointerActive(bool _pointerActive) { pointerActive = _pointerActive; }
+	void	setPointerPos(const Vector& _pointerPos) { pointerPos = _pointerPos; }
+	void	setShowTools(const bool _showTools) { showTools = _showTools; }
+	void	setNameStr(const char* _nameStr) { nameStr = _nameStr; }
+	void	setGridVisible(const bool _gridVisible) { gridVisible = _gridVisible; }
 
 	virtual std::future<PathFinder::Path*> findAPath(int startX, int startY, int endX, int endY) = 0;
 
@@ -242,10 +242,10 @@ protected:
 	String nameStr;						// descriptive name (eg 'Hub World')
 	filetype_t filetype = FILE_BINARY;	// filetype (binary vs json vs wld)
 
-	Uint32 ticks=0;			// lifespan of the world
+	Uint32 ticks = 0;			// lifespan of the world
 
 	// entities
-	Uint32 uids=0;
+	Uint32 uids = 0;
 	Map<Uint32, Entity*> entities;
 
 	// lasers
@@ -259,11 +259,11 @@ protected:
 	btDiscreteDynamicsWorld* bulletDynamicsWorld = nullptr;
 
 	// editing variables
-	bool loaded=false;			// if true, world successfully loaded from a file
-	bool showTools=true;		// when true, then grid, cursor, lights, etc. are drawn; otherwise, they are not
-	bool pointerActive=false;	// if true, pointer is visible/usable
+	bool loaded = false;			// if true, world successfully loaded from a file
+	bool showTools = true;		// when true, then grid, cursor, lights, etc. are drawn; otherwise, they are not
+	bool pointerActive = false;	// if true, pointer is visible/usable
 	Vector pointerPos;			// pointer location
-	bool gridVisible=true;		// if true, editing grid is visible
+	bool gridVisible = true;		// if true, editing grid is visible
 
 	ArrayList<uint32_t> pathMap;
 

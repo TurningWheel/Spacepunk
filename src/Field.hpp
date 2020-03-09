@@ -59,32 +59,32 @@ public:
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
 	// getters & setters
-	const char*					getName() const						{ return name.get(); }
-	const char*					getText() const						{ return text; }
-	const Uint32				getTextLen() const					{ return textLen; }
-	const glm::vec4&			getColor() const					{ return color; }
-	const Rect<int>				getSize() const						{ return size; }
-	const justify_t				getJustify() const					{ return justify; }
-	const bool					isSelected() const					{ return selected; }
-	const bool					isEditable() const					{ return editable; }
-	const bool					isNumbersOnly() const				{ return numbersOnly; }
-	const char*					getTabDestField() const				{ return tabDestField.get(); }
-	const char*					getTabDestFrame() const				{ return tabDestFrame.get(); }
-	Script::Args&				getParams()							{ return params; }
-	const Script::Function*		getCallback() const					{ return callback; }
+	const char*					getName() const { return name.get(); }
+	const char*					getText() const { return text; }
+	const Uint32				getTextLen() const { return textLen; }
+	const glm::vec4&			getColor() const { return color; }
+	const Rect<int>				getSize() const { return size; }
+	const justify_t				getJustify() const { return justify; }
+	const bool					isSelected() const { return selected; }
+	const bool					isEditable() const { return editable; }
+	const bool					isNumbersOnly() const { return numbersOnly; }
+	const char*					getTabDestField() const { return tabDestField.get(); }
+	const char*					getTabDestFrame() const { return tabDestFrame.get(); }
+	Script::Args&				getParams() { return params; }
+	const Script::Function*		getCallback() const { return callback; }
 
-	void	setName(const char* _name)							{ name = _name; }
-	void	setText(const char* _text)							{ memset(text, '\0', textLen); strncpy(text,_text,textLen); }
-	void	setPos(const int x, const int y)					{ size.x = x; size.y = y; }
-	void	setSize(const Rect<int>& _size)						{ size = _size; }
-	void	setColor(const glm::vec4& _color)					{ color = _color; }
-	void	setEditable(const bool _editable)					{ editable = _editable; }
-	void	setNumbersOnly(const bool _numbersOnly)				{ numbersOnly = _numbersOnly; }
-	void	setJustify(const justify_t _justify)				{ justify = _justify; }
-	void	setScroll(const bool _scroll)						{ scroll = _scroll; }
-	void	setTabDestField(const char* _tabDest)				{ tabDestField = _tabDest; }
-	void	setTabDestFrame(const char* _tabDest)				{ tabDestFrame = _tabDest; }
-	void	setCallback(const Script::Function* fn)				{ callback = fn; }
+	void	setName(const char* _name) { name = _name; }
+	void	setText(const char* _text) { memset(text, '\0', textLen); strncpy(text, _text, textLen); }
+	void	setPos(const int x, const int y) { size.x = x; size.y = y; }
+	void	setSize(const Rect<int>& _size) { size = _size; }
+	void	setColor(const glm::vec4& _color) { color = _color; }
+	void	setEditable(const bool _editable) { editable = _editable; }
+	void	setNumbersOnly(const bool _numbersOnly) { numbersOnly = _numbersOnly; }
+	void	setJustify(const justify_t _justify) { justify = _justify; }
+	void	setScroll(const bool _scroll) { scroll = _scroll; }
+	void	setTabDestField(const char* _tabDest) { tabDestField = _tabDest; }
+	void	setTabDestFrame(const char* _tabDest) { tabDestFrame = _tabDest; }
+	void	setCallback(const Script::Function* fn) { callback = fn; }
 
 private:
 	Frame* parent = nullptr;	// parent frame
@@ -93,7 +93,7 @@ private:
 	Script::Args params;
 	char* text = nullptr;
 	Uint32 textLen = 0;
-	glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f);
+	glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f);
 	Rect<int> size;
 	justify_t justify = LEFT;
 	bool selected = false;

@@ -153,7 +153,7 @@ void Generator::createDungeon() {
 	emplaceRooms();
 	openRooms();
 	corridors();
-	if( options.addStairs > 0 ) {
+	if (options.addStairs > 0) {
 		emplaceStairs();
 	}
 	cleanDungeon();
@@ -188,9 +188,9 @@ void Generator::maskCells() {
 	auto layout = dungeonLayout.get(options.dungeonLayout.get());
 
 	Sint32 index = 0;
-	for( Sint32 u = 0; u < width; ++u ) {
+	for (Sint32 u = 0; u < width; ++u) {
 		Sint32 x = u / r_x;
-		for( Sint32 v = 0; v < height; ++v ) {
+		for (Sint32 v = 0; v < height; ++v) {
 			Sint32 y = v / r_y;
 			tiles[index] = layout[y][x] ? NOTHING : BLOCKED;
 			++index;
@@ -203,11 +203,11 @@ void Generator::roundMask() {
 	Sint32& height = options.dungeonHeight;
 
 	Sint32 index = 0;
-	for( Sint32 u = 0; u < width; ++u ) {
-		for( Sint32 v = 0; v < height; ++v ) {
+	for (Sint32 u = 0; u < width; ++u) {
+		for (Sint32 v = 0; v < height; ++v) {
 			Sint32 r = (v - subRows) * options.subdivisor;
 			Sint32 c = (u - subCols) * options.subdivisor;
-			Sint32 d = sqrtf( (float)(r + c) );
+			Sint32 d = sqrtf((float)(r + c));
 			tiles[index] = d <= subCols ? NOTHING : BLOCKED;
 			++index;
 		}
@@ -215,9 +215,9 @@ void Generator::roundMask() {
 }
 
 void Generator::emplaceRooms() {
-	if( options.roomLayout == "Packed" ) {
+	if (options.roomLayout == "Packed") {
 		packRooms();
-	} else if( options.roomLayout == "Scattered" ) {
+	} else if (options.roomLayout == "Scattered") {
 		scatterRooms();
 	} else {
 		mainEngine->fmsg(Engine::MSG_WARN, "unknown room layout type, defaulting to Scattered");
@@ -304,18 +304,18 @@ void Generator::emplaceRoom(Sint32 x, Sint32 y) {
 		Sint32& width = options.dungeonWidth;
 		Sint32& height = options.dungeonHeight;
 		for (Sint32 r = r1 - 1; r <= r2 + 1; ++r) {
-			if (! (tiles[r + (c1 - 1) * height] & (ROOM | ENTRANCE)) ) {
+			if (!(tiles[r + (c1 - 1) * height] & (ROOM | ENTRANCE))) {
 				tiles[r + (c1 - 1) * height] |= PERIMETER;
 			}
-			if (! (tiles[r + (c2 + 1) * height] & (ROOM | ENTRANCE)) ) {
+			if (!(tiles[r + (c2 + 1) * height] & (ROOM | ENTRANCE))) {
 				tiles[r + (c2 + 1) * height] |= PERIMETER;
 			}
 		}
 		for (Sint32 c = c1 - 1; c <= c2 + 1; ++c) {
-			if (! (tiles[(r1 - 1) + c * height] & (ROOM | ENTRANCE)) ) {
+			if (!(tiles[(r1 - 1) + c * height] & (ROOM | ENTRANCE))) {
 				tiles[(r1 - 1) + c * height] |= PERIMETER;
 			}
-			if (! (tiles[(r2 + 1) + c * height] & (ROOM | ENTRANCE)) ) {
+			if (!(tiles[(r2 + 1) + c * height] & (ROOM | ENTRANCE))) {
 				tiles[(r2 + 1) + c * height] |= PERIMETER;
 			}
 		}
@@ -456,7 +456,7 @@ ArrayList<Generator::sill_t> Generator::doorSills(room_t& room) {
 Generator::sill_t Generator::checkSill(room_t& room, Sint32 sill_r, Sint32 sill_c, Sint32 dir) {
 	Sint32 door_r = sill_r + sin[dir];
 	Sint32 door_c = sill_c + cos[dir];
-	
+
 	Uint32& doorTile = tiles[door_r + door_c * options.dungeonHeight];
 	if (!(doorTile & PERIMETER))
 		return sill_t();
@@ -638,7 +638,7 @@ void Generator::removeDeadends(Sint32 percentage) {
 				continue;
 			if (tiles[index] & STAIRS)
 				continue;
-			if (!all && (rand.getSint32()%100 < percentage))
+			if (!all && (rand.getSint32() % 100 < percentage))
 				continue;
 
 			collapse(r, c);
@@ -655,10 +655,10 @@ void Generator::collapse(Sint32 r, Sint32 c) {
 	for (Sint32 dir = 0; dir < 4; ++dir) {
 		if (checkTunnel(r, c, dir)) {
 			for (Sint32 i = 0; i < 1; ++i) {
-				const Sint32 (&p)[2] = closeends[dir].close[i];
+				const Sint32(&p)[2] = closeends[dir].close[i];
 				tiles[(r + p[0]) + (c + p[1]) * options.dungeonHeight] = NOTHING;
 			}
-			const Sint32 (&p)[2] = closeends[dir].recurse;
+			const Sint32(&p)[2] = closeends[dir].recurse;
 			collapse(r + p[0], c + p[1]);
 		}
 	}
@@ -666,7 +666,7 @@ void Generator::collapse(Sint32 r, Sint32 c) {
 
 bool Generator::checkTunnel(Sint32 r, Sint32 c, Sint32 dir) {
 	for (Sint32 i = 0; i < 5; ++i) {
-		const Sint32 (&p)[2] = closeends[dir].walled[i];
+		const Sint32(&p)[2] = closeends[dir].walled[i];
 		Sint32 index = (r + p[0]) + (c + p[1]) * options.dungeonHeight;
 		if ((Uint32)index < tiles.getSize() && tiles[index] & (OPEN_SPACE | DOOR_SPACE)) {
 			return false;
@@ -798,8 +798,7 @@ void Generator::serialize(FileInterface * file) {
 	if (version < 1) {
 		file->property("rooms", roomLibs);
 		file->property("tunnels", tunnelLibs);
-	}
-	else {
+	} else {
 		file->property("levelkit", levelkit);
 	}
 }
@@ -859,7 +858,7 @@ void Generator::piece_t::serialize(FileInterface * file) {
 void Generator::lib_t::loadPieces(ArrayList<piece_t>& pieces, bool clientObj) {
 	for (auto &piece : pieces) {
 		String fullPath = mainEngine->buildPath(piece.path.get()).get();
-		for( int sideInt=Tile::SIDE_EAST; sideInt<Tile::SIDE_TYPE_LENGTH; ++sideInt ) {
+		for (int sideInt = Tile::SIDE_EAST; sideInt < Tile::SIDE_TYPE_LENGTH; ++sideInt) {
 			if (piece.angles[sideInt] == nullptr) {
 				Tile::side_t side = static_cast<Tile::side_t>(sideInt);
 				piece.angles[sideInt] = new TileWorld(nullptr, true, UINT32_MAX, side, fullPath.get());
@@ -870,7 +869,7 @@ void Generator::lib_t::loadPieces(ArrayList<piece_t>& pieces, bool clientObj) {
 
 void Generator::lib_t::freePieces(ArrayList<piece_t>& pieces) {
 	for (auto &piece : pieces) {
-		for( int sideInt=Tile::SIDE_EAST; sideInt<Tile::SIDE_TYPE_LENGTH; ++sideInt ) {
+		for (int sideInt = Tile::SIDE_EAST; sideInt < Tile::SIDE_TYPE_LENGTH; ++sideInt) {
 			if (piece.angles[sideInt]) {
 				delete piece.angles[sideInt];
 			}

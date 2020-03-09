@@ -75,8 +75,7 @@ void Multimesh::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		if (camera.getDrawMode() == Camera::DRAW_GLOW) {
 			if (!mat) {
 				return;
-			}
-			else if (!mat->isGlowing()) {
+			} else if (!mat->isGlowing()) {
 				return;
 			}
 		}
@@ -92,8 +91,7 @@ void Multimesh::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		ShaderProgram* shader = nullptr;
 		if (camera.getDrawMode() == Camera::DRAW_DEPTHFAIL) {
 			shader = mesh->loadShader(*this, camera, lights, depthfailmat, shaderVars, gMat);
-		}
-		else {
+		} else {
 			shader = mesh->loadShader(*this, camera, lights, mat, shaderVars, gMat);
 		}
 

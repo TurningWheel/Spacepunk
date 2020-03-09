@@ -42,8 +42,8 @@ public:
 	void bindForReading(GLenum textureUnit, GLenum attachment) const;
 
 	// getters & setters
-	const GLuint	getFBO() const			{ return fbo; }
-	bool			isInitialized() const	{ return fbo != 0; }
+	const GLuint	getFBO() const { return fbo; }
+	bool			isInitialized() const { return fbo != 0; }
 
 private:
 	GLuint fbo = 0;

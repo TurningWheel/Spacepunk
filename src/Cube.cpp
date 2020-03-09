@@ -107,7 +107,7 @@ const GLfloat Cube::normals[72] = {
 	0, -1, 0
 };
 
-const GLuint Cube::indices[36] {
+const GLuint Cube::indices[36]{
 	0, 1, 2,
 	0, 2, 3,
 
@@ -129,7 +129,7 @@ const GLuint Cube::indices[36] {
 
 Cube::Cube() {
 	// initialize buffer names
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
 
@@ -168,14 +168,14 @@ Cube::Cube() {
 }
 
 Cube::~Cube() {
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		buffer_t buffer = static_cast<buffer_t>(i);
-		if( vbo[buffer] ) {
-			glDeleteBuffers(1,&vbo[buffer]);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
 		}
 	}
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 	}
 }
 
@@ -185,14 +185,14 @@ void Cube::draw(Camera& camera, const glm::mat4& transform, const glm::vec4& col
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/cube.json");
-	if( mat ) {
+	if (mat) {
 		ShaderProgram& shader = mat->getShader();
-		if( &shader != ShaderProgram::getCurrentShader() )
+		if (&shader != ShaderProgram::getCurrentShader())
 			shader.mount();
 
 		// upload uniform variables
-		glUniformMatrix4fv(shader.getUniformLocation("gView"),1,GL_FALSE,glm::value_ptr(viewMatrix));
-		glUniform4fv(shader.getUniformLocation("gColor"),1,glm::value_ptr(color));
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
+		glUniform4fv(shader.getUniformLocation("gColor"), 1, glm::value_ptr(color));
 
 		// draw elements
 		glBindVertexArray(vao);

@@ -25,8 +25,8 @@ public:
 	}
 
 	// getters & setters
-	Map<String, T*>&			getCache()			{ return cache; }
-	const resource_error_t		getError() const	{ return error; }
+	Map<String, T*>&			getCache() { return cache; }
+	const resource_error_t		getError() const { return error; }
 
 	// number of items in the resource
 	// @return the number of cached items in the resource
@@ -41,14 +41,14 @@ public:
 	// if the data is currently being streamed then error is set to ERROR_CACHEINPROGRESS
 	// @param name the name of the data to load
 	// @return the data, or nullptr if the data could not be loaded
-	T* dataForString( const char* name ) {
-		if( name == nullptr || name[0] == '\0' ) {
+	T* dataForString(const char* name) {
+		if (name == nullptr || name[0] == '\0') {
 			error = resource_error_t::ERROR_CACHEFAILED;
 			return nullptr;
 		}
 
 		T** data = cache.find(name);
-		if( data ) {
+		if (data) {
 			error = resource_error_t::ERROR_NONE;
 			return *data;
 		} else {
@@ -71,7 +71,7 @@ public:
 				data->finalize();
 			}
 			Asset* base = data; // enforce Asset base class
-			if( base->isLoaded() ) {
+			if (base->isLoaded()) {
 				error = resource_error_t::ERROR_NOTCACHED;
 				cache.insertUnique(name, data);
 				return data;
@@ -94,7 +94,7 @@ public:
 				T* data = job.get();
 				data->finalize();
 				Asset* base = data; // enforce Asset base class
-				if( base->isLoaded() ) {
+				if (base->isLoaded()) {
 					cache.insertUnique(name.c_str(), data);
 					keys.push_back(name);
 				}

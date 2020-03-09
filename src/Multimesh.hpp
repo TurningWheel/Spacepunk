@@ -28,14 +28,14 @@ public:
 	virtual void serialize(FileInterface * file) override;
 
 	// getters & setters
-	virtual type_t					getType() const override		{ return COMPONENT_MULTIMESH; }
-	const char*						getMaterial() const				{ return materialStr.get(); }
-	const char*						getDepthFailMat() const			{ return depthfailStr.get(); }
-	const Mesh::shadervars_t&		getShaderVars() const			{ return shaderVars; }
+	virtual type_t					getType() const override { return COMPONENT_MULTIMESH; }
+	const char*						getMaterial() const { return materialStr.get(); }
+	const char*						getDepthFailMat() const { return depthfailStr.get(); }
+	const Mesh::shadervars_t&		getShaderVars() const { return shaderVars; }
 
-	void	setMaterial(const char* _material)						{ materialStr = _material; }
-	void	setDepthFailMat(const char* _depthfailmat)				{ depthfailStr = _depthfailmat; }
-	void	setShaderVars(const Mesh::shadervars_t& _shaderVars)	{ shaderVars = _shaderVars; }
+	void	setMaterial(const char* _material) { materialStr = _material; }
+	void	setDepthFailMat(const char* _depthfailmat) { depthfailStr = _depthfailmat; }
+	void	setShaderVars(const Mesh::shadervars_t& _shaderVars) { shaderVars = _shaderVars; }
 
 	Multimesh& operator=(const Multimesh& src) {
 		materialStr = src.materialStr;

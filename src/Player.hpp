@@ -81,24 +81,24 @@ public:
 	void updateGUI();
 
 	// getters & setters
-	const char*				getName() const			{ return name.get(); }
-	const Uint32			getServerID() const		{ return serverID; }
-	const Uint32			getLocalID() const		{ return localID; }
-	const Uint32			getClientID() const		{ return clientID; }
-	Entity*					getEntity()				{ return entity; }
-	const colors_t&			getColors() const		{ return colors; }
-	Camera*					getCamera() const		{ return camera; }
-	bool					isCrouching() const		{ return crouching; }
-	bool					isMoving() const		{ return moving; }
-	bool					hasJumped() const		{ return jumped; }
-	bool					isInvVisible() const	{ return inventoryVisible;  }
+	const char*				getName() const { return name.get(); }
+	const Uint32			getServerID() const { return serverID; }
+	const Uint32			getLocalID() const { return localID; }
+	const Uint32			getClientID() const { return clientID; }
+	Entity*					getEntity() { return entity; }
+	const colors_t&			getColors() const { return colors; }
+	Camera*					getCamera() const { return camera; }
+	bool					isCrouching() const { return crouching; }
+	bool					isMoving() const { return moving; }
+	bool					hasJumped() const { return jumped; }
+	bool					isInvVisible() const { return inventoryVisible; }
 
-	void	setName(const char* _name)				{ name = _name; }
-	void	setServerID(Uint32 id)					{ serverID = id; }
-	void	setLocalID(Uint32 id)					{ localID = id; }
-	void	setClientID(Uint32 id)					{ clientID = id; }
-	void	setMoving(bool b)						{ moving = b; }
-	void	setJumped(bool b)						{ jumped = b; }
+	void	setName(const char* _name) { name = _name; }
+	void	setServerID(Uint32 id) { serverID = id; }
+	void	setLocalID(Uint32 id) { localID = id; }
+	void	setClientID(Uint32 id) { clientID = id; }
+	void	setMoving(bool b) { moving = b; }
+	void	setJumped(bool b) { jumped = b; }
 
 private:
 	StringBuf<64> name = defaultName;	// the player's name

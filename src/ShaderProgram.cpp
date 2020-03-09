@@ -25,9 +25,9 @@ ShaderProgram::ShaderProgram(const char* _name) : Asset(_name) {
 }
 
 ShaderProgram::~ShaderProgram() {
-	if( programObject ) {
-		for( auto& shader : shaders ) {
-			glDetachShader(programObject,shader.getShaderObject());
+	if (programObject) {
+		for (auto& shader : shaders) {
+			glDetachShader(programObject, shader.getShaderObject());
 		}
 		shaders.clear();
 		glDeleteProgram(programObject);
@@ -46,16 +46,16 @@ GLuint ShaderProgram::getUniformLocation(const char* name) {
 }
 
 void ShaderProgram::bindAttribLocation(GLuint index, const GLchar* name) {
-	glBindAttribLocation(programObject,index,name);
+	glBindAttribLocation(programObject, index, name);
 }
 
 int ShaderProgram::link() {
 	GLint linked;
 	glLinkProgram(programObject);
 	glGetProgramiv(programObject, GL_LINK_STATUS, &linked);
-	if( linked ) {
+	if (linked) {
 		// successfully linked
-		mainEngine->msg(Engine::MSG_DEBUG,"linked shader program successfully");
+		mainEngine->msg(Engine::MSG_DEBUG, "linked shader program successfully");
 		return 0;
 	} else {
 		// show error message
@@ -63,13 +63,13 @@ int ShaderProgram::link() {
 		GLsizei slen = 0;
 
 		glGetShaderiv(programObject, GL_INFO_LOG_LENGTH, &blen);
-		if( blen > 1 ) {
-			GLchar* linkLog = new GLchar[blen+1];
-			if( linkLog ) {
+		if (blen > 1) {
+			GLchar* linkLog = new GLchar[blen + 1];
+			if (linkLog) {
 				linkLog[blen] = 0;
 				glGetProgramInfoLog(programObject, blen, &slen, linkLog);
 				linkLog[blen] = 0;
-				mainEngine->fmsg(Engine::MSG_ERROR,"failed to link shader program: %s",linkLog);
+				mainEngine->fmsg(Engine::MSG_ERROR, "failed to link shader program: %s", linkLog);
 				delete[] linkLog;
 			}
 		}
@@ -95,7 +95,7 @@ void ShaderProgram::serialize(FileInterface* file) {
 	file->property("shaders", shaders);
 	if (file->isReading()) {
 		for (auto& shader : shaders) {
-			glAttachShader(programObject,shader.getShaderObject());
+			glAttachShader(programObject, shader.getShaderObject());
 		}
 		loaded = (link() == 0);
 	}
@@ -131,9 +131,9 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 	Uint32 index = 0;
 	for (auto light : lights) {
 		Vector lightAng = light->getGlobalAng().toVector();
-		glm::vec3 lightDir( lightAng.x, -lightAng.z, lightAng.y );
-		glm::vec3 lightPos( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
-		glm::vec3 lightScale( light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y );
+		glm::vec3 lightDir(lightAng.x, -lightAng.z, lightAng.y);
+		glm::vec3 lightPos(light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y);
+		glm::vec3 lightScale(light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y);
 
 		glUniform3fv(getUniformLocation(uniformArray(buf, "gLightPos", 9, index)), 1, glm::value_ptr(lightPos));
 		glUniform3fv(getUniformLocation(uniformArray(buf, "gLightColor", 11, index)), 1, glm::value_ptr(glm::vec3(light->getColor())));
@@ -146,14 +146,14 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_TRUE);
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
-			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
+			light->getShadowMap().bindForReading(GL_TEXTURE0 + textureUnit, GL_DEPTH_ATTACHMENT);
 			//glm::mat4 lightProj = glm::perspective( glm::radians(90.f), 1.f, 1.f, light->getRadius() );
 			glm::mat4 lightProj = Camera::makeInfReversedZProj(glm::radians(90.f), 1.f, 1.f);
 			glUniformMatrix4fv(getUniformLocation(uniformArray(buf, "gLightProj", 10, index)), 1, GL_FALSE, glm::value_ptr(lightProj));
 		} else {
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
 			glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
-			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
+			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_DEPTH_ATTACHMENT);
 		}
 
 		++index;
@@ -162,10 +162,10 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 			break;
 		}
 	}
-	for ( ; index < maxLights; ++index) {
+	for (; index < maxLights; ++index) {
 		glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmapEnabled", 17, index)), GL_FALSE);
 		glUniform1i(getUniformLocation(uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
-		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_DEPTH_ATTACHMENT);
+		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_DEPTH_ATTACHMENT);
 		++textureUnit;
 	}
 
@@ -173,10 +173,10 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 	for (auto light : lights) {
 		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
 			glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
-			light->getShadowMap().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
+			light->getShadowMap().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
 		} else {
 			glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
-			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
+			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
 		}
 
 		++index;
@@ -185,9 +185,9 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 			break;
 		}
 	}
-	for ( ; index < maxLights; ++index) {
+	for (; index < maxLights; ++index) {
 		glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
-		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0+textureUnit, GL_COLOR_ATTACHMENT0);
+		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
 		++textureUnit;
 	}
 

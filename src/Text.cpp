@@ -15,34 +15,34 @@
 GLuint Text::vao = 0;
 GLuint Text::vbo[BUFFER_TYPE_LENGTH] = { 0 };
 
-const GLfloat Text::positions[8] {
+const GLfloat Text::positions[8]{
 	0.f, 0.f,
 	0.f, 1.f,
 	1.f, 1.f,
 	1.f, 0.f
 };
 
-const GLfloat Text::texcoords[8] {
+const GLfloat Text::texcoords[8]{
 	0.f, 0.f,
 	0.f, 1.f,
 	1.f, 1.f,
 	1.f, 0.f
 };
 
-const GLuint Text::indices[6] {
+const GLuint Text::indices[6]{
 	0, 1, 2,
 	0, 2, 3
 };
 
 Text::Text(const char* _name) : Asset(_name) {
 	Client* client = mainEngine->getLocalClient();
-	if( !client ) {
+	if (!client) {
 		return;
 	}
 	Renderer* renderer = client->getRenderer();
-	if( !renderer ) {
+	if (!renderer) {
 		return;
-	} else if( !renderer->isInitialized() ) {
+	} else if (!renderer->isInitialized()) {
 		return;
 	}
 
@@ -51,29 +51,29 @@ Text::Text(const char* _name) : Asset(_name) {
 	SDL_Color colorBlack = { 0, 0, 0, 255 };
 	SDL_Color colorWhite = { 255, 255, 255, 255 };
 
-	if( outlineSize>0 ) {
-		TTF_SetFontOutline(font,outlineSize);
+	if (outlineSize > 0) {
+		TTF_SetFontOutline(font, outlineSize);
 		surf = TTF_RenderUTF8_Blended_Wrapped(font, _name, colorBlack, xres);
-		TTF_SetFontOutline(font,0);
+		TTF_SetFontOutline(font, 0);
 		SDL_Surface* text = TTF_RenderUTF8_Blended_Wrapped(font, _name, colorWhite, xres);
 		SDL_Rect rect;
 		rect.x = 1; rect.y = 1;
-		SDL_BlitSurface(text,NULL,surf,&rect);
+		SDL_BlitSurface(text, NULL, surf, &rect);
 		SDL_FreeSurface(text);
 	} else {
-		TTF_SetFontOutline(font,0);
+		TTF_SetFontOutline(font, 0);
 		surf = TTF_RenderUTF8_Blended_Wrapped(font, _name, colorWhite, xres);
 	}
-	glGenTextures(1,&texid);
+	glGenTextures(1, &texid);
 
 	width = 0;
 	height = 0;
 	int scan = surf->pitch / surf->format->BytesPerPixel;
-	for( int y=0; y<surf->h; ++y ) {
-		for( int x=0; x<surf->w; ++x ) {
-			if( ((Uint32 *)surf->pixels)[ x + y * scan ]!=0 ) {
-				width = max(width,x);
-				height = max(height,y);
+	for (int y = 0; y < surf->h; ++y) {
+		for (int x = 0; x < surf->w; ++x) {
+			if (((Uint32 *)surf->pixels)[x + y * scan] != 0) {
+				width = max(width, x);
+				height = max(height, y);
 			}
 		}
 	}
@@ -109,19 +109,19 @@ Text::Text(const char* _name) : Asset(_name) {
 }
 
 Text::~Text() {
-	if( surf ) {
+	if (surf) {
 		SDL_FreeSurface(surf);
 		surf = nullptr;
 	}
-	if( texid ) {
-		glDeleteTextures(1,&texid);
+	if (texid) {
+		glDeleteTextures(1, &texid);
 		texid = 0;
 	}
 }
 
 void Text::createStaticData() {
 	// initialize buffer names
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
 
@@ -153,32 +153,32 @@ void Text::createStaticData() {
 }
 
 void Text::deleteStaticData() {
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		buffer_t buffer = static_cast<buffer_t>(i);
-		if( vbo[buffer] ) {
-			glDeleteBuffers(1,&vbo[buffer]);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
 		}
 	}
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 	}
 }
 
-void Text::draw( Rect<int> src, Rect<int> dest ) const {
-	drawColor( src, dest, glm::vec4(1.f) );
+void Text::draw(Rect<int> src, Rect<int> dest) const {
+	drawColor(src, dest, glm::vec4(1.f));
 }
 
-void Text::drawColor( Rect<int> src, Rect<int> dest, const glm::vec4& color ) const {
+void Text::drawColor(Rect<int> src, Rect<int> dest, const glm::vec4& color) const {
 	int yres = mainEngine->getYres();
 	int xres = mainEngine->getXres();
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/2D.json");
-	if( !mat ) {
+	if (!mat) {
 		return;
 	}
 	ShaderProgram& shader = mat->getShader();
-	if( &shader != ShaderProgram::getCurrentShader() ) {
+	if (&shader != ShaderProgram::getCurrentShader()) {
 		shader.mount();
 	}
 
@@ -193,7 +193,7 @@ void Text::drawColor( Rect<int> src, Rect<int> dest, const glm::vec4& color ) co
 	dest.h = dest.h <= 0 ? surf->h : dest.h;
 
 	// create view matrix
-	glm::mat4 viewMatrix = glm::ortho( 0.f, (float)xres, 0.f, (float)yres, 1.f, -1.f );
+	glm::mat4 viewMatrix = glm::ortho(0.f, (float)xres, 0.f, (float)yres, 1.f, -1.f);
 
 	// bind texture
 	glActiveTexture(GL_TEXTURE0);

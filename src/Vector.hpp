@@ -11,7 +11,7 @@
 
 class Vector {
 public:
-	float x=0.f, y=0.f, z=0.f;
+	float x = 0.f, y = 0.f, z = 0.f;
 
 	// constructors
 	Vector() {}
@@ -40,7 +40,7 @@ public:
 	// determines whether the vector represents a true volume
 	// @return true if all elements are nonzero, false otherwise
 	bool hasVolume() const {
-		if( x==0.f || y==0.f || z==0.f ) {
+		if (x == 0.f || y == 0.f || z == 0.f) {
 			return false;
 		}
 		return true;
@@ -49,42 +49,42 @@ public:
 	// calculate dot product of this vector and another
 	// @return the dot product of the two vectors
 	float dot(const Vector& other) const {
-		return x*other.x + y*other.y + z*other.z;
+		return x * other.x + y * other.y + z * other.z;
 	}
 
 	// calculate cross product of this vector and another
 	// @return the cross product of the two vectors
 	Vector cross(const Vector& other) const {
 		Vector result;
-		result.x = y*other.z - z*other.y;
-		result.y = z*other.x - x*other.z;
-		result.z = x*other.y - y*other.x;
+		result.x = y * other.z - z * other.y;
+		result.y = z * other.x - x * other.z;
+		result.z = x * other.y - y * other.x;
 		return result;
 	}
 
 	// calculate the length of the vector (uses sqrt)
 	// @return the length
 	float length() const {
-		return sqrtf( x*x + y*y + z*z );
+		return sqrtf(x*x + y * y + z * z);
 	}
 
 	// calculate the length of the vector, sans sqrt
 	// @return the length squared
 	float lengthSquared() const {
-		return x*x + y*y + z*z;
+		return x * x + y * y + z * z;
 	}
 
 	// create an absoluted copy of this vector
 	// @return an absoluted copy of this vector
 	Vector absolute() const {
-		return Vector (fabs(x), fabs(y), fabs(z));
+		return Vector(fabs(x), fabs(y), fabs(z));
 	}
 
 	// create a normalized copy of this vector
 	// @return a normalized version of this vector
 	Vector normal() const {
 		float l = length();
-		return Vector( x/l, y/l, z/l );
+		return Vector(x / l, y / l, z / l);
 	}
 
 	// normalize this vector
@@ -105,12 +105,12 @@ public:
 
 	// conversion to glm::vec3
 	operator glm::vec3() const {
-		return glm::vec3(x,y,z);
+		return glm::vec3(x, y, z);
 	}
 
 	// conversion to btVector3
 	operator btVector3() const {
-		return btVector3(x,y,z);
+		return btVector3(x, y, z);
 	}
 
 	// operator =
@@ -124,9 +124,9 @@ public:
 	// operator +
 	Vector operator+(const Vector& src) const {
 		Vector result;
-		result.x = x+src.x;
-		result.y = y+src.y;
-		result.z = z+src.z;
+		result.x = x + src.x;
+		result.y = y + src.y;
+		result.z = z + src.z;
 		return result;
 	}
 
@@ -141,9 +141,9 @@ public:
 	// operator -
 	Vector operator-(const Vector& src) const {
 		Vector result;
-		result.x = x-src.x;
-		result.y = y-src.y;
-		result.z = z-src.z;
+		result.x = x - src.x;
+		result.y = y - src.y;
+		result.z = z - src.z;
 		return result;
 	}
 
@@ -158,16 +158,16 @@ public:
 	// operator *
 	Vector operator*(const Vector& src) const {
 		Vector result;
-		result.x = x*src.x;
-		result.y = y*src.y;
-		result.z = z*src.z;
+		result.x = x * src.x;
+		result.y = y * src.y;
+		result.z = z * src.z;
 		return result;
 	}
 	Vector operator*(const float& src) const {
 		Vector result;
-		result.x = x*src;
-		result.y = y*src;
-		result.z = z*src;
+		result.x = x * src;
+		result.y = y * src;
+		result.z = z * src;
 		return result;
 	}
 
@@ -188,16 +188,16 @@ public:
 	// operator /
 	Vector operator/(const Vector& src) const {
 		Vector result;
-		result.x = x/src.x;
-		result.y = y/src.y;
-		result.z = z/src.z;
+		result.x = x / src.x;
+		result.y = y / src.y;
+		result.z = z / src.z;
 		return result;
 	}
 	Vector operator/(const float& src) const {
 		Vector result;
-		result.x = x/src;
-		result.y = y/src;
-		result.z = z/src;
+		result.x = x / src;
+		result.y = y / src;
+		result.z = z / src;
 		return result;
 	}
 
@@ -219,7 +219,7 @@ public:
 
 	// operator >
 	bool operator>(const Vector& other) const {
-		if( lengthSquared() > other.lengthSquared() ) {
+		if (lengthSquared() > other.lengthSquared()) {
 			return true;
 		} else {
 			return false;
@@ -228,7 +228,7 @@ public:
 
 	// operator >=
 	bool operator>=(const Vector& other) const {
-		if( lengthSquared() >= other.lengthSquared() ) {
+		if (lengthSquared() >= other.lengthSquared()) {
 			return true;
 		} else {
 			return false;
@@ -237,7 +237,7 @@ public:
 
 	// operator ==
 	bool operator==(const Vector& other) const {
-		if( x==other.x && y==other.y && z==other.z ) {
+		if (x == other.x && y == other.y && z == other.z) {
 			return true;
 		} else {
 			return false;
@@ -246,7 +246,7 @@ public:
 
 	// operator <=
 	bool operator<=(const Vector& other) const {
-		if( lengthSquared() <= other.lengthSquared() ) {
+		if (lengthSquared() <= other.lengthSquared()) {
 			return true;
 		} else {
 			return false;
@@ -255,7 +255,7 @@ public:
 
 	// operator <
 	bool operator<(const Vector& other) const {
-		if( lengthSquared() < other.lengthSquared() ) {
+		if (lengthSquared() < other.lengthSquared()) {
 			return true;
 		} else {
 			return false;
@@ -264,7 +264,7 @@ public:
 
 	// operator !=
 	bool operator!=(const Vector& other) const {
-		if( x!=other.x || y!=other.y || z!=other.z ) {
+		if (x != other.x || y != other.y || z != other.z) {
 			return true;
 		} else {
 			return false;

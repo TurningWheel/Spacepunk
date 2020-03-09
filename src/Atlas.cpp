@@ -9,8 +9,8 @@ Atlas::Atlas() {
 
 Atlas::~Atlas() {
 	cleanup();
-	if( texid ) {
-		glDeleteTextures(1,&texid);
+	if (texid) {
+		glDeleteTextures(1, &texid);
 		texid = 0;
 	}
 }
@@ -18,7 +18,7 @@ Atlas::~Atlas() {
 void Atlas::init() {
 	cleanup();
 
-	glGenTextures(1,&texid);
+	glGenTextures(1, &texid);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, texid);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -27,12 +27,12 @@ void Atlas::init() {
 
 	// load the null image as the base texture
 	char name[128];
-	snprintf(name,128,"images/system/null.png");
+	snprintf(name, 128, "images/system/null.png");
 	loadImage(name);
 }
 
 void Atlas::cleanup() {
-	while( pairs.getSize() > 0 ) {
+	while (pairs.getSize() > 0) {
 		pair_t* pair = pairs.pop();
 		delete pair;
 	}
@@ -46,18 +46,18 @@ bool Atlas::loadImage(const char* _name) {
 	String path = mainEngine->buildPath(_name).get();
 
 	SDL_Surface* surf = nullptr;
-	if( (surf=IMG_Load(path.get()))==NULL ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load image '%s'",_name);
+	if ((surf = IMG_Load(path.get())) == NULL) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load image '%s'", _name);
 		delete surf;
 		return false;
 	}
 
 	// do not load an image if it already exists in the bank
-	for( Uint32 c = 0; c < pairs.getSize(); ++c ) {
+	for (Uint32 c = 0; c < pairs.getSize(); ++c) {
 		pair_t* pair = pairs[c];
 		String& str = pair->name;
-		if( str == _name ) {
-			if( surf ) {
+		if (str == _name) {
+			if (surf) {
 				SDL_FreeSurface(surf);
 			}
 			delete surf;
@@ -90,7 +90,7 @@ void Atlas::refresh() {
 
 	GLuint c = 0;
 	Node<pair_t*>* node = nullptr;
-	for( Uint32 c = 0; c < pairs.getSize(); ++c ) {
+	for (Uint32 c = 0; c < pairs.getSize(); ++c) {
 		pair_t* pair = pairs[c];
 
 		// resize surface
@@ -109,9 +109,9 @@ void Atlas::refresh() {
 const GLuint Atlas::indexForName(const char* name) const {
 	int c = 0;
 	const Node<pair_t*>* node = nullptr;
-	for( Uint32 c = 0; c < pairs.getSize(); ++c ) {
+	for (Uint32 c = 0; c < pairs.getSize(); ++c) {
 		pair_t* pair = pairs[c];
-		if( pair->name == name ) {
+		if (pair->name == name) {
 			return (GLuint)c;
 		}
 	}

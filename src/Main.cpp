@@ -14,12 +14,12 @@ const float SQRT2 = 1.41421356237309504f;
 const char* versionStr = "0.0.0.1";
 
 int main(int argc, char **argv) {
-	mainEngine = new Engine(argc,argv);
+	mainEngine = new Engine(argc, argv);
 
 	// initialize mainEngine
 	mainEngine->init();
-	if( !mainEngine->isInitialized() ) {
-		mainEngine->fmsg(Engine::MSG_CRITICAL,"failed to start engine.");
+	if (!mainEngine->isInitialized()) {
+		mainEngine->fmsg(Engine::MSG_CRITICAL, "failed to start engine.");
 		delete mainEngine;
 		return 1;
 	} else {
@@ -27,14 +27,14 @@ int main(int argc, char **argv) {
 		const char* configName = "autoexec.cfg";
 		mainEngine->loadConfig(configName);
 	}
-	
+
 	// main loop
-	while(mainEngine->isRunning()) {
+	while (mainEngine->isRunning()) {
 		mainEngine->preProcess();
 		mainEngine->process();
 		mainEngine->postProcess();
 	}
-	
+
 	delete mainEngine;
 
 	return 0;

@@ -17,8 +17,8 @@ public:
 	virtual ~ShaderProgram();
 
 	// getters & setters
-	virtual const type_t			getType() const		{ return ASSET_SHADERPROGRAM; }
-	static const ShaderProgram*		getCurrentShader()	{ return currentShader; }
+	virtual const type_t			getType() const { return ASSET_SHADERPROGRAM; }
+	static const ShaderProgram*		getCurrentShader() { return currentShader; }
 
 	// gets the location of a uniform variable
 	// @param name the name of the variable to be retrieved

@@ -80,8 +80,8 @@ const char* Entity::sortStr[SORT_MAX] = {
 Entity::Entity(World* _world, Uint32 _uid) {
 	// insert the entity into the world
 	world = _world;
-	if( world ) {
-		if( _uid == UINT32_MAX ) {
+	if (world) {
+		if (_uid == UINT32_MAX) {
 			uid = world->getNewUID();
 		} else {
 			uid = _uid;
@@ -106,17 +106,17 @@ Entity::Entity(World* _world, Uint32 _uid) {
 }
 
 Entity::~Entity() {
-	if( player ) {
+	if (player) {
 		player->onEntityDeleted(this);
 		player = nullptr;
 	}
-	if( listener ) {
+	if (listener) {
 		listener->onDeleted();
 	}
 
 	// delete components
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c] ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]) {
 			delete components[c];
 			components[c] = nullptr;
 		}
@@ -127,7 +127,7 @@ Entity::~Entity() {
 	clearChunkNode();
 
 	// delete script engine
-	if( script )
+	if (script)
 	{
 		delete script;
 	}
@@ -148,34 +148,34 @@ Game* Entity::getGame() {
 
 void Entity::clearAllChunkNodes() {
 	clearChunkNode();
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->clearAllChunkNodes();
 	}
 }
 
 void Entity::addToEditorList() {
-	if( !shouldSave ) {
+	if (!shouldSave) {
 		return;
 	}
 	Client* client = mainEngine->getLocalClient();
-	if( client ) {
+	if (client) {
 		Frame* gui = client->getGUI();
-		if( gui ) {
+		if (gui) {
 			Frame* levelList = gui->findFrame("editor_FrameLevelNavigatorList");
-			if( levelList ) {
+			if (levelList) {
 
-				Frame::entry_t* entry = levelList->addEntry("entity",true);
+				Frame::entry_t* entry = levelList->addEntry("entity", true);
 				entry->text = name.get();
 				entry->params.addInt(uid);
-				if( selected ) {
-					entry->color = glm::vec4(1.f,0.f,0.f,1.f);
-				} else if( highlighted ) {
-					entry->color = glm::vec4(1.f,1.f,0.f,1.f);
+				if (selected) {
+					entry->color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+				} else if (highlighted) {
+					entry->color = glm::vec4(1.f, 1.f, 0.f, 1.f);
 				} else {
 					entry->color = glm::vec4(1.f);
 				}
 
-				listener = std::make_shared<Frame::listener_t>((void*) entry);
+				listener = std::make_shared<Frame::listener_t>((void*)entry);
 				entry->listener = listener;
 			}
 		}
@@ -216,16 +216,16 @@ void Entity::finishInsertIntoWorld() {
 	}
 
 	// signal components
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->beforeWorldInsertion(newWorld);
 	}
 
 	// insert to new world
-	if( world ) {
+	if (world) {
 		world->getEntities().remove(uid);
 	}
 	world = newWorld;
-	if( world ) {
+	if (world) {
 		uid = world->getNewUID();
 		world->getEntities().insert(uid, this);
 	} else {
@@ -233,7 +233,7 @@ void Entity::finishInsertIntoWorld() {
 	}
 
 	// signal components again
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->afterWorldInsertion(newWorld);
 	}
 
@@ -272,11 +272,11 @@ void Entity::finishInsertIntoWorld() {
 }
 
 void Entity::remove() {
-	toBeDeleted=true;
+	toBeDeleted = true;
 }
 
 void Entity::deleteAllVisMaps() {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->deleteAllVisMaps();
 	}
 }
@@ -284,9 +284,9 @@ void Entity::deleteAllVisMaps() {
 bool Entity::isNearCharacter(float radius) const {
 	LinkedList<Entity*> list;
 	findEntitiesInRadius(radius, list);
-	for( Node<Entity*>* node = list.getFirst(); node != nullptr; node = node->getNext() ) {
+	for (Node<Entity*>* node = list.getFirst(); node != nullptr; node = node->getNext()) {
 		Entity* entity = node->getData();
-		if( entity->getPlayer() || entity->hasComponent(Component::COMPONENT_CHARACTER) ) {
+		if (entity->getPlayer() || entity->hasComponent(Component::COMPONENT_CHARACTER)) {
 			return true;
 		}
 	}
@@ -294,7 +294,7 @@ bool Entity::isNearCharacter(float radius) const {
 }
 
 bool Entity::isCrouching() const {
-	if( player ) {
+	if (player) {
 		return player->isCrouching();
 	} else {
 		return false;
@@ -302,8 +302,8 @@ bool Entity::isCrouching() const {
 }
 
 bool Entity::isMoving() const {
-	if( vel.lengthSquared() > 0.01f ) {
-		if( player ) {
+	if (vel.lengthSquared() > 0.01f) {
+		if (player) {
 			return player->isMoving();
 		} else {
 			return true;
@@ -314,7 +314,7 @@ bool Entity::isMoving() const {
 }
 
 bool Entity::hasJumped() const {
-	if( player ) {
+	if (player) {
 		return player->hasJumped();
 	} else {
 		return false;
@@ -322,10 +322,10 @@ bool Entity::hasJumped() const {
 }
 
 void Entity::findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) const {
-	if( !world ) {
+	if (!world) {
 		return;
 	}
-	world->findEntitiesInRadius( pos, radius, outList );
+	world->findEntitiesInRadius(pos, radius, outList);
 }
 
 void Entity::update() {
@@ -336,13 +336,13 @@ void Entity::update() {
 		return;
 	}
 
-	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(pos.x,-pos.z,pos.y));
+	glm::mat4 translationM = glm::translate(glm::mat4(1.f), glm::vec3(pos.x, -pos.z, pos.y));
 	glm::mat4 rotationM = glm::mat4(glm::quat(ang.w, ang.x, ang.y, ang.z));
-	glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(scale.x, scale.z, scale.y));
+	glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
 	mat = translationM * rotationM * scaleM;
 
 	// update the chunk node
-	if( world && world->getType() == World::WORLD_TILES ) {
+	if (world && world->getType() == World::WORLD_TILES) {
 		TileWorld* tileworld = static_cast<TileWorld*>(world);
 		if (tileworld && tileworld->getChunks().getSize()) {
 			Sint32 cW = tileworld->calcChunksWidth();
@@ -363,8 +363,8 @@ void Entity::update() {
 		}
 	}
 
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c]->isToBeDeleted() ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->isToBeDeleted()) {
 			delete components[c];
 			components.remove(c);
 			--c;
@@ -384,8 +384,7 @@ void Entity::updatePacket(Packet& packet) const {
 		packet.write8(player->isCrouching() ? 1 : 0);
 		packet.write32(player->getServerID());
 		packet.write8(1); // signifies this is a player
-	}
-	else {
+	} else {
 		packet.write8(0); // signifies this is not a player, stop here
 	}
 	packet.write8(falling ? 1U : 0U);
@@ -446,7 +445,7 @@ void Entity::process() {
 	++ticks;
 
 	// update path request
-	if( path ) {
+	if (path) {
 		pathRequested = false;
 		if (path->getSize() == 0) {
 			delete path;
@@ -463,8 +462,8 @@ void Entity::process() {
 				pathNode.z = tileWorld->getTiles()[y + x * tileWorld->getHeight()].getFloorHeight(); float& z = pathNode.z;
 				float epsilon = Tile::size / 4.f;
 
-				if (pos.x >= x-epsilon && pos.x <= x-epsilon &&
-					pos.y >= y-epsilon && pos.y <= y-epsilon) {
+				if (pos.x >= x - epsilon && pos.x <= x - epsilon &&
+					pos.y >= y - epsilon && pos.y <= y - epsilon) {
 					path->removeNode(path->getFirst());
 
 					//Finished pathfinding.
@@ -476,8 +475,7 @@ void Entity::process() {
 						delete path;
 						path = nullptr;
 					}
-				}
-				else {
+				} else {
 					//Move to the target tile.
 					//Stop moving once reached destination.
 					Vector pathDir = (pathNode - pos).normal();
@@ -553,12 +551,12 @@ void Entity::process() {
 	}
 
 	// update component matrices
-	if( updateNeeded ) {
+	if (updateNeeded) {
 		update();
 	}
 
 	// process components
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->process();
 	}
 }
@@ -573,34 +571,34 @@ void Entity::postProcess() {
 
 void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 	bool editorRunning = mainEngine->isEditorRunning();
-	if( !isFlag(flag_t::FLAG_VISIBLE) && (!editorRunning || !shouldSave) ) {
+	if (!isFlag(flag_t::FLAG_VISIBLE) && (!editorRunning || !shouldSave)) {
 		return;
 	}
 
 	// skip editor only entities in orthographic (minimap) mode
-	if( camera.isOrtho() && !shouldSave ) {
+	if (camera.isOrtho() && !shouldSave) {
 		return;
 	}
 
 	// in editor, skip entities at too great a distance
-	if( editorRunning && world->isShowTools() && !camera.isOrtho() ) {
-		if( (camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() / 4.f ) {
+	if (editorRunning && world->isShowTools() && !camera.isOrtho()) {
+		if ((camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() / 4.f) {
 			return;
 		}
 	}
 
 	// setup overdraw characteristics
-	if( isFlag(Entity::flag_t::FLAG_OVERDRAW) ) {
+	if (isFlag(Entity::flag_t::FLAG_OVERDRAW)) {
 		glDepthRange(0.f, .01f);
 	}
 
 	// draw components
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->draw(camera, lights);
 	}
 
 	// reset overdraw characteristics
-	if( isFlag(Entity::flag_t::FLAG_OVERDRAW) ) {
+	if (isFlag(Entity::flag_t::FLAG_OVERDRAW)) {
 		glDepthRange(0.f, 1.f);
 	}
 }
@@ -610,8 +608,8 @@ bool Entity::checkCollision(const Vector& newPos) {
 	pos = newPos;
 	update();
 
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c]->checkCollision() ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->checkCollision()) {
 			pos = oldPos;
 			update();
 			return true;
@@ -625,7 +623,7 @@ bool Entity::checkCollision(const Vector& newPos) {
 void Entity::animate(const char* name, bool blend) {
 	LinkedList<Model*> models;
 	findAllComponents<Model>(Component::COMPONENT_MODEL, models);
-	for( auto& model : models ) {
+	for (auto& model : models) {
 		model->animate(name, blend);
 	}
 }
@@ -648,28 +646,22 @@ void Entity::depositInAvailableSlot(Entity* entityToDeposit)
 	if (!item.isSlotFilled("RightHand"))
 	{
 		depositItem(entityToDeposit, "RightHand");
-	}
-	else if (!item.isSlotFilled("LeftHand"))
+	} else if (!item.isSlotFilled("LeftHand"))
 	{
 		depositItem(entityToDeposit, "LeftHand");
-	}
-	else if (!item.isSlotFilled("Back"))
+	} else if (!item.isSlotFilled("Back"))
 	{
 		depositItem(entityToDeposit, "Back");
-	}
-	else if (!item.isSlotFilled("RightHip"))
+	} else if (!item.isSlotFilled("RightHip"))
 	{
 		depositItem(entityToDeposit, "RightHip");
-	}
-	else if (!item.isSlotFilled("LeftHip"))
+	} else if (!item.isSlotFilled("LeftHip"))
 	{
 		depositItem(entityToDeposit, "LeftHip");
-	}
-	else if (!item.isSlotFilled("Waist"))
+	} else if (!item.isSlotFilled("Waist"))
 	{
 		depositItem(entityToDeposit, "Waist");
-	}
-	else
+	} else
 	{
 		depositItem(entityToDeposit, "RightHand");
 	}
@@ -682,13 +674,13 @@ void Entity::setInventoryVisibility(bool visible)
 
 float Entity::nearestFloor(World::hit_t& hit) {
 	float nearestFloor = FLT_MAX;
-	if( !world ) {
+	if (!world) {
 		return nearestFloor;
 	}
 
 	// perform sweep
 	LinkedList<World::hit_t> hits;
-	Vector v = (ang * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+	Vector v = (ang * Quaternion(Rotation(0.f, PI / 2.f, 0.f))).toVector();
 	world->lineTraceList(pos, pos + v * 10000.f, hits);
 	for (auto& curr : hits) {
 		if (curr.manifest && curr.manifest->entity == this) {
@@ -704,13 +696,13 @@ float Entity::nearestFloor(World::hit_t& hit) {
 
 float Entity::nearestCeiling(World::hit_t& hit) {
 	float nearestCeiling = FLT_MAX;
-	if( !world ) {
+	if (!world) {
 		return nearestCeiling;
 	}
 
 	// perform sweep
 	LinkedList<World::hit_t> hits;
-	Vector v = (ang * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
+	Vector v = (ang * Quaternion(Rotation(0.f, -PI / 2.f, 0.f))).toVector();
 	world->lineTraceList(pos, pos + v * 10000.f, hits);
 	for (auto& curr : hits) {
 		if (curr.manifest && curr.manifest->entity == this) {
@@ -725,7 +717,7 @@ float Entity::nearestCeiling(World::hit_t& hit) {
 }
 
 bool Entity::move() {
-	if( !isFlag(Entity::FLAG_STATIC) ) {
+	if (!isFlag(Entity::FLAG_STATIC)) {
 		// find physics component, if any
 		BBox* physics = nullptr;
 		if (!mainEngine->isEditorRunning()) {
@@ -741,7 +733,7 @@ bool Entity::move() {
 		}
 
 		// apply movement forces to entity
-		if( physics || rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
+		if (physics || rot.yaw || rot.pitch || rot.roll || vel.lengthSquared()) {
 			if (physics && physics->getMass() != 0.f) {
 				btTransform transform = physics->getPhysicsTransform();
 
@@ -775,8 +767,8 @@ bool Entity::move() {
 
 void Entity::setMat(const glm::mat4& _mat) {
 	mat = _mat;
-	pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
-	scale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
+	pos = Vector(mat[3][0], mat[3][2], -mat[3][1]);
+	scale = Vector(glm::length(mat[0]), glm::length(mat[2]), glm::length(mat[1]));
 	ang = Quaternion(mat);
 	updateNeeded = true;
 }
@@ -801,9 +793,9 @@ bool Entity::saveDef(const char* filename) const {
 }
 
 const Entity::def_t* Entity::findDef(const char* name) {
-	for( const Node<Entity::def_t*>* node = mainEngine->getEntityDefs().getFirst(); node!=nullptr; node=node->getNext() ) {
+	for (const Node<Entity::def_t*>* node = mainEngine->getEntityDefs().getFirst(); node != nullptr; node = node->getNext()) {
 		const Entity::def_t* def = node->getData();
-		if( def->entity.getName() == name ) {
+		if (def->entity.getName() == name) {
 			return def;
 		}
 	}
@@ -813,9 +805,9 @@ const Entity::def_t* Entity::findDef(const char* name) {
 const Entity::def_t* Entity::findDef(const Uint32 index) {
 	Uint32 c;
 	const Node<Entity::def_t*>* node;
-	for( c = 0, node = mainEngine->getEntityDefs().getFirst(); node!=nullptr; node=node->getNext(), ++c ) {
+	for (c = 0, node = mainEngine->getEntityDefs().getFirst(); node != nullptr; node = node->getNext(), ++c) {
 		const Entity::def_t* def = node->getData();
-		if( c == index ) {
+		if (c == index) {
 			return def;
 		}
 	}
@@ -845,11 +837,11 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 }
 
 bool Entity::hasComponent(Component::type_t type) const {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c]->getType() == type ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->getType() == type) {
 			return true;
 		}
-		if( components[c]->hasComponent(type) ) {
+		if (components[c]->hasComponent(type)) {
 			return true;
 		}
 	}
@@ -876,7 +868,7 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 	entity->setFalling(falling);
 	entity->setSort(sort);
 	entity->keyvalues.copy(keyvalues);
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->copy(entity);
 	}
 	entity->update();
@@ -887,7 +879,7 @@ Entity* Entity::copy(World* world, Entity* entity) const {
 
 bool Entity::removeComponentByName(const char* name) {
 	Component* component = findComponentByName<Component>(name);
-	if( component ) {
+	if (component) {
 		component->remove();
 		return true;
 	} else {
@@ -897,7 +889,7 @@ bool Entity::removeComponentByName(const char* name) {
 
 bool Entity::removeComponentByUID(const Uint32 uid) {
 	Component* component = findComponentByUID<Component>(uid);
-	if( component ) {
+	if (component) {
 		component->remove();
 		return true;
 	} else {
@@ -930,9 +922,9 @@ Component* Entity::addComponent(Component::type_t type) {
 	}
 }
 
-const World::hit_t Entity::lineTrace( const Vector& origin, const Vector& dest )
+const World::hit_t Entity::lineTrace(const Vector& origin, const Vector& dest)
 {
-	if ( !world )
+	if (!world)
 	{
 		World::hit_t emptyResult;
 		return emptyResult;
@@ -943,7 +935,7 @@ const World::hit_t Entity::lineTrace( const Vector& origin, const Vector& dest )
 
 bool Entity::interact(Entity& user, BBox& bbox)
 {
-	if ( !isFlag(flag_t::FLAG_INTERACTABLE) || !script )
+	if (!isFlag(flag_t::FLAG_INTERACTABLE) || !script)
 	{
 		return false;
 	}
@@ -976,7 +968,7 @@ void Entity::serialize(FileInterface * file) {
 	if (version >= 2) {
 		file->property("EntityItem", item);
 	}
-	if( version >= 1 ) {
+	if (version >= 1) {
 		file->property("keys", keyvalues);
 	}
 
@@ -999,13 +991,12 @@ void Entity::serialize(FileInterface * file) {
 
 		// important to init script engine
 		setScriptStr(scriptStr.get());
-		
+
 		// post
 		setNewPos(pos);
 		setNewAng(ang);
 		updateNeeded = true;
-	}
-	else {
+	} else {
 		Uint32 componentCount = 0;
 		for (Uint32 index = 0; index < components.getSize(); ++index) {
 			if (components[index]->isEditorOnly()) {
@@ -1052,7 +1043,7 @@ void Entity::deleteKeyValue(const char* key)
 const char* Entity::getKeyValueAsString(const char* key) const
 {
 	const String* value = keyvalues.find(key);
-	if( value ) {
+	if (value) {
 		return value->get();
 	} else {
 		return "";
@@ -1062,7 +1053,7 @@ const char* Entity::getKeyValueAsString(const char* key) const
 float Entity::getKeyValueAsFloat(const char* key) const
 {
 	const String* value = keyvalues.find(key);
-	if( value ) {
+	if (value) {
 		return strtof(value->get(), nullptr);
 	} else {
 		return 0.f;
@@ -1072,7 +1063,7 @@ float Entity::getKeyValueAsFloat(const char* key) const
 int Entity::getKeyValueAsInt(const char* key) const
 {
 	const String* value = keyvalues.find(key);
-	if( value ) {
+	if (value) {
 		return strtol(value->get(), nullptr, 10);
 	} else {
 		return 0;

@@ -25,9 +25,9 @@ public:
 	virtual void serialize(FileInterface * file) override;
 
 	// getters & setters
-	virtual const type_t		getType() const			{ return ASSET_TEXTURE; }
-	const ArrayList<Image*>&	getTextures() const		{ return textures; }
-	ArrayList<Image*>&			getTextures()			{ return textures; }
+	virtual const type_t		getType() const { return ASSET_TEXTURE; }
+	const ArrayList<Image*>&	getTextures() const { return textures; }
+	ArrayList<Image*>&			getTextures() { return textures; }
 
 private:
 	ArrayList<Image*> textures;

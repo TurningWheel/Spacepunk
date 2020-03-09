@@ -90,7 +90,7 @@ public:
 		float theta1 = theta0 * t;
 		float sin_theta0 = sinf(theta0);
 		float sin_theta1 = sinf(theta1);
-		
+
 		float s0 = cosf(theta1) - dot * sin_theta1 / sin_theta0;
 		float s1 = sin_theta1 / sin_theta0;
 
@@ -114,10 +114,10 @@ public:
 		SR = sinf(RollNoWinding / 2.f); CR = cosf(RollNoWinding / 2.f);
 
 		Quaternion q;
-		q.x =  CR*SP*SY - SR*CP*CY; // z
-		q.z = -CR*SP*CY - SR*CP*SY; // x
-		q.y = -CR*CP*SY + SR*SP*CY; // y
-		q.w =  CR*CP*CY + SR*SP*SY;
+		q.x = CR * SP*SY - SR * CP*CY; // z
+		q.z = -CR * SP*CY - SR * CP*SY; // x
+		q.y = -CR * CP*SY + SR * SP*CY; // y
+		q.w = CR * CP*CY + SR * SP*SY;
 		return *this * q;
 	}
 
@@ -127,7 +127,7 @@ public:
 
 		Rotation result;
 
-		const float singularityTest = x*y + z*w;
+		const float singularityTest = x * y + z * w;
 		const float epsilon = 0.4999995f;
 
 		result.pitch = -asinf(2.f*x*y + 2.f*z*w);
@@ -187,11 +187,11 @@ public:
 	}
 
 	bool operator==(const Quaternion& q) const {
-		return x==q.x && y==q.y && z==q.z && w==q.w;
+		return x == q.x && y == q.y && z == q.z && w == q.w;
 	}
-	
+
 	bool operator!=(const Quaternion& q) const {
-		return x!=q.x || y!=q.y || z!=q.z || w!=q.w;
+		return x != q.x || y != q.y || z != q.z || w != q.w;
 	}
 
 	void serialize(FileInterface * file) {

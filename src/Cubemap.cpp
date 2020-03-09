@@ -6,14 +6,14 @@
 
 Cubemap::Cubemap(const char* _name) : Asset(_name) {
 	path = mainEngine->buildPath(_name).get();
-	mainEngine->fmsg(Engine::MSG_DEBUG,"loading cubemap '%s'...",_name);
-	if( FileHelper::readObject(path.get(),*this) == false ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load cubemap '%s'",_name);
+	mainEngine->fmsg(Engine::MSG_DEBUG, "loading cubemap '%s'...", _name);
+	if (FileHelper::readObject(path.get(), *this) == false) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load cubemap '%s'", _name);
 	}
 }
 
 bool Cubemap::init() {
-	glGenTextures(1,&texid);
+	glGenTextures(1, &texid);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texid);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -23,12 +23,12 @@ bool Cubemap::init() {
 	};
 
 	Uint32 index = 0;
-	for( auto& texture : textures ) {
+	for (auto& texture : textures) {
 		String path = mainEngine->buildPath(texture->get());
 
 		// load image
-		if( (surfs[index]=IMG_Load(path.get())) == nullptr ) {
-			mainEngine->fmsg(Engine::MSG_ERROR,"failed to load cubemap image '%s'",texture->get());
+		if ((surfs[index] = IMG_Load(path.get())) == nullptr) {
+			mainEngine->fmsg(Engine::MSG_ERROR, "failed to load cubemap image '%s'", texture->get());
 			break;
 		}
 
@@ -50,23 +50,23 @@ bool Cubemap::init() {
 	}
 	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-	if( index < 6 ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load cubemap '%s': some images not found!",name.get());
+	if (index < 6) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load cubemap '%s': some images not found!", name.get());
 		return false;
 	}
-	
+
 	return true;
 }
 
 Cubemap::~Cubemap() {
-	for( int c = 0; c < 6; ++c ) {
-		if( surfs[c] ) {
+	for (int c = 0; c < 6; ++c) {
+		if (surfs[c]) {
 			SDL_FreeSurface(surfs[c]);
 			surfs[c] = nullptr;
 		}
 	}
-	if( texid ) {
-		glDeleteTextures(1,&texid);
+	if (texid) {
+		glDeleteTextures(1, &texid);
 		texid = 0;
 	}
 }

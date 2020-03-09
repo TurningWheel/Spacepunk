@@ -31,7 +31,7 @@
 #define SAVEPNG_AMASK 0xFF000000
 #endif
 
-/* libpng callbacks */ 
+ /* libpng callbacks */
 static void png_error_SDL(png_structp ctx, png_const_charp str)
 {
 	SDL_SetError("libpng: %s\n", str);
@@ -42,12 +42,12 @@ static void png_write_SDL(png_structp png_ptr, png_bytep data, png_size_t length
 	SDL_RWwrite(rw, data, sizeof(png_byte), length);
 }
 
-SDL_Surface *SDL_PNGFormatAlpha(SDL_Surface *src) 
+SDL_Surface *SDL_PNGFormatAlpha(SDL_Surface *src)
 {
 	SDL_Surface *surf;
 	SDL_Rect rect = { 0 };
 
-	/* NO-OP for images < 32bpp and 32bpp images that already have Alpha channel */ 
+	/* NO-OP for images < 32bpp and 32bpp images that already have Alpha channel */
 	if (src->format->BitsPerPixel <= 24 || src->format->Amask) {
 		++src->refcount;
 		return src;
@@ -63,7 +63,7 @@ SDL_Surface *SDL_PNGFormatAlpha(SDL_Surface *src)
 	return surf;
 }
 
-int SDL_SavePNG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst) 
+int SDL_SavePNG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst)
 {
 	png_structp png_ptr;
 	png_infop info_ptr;
@@ -87,7 +87,7 @@ int SDL_SavePNG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst)
 		return (SAVEPNG_ERROR);
 	}
 	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, png_error_SDL, NULL); /* err_ptr, err_fn, warn_fn */
-	if (!png_ptr) 
+	if (!png_ptr)
 	{
 		SDL_SetError("Unable to png_create_write_struct on %s\n", PNG_LIBPNG_VER_STRING);
 		if (freedst) SDL_RWclose(dst);
@@ -114,38 +114,37 @@ int SDL_SavePNG_RW(SDL_Surface *surface, SDL_RWops *dst, int freedst)
 	/* Prepare chunks */
 	colortype = PNG_COLOR_MASK_COLOR;
 	if (surface->format->BytesPerPixel > 0
-	&&  surface->format->BytesPerPixel <= 8
-	&& (pal = surface->format->palette))
+		&& surface->format->BytesPerPixel <= 8
+		&& (pal = surface->format->palette))
 	{
 		colortype |= PNG_COLOR_MASK_PALETTE;
 		pal_ptr = (png_colorp)malloc(pal->ncolors * sizeof(png_color));
 		for (i = 0; i < pal->ncolors; ++i) {
-			pal_ptr[i].red   = pal->colors[i].r;
+			pal_ptr[i].red = pal->colors[i].r;
 			pal_ptr[i].green = pal->colors[i].g;
-			pal_ptr[i].blue  = pal->colors[i].b;
+			pal_ptr[i].blue = pal->colors[i].b;
 		}
 		png_set_PLTE(png_ptr, info_ptr, pal_ptr, pal->ncolors);
 		free(pal_ptr);
-	}
-	else if (surface->format->BytesPerPixel > 3 || surface->format->Amask)
+	} else if (surface->format->BytesPerPixel > 3 || surface->format->Amask)
 		colortype |= PNG_COLOR_MASK_ALPHA;
 
 	png_set_IHDR(png_ptr, info_ptr, surface->w, surface->h, 8, colortype,
 		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-//	png_set_packing(png_ptr);
+	//	png_set_packing(png_ptr);
 
-	/* Allow BGR surfaces */
+		/* Allow BGR surfaces */
 	if (surface->format->Rmask == SAVEPNG_BMASK
-	&& surface->format->Gmask == SAVEPNG_GMASK
-	&& surface->format->Bmask == SAVEPNG_RMASK)
+		&& surface->format->Gmask == SAVEPNG_GMASK
+		&& surface->format->Bmask == SAVEPNG_RMASK)
 		png_set_bgr(png_ptr);
 
 	/* Write everything */
 	png_write_info(png_ptr, info_ptr);
 #ifdef USE_ROW_POINTERS
-	row_pointers = (png_bytep*) malloc(sizeof(png_bytep)*surface->h);
-	if( row_pointers ) {
+	row_pointers = (png_bytep*)malloc(sizeof(png_bytep)*surface->h);
+	if (row_pointers) {
 		for (i = 0; i < surface->h; ++i)
 			row_pointers[i] = (png_bytep)(Uint8*)surface->pixels + i * surface->pitch;
 		png_write_image(png_ptr, row_pointers);

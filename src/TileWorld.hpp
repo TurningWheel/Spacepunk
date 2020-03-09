@@ -12,7 +12,7 @@ class Generator;
 class TileWorld : public World {
 public:
 	TileWorld(Game* _game, Uint32 _id, const char* _zone, Uint32 _seed, Uint32 _width, Uint32 _height, const char* _nameStr);
-	TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width=32, Uint32 _height=32, const char* _nameStr="Untitled World");
+	TileWorld(Game* _game, bool _silent, Uint32 _id, Tile::side_t orientation, const char* _filename, Uint32 _width = 32, Uint32 _height = 32, const char* _nameStr = "Untitled World");
 	TileWorld(Game* _game, Uint32 _id, const char* _zone, const Generator& gen);
 	virtual ~TileWorld();
 
@@ -57,7 +57,7 @@ public:
 	// @param radius the radius to search in
 	// @param outList the list to populate
 	// @param flat if true, the search radius is 2-dimensional
-	virtual void findEntitiesInRadius( const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false );
+	virtual void findEntitiesInRadius(const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false);
 
 	// optimizes all the chunks in the world
 	void optimizeChunks();
@@ -72,7 +72,7 @@ public:
 	// @param _filename the filename to write to, or blank to use our last filename
 	// @param updateFilename if true, our current filename is changed, otherwise, it is not
 	// @return true on success, false on failure
-	virtual bool saveFile(const char* _filename="", bool updateFilename = false);
+	virtual bool saveFile(const char* _filename = "", bool updateFilename = false);
 
 	// save/load this object to a file
 	// @param file interface to serialize with
@@ -106,20 +106,20 @@ public:
 	void findRandomTile(float height, int& outX, int& outY);
 
 	// getters & setters
-	virtual const type_t		getType() const						{ return WORLD_TILES; }
-	const Uint32				getWidth() const					{ return width; }
-	const Uint32				getHeight() const					{ return height; }
-	ArrayList<Tile>&			getTiles()							{ return tiles; }
-	const ArrayList<Tile>&		getTiles() const					{ return tiles; }
-	ArrayList<Chunk>&			getChunks()							{ return chunks; }
-	const LinkedList<exit_t>&	getExits() const					{ return exits; }
+	virtual const type_t		getType() const { return WORLD_TILES; }
+	const Uint32				getWidth() const { return width; }
+	const Uint32				getHeight() const { return height; }
+	ArrayList<Tile>&			getTiles() { return tiles; }
+	const ArrayList<Tile>&		getTiles() const { return tiles; }
+	ArrayList<Chunk>&			getChunks() { return chunks; }
+	const LinkedList<exit_t>&	getExits() const { return exits; }
 
 	// editing properties
-	bool				isSelecting() const					{ return selecting; }
-	const Rect<int>&	getSelectedRect() const				{ return selectedRect; }
+	bool				isSelecting() const { return selecting; }
+	const Rect<int>&	getSelectedRect() const { return selectedRect; }
 
-	void	setSelectedRect(const Rect<int> _selectedRect)	{ selectedRect = _selectedRect; }
-	void	setSelecting(const bool _selecting)				{ selecting = _selecting; }
+	void	setSelectedRect(const Rect<int> _selectedRect) { selectedRect = _selectedRect; }
+	void	setSelecting(const bool _selecting) { selecting = _selecting; }
 
 	virtual std::future<PathFinder::Path*> findAPath(int startX, int startY, int endX, int endY) override;
 
@@ -138,7 +138,7 @@ private:
 
 	// destroys rendering objects for the world grid
 	void destroyGrid();
-		
+
 	// populate list of exits
 	void findExits();
 
@@ -146,15 +146,15 @@ private:
 	LinkedList<exit_t> exits;
 
 	// world dimensions
-	Uint32 width=0;
-	Uint32 height=0;
+	Uint32 width = 0;
+	Uint32 height = 0;
 
 	// tiles (world geometry)
 	ArrayList<Tile> tiles;
 	ArrayList<Chunk> chunks;
 
 	// editing variables
-	bool selecting=false;		// selecting tiles
+	bool selecting = false;		// selecting tiles
 	Rect<int> selectedRect;		// tile selection rectangle
 
 	// how many tiles a "large" grid section is

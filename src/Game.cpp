@@ -15,9 +15,9 @@ Game::Game() {
 }
 
 Game::~Game() {
-	mainEngine->fmsg(Engine::MSG_INFO,"cleaning up gamestate");
+	mainEngine->fmsg(Engine::MSG_INFO, "cleaning up gamestate");
 
-	if( net ) {
+	if (net) {
 		net->setParent(nullptr);
 		net->term();
 		delete net;
@@ -25,18 +25,18 @@ Game::~Game() {
 	}
 
 	// free world data
-	while( worlds.getFirst() ) {
+	while (worlds.getFirst()) {
 		delete worlds.getFirst()->getData();
 		worlds.removeNode(worlds.getFirst());
 	}
 }
 
 void Game::init() {
-	mainEngine->fmsg(Engine::MSG_INFO,"initializing gamestate");
+	mainEngine->fmsg(Engine::MSG_INFO, "initializing gamestate");
 }
 
 void Game::incrementFrame() {
-	if( framesToRun < 4 ) {
+	if (framesToRun < 4) {
 		++framesToRun;
 	}
 }
@@ -124,8 +124,8 @@ World* Game::worldForName(const char* name) {
 Uint32 Game::indexForWorld(World* world) {
 	Uint32 index;
 	Node<World*>* node;
-	for( index = 0, node = worlds.getFirst(); node != nullptr; node = node->getNext(), ++index ) {
-		if( node->getData() == world ) {
+	for (index = 0, node = worlds.getFirst(); node != nullptr; node = node->getNext(), ++index) {
+		if (node->getData() == world) {
 			return index;
 		}
 	}
@@ -133,7 +133,7 @@ Uint32 Game::indexForWorld(World* world) {
 }
 
 void Game::closeAllWorlds() {
-	while( worlds.getFirst() ) {
+	while (worlds.getFirst()) {
 		delete worlds.getFirst()->getData();
 		worlds.removeNode(worlds.getFirst());
 	}
@@ -154,9 +154,9 @@ void Game::preProcess() {
 }
 
 void Game::process() {
-	for( Uint32 frame=0; frame<framesToRun; ++frame ) {
+	for (Uint32 frame = 0; frame < framesToRun; ++frame) {
 		// process worlds
-		for( Node<World*>* node=worlds.getFirst(); node!=nullptr; node=node->getNext() ) {
+		for (Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext()) {
 			World* world = node->getData();
 			world->process();
 		}
@@ -174,9 +174,9 @@ void Game::postProcess() {
 }
 
 Player* Game::findPlayer(Uint32 clientID, Uint32 localID) {
-	for( Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext() ) {
+	for (Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
 		Player& player = node->getData();
-		if( player.getClientID() == clientID && player.getLocalID() == localID ) {
+		if (player.getClientID() == clientID && player.getLocalID() == localID) {
 			return &player;
 		}
 	}
@@ -184,9 +184,9 @@ Player* Game::findPlayer(Uint32 clientID, Uint32 localID) {
 }
 
 Player* Game::findPlayer(Uint32 serverID) {
-	for( Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext() ) {
+	for (Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
 		Player& player = node->getData();
-		if( player.getServerID() == serverID ) {
+		if (player.getServerID() == serverID) {
 			return &player;
 		}
 	}
@@ -195,10 +195,10 @@ Player* Game::findPlayer(Uint32 serverID) {
 
 int Game::numLocalPlayers() const {
 	int result = 0;
-	for( const Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext() ) {
+	for (const Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
 		const Player& player = node->getData();
 
-		if( player.getClientID() == invalidID ) {
+		if (player.getClientID() == invalidID) {
 			++result;
 		}
 	}

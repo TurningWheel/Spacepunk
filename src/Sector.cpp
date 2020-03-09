@@ -19,7 +19,7 @@ Sector::Sector(SectorWorld& _world) {
 
 	dynamicsWorld = world->getBulletDynamicsWorld();
 
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
 
@@ -29,71 +29,71 @@ Sector::Sector(SectorWorld& _world) {
 	faces.push(new face_t);
 
 	faces[0]->sector = this;
-	faces[0]->vertices[0].face     = faces[0];
-	faces[0]->vertices[0].position = glm::vec3( 0.f,  0.f,  0.f );
-	faces[0]->vertices[0].texcoord = glm::vec2( 0.f,  0.f );
-	faces[0]->vertices[1].face     = faces[0];
-	faces[0]->vertices[1].position = glm::vec3( 0.f,  def,  0.f );
-	faces[0]->vertices[1].texcoord = glm::vec2( 0.f,  1.f );
-	faces[0]->vertices[2].face     = faces[0];
-	faces[0]->vertices[2].position = glm::vec3( def,  0.f,  0.f );
-	faces[0]->vertices[2].texcoord = glm::vec2( 1.f,  0.f );
+	faces[0]->vertices[0].face = faces[0];
+	faces[0]->vertices[0].position = glm::vec3(0.f, 0.f, 0.f);
+	faces[0]->vertices[0].texcoord = glm::vec2(0.f, 0.f);
+	faces[0]->vertices[1].face = faces[0];
+	faces[0]->vertices[1].position = glm::vec3(0.f, def, 0.f);
+	faces[0]->vertices[1].texcoord = glm::vec2(0.f, 1.f);
+	faces[0]->vertices[2].face = faces[0];
+	faces[0]->vertices[2].position = glm::vec3(def, 0.f, 0.f);
+	faces[0]->vertices[2].texcoord = glm::vec2(1.f, 0.f);
 
 	faces[1]->sector = this;
-	faces[1]->vertices[0].face     = faces[1];
-	faces[1]->vertices[0].position = glm::vec3( 0.f,  0.f,  0.f );
-	faces[1]->vertices[0].texcoord = glm::vec2( 0.f,  1.f );
-	faces[1]->vertices[1].face     = faces[1];
-	faces[1]->vertices[1].position = glm::vec3( def,  0.f,  0.f );
-	faces[1]->vertices[1].texcoord = glm::vec2( 1.f,  1.f );
-	faces[1]->vertices[2].face     = faces[1];
-	faces[1]->vertices[2].position = glm::vec3( 0.f,  0.f, -def );
-	faces[1]->vertices[2].texcoord = glm::vec2( 0.f,  0.f );
+	faces[1]->vertices[0].face = faces[1];
+	faces[1]->vertices[0].position = glm::vec3(0.f, 0.f, 0.f);
+	faces[1]->vertices[0].texcoord = glm::vec2(0.f, 1.f);
+	faces[1]->vertices[1].face = faces[1];
+	faces[1]->vertices[1].position = glm::vec3(def, 0.f, 0.f);
+	faces[1]->vertices[1].texcoord = glm::vec2(1.f, 1.f);
+	faces[1]->vertices[2].face = faces[1];
+	faces[1]->vertices[2].position = glm::vec3(0.f, 0.f, -def);
+	faces[1]->vertices[2].texcoord = glm::vec2(0.f, 0.f);
 
 	faces[2]->sector = this;
-	faces[2]->vertices[0].face     = faces[2];
-	faces[2]->vertices[0].position = glm::vec3( 0.f,  0.f,  0.f );
-	faces[2]->vertices[0].texcoord = glm::vec2( 1.f,  1.f );
-	faces[2]->vertices[1].face     = faces[2];
-	faces[2]->vertices[1].position = glm::vec3( 0.f,  0.f, -def );
-	faces[2]->vertices[1].texcoord = glm::vec2( 1.f,  0.f );
-	faces[2]->vertices[2].face     = faces[2];
-	faces[2]->vertices[2].position = glm::vec3( 0.f,  def,  0.f );
-	faces[2]->vertices[2].texcoord = glm::vec2( 0.f,  1.f );
+	faces[2]->vertices[0].face = faces[2];
+	faces[2]->vertices[0].position = glm::vec3(0.f, 0.f, 0.f);
+	faces[2]->vertices[0].texcoord = glm::vec2(1.f, 1.f);
+	faces[2]->vertices[1].face = faces[2];
+	faces[2]->vertices[1].position = glm::vec3(0.f, 0.f, -def);
+	faces[2]->vertices[1].texcoord = glm::vec2(1.f, 0.f);
+	faces[2]->vertices[2].face = faces[2];
+	faces[2]->vertices[2].position = glm::vec3(0.f, def, 0.f);
+	faces[2]->vertices[2].texcoord = glm::vec2(0.f, 1.f);
 
 	faces[3]->sector = this;
-	faces[3]->vertices[0].face     = faces[3];
-	faces[3]->vertices[0].position = glm::vec3( 0.f,  0.f, -def );
-	faces[3]->vertices[0].texcoord = glm::vec2( 0.f,  0.f );
-	faces[3]->vertices[1].face     = faces[3];
-	faces[3]->vertices[1].position = glm::vec3( def,  0.f,  0.f );
-	faces[3]->vertices[1].texcoord = glm::vec2( 0.f,  1.f );
-	faces[3]->vertices[2].face     = faces[3];
-	faces[3]->vertices[2].position = glm::vec3( 0.f,  def,  0.f );
-	faces[3]->vertices[2].texcoord = glm::vec2( 1.f,  0.f );
+	faces[3]->vertices[0].face = faces[3];
+	faces[3]->vertices[0].position = glm::vec3(0.f, 0.f, -def);
+	faces[3]->vertices[0].texcoord = glm::vec2(0.f, 0.f);
+	faces[3]->vertices[1].face = faces[3];
+	faces[3]->vertices[1].position = glm::vec3(def, 0.f, 0.f);
+	faces[3]->vertices[1].texcoord = glm::vec2(0.f, 1.f);
+	faces[3]->vertices[2].face = faces[3];
+	faces[3]->vertices[2].position = glm::vec3(0.f, def, 0.f);
+	faces[3]->vertices[2].texcoord = glm::vec2(1.f, 0.f);
 }
 
 Sector::~Sector() {
-	for( int i=POSITION_BUFFER; i<BUFFER_TYPE_LENGTH; ++i ) {
-		if( vbo[static_cast<buffer_t>(i)] ) {
-			glDeleteBuffers(1,&vbo[static_cast<buffer_t>(i)]);
+	for (int i = POSITION_BUFFER; i < BUFFER_TYPE_LENGTH; ++i) {
+		if (vbo[static_cast<buffer_t>(i)]) {
+			glDeleteBuffers(1, &vbo[static_cast<buffer_t>(i)]);
 			vbo[static_cast<buffer_t>(i)] = 0;
 		}
 	}
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 		vao = 0;
 	}
-	if( triMesh!=nullptr ) {
+	if (triMesh != nullptr) {
 		delete triMesh;
 	}
-	if( triMeshShape!=nullptr ) {
+	if (triMeshShape != nullptr) {
 		delete triMeshShape;
 	}
-	if( motionState!=nullptr ) {
+	if (motionState != nullptr) {
 		delete motionState;
 	}
-	if( rigidBody!=nullptr ) {
+	if (rigidBody != nullptr) {
 		dynamicsWorld->removeRigidBody(rigidBody);
 		delete rigidBody;
 	}
@@ -109,49 +109,49 @@ void Sector::splitFace(int faceIndex, const Vector& splitPoint) {
 	vertex->setPos(splitPoint);
 
 	// setup first new face
-	faces[faces.getSize()-3]->sector = this;
-	faces[faces.getSize()-3]->vertices[0].position = faces[faceIndex]->vertices[0].position;
-	faces[faces.getSize()-3]->vertices[1].position = faces[faceIndex]->vertices[1].position;
-	faces[faces.getSize()-3]->vertices[2].position = splitPoint;
-	faces[faceIndex]->vertices[0].joined->own(faces[faces.getSize()-3]->vertices[0]);
-	faces[faceIndex]->vertices[1].joined->own(faces[faces.getSize()-3]->vertices[1]);
-	vertex->own(faces[faces.getSize()-3]->vertices[2]);
-	faces[faces.getSize()-3]->vertices[0].face = faces[faces.getSize() - 3];
-	faces[faces.getSize()-3]->vertices[1].face = faces[faces.getSize() - 3];
-	faces[faces.getSize()-3]->vertices[2].face = faces[faces.getSize() - 3];
-	faces[faces.getSize()-3]->vertices[0].texcoord = faces[faceIndex]->vertices[0].texcoord;
-	faces[faces.getSize()-3]->vertices[1].texcoord = faces[faceIndex]->vertices[1].texcoord;
-	faces[faces.getSize()-3]->vertices[2].texcoord = faces[faceIndex]->vertices[2].texcoord;
+	faces[faces.getSize() - 3]->sector = this;
+	faces[faces.getSize() - 3]->vertices[0].position = faces[faceIndex]->vertices[0].position;
+	faces[faces.getSize() - 3]->vertices[1].position = faces[faceIndex]->vertices[1].position;
+	faces[faces.getSize() - 3]->vertices[2].position = splitPoint;
+	faces[faceIndex]->vertices[0].joined->own(faces[faces.getSize() - 3]->vertices[0]);
+	faces[faceIndex]->vertices[1].joined->own(faces[faces.getSize() - 3]->vertices[1]);
+	vertex->own(faces[faces.getSize() - 3]->vertices[2]);
+	faces[faces.getSize() - 3]->vertices[0].face = faces[faces.getSize() - 3];
+	faces[faces.getSize() - 3]->vertices[1].face = faces[faces.getSize() - 3];
+	faces[faces.getSize() - 3]->vertices[2].face = faces[faces.getSize() - 3];
+	faces[faces.getSize() - 3]->vertices[0].texcoord = faces[faceIndex]->vertices[0].texcoord;
+	faces[faces.getSize() - 3]->vertices[1].texcoord = faces[faceIndex]->vertices[1].texcoord;
+	faces[faces.getSize() - 3]->vertices[2].texcoord = faces[faceIndex]->vertices[2].texcoord;
 
 	// setup second new face
-	faces[faces.getSize()-2]->sector = this;
-	faces[faces.getSize()-2]->vertices[0].position = faces[faceIndex]->vertices[1].position;
-	faces[faces.getSize()-2]->vertices[1].position = faces[faceIndex]->vertices[2].position;
-	faces[faces.getSize()-2]->vertices[2].position = splitPoint;
-	faces[faceIndex]->vertices[1].joined->own(faces[faces.getSize()-2]->vertices[0]);
-	faces[faceIndex]->vertices[2].joined->own(faces[faces.getSize()-2]->vertices[1]);
-	vertex->own(faces[faces.getSize()-2]->vertices[2]);
-	faces[faces.getSize()-2]->vertices[0].face = faces[faces.getSize() - 2];
-	faces[faces.getSize()-2]->vertices[1].face = faces[faces.getSize() - 2];
-	faces[faces.getSize()-2]->vertices[2].face = faces[faces.getSize() - 2];
-	faces[faces.getSize()-2]->vertices[0].texcoord = faces[faceIndex]->vertices[1].texcoord;
-	faces[faces.getSize()-2]->vertices[1].texcoord = faces[faceIndex]->vertices[2].texcoord;
-	faces[faces.getSize()-2]->vertices[2].texcoord = faces[faceIndex]->vertices[0].texcoord;
+	faces[faces.getSize() - 2]->sector = this;
+	faces[faces.getSize() - 2]->vertices[0].position = faces[faceIndex]->vertices[1].position;
+	faces[faces.getSize() - 2]->vertices[1].position = faces[faceIndex]->vertices[2].position;
+	faces[faces.getSize() - 2]->vertices[2].position = splitPoint;
+	faces[faceIndex]->vertices[1].joined->own(faces[faces.getSize() - 2]->vertices[0]);
+	faces[faceIndex]->vertices[2].joined->own(faces[faces.getSize() - 2]->vertices[1]);
+	vertex->own(faces[faces.getSize() - 2]->vertices[2]);
+	faces[faces.getSize() - 2]->vertices[0].face = faces[faces.getSize() - 2];
+	faces[faces.getSize() - 2]->vertices[1].face = faces[faces.getSize() - 2];
+	faces[faces.getSize() - 2]->vertices[2].face = faces[faces.getSize() - 2];
+	faces[faces.getSize() - 2]->vertices[0].texcoord = faces[faceIndex]->vertices[1].texcoord;
+	faces[faces.getSize() - 2]->vertices[1].texcoord = faces[faceIndex]->vertices[2].texcoord;
+	faces[faces.getSize() - 2]->vertices[2].texcoord = faces[faceIndex]->vertices[0].texcoord;
 
 	// setup third new face
-	faces[faces.getSize()-1]->sector = this;
-	faces[faces.getSize()-1]->vertices[0].position = faces[faceIndex]->vertices[2].position;
-	faces[faces.getSize()-1]->vertices[1].position = faces[faceIndex]->vertices[0].position;
-	faces[faces.getSize()-1]->vertices[2].position = splitPoint;
-	faces[faceIndex]->vertices[2].joined->own(faces[faces.getSize()-1]->vertices[0]);
-	faces[faceIndex]->vertices[0].joined->own(faces[faces.getSize()-1]->vertices[1]);
-	vertex->own(faces[faces.getSize()-1]->vertices[2]);
-	faces[faces.getSize()-1]->vertices[0].face = faces[faces.getSize() - 1];
-	faces[faces.getSize()-1]->vertices[1].face = faces[faces.getSize() - 1];
-	faces[faces.getSize()-1]->vertices[2].face = faces[faces.getSize() - 1];
-	faces[faces.getSize()-1]->vertices[0].texcoord = faces[faceIndex]->vertices[2].texcoord;
-	faces[faces.getSize()-1]->vertices[1].texcoord = faces[faceIndex]->vertices[0].texcoord;
-	faces[faces.getSize()-1]->vertices[2].texcoord = faces[faceIndex]->vertices[1].texcoord;
+	faces[faces.getSize() - 1]->sector = this;
+	faces[faces.getSize() - 1]->vertices[0].position = faces[faceIndex]->vertices[2].position;
+	faces[faces.getSize() - 1]->vertices[1].position = faces[faceIndex]->vertices[0].position;
+	faces[faces.getSize() - 1]->vertices[2].position = splitPoint;
+	faces[faceIndex]->vertices[2].joined->own(faces[faces.getSize() - 1]->vertices[0]);
+	faces[faceIndex]->vertices[0].joined->own(faces[faces.getSize() - 1]->vertices[1]);
+	vertex->own(faces[faces.getSize() - 1]->vertices[2]);
+	faces[faces.getSize() - 1]->vertices[0].face = faces[faces.getSize() - 1];
+	faces[faces.getSize() - 1]->vertices[1].face = faces[faces.getSize() - 1];
+	faces[faces.getSize() - 1]->vertices[2].face = faces[faces.getSize() - 1];
+	faces[faces.getSize() - 1]->vertices[0].texcoord = faces[faceIndex]->vertices[2].texcoord;
+	faces[faces.getSize() - 1]->vertices[1].texcoord = faces[faceIndex]->vertices[0].texcoord;
+	faces[faces.getSize() - 1]->vertices[2].texcoord = faces[faceIndex]->vertices[1].texcoord;
 
 	// remove original face
 	Sector::face_t* oldFace = faces.remove(faceIndex);
@@ -238,8 +238,8 @@ void Sector::connectSectors(int myFace, int theirFace) {
 void Sector::countVertices() {
 	numVertices = 0;
 	numIndices = 0;
-	for( Uint32 c = 0; c < faces.getSize(); ++c ) {
-		if( !faces[c]->neighbor ) {
+	for (Uint32 c = 0; c < faces.getSize(); ++c) {
+		if (!faces[c]->neighbor) {
 			numVertices += 3;
 			numIndices += 3;
 		}
@@ -249,13 +249,13 @@ void Sector::countVertices() {
 int Sector::findFaceWithNormal(const Vector& normal) {
 	static const float epsilon = 0.0001f;
 	glm::vec3 gNormal(normal);
-	for( Uint32 c = 0; c < faces.getSize(); ++c ) {
-		if( faces[c]->normal.x >= gNormal.x - epsilon &&
-			faces[c]->normal.x <= gNormal.x + epsilon ) {
-			if( faces[c]->normal.y >= gNormal.y - epsilon &&
-				faces[c]->normal.y <= gNormal.y + epsilon ) {
-				if( faces[c]->normal.z >= gNormal.z - epsilon &&
-					faces[c]->normal.z <= gNormal.z + epsilon ) {
+	for (Uint32 c = 0; c < faces.getSize(); ++c) {
+		if (faces[c]->normal.x >= gNormal.x - epsilon &&
+			faces[c]->normal.x <= gNormal.x + epsilon) {
+			if (faces[c]->normal.y >= gNormal.y - epsilon &&
+				faces[c]->normal.y <= gNormal.y + epsilon) {
+				if (faces[c]->normal.z >= gNormal.z - epsilon &&
+					faces[c]->normal.z <= gNormal.z + epsilon) {
 					return c;
 				}
 			}
@@ -266,19 +266,19 @@ int Sector::findFaceWithNormal(const Vector& normal) {
 
 void Sector::buildPhysicsMesh() {
 	// delete old rigid mesh
-	if( rigidBody!=nullptr ) {
+	if (rigidBody != nullptr) {
 		dynamicsWorld->removeRigidBody(rigidBody);
 		delete rigidBody;
 		rigidBody = nullptr;
 	}
 
 	// check that there are any vertices to even build for
-	if( numVertices == 0 ) {
+	if (numVertices == 0) {
 		return;
 	}
 
 	// delete the old triangle mesh and generate a new one
-	if( triMesh!=nullptr ) {
+	if (triMesh != nullptr) {
 		delete triMesh;
 	}
 	triMesh = new btTriangleMesh();
@@ -286,20 +286,20 @@ void Sector::buildPhysicsMesh() {
 	vlist.alloc(3);
 
 	// build mesh
-	for( Uint32 face = 0; face < faces.getSize(); ++face ) {
-		if( !faces[face]->neighbor ) {
-			for( Uint32 vertex = 0; vertex < 3; ++vertex ) {
+	for (Uint32 face = 0; face < faces.getSize(); ++face) {
+		if (!faces[face]->neighbor) {
+			for (Uint32 vertex = 0; vertex < 3; ++vertex) {
 				vertex_t& v = faces[face]->vertices[vertex];
 
-				Vector pos(v.position.x,v.position.y,v.position.z);
+				Vector pos(v.position.x, v.position.y, v.position.z);
 				vlist.push(pos);
 
-				if( vlist.getSize()==3 ) {
+				if (vlist.getSize() == 3) {
 					// add the three vertices to the triangle mesh
 					Vector& v0 = vlist[0];
 					Vector& v1 = vlist[1];
 					Vector& v2 = vlist[2];
-					triMesh->addTriangle(v0,v1,v2,true);
+					triMesh->addTriangle(v0, v1, v2, true);
 
 					// clear the triangle list
 					vlist.clear();
@@ -309,12 +309,12 @@ void Sector::buildPhysicsMesh() {
 	}
 
 	// build a new triangle shape
-	if( triMeshShape!=nullptr )
+	if (triMeshShape != nullptr)
 		delete triMeshShape;
-	triMeshShape = new btBvhTriangleMeshShape(triMesh,true,true);
+	triMeshShape = new btBvhTriangleMeshShape(triMesh, true, true);
 
 	// create motion state
-	if( motionState!=nullptr )
+	if (motionState != nullptr)
 		delete motionState;
 	motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 
@@ -343,10 +343,10 @@ void Sector::uploadBuffers() {
 	tangentBuffer.alloc(numVertices);
 	indexBuffer.alloc(numIndices);
 
-	if( numVertices > 0 ) {
+	if (numVertices > 0) {
 		GLuint index = 0;
-		for( Uint32 face = 0; face < faces.getSize(); ++face ) {
-			if( !faces[face]->neighbor ) {
+		for (Uint32 face = 0; face < faces.getSize(); ++face) {
+			if (!faces[face]->neighbor) {
 				glm::vec3 e0 = faces[face]->vertices[1].position - faces[face]->vertices[0].position;
 				glm::vec3 e1 = faces[face]->vertices[2].position - faces[face]->vertices[0].position;
 				glm::vec2 uv0 = faces[face]->vertices[1].texcoord - faces[face]->vertices[0].texcoord;
@@ -359,7 +359,7 @@ void Sector::uploadBuffers() {
 				float r = 1.0f / (uv0.x * uv1.y - uv0.y * uv1.x);
 				tangent = (e0 * uv1.y - e1 * uv0.y) * r;
 
-				for( Uint32 vertex = 0; vertex < 3; ++vertex ) {
+				for (Uint32 vertex = 0; vertex < 3; ++vertex) {
 					glm::vec3& position = faces[face]->vertices[vertex].position;
 					positionBuffer.push(glm::vec3(position.x, -position.z, position.y));
 
@@ -376,11 +376,11 @@ void Sector::uploadBuffers() {
 		}
 	}
 
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 		vao = 0;
 	}
-	if( !numVertices ) {
+	if (!numVertices) {
 		return;
 	}
 
@@ -388,8 +388,8 @@ void Sector::uploadBuffers() {
 	glBindVertexArray(vao);
 
 	// upload position data
-	if( vbo[POSITION_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[POSITION_BUFFER]);
+	if (vbo[POSITION_BUFFER]) {
+		glDeleteBuffers(1, &vbo[POSITION_BUFFER]);
 		vbo[POSITION_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[POSITION_BUFFER]);
@@ -399,8 +399,8 @@ void Sector::uploadBuffers() {
 	glEnableVertexAttribArray(0);
 
 	// upload texcoord data
-	if( vbo[TEXCOORD_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[TEXCOORD_BUFFER]);
+	if (vbo[TEXCOORD_BUFFER]) {
+		glDeleteBuffers(1, &vbo[TEXCOORD_BUFFER]);
 		vbo[TEXCOORD_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
@@ -410,8 +410,8 @@ void Sector::uploadBuffers() {
 	glEnableVertexAttribArray(1);
 
 	// upload normal data
-	if( vbo[NORMAL_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[NORMAL_BUFFER]);
+	if (vbo[NORMAL_BUFFER]) {
+		glDeleteBuffers(1, &vbo[NORMAL_BUFFER]);
 		vbo[NORMAL_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[NORMAL_BUFFER]);
@@ -421,8 +421,8 @@ void Sector::uploadBuffers() {
 	glEnableVertexAttribArray(2);
 
 	// upload tangent data
-	if( vbo[TANGENT_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[TANGENT_BUFFER]);
+	if (vbo[TANGENT_BUFFER]) {
+		glDeleteBuffers(1, &vbo[TANGENT_BUFFER]);
 		vbo[TANGENT_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[TANGENT_BUFFER]);
@@ -432,8 +432,8 @@ void Sector::uploadBuffers() {
 	glEnableVertexAttribArray(3);
 
 	// upload index data
-	if( vbo[INDEX_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[INDEX_BUFFER]);
+	if (vbo[INDEX_BUFFER]) {
+		glDeleteBuffers(1, &vbo[INDEX_BUFFER]);
 		vbo[INDEX_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[INDEX_BUFFER]);
@@ -444,14 +444,14 @@ void Sector::uploadBuffers() {
 }
 
 void Sector::process() {
-	if( updateNeeded ) {
+	if (updateNeeded) {
 		updateNeeded = false;
 		uploadBuffers();
 	}
 }
 
 void Sector::draw(Camera& camera, Light* light) {
-	if( !numIndices ) {
+	if (!numIndices) {
 		return;
 	}
 
@@ -468,11 +468,11 @@ void Sector::draw(Camera& camera, Light* light) {
 
 void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 	Client* client = mainEngine->getLocalClient();
-	if( !client )
+	if (!client)
 		return;
 
-	if( !material ) {
-		switch( camera.getDrawMode() ) {
+	if (!material) {
+		switch (camera.getDrawMode()) {
 		case Camera::DRAW_DEPTH:
 			material = mainEngine->getMaterialResource().dataForString("shaders/sector/depth.json");
 			break;
@@ -489,8 +489,8 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 			material = mainEngine->getMaterialResource().dataForString("shaders/sector/std.json");
 			break;
 		}
-		if( !material ) {
-			mainEngine->fmsg(Engine::MSG_ERROR,"failed to load sector material");
+		if (!material) {
+			mainEngine->fmsg(Engine::MSG_ERROR, "failed to load sector material");
 			return;
 		}
 	}
@@ -498,35 +498,35 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 	ShaderProgram& shader = material->getShader();
 	//glLineWidth(1);
 
-	if( &shader != ShaderProgram::getCurrentShader() ) {
+	if (&shader != ShaderProgram::getCurrentShader()) {
 		shader.mount();
-		if( camera.getDrawMode()==Camera::DRAW_DEPTH ) {
+		if (camera.getDrawMode() == Camera::DRAW_DEPTH) {
 
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
-		} else if( camera.getDrawMode()==Camera::DRAW_SILHOUETTE ) {
+		} else if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
 
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 
 			// load camera position into shader
-			glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+			glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
 			glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
-		} else if( camera.getDrawMode() == Camera::DRAW_TRIANGLES ) {
+		} else if (camera.getDrawMode() == Camera::DRAW_TRIANGLES) {
 
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
-		} else if( camera.getDrawMode()==Camera::DRAW_STENCIL ) {
+		} else if (camera.getDrawMode() == Camera::DRAW_STENCIL) {
 
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 
 			// load light data into shader
-			if( light ) {
-				glm::vec3 lightPos( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
+			if (light) {
+				glm::vec3 lightPos(light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y);
 				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
 			} else {
-				glm::vec3 lightPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+				glm::vec3 lightPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
 				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
 			}
 		} else {
@@ -534,20 +534,20 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 			// load projection matrix into shader
 			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 
-			glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+			glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
 
-			if( camera.getDrawMode() == Camera::DRAW_STANDARD ) {
+			if (camera.getDrawMode() == Camera::DRAW_STANDARD) {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
 			} else {
 				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_FALSE);
 			}
 
 			// load light data into shader
-			if( light ) {
+			if (light) {
 				Vector lightAng = light->getGlobalAng().toVector();
-				glm::vec3 lightDir( lightAng.x, -lightAng.z, lightAng.y );
-				glm::vec3 lightPos( light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y );
-				glm::vec3 lightScale( light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y );
+				glm::vec3 lightDir(lightAng.x, -lightAng.z, lightAng.y);
+				glm::vec3 lightPos(light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y);
+				glm::vec3 lightScale(light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y);
 
 				glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
 				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
@@ -560,10 +560,10 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 			} else {
 				glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
 				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(cameraPos));
-				glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec4(1.f,1.f,1.f,1.f)));
+				glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec4(1.f, 1.f, 1.f, 1.f)));
 				glUniform1f(shader.getUniformLocation("gLightIntensity"), 1);
 				glUniform1f(shader.getUniformLocation("gLightRadius"), 16384.f);
-				glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(glm::vec3(1.f,1.f,1.f)));
+				glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(glm::vec3(1.f, 1.f, 1.f)));
 				glUniform1i(shader.getUniformLocation("gLightShape"), 0);
 			}
 
@@ -574,9 +574,9 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 }
 
 Sector::vertex_t::~vertex_t() {
-	if( joined ) {
+	if (joined) {
 		for (Uint32 c = 0; c < joined->vertices.getSize(); ++c) {
-			if( joined->vertices[c] == this ) {
+			if (joined->vertices[c] == this) {
 				joined->vertices.remove(c);
 				--c;
 			}

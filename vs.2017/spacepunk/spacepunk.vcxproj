@@ -108,8 +108,8 @@
     <OutDir>$(SolutionDir)..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SPACEPUNK_LIBS)\include;$(SPACEPUNK_LIBS)\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SPACEPUNK_LIBS)\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -130,16 +130,16 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SPACEPUNK_LIBS)\include;$(SPACEPUNK_LIBS)\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SPACEPUNK_LIBS)\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <OutDir>$(SolutionDir)..\..\build\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'">
-    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GameLibs\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SPACEPUNK_LIBS)\include;$(SPACEPUNK_LIBS)\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SPACEPUNK_LIBS)\lib\x64;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -302,7 +302,6 @@
     <ClInclude Include="..\..\src\Light.hpp" />
     <ClInclude Include="..\..\src\Line3D.hpp" />
     <ClInclude Include="..\..\src\LinkedList.hpp" />
-    <ClInclude Include="..\..\src\List.hpp" />
     <ClInclude Include="..\..\src\Main.hpp" />
     <ClInclude Include="..\..\src\Map.hpp" />
     <ClInclude Include="..\..\src\Mesh.hpp" />

@@ -10,7 +10,7 @@ const char* Character::sexStr[SEX_MAX] = {
 	"none"
 };
 
-Character::Character(Entity& entity, Component* parent) : 
+Character::Character(Entity& entity, Component* parent) :
 	Component(entity, parent) {
 
 	name = typeStr[COMPONENT_CHARACTER];

@@ -39,7 +39,7 @@ Model::Model(Entity& _entity, Component* _parent) :
 	loadAnimations();
 
 	// add a bbox for editor usage
-	if( mainEngine->isEditorRunning() && !dontLoadMesh ) {
+	if (mainEngine->isEditorRunning() && !dontLoadMesh) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_MESH);
 		bbox->setEditorOnly(true);
@@ -86,14 +86,14 @@ void Model::process() {
 	Speaker* speaker = findComponentByName<Speaker>("animSpeaker");
 
 	// update animations
-	for( auto& pair : animations ) {
+	for (auto& pair : animations) {
 		skinUpdateNeeded = pair.b.update(speaker) ? true : skinUpdateNeeded;
 	}
 }
 
 Uint32 Model::findBoneIndex(const char* name) const {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
-	if( mesh ) {
+	if (mesh) {
 		return (Uint32)mesh->boneIndexForName(name);
 	} else {
 		return UINT32_MAX;
@@ -102,14 +102,14 @@ Uint32 Model::findBoneIndex(const char* name) const {
 
 glm::mat4 Model::findBone(Uint32 bone) const {
 	Uint32 c = 0;
-	for( ; c < skincache.getSize(); ++c ) {
-		if( bone >= skincache[c].anims.getSize() ) {
+	for (; c < skincache.getSize(); ++c) {
+		if (bone >= skincache[c].anims.getSize()) {
 			bone -= (unsigned int)skincache[c].anims.getSize();
 		} else {
 			break;
 		}
 	}
-	if( c >= skincache.getSize() ) {
+	if (c >= skincache.getSize()) {
 		return glm::mat4(1.f);
 	} else {
 		return skincache[c].offsets[bone];
@@ -140,7 +140,7 @@ bool Model::animate(const char* name, bool blend) {
 		return false;
 	}
 	if (!animations.exists(name)) {
-		if (strcmp(name,"__tpose")) {
+		if (strcmp(name, "__tpose")) {
 			animate("__tpose", false);
 		}
 		return false;
@@ -197,7 +197,7 @@ void Model::updateSkin() {
 	if (skinUpdateNeeded) {
 		skinUpdateNeeded = false;
 		Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
-		if( mesh ) {
+		if (mesh) {
 			mesh->skin(animations, skincache);
 		}
 	}
@@ -226,30 +226,30 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	// prevents editor widgets from drawing for non-editor cameras
-	if( camera.getEntity()->isShouldSave() && !entity->isShouldSave() ) {
+	if (camera.getEntity()->isShouldSave() && !entity->isShouldSave()) {
 		return;
 	}
-	if( camera.getDrawMode() == Camera::DRAW_SHADOW && (!entity->isShouldSave() && entity->getScriptStr() == "") ) {
+	if (camera.getDrawMode() == Camera::DRAW_SHADOW && (!entity->isShouldSave() && entity->getScriptStr() == "")) {
 		return;
 	}
 
 	// static lights only render static objects
-	if( camera.getDrawMode()==Camera::DRAW_SHADOW && lights[0]->getEntity()->isFlag(Entity::FLAG_STATIC) && !entity->isFlag(Entity::FLAG_STATIC) )
+	if (camera.getDrawMode() == Camera::DRAW_SHADOW && lights[0]->getEntity()->isFlag(Entity::FLAG_STATIC) && !entity->isFlag(Entity::FLAG_STATIC))
 		return;
 
 	// skip certain passes if necessary
-	if( camera.getDrawMode()==Camera::DRAW_SHADOW && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)) )
+	if (camera.getDrawMode() == Camera::DRAW_SHADOW && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)))
 		return;
-	if( camera.getDrawMode()==Camera::DRAW_STENCIL && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)) )
+	if (camera.getDrawMode() == Camera::DRAW_STENCIL && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)))
 		return;
-	if( camera.getDrawMode()==Camera::DRAW_GLOW && !(entity->isFlag(Entity::flag_t::FLAG_GLOWING)) )
+	if (camera.getDrawMode() == Camera::DRAW_GLOW && !(entity->isFlag(Entity::flag_t::FLAG_GLOWING)))
 		return;
-	if( camera.getDrawMode()==Camera::DRAW_DEPTHFAIL && !(entity->isFlag(Entity::flag_t::FLAG_DEPTHFAIL)) )
+	if (camera.getDrawMode() == Camera::DRAW_DEPTHFAIL && !(entity->isFlag(Entity::flag_t::FLAG_DEPTHFAIL)))
 		return;
 
 	// don't render models marked genius
-	if( ( entity->isFlag(Entity::flag_t::FLAG_GENIUS) || genius ) ) {
-		if( camera.getEntity() == entity && camera.getDrawMode() != Camera::DRAW_STENCIL ) {
+	if ((entity->isFlag(Entity::flag_t::FLAG_GENIUS) || genius)) {
+		if (camera.getEntity() == entity && camera.getDrawMode() != Camera::DRAW_STENCIL) {
 			return;
 		}
 	}
@@ -262,9 +262,9 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// mark model as "broken"
 	resource_error_t error = mainEngine->getMeshResource().getError();
 	bool hadError = error == resource_error_t::ERROR_CACHEFAILED;
-	if( (!mesh && !meshStr.empty() && hadError) ||
+	if ((!mesh && !meshStr.empty() && hadError) ||
 		(!mat && !materialStr.empty()) ||
-		(!depthfailmat && !depthfailStr.empty()) ) {
+		(!depthfailmat && !depthfailStr.empty())) {
 		broken = true;
 	}
 
@@ -282,39 +282,39 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		return;
 	}
 
-	if( mesh ) {
+	if (mesh) {
 		// skip models that aren't glowing in the "glow" pass...
-		if( camera.getDrawMode() == Camera::DRAW_GLOW ) {
-			if( !mat ) {
+		if (camera.getDrawMode() == Camera::DRAW_GLOW) {
+			if (!mat) {
 				return;
-			} else if( !mat->isGlowing() ) {
+			} else if (!mat->isGlowing()) {
 				return;
 			}
 		}
 
 		// skip models that don't have depth fail materials in the depth fail pass...
-		if( camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
-			if( !depthfailmat ) {
+		if (camera.getDrawMode() == Camera::DRAW_DEPTHFAIL) {
+			if (!depthfailmat) {
 				return;
 			}
 		}
 
 		// load shader
 		ShaderProgram* shader = nullptr;
-		if( camera.getDrawMode() == Camera::DRAW_DEPTHFAIL ) {
+		if (camera.getDrawMode() == Camera::DRAW_DEPTHFAIL) {
 			shader = mesh->loadShader(*this, camera, lights, depthfailmat, shaderVars, gMat);
 		} else {
 			shader = mesh->loadShader(*this, camera, lights, mat, shaderVars, gMat);
 		}
 
 		// update skin
-		if( skinUpdateNeeded ) {
+		if (skinUpdateNeeded) {
 			skinUpdateNeeded = false;
 			mesh->skin(animations, skincache);
 		}
 
 		// draw mesh
-		if( shader ) {
+		if (shader) {
 			mesh->draw(camera, this, skincache, shader);
 		}
 
@@ -327,7 +327,7 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 			camera.setDrawMode(Camera::DRAW_SILHOUETTE);
 			ShaderProgram* shader = nullptr;
 			shader = mesh->loadShader(*this, camera, lights, mat, shaderVars, gMat);
-			if( shader ) {
+			if (shader) {
 				mesh->draw(camera, this, skincache, shader);
 			}
 			glDepthMask(GL_TRUE);
@@ -339,8 +339,8 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 
 bool Model::hasAnimations() const {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
-	if( mesh ) {
-		if( mesh->hasAnimations() ) {
+	if (mesh) {
+		if (mesh->hasAnimations()) {
 			return true;
 		}
 	}
@@ -356,10 +356,10 @@ void Model::load(FILE* fp) {
 	len = 0;
 	char* mesh = nullptr;
 	Engine::freadl(&len, sizeof(Uint32), 1, fp, nullptr, "Model::load()");
-	if( len > 0 && len < 128 ) {
-		mesh = (char *) calloc( len+1, sizeof(char));
+	if (len > 0 && len < 128) {
+		mesh = (char *)calloc(len + 1, sizeof(char));
 		Engine::freadl(mesh, sizeof(char), len, fp, nullptr, "Model::load()");
-	} else if( len >= 128 ) {
+	} else if (len >= 128) {
 		assert(0);
 	}
 	meshStr = mesh;
@@ -368,10 +368,10 @@ void Model::load(FILE* fp) {
 	len = 0;
 	char* material = nullptr;
 	Engine::freadl(&len, sizeof(Uint32), 1, fp, nullptr, "Model::load()");
-	if( len > 0 && len < 128 ) {
-		material = (char *) calloc( len+1, sizeof(char));
+	if (len > 0 && len < 128) {
+		material = (char *)calloc(len + 1, sizeof(char));
 		Engine::freadl(material, sizeof(char), len, fp, nullptr, "Model::load()");
-	} else if( len >= 128 ) {
+	} else if (len >= 128) {
 		assert(0);
 	}
 	materialStr = material;
@@ -380,10 +380,10 @@ void Model::load(FILE* fp) {
 	len = 0;
 	char* depthfail = nullptr;
 	Engine::freadl(&len, sizeof(Uint32), 1, fp, nullptr, "Model::load()");
-	if( len > 0 && len < 128 ) {
-		depthfail = (char *) calloc( len+1, sizeof(char));
+	if (len > 0 && len < 128) {
+		depthfail = (char *)calloc(len + 1, sizeof(char));
 		Engine::freadl(depthfail, sizeof(char), len, fp, nullptr, "Model::load()");
-	} else if( len >= 128 ) {
+	} else if (len >= 128) {
 		assert(0);
 	}
 	depthfailStr = depthfail;
@@ -392,10 +392,10 @@ void Model::load(FILE* fp) {
 	len = 0;
 	char* animation = nullptr;
 	Engine::freadl(&len, sizeof(Uint32), 1, fp, nullptr, "Model::load()");
-	if( len > 0 && len < 128 ) {
-		animation = (char *) calloc( len+1, sizeof(char));
+	if (len > 0 && len < 128) {
+		animation = (char *)calloc(len + 1, sizeof(char));
 		Engine::freadl(animation, sizeof(char), len, fp, nullptr, "Model::load()");
-	} else if( len >= 128 ) {
+	} else if (len >= 128) {
 		assert(0);
 	}
 	animationStr = animation;

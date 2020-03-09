@@ -84,24 +84,24 @@ public:
 	// @param camera the camera to render the mesh through
 	// @param component optional component tied to the mesh
 	// @param shader the shader program to draw the mesh with
-	void draw( Camera& camera, const Component* component, ShaderProgram* shader );
+	void draw(Camera& camera, const Component* component, ShaderProgram* shader);
 
 	// draws the mesh
 	// @param camera the camera to render the mesh through
 	// @param component optional component tied to the mesh
 	// @param skincache skincache to render with
 	// @param shader the shader program to draw the mesh with
-	void draw( Camera& camera, const Component* component, SkinCache& skincache, ShaderProgram* shader );
+	void draw(Camera& camera, const Component* component, SkinCache& skincache, ShaderProgram* shader);
 
 	// skins the mesh
 	// @param animations animations to skin with
 	// @param skincache where to store resulting skin
-	void skin( const AnimationMap& animations, SkinCache& skincache ) const;
+	void skin(const AnimationMap& animations, SkinCache& skincache) const;
 
 	// find the bone with the given name
 	// @param name the name of the bone to search for
 	// @return the index of the bone we are searching for, or UINT32_MAX if the bone could not be found
-	unsigned int boneIndexForName( const char* name ) const;
+	unsigned int boneIndexForName(const char* name) const;
 
 	// empties all data from this mesh
 	void clear();
@@ -148,11 +148,11 @@ public:
 
 		// subclass for vertex bones and weights
 		class VertexBoneData {
-			public:
-				GLint ids[numBonesPerVertex];
-				GLfloat weights[numBonesPerVertex];
+		public:
+			GLint ids[numBonesPerVertex];
+			GLfloat weights[numBonesPerVertex];
 
-				void addBoneData( unsigned int boneID, float weight );
+			void addBoneData(unsigned int boneID, float weight);
 		};
 
 		// substruct for bone data
@@ -162,7 +162,7 @@ public:
 			bool real;
 		};
 
-		unsigned int boneIndexForName( const char* name ) const;
+		unsigned int boneIndexForName(const char* name) const;
 
 		GLuint findAdjacentIndex(const aiMesh& mesh, GLuint index1, GLuint index2, GLuint index3);
 		void mapBones(const aiNode* node);
@@ -180,26 +180,26 @@ public:
 		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
 
 		// getters & setters
-		virtual const type_t				getType() const				{ return ASSET_MESH; }
-		virtual const bool					isStreamable() const		{ return true; }
-		const unsigned int					getNumVertices() const		{ return numVertices; }
-		const unsigned int					getNumIndices() const		{ return elementCount; }
-		const unsigned int					getNumBones() const			{ return numBones; }
-		const float*						getVertices() const			{ return vertices; }
-		const float*						getTexCoords() const		{ return texCoords; }
-		const float*						getNormals() const			{ return normals; }
-		const float*						getColors() const			{ return colors; }
-		const float*						getTangents() const			{ return tangents; }
-		const GLuint*						getIndices() const			{ return indices; }
-		const ArrayList<boneinfo_t>&		getBones() const			{ return bones; }
-		const aiNode*						getRootNode() const			{ return scene ? scene->mRootNode : nullptr; }
-		const unsigned int					getLastVertex() const		{ return lastVertex; }
-		const unsigned int					getLastIndex() const		{ return lastIndex; }
+		virtual const type_t				getType() const { return ASSET_MESH; }
+		virtual const bool					isStreamable() const { return true; }
+		const unsigned int					getNumVertices() const { return numVertices; }
+		const unsigned int					getNumIndices() const { return elementCount; }
+		const unsigned int					getNumBones() const { return numBones; }
+		const float*						getVertices() const { return vertices; }
+		const float*						getTexCoords() const { return texCoords; }
+		const float*						getNormals() const { return normals; }
+		const float*						getColors() const { return colors; }
+		const float*						getTangents() const { return tangents; }
+		const GLuint*						getIndices() const { return indices; }
+		const ArrayList<boneinfo_t>&		getBones() const { return bones; }
+		const aiNode*						getRootNode() const { return scene ? scene->mRootNode : nullptr; }
+		const unsigned int					getLastVertex() const { return lastVertex; }
+		const unsigned int					getLastIndex() const { return lastIndex; }
 
 	private:
 		Map<String, unsigned int> boneMapping; // maps a bone name to its index
 		ArrayList<boneinfo_t> bones;
-    	unsigned int numBones = 0;
+		unsigned int numBones = 0;
 		unsigned int numVertices = 0;
 		GLuint vao = 0;
 		GLuint vbo[BUFFER_TYPE_LENGTH];
@@ -221,9 +221,9 @@ public:
 	};
 
 	// getters & setters
-	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const		{ return subMeshes; }
-	const Vector&							getMinBox() const			{ return minBox; }
-	const Vector&							getMaxBox() const			{ return maxBox; }
+	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const { return subMeshes; }
+	const Vector&							getMinBox() const { return minBox; }
+	const Vector&							getMaxBox() const { return maxBox; }
 	float									getAnimLength() const;
 
 private:

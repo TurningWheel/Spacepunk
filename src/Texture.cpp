@@ -11,9 +11,9 @@ const char* Texture::defaultEffects = "images/tile/effects/empty.png";
 
 Texture::Texture(const char* _name) : Asset(_name) {
 	path = mainEngine->buildPath(_name).get();
-	mainEngine->fmsg(Engine::MSG_DEBUG,"loading texture '%s'...",_name);
+	mainEngine->fmsg(Engine::MSG_DEBUG, "loading texture '%s'...", _name);
 	if (FileHelper::readObject(path.get(), *this) == false) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load texture '%s'",_name);
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load texture '%s'", _name);
 	}
 }
 
@@ -32,8 +32,8 @@ void Texture::serialize(FileInterface* file) {
 				textures.push(image);
 			}
 		}
-		if( textures.getSize() < 3 ) {
-			mainEngine->fmsg(Engine::MSG_ERROR,"failed to load texture '%s': 3 textures needed! (diffuse, normal, effects)",name.get());
+		if (textures.getSize() < 3) {
+			mainEngine->fmsg(Engine::MSG_ERROR, "failed to load texture '%s': 3 textures needed! (diffuse, normal, effects)", name.get());
 			loaded = false;
 		} else {
 			loaded = true;

@@ -36,15 +36,15 @@ public:
 	void own(Sector::vertex_t& vertex);
 
 	// getters & setters
-	bool									isSelected() const			{ return selected; }
-	bool									isHighlighted() const		{ return highlighted; }
-	const ArrayList<Sector::vertex_t*>&		getVertices() const			{ return vertices; }
-	ArrayList<Sector::vertex_t*>&			getVertices()				{ return vertices; }
-	const Vector&							getPos() const				{ return pos; }
+	bool									isSelected() const { return selected; }
+	bool									isHighlighted() const { return highlighted; }
+	const ArrayList<Sector::vertex_t*>&		getVertices() const { return vertices; }
+	ArrayList<Sector::vertex_t*>&			getVertices() { return vertices; }
+	const Vector&							getPos() const { return pos; }
 
-	void	setSelected(bool _b)		{ selected = _b; }
-	void	setHighlighted(bool _b)		{ highlighted = _b; }
-	void	setPos(const Vector& v)		{ pos = v; }
+	void	setSelected(bool _b) { selected = _b; }
+	void	setHighlighted(bool _b) { highlighted = _b; }
+	void	setPos(const Vector& v) { pos = v; }
 
 private:
 	SectorWorld* world = nullptr;

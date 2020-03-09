@@ -24,12 +24,12 @@ public:
 	static const Uint32 invalidID = UINT32_MAX;
 
 	// getters & setters
-	World*						getWorld(const int index)		{ return worlds[index]->getData(); }
-	Uint32						getNumWorlds() const			{ return worlds.getSize(); }
-	const Uint32				getTicks() const				{ return ticks; }
-	Net*						getNet() const					{ return net; }
-	bool						isSuicide() const				{ return suicide; }
-	const LinkedList<Player>	getPlayers() const				{ return players; }
+	World*						getWorld(const int index) { return worlds[index]->getData(); }
+	Uint32						getNumWorlds() const { return worlds.getSize(); }
+	const Uint32				getTicks() const { return ticks; }
+	Net*						getNet() const { return net; }
+	bool						isSuicide() const { return suicide; }
+	const LinkedList<Player>	getPlayers() const { return players; }
 	virtual bool				isServer() const = 0;
 	virtual bool				isClient() const = 0;
 
@@ -120,9 +120,9 @@ protected:
 
 	LinkedList<Player> players;
 	LinkedList<World*> worlds;
-	Uint32 ticks=0;
-	Uint32 framesToRun=0;
-	bool suicide=false; // if a game wants to end itself, setting this flag is the way to do it.
+	Uint32 ticks = 0;
+	Uint32 framesToRun = 0;
+	bool suicide = false; // if a game wants to end itself, setting this flag is the way to do it.
 
 	// the net interface
 	Net* net = nullptr;

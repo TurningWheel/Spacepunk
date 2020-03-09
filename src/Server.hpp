@@ -12,8 +12,8 @@ public:
 	virtual ~Server();
 
 	// getters & setters
-	virtual bool	isServer() const override	{ return true; }
-	virtual bool	isClient() const override	{ return false; }
+	virtual bool	isServer() const override { return true; }
+	virtual bool	isClient() const override { return false; }
 
 	// starts up the server
 	virtual void init() override;

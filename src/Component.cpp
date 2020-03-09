@@ -440,13 +440,11 @@ int Component::AttributeFile::ButtonCallback::operator()(Script::Args& args) con
 	if (result == NFD_CANCEL) {
 		mainEngine->setPaused(false);
 		return 1;
-	}
-	else if (result == NFD_ERROR) {
+	} else if (result == NFD_ERROR) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
 		mainEngine->setPaused(false);
 		return 2;
-	}
-	else {
+	} else {
 		value = mainEngine->shortenPath(resultPath);
 		field->setText(value.get());
 		mainEngine->setPaused(false);
@@ -494,8 +492,8 @@ Component::Component(Entity& _entity, Component* _parent) {
 }
 
 Component::~Component() {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c] ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]) {
 			delete components[c];
 			components[c] = nullptr;
 		}
@@ -519,24 +517,24 @@ Component::~Component() {
 
 void Component::clearAllChunkNodes() {
 	clearChunkNode();
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->clearAllChunkNodes();
 	}
 }
 
 bool Component::seesEntity(const Entity& target, float range, int accuracy) {
-	if( !chunksVisible ) {
+	if (!chunksVisible) {
 		occlusionTest(range, accuracy);
 	}
-	
+
 	// for tile worlds
-	if( entity->getWorld()->getType() == World::WORLD_TILES ) {
+	if (entity->getWorld()->getType() == World::WORLD_TILES) {
 		const TileWorld* tileworld = static_cast<const TileWorld*>(target.getWorld());
 		Sint32 chunkW = tileworld->calcChunksWidth();
 		Sint32 chunkH = tileworld->calcChunksHeight();
-		Sint32 chunkX = min( max( 0, target.getCurrentCX() ), chunkW - 1 );
-		Sint32 chunkY = min( max( 0, target.getCurrentCY() ), chunkH - 1 );
-		if( chunksVisible[chunkY + chunkX * chunkH] ) {
+		Sint32 chunkX = min(max(0, target.getCurrentCX()), chunkW - 1);
+		Sint32 chunkY = min(max(0, target.getCurrentCY()), chunkH - 1);
+		if (chunksVisible[chunkY + chunkX * chunkH]) {
 			return true;
 		} else {
 			return false;
@@ -548,10 +546,10 @@ bool Component::seesEntity(const Entity& target, float range, int accuracy) {
 
 void Component::occlusionTest(float range, int accuracy) {
 	World* world = entity->getWorld();
-	if( !world ) {
+	if (!world) {
 		return;
 	} else {
-		switch( world->getType() ) {
+		switch (world->getType()) {
 		case World::WORLD_BASIC:
 			break;
 		case World::WORLD_TILES:
@@ -568,7 +566,7 @@ void Component::occlusionTest(float range, int accuracy) {
 
 void Component::occlusionTestTiles(float range, int accuracy) {
 	TileWorld* world = static_cast<TileWorld*>(entity->getWorld());
-	if( !world ) {
+	if (!world) {
 		return;
 	}
 
@@ -582,37 +580,37 @@ void Component::occlusionTestTiles(float range, int accuracy) {
 
 	// clear old visible tile/chunk data
 	visibleChunks.resize(0);
-	if( tilesWidth != tWidth || tilesHeight != tHeight ) {
+	if (tilesWidth != tWidth || tilesHeight != tHeight) {
 		tilesWidth = tWidth;
 		tilesHeight = tHeight;
-		if( tilesVisible ) {
+		if (tilesVisible) {
 			delete[] tilesVisible;
 		}
 		tilesVisible = new bool[tWidth*tHeight];
-		if( chunksVisible ) {
+		if (chunksVisible) {
 			delete[] chunksVisible;
 		}
 		chunksVisible = new bool[cWidth*cHeight];
 	}
 
-	Sint32 tX = min( max( 0, (Sint32)floor(fX) ), (Sint32)world->getWidth() - 1 );
-	Sint32 tY = min( max( 0, (Sint32)floor(fY) ), (Sint32)world->getHeight() - 1 );
-	Sint32 cX = min( max( 0, (Sint32)floor(fX / Chunk::size) ), cWidth - 1 );
-	Sint32 cY = min( max( 0, (Sint32)floor(fY / Chunk::size) ), cHeight - 1 );
+	Sint32 tX = min(max(0, (Sint32)floor(fX)), (Sint32)world->getWidth() - 1);
+	Sint32 tY = min(max(0, (Sint32)floor(fY)), (Sint32)world->getHeight() - 1);
+	Sint32 cX = min(max(0, (Sint32)floor(fX / Chunk::size)), cWidth - 1);
+	Sint32 cY = min(max(0, (Sint32)floor(fY / Chunk::size)), cHeight - 1);
 
 	// don't do occlusion culling under these conditions
-	if( fX < 0.f || fX >= tWidth || fY < 0.f || fY >= tHeight ||
-		!world->getTiles()[tY+tX*tHeight].hasVolume() ||
-		( world->isShowTools() && getType() == COMPONENT_CAMERA ) ) {
-		for( Sint32 x = 0; x < tWidth; ++x ) {
-			for( Sint32 y = 0; y< tHeight; ++y ) {
-				tilesVisible[y+x*tHeight] = true;
+	if (fX < 0.f || fX >= tWidth || fY < 0.f || fY >= tHeight ||
+		!world->getTiles()[tY + tX * tHeight].hasVolume() ||
+		(world->isShowTools() && getType() == COMPONENT_CAMERA)) {
+		for (Sint32 x = 0; x < tWidth; ++x) {
+			for (Sint32 y = 0; y < tHeight; ++y) {
+				tilesVisible[y + x * tHeight] = true;
 			}
 		}
-		for( Sint32 x = 0; x < cWidth; ++x ) {
-			for( Sint32 y = 0; y < cHeight; ++y ) {
-				chunksVisible[y+x*cHeight] = true;
-				visibleChunks.push(&world->getChunks()[y+x*cHeight]);
+		for (Sint32 x = 0; x < cWidth; ++x) {
+			for (Sint32 y = 0; y < cHeight; ++y) {
+				chunksVisible[y + x * cHeight] = true;
+				visibleChunks.push(&world->getChunks()[y + x * cHeight]);
 			}
 		}
 		return;
@@ -621,40 +619,40 @@ void Component::occlusionTestTiles(float range, int accuracy) {
 	// initial conditions
 	memset(tilesVisible, 0, sizeof(bool) * tWidth * tHeight);
 	memset(chunksVisible, 0, sizeof(bool) * cWidth * cHeight);
-	if( world->getTiles()[tY + tX * tHeight].hasVolume() ) {
+	if (world->getTiles()[tY + tX * tHeight].hasVolume()) {
 		tilesVisible[tY + tX * tHeight] = true;
 	}
 
 	// find visible tiles (line tests)
 	occlusionTestTilesStep(range, tX, tY, accuracy);
-	if( accuracy&1 ) {
-		if( tX > 0 ) {
-			occlusionTestTilesStep(range, tX-1, tY, accuracy);
+	if (accuracy & 1) {
+		if (tX > 0) {
+			occlusionTestTilesStep(range, tX - 1, tY, accuracy);
 		}
-		if( tX < tWidth-1 ) {
-			occlusionTestTilesStep(range, tX+1, tY, accuracy);
+		if (tX < tWidth - 1) {
+			occlusionTestTilesStep(range, tX + 1, tY, accuracy);
 		}
-		if( tY > 0 ) {
-			occlusionTestTilesStep(range, tX, tY-1, accuracy);
+		if (tY > 0) {
+			occlusionTestTilesStep(range, tX, tY - 1, accuracy);
 		}
-		if( tY < tHeight-1 ) {
-			occlusionTestTilesStep(range, tX, tY+1, accuracy);
+		if (tY < tHeight - 1) {
+			occlusionTestTilesStep(range, tX, tY + 1, accuracy);
 		}
 	}
 
 	// neighbor tiles are always visible
-	if( accuracy&2 ) {
+	if (accuracy & 2) {
 		bool* visibleByExtension = new bool[tWidth * tHeight];
 		memset(visibleByExtension, 0, sizeof(bool) * tWidth * tHeight);
-		for( Sint32 u = 1; u < tWidth-1; ++u ) {
-			for( Sint32 v = 1; v < tHeight-1; ++v ) {
+		for (Sint32 u = 1; u < tWidth - 1; ++u) {
+			for (Sint32 v = 1; v < tHeight - 1; ++v) {
 				Uint32 index = v + u * tHeight;
-				if( !tilesVisible[index] && world->getTiles()[index].hasVolume() ) {
-					if( accuracy&8 ) {
-						for( Sint32 u2 = u-1; u2 <= u+1; ++u2 ) {
-							for( Sint32 v2 = v-1; v2 <= v+1; ++v2 ) {
+				if (!tilesVisible[index] && world->getTiles()[index].hasVolume()) {
+					if (accuracy & 8) {
+						for (Sint32 u2 = u - 1; u2 <= u + 1; ++u2) {
+							for (Sint32 v2 = v - 1; v2 <= v + 1; ++v2) {
 								Uint32 index2 = v2 + u2 * tHeight;
-								if( tilesVisible[index2] && !visibleByExtension[index2] ) {
+								if (tilesVisible[index2] && !visibleByExtension[index2]) {
 									tilesVisible[index] = true;
 									visibleByExtension[index] = true;
 									goto next;
@@ -664,25 +662,25 @@ void Component::occlusionTestTiles(float range, int accuracy) {
 					} else {
 						Uint32 index2;
 						index2 = (v + 1) + u * tHeight;
-						if( tilesVisible[index2] && !visibleByExtension[index2] ) {
+						if (tilesVisible[index2] && !visibleByExtension[index2]) {
 							tilesVisible[index] = true;
 							visibleByExtension[index] = true;
 							goto next;
 						}
 						index2 = (v - 1) + u * tHeight;
-						if( tilesVisible[index2] && !visibleByExtension[index2] ) {
+						if (tilesVisible[index2] && !visibleByExtension[index2]) {
 							tilesVisible[index] = true;
 							visibleByExtension[index] = true;
 							goto next;
 						}
 						index2 = v + (u + 1) * tHeight;
-						if( tilesVisible[index2] && !visibleByExtension[index2] ) {
+						if (tilesVisible[index2] && !visibleByExtension[index2]) {
 							tilesVisible[index] = true;
 							visibleByExtension[index] = true;
 							goto next;
 						}
 						index2 = v + (u - 1) * tHeight;
-						if( tilesVisible[index2] && !visibleByExtension[index2] ) {
+						if (tilesVisible[index2] && !visibleByExtension[index2]) {
 							tilesVisible[index] = true;
 							visibleByExtension[index] = true;
 							goto next;
@@ -699,20 +697,20 @@ void Component::occlusionTestTiles(float range, int accuracy) {
 	Uint32 chunkDim = Chunk::size * Chunk::size;
 
 	// find visible chunks
-	for( Sint32 u = cX - cRange; u <= cX + cRange; ++u ) {
-		for( Sint32 v = cY - cRange; v <= cY + cRange; ++v ) {
-			if( u < 0 || v < 0 || u >= cWidth || v >= cHeight ) {
+	for (Sint32 u = cX - cRange; u <= cX + cRange; ++u) {
+		for (Sint32 v = cY - cRange; v <= cY + cRange; ++v) {
+			if (u < 0 || v < 0 || u >= cWidth || v >= cHeight) {
 				continue;
 			}
 			Uint32 index = v + u * cHeight;
 
 			// try to find a visible tile in the chunk
-			for( Uint32 c = 0; c < chunkDim; ++c ) {
+			for (Uint32 c = 0; c < chunkDim; ++c) {
 				Tile* tile = world->getChunks()[index].getTile(c);
-				if( tile ) {
+				if (tile) {
 					Uint32 tX = tile->getX() / Tile::size;
 					Uint32 tY = tile->getY() / Tile::size;
-					if( tilesVisible[tY + tX * tHeight] ) {
+					if (tilesVisible[tY + tX * tHeight]) {
 						visibleChunks.push(&world->getChunks()[index]);
 						chunksVisible[index] = true;
 						break;
@@ -730,28 +728,28 @@ void Component::occlusionTestTilesStep(float range, Sint32 tX, Sint32 tY, int ac
 	Sint32 tWidth = (Sint32)world->getWidth();
 	Sint32 tHeight = (Sint32)world->getHeight();
 
-	if( !world->getTiles()[tY + tX * tHeight].hasVolume() ) {
+	if (!world->getTiles()[tY + tX * tHeight].hasVolume()) {
 		return;
 	}
 
-	for( Sint32 u = tX - tRange; u <= tX + tRange; ++u ) {
-		for( Sint32 v = tY - tRange; v <= tY + tRange; ++v ) {
-			if( u < 0 || v < 0 || u >= tWidth || v >= tHeight ) {
+	for (Sint32 u = tX - tRange; u <= tX + tRange; ++u) {
+		for (Sint32 v = tY - tRange; v <= tY + tRange; ++v) {
+			if (u < 0 || v < 0 || u >= tWidth || v >= tHeight) {
 				continue;
 			}
 
 			Uint32 index = v + u * tHeight;
 
 			// skip tracing solid tiles
-			if( !world->getTiles()[index].hasVolume() ) {
+			if (!world->getTiles()[index].hasVolume()) {
 				continue;
 			}
-			if( accuracy&4 ) {
+			if (accuracy & 4) {
 				Chunk* chunk = world->getTiles()[index].getChunk();
-				if( chunk ) {
-					for( Component* component : chunk->getCPopulation() ) {
+				if (chunk) {
+					for (Component* component : chunk->getCPopulation()) {
 						Entity* entity = component->getEntity();
-						if( entity->isFlag(Entity::FLAG_OCCLUDE) ) {
+						if (entity->isFlag(Entity::FLAG_OCCLUDE)) {
 							continue;
 						}
 					}
@@ -759,8 +757,8 @@ void Component::occlusionTestTilesStep(float range, Sint32 tX, Sint32 tY, int ac
 			}
 
 			// trace both ways
-			if( occlusionTestTilesLine(tX, tY, u, v, (accuracy&4) != 0) ||
-				occlusionTestTilesLine(u, v, tX, tY, (accuracy&4) != 0) ) {
+			if (occlusionTestTilesLine(tX, tY, u, v, (accuracy & 4) != 0) ||
+				occlusionTestTilesLine(u, v, tX, tY, (accuracy & 4) != 0)) {
 				tilesVisible[index] = true;
 			}
 		}
@@ -783,54 +781,54 @@ bool Component::occlusionTestTilesLine(Sint32 sX, Sint32 sY, Sint32 eX, Sint32 e
 	Sint32 u2 = sX;
 	Sint32 v2 = sY;
 
-	if( dxabs > dyabs ) { // the line is more horizontal than vertical
-		for( Sint32 i = 0; i < dxabs; ++i ) {
+	if (dxabs > dyabs) { // the line is more horizontal than vertical
+		for (Sint32 i = 0; i < dxabs; ++i) {
 			u2 += sgn(dx);
 			b += dyabs;
-			if( b >= dxabs ) {
+			if (b >= dxabs) {
 				b -= dxabs;
 				v2 += sgn(dy);
 			}
-			if( u2 >= 0 && u2 < tWidth && v2 >= 0 && v2 < tHeight ) {
+			if (u2 >= 0 && u2 < tWidth && v2 >= 0 && v2 < tHeight) {
 				Uint32 index = v2 + u2 * tHeight;
-				if( entities ) {
+				if (entities) {
 					Chunk* chunk = world->getTiles()[index].getChunk();
-					if( chunk ) {
-						for( Component* component : chunk->getCPopulation() ) {
+					if (chunk) {
+						for (Component* component : chunk->getCPopulation()) {
 							Entity* entity = component->getEntity();
-							if( entity->isFlag(Entity::FLAG_OCCLUDE) ) {
+							if (entity->isFlag(Entity::FLAG_OCCLUDE)) {
 								return false;
 							}
 						}
 					}
 				}
-				if( !world->getTiles()[index].hasVolume() ) {
+				if (!world->getTiles()[index].hasVolume()) {
 					return false;
 				}
 			}
 		}
 	} else { // the line is more vertical than horizontal
-		for( Sint32 i = 0; i < dyabs; ++i ) {
+		for (Sint32 i = 0; i < dyabs; ++i) {
 			v2 += sgn(dy);
 			a += dxabs;
-			if( a >= dyabs ) {
+			if (a >= dyabs) {
 				a -= dyabs;
 				u2 += sgn(dx);
 			}
-			if( u2 >= 0 && u2 < tWidth && v2 >= 0 && v2 < tHeight ) {
+			if (u2 >= 0 && u2 < tWidth && v2 >= 0 && v2 < tHeight) {
 				Uint32 index = v2 + u2 * tHeight;
-				if( entities ) {
+				if (entities) {
 					Chunk* chunk = world->getTiles()[index].getChunk();
-					if( chunk ) {
-						for( Component* component : chunk->getCPopulation() ) {
+					if (chunk) {
+						for (Component* component : chunk->getCPopulation()) {
 							Entity* entity = component->getEntity();
-							if( entity->isFlag(Entity::FLAG_OCCLUDE) ) {
+							if (entity->isFlag(Entity::FLAG_OCCLUDE)) {
 								return false;
 							}
 						}
 					}
 				}
-				if( !world->getTiles()[index].hasVolume() ) {
+				if (!world->getTiles()[index].hasVolume()) {
 					return false;
 				}
 			}
@@ -843,11 +841,11 @@ bool Component::occlusionTestTilesLine(Sint32 sX, Sint32 sY, Sint32 eX, Sint32 e
 void Component::deleteVisMaps() {
 	tilesWidth = 0;
 	tilesHeight = 0;
-	if( tilesVisible ) {
+	if (tilesVisible) {
 		delete[] tilesVisible;
 		tilesVisible = nullptr;
 	}
-	if( chunksVisible ) {
+	if (chunksVisible) {
 		delete[] chunksVisible;
 		chunksVisible = nullptr;
 	}
@@ -855,14 +853,14 @@ void Component::deleteVisMaps() {
 }
 
 void Component::deleteAllVisMaps() {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->deleteAllVisMaps();
 	}
 	deleteVisMaps();
 }
 
 void Component::process() {
-	if( boundToBone ) {
+	if (boundToBone) {
 		boneModel->updateSkin();
 		glm::mat4 mat = boneModel->findBone(boneIndex);
 		setLocalMat(mat);
@@ -870,30 +868,30 @@ void Component::process() {
 		translate(boneTranslate);
 		scale(boneScale);
 	}
-	if( updateNeeded ) {
+	if (updateNeeded) {
 		update();
 	}
 
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->process();
 	}
 }
 
 void Component::beforeWorldInsertion(const World* world) {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->beforeWorldInsertion(world);
 	}
 }
 
 void Component::afterWorldInsertion(const World* world) {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->afterWorldInsertion(world);
 	}
 }
 
 bool Component::checkCollision() const {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c]->checkCollision() ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->checkCollision()) {
 			return true;
 		}
 	}
@@ -901,17 +899,17 @@ bool Component::checkCollision() const {
 }
 
 void Component::draw(Camera& camera, const ArrayList<Light*>& lights) {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->draw(camera, lights);
 	}
 }
 
 bool Component::hasComponent(type_t type) const {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c]->getType() == type ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->getType() == type) {
 			return true;
 		}
-		if( components[c]->hasComponent(type) ) {
+		if (components[c]->hasComponent(type)) {
 			return true;
 		}
 	}
@@ -932,7 +930,7 @@ void Component::translate(const Vector& vec) {
 	}
 	lMat = glm::translate(lMat, glm::vec3(vec.x, -vec.z, vec.y));
 	lPos = Vector(lMat[3][0], lMat[3][2], -lMat[3][1]);
-	lScale = Vector(glm::length( lMat[0] ), glm::length( lMat[2] ), glm::length( lMat[1] ));
+	lScale = Vector(glm::length(lMat[0]), glm::length(lMat[2]), glm::length(lMat[1]));
 	lAng = Quaternion(lMat);
 	updateNeeded = true;
 }
@@ -943,7 +941,7 @@ void Component::scale(const Vector& vec) {
 	}
 	lMat = glm::scale(lMat, glm::vec3(vec.x, vec.z, vec.y));
 	lPos = Vector(lMat[3][0], lMat[3][2], -lMat[3][1]);
-	lScale = Vector(glm::length( lMat[0] ), glm::length( lMat[2] ), glm::length( lMat[1] ));
+	lScale = Vector(glm::length(lMat[0]), glm::length(lMat[2]), glm::length(lMat[1]));
 	lAng = Quaternion(lMat);
 	updateNeeded = true;
 }
@@ -971,27 +969,27 @@ void Component::revertToIdentity() {
 
 void Component::update() {
 	updateNeeded = false;
-	
+
 	deleteVisMaps();
 
-	glm::mat4 translationM = glm::translate(glm::mat4(1.f),glm::vec3(lPos.x,-lPos.z,lPos.y));
+	glm::mat4 translationM = glm::translate(glm::mat4(1.f), glm::vec3(lPos.x, -lPos.z, lPos.y));
 	glm::mat4 rotationM(glm::quat(lAng.w, lAng.x, lAng.y, lAng.z));
-	glm::mat4 scaleM = glm::scale(glm::mat4(1.f),glm::vec3(lScale.x, lScale.z, lScale.y));
+	glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(lScale.x, lScale.z, lScale.y));
 	lMat = translationM * rotationM * scaleM;
 
-	if( parent ) {
+	if (parent) {
 		gMat = parent->getGlobalMat() * lMat;
 		gAng = parent->getGlobalAng() * lAng;
 	} else {
 		gMat = entity->getMat() * lMat;
 		gAng = entity->getAng() * lAng;
 	}
-	gPos = Vector( gMat[3][0], gMat[3][2], -gMat[3][1] );
-	gScale = Vector( glm::length( gMat[0] ), glm::length( gMat[2] ), glm::length( gMat[1] ) );
+	gPos = Vector(gMat[3][0], gMat[3][2], -gMat[3][1]);
+	gScale = Vector(glm::length(gMat[0]), glm::length(gMat[2]), glm::length(gMat[1]));
 
 	// update the chunk node
 	World* world = entity->getWorld();
-	if( world && world->getType() == World::WORLD_TILES ) {
+	if (world && world->getType() == World::WORLD_TILES) {
 		TileWorld* tileworld = static_cast<TileWorld*>(world);
 		if (tileworld && tileworld->getChunks().getSize()) {
 			Sint32 cW = tileworld->calcChunksWidth();
@@ -1014,8 +1012,8 @@ void Component::update() {
 		}
 	}
 
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
-		if( components[c]->isToBeDeleted() ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->isToBeDeleted()) {
 			delete components[c];
 			components.remove(c);
 			--c;
@@ -1190,14 +1188,14 @@ void Component::copy(Entity* dest) {
 }
 
 void Component::copyComponents(Component& dest) {
-	for( Uint32 c = 0; c < components.getSize(); ++c ) {
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->copy(&dest);
 	}
 }
 
 bool Component::removeComponentByName(const char* name) {
 	Component* component = findComponentByName<Component>(name);
-	if( component ) {
+	if (component) {
 		component->remove();
 		return true;
 	} else {
@@ -1207,7 +1205,7 @@ bool Component::removeComponentByName(const char* name) {
 
 bool Component::removeComponentByUID(const Uint32 uid) {
 	Component* component = findComponentByUID<Component>(uid);
-	if( component ) {
+	if (component) {
 		component->remove();
 		return true;
 	} else {
@@ -1227,13 +1225,13 @@ void Component::load(FILE* fp) {
 void Component::loadSubComponents(FILE* fp) {
 	Uint32 numComponents = 0;
 	Engine::freadl(&numComponents, sizeof(Uint32), 1, fp, nullptr, "Component::loadSubComponents()");
-	for( Uint32 c = 0; c < numComponents; ++c ) {
+	for (Uint32 c = 0; c < numComponents; ++c) {
 		Component::type_t type = Component::type_t::COMPONENT_BASIC;
 		Engine::freadl(&type, sizeof(Component::type_t), 1, fp, nullptr, "Component::loadSubComponents()");
 
 		Component* component = addComponent(type);
-		if( !component ) {
-			mainEngine->fmsg(Engine::MSG_ERROR,"failed to load component for entity '%s'",entity->getName().get());
+		if (!component) {
+			mainEngine->fmsg(Engine::MSG_ERROR, "failed to load component for entity '%s'", entity->getName().get());
 		} else {
 			component->load(fp);
 		}
@@ -1298,8 +1296,7 @@ void Component::serializeComponents(FileInterface* file) {
 			file->endObject();
 		}
 		file->endArray();
-	}
-	else {
+	} else {
 		Uint32 componentCount = 0;
 		for (Uint32 index = 0; index < components.getSize(); ++index) {
 			if (components[index]->isEditorOnly()) {
@@ -1350,8 +1347,8 @@ void Component::shootLaser(const glm::mat4& mat, WideVector& color, float size, 
 
 void Component::setLocalMat(const glm::mat4& mat) {
 	lMat = mat;
-	lPos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
-	lScale = Vector( glm::length( mat[0] ), glm::length( mat[2] ), glm::length( mat[1] ) );
+	lPos = Vector(mat[3][0], mat[3][2], -mat[3][1]);
+	lScale = Vector(glm::length(mat[0]), glm::length(mat[2]), glm::length(mat[1]));
 	lAng = Quaternion(mat);
 	updateNeeded = true;
 }

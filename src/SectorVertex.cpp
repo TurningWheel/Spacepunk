@@ -23,10 +23,10 @@ SectorVertex::~SectorVertex() {
 }
 
 void SectorVertex::own(Sector::vertex_t& vertex) {
-	if( vertex.joined ) {
+	if (vertex.joined) {
 		ArrayList<Sector::vertex_t*> theirVertices = vertex.joined->getVertices();
-		for( Uint32 c = 0; c < theirVertices.getSize(); ++c ) {
-			if( theirVertices[c] == &vertex ) {
+		for (Uint32 c = 0; c < theirVertices.getSize(); ++c) {
+			if (theirVertices[c] == &vertex) {
 				theirVertices.remove(c);
 				--c;
 			}
@@ -38,8 +38,8 @@ void SectorVertex::own(Sector::vertex_t& vertex) {
 
 void SectorVertex::deleteRigidBody() {
 	// delete old rigid body
-	if( rigidBody!=nullptr ) {
-		if( dynamicsWorld ) {
+	if (rigidBody != nullptr) {
+		if (dynamicsWorld) {
 			dynamicsWorld->removeRigidBody(rigidBody);
 		}
 		delete rigidBody;
@@ -47,13 +47,13 @@ void SectorVertex::deleteRigidBody() {
 	}
 
 	// delete motion state
-	if( motionState!=nullptr ) {
+	if (motionState != nullptr) {
 		delete motionState;
 		motionState = nullptr;
 	}
 
 	// delete collision volume
-	if( collisionShapePtr!=nullptr ) {
+	if (collisionShapePtr != nullptr) {
 		delete collisionShapePtr;
 		collisionShapePtr = nullptr;
 	}
@@ -61,7 +61,7 @@ void SectorVertex::deleteRigidBody() {
 
 void SectorVertex::updateRigidBody() {
 	deleteRigidBody();
-	if( vertices.getSize() <= 0 || !mainEngine->isEditorRunning() ) {
+	if (vertices.getSize() <= 0 || !mainEngine->isEditorRunning()) {
 		return;
 	}
 
@@ -79,16 +79,16 @@ void SectorVertex::updateRigidBody() {
 	rigidBody = new btRigidBody(rigidBodyCI);
 
 	// add a new rigid body to the simulation
-	if( world ) {
+	if (world) {
 		dynamicsWorld = world->getBulletDynamicsWorld();
-		if( dynamicsWorld ) {
+		if (dynamicsWorld) {
 			dynamicsWorld->addRigidBody(rigidBody);
 		}
 	}
 }
 
 void SectorVertex::move(const glm::vec3& pos) {
-	for( Uint32 c = 0; c < vertices.getSize(); ++c ) {
+	for (Uint32 c = 0; c < vertices.getSize(); ++c) {
 		vertices[c]->position = pos;
 		vertices[c]->face->sector->setUpdateNeeded(true);
 	}
@@ -97,16 +97,16 @@ void SectorVertex::move(const glm::vec3& pos) {
 }
 
 void SectorVertex::draw(Camera& camera) {
-	if( !mainEngine->isEditorRunning() ) {
+	if (!mainEngine->isEditorRunning()) {
 		return;
 	}
 
-	glm::mat4 mat = glm::translate( glm::mat4(1.f), glm::vec3(pos.x, -pos.z, pos.y) );
+	glm::mat4 mat = glm::translate(glm::mat4(1.f), glm::vec3(pos.x, -pos.z, pos.y));
 	mat = glm::scale(mat, glm::vec3(4.f));
-	if( selected ) {
+	if (selected) {
 		camera.drawCube(mat, glm::vec4(1.f, 0.f, 0.f, 1.f));
 	} else {
-		if( highlighted ) {
+		if (highlighted) {
 			camera.drawCube(mat, glm::vec4(1.f, 1.f, 0.f, 1.f));
 		} else {
 			camera.drawCube(mat, glm::vec4(0.f, 1.f, 0.f, 1.f));

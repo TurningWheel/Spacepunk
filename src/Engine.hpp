@@ -75,70 +75,70 @@ public:
 	static const unsigned int doubleClickTime = 30;
 
 	// getters & setters
-	const bool							isInitialized() const							{ return initialized; }
-	const bool							isRunning() const								{ return running; }
-	const bool							isPaused() const								{ return paused; }
-	const bool							isFullscreen() const							{ return fullscreen; }
-	const bool							isRunningClient() const							{ return runningClient; }
-	const bool							isRunningServer() const							{ return runningServer; }
-	const char*							getGameTitle() const							{ return game.name.get(); }
-	Client*&							getLocalClient()								{ return localClient; }
-	Server*&							getLocalServer()								{ return localServer; }
-	const Sint32						getXres() const									{ return xres; }
-	const Sint32						getYres() const									{ return yres; }
-	const bool							getKeyStatus(const int index) const				{ return keystatus[index]; }
-	const bool							getAnyKeyStatus() const							{ return anykeystatus; }
-	const char*							getLastKeyPressed() const						{ return lastkeypressed; }
-	const bool							getMouseStatus(const int index) const			{ return mousestatus[index]; }
-	const bool							getDBCMouseStatus(const int index) const		{ return dbc_mousestatus[index]; }
-	const Sint32						getMouseX() const								{ return mousex; }
-	const Sint32						getMouseY() const								{ return mousey; }
-	const Sint32						getOldMouseX() const							{ return omousex; }
-	const Sint32						getOldMouseY() const							{ return omousey; }
-	const Sint32						getMouseWheelX() const							{ return mousewheelx; }
-	const Sint32						getMouseWheelY() const							{ return mousewheely; }
-	const Sint32						getMouseMoveX() const							{ return mousexrel; }
-	const Sint32						getMouseMoveY() const							{ return mouseyrel; }
-	const double						getFPS() const									{ return fps; }
-	const double						getTimeSync() const								{ return timesync; }
-	const Uint32						getTicks() const								{ return ticks; }
-	const unsigned int					getTicksPerSecond() const						{ return ticksPerSecond; }
-	Resource<Mesh, true>&				getMeshResource()								{ return meshResource; }
-	Resource<Image, true>&				getImageResource()								{ return imageResource; }
-	Resource<Material>&					getMaterialResource()							{ return materialResource; }
-	Resource<Texture>&					getTextureResource()							{ return textureResource; }
-	Resource<Text>&						getTextResource()								{ return textResource; }
-	Resource<Sound>&					getSoundResource()								{ return soundResource; }
-	Resource<Animation>&				getAnimationResource()							{ return animationResource; }
-	Resource<Cubemap>&					getCubemapResource()							{ return cubemapResource; }
-	Dictionary&							getTextureDictionary()							{ return textureDictionary; }
-	const Atlas&						getTileDiffuseTextures()						{ return tileDiffuseTextures; }
-	const Atlas&						getTileNormalTextures()							{ return tileNormalTextures; }
-	const Atlas&						getTileEffectsTextures()						{ return tileEffectsTextures; }
-	const LinkedList<Entity::def_t*>&	getEntityDefs()									{ return entityDefs; }
-	LinkedList<String>&					getCommandHistory()								{ return commandHistory; }
-	const char*							getInputStr()									{ return inputstr; }
-	const bool							isCursorVisible() const							{ return (ticks-cursorflash)%ticksPerSecond<ticksPerSecond/2; }
-	const bool							isMouseRelative() const							{ return mouseRelative; }
-	const bool							isKillSignal() const							{ return killSignal; }
-	Random&								getRandom()										{ return rand; }
-	const char*							getLastInput() const							{ return lastInput; }
-	LinkedList<SDL_GameController*>&	getControllers()								{ return controllers; }
-	LinkedList<SDL_Joystick*>&			getJoysticks()									{ return joysticks; }
-	Input&								getInput(int index)								{ return inputs[index]; }
-	const bool							isPlayTest() const								{ return playTest; }
-		
-	void								setPaused(const bool _paused)					{ paused = _paused; }
-	void								setInputStr(char* const _inputstr)				{ inputstr = _inputstr; inputnum = false; }
-	void								setInputLen(const int _inputlen)				{ inputlen = _inputlen; }
-	void								setInputNumbersOnly(const bool _inputnum)		{ inputnum = _inputnum; }
-	void								setMouseRelative(const bool _mouseRelative)		{ mouseRelative = _mouseRelative; }
-	void								setKillSignal(const bool _killSignal)			{ killSignal = _killSignal; }
-	void								setFullscreen(const bool _b)					{ fullscreen = _b; }
-	void								setXres(const Sint32 i)							{ xres = i; }
-	void								setYres(const Sint32 i)							{ yres = i; }
-	void								setPlayTest(const bool b)						{ playTest = b; }
-	void								setConsoleSleep(Uint32 i)						{ consoleSleep = i; }
+	const bool							isInitialized() const { return initialized; }
+	const bool							isRunning() const { return running; }
+	const bool							isPaused() const { return paused; }
+	const bool							isFullscreen() const { return fullscreen; }
+	const bool							isRunningClient() const { return runningClient; }
+	const bool							isRunningServer() const { return runningServer; }
+	const char*							getGameTitle() const { return game.name.get(); }
+	Client*&							getLocalClient() { return localClient; }
+	Server*&							getLocalServer() { return localServer; }
+	const Sint32						getXres() const { return xres; }
+	const Sint32						getYres() const { return yres; }
+	const bool							getKeyStatus(const int index) const { return keystatus[index]; }
+	const bool							getAnyKeyStatus() const { return anykeystatus; }
+	const char*							getLastKeyPressed() const { return lastkeypressed; }
+	const bool							getMouseStatus(const int index) const { return mousestatus[index]; }
+	const bool							getDBCMouseStatus(const int index) const { return dbc_mousestatus[index]; }
+	const Sint32						getMouseX() const { return mousex; }
+	const Sint32						getMouseY() const { return mousey; }
+	const Sint32						getOldMouseX() const { return omousex; }
+	const Sint32						getOldMouseY() const { return omousey; }
+	const Sint32						getMouseWheelX() const { return mousewheelx; }
+	const Sint32						getMouseWheelY() const { return mousewheely; }
+	const Sint32						getMouseMoveX() const { return mousexrel; }
+	const Sint32						getMouseMoveY() const { return mouseyrel; }
+	const double						getFPS() const { return fps; }
+	const double						getTimeSync() const { return timesync; }
+	const Uint32						getTicks() const { return ticks; }
+	const unsigned int					getTicksPerSecond() const { return ticksPerSecond; }
+	Resource<Mesh, true>&				getMeshResource() { return meshResource; }
+	Resource<Image, true>&				getImageResource() { return imageResource; }
+	Resource<Material>&					getMaterialResource() { return materialResource; }
+	Resource<Texture>&					getTextureResource() { return textureResource; }
+	Resource<Text>&						getTextResource() { return textResource; }
+	Resource<Sound>&					getSoundResource() { return soundResource; }
+	Resource<Animation>&				getAnimationResource() { return animationResource; }
+	Resource<Cubemap>&					getCubemapResource() { return cubemapResource; }
+	Dictionary&							getTextureDictionary() { return textureDictionary; }
+	const Atlas&						getTileDiffuseTextures() { return tileDiffuseTextures; }
+	const Atlas&						getTileNormalTextures() { return tileNormalTextures; }
+	const Atlas&						getTileEffectsTextures() { return tileEffectsTextures; }
+	const LinkedList<Entity::def_t*>&	getEntityDefs() { return entityDefs; }
+	LinkedList<String>&					getCommandHistory() { return commandHistory; }
+	const char*							getInputStr() { return inputstr; }
+	const bool							isCursorVisible() const { return (ticks - cursorflash) % ticksPerSecond < ticksPerSecond / 2; }
+	const bool							isMouseRelative() const { return mouseRelative; }
+	const bool							isKillSignal() const { return killSignal; }
+	Random&								getRandom() { return rand; }
+	const char*							getLastInput() const { return lastInput; }
+	LinkedList<SDL_GameController*>&	getControllers() { return controllers; }
+	LinkedList<SDL_Joystick*>&			getJoysticks() { return joysticks; }
+	Input&								getInput(int index) { return inputs[index]; }
+	const bool							isPlayTest() const { return playTest; }
+
+	void								setPaused(const bool _paused) { paused = _paused; }
+	void								setInputStr(char* const _inputstr) { inputstr = _inputstr; inputnum = false; }
+	void								setInputLen(const int _inputlen) { inputlen = _inputlen; }
+	void								setInputNumbersOnly(const bool _inputnum) { inputnum = _inputnum; }
+	void								setMouseRelative(const bool _mouseRelative) { mouseRelative = _mouseRelative; }
+	void								setKillSignal(const bool _killSignal) { killSignal = _killSignal; }
+	void								setFullscreen(const bool _b) { fullscreen = _b; }
+	void								setXres(const Sint32 i) { xres = i; }
+	void								setYres(const Sint32 i) { yres = i; }
+	void								setPlayTest(const bool b) { playTest = b; }
+	void								setConsoleSleep(Uint32 i) { consoleSleep = i; }
 
 	// get the directory the game is running in
 	const char* getRunningDir();
@@ -247,27 +247,27 @@ public:
 	// @param stream the file stream to read the data from
 	// @param filename the filename of the file that is being read from
 	// @param funcName the name of the function wherein the file is being read
-	static void freadl( void* ptr, Uint32 size, Uint32 count, FILE* stream, const char* filename, const char* funcName );
+	static void freadl(void* ptr, Uint32 size, Uint32 count, FILE* stream, const char* filename, const char* funcName);
 
 	// reads multiple ints from a character string
 	// @param str the string to read the space-separated character-encoded ints from
 	// @param arr an array to store each of the ints in
 	// @param numToRead the number of ints to read from str
 	// @return the number of ints that were successfully read from str
-	static int readInt( const char* str, int* arr, int numToRead );
+	static int readInt(const char* str, int* arr, int numToRead);
 
 	// reads multiple floats from a character string
 	// @param str the string to read the space-separated character-encoded floats from
 	// @param arr an array to store each of the floats in
 	// @param numToRead the number of floats to read from str
 	// @return the number of floats that were successfully read from str
-	static int readFloat( const char* str, float* arr, int numToRead );
+	static int readFloat(const char* str, float* arr, int numToRead);
 
 	// determines if some text is anything but a number
 	// @param arr the array of characters to check for letters
 	// @param len the length of the array
 	// @return true if the character array has non-numeral characters, false otherwise
-	static bool charsHaveLetters( const char* arr, Uint32 len );
+	static bool charsHaveLetters(const char* arr, Uint32 len);
 
 	// does string comparison (helper function for lua)
 	// @param a the first string
@@ -282,7 +282,7 @@ public:
 	// @param planeNormal the surface normal of the plane
 	// @param outIntersection the point of intersection between the line and the plane
 	// @return true if the line intersects with the plane, false otherwise
-	static bool lineIntersectPlane( const Vector& lineStart, const Vector& lineEnd, const Vector& planeOrigin, const Vector& planeNormal, Vector& outIntersection );
+	static bool lineIntersectPlane(const Vector& lineStart, const Vector& lineEnd, const Vector& planeOrigin, const Vector& planeNormal, Vector& outIntersection);
 
 	// determines where in the triangle defined by a, b, c, that the point p lies (does not use Z coord)
 	// @param a point A on the triangle
@@ -290,7 +290,7 @@ public:
 	// @param c point C on the triangle
 	// @param p the point to test
 	// @return a pair of coordinates that define where the point is in the triangle
-	static Vector triangleCoords( const Vector& a, const Vector& b, const Vector& c, const Vector& p );
+	static Vector triangleCoords(const Vector& a, const Vector& b, const Vector& c, const Vector& p);
 
 	// determines if the given point p lies in the triangle defined by a, b, c (does not use Z coord)
 	// @param a point A on the triangle
@@ -298,7 +298,7 @@ public:
 	// @param c point C on the triangle
 	// @param p the point to test
 	// @return true if the point is in the triangle, otherwise false
-	static bool pointInTriangle( const Vector& a, const Vector& b, const Vector& c, const Vector& p );
+	static bool pointInTriangle(const Vector& a, const Vector& b, const Vector& c, const Vector& p);
 
 	// determines if one triangle lies inside of another (two-dimensional)
 	// @param a0: point A on first triangle (container)
@@ -308,7 +308,7 @@ public:
 	// @param b1: point B on second triangle
 	// @param c1: point C on second triangle
 	// @return true if the second triangle is in the first one, otherwise false
-	static bool triangleOverlapsTriangle( const Vector& a0, const Vector& b0, const Vector& c0, const Vector& a1, const Vector& b1, const Vector& c1 );
+	static bool triangleOverlapsTriangle(const Vector& a0, const Vector& b0, const Vector& c0, const Vector& a1, const Vector& b1, const Vector& c1);
 
 	// perform pre-processing on the current frame
 	void preProcess();
@@ -328,14 +328,14 @@ public:
 	// use a local variable to record the press for your object instead!
 	// @param index the key scancode
 	// @return true if the key has been pressed, false otherwise
-	const bool pressKey(const int index)	{ if( keystatus[index] ) { keystatus[index]=false; return true; } else { return false; } }
+	const bool pressKey(const int index) { if (keystatus[index]) { keystatus[index] = false; return true; } else { return false; } }
 
 	// return the value of a mouse button and reset it if it's been clicked
 	// !IMPORTANT! should generally NOT be used, as it "locks" the button for the rest of the frame after being pressed
 	// use a local variable to record the press for your object instead!
 	// @param index the button number
 	// @return true if the button has been clicked, false otherwise
-	const bool pressMouse(const int index)	{ if( mousestatus[index] ) { mousestatus[index]=false; return true; } else { return false; } }
+	const bool pressMouse(const int index) { if (mousestatus[index]) { mousestatus[index] = false; return true; } else { return false; } }
 
 	// takes a full system path to a local asset and attempts to cut it down to a virtual path
 	// @param path the full filename
@@ -428,11 +428,11 @@ private:
 	Sint32 yres = 720;
 
 	// timing data
-	double fps=0, timesync=0, t=0, ot=0;
+	double fps = 0, timesync = 0, t = 0, ot = 0;
 	static const int fpsAverage = 32;
 	double frameval[fpsAverage];
-	Uint32 ticks=0, cycles=0, lastfpscount=0;
-	bool executedFrames=false;
+	Uint32 ticks = 0, cycles = 0, lastfpscount = 0;
+	bool executedFrames = false;
 	std::chrono::time_point<std::chrono::steady_clock> lastTick;
 
 	// console data
@@ -450,10 +450,10 @@ private:
 	bool dbc_mousestatus[8];
 	Uint32 mouseClickTime = 0;
 	bool mouseRelative = false;
-	Sint32 mousex=0, mousey=0;
-	Sint32 omousex=0, omousey=0;
-	Sint32 mousexrel=0, mouseyrel=0;
-	Sint32 mousewheelx=0, mousewheely=0;
+	Sint32 mousex = 0, mousey = 0;
+	Sint32 omousex = 0, omousey = 0;
+	Sint32 mousexrel = 0, mouseyrel = 0;
+	Sint32 mousewheelx = 0, mousewheely = 0;
 	char *inputstr = nullptr; // text input buffer
 	int inputlen = 0; // length of the text input buffer
 	bool inputnum = false; // if true, the text input is for numbers only

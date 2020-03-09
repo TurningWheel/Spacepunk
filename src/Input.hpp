@@ -90,8 +90,8 @@ public:
 	void update();
 
 	// getters & setters
-	const bool					isInverted() const			{ return inverted; }
-	void						setInverted(bool b)			{ inverted = b; }
+	const bool					isInverted() const { return inverted; }
+	void						setInverted(bool b) { inverted = b; }
 
 private:
 	Map<StringBuf<64>, binding_t> bindings;

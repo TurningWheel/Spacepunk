@@ -30,23 +30,23 @@ Client::Client() {
 }
 
 Client::~Client() {
-	if( script ) {
+	if (script) {
 		script->dispatch("term");
 		delete script;
 	}
-	if( gui ) {
+	if (gui) {
 		delete gui;
 		gui = nullptr;
 	}
-	if( editor ) {
+	if (editor) {
 		delete editor;
 		editor = nullptr;
 	}
-	if( renderer ) {
+	if (renderer) {
 		delete renderer;
 		renderer = nullptr;
 	}
-	if( mixer ) {
+	if (mixer) {
 		delete mixer;
 		mixer = nullptr;
 	}
@@ -56,14 +56,14 @@ void Client::init() {
 	net->init();
 
 	renderer->init();
-	if( !renderer->isInitialized() ) {
-		mainEngine->smsg(Engine::MSG_ERROR,"failed to initialize renderer");
+	if (!renderer->isInitialized()) {
+		mainEngine->smsg(Engine::MSG_ERROR, "failed to initialize renderer");
 		return;
 	}
 
 	mixer->init();
-	if( !mixer->isInitialized() ) {
-		mainEngine->smsg(Engine::MSG_ERROR,"failed to initialize mixer");
+	if (!mixer->isInitialized()) {
+		mainEngine->smsg(Engine::MSG_ERROR, "failed to initialize mixer");
 		return;
 	}
 
@@ -72,25 +72,25 @@ void Client::init() {
 }
 
 void Client::handleNetMessages() {
-	if( !net ) {
+	if (!net) {
 		return;
 	}
 
-	for( int remoteIndex=0; remoteIndex < (int)net->numRemoteHosts(); ++remoteIndex ) {
-		while( !net->lockThread() );
+	for (int remoteIndex = 0; remoteIndex < (int)net->numRemoteHosts(); ++remoteIndex) {
+		while (!net->lockThread());
 
 		// receive packets
 		Packet* recvPacket = nullptr;
-		while( (recvPacket=net->recvPacket(remoteIndex)) != nullptr ) {
+		while ((recvPacket = net->recvPacket(remoteIndex)) != nullptr) {
 			Packet packet(*recvPacket);
 			delete recvPacket;
 
 			Uint32 id, timestamp;
-			if( packet.read32(id) && packet.read32(timestamp) ) {
-				char packetType[4] = {0};
-				if( packet.read(packetType, 4) ) {
-					if( int result = net->handleNetworkPacket(packet, (const char*)packetType, id) ) {
-						if( result == 2 ) {
+			if (packet.read32(id) && packet.read32(timestamp)) {
+				char packetType[4] = { 0 };
+				if (packet.read(packetType, 4)) {
+					if (int result = net->handleNetworkPacket(packet, (const char*)packetType, id)) {
+						if (result == 2) {
 							// this means they've disconnected, so stop expecting more packets -- you won't get any
 							--remoteIndex;
 							break;
@@ -100,13 +100,13 @@ void Client::handleNetMessages() {
 					}
 
 					// chat message
-					else if( strncmp( (const char*)packetType, "CMSG", 4) == 0 ) {
+					else if (strncmp((const char*)packetType, "CMSG", 4) == 0) {
 						Uint32 msgLen;
-						if( packet.read32(msgLen) ) {
-							char* msg = new char[msgLen+1];
-							if( msg ) {
+						if (packet.read32(msgLen)) {
+							char* msg = new char[msgLen + 1];
+							if (msg) {
 								msg[msgLen] = 0;
-								packet.read(msg,msgLen);
+								packet.read(msg, msgLen);
 								mainEngine->fmsg(Engine::MSG_CHAT, msg);
 								delete[] msg;
 							}
@@ -116,39 +116,39 @@ void Client::handleNetMessages() {
 					}
 
 					// server map list
-					else if( strncmp( (const char*)packetType, "MAPS", 4) == 0 ) {
+					else if (strncmp((const char*)packetType, "MAPS", 4) == 0) {
 						closeAllWorlds();
 
 						Uint32 numWorlds;
 						packet.read32(numWorlds);
-						for( Uint32 c=0; c<numWorlds; ++c ) {
+						for (Uint32 c = 0; c < numWorlds; ++c) {
 							Uint8 worldType;
 							packet.read8(worldType);
-							if( worldType == 'g' ) {
+							if (worldType == 'g') {
 								Uint32 pathLen;
 								packet.read32(pathLen);
-								char* path = new char[pathLen+1];
-								if( path ) {
-									packet.read(path,pathLen);
+								char* path = new char[pathLen + 1];
+								if (path) {
+									packet.read(path, pathLen);
 									path[pathLen] = '\0';
 									genTileWorld(path);
 									delete[] path;
 								}
-							} else if( worldType == 'f' ) {
+							} else if (worldType == 'f') {
 								Uint32 filenameLen;
 								packet.read32(filenameLen);
-								char* filename = new char[filenameLen+1];
-								if( filename ) {
-									packet.read(filename,filenameLen);
+								char* filename = new char[filenameLen + 1];
+								if (filename) {
+									packet.read(filename, filenameLen);
 									filename[filenameLen] = '\0';
-									loadWorld(filename,true);
+									loadWorld(filename, true);
 									delete[] filename;
 								}
 							}
 						}
 
 						// for playtesting
-						if( mainEngine->isPlayTest() && net->getLocalID() != Net::invalidID ) {
+						if (mainEngine->isPlayTest() && net->getLocalID() != Net::invalidID) {
 							spawn(0);
 						}
 
@@ -156,7 +156,7 @@ void Client::handleNetMessages() {
 					}
 
 					// server telling us about a player
-					else if( strncmp( (const char*)packetType, "CENS", 4) == 0 ) {
+					else if (strncmp((const char*)packetType, "CENS", 4) == 0) {
 						Player::colors_t colors;
 
 						Uint32 localID, clientID, serverID;
@@ -167,9 +167,9 @@ void Client::handleNetMessages() {
 						// read name
 						Uint8 nameLen;
 						StringBuf<64> nameStr = "";
-						if( packet.read8(nameLen) ) {
-							char* name = new char[nameLen+1];
-							if( name ) {
+						if (packet.read8(nameLen)) {
+							char* name = new char[nameLen + 1];
+							if (name) {
 								packet.read(name, nameLen);
 								name[nameLen] = '\0';
 								nameStr = name;
@@ -214,13 +214,13 @@ void Client::handleNetMessages() {
 						colors.feetBChannel = { feetB[0] / 255.f, feetB[1] / 255.f, feetB[2] / 255.f, 1.f };
 
 						Player* player = findPlayer(clientID, localID);
-						if( player == nullptr ) {
+						if (player == nullptr) {
 							player = &players.addNodeLast(Player(nameStr.get(), colors))->getData();
 							player->setLocalID(localID);
 							player->setClientID(clientID);
 						} else {
 							player->setName(nameStr.get());
-							if( player->getEntity() ) {
+							if (player->getEntity()) {
 								player->updateColors(colors);
 							}
 						}
@@ -308,7 +308,7 @@ void Client::handleNetMessages() {
 						assert(world);
 
 						// get player
-						if( clientID == net->getLocalID() ) {
+						if (clientID == net->getLocalID()) {
 							clientID = Player::invalidID;
 						}
 						Player* player = findPlayer(clientID, localID);
@@ -427,12 +427,12 @@ void Client::handleNetMessages() {
 					}
 
 					// entity update
-					else if( strncmp( (const char*)packetType, "ENTU", 4) == 0 ) {
+					else if (strncmp((const char*)packetType, "ENTU", 4) == 0) {
 						// read world
 						Uint32 worldID;
 						packet.read32(worldID);
 						Node<World*>* node = worlds[worldID];
-						if( node ) {
+						if (node) {
 							World& world = *node->getData();
 
 							// get uid
@@ -448,14 +448,14 @@ void Client::handleNetMessages() {
 							packet.read32(posInt[0]);
 							packet.read32(posInt[1]);
 							packet.read32(posInt[2]);
-							Vector pos( ((Sint32)posInt[0]) / 32.f, ((Sint32)posInt[1]) / 32.f, ((Sint32)posInt[2]) / 32.f );
+							Vector pos(((Sint32)posInt[0]) / 32.f, ((Sint32)posInt[1]) / 32.f, ((Sint32)posInt[2]) / 32.f);
 
 							// read vel
 							Uint32 velInt[3];
 							packet.read32(velInt[0]);
 							packet.read32(velInt[1]);
 							packet.read32(velInt[2]);
-							Vector vel( ((Sint32)velInt[0]) / 128.f, ((Sint32)velInt[1]) / 128.f, ((Sint32)velInt[2]) / 128.f );
+							Vector vel(((Sint32)velInt[0]) / 128.f, ((Sint32)velInt[1]) / 128.f, ((Sint32)velInt[2]) / 128.f);
 
 							// read ang
 							Uint32 angInt[4];
@@ -487,8 +487,7 @@ void Client::handleNetMessages() {
 									packet.read8(isCrouching);
 									if (isCrouching) {
 										player->putInCrouch(true);
-									}
-									else {
+									} else {
 										player->putInCrouch(false);
 									}
 
@@ -497,8 +496,7 @@ void Client::handleNetMessages() {
 									packet.read8(isMoving);
 									if (isMoving) {
 										player->setMoving(true);
-									}
-									else {
+									} else {
 										player->setMoving(false);
 									}
 
@@ -507,8 +505,7 @@ void Client::handleNetMessages() {
 									packet.read8(hasJumped);
 									if (hasJumped) {
 										player->setJumped(true);
-									}
-									else {
+									} else {
 										player->setJumped(false);
 									}
 
@@ -526,12 +523,12 @@ void Client::handleNetMessages() {
 
 							// update the entity
 							Entity* entity = player && player->getEntity() ? player->getEntity() : world.uidToEntity(uid);
-							if( !entity ) {
+							if (!entity) {
 								// we need to spawn the entity
-								if( type != UINT32_MAX ) {
+								if (type != UINT32_MAX) {
 									const Entity::def_t* def = Entity::findDef(type);
 									entity = Entity::spawnFromDef(&world, *def, pos, ang.toRotation(), uid);
-									if( entity ) {
+									if (entity) {
 										entity->setVel(vel);
 										entity->setLastUpdate(ticks);
 									}
@@ -563,12 +560,12 @@ void Client::handleNetMessages() {
 					}
 
 					// entity deleted
-					else if( strncmp( (const char*)packetType, "ENTD", 4) == 0 ) {
+					else if (strncmp((const char*)packetType, "ENTD", 4) == 0) {
 						// read world
 						Uint32 worldID;
 						packet.read32(worldID);
 						Node<World*>* node = worlds[worldID];
-						if( node ) {
+						if (node) {
 							World& world = *node->getData();
 
 							// get uid
@@ -577,7 +574,7 @@ void Client::handleNetMessages() {
 
 							// find entity
 							Entity* entity = world.uidToEntity(uid);
-							if( entity ) {
+							if (entity) {
 								entity->remove();
 							}
 						}
@@ -586,7 +583,7 @@ void Client::handleNetMessages() {
 					}
 
 					// player interaction broadcast message
-					else if( strncmp( (const char*)packetType, "PINT", 4) == 0 ) {
+					else if (strncmp((const char*)packetType, "PINT", 4) == 0) {
 						// read world
 						Uint32 playerID;
 						packet.read32(playerID);
@@ -595,7 +592,7 @@ void Client::handleNetMessages() {
 						Uint32 selectedEntityID;
 						packet.read32(selectedEntityID);
 						Node<World*>* node = worlds.nodeForIndex(worldID);
-						if ( node ) {
+						if (node) {
 							World* world = node->getData();
 
 							Player* player = findPlayer(playerID);
@@ -617,7 +614,7 @@ void Client::handleNetMessages() {
 }
 
 void Client::onEstablishConnection(Uint32 remoteID) {
-	if( mainEngine->isPlayTest() && numWorlds() > 0 ) {
+	if (mainEngine->isPlayTest() && numWorlds() > 0) {
 		spawn(0);
 	}
 }
@@ -625,10 +622,10 @@ void Client::onEstablishConnection(Uint32 remoteID) {
 void Client::onDisconnect(Uint32 remoteID) {
 	Node<Player>* node;
 	Node<Player>* nextNode;
-	for( node = players.getFirst(); node != nullptr; node = nextNode ) {
+	for (node = players.getFirst(); node != nullptr; node = nextNode) {
 		nextNode = node->getNext();
 		Player& player = node->getData();
-		if( player.getClientID() == Player::invalidID ) {
+		if (player.getClientID() == Player::invalidID) {
 			player.despawn();
 		} else {
 			players.removeNode(node);
@@ -638,7 +635,7 @@ void Client::onDisconnect(Uint32 remoteID) {
 
 void Client::spawn(Uint32 localID) {
 	Player* player = findPlayer(Player::invalidID, localID);
-	if( player == nullptr ) {
+	if (player == nullptr) {
 		player = &players.addNodeLast(Player())->getData();
 		player->setLocalID(localID);
 	}
@@ -697,7 +694,7 @@ void Client::spawn(Uint32 localID) {
 void Client::closeEditor() {
 	net->disconnectAll();
 
-	if( editor ) {
+	if (editor) {
 		delete editor;
 		editor = nullptr;
 	}
@@ -720,18 +717,18 @@ void Client::startEditor(const char* path) {
 }
 
 void Client::runConsole() {
-	if( mainEngine->copyLog(console) ) {
+	if (mainEngine->copyLog(console)) {
 		logStart = nullptr;
 	}
 
-	#ifdef PLATFORM_LINUX
-	if( mainEngine->pressKey(SDL_SCANCODE_F1) ) {
-	#else
-	if( mainEngine->pressKey(SDL_SCANCODE_GRAVE) ) { // doesn't work on linux for some reason?
-	#endif
-		consoleActive = (consoleActive==false);
-		if( consoleActive ) {
-			for( int i=0; i<consoleLen; ++i ) {
+#ifdef PLATFORM_LINUX
+	if (mainEngine->pressKey(SDL_SCANCODE_F1)) {
+#else
+	if (mainEngine->pressKey(SDL_SCANCODE_GRAVE)) { // doesn't work on linux for some reason?
+#endif
+		consoleActive = (consoleActive == false);
+		if (consoleActive) {
+			for (int i = 0; i < consoleLen; ++i) {
 				consoleInput[i] = 0;
 			}
 			mainEngine->setInputStr(consoleInput);
@@ -743,114 +740,114 @@ void Client::runConsole() {
 			SDL_StopTextInput();
 		}
 	}
-	if( consoleActive ) {
-		consoleHeight = min(consoleHeight+renderer->getYres()/10,renderer->getYres()/2);
+	if (consoleActive) {
+		consoleHeight = min(consoleHeight + renderer->getYres() / 10, renderer->getYres() / 2);
 
 		// submit console command
-		if( mainEngine->pressKey(SDL_SCANCODE_RETURN) || mainEngine->getKeyStatus(SDL_SCANCODE_KP_ENTER) ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_RETURN) || mainEngine->getKeyStatus(SDL_SCANCODE_KP_ENTER)) {
 			const char* command[1];
 			command[0] = consoleInput;
-			mainEngine->commandLine(1,command);
+			mainEngine->commandLine(1, command);
 			String oldCommand(consoleInput);
 			mainEngine->getCommandHistory().addNodeLast(oldCommand);
 			cuCommand = nullptr;
-			for( int i=0; i<consoleLen; ++i ) {
+			for (int i = 0; i < consoleLen; ++i) {
 				consoleInput[i] = 0;
 			}
 		}
 
 		// help on current console buffer
-		if( mainEngine->pressKey(SDL_SCANCODE_TAB) ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_TAB)) {
 			StringBuf<64> cmd("help %s", 1, consoleInput);
 			mainEngine->doCommand(cmd.get());
 		}
 
 		// navigate command history
-		if( mainEngine->pressKey(SDL_SCANCODE_UP) ) {
-			if( cuCommand==nullptr ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_UP)) {
+			if (cuCommand == nullptr) {
 				strncpy(oldConsoleInput, consoleInput, consoleLen);
 				cuCommand = mainEngine->getCommandHistory().getLast();
-				if( cuCommand ) {
-					strncpy(consoleInput,cuCommand->getData().get(),consoleLen);
+				if (cuCommand) {
+					strncpy(consoleInput, cuCommand->getData().get(), consoleLen);
 				}
 			} else {
-				if( cuCommand->getPrev()!=nullptr ) {
+				if (cuCommand->getPrev() != nullptr) {
 					cuCommand = cuCommand->getPrev();
-					strncpy(consoleInput,cuCommand->getData().get(),consoleLen);
+					strncpy(consoleInput, cuCommand->getData().get(), consoleLen);
 				}
 			}
 		}
-		if( mainEngine->pressKey(SDL_SCANCODE_DOWN) ) {
-			if( cuCommand!=nullptr ) {
-				if( cuCommand->getNext()!=nullptr ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_DOWN)) {
+			if (cuCommand != nullptr) {
+				if (cuCommand->getNext() != nullptr) {
 					cuCommand = cuCommand->getNext();
-					strncpy(consoleInput,cuCommand->getData().get(),consoleLen);
+					strncpy(consoleInput, cuCommand->getData().get(), consoleLen);
 				} else {
 					cuCommand = nullptr;
-					strncpy(consoleInput,oldConsoleInput,consoleLen);
+					strncpy(consoleInput, oldConsoleInput, consoleLen);
 				}
 			}
 		}
 
 		// navigate console log
-		if( mainEngine->pressKey(SDL_SCANCODE_PAGEUP) ) {
-			if( logStart==nullptr ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_PAGEUP)) {
+			if (logStart == nullptr) {
 				logStart = console.getLast();
 			}
-			for( int c=0; logStart!=console.getFirst() && c<10; logStart=logStart->getPrev(), ++c ) {
-				Uint32 i=-1;
+			for (int c = 0; logStart != console.getFirst() && c < 10; logStart = logStart->getPrev(), ++c) {
+				Uint32 i = -1;
 				String* str = &logStart->getData().text;
-				while( (i=str->find('\n',i+1)) != UINT32_MAX ) {
+				while ((i = str->find('\n', i + 1)) != UINT32_MAX) {
 					++c;
-					if( c>=9 )
+					if (c >= 9)
 						break;
 				}
 			}
 		}
-		if( mainEngine->pressKey(SDL_SCANCODE_PAGEDOWN) ) {
-			if( logStart!=nullptr ) {
-				for( int c=0; logStart!=console.getLast() && c<10; logStart=logStart->getNext(), ++c ) {
-					Uint32 i=-1;
+		if (mainEngine->pressKey(SDL_SCANCODE_PAGEDOWN)) {
+			if (logStart != nullptr) {
+				for (int c = 0; logStart != console.getLast() && c < 10; logStart = logStart->getNext(), ++c) {
+					Uint32 i = -1;
 					String* str = &logStart->getData().text;
-					while( (i=str->find('\n',i+1)) != UINT32_MAX ) {
+					while ((i = str->find('\n', i + 1)) != UINT32_MAX) {
 						++c;
-						if( c>=9 )
+						if (c >= 9)
 							break;
 					}
 				}
-				if( logStart == console.getLast() ) {
+				if (logStart == console.getLast()) {
 					logStart = nullptr;
 				}
 			}
 		}
-		if( mainEngine->pressKey(SDL_SCANCODE_HOME) ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_HOME)) {
 			logStart = console.getFirst();
 		}
-		if( mainEngine->pressKey(SDL_SCANCODE_END) ) {
+		if (mainEngine->pressKey(SDL_SCANCODE_END)) {
 			logStart = nullptr;
 		}
 	} else {
-		consoleHeight = max(consoleHeight-renderer->getYres()/10,0);
+		consoleHeight = max(consoleHeight - renderer->getYres() / 10, 0);
 	}
-}
+	}
 
 void Client::preProcess() {
-	if( mainEngine->isPlayTest() && editor ) {
+	if (mainEngine->isPlayTest() && editor) {
 		closeEditor();
 		mainEngine->joinServer("localhost");
 	}
-	if( framesToRun ) {
+	if (framesToRun) {
 		script->dispatch("preprocess");
 
-		if( editor ) {
+		if (editor) {
 			editor->preProcess();
 		}
 
 		// player controls
-		for( Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext() ) {
+		for (Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
 			Player& player = node->getData();
-			
-			if( player.getClientID() == Player::invalidID ) {
+
+			if (player.getClientID() == Player::invalidID) {
 				// in the context of a client, this means *we* own the player.
 				// in any other circumstance, it would contain a legitimate client ID.
 				player.control();
@@ -876,17 +873,17 @@ void Client::preProcess() {
 void Client::process() {
 	Game::process();
 
-	for( Uint32 frame=0; frame<framesToRun; ++frame ) {
+	for (Uint32 frame = 0; frame < framesToRun; ++frame) {
 		script->dispatch("process");
 
 		// drop down console
-		if( consoleAllowed ) {
+		if (consoleAllowed) {
 			runConsole();
 		}
 
 		bool editorFullscreen = false;
 		bool textureSelectorActive = false;
-		if( editor ) {
+		if (editor) {
 			editorFullscreen = editor->isFullscreen();
 			textureSelectorActive = editor->isTextureSelectorActive();
 		}
@@ -902,16 +899,16 @@ void Client::process() {
 			}
 		}
 
-		if( !consoleActive ) {
+		if (!consoleActive) {
 			// process gui
 			bool usableInterface = true;
-			if( gui && !editorFullscreen && !textureSelectorActive ) {
+			if (gui && !editorFullscreen && !textureSelectorActive) {
 				Frame::result_t result = gui->process();
 				usableInterface = result.usable;
 			}
 
 			// process editor
-			if( editor && editor->isInitialized() ) {
+			if (editor && editor->isInitialized()) {
 				editor->process(usableInterface);
 			}
 		}
@@ -921,18 +918,18 @@ void Client::process() {
 void Client::postProcess() {
 	Game::postProcess();
 
-	if( framesToRun ) {
+	if (framesToRun) {
 		bool editorFullscreen = false;
-		if( editor ) {
+		if (editor) {
 			editorFullscreen = editor->isFullscreen();
 		}
 
 		// update player cameras
-		if( framesToRun ) {
-			for( Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext() ) {
+		if (framesToRun) {
+			for (Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
 				Player& player = node->getData();
 
-				if( player.getClientID() == Player::invalidID ) {
+				if (player.getClientID() == Player::invalidID) {
 					// in the context of a client, this means *we* own the player.
 					// in any other circumstance, it would contain a legitimate client ID.
 					player.updateCamera();
@@ -942,7 +939,7 @@ void Client::postProcess() {
 
 		// rendering
 		bool textureSelectorActive = false;
-		if( editor && editor->isInitialized() ) {
+		if (editor && editor->isInitialized()) {
 			textureSelectorActive = editor->isTextureSelectorActive();
 		}
 
@@ -951,12 +948,12 @@ void Client::postProcess() {
 		Framebuffer* fbo = renderer->bindFBO("__main");
 		fbo->clear();
 
-		if( !textureSelectorActive ) {
+		if (!textureSelectorActive) {
 			Framebuffer* scene = renderer->bindFBO("scene");
 			scene->clear();
 
 			bool showTools = false;
-			for( Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext() ) {
+			for (Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext()) {
 				World* world = node->getData();
 				world->draw();
 				showTools = world->isShowTools();
@@ -985,74 +982,74 @@ void Client::postProcess() {
 			}
 
 			// editor interface
-			if( editor && editor->isInitialized() ) {
+			if (editor && editor->isInitialized()) {
 				editor->draw(*renderer);
 			}
 
 			// draw frames
-			if( gui && !editorFullscreen ) {
+			if (gui && !editorFullscreen) {
 				gui->draw(*renderer);
 			}
 
 			// draw console
-			if( consoleHeight>0 ) {
-				renderer->drawConsole(consoleHeight,consoleInput,console,logStart);
+			if (consoleHeight > 0) {
+				renderer->drawConsole(consoleHeight, consoleInput, console, logStart);
 			}
 
 			// debug counters
-			if( (!editor || !editor->isInitialized()) ) {
+			if ((!editor || !editor->isInitialized())) {
 				// fps counter
-				if( cvar_showFPS.toInt() ) {
+				if (cvar_showFPS.toInt()) {
 					char fps[16];
-					snprintf(fps,16,"%.1f",mainEngine->getFPS());
+					snprintf(fps, 16, "%.1f", mainEngine->getFPS());
 
 					int width;
-					TTF_SizeUTF8(renderer->getMonoFont(),fps,&width,NULL);
+					TTF_SizeUTF8(renderer->getMonoFont(), fps, &width, NULL);
 
 					Rect<int> pos;
 					Rect<int> rect;
 					rect.x = 0; rect.w = renderer->getXres();
 					rect.y = 0; rect.h = renderer->getYres();
-					pos.x = rect.x+rect.w-18-width; pos.w = 0;
-					pos.y = rect.y+18; pos.h = 0;
+					pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
+					pos.y = rect.y + 18; pos.h = 0;
 
-					renderer->printText( pos, fps );
+					renderer->printText(pos, fps);
 				}
 
 				// player speedometer
-				if( cvar_showSpeed.toInt() ) {
+				if (cvar_showSpeed.toInt()) {
 					Node<Player>* node = players.getFirst();
-					if( node ) {
+					if (node) {
 						Player& player = node->getData();
 
-						if( player.getEntity() ) {
+						if (player.getEntity()) {
 							float fSpeed = player.getEntity()->getVel().length() * mainEngine->getTicksPerSecond() / 64.f;
 
 							char speed[16];
-							snprintf(speed,16,"%.1f m/sec",fSpeed);
+							snprintf(speed, 16, "%.1f m/sec", fSpeed);
 
 							int width;
-							TTF_SizeUTF8(renderer->getMonoFont(),speed,&width,NULL);
+							TTF_SizeUTF8(renderer->getMonoFont(), speed, &width, NULL);
 
 							Rect<int> pos;
 							Rect<int> rect;
 							rect.x = 0; rect.w = renderer->getXres();
 							rect.y = 0; rect.h = renderer->getYres();
-							pos.x = rect.x+rect.w-18-width; pos.w = 0;
-							pos.y = rect.y+18+36; pos.h = 0;
+							pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
+							pos.y = rect.y + 18 + 36; pos.h = 0;
 
-							renderer->printText( pos, speed );
+							renderer->printText(pos, speed);
 						}
 					}
 				}
 
 				// camera matrix
-				if( cvar_showMatrix.toInt() ) {
+				if (cvar_showMatrix.toInt()) {
 					Node<Player>* node = players.getFirst();
-					if( node ) {
+					if (node) {
 						Player& player = node->getData();
 
-						if( player.getCamera() ) {
+						if (player.getCamera()) {
 							const glm::mat4& mat = player.getCamera()->getViewMatrix();
 
 							char matrixChars[256];
@@ -1061,23 +1058,23 @@ void Client::postProcess() {
 								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
 								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
 								"%+07.1f %+07.1f %+07.1f %+07.1f\n",
-								mat[ 0][ 0], mat[ 0][ 1], mat[ 0][ 2], mat[ 0][ 3],
-								mat[ 1][ 0], mat[ 1][ 1], mat[ 1][ 2], mat[ 1][ 3],
-								mat[ 2][ 0], mat[ 2][ 1], mat[ 2][ 2], mat[ 2][ 3],
-								mat[ 3][ 0], mat[ 3][ 1], mat[ 3][ 2], mat[ 3][ 3]
+								mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+								mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+								mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+								mat[3][0], mat[3][1], mat[3][2], mat[3][3]
 							);
 
 							Rect<int> pos;
 							pos.x = 18; pos.w = 0;
 							pos.y = 18; pos.h = 0;
-							renderer->printText( pos, matrixChars );
+							renderer->printText(pos, matrixChars);
 						}
 					}
 				}
 			}
 		} else {
 			// just the editor interface
-			if( editor && editor->isInitialized() ) {
+			if (editor && editor->isInitialized()) {
 				editor->draw(*renderer);
 			}
 		}
@@ -1095,22 +1092,22 @@ void Client::postProcess() {
 		// run script
 		script->dispatch("postprocess");
 
-		if( editor ) {
+		if (editor) {
 			editor->postProcess();
 		}
 
 		// update server on player positions 4 times per second
-		if( net->isConnected() ) {
-			if( ticks % (mainEngine->getTicksPerSecond()/10) == 0 ) {
-				for( Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext() ) {
+		if (net->isConnected()) {
+			if (ticks % (mainEngine->getTicksPerSecond() / 10) == 0) {
+				for (Node<Player>* node = players.getFirst(); node != nullptr; node = node->getNext()) {
 					Player& player = node->getData();
-					if( player.getClientID() == Player::invalidID ) {
-						if( Entity* entity = player.getEntity() ) {
+					if (player.getClientID() == Player::invalidID) {
+						if (Entity* entity = player.getEntity()) {
 							Packet packet;
 
 							Uint32 worldIndex = indexForWorld(entity->getWorld());
 
-							if( worldIndex != invalidID ) {
+							if (worldIndex != invalidID) {
 								packet.write32((Sint32)(entity->getLookDir().degreesRoll() * 32));
 								packet.write32((Sint32)(entity->getLookDir().degreesPitch() * 32));
 								packet.write32((Sint32)(entity->getLookDir().degreesYaw() * 32));
@@ -1144,13 +1141,13 @@ void Client::postProcess() {
 			}
 		}
 
-		framesToRun=0;
+		framesToRun = 0;
 	}
 }
 
 static int console_clientDisconnect(int argc, const char** argv) {
 	Client* client = mainEngine->getLocalClient();
-	if( client ) {
+	if (client) {
 		client->getNet()->disconnectAll();
 		return 0;
 	} else {
@@ -1160,7 +1157,7 @@ static int console_clientDisconnect(int argc, const char** argv) {
 
 static int console_clientReset(int argc, const char** argv) {
 	Client* client = mainEngine->getLocalClient();
-	if( client ) {
+	if (client) {
 		mainEngine->setInputStr(nullptr);
 		mainEngine->setPlayTest(false);
 		mainEngine->dumpResources();
@@ -1172,13 +1169,13 @@ static int console_clientReset(int argc, const char** argv) {
 }
 
 static int console_clientMap(int argc, const char** argv) {
-	if( argc < 1 ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"A path is needed. ex: client.map TestWorld");
+	if (argc < 1) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A path is needed. ex: client.map TestWorld");
 		return 1;
 	}
 	Client* client = mainEngine->getLocalClient();
-	if( client ) {
-		client->loadWorld(argv[0],true);
+	if (client) {
+		client->loadWorld(argv[0], true);
 		return 0;
 	} else {
 		return 1;
@@ -1186,23 +1183,23 @@ static int console_clientMap(int argc, const char** argv) {
 }
 
 static int console_clientSpawn(int argc, const char** argv) {
-	if( argc < 1 ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"Please specify player number. ex: client.spawn 0");
+	if (argc < 1) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "Please specify player number. ex: client.spawn 0");
 		return 1;
 	}
 
 	int num = strtol(argv[0], nullptr, 10);
 	Client* client = mainEngine->getLocalClient();
-	if( client ) {
+	if (client) {
 		int numPlayers = client->numLocalPlayers();
-		if( numPlayers < 4 ) {
+		if (numPlayers < 4) {
 			client->spawn(num);
 			return 0;
 		} else {
-			mainEngine->fmsg(Engine::MSG_ERROR,"Local player limit reached.");
+			mainEngine->fmsg(Engine::MSG_ERROR, "Local player limit reached.");
 		}
 	} else {
-		mainEngine->fmsg(Engine::MSG_INFO,"No client to spawn.");
+		mainEngine->fmsg(Engine::MSG_INFO, "No client to spawn.");
 	}
 	return 1;
 }
@@ -1221,12 +1218,12 @@ static int console_clientCountEntities(int argc, const char** argv) {
 	return 0;
 }
 
-static Ccmd ccmd_clientReset("client.reset","restarts the local client",&console_clientReset);
-static Ccmd ccmd_clientDisconnect("client.disconnect","disconnects the client from the remote host",&console_clientDisconnect);
-static Ccmd ccmd_clientMap("client.map","loads a world file on the local client",&console_clientMap);
-static Ccmd ccmd_clientSpawn("client.spawn","spawns a new player into the world we are connected to",&console_clientSpawn);
+static Ccmd ccmd_clientReset("client.reset", "restarts the local client", &console_clientReset);
+static Ccmd ccmd_clientDisconnect("client.disconnect", "disconnects the client from the remote host", &console_clientDisconnect);
+static Ccmd ccmd_clientMap("client.map", "loads a world file on the local client", &console_clientMap);
+static Ccmd ccmd_clientSpawn("client.spawn", "spawns a new player into the world we are connected to", &console_clientSpawn);
 static Ccmd ccmd_clientCountEntities("client.countentities", "count the number of entities in all worlds on the client", &console_clientCountEntities);
 
-Cvar cvar_showFPS("showfps","displays an FPS counter","0");
-Cvar cvar_showSpeed("showspeed","displays player speedometer","0");
-Cvar cvar_showMatrix("showmatrix","displays the camera matrix of the first player","0");
+Cvar cvar_showFPS("showfps", "displays an FPS counter", "0");
+Cvar cvar_showSpeed("showspeed", "displays player speedometer", "0");
+Cvar cvar_showMatrix("showmatrix", "displays the camera matrix of the first player", "0");

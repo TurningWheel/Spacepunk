@@ -25,7 +25,7 @@ public:
 		assign(src);
 	}
 	virtual ~String() {
-		if( str ) {
+		if (str) {
 			free(str);
 			str = nullptr;
 			size = 0;
@@ -36,31 +36,31 @@ public:
 	static const Uint32 npos = UINT32_MAX;
 
 	// getters & setters
-	const char*				get() const			{ return str ? str : ""; }
-	const Uint32			getSize() const		{ return size; }
+	const char*				get() const { return str ? str : ""; }
+	const Uint32			getSize() const { return size; }
 
 	// allocs / reallocs the string (erases data!)
 	// @param newSize the size (in chars) of the string to alloc
 	// @return the alloc'd string
 	virtual const char* alloc(const Uint32 newSize) {
 		size = newSize;
-		if( str ) {
-			char* result = (char*) realloc(str, size * sizeof(char));
+		if (str) {
+			char* result = (char*)realloc(str, size * sizeof(char));
 			assert(result);
 			str = result;
 		} else {
-			str = (char*) malloc(size * sizeof(char));
+			str = (char*)malloc(size * sizeof(char));
 			assert(str);
 		}
 		str[0] = '\0';
-		str[size-1] = '\0';
+		str[size - 1] = '\0';
 		return str;
 	}
 
 	// determine if the string is empty
 	// @return true if empty, otherwise false
 	bool empty() const {
-		if( str ) {
+		if (str) {
 			return str[0] == '\0';
 		} else {
 			return true;
@@ -70,35 +70,35 @@ public:
 	// get the length of the string
 	// @return the number of chars in the string
 	Uint32 length() const {
-		if( str == nullptr || size == 0 ) {
+		if (str == nullptr || size == 0) {
 			return 0;
 		}
 		Uint32 c = 0;
-		for( ; c < size && str[c] != '\0'; ++c );
+		for (; c < size && str[c] != '\0'; ++c);
 		return c;
 	}
 
 	// copies src into string. string will always be null-terminated
 	// @param src the string to copy into our string
 	const char* assign(const char* src) {
-		if( src == nullptr ) {
-			if( str ) {
+		if (src == nullptr) {
+			if (str) {
 				str[0] = '\0';
 				return str;
 			} else {
 				return "";
 			}
 		} else {
-			if( str == src || *this == src ) {
+			if (str == src || *this == src) {
 				return str;
 			}
 			Uint32 srcLen = static_cast<Uint32>(strlen(src)) + 1;
-			if( srcLen > size || str == nullptr ) {
+			if (srcLen > size || str == nullptr) {
 				alloc(srcLen);
 			}
 			assert(str);
-			strncpy_s(str, size, src, size-1);
-			str[size-1] = '\0';
+			strncpy_s(str, size, src, size - 1);
+			str[size - 1] = '\0';
 			return str;
 		}
 	}
@@ -106,18 +106,18 @@ public:
 	// copies formatted src string into our string. string will always be null-terminated
 	// @param src the formatted string to copy
 	const char* format(const char* src, ...) {
-		if( str == nullptr || size==0 ) {
+		if (str == nullptr || size == 0) {
 			return "";
 		}
-		if( src == nullptr ) {
+		if (src == nullptr) {
 			str[0] = '\0';
 			return str;
 		}
 		va_list argptr;
-		va_start( argptr, src );
-		vsnprintf( str, size, src, argptr );
-		va_end( argptr );
-		str[size-1] = '\0';
+		va_start(argptr, src);
+		vsnprintf(str, size, src, argptr);
+		va_end(argptr);
+		str[size - 1] = '\0';
 
 		return str;
 	}
@@ -126,19 +126,19 @@ public:
 	// @param src the formatted string to append
 	// @return this string
 	const char* append(const char* src) {
-		if( str == nullptr ) {
+		if (str == nullptr) {
 			return "";
 		}
-		if( src == nullptr ) {
+		if (src == nullptr) {
 			return str;
 		}
 		Uint32 len = length();
-		if( len >= size-1 ) {
+		if (len >= size - 1) {
 			return str;
 		}
-		Uint32 last = std::min(len + (Uint32)strlen(src), size-1);
+		Uint32 last = std::min(len + (Uint32)strlen(src), size - 1);
 
-		strncpy_s((char *)(str + len), size-len, src, last-len);
+		strncpy_s((char *)(str + len), size - len, src, last - len);
 		str[last] = '\0';
 		return str;
 	}
@@ -147,29 +147,29 @@ public:
 	// @param src the formatted string to append
 	// @return this string
 	const char* appendf(const char* src, ...) {
-		if( str == nullptr ) {
+		if (str == nullptr) {
 			return "";
 		}
-		if( src == nullptr ) {
+		if (src == nullptr) {
 			return str;
 		}
 		Uint32 len = length();
-		if( len >= size-1 ) {
+		if (len >= size - 1) {
 			return str;
 		}
 
-		char* buf = (char*) malloc( (size-len) * sizeof(char));
+		char* buf = (char*)malloc((size - len) * sizeof(char));
 		assert(buf);
 		buf[0] = '\0';
-		buf[size-len-1] = '\0';
+		buf[size - len - 1] = '\0';
 		va_list argptr;
-		va_start( argptr, src );
-		vsnprintf( buf, size-len, src, argptr );
-		va_end( argptr );
-		buf[size-len-1] = '\0';
+		va_start(argptr, src);
+		vsnprintf(buf, size - len, src, argptr);
+		va_end(argptr);
+		buf[size - len - 1] = '\0';
 
-		strncpy_s((char *)(str + len), size-len, buf, size-len-1);
-		str[size-1] = '\0';
+		strncpy_s((char *)(str + len), size - len, buf, size - len - 1);
+		str[size - 1] = '\0';
 		free(buf);
 
 		return str;
@@ -180,23 +180,23 @@ public:
 	// @param end the index to end at
 	// @return the resulting substr
 	String substr(const Uint32 start, Uint32 end = 0) const {
-		if( end == 0 ) {
+		if (end == 0) {
 			end = size;
 		}
-		if( str == nullptr ) {
+		if (str == nullptr) {
 			return String("");
 		}
 
-		end = std::min( end, length() );
+		end = std::min(end, length());
 
-		if( start >= end ) {
+		if (start >= end) {
 			return String("");
 		}
 
 		Uint32 c, i;
 		String result;
-		result.alloc( end - start + 1 );
-		for( i = 0, c = start; c < end; ++c, ++i ) {
+		result.alloc(end - start + 1);
+		for (i = 0, c = start; c < end; ++c, ++i) {
 			result[i] = str[c];
 		}
 		result[end - start] = '\0';
@@ -208,19 +208,19 @@ public:
 	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
 	Uint32 find(const char* key, Uint32 offset = 0) const {
-		if( key == nullptr || str == nullptr ) {
+		if (key == nullptr || str == nullptr) {
 			return npos;
 		}
 		Uint32 ourLen = length();
 		Uint32 itsLen = static_cast<Uint32>(strlen(key));
-		for( Uint32 c = offset; c < ourLen; ++c ) {
+		for (Uint32 c = offset; c < ourLen; ++c) {
 			Uint32 i, j;
-			for( j = 0, i = c; i < ourLen && j < itsLen; ++i, ++j ) {
-				if( str[i] != key[j] ) {
+			for (j = 0, i = c; i < ourLen && j < itsLen; ++i, ++j) {
+				if (str[i] != key[j]) {
 					break;
 				}
 			}
-			if( j==itsLen ) {
+			if (j == itsLen) {
 				return c;
 			}
 		}
@@ -232,12 +232,12 @@ public:
 	// @param offset the index to start looking in our string
 	// @return the index of the key if it was found, or npos if it could not be found
 	Uint32 find(const char key, Uint32 offset = 0) const {
-		if( str == nullptr ) {
+		if (str == nullptr) {
 			return npos;
 		}
 		Uint32 ourLen = length();
-		for( Uint32 c = offset; c < ourLen; ++c ) {
-			if( str[c] == key ) {
+		for (Uint32 c = offset; c < ourLen; ++c) {
+			if (str[c] == key) {
 				return c;
 			}
 		}
@@ -248,8 +248,8 @@ public:
 	// @return the int value
 	int toInt() const {
 		int result = 0;
-		if( str != nullptr ) {
-			result = strtol( str, nullptr, 10 );
+		if (str != nullptr) {
+			result = strtol(str, nullptr, 10);
 		}
 		return result;
 	}
@@ -258,8 +258,8 @@ public:
 	// @return the float value
 	float toFloat() const {
 		float result = 0.f;
-		if( str != nullptr ) {
-			result = strtof( str, nullptr );
+		if (str != nullptr) {
+			result = strtof(str, nullptr);
 		}
 		return result;
 	}
@@ -273,7 +273,7 @@ public:
 		unsigned long value = 5381;
 		int c;
 		const char* data = str;
-		while((c = *data++)!=0) {
+		while ((c = *data++) != 0) {
 			value = ((value << 5) + value) + c; // hash * 33 + c
 		}
 		return value;
@@ -292,54 +292,54 @@ public:
 
 	// compare strings
 	bool operator<(const char* src) const {
-		if( str && src ) {
-			return strcmp(str, src)<0;
-		} else if( !str && !src ) {
+		if (str && src) {
+			return strcmp(str, src) < 0;
+		} else if (!str && !src) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	bool operator<=(const char* src) const {
-		if( str && src ) {
-			return strcmp(str, src)<=0;
-		} else if( !str && !src ) {
+		if (str && src) {
+			return strcmp(str, src) <= 0;
+		} else if (!str && !src) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	bool operator==(const char* src) const {
-		if( str && src ) {
-			return strcmp(str, src)==0;
-		} else if( !str && !src ) {
+		if (str && src) {
+			return strcmp(str, src) == 0;
+		} else if (!str && !src) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	bool operator>=(const char* src) const {
-		if( str && src ) {
-			return strcmp(str, src)>=0;
-		} else if( !str && !src ) {
+		if (str && src) {
+			return strcmp(str, src) >= 0;
+		} else if (!str && !src) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	bool operator>(const char* src) const {
-		if( str && src ) {
-			return strcmp(str, src)>0;
-		} else if( !str && !src ) {
+		if (str && src) {
+			return strcmp(str, src) > 0;
+		} else if (!str && !src) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 	bool operator!=(const char* src) const {
-		if( str && src ) {
-			return strcmp(str, src)!=0;
-		} else if( !str && !src ) {
+		if (str && src) {
+			return strcmp(str, src) != 0;
+		} else if (!str && !src) {
 			return false;
 		} else {
 			return true;
@@ -417,8 +417,7 @@ public:
 			char* result = (char*)realloc(str, size * sizeof(char));
 			assert(result);
 			str = result;
-		}
-		else {
+		} else {
 			str = (char*)malloc(size * sizeof(char));
 			assert(str);
 		}

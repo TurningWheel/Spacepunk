@@ -45,11 +45,11 @@ std::future<PathFinder::Path*> PathFinder::generateAStarPath(Sint32 startX, Sint
 		return std::future<Path*>(); // return invalid future
 	}
 
-	if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX > (Sint32)world.getWidth() || startY > (Sint32)world.getHeight() || endX > (Sint32)world.getWidth() || endY > (Sint32)world.getHeight()) {
+	if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX >(Sint32)world.getWidth() || startY >(Sint32)world.getHeight() || endX >(Sint32)world.getWidth() || endY >(Sint32)world.getHeight()) {
 		mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder is returning an invalid path future due to invalid pathing bounds!");
 		return std::future<Path*>(); // return invalid future
 	}
-	
+
 	AStarTask task(map, world.getWidth(), world.getHeight(), startX, startY, endX, endY);
 	return std::async(std::launch::async, task);
 }
@@ -59,9 +59,9 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 	LinkedList<PathFinder::PathNode*> openList, closedList;
 
 	PathNode startnode(nullptr, std::min(std::max(0, startX), (Sint32)mapWidth - 1),
-						std::min(std::max(0, startY), (Sint32)mapHeight - 1), nullptr, 1);
+		std::min(std::max(0, startY), (Sint32)mapHeight - 1), nullptr, 1);
 	PathNode endnode(nullptr, std::min(std::max(0, endX), (Sint32)mapWidth - 1),
-						std::min(std::max(0, endY), (Sint32)mapHeight - 1), nullptr, 1);
+		std::min(std::max(0, endY), (Sint32)mapHeight - 1), nullptr, 1);
 	startnode.h = heuristic(startnode.x, startnode.y, endnode.x, endnode.y);
 
 	// final path
@@ -78,12 +78,12 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 	visitList.push(currentNode);
 	int tries = 0;
 	bool foundPath = false;
-	while ( openList.getSize() > 0 && tries < MAX_TRIES && visitList.size() > 0 )
+	while (openList.getSize() > 0 && tries < MAX_TRIES && visitList.size() > 0)
 	{
 		currentNode = visitList.top();
 		//mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder current node coords: (%d, %d)!", currentNode->x, currentNode->y);
 		visitList.pop();
-		if ( *currentNode == endnode )
+		if (*currentNode == endnode)
 		{
 			mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder just hit the endnode!");
 			foundPath = true;
@@ -97,9 +97,9 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 		currentNode = movedNode;
 
 		// expand search to neighbor tiles
-		for ( Sint32 y = -1; y <= 1; y++ ) {
-			for ( Sint32 x = -1; x <= 1; x++ ) {
-				if ( x == 0 && y == 0 ) {
+		for (Sint32 y = -1; y <= 1; y++) {
+			for (Sint32 x = -1; x <= 1; x++) {
+				if (x == 0 && y == 0) {
 					continue; //Don't check yourself :)
 				}
 				if (currentNode->x <= 0 && x < 0)
@@ -119,36 +119,36 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 					continue; //Don't look off the bottom edge of the map.
 				}
 
-                // check neighboring tiles are not obstacles
-                if ( !map[(currentNode->y + y) + (currentNode->x + x)*mapHeight] ) {
-                    continue;
-                } else if ( x && y ) {
-                    if ( !map[(currentNode->y) + (currentNode->x + x)*mapHeight] ) {
-                        continue;
-                    }
-                    if ( !map[(currentNode->y + y) + (currentNode->x)*mapHeight] ) {
-                        continue;
-                    }
-                }
+				// check neighboring tiles are not obstacles
+				if (!map[(currentNode->y + y) + (currentNode->x + x)*mapHeight]) {
+					continue;
+				} else if (x && y) {
+					if (!map[(currentNode->y) + (currentNode->x + x)*mapHeight]) {
+						continue;
+					}
+					if (!map[(currentNode->y + y) + (currentNode->x)*mapHeight]) {
+						continue;
+					}
+				}
 
-                bool alreadyAdded = false;
-                for ( auto &pathNode : closedList ) {
-                    if ( pathNode->x == currentNode->x + x && pathNode->y == currentNode->y + y ) {
-                        alreadyAdded = true;
-                        break;
-                    }
-                }
-
-				for ( auto &pathNode : openList ) {
-					if ( pathNode->x == currentNode->x + x && pathNode->y == currentNode->y + y ) {
+				bool alreadyAdded = false;
+				for (auto &pathNode : closedList) {
+					if (pathNode->x == currentNode->x + x && pathNode->y == currentNode->y + y) {
 						alreadyAdded = true;
-						if ( x && y ) {
-							if ( pathNode->g > currentNode->g + COST_DIAGONAL ) {
+						break;
+					}
+				}
+
+				for (auto &pathNode : openList) {
+					if (pathNode->x == currentNode->x + x && pathNode->y == currentNode->y + y) {
+						alreadyAdded = true;
+						if (x && y) {
+							if (pathNode->g > currentNode->g + COST_DIAGONAL) {
 								pathNode->parent = currentNode;
 								pathNode->g = currentNode->g + COST_DIAGONAL;
 							}
 						} else {
-							if ( pathNode->g > currentNode->g + COST_STRAIGHT ) {
+							if (pathNode->g > currentNode->g + COST_STRAIGHT) {
 								pathNode->parent = currentNode;
 								pathNode->g = currentNode->g + COST_STRAIGHT;
 							}
@@ -156,39 +156,38 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 						break;
 					}
 				}
-				
-                if ( alreadyAdded == false ) {
-                    if ( openList.getSize() >= 1000 ) {
+
+				if (alreadyAdded == false) {
+					if (openList.getSize() >= 1000) {
 						mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder exceeded maximum tries!");
-                        return path;
-                    }
-                    PathNode *childnode = new PathNode(&openList, currentNode->x + x, currentNode->y + y, currentNode, 1);
-                    if ( x && y ) {
-                        childnode->g = currentNode->g + COST_DIAGONAL;
-                    }
-                    else {
-                        childnode->g = currentNode->g + COST_STRAIGHT;
-                    }
+						return path;
+					}
+					PathNode *childnode = new PathNode(&openList, currentNode->x + x, currentNode->y + y, currentNode, 1);
+					if (x && y) {
+						childnode->g = currentNode->g + COST_DIAGONAL;
+					} else {
+						childnode->g = currentNode->g + COST_STRAIGHT;
+					}
 					childnode->h = heuristic(childnode->x, childnode->y, endnode.x, endnode.y);
-                    visitList.push(childnode);
+					visitList.push(childnode);
 					//mainEngine->fmsg(Engine::MSG_WARN, "Queueing up pathnode for (%d, %d)", childnode->x, childnode->y);
-                }
+				}
 			}
 		}
 		++tries;
 	}
 
 	// if target is found, retrace path
-	if ( true == foundPath ) {
+	if (true == foundPath) {
 		if (currentNode->parent == nullptr)
 		{
 			return path; //Already on the goal tile!
 		}
 
 		PathNode* parent = currentNode->parent;
-		for ( PathNode *childnode = currentNode; childnode != nullptr; childnode = currentNode->parent )
+		for (PathNode *childnode = currentNode; childnode != nullptr; childnode = currentNode->parent)
 		{
-			if ( childnode->parent == nullptr && nullptr != parent )
+			if (childnode->parent == nullptr && nullptr != parent)
 			{
 				parent->parent = nullptr;
 				break;
@@ -196,8 +195,7 @@ PathFinder::Path* PathFinder::AStarTask::findPath()
 			path->addNodeLast(PathWaypoint(childnode->x, childnode->y));
 			currentNode = currentNode->parent;
 		}
-	}
-	else
+	} else
 	{
 		mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder could not find path!");
 	}

@@ -13,21 +13,21 @@
 GLuint Image::vao = 0;
 GLuint Image::vbo[BUFFER_TYPE_LENGTH] = { 0 };
 
-const GLfloat Image::positions[8] {
+const GLfloat Image::positions[8]{
 	0.f, 0.f,
 	0.f, 1.f,
 	1.f, 1.f,
 	1.f, 0.f
 };
 
-const GLfloat Image::texcoords[8] {
+const GLfloat Image::texcoords[8]{
 	0.f, 0.f,
 	0.f, 1.f,
 	1.f, 1.f,
 	1.f, 0.f
 };
 
-const GLuint Image::indices[6] {
+const GLuint Image::indices[6]{
 	0, 1, 2,
 	0, 2, 3
 };
@@ -53,10 +53,10 @@ Image::Image(const char* _name) : Asset(_name) {
 		}
 	}
 	path = mainEngine->buildPath(_name).get();
-	
-	mainEngine->fmsg(Engine::MSG_DEBUG,"loading image '%s'...",_name);
-	if( (surf=IMG_Load(path.get()))==NULL ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to load image '%s'",_name);
+
+	mainEngine->fmsg(Engine::MSG_DEBUG, "loading image '%s'...", _name);
+	if ((surf = IMG_Load(path.get())) == NULL) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load image '%s'", _name);
 		return;
 	}
 
@@ -70,7 +70,7 @@ Image::Image(const char* _name) : Asset(_name) {
 bool Image::finalize() {
 	if (surf) {
 		SDL_LockSurface(surf);
-		glGenTextures(1,&texid);
+		glGenTextures(1, &texid);
 		glBindTexture(GL_TEXTURE_2D, texid);
 		glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, surf->w, surf->h);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
@@ -99,19 +99,19 @@ bool Image::finalize() {
 }
 
 Image::~Image() {
-	if( surf ) {
+	if (surf) {
 		SDL_FreeSurface(surf);
 		surf = nullptr;
 	}
-	if( texid ) {
-		glDeleteTextures(1,&texid);
+	if (texid) {
+		glDeleteTextures(1, &texid);
 		texid = 0;
 	}
 }
 
 void Image::createStaticData() {
 	// initialize buffer names
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
 
@@ -143,22 +143,22 @@ void Image::createStaticData() {
 }
 
 void Image::deleteStaticData() {
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		buffer_t buffer = static_cast<buffer_t>(i);
-		if( vbo[buffer] ) {
-			glDeleteBuffers(1,&vbo[buffer]);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
 		}
 	}
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 	}
 }
 
-void Image::draw( const Rect<int>* src, const Rect<int>& dest ) const {
-	drawColor(src,dest,glm::vec4(1.f));
+void Image::draw(const Rect<int>* src, const Rect<int>& dest) const {
+	drawColor(src, dest, glm::vec4(1.f));
 }
 
-void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::vec4& color ) const {
+void Image::drawColor(const Rect<int>* src, const Rect<int>& dest, const glm::vec4& color) const {
 	if (!loaded) {
 		return;
 	}
@@ -168,11 +168,11 @@ void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::v
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/2D.json");
-	if( !mat ) {
+	if (!mat) {
 		return;
 	}
 	ShaderProgram& shader = mat->getShader();
-	if( &shader != ShaderProgram::getCurrentShader() ) {
+	if (&shader != ShaderProgram::getCurrentShader()) {
 		shader.mount();
 	}
 
@@ -183,16 +183,16 @@ void Image::drawColor( const Rect<int>* src, const Rect<int>& dest, const glm::v
 
 	// for the use of a whole image
 	Rect<int> secondsrc;
-	if( src==nullptr ) {
-		secondsrc.x=0;
-		secondsrc.y=0;
-		secondsrc.w=surf->w;
-		secondsrc.h=surf->h;
+	if (src == nullptr) {
+		secondsrc.x = 0;
+		secondsrc.y = 0;
+		secondsrc.w = surf->w;
+		secondsrc.h = surf->h;
 		src = &secondsrc;
 	}
 
 	// create view matrix
-	glm::mat4 viewMatrix = glm::ortho( 0.f, (float)xres, 0.f, (float)yres, 1.f, -1.f );
+	glm::mat4 viewMatrix = glm::ortho(0.f, (float)xres, 0.f, (float)yres, 1.f, -1.f);
 
 	// bind texture
 	glActiveTexture(GL_TEXTURE0);

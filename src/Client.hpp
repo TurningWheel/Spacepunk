@@ -21,8 +21,8 @@ public:
 	typedef LinkedList<Engine::logmsg_t> LogList;
 
 	// getters & setters
-	virtual bool	isServer() const override	{ return false; }
-	virtual bool	isClient() const override	{ return true; }
+	virtual bool	isServer() const override { return false; }
+	virtual bool	isClient() const override { return true; }
 
 	// starts up the client
 	virtual void init() override;
@@ -58,24 +58,24 @@ public:
 	void closeEditor();
 
 	// getters & setters
-	Renderer*&						getRenderer()						{ return renderer; }
-	Mixer*&							getMixer()							{ return mixer; }
-	Frame*&							getGUI()							{ return gui; }
-	Editor*&						getEditor()							{ return editor; }
-	const bool						isConsoleAllowed() const			{ return consoleAllowed; }
-	const bool						isConsoleActive() const				{ return consoleActive; }
-	const bool						isEditorActive() const				{ return editor != nullptr; }
-	const LogList&					getConsole() const					{ return console; }
+	Renderer*&						getRenderer() { return renderer; }
+	Mixer*&							getMixer() { return mixer; }
+	Frame*&							getGUI() { return gui; }
+	Editor*&						getEditor() { return editor; }
+	const bool						isConsoleAllowed() const { return consoleAllowed; }
+	const bool						isConsoleActive() const { return consoleActive; }
+	const bool						isEditorActive() const { return editor != nullptr; }
+	const LogList&					getConsole() const { return console; }
 
-	void	setCuCommand(Node<String>* const node)		{ cuCommand = node; }
-	void	setLogStart(Node<Engine::logmsg_t>* const node)		{ logStart = node; }
+	void	setCuCommand(Node<String>* const node) { cuCommand = node; }
+	void	setLogStart(Node<Engine::logmsg_t>* const node) { logStart = node; }
 
 private:
-	Script*     script		= nullptr; // script engine
-	Renderer*   renderer	= nullptr; // renderer
-	Mixer*		mixer		= nullptr; // audio mixer
-	Frame*		gui			= nullptr; // active gui
-	Editor*		editor		= nullptr; // level editor
+	Script*     script = nullptr; // script engine
+	Renderer*   renderer = nullptr; // renderer
+	Mixer*		mixer = nullptr; // audio mixer
+	Frame*		gui = nullptr; // active gui
+	Editor*		editor = nullptr; // level editor
 
 	// console variables
 	static const int consoleLen = 80;

@@ -17,42 +17,42 @@ public:
 	}
 
 	// parameter functions
-	Node<T>* 			getFirst()					{ return first; }
-	Node<T>* 			getLast()					{ return last; }
+	Node<T>* 			getFirst() { return first; }
+	Node<T>* 			getLast() { return last; }
 
-	const Node<T>* 		getFirst() const			{ return (const Node<T>*)(first); }
-	const Node<T>* 		getLast() const				{ return (const Node<T>*)(last); }
-	Uint32				getSize() const				{ return size; }
+	const Node<T>* 		getFirst() const { return (const Node<T>*)(first); }
+	const Node<T>* 		getLast() const { return (const Node<T>*)(last); }
+	Uint32				getSize() const { return size; }
 
-	void 				setFirst(Node<T> *node)		{ first = node; }
-	void 				setLast(Node<T> *node)		{ last = node; }
+	void 				setFirst(Node<T> *node) { first = node; }
+	void 				setLast(Node<T> *node) { last = node; }
 
 	// returns the node at the given index
 	// @param index the index of the node to be returned
 	// @return the Node at the given index, or nullptr if the Node does not exist
 	Node<T>* nodeForIndex(const Uint32 index) {
-		if( index>=size ) {
+		if (index >= size) {
 			return nullptr;
-		} else if( index>=size/2 ) {
-			Node<T>* node=last;
-			for( Uint32 i=size-1; i!=index; node=node->getPrev(), --i );
+		} else if (index >= size / 2) {
+			Node<T>* node = last;
+			for (Uint32 i = size - 1; i != index; node = node->getPrev(), --i);
 			return node;
 		} else {
-			Node<T>* node=first;
-			for( Uint32 i=0; i!=index; node=node->getNext(), ++i );
+			Node<T>* node = first;
+			for (Uint32 i = 0; i != index; node = node->getNext(), ++i);
 			return node;
 		}
 	}
 	const Node<T>* nodeForIndex(const Uint32 index) const {
-		if( index>=size ) {
+		if (index >= size) {
 			return nullptr;
-		} else if( index>=size/2 ) {
-			const Node<T>* node=last;
-			for( Uint32 i=size-1; i!=index; node=node->getPrev(), --i );
+		} else if (index >= size / 2) {
+			const Node<T>* node = last;
+			for (Uint32 i = size - 1; i != index; node = node->getPrev(), --i);
 			return node;
 		} else {
-			const Node<T>* node=first;
-			for( Uint32 i=0; i!=index; node=node->getNext(), ++i );
+			const Node<T>* node = first;
+			for (Uint32 i = 0; i != index; node = node->getNext(), ++i);
 			return node;
 		}
 	}
@@ -61,16 +61,16 @@ public:
 	// @param node the node for whom you wish to retrieve the index
 	// @return the index for the given node, or -1 if the node does not exist in the list
 	Uint32 indexForNode(const Node<T>* node) const {
-		if( node->getList() != this )
+		if (node->getList() != this)
 			return -1;
-		if( node==last )
-			return size-1;
+		if (node == last)
+			return size - 1;
 
 		Node<T>* tempNode;
 		Uint32 i;
 
-		for( tempNode=first, i=0; tempNode!=nullptr && tempNode!=node; tempNode=tempNode->getNext(), ++i );
-		if( tempNode==nullptr ) {
+		for (tempNode = first, i = 0; tempNode != nullptr && tempNode != node; tempNode = tempNode->getNext(), ++i);
+		if (tempNode == nullptr) {
 			return -1;
 		} else {
 			return i;
@@ -84,7 +84,7 @@ public:
 	Node<T>* addNode(const Uint32 index, const T& data) {
 		Node<T>* node = nodeForIndex(index);
 		++size;
-		return new Node<T>(*this,node,data);
+		return new Node<T>(*this, node, data);
 	}
 
 	// adds a node to the beginning of the list
@@ -92,7 +92,7 @@ public:
 	// @return the newly created Node
 	Node<T>* addNodeFirst(const T& data) {
 		++size;
-		return new Node<T>(*this,first,data);
+		return new Node<T>(*this, first, data);
 	}
 
 	// adds a node to the end of the list
@@ -100,26 +100,26 @@ public:
 	// @return the newly created Node
 	Node<T>* addNodeLast(const T& data) {
 		++size;
-		return new Node<T>(*this,nullptr,data);
+		return new Node<T>(*this, nullptr, data);
 	}
 
 	// removes a node from the list
 	// @param node the node to remove from the list
 	void removeNode(Node<T>* node) {
-		if( this != node->getList() )
+		if (this != node->getList())
 		{
 			return;
 		}
 
-		if( node == first ) {
-			if( node == getLast() ) {
+		if (node == first) {
+			if (node == getLast()) {
 				first = nullptr;
 				last = nullptr;
 			} else {
 				node->getNext()->setPrev(nullptr);
 				first = node->getNext();
 			}
-		} else if( node == last ) {
+		} else if (node == last) {
 			node->getPrev()->setNext(nullptr);
 			last = node->getPrev();
 		} else {
@@ -142,7 +142,7 @@ public:
 		Node<T>* node;
 		Node<T>* nextnode;
 
-		for( node=first; node!=nullptr; node=nextnode ) {
+		for (node = first; node != nullptr; node = nextnode) {
 			nextnode = node->getNext();
 			delete node;
 		}
@@ -153,7 +153,7 @@ public:
 
 	// copy one list to another (also copies data)
 	void copy(const LinkedList<T>& src) {
-		for( const Node<T>* node = src.getFirst(); node != nullptr; node = node->getNext() ) {
+		for (const Node<T>* node = src.getFirst(); node != nullptr; node = node->getNext()) {
 			addNodeLast(node->getData());
 		}
 	}
@@ -162,15 +162,15 @@ public:
 	// @return a reference to the sorted list
 	LinkedList<T>& sort() {
 		Uint32 len = size;
-		if( len<=1 ) {
+		if (len <= 1) {
 			return *this;
 		}
 
 		Uint32 i;
 		Node<T>* node;
 		LinkedList<T> left, right;
-		for( i=0, node = first; node!=nullptr && i<len; ++i, node=node->getNext() ) {
-			if( i%2==0 ) {
+		for (i = 0, node = first; node != nullptr && i < len; ++i, node = node->getNext()) {
+			if (i % 2 == 0) {
 				right.addNodeLast(node->getData());
 			} else {
 				left.addNodeLast(node->getData());
@@ -252,7 +252,7 @@ public:
 	const ConstIterator end() const {
 		return ConstIterator(nullptr);
 	}
-	
+
 	// exposes this list type to a script
 	// @param lua The script engine to expose to
 	// @param listName The type name for the list in lua
@@ -280,7 +280,7 @@ public:
 
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<LinkedList<T>>(listName)
-			.addConstructor<void (*)()>()
+			.addConstructor<void(*)()>()
 			.addFunction("getFirst", getFirst)
 			.addFunction("getFirstConst", getFirstConst)
 			.addFunction("getLast", getLast)
@@ -299,31 +299,31 @@ public:
 			.addFunction("removeAll", &LinkedList<T>::removeAll)
 			.addFunction("copy", &LinkedList<T>::copy)
 			.endClass()
-		;
+			;
 
 		Node<T>::exposeToScript(lua, nodeName);
 	}
 
 private:
-	Node<T>* first	= nullptr;
-	Node<T>* last	= nullptr;
+	Node<T>* first = nullptr;
+	Node<T>* last = nullptr;
 	Uint32 size = 0;
 
 	LinkedList<T>& merge(LinkedList<T>& left, LinkedList<T>& right) {
 		LinkedList<T> result;
 
-		while( left.getFirst() != nullptr && right.getFirst() != nullptr ) {
-			if( left.getFirst()->getData() <= right.getFirst()->getData() ) {
+		while (left.getFirst() != nullptr && right.getFirst() != nullptr) {
+			if (left.getFirst()->getData() <= right.getFirst()->getData()) {
 				result.addNodeLast(left.getFirst()->getData());
 			} else {
 				result.addNodeLast(right.getFirst()->getData());
 			}
 		}
 
-		while( left.getFirst() != nullptr ) {
+		while (left.getFirst() != nullptr) {
 			result.addNodeLast(left.getFirst()->getData());
 		}
-		while( right.getFirst() != nullptr ) {
+		while (right.getFirst() != nullptr) {
 			result.addNodeLast(right.getFirst()->getData());
 		}
 

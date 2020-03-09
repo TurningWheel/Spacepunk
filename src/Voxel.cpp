@@ -50,7 +50,7 @@ VoxelMeshData generateVBOs(polymodel_t* model)
 {
 	VoxelMeshData result(model->numfaces);
 
-	for ( Uint32 i = 0; i < model->numfaces; i++ )
+	for (Uint32 i = 0; i < model->numfaces; i++)
 	{
 		const polytriangle_t *face = &model->faces[i];
 		for (int vert_index = 0; vert_index < 3; vert_index++)
@@ -96,29 +96,28 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 	indexdown[2] = 1;
 
 	// find front faces
-	for ( x = model->sizex - 1; x >= 0; x-- )
+	for (x = model->sizex - 1; x >= 0; x--)
 	{
-		for ( z = 0; z < model->sizez; z++ )
+		for (z = 0; z < model->sizez; z++)
 		{
 			oldcolor = 255;
 			buildingquad = false;
-			for ( y = 0; y < model->sizey; y++ )
+			for (y = 0; y < model->sizey; y++)
 			{
 				index = z + y * model->sizez + x * model->sizey * model->sizez;
 				newcolor = model->data[index];
-				if ( buildingquad == true )
+				if (buildingquad == true)
 				{
 					bool doit = false;
-					if ( newcolor != oldcolor )
+					if (newcolor != oldcolor)
 					{
 						doit = true;
-					}
-					else if ( x < model->sizex - 1 )
-						if ( model->data[index + indexdown[0]] >= 0 && model->data[index + indexdown[0]] < 255 )
+					} else if (x < model->sizex - 1)
+						if (model->data[index + indexdown[0]] >= 0 && model->data[index + indexdown[0]] < 255)
 						{
 							doit = true;
 						}
-					if ( doit )
+					if (doit)
 					{
 						// add the last two vertices to the previous quad
 						buildingquad = false;
@@ -134,16 +133,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 						// optimize quad
 						Node<polyquad_t>* node;
-						for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+						for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 						{
 							quad2 = &node->getData();
-							if ( quad1->side == quad2->side )
+							if (quad1->side == quad2->side)
 							{
-								if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+								if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 								{
-									if ( quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z )
+									if (quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z)
 									{
-										if ( quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z )
+										if (quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z)
 										{
 											quad2->vertex[2].z++;
 											quad2->vertex[3].z++;
@@ -158,20 +157,19 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 						}
 					}
 				}
-				if ( newcolor != oldcolor || !buildingquad )
+				if (newcolor != oldcolor || !buildingquad)
 				{
-					if ( newcolor != 255 )
+					if (newcolor != 255)
 					{
 						bool doit = false;
-						if ( x == model->sizex - 1 )
+						if (x == model->sizex - 1)
+						{
+							doit = true;
+						} else if (model->data[index + indexdown[0]] == 255)
 						{
 							doit = true;
 						}
-						else if ( model->data[index + indexdown[0]] == 255 )
-						{
-							doit = true;
-						}
-						if ( doit )
+						if (doit)
 						{
 							// start building a quad
 							buildingquad = true;
@@ -198,7 +196,7 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 				}
 				oldcolor = newcolor;
 			}
-			if ( buildingquad == true )
+			if (buildingquad == true)
 			{
 				// add the last two vertices to the previous quad
 				buildingquad = false;
@@ -214,16 +212,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 				// optimize quad
 				Node<polyquad_t>* node;
-				for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+				for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 				{
 					quad2 = &node->getData();
-					if ( quad1->side == quad2->side )
+					if (quad1->side == quad2->side)
 					{
-						if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+						if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 						{
-							if ( quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z )
+							if (quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z)
 							{
-								if ( quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z )
+								if (quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z)
 								{
 									quad2->vertex[2].z++;
 									quad2->vertex[3].z++;
@@ -241,29 +239,28 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 	}
 
 	// find back faces
-	for ( x = 0; x < model->sizex; x++ )
+	for (x = 0; x < model->sizex; x++)
 	{
-		for ( z = 0; z < model->sizez; z++ )
+		for (z = 0; z < model->sizez; z++)
 		{
 			oldcolor = 255;
 			buildingquad = false;
-			for ( y = 0; y < model->sizey; y++ )
+			for (y = 0; y < model->sizey; y++)
 			{
 				index = z + y * model->sizez + x * model->sizey * model->sizez;
 				newcolor = model->data[index];
-				if ( buildingquad == true )
+				if (buildingquad == true)
 				{
 					bool doit = false;
-					if ( newcolor != oldcolor )
+					if (newcolor != oldcolor)
 					{
 						doit = true;
-					}
-					else if ( x > 0 )
-						if ( model->data[index - indexdown[0]] >= 0 && model->data[index - indexdown[0]] < 255 )
+					} else if (x > 0)
+						if (model->data[index - indexdown[0]] >= 0 && model->data[index - indexdown[0]] < 255)
 						{
 							doit = true;
 						}
-					if ( doit )
+					if (doit)
 					{
 						// add the last two vertices to the previous quad
 						buildingquad = false;
@@ -279,16 +276,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 						// optimize quad
 						Node<polyquad_t>* node;
-						for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+						for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 						{
 							quad2 = &node->getData();
-							if ( quad1->side == quad2->side )
+							if (quad1->side == quad2->side)
 							{
-								if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+								if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 								{
-									if ( quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z )
+									if (quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z)
 									{
-										if ( quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z )
+										if (quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z)
 										{
 											quad2->vertex[0].z++;
 											quad2->vertex[1].z++;
@@ -303,20 +300,19 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 						}
 					}
 				}
-				if ( newcolor != oldcolor || !buildingquad )
+				if (newcolor != oldcolor || !buildingquad)
 				{
-					if ( newcolor != 255 )
+					if (newcolor != 255)
 					{
 						bool doit = false;
-						if ( x == 0 )
+						if (x == 0)
+						{
+							doit = true;
+						} else if (model->data[index - indexdown[0]] == 255)
 						{
 							doit = true;
 						}
-						else if ( model->data[index - indexdown[0]] == 255 )
-						{
-							doit = true;
-						}
-						if ( doit )
+						if (doit)
 						{
 							// start building a quad
 							buildingquad = true;
@@ -343,7 +339,7 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 				}
 				oldcolor = newcolor;
 			}
-			if ( buildingquad == true )
+			if (buildingquad == true)
 			{
 				// add the last two vertices to the previous quad
 				buildingquad = false;
@@ -359,16 +355,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 				// optimize quad
 				Node<polyquad_t>* node;
-				for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+				for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 				{
 					quad2 = &node->getData();
-					if ( quad1->side == quad2->side )
+					if (quad1->side == quad2->side)
 					{
-						if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+						if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 						{
-							if ( quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z )
+							if (quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z)
 							{
-								if ( quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z )
+								if (quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z)
 								{
 									quad2->vertex[0].z++;
 									quad2->vertex[1].z++;
@@ -386,29 +382,28 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 	}
 
 	// find right faces
-	for ( y = model->sizey - 1; y >= 0; y-- )
+	for (y = model->sizey - 1; y >= 0; y--)
 	{
-		for ( z = 0; z < model->sizez; z++ )
+		for (z = 0; z < model->sizez; z++)
 		{
 			oldcolor = 255;
 			buildingquad = false;
-			for ( x = 0; x < model->sizex; x++ )
+			for (x = 0; x < model->sizex; x++)
 			{
 				index = z + y * model->sizez + x * model->sizey * model->sizez;
 				newcolor = model->data[index];
-				if ( buildingquad == true )
+				if (buildingquad == true)
 				{
 					bool doit = false;
-					if ( newcolor != oldcolor )
+					if (newcolor != oldcolor)
 					{
 						doit = true;
-					}
-					else if ( y < model->sizey - 1 )
-						if ( model->data[index + indexdown[1]] >= 0 && model->data[index + indexdown[1]] < 255 )
+					} else if (y < model->sizey - 1)
+						if (model->data[index + indexdown[1]] >= 0 && model->data[index + indexdown[1]] < 255)
 						{
 							doit = true;
 						}
-					if ( doit )
+					if (doit)
 					{
 						// add the last two vertices to the previous quad
 						buildingquad = false;
@@ -424,16 +419,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 						// optimize quad
 						Node<polyquad_t>* node;
-						for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+						for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 						{
 							quad2 = &node->getData();
-							if ( quad1->side == quad2->side )
+							if (quad1->side == quad2->side)
 							{
-								if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+								if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 								{
-									if ( quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z )
+									if (quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z)
 									{
-										if ( quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z )
+										if (quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z)
 										{
 											quad2->vertex[0].z++;
 											quad2->vertex[1].z++;
@@ -448,20 +443,19 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 						}
 					}
 				}
-				if ( newcolor != oldcolor || !buildingquad )
+				if (newcolor != oldcolor || !buildingquad)
 				{
-					if ( newcolor != 255 )
+					if (newcolor != 255)
 					{
 						bool doit = false;
-						if ( y == model->sizey - 1 )
+						if (y == model->sizey - 1)
+						{
+							doit = true;
+						} else if (model->data[index + indexdown[1]] == 255)
 						{
 							doit = true;
 						}
-						else if ( model->data[index + indexdown[1]] == 255 )
-						{
-							doit = true;
-						}
-						if ( doit )
+						if (doit)
 						{
 							// start building a quad
 							buildingquad = true;
@@ -488,7 +482,7 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 				}
 				oldcolor = newcolor;
 			}
-			if ( buildingquad == true )
+			if (buildingquad == true)
 			{
 				// add the last two vertices to the previous quad
 				buildingquad = false;
@@ -503,16 +497,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 				// optimize quad
 				Node<polyquad_t>* node;
-				for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+				for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 				{
 					quad2 = &node->getData();
-					if ( quad1->side == quad2->side )
+					if (quad1->side == quad2->side)
 					{
-						if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+						if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 						{
-							if ( quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z )
+							if (quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z)
 							{
-								if ( quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z )
+								if (quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z)
 								{
 									quad2->vertex[0].z++;
 									quad2->vertex[1].z++;
@@ -530,29 +524,28 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 	}
 
 	// find left faces
-	for ( y = 0; y < model->sizey; y++ )
+	for (y = 0; y < model->sizey; y++)
 	{
-		for ( z = 0; z < model->sizez; z++ )
+		for (z = 0; z < model->sizez; z++)
 		{
 			oldcolor = 255;
 			buildingquad = false;
-			for ( x = 0; x < model->sizex; x++ )
+			for (x = 0; x < model->sizex; x++)
 			{
 				index = z + y * model->sizez + x * model->sizey * model->sizez;
 				newcolor = model->data[index];
-				if ( buildingquad == true )
+				if (buildingquad == true)
 				{
 					bool doit = false;
-					if ( newcolor != oldcolor )
+					if (newcolor != oldcolor)
 					{
 						doit = true;
-					}
-					else if ( y > 0 )
-						if ( model->data[index - indexdown[1]] >= 0 && model->data[index - indexdown[1]] < 255 )
+					} else if (y > 0)
+						if (model->data[index - indexdown[1]] >= 0 && model->data[index - indexdown[1]] < 255)
 						{
 							doit = true;
 						}
-					if ( doit )
+					if (doit)
 					{
 						// add the last two vertices to the previous quad
 						buildingquad = false;
@@ -568,16 +561,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 						// optimize quad
 						Node<polyquad_t>* node;
-						for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+						for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 						{
 							quad2 = &node->getData();
-							if ( quad1->side == quad2->side )
+							if (quad1->side == quad2->side)
 							{
-								if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+								if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 								{
-									if ( quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z )
+									if (quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z)
 									{
-										if ( quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z )
+										if (quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z)
 										{
 											quad2->vertex[2].z++;
 											quad2->vertex[3].z++;
@@ -592,20 +585,19 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 						}
 					}
 				}
-				if ( newcolor != oldcolor || !buildingquad )
+				if (newcolor != oldcolor || !buildingquad)
 				{
-					if ( newcolor != 255 )
+					if (newcolor != 255)
 					{
 						bool doit = false;
-						if ( y == 0 )
+						if (y == 0)
+						{
+							doit = true;
+						} else if (model->data[index - indexdown[1]] == 255)
 						{
 							doit = true;
 						}
-						else if ( model->data[index - indexdown[1]] == 255 )
-						{
-							doit = true;
-						}
-						if ( doit )
+						if (doit)
 						{
 							// start building a quad
 							buildingquad = true;
@@ -632,7 +624,7 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 				}
 				oldcolor = newcolor;
 			}
-			if ( buildingquad == true )
+			if (buildingquad == true)
 			{
 				// add the last two vertices to the previous quad
 				buildingquad = false;
@@ -647,16 +639,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 				// optimize quad
 				Node<polyquad_t>* node;
-				for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+				for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 				{
 					quad2 = &node->getData();
-					if ( quad1->side == quad2->side )
+					if (quad1->side == quad2->side)
 					{
-						if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+						if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 						{
-							if ( quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z )
+							if (quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z)
 							{
-								if ( quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z )
+								if (quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z)
 								{
 									quad2->vertex[2].z++;
 									quad2->vertex[3].z++;
@@ -674,29 +666,28 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 	}
 
 	// find bottom faces
-	for ( z = model->sizez - 1; z >= 0; z-- )
+	for (z = model->sizez - 1; z >= 0; z--)
 	{
-		for ( y = 0; y < model->sizey; y++ )
+		for (y = 0; y < model->sizey; y++)
 		{
 			oldcolor = 255;
 			buildingquad = false;
-			for ( x = 0; x < model->sizex; x++ )
+			for (x = 0; x < model->sizex; x++)
 			{
 				index = z + y * model->sizez + x * model->sizey * model->sizez;
 				newcolor = model->data[index];
-				if ( buildingquad == true )
+				if (buildingquad == true)
 				{
 					bool doit = false;
-					if ( newcolor != oldcolor )
+					if (newcolor != oldcolor)
 					{
 						doit = true;
-					}
-					else if ( z < model->sizez - 1 )
-						if ( model->data[index + indexdown[2]] >= 0 && model->data[index + indexdown[2]] < 255 )
+					} else if (z < model->sizez - 1)
+						if (model->data[index + indexdown[2]] >= 0 && model->data[index + indexdown[2]] < 255)
 						{
 							doit = true;
 						}
-					if ( doit )
+					if (doit)
 					{
 						// add the last two vertices to the previous quad
 						buildingquad = false;
@@ -712,16 +703,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 						// optimize quad
 						Node<polyquad_t>* node;
-						for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+						for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 						{
 							quad2 = &node->getData();
-							if ( quad1->side == quad2->side )
+							if (quad1->side == quad2->side)
 							{
-								if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+								if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 								{
-									if ( quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z )
+									if (quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z)
 									{
-										if ( quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z )
+										if (quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z)
 										{
 											quad2->vertex[2].y++;
 											quad2->vertex[3].y++;
@@ -736,20 +727,19 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 						}
 					}
 				}
-				if ( newcolor != oldcolor || !buildingquad )
+				if (newcolor != oldcolor || !buildingquad)
 				{
-					if ( newcolor != 255 )
+					if (newcolor != 255)
 					{
 						bool doit = false;
-						if ( z == model->sizez - 1 )
+						if (z == model->sizez - 1)
+						{
+							doit = true;
+						} else if (model->data[index + indexdown[2]] == 255)
 						{
 							doit = true;
 						}
-						else if ( model->data[index + indexdown[2]] == 255 )
-						{
-							doit = true;
-						}
-						if ( doit )
+						if (doit)
 						{
 							// start building a quad
 							buildingquad = true;
@@ -776,7 +766,7 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 				}
 				oldcolor = newcolor;
 			}
-			if ( buildingquad == true )
+			if (buildingquad == true)
 			{
 				// add the last two vertices to the previous quad
 				buildingquad = false;
@@ -792,16 +782,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 				// optimize quad
 				Node<polyquad_t>* node;
-				for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+				for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 				{
 					quad2 = &node->getData();
-					if ( quad1->side == quad2->side )
+					if (quad1->side == quad2->side)
 					{
-						if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+						if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 						{
-							if ( quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z )
+							if (quad2->vertex[3].x == quad1->vertex[0].x && quad2->vertex[3].y == quad1->vertex[0].y && quad2->vertex[3].z == quad1->vertex[0].z)
 							{
-								if ( quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z )
+								if (quad2->vertex[2].x == quad1->vertex[1].x && quad2->vertex[2].y == quad1->vertex[1].y && quad2->vertex[2].z == quad1->vertex[1].z)
 								{
 									quad2->vertex[2].y++;
 									quad2->vertex[3].y++;
@@ -819,29 +809,28 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 	}
 
 	// find top faces
-	for ( z = 0; z < model->sizez; z++ )
+	for (z = 0; z < model->sizez; z++)
 	{
-		for ( y = 0; y < model->sizey; y++ )
+		for (y = 0; y < model->sizey; y++)
 		{
 			oldcolor = 255;
 			buildingquad = false;
-			for ( x = 0; x < model->sizex; x++ )
+			for (x = 0; x < model->sizex; x++)
 			{
 				index = z + y * model->sizez + x * model->sizey * model->sizez;
 				newcolor = model->data[index];
-				if ( buildingquad == true )
+				if (buildingquad == true)
 				{
 					bool doit = false;
-					if ( newcolor != oldcolor )
+					if (newcolor != oldcolor)
 					{
 						doit = true;
-					}
-					else if ( z > 0 )
-						if ( model->data[index - indexdown[2]] >= 0 && model->data[index - indexdown[2]] < 255 )
+					} else if (z > 0)
+						if (model->data[index - indexdown[2]] >= 0 && model->data[index - indexdown[2]] < 255)
 						{
 							doit = true;
 						}
-					if ( doit )
+					if (doit)
 					{
 						// add the last two vertices to the previous quad
 						buildingquad = false;
@@ -857,16 +846,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 						// optimize quad
 						Node<polyquad_t>* node;
-						for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+						for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 						{
 							quad2 = &node->getData();
-							if ( quad1->side == quad2->side )
+							if (quad1->side == quad2->side)
 							{
-								if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+								if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 								{
-									if ( quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z )
+									if (quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z)
 									{
-										if ( quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z )
+										if (quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z)
 										{
 											quad2->vertex[0].y++;
 											quad2->vertex[1].y++;
@@ -881,20 +870,19 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 						}
 					}
 				}
-				if ( newcolor != oldcolor || !buildingquad )
+				if (newcolor != oldcolor || !buildingquad)
 				{
-					if ( newcolor != 255 )
+					if (newcolor != 255)
 					{
 						bool doit = false;
-						if ( z == 0 )
+						if (z == 0)
+						{
+							doit = true;
+						} else if (model->data[index - indexdown[2]] == 255)
 						{
 							doit = true;
 						}
-						else if ( model->data[index - indexdown[2]] == 255 )
-						{
-							doit = true;
-						}
-						if ( doit )
+						if (doit)
 						{
 							// start building a quad
 							buildingquad = true;
@@ -921,7 +909,7 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 				}
 				oldcolor = newcolor;
 			}
-			if ( buildingquad == true )
+			if (buildingquad == true)
 			{
 				// add the last two vertices to the previous quad
 				buildingquad = false;
@@ -937,16 +925,16 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 
 				// optimize quad
 				Node<polyquad_t>* node;
-				for ( i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext() )
+				for (i = 0, node = quads.getFirst(); i < numquads - 1; i++, node = node->getNext())
 				{
 					quad2 = &node->getData();
-					if ( quad1->side == quad2->side )
+					if (quad1->side == quad2->side)
 					{
-						if ( quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b )
+						if (quad1->r == quad2->r && quad1->g == quad2->g && quad1->b == quad2->b)
 						{
-							if ( quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z )
+							if (quad2->vertex[0].x == quad1->vertex[3].x && quad2->vertex[0].y == quad1->vertex[3].y && quad2->vertex[0].z == quad1->vertex[3].z)
 							{
-								if ( quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z )
+								if (quad2->vertex[1].x == quad1->vertex[2].x && quad2->vertex[1].y == quad1->vertex[2].y && quad2->vertex[1].z == quad1->vertex[2].z)
 								{
 									quad2->vertex[0].y++;
 									quad2->vertex[1].y++;
@@ -964,21 +952,20 @@ VoxelMeshData generatePolyModel(voxel_t* model)
 	}
 
 	// translate quads into triangles
-	polymodel.faces = (polytriangle_t*) malloc(sizeof(polytriangle_t) * polymodel.numfaces);
-	for ( i = 0; i < polymodel.numfaces; i++ )
+	polymodel.faces = (polytriangle_t*)malloc(sizeof(polytriangle_t) * polymodel.numfaces);
+	for (i = 0; i < polymodel.numfaces; i++)
 	{
 		Node<polyquad_t>* node = quads.nodeForIndex(i / 2);
 		polyquad_t* quad = &node->getData();
 		polymodel.faces[i].r = quad->r;
 		polymodel.faces[i].g = quad->g;
 		polymodel.faces[i].b = quad->b;
-		if ( i % 2 )
+		if (i % 2)
 		{
 			polymodel.faces[i].vertex[0] = quad->vertex[0];
 			polymodel.faces[i].vertex[1] = quad->vertex[1];
 			polymodel.faces[i].vertex[2] = quad->vertex[2];
-		}
-		else
+		} else
 		{
 			polymodel.faces[i].vertex[0] = quad->vertex[0];
 			polymodel.faces[i].vertex[1] = quad->vertex[2];
@@ -1019,7 +1006,7 @@ voxel_t* loadVoxel(const char* filename)
 		fread(model->data, sizeof(Uint8), model->sizex * model->sizey * model->sizez, file);
 		fread(&model->palette, sizeof(Uint8), 256 * 3, file);
 		int c;
-		for ( c = 0; c < 256; c++ )
+		for (c = 0; c < 256; c++)
 		{
 			model->palette[c][0] = model->palette[c][0] << 2;
 			model->palette[c][1] = model->palette[c][1] << 2;
@@ -1028,8 +1015,7 @@ voxel_t* loadVoxel(const char* filename)
 		fclose(file);
 
 		return model;
-	}
-	else
+	} else
 	{
 		return NULL;
 	}

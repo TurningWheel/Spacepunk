@@ -16,7 +16,7 @@ public:
 	// an image element
 	struct pair_t {
 		~pair_t() {
-			if( surf ) {
+			if (surf) {
 				SDL_FreeSurface(surf);
 				surf = nullptr;
 			}
@@ -50,12 +50,12 @@ public:
 	const GLuint indexForName(const char* _name) const;
 
 	// getters & setters
-	const GLuint			getTexID() const					{ return texid; }
-	const String&			getName(GLuint index) const			{ return pairs[index]->name; }
-	const SDL_Surface*		getSurf(GLuint index) const			{ return pairs[index]->surf; }
-	const unsigned int		getWidth(GLuint index) const		{ return pairs[index]->surf->w; }
-	const unsigned int		getHeight(GLuint index)	const		{ return pairs[index]->surf->h; }
-	const bool				isValidIndex(GLuint index) const	{ return index<layers; }
+	const GLuint			getTexID() const { return texid; }
+	const String&			getName(GLuint index) const { return pairs[index]->name; }
+	const SDL_Surface*		getSurf(GLuint index) const { return pairs[index]->surf; }
+	const unsigned int		getWidth(GLuint index) const { return pairs[index]->surf->w; }
+	const unsigned int		getHeight(GLuint index)	const { return pairs[index]->surf->h; }
+	const bool				isValidIndex(GLuint index) const { return index < layers; }
 
 private:
 	GLuint texid = 0;

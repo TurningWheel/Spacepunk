@@ -92,28 +92,28 @@ public:
 	bool isAnimDone() const;
 
 	// getters & setters
-	virtual type_t						getType() const override			{ return COMPONENT_MODEL; }
-	const char*							getMesh() const						{ return meshStr.get(); }
-	const char*							getMaterial() const					{ return materialStr.get(); }
-	const char*							getDepthFailMat() const				{ return depthfailStr.get(); }
-	const char*							getAnimation() const				{ return animationStr.get(); }
-	const AnimationMap&					getAnimations() const				{ return animations; }
-	AnimationMap&						getAnimations()						{ return animations; }
-	const Mesh::shadervars_t&			getShaderVars() const				{ return shaderVars; }
-	const SkinCache&					getSkinCache() const				{ return skincache; }
-	float								getAnimationSpeed() const			{ return animationSpeed; }
-	bool								isSkinUpdateNeeded() const			{ return skinUpdateNeeded; }
-	bool								isGenius() const					{ return genius; }
-	const char*							getCurrentAnimation() const			{ return currentAnimation.get(); }
-	const char*							getPreviousAnimation() const		{ return previousAnimation.get(); }
+	virtual type_t						getType() const override { return COMPONENT_MODEL; }
+	const char*							getMesh() const { return meshStr.get(); }
+	const char*							getMaterial() const { return materialStr.get(); }
+	const char*							getDepthFailMat() const { return depthfailStr.get(); }
+	const char*							getAnimation() const { return animationStr.get(); }
+	const AnimationMap&					getAnimations() const { return animations; }
+	AnimationMap&						getAnimations() { return animations; }
+	const Mesh::shadervars_t&			getShaderVars() const { return shaderVars; }
+	const SkinCache&					getSkinCache() const { return skincache; }
+	float								getAnimationSpeed() const { return animationSpeed; }
+	bool								isSkinUpdateNeeded() const { return skinUpdateNeeded; }
+	bool								isGenius() const { return genius; }
+	const char*							getCurrentAnimation() const { return currentAnimation.get(); }
+	const char*							getPreviousAnimation() const { return previousAnimation.get(); }
 
-	void	setMesh(const char* _mesh)										{ meshStr = _mesh; loadAnimations(); updateNeeded = true; broken = false; }
-	void	setMaterial(const char* _material)								{ materialStr = _material; broken = false; }
-	void	setDepthFailMat(const char* _depthfailmat)						{ depthfailStr = _depthfailmat; broken = false; }
-	void	setAnimation(const char* _animation)							{ animationStr = _animation; loadAnimations(); }
-	void	setShaderVars(const Mesh::shadervars_t& _shaderVars)			{ shaderVars = _shaderVars; }
-	void	setAnimationSpeed(const float _animationSpeed)					{ animationSpeed = _animationSpeed; }
-	void	setGenius(const bool _genius)									{ genius = _genius; }
+	void	setMesh(const char* _mesh) { meshStr = _mesh; loadAnimations(); updateNeeded = true; broken = false; }
+	void	setMaterial(const char* _material) { materialStr = _material; broken = false; }
+	void	setDepthFailMat(const char* _depthfailmat) { depthfailStr = _depthfailmat; broken = false; }
+	void	setAnimation(const char* _animation) { animationStr = _animation; loadAnimations(); }
+	void	setShaderVars(const Mesh::shadervars_t& _shaderVars) { shaderVars = _shaderVars; }
+	void	setAnimationSpeed(const float _animationSpeed) { animationSpeed = _animationSpeed; }
+	void	setGenius(const bool _genius) { genius = _genius; }
 
 	Model& operator=(const Model& src) {
 		genius = src.genius;

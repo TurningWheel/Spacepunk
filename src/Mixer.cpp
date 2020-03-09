@@ -23,33 +23,33 @@ Mixer::~Mixer() {
 }
 
 void Mixer::init() {
-	mainEngine->fmsg(Engine::MSG_INFO,"initializing OpenAL context...");
-	if( (device=alcOpenDevice(NULL))==NULL ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to open audio device: %d",alGetError());
+	mainEngine->fmsg(Engine::MSG_INFO, "initializing OpenAL context...");
+	if ((device = alcOpenDevice(NULL)) == NULL) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open audio device: %d", alGetError());
 		return;
 	}
-	if( alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT")==AL_TRUE ) {
+	if (alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT") == AL_TRUE) {
 		listDevices();
 	}
 	context = alcCreateContext(device, NULL);
-	if( !alcMakeContextCurrent(context) ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to set current audio context");
+	if (!alcMakeContextCurrent(context)) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to set current audio context");
 		return;
 	}
 
 	// create low pass filter
 	alGetError();
 	alGenFilters(1, &filter_lowpass);
-	if( alIsFilter(filter_lowpass) && alGetError() == AL_NO_ERROR ) {
+	if (alIsFilter(filter_lowpass) && alGetError() == AL_NO_ERROR) {
 		alFilteri(filter_lowpass, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
 		if (alGetError() != AL_NO_ERROR) {
-			mainEngine->fmsg(Engine::MSG_ERROR,"failed to setup lowpass filter");
+			mainEngine->fmsg(Engine::MSG_ERROR, "failed to setup lowpass filter");
 		} else {
 			alFilterf(filter_lowpass, AL_LOWPASS_GAIN, 0.25f);
 			alFilterf(filter_lowpass, AL_LOWPASS_GAINHF, 0.25f);
 		}
 	} else {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to create lowpass filter");
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to create lowpass filter");
 	}
 
 	initialized = true;
@@ -60,17 +60,17 @@ void Mixer::listDevices() {
 	const ALCchar* next = device + 1;
 	size_t len = 0;
 
-	mainEngine->fmsg(Engine::MSG_INFO,"audio devices found:");
-	mainEngine->fmsg(Engine::MSG_INFO,"----------------");
-	while( device && *device != '\0' && next && *next != '\0' ) {
+	mainEngine->fmsg(Engine::MSG_INFO, "audio devices found:");
+	mainEngine->fmsg(Engine::MSG_INFO, "----------------");
+	while (device && *device != '\0' && next && *next != '\0') {
 		mainEngine->fmsg(Engine::MSG_INFO, device);
 		len = strlen(device);
 		device += (len + 1);
-		next += (len + 2 );
+		next += (len + 2);
 	}
-	mainEngine->fmsg(Engine::MSG_INFO,"----------------");
+	mainEngine->fmsg(Engine::MSG_INFO, "----------------");
 	const ALCchar* defaultDevice = alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
-	mainEngine->fmsg(Engine::MSG_INFO,"selected audio device: %s",defaultDevice);
+	mainEngine->fmsg(Engine::MSG_INFO, "selected audio device: %s", defaultDevice);
 }
 
 void Mixer::setListener(Camera* camera) {
@@ -95,7 +95,7 @@ void Mixer::setListener(Camera* camera) {
 
 int Mixer::playSound(const char* name, const bool loop) {
 	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", 1, name).get());
-	if( sound ) {
+	if (sound) {
 		return sound->play(loop);
 	}
 	return -1;

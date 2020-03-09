@@ -25,10 +25,10 @@ public:
 	}
 
 	// getters & setters
-	ArrayList<OrderedPair<K, T>>&				getHash(Uint32 index)			{ return data[index]; }
-	const ArrayList<OrderedPair<K, T>>&			getHash(Uint32 index) const		{ return data[index]; }
-	Uint32										getNumBuckets() const			{ return numBuckets; }
-	Uint32										getSize() const					{ return size; }
+	ArrayList<OrderedPair<K, T>>&				getHash(Uint32 index) { return data[index]; }
+	const ArrayList<OrderedPair<K, T>>&			getHash(Uint32 index) const { return data[index]; }
+	Uint32										getNumBuckets() const { return numBuckets; }
+	Uint32										getSize() const { return size; }
 
 	// clears the map of all key/value pairs
 	void clear() {
@@ -97,8 +97,8 @@ public:
 	// @return true if key/value pair exists, false otherwise
 	bool exists(const K& key) const {
 		auto& list = data[hash(key) & (numBuckets - 1)];
-		for( auto& pair : list ) {
-			if( pair.a == key ) {
+		for (auto& pair : list) {
+			if (pair.a == key) {
 				return true;
 			}
 		}
@@ -110,9 +110,9 @@ public:
 	// @return true if the key/value pair was removed, otherwise false
 	bool remove(const K& key) {
 		auto& list = data[hash(key) & (numBuckets - 1)];
-		for( Uint32 c = 0; c < list.getSize(); ++c ) {
+		for (Uint32 c = 0; c < list.getSize(); ++c) {
 			auto& pair = list[c];
-			if( pair.a == key ) {
+			if (pair.a == key) {
 				list.remove(c);
 				--size;
 				return true;
@@ -126,8 +126,8 @@ public:
 	// @return the value associated with the key, or nullptr if it could not be found
 	T* find(const K& key) {
 		auto& list = data[hash(key) & (numBuckets - 1)];
-		for( auto& pair : list ) {
-			if( pair.a == key ) {
+		for (auto& pair : list) {
+			if (pair.a == key) {
 				return &pair.b;
 			}
 		}
@@ -135,8 +135,8 @@ public:
 	}
 	const T* find(const K& key) const {
 		auto& list = data[hash(key) & (numBuckets - 1)];
-		for( auto& pair : list ) {
-			if( pair.a == key ) {
+		for (auto& pair : list) {
+			if (pair.a == key) {
 				return &pair.b;
 			}
 		}
@@ -160,7 +160,7 @@ public:
 			Uint32 keyCount = 0;
 			file->propertyName("data");
 			file->beginArray(keyCount);
-			for( Uint32 c = 0; c < keyCount; ++c ) {
+			for (Uint32 c = 0; c < keyCount; ++c) {
 				K key;
 				T value;
 
@@ -180,7 +180,7 @@ public:
 
 			file->propertyName("data");
 			file->beginArray(keyCount);
-			for( auto& pair : *this ) {
+			for (auto& pair : *this) {
 				file->beginObject();
 				file->property("key", pair.a);
 				file->property("value", pair.b);
@@ -215,7 +215,7 @@ public:
 		}
 		Iterator& operator++() {
 			++position;
-			while( bucket < map.getNumBuckets() && position >= map.getHash(bucket).getSize() ) {
+			while (bucket < map.getNumBuckets() && position >= map.getHash(bucket).getSize()) {
 				++bucket;
 				position = 0;
 			}
@@ -249,7 +249,7 @@ public:
 		}
 		ConstIterator& operator++() {
 			++position;
-			while( bucket < map.getNumBuckets() && position >= map.getHash(bucket).getSize() ) {
+			while (bucket < map.getNumBuckets() && position >= map.getHash(bucket).getSize()) {
 				++bucket;
 				position = 0;
 			}

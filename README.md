@@ -7,18 +7,19 @@ Hit the blue "Play" button at the top of the editor to run the demo level.
 Features:
 
 	* OpenGL 4.5 core profile renderer
-	* support for several major polygonal formats via Assimp
+	* support for several major model formats via Assimp
 	* hardware skinned characters (skeletal animation)
+	* blend multiple skeletal animations per bone per character
 	* support for voxlap voxel format (.vox)
-	* Lua for client/server/world/entity/gui programming
+	* Lua for game scripting
+	* JSON support for level format, asset definitions, etc.
 	* rigid body dynamics and kinematic (game style) physics via Bullet
-	* multiple convex collision shapes (box, sphere, capsule, cylinder) and collision meshes
+	* multiple convex collision shapes (box, sphere, capsule, cylinder), plus collision meshes
 	* multiplayer support (listen servers, dedicated servers, and clients)
 	* splitscreen multiplayer (can be combined with online multiplayer)
 	* fully dynamic light and shadows (either w/ shadow maps or stencil shadows)
 	* multiple light shapes (point, cone, box)
-	* json support for level format, asset definitions, etc.
-	* shaders and material-based rendering
+	* GLSL shaders and material-based rendering
 	* in-game command line (console), cvars and ccmds can be declared anywhere
 	* 3D audio and filters for special effects (OpenAL)
 	* support for numerous input devices and remapping (game controllers)
@@ -45,17 +46,14 @@ Build/Install:
 		luajit
 		luabridge (https://github.com/vinniefalco/LuaBridge)
 
+		On Windows these are available through the included SpacepunkLibs.zip
+
 	Windows:
 
 		Visual Studio 2017 or later is required to compile.
-		Visual Studio 2015 was previously supported, but is no longer up to date.
 
-		The project is configured to look for dependencies in C:/GameLibs,
-		which should have "include" and "lib" directories. In the future,
-		this may use an environment variable instead. For our private use,
-		we distribute a GameLibs.zip directory that includes built versions
-		of every necessary lib and header, which you can request from me by
-		using my contact info below.
+		Create a SPACEPUNK_LIBS environment variable, and point it to the
+		directory created when you extract SpacepunkLibs.zip
 
 	Linux:
 
@@ -66,7 +64,7 @@ Build/Install:
 		cmake -DCMAKE_BUILD_TYPE=Release
 		make
 
-		There is a known issue regarding LuaBridge where addConstructor() won´t
+		There is a known issue regarding LuaBridge where addConstructor() won't
 		compile correctly with g++. You can fix this by injecting the following code in
 		LuaBridge/detail/Namespace.h (around line 836):
 
@@ -79,9 +77,16 @@ Build/Install:
 			return *this;
 		}
 
+	Macintosh:
+
+		The engine has not been tested to compile on Macintosh, but should not
+		take much effort to get it there. Please reach out to me using my
+		contact info below if you are interested.
+
 Controls:
 
-	These can be rebound via autoexec.cfg in the base folder. Also check help in the editor.
+	These can be inspected and rebound via autoexec.cfg in the base directory.
+	Also check the help screen in the editor.
 
 Console:
 
@@ -98,4 +103,4 @@ Console:
 
 Contact:
 
-	Send all suggestions and comments to sheridan.rathbun@gmail.com
+	Send all suggestions, comments, and questions to sheridan.rathbun@gmail.com

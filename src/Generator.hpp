@@ -45,23 +45,23 @@ public:
 			{ 1, 0, 1 }
 		};
 
-		const bool (*get(const char *str) const)[3] {
-			if( !str ) {
+		const bool(*get(const char *str) const)[3]{
+			if (!str) {
 				return fullLayout;
 			}
-			if( strcmp(str, "Full") == 0 ) {
+			if (strcmp(str, "Full") == 0) {
 				return fullLayout;
 			}
-			if( strcmp(str, "Box") == 0 ) {
+			if (strcmp(str, "Box") == 0) {
 				return boxLayout;
 			}
-			if( strcmp(str, "Cross") == 0 ) {
+			if (strcmp(str, "Cross") == 0) {
 				return crossLayout;
 			}
-			if( strcmp(str, "Dagger") == 0 ) {
+			if (strcmp(str, "Dagger") == 0) {
 				return daggerLayout;
 			}
-			if( strcmp(str, "Saltire") == 0 ) {
+			if (strcmp(str, "Saltire") == 0) {
 				return saltireLayout;
 			}
 			return fullLayout;
@@ -76,16 +76,16 @@ public:
 		int straight = 100;
 
 		int get(const char* str) const {
-			if( !str ) {
+			if (!str) {
 				return labyrinth;
 			}
-			if( strcmp(str, "Labyrinth") == 0 ) {
+			if (strcmp(str, "Labyrinth") == 0) {
 				return labyrinth;
 			}
-			if( strcmp(str, "Bent") == 0 ) {
+			if (strcmp(str, "Bent") == 0) {
 				return bent;
 			}
-			if( strcmp(str, "Straight") == 0 ) {
+			if (strcmp(str, "Straight") == 0) {
 				return straight;
 			}
 			return labyrinth;
@@ -178,31 +178,31 @@ public:
 	};
 
 	// Cell bits
-	static const Uint32 NOTHING			= 0;
-	static const Uint32 BLOCKED			= (1 << 0);
-	static const Uint32 ROOM			= (1 << 1);
-	static const Uint32 CORRIDOR		= (1 << 2);
-	static const Uint32 PERIMETER		= (1 << 3);
-	static const Uint32 ENTRANCE		= (1 << 4);
-	static const Uint32 ROOM_ID			= (1 << 5);
-	static const Uint32 ARCH			= (1 << 6);
-	static const Uint32 DOOR			= (1 << 7);
-	static const Uint32 LOCKED			= (1 << 8);
-	static const Uint32 TRAPPED			= (1 << 9);
-	static const Uint32 SECRET			= (1 << 10);
-	static const Uint32 PORTCULLIS		= (1 << 11);
-	static const Uint32 STAIR_DOWN		= (1 << 12);
-	static const Uint32 STAIR_UP		= (1 << 13);
-	static const Uint32 LABEL			= (1 << 14);
-	static const Uint32 CORRIDOR_EXTRA	= (1 << 15);
+	static const Uint32 NOTHING = 0;
+	static const Uint32 BLOCKED = (1 << 0);
+	static const Uint32 ROOM = (1 << 1);
+	static const Uint32 CORRIDOR = (1 << 2);
+	static const Uint32 PERIMETER = (1 << 3);
+	static const Uint32 ENTRANCE = (1 << 4);
+	static const Uint32 ROOM_ID = (1 << 5);
+	static const Uint32 ARCH = (1 << 6);
+	static const Uint32 DOOR = (1 << 7);
+	static const Uint32 LOCKED = (1 << 8);
+	static const Uint32 TRAPPED = (1 << 9);
+	static const Uint32 SECRET = (1 << 10);
+	static const Uint32 PORTCULLIS = (1 << 11);
+	static const Uint32 STAIR_DOWN = (1 << 12);
+	static const Uint32 STAIR_UP = (1 << 13);
+	static const Uint32 LABEL = (1 << 14);
+	static const Uint32 CORRIDOR_EXTRA = (1 << 15);
 
-	static const Uint32 OPEN_SPACE		= ROOM | CORRIDOR;
-	static const Uint32 DOOR_SPACE		= ARCH | DOOR | LOCKED | TRAPPED | SECRET | PORTCULLIS;
-	static const Uint32 E_SPACE			= ENTRANCE | DOOR_SPACE | LABEL;
-	static const Uint32 STAIRS			= STAIR_UP | STAIR_DOWN;
-	static const Uint32 BLOCK_ROOM		= BLOCKED | ROOM;
-	static const Uint32 BLOCK_CORRIDOR	= BLOCKED | PERIMETER | CORRIDOR;
-	static const Uint32 BLOCK_DOOR		= BLOCKED | DOOR_SPACE;
+	static const Uint32 OPEN_SPACE = ROOM | CORRIDOR;
+	static const Uint32 DOOR_SPACE = ARCH | DOOR | LOCKED | TRAPPED | SECRET | PORTCULLIS;
+	static const Uint32 E_SPACE = ENTRANCE | DOOR_SPACE | LABEL;
+	static const Uint32 STAIRS = STAIR_UP | STAIR_DOWN;
+	static const Uint32 BLOCK_ROOM = BLOCKED | ROOM;
+	static const Uint32 BLOCK_CORRIDOR = BLOCKED | PERIMETER | CORRIDOR;
+	static const Uint32 BLOCK_DOOR = BLOCKED | DOOR_SPACE;
 
 	// directions
 	static const Sint32 EAST = 0;
@@ -218,21 +218,21 @@ public:
 
 	// Options
 	struct options_t {
-		Uint32 seed				= 0;			// random seed
-		Sint32 dungeonWidth		= 39;			// must be an odd number
-		Sint32 dungeonHeight	= 39;			// must be an odd number
-		String dungeonLayout	= "None";
-		Sint32 roomMin			= 3;
-		Sint32 roomMax			= 9;
-		String roomLayout		= "Scattered";	// Packed or Scattered
-		String corridorLayout	= "Bent";
-		Sint32 removeDeadends	= 0;			// percentage
-		Sint32 addStairs		= 2;			// number of stairs
-		Sint32 subdivisor		= 2;
-		bool complex			= false;		// whether to create "complex" (non-rectangle) rooms
-		bool power				= false;
-		bool gravity			= false;
-		bool lifeSupport		= false;
+		Uint32 seed = 0;			// random seed
+		Sint32 dungeonWidth = 39;			// must be an odd number
+		Sint32 dungeonHeight = 39;			// must be an odd number
+		String dungeonLayout = "None";
+		Sint32 roomMin = 3;
+		Sint32 roomMax = 9;
+		String roomLayout = "Scattered";	// Packed or Scattered
+		String corridorLayout = "Bent";
+		Sint32 removeDeadends = 0;			// percentage
+		Sint32 addStairs = 2;			// number of stairs
+		Sint32 subdivisor = 2;
+		bool complex = false;		// whether to create "complex" (non-rectangle) rooms
+		bool power = false;
+		bool gravity = false;
+		bool lifeSupport = false;
 
 		// save/load this object to a file
 		// @param file interface to serialize with
@@ -254,14 +254,14 @@ public:
 	void serialize(FileInterface * file);
 
 	// getters & setters
-	const char*						getName() const					{ return name; }
-	const options_t&				getOptions() const				{ return options; }
-	const ArrayList<Uint32>&		getTiles() const				{ return tiles; }
-	const ArrayList<roomlib_t>&		getRoomPieces() const			{ return roomLibs; }
-	const ArrayList<tunnellib_t>&	getTunnelPieces() const			{ return tunnelLibs; }
+	const char*						getName() const { return name; }
+	const options_t&				getOptions() const { return options; }
+	const ArrayList<Uint32>&		getTiles() const { return tiles; }
+	const ArrayList<roomlib_t>&		getRoomPieces() const { return roomLibs; }
+	const ArrayList<tunnellib_t>&	getTunnelPieces() const { return tunnelLibs; }
 
-	void				setName(const char* _name)					{ name = _name; }
-	void				setOptions(const options_t& _options)		{ options = _options; }
+	void				setName(const char* _name) { name = _name; }
+	void				setOptions(const options_t& _options) { options = _options; }
 
 private:
 	String name;

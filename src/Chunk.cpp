@@ -14,29 +14,29 @@
 #include <unordered_set>
 
 Chunk::Chunk() {
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
-	for( int i=0; i<size*size; ++i ) {
+	for (int i = 0; i < size*size; ++i) {
 		tiles[i] = nullptr;
 	}
 }
 
 Chunk::~Chunk() {
-	for( int i=VERTEX_BUFFER; i<BUFFER_TYPE_LENGTH; ++i ) {
-		if( vbo[static_cast<buffer_t>(i)] ) {
-			glDeleteBuffers(1,&vbo[static_cast<buffer_t>(i)]);
+	for (int i = VERTEX_BUFFER; i < BUFFER_TYPE_LENGTH; ++i) {
+		if (vbo[static_cast<buffer_t>(i)]) {
+			glDeleteBuffers(1, &vbo[static_cast<buffer_t>(i)]);
 			vbo[static_cast<buffer_t>(i)] = 0;
 		}
 	}
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 		vao = 0;
 	}
 	{
 		Node<Entity*>* nextnode;
 		Node<Entity*>* node = ePopulation.getFirst();
-		for( ; node != nullptr; node = nextnode ) {
+		for (; node != nullptr; node = nextnode) {
 			Entity* entity = node->getData();
 			nextnode = node->getNext();
 			entity->clearChunkNode();
@@ -45,7 +45,7 @@ Chunk::~Chunk() {
 	{
 		Node<Component*>* nextnode;
 		Node<Component*>* node = cPopulation.getFirst();
-		for( ; node != nullptr; node = nextnode ) {
+		for (; node != nullptr; node = nextnode) {
 			Component* component = node->getData();
 			nextnode = node->getNext();
 			component->clearChunkNode();
@@ -55,8 +55,8 @@ Chunk::~Chunk() {
 
 Uint32 Chunk::calculateVertices() const {
 	Uint32 result = 0;
-	for( int i=0; i<size*size; ++i ) {
-		if( tiles[i] ) {
+	for (int i = 0; i < size*size; ++i) {
+		if (tiles[i]) {
 			result += tiles[i]->getNumVertices();
 		}
 	}
@@ -92,12 +92,12 @@ void Chunk::buildBuffers() {
 	indexBuffer.alloc(numIndices);
 
 	// fill buffers
-	GLuint index=0;
-	for( int j=0; j<size*size; ++j ) {
-		if( !tiles[j] )
+	GLuint index = 0;
+	for (int j = 0; j < size*size; ++j) {
+		if (!tiles[j])
 			continue;
 		Tile& tile = *tiles[j];
-		if( !tile.hasVolume() )
+		if (!tile.hasVolume())
 			continue;
 
 		colorChannels[j][0].r = tile.getShaderVars().customColorR.getArray()[0];
@@ -110,10 +110,10 @@ void Chunk::buildBuffers() {
 		colorChannels[j][2].g = tile.getShaderVars().customColorB.getArray()[1];
 		colorChannels[j][2].b = tile.getShaderVars().customColorB.getArray()[2];
 
-		for( int i=0; i<10; ++i ) {
+		for (int i = 0; i < 10; ++i) {
 			LinkedList<Tile::vertex_t>* list = tile.intForVertices(i);
-			if( !mainEngine->isEditorRunning() ) {
-				switch( i ) {
+			if (!mainEngine->isEditorRunning()) {
+				switch (i) {
 				case 0:
 				{
 					tile.compileCeilingVertices();
@@ -127,7 +127,7 @@ void Chunk::buildBuffers() {
 				case 2:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_EAST);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileUpperVertices(*neighbor, Tile::SIDE_EAST);
 					}
 					break;
@@ -135,7 +135,7 @@ void Chunk::buildBuffers() {
 				case 3:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_SOUTH);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileUpperVertices(*neighbor, Tile::SIDE_SOUTH);
 					}
 					break;
@@ -143,7 +143,7 @@ void Chunk::buildBuffers() {
 				case 4:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_WEST);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileUpperVertices(*neighbor, Tile::SIDE_WEST);
 					}
 					break;
@@ -151,7 +151,7 @@ void Chunk::buildBuffers() {
 				case 5:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_NORTH);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileUpperVertices(*neighbor, Tile::SIDE_NORTH);
 					}
 					break;
@@ -159,7 +159,7 @@ void Chunk::buildBuffers() {
 				case 6:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_EAST);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileLowerVertices(*neighbor, Tile::SIDE_EAST);
 					}
 					break;
@@ -167,7 +167,7 @@ void Chunk::buildBuffers() {
 				case 7:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_SOUTH);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileLowerVertices(*neighbor, Tile::SIDE_SOUTH);
 					}
 					break;
@@ -175,7 +175,7 @@ void Chunk::buildBuffers() {
 				case 8:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_WEST);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileLowerVertices(*neighbor, Tile::SIDE_WEST);
 					}
 					break;
@@ -183,7 +183,7 @@ void Chunk::buildBuffers() {
 				case 9:
 				{
 					Tile* neighbor = tile.findNeighbor(Tile::SIDE_NORTH);
-					if( neighbor ) {
+					if (neighbor) {
 						tile.compileLowerVertices(*neighbor, Tile::SIDE_NORTH);
 					}
 					break;
@@ -192,369 +192,369 @@ void Chunk::buildBuffers() {
 			}
 
 			Node<Tile::vertex_t>* node;
-			for( node=list->getFirst(); node!=nullptr; node=node->getNext() ) {
+			for (node = list->getFirst(); node != nullptr; node = node->getNext()) {
 				Tile::vertex_t& vert = node->getData();
-				vertexBuffer.push(glm::vec3(vert.pos.x,-vert.pos.z,vert.pos.y));
+				vertexBuffer.push(glm::vec3(vert.pos.x, -vert.pos.z, vert.pos.y));
 
 				Tile* neighbor = nullptr;
-				switch( i ) {
-					case 0:
-						// ceiling
-						{
-							glm::vec3 xy( (float)(size - (j / size)), (float)(j % size), 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = 1.0 - (vert.pos.x-tile.getX())/Tile::size;
-							GLfloat v = (vert.pos.y-tile.getY())/Tile::size;
+				switch (i) {
+				case 0:
+					// ceiling
+				{
+					glm::vec3 xy((float)(size - (j / size)), (float)(j % size), 0.f);
+					glm::vec3 wh(1.f, 1.f, 1.f);
+					GLfloat u = 1.0 - (vert.pos.x - tile.getX()) / Tile::size;
+					GLfloat v = (vert.pos.y - tile.getY()) / Tile::size;
 
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getCeilingTexture()];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
+					const String& string = mainEngine->getTextureDictionary().getWords()[tile.getCeilingTexture()];
+					Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+					if (texture == nullptr) {
+						texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+					}
+					assert(texture != nullptr);
 
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
+					GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+					glm::vec3 diffuseUV(u, v, diffuse);
+					diffuseMapBuffer.push(diffuseUV*wh + xy);
 
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
+					GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+					glm::vec3 normalUV(u, v, normal);
+					normalMapBuffer.push(normalUV*wh + xy);
 
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						if( tile.getCeilingSlopeSize()==0 ) {
-							normalBuffer.push(glm::vec3(0,-1,0));
-						} else {
-							switch( tile.getCeilingSlopeSide() ) {
-								case Tile::SIDE_EAST:
-									normalBuffer.push(glm::normalize(glm::vec3(-1 * tile.getCeilingSlopeSize(), -1 * Tile::size, 0)));
-									break;
-								case Tile::SIDE_SOUTH:
-									normalBuffer.push(glm::normalize(glm::vec3(0, -1 * Tile::size, -1 * tile.getCeilingSlopeSize())));
-									break;
-								case Tile::SIDE_WEST:
-									normalBuffer.push(glm::normalize(glm::vec3(1 * tile.getCeilingSlopeSize(), -1 * Tile::size, 0)));
-									break;
-								case Tile::SIDE_NORTH:
-									normalBuffer.push(glm::normalize(glm::vec3(0, -1 * Tile::size, 1 * tile.getCeilingSlopeSize())));
-									break;
-								default:
-									normalBuffer.push(glm::vec3(0,-1,0));
-									break;
-							}
-						}
+					GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+					glm::vec3 effectsUV(u, v, effects);
+					effectsMapBuffer.push(effectsUV*wh + xy);
+				}
+				if (tile.getCeilingSlopeSize() == 0) {
+					normalBuffer.push(glm::vec3(0, -1, 0));
+				} else {
+					switch (tile.getCeilingSlopeSide()) {
+					case Tile::SIDE_EAST:
+						normalBuffer.push(glm::normalize(glm::vec3(-1 * tile.getCeilingSlopeSize(), -1 * Tile::size, 0)));
 						break;
-					case 1:
-						// floor
-						{
-							glm::vec3 xy( (float)(j / size), (float)(j % size), 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (vert.pos.x-tile.getX())/Tile::size;
-							GLfloat v = (vert.pos.y-tile.getY())/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getFloorTexture()];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						if( tile.getFloorSlopeSize()==0 ) {
-							normalBuffer.push(glm::vec3(0,1,0));
-						} else {
-							switch( tile.getFloorSlopeSide() ) {
-								case Tile::SIDE_EAST:
-									normalBuffer.push(glm::normalize(glm::vec3(1 * tile.getFloorSlopeSize(), 1 * Tile::size, 0)));
-									break;
-								case Tile::SIDE_SOUTH:
-									normalBuffer.push(glm::normalize(glm::vec3(0, 1 * Tile::size, 1 * tile.getFloorSlopeSize())));
-									break;
-								case Tile::SIDE_WEST:
-									normalBuffer.push(glm::normalize(glm::vec3(-1 * tile.getFloorSlopeSize(), 1 * Tile::size, 0)));
-									break;
-								case Tile::SIDE_NORTH:
-									normalBuffer.push(glm::normalize(glm::vec3(0, 1 * Tile::size, -1 * tile.getFloorSlopeSize())));
-									break;
-								default:
-									normalBuffer.push(glm::vec3(0,1,0));
-									break;
-							}
-						}
+					case Tile::SIDE_SOUTH:
+						normalBuffer.push(glm::normalize(glm::vec3(0, -1 * Tile::size, -1 * tile.getCeilingSlopeSize())));
 						break;
-					case 2:
-						// upper wall east
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_EAST)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(j % size), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (vert.pos.y-tile.getY())/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_EAST)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(-1,0,0));
+					case Tile::SIDE_WEST:
+						normalBuffer.push(glm::normalize(glm::vec3(1 * tile.getCeilingSlopeSize(), -1 * Tile::size, 0)));
 						break;
-					case 3:
-						// upper wall south
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(size - (j / size)), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (Tile::size-(vert.pos.x-tile.getX()))/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_SOUTH)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(0,0,-1));
-						break;
-					case 4:
-						// upper wall west
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_WEST)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(size - (j % size)), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (Tile::size-(vert.pos.y-tile.getY()))/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_WEST)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(1,0,0));
-						break;
-					case 5:
-						// upper wall north
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(j / size), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (vert.pos.x-tile.getX())/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_NORTH)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(0,0,1));
-						break;
-					case 6:
-						// lower wall east
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_EAST)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(j % size), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (vert.pos.y-tile.getY())/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_EAST)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(-1,0,0));
-						break;
-					case 7:
-						// lower wall south
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(size - (j / size)), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (Tile::size-(vert.pos.x-tile.getX()))/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_SOUTH)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(0,0,-1));
-						break;
-					case 8:
-						// lower wall west
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_WEST)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(size - (j % size)), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (Tile::size-(vert.pos.y-tile.getY()))/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_WEST)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(1,0,0));
-						break;
-					case 9:
-						// lower wall north
-						if( (neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) == nullptr ) {
-							continue;
-						}
-						{
-							glm::vec3 xy( (float)(j / size), 0.f, 0.f );
-							glm::vec3 wh( 1.f, 1.f, 1.f );
-							GLfloat u = (vert.pos.x-tile.getX())/Tile::size;
-							GLfloat v = vert.pos.z/Tile::size;
-
-							const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_NORTH)];
-							Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
-							if( texture == nullptr ) {
-								texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
-							}
-							assert(texture != nullptr);
-
-							GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
-							glm::vec3 diffuseUV( u, v, diffuse );
-							diffuseMapBuffer.push( diffuseUV*wh + xy );
-
-							GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
-							glm::vec3 normalUV( u, v, normal );
-							normalMapBuffer.push( normalUV*wh + xy );
-
-							GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
-							glm::vec3 effectsUV( u, v, effects );
-							effectsMapBuffer.push( effectsUV*wh + xy );
-						}
-						normalBuffer.push(glm::vec3(0,0,1));
+					case Tile::SIDE_NORTH:
+						normalBuffer.push(glm::normalize(glm::vec3(0, -1 * Tile::size, 1 * tile.getCeilingSlopeSize())));
 						break;
 					default:
-						assert(0);
+						normalBuffer.push(glm::vec3(0, -1, 0));
 						break;
+					}
+				}
+				break;
+				case 1:
+					// floor
+				{
+					glm::vec3 xy((float)(j / size), (float)(j % size), 0.f);
+					glm::vec3 wh(1.f, 1.f, 1.f);
+					GLfloat u = (vert.pos.x - tile.getX()) / Tile::size;
+					GLfloat v = (vert.pos.y - tile.getY()) / Tile::size;
+
+					const String& string = mainEngine->getTextureDictionary().getWords()[tile.getFloorTexture()];
+					Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+					if (texture == nullptr) {
+						texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+					}
+					assert(texture != nullptr);
+
+					GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+					glm::vec3 diffuseUV(u, v, diffuse);
+					diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+					GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+					glm::vec3 normalUV(u, v, normal);
+					normalMapBuffer.push(normalUV*wh + xy);
+
+					GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+					glm::vec3 effectsUV(u, v, effects);
+					effectsMapBuffer.push(effectsUV*wh + xy);
+				}
+				if (tile.getFloorSlopeSize() == 0) {
+					normalBuffer.push(glm::vec3(0, 1, 0));
+				} else {
+					switch (tile.getFloorSlopeSide()) {
+					case Tile::SIDE_EAST:
+						normalBuffer.push(glm::normalize(glm::vec3(1 * tile.getFloorSlopeSize(), 1 * Tile::size, 0)));
+						break;
+					case Tile::SIDE_SOUTH:
+						normalBuffer.push(glm::normalize(glm::vec3(0, 1 * Tile::size, 1 * tile.getFloorSlopeSize())));
+						break;
+					case Tile::SIDE_WEST:
+						normalBuffer.push(glm::normalize(glm::vec3(-1 * tile.getFloorSlopeSize(), 1 * Tile::size, 0)));
+						break;
+					case Tile::SIDE_NORTH:
+						normalBuffer.push(glm::normalize(glm::vec3(0, 1 * Tile::size, -1 * tile.getFloorSlopeSize())));
+						break;
+					default:
+						normalBuffer.push(glm::vec3(0, 1, 0));
+						break;
+					}
+				}
+				break;
+				case 2:
+					// upper wall east
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_EAST)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(j % size), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (vert.pos.y - tile.getY()) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_EAST)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(-1, 0, 0));
+					break;
+				case 3:
+					// upper wall south
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(size - (j / size)), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (Tile::size - (vert.pos.x - tile.getX())) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_SOUTH)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(0, 0, -1));
+					break;
+				case 4:
+					// upper wall west
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_WEST)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(size - (j % size)), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (Tile::size - (vert.pos.y - tile.getY())) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_WEST)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(1, 0, 0));
+					break;
+				case 5:
+					// upper wall north
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(j / size), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (vert.pos.x - tile.getX()) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getUpperTexture(Tile::SIDE_NORTH)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(0, 0, 1));
+					break;
+				case 6:
+					// lower wall east
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_EAST)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(j % size), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (vert.pos.y - tile.getY()) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_EAST)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(-1, 0, 0));
+					break;
+				case 7:
+					// lower wall south
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(size - (j / size)), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (Tile::size - (vert.pos.x - tile.getX())) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_SOUTH)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(0, 0, -1));
+					break;
+				case 8:
+					// lower wall west
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_WEST)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(size - (j % size)), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (Tile::size - (vert.pos.y - tile.getY())) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_WEST)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(1, 0, 0));
+					break;
+				case 9:
+					// lower wall north
+					if ((neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) == nullptr) {
+						continue;
+					}
+					{
+						glm::vec3 xy((float)(j / size), 0.f, 0.f);
+						glm::vec3 wh(1.f, 1.f, 1.f);
+						GLfloat u = (vert.pos.x - tile.getX()) / Tile::size;
+						GLfloat v = vert.pos.z / Tile::size;
+
+						const String& string = mainEngine->getTextureDictionary().getWords()[tile.getLowerTexture(Tile::SIDE_NORTH)];
+						Texture* texture = mainEngine->getTextureResource().dataForString(string.get());
+						if (texture == nullptr) {
+							texture = mainEngine->getTextureResource().dataForString(Texture::defaultTexture);
+						}
+						assert(texture != nullptr);
+
+						GLuint diffuse = mainEngine->getTileDiffuseTextures().indexForName(texture->getTextures()[0]->getName());
+						glm::vec3 diffuseUV(u, v, diffuse);
+						diffuseMapBuffer.push(diffuseUV*wh + xy);
+
+						GLuint normal = mainEngine->getTileNormalTextures().indexForName(texture->getTextures()[1]->getName());
+						glm::vec3 normalUV(u, v, normal);
+						normalMapBuffer.push(normalUV*wh + xy);
+
+						GLuint effects = mainEngine->getTileEffectsTextures().indexForName(texture->getTextures()[2]->getName());
+						glm::vec3 effectsUV(u, v, effects);
+						effectsMapBuffer.push(effectsUV*wh + xy);
+					}
+					normalBuffer.push(glm::vec3(0, 0, 1));
+					break;
+				default:
+					assert(0);
+					break;
 				}
 
 				indexBuffer.push(index);
@@ -563,7 +563,7 @@ void Chunk::buildBuffers() {
 			}
 		}
 
-		if( !mainEngine->isEditorRunning() ) {
+		if (!mainEngine->isEditorRunning()) {
 			tile.cleanVertexBuffers();
 		}
 	}
@@ -577,22 +577,22 @@ void Chunk::buildBuffers() {
 }
 
 void Chunk::buildTangents() {
-	for( unsigned int i = 0; i < vertexBuffer.getSize(); i += 3 ) {
-		glm::vec3& v0 = vertexBuffer[i+0];
-		glm::vec3& v1 = vertexBuffer[i+1];
-		glm::vec3& v2 = vertexBuffer[i+2];
+	for (unsigned int i = 0; i < vertexBuffer.getSize(); i += 3) {
+		glm::vec3& v0 = vertexBuffer[i + 0];
+		glm::vec3& v1 = vertexBuffer[i + 1];
+		glm::vec3& v2 = vertexBuffer[i + 2];
 
-		glm::vec2 uv0 = normalMapBuffer[i+0];
-		glm::vec2 uv1 = normalMapBuffer[i+1];
-		glm::vec2 uv2 = normalMapBuffer[i+2];
+		glm::vec2 uv0 = normalMapBuffer[i + 0];
+		glm::vec2 uv1 = normalMapBuffer[i + 1];
+		glm::vec2 uv2 = normalMapBuffer[i + 2];
 
 		// position delta
-		glm::vec3 deltaPos0 = v1-v0;
-		glm::vec3 deltaPos1 = v2-v0;
+		glm::vec3 deltaPos0 = v1 - v0;
+		glm::vec3 deltaPos1 = v2 - v0;
 
 		// UV delta
-		glm::vec2 deltaUV0 = uv1-uv0;
-		glm::vec2 deltaUV1 = uv2-uv0;
+		glm::vec2 deltaUV0 = uv1 - uv0;
+		glm::vec2 deltaUV1 = uv2 - uv0;
 
 		float r = 1.0f / (deltaUV0.x * deltaUV1.y - deltaUV0.y * deltaUV1.x);
 		glm::vec3 tangent = (deltaPos0 * deltaUV1.y - deltaPos1 * deltaUV0.y)*r;
@@ -639,10 +639,10 @@ void Chunk::optimizeBuffers() {
 	}*/
 
 	// step 5: find vertex adjacencies
-	for( Uint32 i = 0; i < numIndices; i += 6 ) {
-		indexBuffer[i+1] = findAdjacentIndex(indexBuffer[i],indexBuffer[i+2],indexBuffer[i+4]);
-		indexBuffer[i+3] = findAdjacentIndex(indexBuffer[i+2],indexBuffer[i+4],indexBuffer[i]);
-		indexBuffer[i+5] = findAdjacentIndex(indexBuffer[i+4],indexBuffer[i],indexBuffer[i+2]);
+	for (Uint32 i = 0; i < numIndices; i += 6) {
+		indexBuffer[i + 1] = findAdjacentIndex(indexBuffer[i], indexBuffer[i + 2], indexBuffer[i + 4]);
+		indexBuffer[i + 3] = findAdjacentIndex(indexBuffer[i + 2], indexBuffer[i + 4], indexBuffer[i]);
+		indexBuffer[i + 5] = findAdjacentIndex(indexBuffer[i + 4], indexBuffer[i], indexBuffer[i + 2]);
 	}
 
 	uploadBuffers();
@@ -653,33 +653,33 @@ void Chunk::optimizeBuffers() {
 void Chunk::combineVertices() {
 	ArrayList<bool> conjoinedBool;
 	conjoinedBool.resize(numVertices);
-	for( Uint32 c = 0; c < conjoinedBool.getSize(); ++c ) {
+	for (Uint32 c = 0; c < conjoinedBool.getSize(); ++c) {
 		conjoinedBool[c] = false;
 	}
 
 	ArrayList<ArrayList<Uint32>> conjoinedMem;
-	for( Uint32 i = 0; i < numVertices; ++i ) {
-		if( conjoinedBool[i] ) {
+	for (Uint32 i = 0; i < numVertices; ++i) {
+		if (conjoinedBool[i]) {
 			continue;
 		}
 		conjoinedMem.push(ArrayList<Uint32>());
-		conjoinedMem.peek().push(i*2);
-		for( Uint32 j = i + 1; j < numVertices; ++j ) {
-			if( conjoinedBool[j] ) {
+		conjoinedMem.peek().push(i * 2);
+		for (Uint32 j = i + 1; j < numVertices; ++j) {
+			if (conjoinedBool[j]) {
 				continue;
 			}
-			if( vertexBuffer[i] == vertexBuffer[j] &&
+			if (vertexBuffer[i] == vertexBuffer[j] &&
 				normalBuffer[i] == normalBuffer[j] &&
 				diffuseMapBuffer[i] == diffuseMapBuffer[j] &&
 				normalMapBuffer[i] == normalMapBuffer[j] &&
-				effectsMapBuffer[i] == effectsMapBuffer[j] ) {
+				effectsMapBuffer[i] == effectsMapBuffer[j]) {
 				conjoinedBool[j] = true;
-				conjoinedMem.peek().push(j*2);
+				conjoinedMem.peek().push(j * 2);
 			}
 		}
 	}
-	for( Uint32 j = 0, i = 0; i < numVertices; ++i, ++j ) {
-		if( conjoinedBool[i] ) {
+	for (Uint32 j = 0, i = 0; i < numVertices; ++i, ++j) {
+		if (conjoinedBool[i]) {
 			vertexBuffer.removeAndRearrange(j);
 			normalBuffer.removeAndRearrange(j);
 			tangentBuffer.removeAndRearrange(j);
@@ -690,21 +690,21 @@ void Chunk::combineVertices() {
 		}
 	}
 	numVertices = vertexBuffer.getSize();
-	for( Uint32 index = 0; index < numIndices; index += 2 ) {
+	for (Uint32 index = 0; index < numIndices; index += 2) {
 		bool found = false;
-		for( Uint32 i = 0; i < conjoinedMem.getSize(); ++i ) {
-			for( Uint32 j = 0; j < conjoinedMem[i].getSize(); ++j ) {
-				if( conjoinedMem[i][j] == index ) {
-					indexBuffer[index    ] = (GLuint)i;
+		for (Uint32 i = 0; i < conjoinedMem.getSize(); ++i) {
+			for (Uint32 j = 0; j < conjoinedMem[i].getSize(); ++j) {
+				if (conjoinedMem[i][j] == index) {
+					indexBuffer[index] = (GLuint)i;
 					indexBuffer[index + 1] = (GLuint)i;
 					found = true;
 					break;
 				}
-				if( found ) {
+				if (found) {
 					break;
 				}
 			}
-			if( found ) {
+			if (found) {
 				break;
 			}
 		}
@@ -713,31 +713,31 @@ void Chunk::combineVertices() {
 }
 
 void Chunk::combineEdges(EdgeList& edges) {
-	for( Uint32 i = 0; i < edges.getSize(); ++i ) {
-		for( Uint32 j = 0; j < edges.getSize(); ++j ) {
-			if( i == j ) {
+	for (Uint32 i = 0; i < edges.getSize(); ++i) {
+		for (Uint32 j = 0; j < edges.getSize(); ++j) {
+			if (i == j) {
 				continue;
 			}
 			Edge& edge0 = edges[i];
 			Edge& edge1 = edges[j];
 
-			if( edge0.shares(edge1) ) {
+			if (edge0.shares(edge1)) {
 				glm::vec3 edgeVec0 = glm::normalize(vertexBuffer[edge0.b] - vertexBuffer[edge0.a]);
 				glm::vec3 edgeVec1 = glm::normalize(vertexBuffer[edge1.b] - vertexBuffer[edge1.a]);
 
 				float dot = glm::dot(edgeVec0, edgeVec1);
-				if( dot >= 0.999f ) {
-					if( edge0.a == edge1.a ) {
+				if (dot >= 0.999f) {
+					if (edge0.a == edge1.a) {
 						edge0.a = edge1.b;
-					} else if( edge0.a == edge1.b ) {
+					} else if (edge0.a == edge1.b) {
 						edge0.a = edge1.a;
-					} else if( edge0.b == edge1.a ) {
+					} else if (edge0.b == edge1.a) {
 						edge0.b = edge1.b;
-					} else if( edge0.b == edge1.b ) {
+					} else if (edge0.b == edge1.b) {
 						edge0.b = edge1.a;
 					}
 					edges.removeAndRearrange(j);
-					if( j < i ) {
+					if (j < i) {
 						--i;
 					}
 					--j;
@@ -748,28 +748,28 @@ void Chunk::combineEdges(EdgeList& edges) {
 }
 
 void Chunk::findEdges(EdgeList& edges, bool all) {
-	for( Uint32 index = 0; index < numIndices; index += 6 ) {
-		findEdge(Edge(indexBuffer[index    ], indexBuffer[index + 2]), index, edges, all);
+	for (Uint32 index = 0; index < numIndices; index += 6) {
+		findEdge(Edge(indexBuffer[index], indexBuffer[index + 2]), index, edges, all);
 		findEdge(Edge(indexBuffer[index + 2], indexBuffer[index + 4]), index, edges, all);
-		findEdge(Edge(indexBuffer[index + 4], indexBuffer[index    ]), index, edges, all);
+		findEdge(Edge(indexBuffer[index + 4], indexBuffer[index]), index, edges, all);
 	}
 }
 
 void Chunk::findEdge(const Edge& edge, Uint32 skip, EdgeList& edges, bool all) {
 	bool foundMatch = false;
-	for( Uint32 index = all ? skip + 6 : 0; index < numIndices; index += 6 ) {
-		if( index == skip ) {
+	for (Uint32 index = all ? skip + 6 : 0; index < numIndices; index += 6) {
+		if (index == skip) {
 			continue;
 		}
-		Edge e0(indexBuffer[index    ], indexBuffer[index + 2]);
+		Edge e0(indexBuffer[index], indexBuffer[index + 2]);
 		Edge e1(indexBuffer[index + 2], indexBuffer[index + 4]);
-		Edge e2(indexBuffer[index + 4], indexBuffer[index    ]);
-		if( e0 == edge || e1 == edge || e2 == edge ) {
+		Edge e2(indexBuffer[index + 4], indexBuffer[index]);
+		if (e0 == edge || e1 == edge || e2 == edge) {
 			foundMatch = true;
 			break;
 		}
 	}
-	if( !foundMatch ) {
+	if (!foundMatch) {
 		edges.push(edge);
 	}
 }
@@ -800,19 +800,19 @@ GLuint Chunk::findAdjacentIndex(GLuint index1, GLuint index2, GLuint index3) {
 }
 
 void Chunk::uploadBuffers() {
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 		vao = 0;
 	}
-	if( !numVertices )
+	if (!numVertices)
 		return;
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
 	// upload vertex data
-	if( vbo[VERTEX_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[VERTEX_BUFFER]);
+	if (vbo[VERTEX_BUFFER]) {
+		glDeleteBuffers(1, &vbo[VERTEX_BUFFER]);
 		vbo[VERTEX_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[VERTEX_BUFFER]);
@@ -822,8 +822,8 @@ void Chunk::uploadBuffers() {
 	glEnableVertexAttribArray(0);
 
 	// upload normal data
-	if( vbo[NORMAL_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[NORMAL_BUFFER]);
+	if (vbo[NORMAL_BUFFER]) {
+		glDeleteBuffers(1, &vbo[NORMAL_BUFFER]);
 		vbo[NORMAL_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[NORMAL_BUFFER]);
@@ -833,8 +833,8 @@ void Chunk::uploadBuffers() {
 	glEnableVertexAttribArray(1);
 
 	// upload tangent data
-	if( vbo[TANGENT_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[TANGENT_BUFFER]);
+	if (vbo[TANGENT_BUFFER]) {
+		glDeleteBuffers(1, &vbo[TANGENT_BUFFER]);
 		vbo[TANGENT_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[TANGENT_BUFFER]);
@@ -844,8 +844,8 @@ void Chunk::uploadBuffers() {
 	glEnableVertexAttribArray(2);
 
 	// upload diffuse map data
-	if( vbo[DIFFUSEMAP_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[DIFFUSEMAP_BUFFER]);
+	if (vbo[DIFFUSEMAP_BUFFER]) {
+		glDeleteBuffers(1, &vbo[DIFFUSEMAP_BUFFER]);
 		vbo[DIFFUSEMAP_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[DIFFUSEMAP_BUFFER]);
@@ -855,8 +855,8 @@ void Chunk::uploadBuffers() {
 	glEnableVertexAttribArray(3);
 
 	// upload normal map data
-	if( vbo[NORMALMAP_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[NORMALMAP_BUFFER]);
+	if (vbo[NORMALMAP_BUFFER]) {
+		glDeleteBuffers(1, &vbo[NORMALMAP_BUFFER]);
 		vbo[NORMALMAP_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[NORMALMAP_BUFFER]);
@@ -866,8 +866,8 @@ void Chunk::uploadBuffers() {
 	glEnableVertexAttribArray(4);
 
 	// upload effects map data
-	if( vbo[EFFECTSMAP_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[EFFECTSMAP_BUFFER]);
+	if (vbo[EFFECTSMAP_BUFFER]) {
+		glDeleteBuffers(1, &vbo[EFFECTSMAP_BUFFER]);
 		vbo[EFFECTSMAP_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[EFFECTSMAP_BUFFER]);
@@ -877,8 +877,8 @@ void Chunk::uploadBuffers() {
 	glEnableVertexAttribArray(5);
 
 	// upload index data
-	if( vbo[INDEX_BUFFER] ) {
-		glDeleteBuffers(1,&vbo[INDEX_BUFFER]);
+	if (vbo[INDEX_BUFFER]) {
+		glDeleteBuffers(1, &vbo[INDEX_BUFFER]);
 		vbo[INDEX_BUFFER] = 0;
 	}
 	glGenBuffers(1, &vbo[INDEX_BUFFER]);
@@ -891,12 +891,12 @@ void Chunk::uploadBuffers() {
 static Cvar cvar_showChunkEdges("showchunkedges", "show the computed edge list on chunks", "0");
 
 void Chunk::draw(Camera& camera, ShaderProgram& shader) const {
-	if( !numIndices )
+	if (!numIndices)
 		return;
 
 	// upload colors
-	if( camera.getDrawMode() == Camera::DRAW_STANDARD ||
-		camera.getDrawMode() == Camera::DRAW_GLOW ) {
+	if (camera.getDrawMode() == Camera::DRAW_STANDARD ||
+		camera.getDrawMode() == Camera::DRAW_GLOW) {
 		glUniformMatrix3fv(shader.getUniformLocation("gTileColors"), size*size, GL_FALSE, glm::value_ptr(colorChannels[0]));
 	}
 
@@ -906,9 +906,9 @@ void Chunk::draw(Camera& camera, ShaderProgram& shader) const {
 	glBindVertexArray(0);
 
 	// draw edges
-	if( cvar_showChunkEdges.toInt() ) {
+	if (cvar_showChunkEdges.toInt()) {
 		ShaderProgram* shader = const_cast<ShaderProgram*>(ShaderProgram::getCurrentShader()); // purely for debug
-		for( Uint32 c = 0; c < edges.getSize(); ++c ) {
+		for (Uint32 c = 0; c < edges.getSize(); ++c) {
 			glm::vec3 a = vertexBuffer[edges[c].a] - normalBuffer[edges[c].a];
 			glm::vec3 b = vertexBuffer[edges[c].b] - normalBuffer[edges[c].b];
 			glm::vec3 src(a.x, a.z, -a.y);
@@ -916,9 +916,9 @@ void Chunk::draw(Camera& camera, ShaderProgram& shader) const {
 
 			glm::vec3 n = normalBuffer[edges[c].a];
 			glm::vec4 color(fabs(n.x), fabs(n.y), fabs(n.z), 1.f);
-			camera.drawLine3D( 2.f, src, dst, color );
+			camera.drawLine3D(2.f, src, dst, color);
 		}
-		if( shader ) {
+		if (shader) {
 			shader->mount();
 		}
 	}

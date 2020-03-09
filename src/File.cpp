@@ -15,8 +15,8 @@ class JsonFileWriter : public FileInterface {
 public:
 
 	JsonFileWriter()
-	: buffer()
-	, writer(buffer)
+		: buffer()
+		, writer(buffer)
 	{
 	}
 
@@ -244,7 +244,7 @@ class BinaryFileWriter : public FileInterface {
 public:
 
 	BinaryFileWriter(FILE * file)
-	: fp(file)
+		: fp(file)
 	{
 	}
 
@@ -433,8 +433,7 @@ static EFileFormat GetFileFormat(FILE * file) {
 
 	if (fileFormatTag == BinaryFormatTag) {
 		return EFileFormat::Binary;
-	}
-	else {
+	} else {
 		return EFileFormat::Json;
 	}
 }
@@ -452,11 +451,9 @@ bool FileHelper::writeObjectInternal(const char * filename, EFileFormat format, 
 	bool success = false;
 	if (format == EFileFormat::Binary) {
 		success = BinaryFileWriter::writeObject(file, serialize);
-	}
-	else if (format == EFileFormat::Json) {
+	} else if (format == EFileFormat::Json) {
 		success = JsonFileWriter::writeObject(file, serialize);
-	}
-	else {
+	} else {
 		assert(false);
 	}
 
@@ -480,11 +477,9 @@ bool FileHelper::readObjectInternal(const char * filename, const SerializationFu
 	bool success = false;
 	if (format == EFileFormat::Binary) {
 		success = BinaryFileReader::readObject(file, serialize);
-	}
-	else if(format == EFileFormat::Json) {
+	} else if (format == EFileFormat::Json) {
 		success = JsonFileReader::readObject(file, serialize);
-	}
-	else {
+	} else {
 		assert(false);
 	}
 

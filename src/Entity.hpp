@@ -77,78 +77,78 @@ public:
 	virtual ~Entity();
 
 	// getters & setters
-	const String&						getName() const						{ return name; }
-	const Uint32&						getUID() const						{ return uid; }
-	const Uint32&						getTicks() const					{ return ticks; }
-	const Vector&						getPos() const						{ return pos; }
-	const Vector&						getNewPos() const					{ return newPos; }
-	const Vector&						getVel() const						{ return vel; }
-	const Quaternion&					getAng() const						{ return ang; }
-	const Quaternion&					getNewAng() const					{ return newAng; }
-	const Rotation&						getRot() const						{ return rot; }
-	const glm::mat4&					getMat() const						{ return mat; }
-	const char*							getScriptStr() const				{ return scriptStr.get(); }
-	const bool							isToBeDeleted() const				{ return toBeDeleted; }
-	const Vector&						getScale() const					{ return scale; }
-	const Uint32&						getFlags() const					{ return flags; }
-	const Map<String, String>&			getKeyValues() const				{ return keyvalues; }
-	const bool							isFlag(const flag_t flag) const		{ return ((flags&static_cast<Uint32>(flag))!=0); }
-	const bool							isShouldSave() const				{ return shouldSave; }
-	World*								getWorld()							{ return world; }
-	const World*						getWorld() const					{ return world; }
-	Player*								getPlayer()							{ return player; }
-	const bool&							isFalling()							{ return falling; }
-	Uint32								getLastUpdate()						{ return lastUpdate; }
-	const char*							getDefName() const					{ return defName.get(); }
-	Uint32								getDefIndex() const					{ return defIndex; }
-	const ArrayList<Component*>&		getComponents() const				{ return components; }
-	ArrayList<Component*>&				getComponents()						{ return components; }
-	const sort_t&						getSort() const						{ return sort; }
-	Sint32								getCurrentCX() const				{ return currentCX; }
-	Sint32								getCurrentCY() const				{ return currentCY; }
-	int									getCurrentTileX() const				{ return static_cast<int>(getPos().x) / Tile::size; }
-	int									getCurrentTileY() const				{ return static_cast<int>(getPos().y) / Tile::size; }
-	int									getCurrentTileZ() const				{ return static_cast<int>(getPos().z) / Tile::size; }
-	bool								isPathRequested() const				{ return pathRequested; }
-	const Vector&						getPathNodePosition() const			{ return pathNode; }
-	const Vector&						getPathNodeDir() const				{ return pathDir; }
-	bool								hasPath() const						{ return path != nullptr; }
-	const Entity*						getAnchor() const					{ return anchor; }
-	const Vector&						getOffset() const					{ return offset; }
-	bool								isPickupable() const				{ return canBePickedUp; }
-	const Rotation&						getLookDir() const					{ return lookDir; }
+	const String&						getName() const { return name; }
+	const Uint32&						getUID() const { return uid; }
+	const Uint32&						getTicks() const { return ticks; }
+	const Vector&						getPos() const { return pos; }
+	const Vector&						getNewPos() const { return newPos; }
+	const Vector&						getVel() const { return vel; }
+	const Quaternion&					getAng() const { return ang; }
+	const Quaternion&					getNewAng() const { return newAng; }
+	const Rotation&						getRot() const { return rot; }
+	const glm::mat4&					getMat() const { return mat; }
+	const char*							getScriptStr() const { return scriptStr.get(); }
+	const bool							isToBeDeleted() const { return toBeDeleted; }
+	const Vector&						getScale() const { return scale; }
+	const Uint32&						getFlags() const { return flags; }
+	const Map<String, String>&			getKeyValues() const { return keyvalues; }
+	const bool							isFlag(const flag_t flag) const { return ((flags&static_cast<Uint32>(flag)) != 0); }
+	const bool							isShouldSave() const { return shouldSave; }
+	World*								getWorld() { return world; }
+	const World*						getWorld() const { return world; }
+	Player*								getPlayer() { return player; }
+	const bool&							isFalling() { return falling; }
+	Uint32								getLastUpdate() { return lastUpdate; }
+	const char*							getDefName() const { return defName.get(); }
+	Uint32								getDefIndex() const { return defIndex; }
+	const ArrayList<Component*>&		getComponents() const { return components; }
+	ArrayList<Component*>&				getComponents() { return components; }
+	const sort_t&						getSort() const { return sort; }
+	Sint32								getCurrentCX() const { return currentCX; }
+	Sint32								getCurrentCY() const { return currentCY; }
+	int									getCurrentTileX() const { return static_cast<int>(getPos().x) / Tile::size; }
+	int									getCurrentTileY() const { return static_cast<int>(getPos().y) / Tile::size; }
+	int									getCurrentTileZ() const { return static_cast<int>(getPos().z) / Tile::size; }
+	bool								isPathRequested() const { return pathRequested; }
+	const Vector&						getPathNodePosition() const { return pathNode; }
+	const Vector&						getPathNodeDir() const { return pathDir; }
+	bool								hasPath() const { return path != nullptr; }
+	const Entity*						getAnchor() const { return anchor; }
+	const Vector&						getOffset() const { return offset; }
+	bool								isPickupable() const { return canBePickedUp; }
+	const Rotation&						getLookDir() const { return lookDir; }
 
-	void					setName(const char* _name)						{ name = _name; if(listener) listener->onChangeName(name); }
+	void					setName(const char* _name) { name = _name; if (listener) listener->onChangeName(name); }
 	void					setMat(const glm::mat4& _mat);
-	void					setPos(const Vector& _pos)						{ if( pos != _pos ) { pos = _pos; updateNeeded = true; } }
-	void					setVel(const Vector& _vel)						{ vel = _vel; }
-	void					setNewPos(const Vector& _newPos)				{ newPos = _newPos; }
-	void					setAng(const Quaternion& _ang)					{ if( ang != _ang ) { ang = _ang; updateNeeded = true; } }
-	void					setRot(const Rotation& _rot)					{ rot = _rot; }
-	void					setNewAng(const Quaternion& _newAng)			{ newAng = _newAng; }
+	void					setPos(const Vector& _pos) { if (pos != _pos) { pos = _pos; updateNeeded = true; } }
+	void					setVel(const Vector& _vel) { vel = _vel; }
+	void					setNewPos(const Vector& _newPos) { newPos = _newPos; }
+	void					setAng(const Quaternion& _ang) { if (ang != _ang) { ang = _ang; updateNeeded = true; } }
+	void					setRot(const Rotation& _rot) { rot = _rot; }
+	void					setNewAng(const Quaternion& _newAng) { newAng = _newAng; }
 	void					setScriptStr(const char* _scriptStr);
-	void					setScale(const Vector& _scale)					{ if( scale != _scale ) { scale = _scale; updateNeeded = true; } }
-	void					setFlags(const Uint32 _flags)					{ flags = _flags; }
-	void					setFlag(const Uint32 flag)						{ flags |= flag; }
-	void					resetFlag(const Uint32 flag)					{ flags &= ~flag; }
-	void					toggleFlag(const Uint32 flag)					{ flags ^= flag; }
-	void					setShouldSave(const bool _shouldSave)			{ shouldSave = _shouldSave; }
-	void					setPlayer(Player* _player)						{ player = _player; }
-	void					setFalling(const bool b)						{ falling = b; }
-	void					setLastUpdate(const Uint32 _lastUpdate)			{ lastUpdate = _lastUpdate; }
-	void					setDefName(const char* _defName)				{ defName = _defName; }
-	void					setDefIndex(Uint32 _defIndex)					{ defIndex = _defIndex; }
-	void					setSort(sort_t _sort)							{ sort = _sort; }
-	void					setPickupable(bool _pickupable)					{ canBePickedUp = _pickupable; }
-	void					setLookDir(const Rotation& _ang)				{ lookDir = _ang; }
+	void					setScale(const Vector& _scale) { if (scale != _scale) { scale = _scale; updateNeeded = true; } }
+	void					setFlags(const Uint32 _flags) { flags = _flags; }
+	void					setFlag(const Uint32 flag) { flags |= flag; }
+	void					resetFlag(const Uint32 flag) { flags &= ~flag; }
+	void					toggleFlag(const Uint32 flag) { flags ^= flag; }
+	void					setShouldSave(const bool _shouldSave) { shouldSave = _shouldSave; }
+	void					setPlayer(Player* _player) { player = _player; }
+	void					setFalling(const bool b) { falling = b; }
+	void					setLastUpdate(const Uint32 _lastUpdate) { lastUpdate = _lastUpdate; }
+	void					setDefName(const char* _defName) { defName = _defName; }
+	void					setDefIndex(Uint32 _defIndex) { defIndex = _defIndex; }
+	void					setSort(sort_t _sort) { sort = _sort; }
+	void					setPickupable(bool _pickupable) { canBePickedUp = _pickupable; }
+	void					setLookDir(const Rotation& _ang) { lookDir = _ang; }
 
 	// editor properties
 
-	const bool	isSelected() const							{ return selected; }
-	const bool	isHighlighted() const						{ return highlighted; }
+	const bool	isSelected() const { return selected; }
+	const bool	isHighlighted() const { return highlighted; }
 
-	void	setSelected(const bool _selected)				{ selected = _selected; if(listener) listener->onChangeColor(selected, highlighted); }
-	void	setHighlighted(const bool _highlighted)			{ highlighted = _highlighted; if(listener) listener->onChangeColor(selected, highlighted); }
+	void	setSelected(const bool _selected) { selected = _selected; if (listener) listener->onChangeColor(selected, highlighted); }
+	void	setHighlighted(const bool _highlighted) { highlighted = _highlighted; if (listener) listener->onChangeColor(selected, highlighted); }
 
 	// get game sim that we are living in (if any)
 	// @return the Game* that we are in, or nullptr if we aren't in a game
@@ -320,7 +320,7 @@ public:
 	void update();
 
 	// clears the node pointing to us in the chunk we are occupying
-	void clearChunkNode() { if( chunkNode ) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
+	void clearChunkNode() { if (chunkNode) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
 
 	// clears the chunk nodes of all components
 	void clearAllChunkNodes();
@@ -339,15 +339,15 @@ public:
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByName(const char* name) {
-		if( name == nullptr || strcmp(name,"")==0 ) {
+		if (name == nullptr || strcmp(name, "") == 0) {
 			return nullptr;
 		}
-		for( Uint32 c = 0; c < components.getSize(); ++c ) {
-			if( strcmp( components[c]->getName(), name ) == 0 ) {
+		for (Uint32 c = 0; c < components.getSize(); ++c) {
+			if (strcmp(components[c]->getName(), name) == 0) {
 				return static_cast<T*>(components[c]);
 			} else {
 				T* result = components[c]->findComponentByName<T>(name);
-				if( result ) {
+				if (result) {
 					return static_cast<T*>(result);
 				}
 			}
@@ -360,15 +360,15 @@ public:
 	// @return the component, or nullptr if it could not be found
 	template <typename T>
 	T* findComponentByUID(const Uint32 uid) {
-		if( uid == Component::nuid ) {
+		if (uid == Component::nuid) {
 			return nullptr;
 		}
-		for( Uint32 c = 0; c < components.getSize(); ++c ) {
-			if( components[c]->getUID() == uid ) {
+		for (Uint32 c = 0; c < components.getSize(); ++c) {
+			if (components[c]->getUID() == uid) {
 				return static_cast<T*>(components[c]);
 			} else {
 				T* result = components[c]->findComponentByUID<T>(uid);
-				if( result ) {
+				if (result) {
 					return static_cast<T*>(result);
 				}
 			}
@@ -402,11 +402,11 @@ public:
 	// @param list list to populate
 	template <typename T>
 	void findAllComponents(Component::type_t type, LinkedList<T*>& list) const {
-		for( Uint32 c = 0; c < components.getSize(); ++c ) {
-			if( components[c]->getType() == type ) {
+		for (Uint32 c = 0; c < components.getSize(); ++c) {
+			if (components[c]->getType() == type) {
 				list.addNodeLast(dynamic_cast<T*>(components[c]));
 			}
-			components[c]->findAllComponents(type,list);
+			components[c]->findAllComponents(type, list);
 		}
 	}
 
@@ -414,7 +414,7 @@ public:
 	// @param origin the starting point of the ray
 	// @param dest the ending point of the ray
 	// @return a hit_t structure containing information on the hit object
-	const World::hit_t lineTrace( const Vector& origin, const Vector& dest );
+	const World::hit_t lineTrace(const Vector& origin, const Vector& dest);
 
 	// dispatches the entity's interaction function in LUA.
 	// @param user the entity that interacted with this entity
@@ -463,13 +463,13 @@ public:
 	void setInventoryVisibility(bool visible);
 
 protected:
-	World* world				= nullptr;	// parent world object
-	Script* script				= nullptr;	// scripting engine
-	Player* player				= nullptr;	// player associated with this entity, if any
-	Node<Entity*>* chunkNode	= nullptr;	// pointer to our node in the chunk we are occupying (if any)
+	World* world = nullptr;	// parent world object
+	Script* script = nullptr;	// scripting engine
+	Player* player = nullptr;	// player associated with this entity, if any
+	Node<Entity*>* chunkNode = nullptr;	// pointer to our node in the chunk we are occupying (if any)
 
-	World* newWorld				= nullptr;  // world we are moving to, if any
-	const Entity* anchor		= nullptr;	// entity we are attached to for the transition
+	World* newWorld = nullptr;  // world we are moving to, if any
+	const Entity* anchor = nullptr;	// entity we are attached to for the transition
 	Vector offset;							// offset from the anchor
 
 	Uint32 componentIDs = 0;
@@ -497,9 +497,9 @@ protected:
 	String scriptStr;						// entity script filename
 	bool ranScript = false;					// is true if script has run at least once
 
-	Uint32 uid=0;							// entity id number
-	Uint32 ticks=0;							// lifespan of the entity
-	Uint32 lastUpdate=0;					// time of last remote update of the entity (netplay)
+	Uint32 uid = 0;							// entity id number
+	Uint32 ticks = 0;							// lifespan of the entity
+	Uint32 lastUpdate = 0;					// time of last remote update of the entity (netplay)
 	bool toBeDeleted = false;				// if true, the entity has been marked for deletion at the end of the current frame
 	bool shouldSave = true;					// if true, the entity is saved when the world is saved to a file; if false, it is not
 	bool falling = false;					// when true the entity is off the floor, otherwise they are on the floor
@@ -520,7 +520,7 @@ protected:
 	PathFinder::Path* path = nullptr;
 	bool pathRequested = false;
 };
- 
+
 struct Entity::def_t {
 	def_t() : entity(nullptr) {
 	}

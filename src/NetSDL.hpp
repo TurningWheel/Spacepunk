@@ -18,8 +18,8 @@ public:
 		IPaddress host;
 
 		virtual ~sdlremote_t() {
-			for( Uint32 c = 0; c < parent->remotes.getSize(); ++c ) {
-				if( parent->remotes[c]->id == id ) {
+			for (Uint32 c = 0; c < parent->remotes.getSize(); ++c) {
+				if (parent->remotes[c]->id == id) {
 					parent->remotes.remove(c);
 					break;
 				}
@@ -52,7 +52,7 @@ public:
 	// @param remoteID the remote host to disconnect from
 	// @param inform if true, remote host will be notified of disconnect; otherwise it will not
 	// @return true if the disconnect succeeded, false otherwise
-	virtual bool disconnect(Uint32 remoteID, bool inform=true) override;
+	virtual bool disconnect(Uint32 remoteID, bool inform = true) override;
 
 	// shuts down an open localhost connection, if any are open
 	// @return true if the disconnect succeeded, false otherwise
@@ -111,7 +111,7 @@ public:
 	virtual int handleNetworkPacket(Packet& packet, const char* type, Uint32 remoteID) override;
 
 	// getters & setters
-	const ArrayList<sdlremote_t*>&	getSDLRemoteHosts() const	{ return SDLremotes; }
+	const ArrayList<sdlremote_t*>&	getSDLRemoteHosts() const { return SDLremotes; }
 
 protected:
 	UDPpacket* SDLsendPacket = nullptr;

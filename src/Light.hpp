@@ -41,25 +41,25 @@ public:
 	static const char* materialStr;
 
 	// getters & setters
-	virtual type_t		getType() const override	{ return COMPONENT_LIGHT; }
-	const Vector& 		getColor() const			{ return color; }
-	const float&		getIntensity() const		{ return intensity; }
-	const float&		getRadius() const			{ return radius; }
-	ArrayList<Chunk*>&	getChunksLit()				{ return chunksLit; }
-	const shape_t&		getShape() const			{ return shape; }
-	const bool			isChosen() const			{ return chosen; }
-	const float			getArc() const				{ return arc; }
-	const bool			isShadow() const			{ return shadow; }
-	Uint32				getShadowTicks() const		{ return shadowTicks; }
-	Shadow&				getShadowMap()				{ return shadowMap; }
+	virtual type_t		getType() const override { return COMPONENT_LIGHT; }
+	const Vector& 		getColor() const { return color; }
+	const float&		getIntensity() const { return intensity; }
+	const float&		getRadius() const { return radius; }
+	ArrayList<Chunk*>&	getChunksLit() { return chunksLit; }
+	const shape_t&		getShape() const { return shape; }
+	const bool			isChosen() const { return chosen; }
+	const float			getArc() const { return arc; }
+	const bool			isShadow() const { return shadow; }
+	Uint32				getShadowTicks() const { return shadowTicks; }
+	Shadow&				getShadowMap() { return shadowMap; }
 
-	void	setColor(const Vector& _color)			{ color = _color; }
-	void	setIntensity(const float _intensity)	{ intensity = _intensity; }
-	void	setRadius(const float _radius)			{ radius = _radius; updateNeeded = true; }
-	void	setChosen(const bool _chosen)			{ chosen = _chosen; }
-	void	setShape(const shape_t& _shape)			{ shape = _shape; }
-	void	setArc(const float _arc)				{ arc = _arc; }
-	void	setShadow(const bool _shadow)			{ shadow = _shadow; }
+	void	setColor(const Vector& _color) { color = _color; }
+	void	setIntensity(const float _intensity) { intensity = _intensity; }
+	void	setRadius(const float _radius) { radius = _radius; updateNeeded = true; }
+	void	setChosen(const bool _chosen) { chosen = _chosen; }
+	void	setShape(const shape_t& _shape) { shape = _shape; }
+	void	setArc(const float _arc) { arc = _arc; }
+	void	setShadow(const bool _shadow) { shadow = _shadow; }
 
 	// updates matrices
 	virtual void update() override;

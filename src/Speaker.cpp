@@ -22,14 +22,14 @@ const char* Speaker::materialStr = "assets/editor/speaker/material.json";
 
 Speaker::Speaker(Entity& _entity, Component* _parent) :
 	Component(_entity, _parent) {
-	for( int i=0; i<maxSources; ++i ) {
+	for (int i = 0; i < maxSources; ++i) {
 		sources[i] = 0;
 	}
 
 	name = typeStr[COMPONENT_SPEAKER];
 
 	// add a bbox for editor usage
-	if( mainEngine->isEditorRunning() ) {
+	if (mainEngine->isEditorRunning()) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_SPHERE);
 		bbox->setLocalScale(Vector(16.f));
@@ -47,35 +47,35 @@ Speaker::~Speaker() {
 	stopAllSounds();
 }
 
-int Speaker::playSound( const char* _name, const bool loop, float range ) {
-	if( !_name || strlen(_name) == 0 ) {
+int Speaker::playSound(const char* _name, const bool loop, float range) {
+	if (!_name || strlen(_name) == 0) {
 		return -1;
 	}
-	if( !entity->getWorld() ) {
+	if (!entity->getWorld()) {
 		return -1;
 	}
-	if( !entity->getWorld()->isClientObj() ) {
+	if (!entity->getWorld()->isClientObj()) {
 		return -1;
 	}
 
 	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", 1, _name).get());
-	if( sound ) {
+	if (sound) {
 		int index = maxSources;
-		for( int i=0; i<maxSources; ++i ) {
-			if( sources[i]==0 ) {
+		for (int i = 0; i < maxSources; ++i) {
+			if (sources[i] == 0) {
 				index = i;
 				break;
 			}
 		}
-		if( index==maxSources ) {
-			mainEngine->fmsg(Engine::MSG_WARN,"'%s' cannot play sound '%s', no more available sources.", name.get(), _name);
+		if (index == maxSources) {
+			mainEngine->fmsg(Engine::MSG_WARN, "'%s' cannot play sound '%s', no more available sources.", name.get(), _name);
 			return -1;
 		}
 		alGenSources(1, &sources[index]);
-		alSourcei(sources[index], AL_BUFFER, sound->getBuffer()); 
-		alSourcef(sources[index], AL_PITCH, 1.0f); 
+		alSourcei(sources[index], AL_BUFFER, sound->getBuffer());
+		alSourcef(sources[index], AL_PITCH, 1.0f);
 		alSourcef(sources[index], AL_GAIN, 0.0f);
-		if( loop ) {
+		if (loop) {
 			alSourcei(sources[index], AL_LOOPING, AL_TRUE);
 		} else {
 			alSourcei(sources[index], AL_LOOPING, AL_FALSE);
@@ -96,7 +96,7 @@ int Speaker::playSound( const char* _name, const bool loop, float range ) {
 		alSourcePlay(sources[index]);
 		return index;
 	} else {
-		mainEngine->fmsg(Engine::MSG_WARN,"'%s' could not play sound '%s', sound not cached.", name.get(), _name);
+		mainEngine->fmsg(Engine::MSG_WARN, "'%s' could not play sound '%s', sound not cached.", name.get(), _name);
 		return -1;
 	}
 }
@@ -112,11 +112,11 @@ bool Speaker::isPlaying(const int index) {
 }
 
 bool Speaker::stopSound(const int index) {
-	if( index<0 || index>=maxSources )
+	if (index < 0 || index >= maxSources)
 		return false;
-	if( !sources[index] )
+	if (!sources[index])
 		return false;
-	if( !isPlaying(index) )
+	if (!isPlaying(index))
 		return false;
 	alSourceStop(sources[index]);
 	alDeleteSources(1, &sources[index]);
@@ -126,8 +126,8 @@ bool Speaker::stopSound(const int index) {
 
 bool Speaker::stopAllSounds() {
 	bool result = false;
-	for( int i=0; i<maxSources; ++i ) {
-		if( stopSound(i) ) {
+	for (int i = 0; i < maxSources; ++i) {
+		if (stopSound(i)) {
 			result = true;
 		}
 	}
@@ -136,21 +136,21 @@ bool Speaker::stopAllSounds() {
 
 void Speaker::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
-	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
+	if (!mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho()) {
 		return;
 	}
 
 	// do not render for these fx passes
-	if( camera.getDrawMode() >= Camera::DRAW_GLOW ) {
+	if (camera.getDrawMode() >= Camera::DRAW_GLOW) {
 		return;
 	}
 
 	glm::mat4 matrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -16.f, -4.f));
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
-	if( mesh && material ) {
+	if (mesh && material) {
 		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat * matrix);
-		if( shader ) {
+		if (shader) {
 			mesh->draw(camera, this, shader);
 		}
 	}
@@ -162,11 +162,11 @@ void Speaker::process() {
 	Component::process();
 
 	// update sound sources
-	for( int i=0; i<maxSources; ++i ) {
-		if( sources[i] ) {
+	for (int i = 0; i < maxSources; ++i) {
+		if (sources[i]) {
 			ALint state = AL_STOPPED;
-			alGetSourcei(sources[i],AL_SOURCE_STATE,&state);
-			if( state==AL_PLAYING ) {
+			alGetSourcei(sources[i], AL_SOURCE_STATE, &state);
+			if (state == AL_PLAYING) {
 				auto& m = gMat;
 				ALfloat orientation[6] = { m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2] };
 
@@ -178,17 +178,17 @@ void Speaker::process() {
 				bool inWorld = false;
 				Camera* camera = nullptr;
 				Mixer* mixer = nullptr;
-				if( entity->getWorld() != nullptr ) {
-					if( !entity->getWorld()->isShowTools() || !mainEngine->isEditorRunning() ) {
+				if (entity->getWorld() != nullptr) {
+					if (!entity->getWorld()->isShowTools() || !mainEngine->isEditorRunning()) {
 						Client* client = mainEngine->getLocalClient();
-						if( client ) {
+						if (client) {
 							mixer = client->getMixer();
-							if( mixer ) {
+							if (mixer) {
 								camera = mixer->getListener();
-								if( camera ) {
+								if (camera) {
 									const Entity* listener = camera->getEntity();
-									if( listener ) {
-										if( listener->getWorld() == entity->getWorld() ) {
+									if (listener) {
+										if (listener->getWorld() == entity->getWorld()) {
 											inWorld = true;
 										}
 									}
@@ -199,7 +199,7 @@ void Speaker::process() {
 				}
 
 				if (inWorld) {
-					if( camera->seesEntity(*entity, camera->getClipFar(), cvar_speakerCull.toInt()) ) {
+					if (camera->seesEntity(*entity, camera->getClipFar(), cvar_speakerCull.toInt())) {
 						alSourcei(sources[i], AL_DIRECT_FILTER, 0);
 						alSourcef(sources[i], AL_GAIN, 1.f);
 					} else {
@@ -223,10 +223,10 @@ void Speaker::load(FILE* fp) {
 	Uint32 len = 0;
 	char* defaultSoundStr = nullptr;
 	Engine::freadl(&len, sizeof(Uint32), 1, fp, nullptr, "Speaker::load()");
-	if( len > 0 && len < 128 ) {
-		defaultSoundStr = (char *) calloc( len+1, sizeof(char));
+	if (len > 0 && len < 128) {
+		defaultSoundStr = (char *)calloc(len + 1, sizeof(char));
 		Engine::freadl(defaultSoundStr, sizeof(char), len, fp, nullptr, "Speaker::load()");
-	} else if( len >= 128 ) {
+	} else if (len >= 128) {
 		assert(0);
 	}
 	defaultSound = defaultSoundStr;
@@ -238,15 +238,15 @@ void Speaker::load(FILE* fp) {
 	Engine::freadl(&reserved, sizeof(Uint32), 1, fp, nullptr, "Speaker::load()");
 
 	// new data 2017/12/04
-	if( reserved == 1 ) {
+	if (reserved == 1) {
 		Engine::freadl(&defaultRange, sizeof(float), 1, fp, nullptr, "Speaker::load()");
 
 		reserved = 0;
 		Engine::freadl(&reserved, sizeof(Uint32), 1, fp, nullptr, "Speaker::load()");
 	}
 
-	if( !defaultSound.empty() ) {
-		playSound(defaultSound,defaultLoop,defaultRange);
+	if (!defaultSound.empty()) {
+		playSound(defaultSound, defaultLoop, defaultRange);
 	}
 
 	loadSubComponents(fp);
@@ -261,9 +261,9 @@ void Speaker::serialize(FileInterface * file) {
 	file->property("defaultLoop", defaultLoop);
 	file->property("defaultRange", defaultRange);
 
-	if( file->isReading() ) {
-		if( !defaultSound.empty() ) {
-			playSound(defaultSound,defaultLoop,defaultRange);
+	if (file->isReading()) {
+		if (!defaultSound.empty()) {
+			playSound(defaultSound, defaultLoop, defaultRange);
 		}
 	}
 }

@@ -75,46 +75,46 @@ public:
 	};
 
 	// getters & setters
-	Uint32					getX() const							{ return x; }
-	Uint32					getY() const							{ return y; }
-	Chunk*&					getChunk()								{ return chunk; }
-	const Sint32&			getCeilingHeight() const				{ return ceilingHeight; }
-	const Sint32&			getFloorHeight() const					{ return floorHeight; }
-	Uint32					getUpperTexture(side_t side) const		{ return upperTextures[side]; }
-	Uint32					getLowerTexture(side_t side) const		{ return lowerTextures[side]; }
-	Uint32					getCeilingTexture() const				{ return ceilingTexture; }
-	Uint32					getFloorTexture() const					{ return floorTexture; }
-	const side_t&			getCeilingSlopeSide() const				{ return ceilingSlopeSide; }
-	const Sint32&			getCeilingSlopeSize() const				{ return ceilingSlopeSize; }
-	const side_t&			getFloorSlopeSide() const				{ return floorSlopeSide; }
-	const Sint32&			getFloorSlopeSize() const				{ return floorSlopeSize; }
-	LinkedList<vertex_t>&	getCeilingVertices()					{ return ceilingVertices; }
-	LinkedList<vertex_t>&	getFloorVertices()						{ return floorVertices; }
-	LinkedList<vertex_t>&	getLowerVertices(const side_t side)		{ return lowerVertices[side]; }
-	LinkedList<vertex_t>&	getUpperVertices(const side_t side)		{ return upperVertices[side]; }
-	const bool				isChanged() const						{ return changed; }
-	const Uint32			getNumVertices() const					{ return numVertices; }
-	bool					isLocked() const						{ return locked; }
-	const shadervars_t&		getShaderVars() const					{ return shaderVars; }
+	Uint32					getX() const { return x; }
+	Uint32					getY() const { return y; }
+	Chunk*&					getChunk() { return chunk; }
+	const Sint32&			getCeilingHeight() const { return ceilingHeight; }
+	const Sint32&			getFloorHeight() const { return floorHeight; }
+	Uint32					getUpperTexture(side_t side) const { return upperTextures[side]; }
+	Uint32					getLowerTexture(side_t side) const { return lowerTextures[side]; }
+	Uint32					getCeilingTexture() const { return ceilingTexture; }
+	Uint32					getFloorTexture() const { return floorTexture; }
+	const side_t&			getCeilingSlopeSide() const { return ceilingSlopeSide; }
+	const Sint32&			getCeilingSlopeSize() const { return ceilingSlopeSize; }
+	const side_t&			getFloorSlopeSide() const { return floorSlopeSide; }
+	const Sint32&			getFloorSlopeSize() const { return floorSlopeSize; }
+	LinkedList<vertex_t>&	getCeilingVertices() { return ceilingVertices; }
+	LinkedList<vertex_t>&	getFloorVertices() { return floorVertices; }
+	LinkedList<vertex_t>&	getLowerVertices(const side_t side) { return lowerVertices[side]; }
+	LinkedList<vertex_t>&	getUpperVertices(const side_t side) { return upperVertices[side]; }
+	const bool				isChanged() const { return changed; }
+	const Uint32			getNumVertices() const { return numVertices; }
+	bool					isLocked() const { return locked; }
+	const shadervars_t&		getShaderVars() const { return shaderVars; }
 
-	void	setX(Uint32 _x)													{ x = _x; }
-	void	setY(Uint32 _y)													{ y = _y; }
-	void	setWorld(TileWorld& _world)										{ world = &_world; }
-	void	setChunk(Chunk& _chunk)											{ chunk = &_chunk; }
-	void	setCeilingHeight(Sint32 _ceilingHeight)							{ ceilingHeight = _ceilingHeight; }
-	void	setFloorHeight(Sint32 _floorHeight)								{ floorHeight = _floorHeight; }
-	void	setUpperTexture(side_t side, Uint32 texture)					{ upperTextures[side] = texture; }
-	void	setLowerTexture(side_t side, Uint32 texture)					{ lowerTextures[side] = texture; }
-	void	setCeilingTexture(Uint32 texture)								{ ceilingTexture = texture; }
-	void	setFloorTexture(Uint32 texture)									{ floorTexture = texture; }
-	void	setCeilingSlopeSide(side_t side)								{ ceilingSlopeSide = side; }
-	void	setCeilingSlopeSize(Sint32 size)								{ ceilingSlopeSize = size; }
-	void	setFloorSlopeSide(side_t side)									{ floorSlopeSide = side; }
-	void	setFloorSlopeSize(Sint32 size)									{ floorSlopeSize = size; }
-	void	setDynamicsWorld(btDiscreteDynamicsWorld& _dynamicsWorld)		{ dynamicsWorld = &_dynamicsWorld; }
-	void	setChanged(bool _changed)										{ changed = _changed; }
-	void	setLocked(bool _locked)											{ locked = _locked; }
-	void	setShaderVars(const shadervars_t& src)							{ shaderVars = src; }
+	void	setX(Uint32 _x) { x = _x; }
+	void	setY(Uint32 _y) { y = _y; }
+	void	setWorld(TileWorld& _world) { world = &_world; }
+	void	setChunk(Chunk& _chunk) { chunk = &_chunk; }
+	void	setCeilingHeight(Sint32 _ceilingHeight) { ceilingHeight = _ceilingHeight; }
+	void	setFloorHeight(Sint32 _floorHeight) { floorHeight = _floorHeight; }
+	void	setUpperTexture(side_t side, Uint32 texture) { upperTextures[side] = texture; }
+	void	setLowerTexture(side_t side, Uint32 texture) { lowerTextures[side] = texture; }
+	void	setCeilingTexture(Uint32 texture) { ceilingTexture = texture; }
+	void	setFloorTexture(Uint32 texture) { floorTexture = texture; }
+	void	setCeilingSlopeSide(side_t side) { ceilingSlopeSide = side; }
+	void	setCeilingSlopeSize(Sint32 size) { ceilingSlopeSize = size; }
+	void	setFloorSlopeSide(side_t side) { floorSlopeSide = side; }
+	void	setFloorSlopeSize(Sint32 size) { floorSlopeSize = size; }
+	void	setDynamicsWorld(btDiscreteDynamicsWorld& _dynamicsWorld) { dynamicsWorld = &_dynamicsWorld; }
+	void	setChanged(bool _changed) { changed = _changed; }
+	void	setLocked(bool _locked) { locked = _locked; }
+	void	setShaderVars(const shadervars_t& src) { shaderVars = src; }
 
 	// load the shader that we will use to draw the tile with
 	// @param world the world object that contains the scene
@@ -190,7 +190,7 @@ public:
 	// 2-5 = upperVertices(SIDE_EAST) ... upperVertices(SIDE_NORTH)
 	// 6-9 = lowerVertices(SIDE_SOUTH) ... lowerVertices(SIDE_NORTH)
 	// @return a pointer to the specified list of vertices, or nullptr if the given int doesn't match with a list
-	LinkedList<vertex_t>* intForVertices( const int i );
+	LinkedList<vertex_t>* intForVertices(const int i);
 
 	// determines if the tile is selected by testing it against the selection rectangle in its parent world
 	// @return true if the tile is selected, false otherwise
@@ -213,7 +213,7 @@ public:
 		floorSlopeSize = src.getFloorSlopeSize();
 
 		// wall data
-		for( Uint32 c = 0; c < SIDE_TYPE_LENGTH; ++c ) {
+		for (Uint32 c = 0; c < SIDE_TYPE_LENGTH; ++c) {
 			side_t side = static_cast<side_t>(c);
 			upperTextures[side] = src.getUpperTexture(side);
 			lowerTextures[side] = src.getLowerTexture(side);

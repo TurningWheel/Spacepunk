@@ -33,11 +33,11 @@ public:
 	// @param loop if true, the sound will loop when played; otherwise, it will not
 	// @param range max distance the sound will play over
 	// @return the sound source index, or -1 for failure
-	int playSound( const char* name, const bool loop, const float range );
+	int playSound(const char* name, const bool loop, const float range);
 
 	// stops the given sound if it is playing
 	// @return true if the sound was successfully stopped, otherwise return false
-	bool stopSound( const int index );
+	bool stopSound(const int index);
 
 	// stops all sounds playing on the speaker
 	// @return true if any sound was stopped, otherwise false
@@ -56,14 +56,14 @@ public:
 	bool isPlaying(const int index);
 
 	// getters & setters
-	virtual type_t		getType() const override		{ return COMPONENT_SPEAKER; }
-	const char*			getDefaultSound() const			{ return defaultSound.get(); }
-	bool				isDefaultLoop() const			{ return defaultLoop; }
-	float				getDefaultRange() const			{ return defaultRange; }
+	virtual type_t		getType() const override { return COMPONENT_SPEAKER; }
+	const char*			getDefaultSound() const { return defaultSound.get(); }
+	bool				isDefaultLoop() const { return defaultLoop; }
+	float				getDefaultRange() const { return defaultRange; }
 
-	void		setDefaultSound(const char* name)		{ defaultSound = name; }
-	void		setDefaultLoop(const bool b)			{ defaultLoop = b; }
-	void		setDefaultRange(const float _range)		{ defaultRange = _range; }
+	void		setDefaultSound(const char* name) { defaultSound = name; }
+	void		setDefaultLoop(const bool b) { defaultLoop = b; }
+	void		setDefaultRange(const float _range) { defaultRange = _range; }
 
 	Speaker& operator=(const Speaker& src) {
 		defaultSound = src.defaultSound;

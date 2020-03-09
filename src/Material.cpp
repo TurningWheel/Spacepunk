@@ -42,40 +42,40 @@ unsigned int Material::bindTextures(texturekind_t textureKind) {
 			glowTextures.push(image);
 		}
 	}
-	ArrayList<Image*>& images = (textureKind==STANDARD) ? stdTextures : glowTextures;
+	ArrayList<Image*>& images = (textureKind == STANDARD) ? stdTextures : glowTextures;
 	unsigned int textureNum = 0;
 
 	// bind normal textures
-	if( images.getSize()==0 ) {
+	if (images.getSize() == 0) {
 		Client* client = mainEngine->getLocalClient();
-		if( !client ) {
+		if (!client) {
 			return 0;
 		}
 		Renderer* renderer = client->getRenderer();
-		if( !renderer ) {
+		if (!renderer) {
 			return 0;
-		} else if( !renderer->isInitialized() ) {
+		} else if (!renderer->isInitialized()) {
 			return 0;
 		}
 
 		glUniform1i(shader.getUniformLocation("gTexture"), 0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D,renderer->getNullImage()->getTexID());
+		glBindTexture(GL_TEXTURE_2D, renderer->getNullImage()->getTexID());
 		++textureNum;
-	} else if( images.getSize()==1 ) {
+	} else if (images.getSize() == 1) {
 		glUniform1i(shader.getUniformLocation("gTexture"), 0);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D,images[0]->getTexID());
+		glBindTexture(GL_TEXTURE_2D, images[0]->getTexID());
 		++textureNum;
-	} else if( images.getSize()>1 ) {
-		for( Uint32 index = 0; index < images.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
+	} else if (images.getSize() > 1) {
+		for (Uint32 index = 0; index < images.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum) {
 			Image* image = images[index];
 
 			char buf[32] = { 0 };
-			snprintf(buf,32,"gTexture[%d]",(int)index);
+			snprintf(buf, 32, "gTexture[%d]", (int)index);
 
 			glUniform1i(shader.getUniformLocation(buf), textureNum);
-			glActiveTexture(GL_TEXTURE0+textureNum);
+			glActiveTexture(GL_TEXTURE0 + textureNum);
 			glBindTexture(GL_TEXTURE_2D, image->getTexID());
 		}
 	}
@@ -89,21 +89,21 @@ unsigned int Material::bindTextures(texturekind_t textureKind) {
 	}
 
 	// bind cubemap textures
-	if( cubemaps.getSize() == 1 ) {
+	if (cubemaps.getSize() == 1) {
 		glUniform1i(shader.getUniformLocation("gCubemap"), textureNum);
 		glActiveTexture(GL_TEXTURE0 + std::min(textureNum, (unsigned int)GL_MAX_TEXTURE_IMAGE_UNITS));
-		glBindTexture(GL_TEXTURE_CUBE_MAP,cubemaps[0]->getTexID());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemaps[0]->getTexID());
 		++textureNum;
-	} else if( cubemaps.getSize() > 1 ) {
-		for( Uint32 index = 0; index < cubemaps.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum ) {
+	} else if (cubemaps.getSize() > 1) {
+		for (Uint32 index = 0; index < cubemaps.getSize() && textureNum < GL_MAX_TEXTURE_IMAGE_UNITS; ++index, ++textureNum) {
 			Cubemap* cubemap = cubemaps[index];
 
 			char buf[32] = { 0 };
-			snprintf(buf,32,"gCubemap[%d]",(int)index);
+			snprintf(buf, 32, "gCubemap[%d]", (int)index);
 
 			glUniform1i(shader.getUniformLocation(buf), textureNum);
-			glActiveTexture(GL_TEXTURE0+textureNum);
-			glBindTexture(GL_TEXTURE_CUBE_MAP,cubemap->getTexID());
+			glActiveTexture(GL_TEXTURE0 + textureNum);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap->getTexID());
 		}
 	}
 

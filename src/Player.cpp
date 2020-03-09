@@ -77,7 +77,7 @@ Player::~Player() {
 
 void Player::setEntity(Entity* _entity) {
 	entity = _entity;
-	if( entity ) {
+	if (entity) {
 		models = entity->findComponentByName<Component>("models");
 		head = entity->findComponentByName<Model>("Head");
 		torso = entity->findComponentByName<Model>("Torso");
@@ -88,20 +88,20 @@ void Player::setEntity(Entity* _entity) {
 		rTool = entity->findComponentByName<Model>("RightTool");
 		lTool = entity->findComponentByName<Model>("LeftTool");
 		lamp = entity->findComponentByName<Light>("Lamp");
-		if( !models || !bbox || !camera ) {
-			mainEngine->fmsg(Engine::MSG_WARN,"failed to setup player for third party client: missing bodypart");
+		if (!models || !bbox || !camera) {
+			mainEngine->fmsg(Engine::MSG_WARN, "failed to setup player for third party client: missing bodypart");
 		}
 	}
 }
 
 bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
-	if( entity ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: already spawned");
+	if (entity) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to spawn player: already spawned");
 		return false;
 	}
 
 	Uint32 uid;
-	if( _world.isClientObj() && clientID == invalidID ) {
+	if (_world.isClientObj() && clientID == invalidID) {
 		// this is for clients, and causes the entity to get a non-canonical uid.
 		uid = UINT32_MAX - 1;
 		while (_world.getEntities().find(uid) != nullptr) {
@@ -114,13 +114,13 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 
 	// create 
 	const Entity::def_t* def = Entity::findDef("Player");
-	if( def ) {
+	if (def) {
 		entity = Entity::spawnFromDef(&_world, *def, pos, ang, uid);
 	} else {
 		entity = nullptr;
 	}
-	if( !entity ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: spawn from def failed");
+	if (!entity) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to spawn player: spawn from def failed");
 		return false;
 	}
 	entity->setShouldSave(false);
@@ -137,8 +137,8 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 	rTool = entity->findComponentByName<Model>("RightTool");
 	lTool = entity->findComponentByName<Model>("LeftTool");
 	lamp = entity->findComponentByName<Light>("Lamp");
-	if( !models || !bbox || !camera ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: missing bodypart");
+	if (!models || !bbox || !camera) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to spawn player: missing bodypart");
 		entity->remove();
 		entity = nullptr;
 		return false;
@@ -152,15 +152,15 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 
 	// setup collision mesh and check that we spawned in a valid position
 	entity->update();
-	if( bbox->checkCollision() ) {
-		mainEngine->fmsg(Engine::MSG_ERROR,"failed to spawn player: no room at spawn location");
+	if (bbox->checkCollision()) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to spawn player: no room at spawn location");
 		entity->remove();
 		return false;
 	}
 
 	entity->setFlag(static_cast<int>(Entity::flag_t::FLAG_UPDATE));
-	if( _world.isClientObj() ) {
-		if( clientID == invalidID ) {
+	if (_world.isClientObj()) {
+		if (clientID == invalidID) {
 			Rect<Sint32> rect;
 			rect.x = 0;
 			rect.y = 0;
@@ -179,9 +179,9 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 			camera->setWin(rect);
 		}
 
-		mainEngine->fmsg(Engine::MSG_INFO,"Client spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
+		mainEngine->fmsg(Engine::MSG_INFO, "Client spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
 	} else {
-		mainEngine->fmsg(Engine::MSG_INFO,"Server spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
+		mainEngine->fmsg(Engine::MSG_INFO, "Server spawned player (%d) at (%1.f, %.1f, %.1f)", serverID, entity->getPos().x, entity->getPos().y, entity->getPos().z);
 	}
 
 	playerAng = entity->getAng();
@@ -319,7 +319,7 @@ void Player::control() {
 		return;
 	}
 
-	if( client->isConsoleActive() || cvar_mouselook.toInt() < 0 ) {
+	if (client->isConsoleActive() || cvar_mouselook.toInt() < 0) {
 		mainEngine->setMouseRelative(false);
 	} else {
 		mainEngine->setMouseRelative(true);
@@ -347,18 +347,18 @@ void Player::control() {
 	buttonLeanRight = 0.f;
 	buttonJump = false;
 	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling <= totalHeight : false;
-	if( !client->isConsoleActive() ) {
+	if (!client->isConsoleActive()) {
 		buttonCrouch |= input.binary("MoveDown");
 
-		if( input.binary("MoveUp") && !jumped ) {
-			if( nearestCeiling > totalHeight && !buttonCrouch ) {
+		if (input.binary("MoveUp") && !jumped) {
+			if (nearestCeiling > totalHeight && !buttonCrouch) {
 				buttonJump = true;
 			}
-		} else if( !input.binary("MoveUp") && jumped ) {
+		} else if (!input.binary("MoveUp") && jumped) {
 			jumped = false;
 		}
 
-		if( !input.binary("Lean") ) {
+		if (!input.binary("Lean")) {
 			buttonRight = input.analog("MoveRight");
 			buttonLeft = input.analog("MoveLeft");
 			buttonForward = input.analog("MoveForward");
@@ -367,26 +367,26 @@ void Player::control() {
 			buttonLeanRight = input.analog("LeanRight");
 
 			// restrict inputs to circle
-			float dir = atan2f( buttonForward - buttonBackward, buttonRight - buttonLeft);
+			float dir = atan2f(buttonForward - buttonBackward, buttonRight - buttonLeft);
 			float cosDir = fabs(cosf(dir));
 			float sinDir = fabs(sinf(dir));
-			buttonRight = min(cosDir,buttonRight);
-			buttonLeft = min(cosDir,buttonLeft);
-			buttonForward = min(sinDir,buttonForward);
-			buttonBackward = min(sinDir,buttonBackward);
+			buttonRight = min(cosDir, buttonRight);
+			buttonLeft = min(cosDir, buttonLeft);
+			buttonForward = min(sinDir, buttonForward);
+			buttonBackward = min(sinDir, buttonBackward);
 		} else {
 			buttonLeanLeft = input.analog("MoveLeft");
 			buttonLeanRight = input.analog("MoveRight");
 		}
 	}
-	if( buttonRight || buttonLeft || buttonForward || buttonBackward ) {
+	if (buttonRight || buttonLeft || buttonForward || buttonBackward) {
 		moving = true;
 	} else {
 		moving = false;
 	}
 
 	// animation
-	if( buttonCrouch ) {
+	if (buttonCrouch) {
 		crouching = true;
 	} else {
 		crouching = false;
@@ -397,9 +397,9 @@ void Player::control() {
 
 	// direction vectors
 	Vector forward = playerAng.toVector();
-	Vector right = (playerAng * Quaternion(Rotation(PI/2.f, 0.f, 0.f))).toVector();
-	Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
-	Vector up = (playerAng * Quaternion(Rotation(0.f, -PI/2.f, 0.f))).toVector();
+	Vector right = (playerAng * Quaternion(Rotation(PI / 2.f, 0.f, 0.f))).toVector();
+	Vector down = (playerAng * Quaternion(Rotation(0.f, PI / 2.f, 0.f))).toVector();
+	Vector up = (playerAng * Quaternion(Rotation(0.f, -PI / 2.f, 0.f))).toVector();
 
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
@@ -420,8 +420,8 @@ void Player::control() {
 		vel += up * buttonJump * speedFactor * timeFactor;
 		vel -= up * buttonCrouch * speedFactor * timeFactor;
 	} else {
-		if( entity->isFalling() ) {
-			if( nearestFloor <= middleOfBody && vel.normal().dot(down) > 0.f) {
+		if (entity->isFalling()) {
+			if (nearestFloor <= middleOfBody && vel.normal().dot(down) > 0.f) {
 				const float slope = cosf(cvar_slopeLimit.toFloat() * PI / 180.f);
 				if (up.dot(floorHit.normal) > slope) {
 					entity->setFalling(false);
@@ -431,7 +431,7 @@ void Player::control() {
 				vel += down * cvar_gravity.toFloat() * timeFactor;
 			}
 		} else {
-			if( buttonJump ) {
+			if (buttonJump) {
 				jumped = true;
 				entity->setFalling(true);
 				vel += up * cvar_jumpPower.toFloat();
@@ -457,7 +457,7 @@ void Player::control() {
 	vel -= right * buttonLeft * speedFactor * timeFactor;
 
 	// friction
-	if( !entity->isFalling() ) {
+	if (!entity->isFalling()) {
 		vel *= .9;
 	}
 	rot.yaw *= .5;
@@ -465,11 +465,11 @@ void Player::control() {
 	rot.roll *= .5;
 
 	// looking
-	if( !client->isConsoleActive() ) {
-		if( mainEngine->isMouseRelative() && cvar_mouselook.toInt() == localID ) {
+	if (!client->isConsoleActive()) {
+		if (mainEngine->isMouseRelative() && cvar_mouselook.toInt() == localID) {
 			float mousex = mainEngine->getMouseMoveX();
 			float mousey = mainEngine->getMouseMoveY();
-			
+
 			rot.yaw += mousex * timeFactor * cvar_mouseSpeed.toFloat();
 			rot.pitch += mousey * timeFactor  * cvar_mouseSpeed.toFloat() * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 		}
@@ -532,7 +532,7 @@ void Player::control() {
 
 	// orient to ground
 	if (cvar_wallWalk.toInt() && !cvar_zeroGravity.toInt()) {
-		if (nearestFloor <= standScale.z+16.f && !up.close(floorHit.normal)) {
+		if (nearestFloor <= standScale.z + 16.f && !up.close(floorHit.normal)) {
 			if (floorHit.normal.lengthSquared() > 0.f) {
 				const float dot = up.dot(floorHit.normal);
 				const float slopeLimit = cosf(cvar_wallWalkLimit.toFloat() * PI / 180.f);
@@ -550,7 +550,7 @@ void Player::control() {
 					orienting = true;
 					orient = 0.f;
 
-					Vector down = (playerAng * Quaternion(Rotation(0.f, PI/2.f, 0.f))).toVector();
+					Vector down = (playerAng * Quaternion(Rotation(0.f, PI / 2.f, 0.f))).toVector();
 					vel -= vel * down.absolute();
 				}
 			}
@@ -570,9 +570,9 @@ void Player::control() {
 	}
 
 	//Interacting with entities.
-	if ( !client->isConsoleActive() ) {
+	if (!client->isConsoleActive()) {
 		World* world = entity->getWorld();
-		if(camera && world)
+		if (camera && world)
 		{
 			if (input.binaryToggle("Interact")) {
 				if (holdingInteract)
@@ -613,8 +613,7 @@ void Player::control() {
 						}
 					}
 				}
-			}
-			else
+			} else
 			{
 				holdingInteract = false;
 
@@ -652,7 +651,7 @@ void Player::control() {
 		Uint32 bone = lTool->findBoneIndex("emitter");
 		glm::mat4 mat = lTool->getGlobalMat();
 		if (bone != UINT32_MAX) {
-			 mat *= lTool->findBone(bone);
+			mat *= lTool->findBone(bone);
 		}
 		auto red = WideVector(1.f, 0.f, 0.f, 1.f);
 		lTool->shootLaser(mat, red, 8.f, 20.f);
@@ -678,7 +677,7 @@ void Player::control() {
 
 void Player::updateCamera() {
 	Client* client = mainEngine->getLocalClient();
-	if( !entity || !client ) {
+	if (!entity || !client) {
 		return;
 	}
 
@@ -686,7 +685,7 @@ void Player::updateCamera() {
 
 	bobAngle += PI / 15.f;
 	if (bobAngle > PI*2.f) {
-		bobAngle -= PI*2.f;
+		bobAngle -= PI * 2.f;
 	}
 	if (moving && cvar_enableBob.toInt()) {
 		bobLength = min(bobLength + 0.1f, 1.f);
@@ -695,7 +694,7 @@ void Player::updateCamera() {
 	}
 
 	// move camera
-	if( camera ) {
+	if (camera) {
 		camera->setLocalPos(originalCameraPos);
 		camera->setLocalAng(entity->getLookDir());
 
@@ -703,26 +702,26 @@ void Player::updateCamera() {
 		if (head) {
 			head->updateSkin();
 			headBone = head->findBoneIndex("Bone_Head");
-			if( headBone != UINT32_MAX ) {
+			if (headBone != UINT32_MAX) {
 				auto mat = head->findBone(headBone);
-				auto pos = Vector( mat[3][0], mat[3][2], -mat[3][1] );
+				auto pos = Vector(mat[3][0], mat[3][2], -mat[3][1]);
 				camera->setLocalPos(pos + models->getLocalPos());
 			}
 		}
 
-		if( localID == 0 ) {
+		if (localID == 0) {
 			client->getMixer()->setListener(camera);
 		}
 
 		int localPlayerCount = client->numLocalPlayers();
 
 		Rect<Sint32> rect;
-		if( localPlayerCount < 2 ) {
+		if (localPlayerCount < 2) {
 			rect.x = 0;
 			rect.w = mainEngine->getXres();
 			rect.y = 0;
 			rect.h = mainEngine->getYres();
-		} else if( localPlayerCount < 3 ) {
+		} else if (localPlayerCount < 3) {
 			rect.x = 0;
 			rect.w = mainEngine->getXres();
 			rect.y = (localID % 2) * (mainEngine->getYres() / 2);
@@ -734,7 +733,7 @@ void Player::updateCamera() {
 			rect.h = mainEngine->getYres() / 2;
 		}
 		camera->setWin(rect);
-		if( headBone != UINT32_MAX ) {
+		if (headBone != UINT32_MAX) {
 			camera->translate(Vector(16.f, 0.f, 0.f));
 		}
 		if (cvar_enableBob.toInt()) {
@@ -745,7 +744,7 @@ void Player::updateCamera() {
 }
 
 bool Player::despawn() {
-	if( !entity ) {
+	if (!entity) {
 		return false;
 	}
 	entity->remove();
@@ -754,7 +753,7 @@ bool Player::despawn() {
 }
 
 void Player::onEntityDeleted(Entity* _entity) {
-	if( entity == _entity ) {
+	if (entity == _entity) {
 		entity = nullptr;
 	}
 	return;

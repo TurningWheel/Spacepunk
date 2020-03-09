@@ -34,7 +34,7 @@ enum class EFileFormat {
 class FileInterface {
 public:
 	virtual ~FileInterface() {}
-	
+
 	// @return true if this interface is reading data from a file, false if it is writing
 	virtual bool isReading() const = 0;
 
@@ -90,7 +90,7 @@ public:
 	// Serialize a pointer by dereferencing it
 	// @param v the pointer to dereference and serialize
 	template<typename T>
-	void value (T*& v) {
+	void value(T*& v) {
 		if (isReading()) {
 			v = new T();
 		}
@@ -101,7 +101,7 @@ public:
 	// @param t the enum value to serialize
 	template<typename T>
 	typename std::enable_if<std::is_enum<T>::value, void>::type
-	value(T& v) {
+		value(T& v) {
 		typename std::underlying_type<T>::type temp = v;
 		value(temp);
 		v = (T)temp;
@@ -111,16 +111,16 @@ public:
 	// @param v the object to serialize
 	template<typename T>
 	typename std::enable_if<std::is_class<T>::value, void>::type
-	value(T& v) {
+		value(T& v) {
 		beginObject();
 		v.serialize(this);
 		endObject();
 	}
-	
+
 	// Serializes a fixed-size native array
 	// @param v array to serialize
 	template<typename T, Uint32 Size, typename... Args>
-	void value(T (&v)[Size], Args ... args) {
+	void value(T(&v)[Size], Args ... args) {
 		Uint32 size = Size;
 		beginArray(size);
 		assert(size == Size);

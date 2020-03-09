@@ -16,8 +16,8 @@ public:
 	int play(const bool loop);
 
 	// getters & setters
-	virtual const type_t	getType() const		{ return ASSET_SOUND; }
-	const ALuint			getBuffer() const	{ return buffer; }
+	virtual const type_t	getType() const { return ASSET_SOUND; }
+	const ALuint			getBuffer() const { return buffer; }
 
 private:
 	ALuint buffer = 0;

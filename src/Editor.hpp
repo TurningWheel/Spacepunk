@@ -62,7 +62,7 @@ public:
 	// opens the entity add component window
 	// @param uid the uid of the component which will get the new component
 	void buttonEntityAddComponent(unsigned int uid);
-		
+
 	// confirms creation of a new world
 	void buttonNewConfirm();
 
@@ -239,38 +239,38 @@ public:
 	void draw(Renderer& renderer);
 
 	// getters & setters
-	const bool				isInitialized() const				{ return initialized; }
-	const bool				isCeilingMode() const				{ return ceilingMode; }
-	Sint32					getEditingMode() const				{ return static_cast<Sint32>(editingMode); }
-	const Uint32			getHighlightedObj() const			{ return highlightedObj; }
-	Sint32					getWidgetMode() const				{ return static_cast<Sint32>(widgetMode); }
-	const int				getTextureSide() const				{ return textureSide; }
-	const Camera*			getEditingCamera() const			{ return editingCamera; }
-	const Camera*			getMinimapCamera() const			{ return minimap; }
-	const char*				getTextureUnderMouse() const		{ return textureUnderMouse; }
-	const bool				isTextureSelectorActive() const		{ return textureSelectorActive; }
-	const bool				isFullscreen() const				{ return fullscreen; }
+	const bool				isInitialized() const { return initialized; }
+	const bool				isCeilingMode() const { return ceilingMode; }
+	Sint32					getEditingMode() const { return static_cast<Sint32>(editingMode); }
+	const Uint32			getHighlightedObj() const { return highlightedObj; }
+	Sint32					getWidgetMode() const { return static_cast<Sint32>(widgetMode); }
+	const int				getTextureSide() const { return textureSide; }
+	const Camera*			getEditingCamera() const { return editingCamera; }
+	const Camera*			getMinimapCamera() const { return minimap; }
+	const char*				getTextureUnderMouse() const { return textureUnderMouse; }
+	const bool				isTextureSelectorActive() const { return textureSelectorActive; }
+	const bool				isFullscreen() const { return fullscreen; }
 
-	void	setHighlightedObj(const Uint32 obj)					{ highlightedObj = obj; highlightedObjManuallySet = true; }
-	void	setWidgetMode(const Uint32 _widgetMode)				{ widgetMode = static_cast<widgetmode_t>(_widgetMode); }
-	void	setCeilingMode(const bool _ceilingMode)				{ ceilingMode = _ceilingMode; }
-	void	setEditingMode(const Uint32 _editingMode)			{ editingMode = static_cast<editingmode_t>(_editingMode); }
-	void	setTextureSide(const int _textureSide) 				{ textureSide = _textureSide; }
-	void	setTextureSelectorActive(const bool _b)				{ textureSelectorActive = _b; }
-	void	setFullscreen(const bool _b)						{ fullscreen = _b; }
+	void	setHighlightedObj(const Uint32 obj) { highlightedObj = obj; highlightedObjManuallySet = true; }
+	void	setWidgetMode(const Uint32 _widgetMode) { widgetMode = static_cast<widgetmode_t>(_widgetMode); }
+	void	setCeilingMode(const bool _ceilingMode) { ceilingMode = _ceilingMode; }
+	void	setEditingMode(const Uint32 _editingMode) { editingMode = static_cast<editingmode_t>(_editingMode); }
+	void	setTextureSide(const int _textureSide) { textureSide = _textureSide; }
+	void	setTextureSelectorActive(const bool _b) { textureSelectorActive = _b; }
+	void	setFullscreen(const bool _b) { fullscreen = _b; }
 
 private:
 	Client* client = nullptr;
 	World* world = nullptr;
 
-	bool initialized=false;
+	bool initialized = false;
 
 	// editing variables
 	Camera* editingCamera = nullptr;
 	Camera* minimap = nullptr;
 	Uint32 editTick = 0;
 	const char* textureUnderMouse = ""; // the name of the texture under the mouse pointer
-	int textureSide =0; // the side of the tile to texture
+	int textureSide = 0; // the side of the tile to texture
 	bool ceilingMode = false; // when false, you're in floor editing mode, otherwise, ceiling mode
 	editingmode_t editingMode = TILES;
 	bool editingText = false;
@@ -288,11 +288,11 @@ private:
 	Sector* highlightedSector = nullptr; // sector that we're hovering the mouse over
 	int highlightedFace = -1; // sector face we're pointing at
 	bool highlightedObjManuallySet = false;
-	bool leftClick=false, leftClicking=false, leftClickLock=false;
+	bool leftClick = false, leftClicking = false, leftClickLock = false;
 	Entity* entityToSpawn = nullptr;
 
 	// texture browser
-	bool textureSelectorActive=false;
+	bool textureSelectorActive = false;
 	Sint32 textureScroll = 0;
 
 	// editing widget
@@ -301,7 +301,7 @@ private:
 	widgetmode_t widgetMode = TRANSLATE;
 	Vector oldWidgetPos = Vector(0.f);
 	Vector widgetPos = Vector(0.f);
-	Rotation widgetAng = Rotation(0.f,0.f,0.f);
+	Rotation widgetAng = Rotation(0.f, 0.f, 0.f);
 	Vector widgetScale = Vector(1.f);
 	bool widgetVisible = false;
 	Entity* widget = nullptr;

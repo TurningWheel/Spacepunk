@@ -5,14 +5,14 @@
 #include "AnimationState.hpp"
 #include "Speaker.hpp"
 
-AnimationState::AnimationState():
+AnimationState::AnimationState() :
 	name("unknown"),
 	begin(0.f),
 	end(0.f),
 	length(0.f),
 	loop(false) {}
 
-AnimationState::AnimationState(const Animation::entry_t& entry, const ArrayList<Animation::sound_t>& sounds):
+AnimationState::AnimationState(const Animation::entry_t& entry, const ArrayList<Animation::sound_t>& sounds) :
 	name(entry.name),
 	begin(entry.begin + 1),
 	end(max(entry.begin, entry.end)),
@@ -20,8 +20,8 @@ AnimationState::AnimationState(const Animation::entry_t& entry, const ArrayList<
 	loop(entry.loop)
 {
 	// copy sound triggers
-	for( auto& sound : sounds ) {
-		if( sound.frame >= entry.begin && sound.frame < entry.end ) {
+	for (auto& sound : sounds) {
+		if (sound.frame >= entry.begin && sound.frame < entry.end) {
 			sound_t newSound;
 			newSound.frame = sound.frame - begin;
 			newSound.files = sound.files;
@@ -44,7 +44,7 @@ bool AnimationState::update(Speaker* speaker) {
 	}
 
 	// ticks
-	if( length > 1.f ) {
+	if (length > 1.f) {
 		if (ticksRate && (loop ||
 			(ticksRate > 0.f && ticks < length) ||
 			(ticksRate < 0.f && ticks > 0.f))) {
@@ -67,16 +67,16 @@ bool AnimationState::update(Speaker* speaker) {
 			}
 
 			// play animation sound trigger
-			if( speaker ) {
-				unsigned int oFrame = (unsigned int) fmod(oldTicks, length);
-				unsigned int nFrame = (unsigned int) fmod(ticks, length);
+			if (speaker) {
+				unsigned int oFrame = (unsigned int)fmod(oldTicks, length);
+				unsigned int nFrame = (unsigned int)fmod(ticks, length);
 				unsigned int sFrame = step > 0.f ? oFrame : nFrame;
 				unsigned int eFrame = step > 0.f ? nFrame : oFrame;
-				for( unsigned int c = 0; c < sounds.getSize(); ++c ) {
+				for (unsigned int c = 0; c < sounds.getSize(); ++c) {
 					const sound_t& sound = sounds[c];
-					if( sound.files.getSize() ) {
-						if( (sound.frame >= sFrame && sound.frame <= eFrame) &&
-							(sound.frame < beginLastSoundFrame || sound.frame > endLastSoundFrame) ) {
+					if (sound.files.getSize()) {
+						if ((sound.frame >= sFrame && sound.frame <= eFrame) &&
+							(sound.frame < beginLastSoundFrame || sound.frame > endLastSoundFrame)) {
 							Random& rand = mainEngine->getRandom();
 							Uint32 fileIndex = rand.getUint32() % sound.files.getSize();
 							const char* file = sound.files[fileIndex].get();

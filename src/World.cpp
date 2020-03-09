@@ -37,8 +37,8 @@ World::World(Game* _game)
 }
 
 World::~World() {
-	if( !silent ) {
-		mainEngine->fmsg(Engine::MSG_INFO,"deleting world '%s'",nameStr.get());
+	if (!silent) {
+		mainEngine->fmsg(Engine::MSG_INFO, "deleting world '%s'", nameStr.get());
 	}
 
 	// delete entities
@@ -49,7 +49,7 @@ World::~World() {
 	entities.clear();
 
 	// delete script engine
-	if( script ) {
+	if (script) {
 		delete script;
 		script = nullptr;
 	}
@@ -130,7 +130,7 @@ void World::bulletCollisionCallback(btBroadphasePair& pair, btCollisionDispatche
 }
 
 void World::initialize(bool empty) {
-	mainEngine->fmsg(Engine::MSG_INFO,"creating physics simulation...");
+	mainEngine->fmsg(Engine::MSG_INFO, "creating physics simulation...");
 
 	// build the broadphase
 	bulletBroadphase = new btDbvtBroadphase();
@@ -145,8 +145,8 @@ void World::initialize(bool empty) {
 	bulletSolver = new btSequentialImpulseConstraintSolver;
 
 	// the world
-	bulletDynamicsWorld = new btDiscreteDynamicsWorld(bulletDispatcher,bulletBroadphase,bulletSolver,bulletCollisionConfiguration);
-	bulletDynamicsWorld->setGravity(btVector3(0.f,0.f,9.81 * (Tile::size / 2.f)));
+	bulletDynamicsWorld = new btDiscreteDynamicsWorld(bulletDispatcher, bulletBroadphase, bulletSolver, bulletCollisionConfiguration);
+	bulletDynamicsWorld->setGravity(btVector3(0.f, 0.f, 9.81 * (Tile::size / 2.f)));
 	bulletDynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
 	// create shadow camera
@@ -161,10 +161,10 @@ void World::getSelectedEntities(LinkedList<Entity*>& outResult) {
 		Entity* entity = pair.b;
 
 		// skip editor entities
-		if( !entity->isShouldSave() )
+		if (!entity->isShouldSave())
 			continue;
 
-		if( entity->isSelected() ) {
+		if (entity->isSelected()) {
 			outResult.addNodeLast(entity);
 		}
 	}
@@ -183,37 +183,37 @@ ArrayList<int> World::generateDungeon(const char* filename) const {
 	return result;
 }
 
-void World::changeFilename(const char* _filename) {	
-	if( _filename == nullptr ) {
+void World::changeFilename(const char* _filename) {
+	if (_filename == nullptr) {
 		return;
 	}
 
 	// set new filetype
 	filetype = FILE_MAX;
-	for( int c = 0; c < static_cast<int>(World::FILE_MAX); ++c ) {
+	for (int c = 0; c < static_cast<int>(World::FILE_MAX); ++c) {
 		StringBuf<16> fullExtension(".%s", 1, fileExtensions[static_cast<int>(c)]);
 		filename.alloc((Uint32)strlen(_filename) + fullExtension.length() + 1);
 		filename = _filename;
 
 		// append filetype extension
-		if( filename.length() >= fullExtension.length() ) {
-			String currExtension = filename.substr( filename.length() - fullExtension.length() );
-			if( currExtension == fullExtension.get() ) {
+		if (filename.length() >= fullExtension.length()) {
+			String currExtension = filename.substr(filename.length() - fullExtension.length());
+			if (currExtension == fullExtension.get()) {
 				filetype = static_cast<filetype_t>(c);
 				break;
 			}
 		}
 	}
-	if( filetype == FILE_MAX ) {
+	if (filetype == FILE_MAX) {
 		filetype = FILE_BINARY;
-		filename.appendf(".%s",fileExtensions[static_cast<int>(filetype)]);
+		filename.appendf(".%s", fileExtensions[static_cast<int>(filetype)]);
 	}
 
 	// create shortened filename
 	shortname = filename;
 	Uint32 i = 0;
 	do {
-		i = shortname.find('/',0);
+		i = shortname.find('/', 0);
 		if (i != UINT32_MAX) {
 			shortname = shortname.substr(i + 1);
 		}
@@ -223,7 +223,7 @@ void World::changeFilename(const char* _filename) {
 	// windows has to cut out their crazy backward slashes, too.
 	i = 0;
 	do {
-		i = shortname.find('\\',0);
+		i = shortname.find('\\', 0);
 		if (i != UINT32_MAX) {
 			shortname = shortname.substr(i + 1);
 		}
@@ -233,7 +233,7 @@ void World::changeFilename(const char* _filename) {
 
 bool World::isShowTools() const {
 	Client* client = mainEngine->getLocalClient();
-	if( !client || !client->isEditorActive() ) {
+	if (!client || !client->isEditorActive()) {
 		return false;
 	} else {
 		return showTools;
@@ -254,11 +254,11 @@ Entity* World::spawnEntity(const char* name, const Vector& pos, const Rotation& 
 
 const bool World::selectEntity(const Uint32 uid, const bool b) {
 	Entity* entity = uidToEntity(uid);
-	if( entity ) {
+	if (entity) {
 		entity->setSelected(b);
 		entity->setHighlighted(b);
 
-		if( b ) {
+		if (b) {
 			mainEngine->playSound("editor/message.wav");
 		}
 		return true;
@@ -269,18 +269,18 @@ const bool World::selectEntity(const Uint32 uid, const bool b) {
 void World::selectEntities(const bool b) {
 	for (auto& pair : entities) {
 		Entity* entity = pair.b;
-		if( entity->isSelected() ) {
+		if (entity->isSelected()) {
 			entity->setSelected(b);
 			entity->setHighlighted(b);
 		}
 	}
 
-	if( b ) {
+	if (b) {
 		mainEngine->playSound("editor/message.wav");
 	}
 }
 
-const World::hit_t World::convexSweep( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng ) {
+const World::hit_t World::convexSweep(const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng) {
 	hit_t emptyResult;
 	emptyResult.pos = destPos;
 
@@ -288,7 +288,7 @@ const World::hit_t World::convexSweep( const btConvexShape* shape, const Vector&
 	convexSweepList(shape, originPos, originAng, destPos, destAng, list);
 
 	// return the first entry found
-	if( list.getSize() > 0 ) {
+	if (list.getSize() > 0) {
 		return list.getFirst()->getData();
 	}
 
@@ -337,7 +337,7 @@ struct AllHitsConvexResultCallback : public btCollisionWorld::ConvexResultCallba
 	}
 };
 
-void World::convexSweepList( const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng, LinkedList<hit_t>& outResult ) {
+void World::convexSweepList(const btConvexShape* shape, const Vector& originPos, const Quaternion& originAng, const Vector& destPos, const Quaternion& destAng, LinkedList<hit_t>& outResult) {
 	btVector3 btOriginPos(originPos);
 	btQuaternion btOriginQuat = btQuat(originAng);
 	btTransform btOrigin(btOriginQuat, btOriginPos);
@@ -350,25 +350,25 @@ void World::convexSweepList( const btConvexShape* shape, const Vector& originPos
 	AllHitsConvexResultCallback SweepCallback(btOriginPos, btDestPos);
 	bulletDynamicsWorld->convexSweepTest(shape, btOrigin, btDest, SweepCallback);
 
-	if( SweepCallback.hasHit() ) {
-		for( int num=0; num<SweepCallback.m_hitPointWorld.size(); ++num ) {
+	if (SweepCallback.hasHit()) {
+		for (int num = 0; num < SweepCallback.m_hitPointWorld.size(); ++num) {
 			hit_t hit;
 
 			// determine properties of the hit
-			hit.pos = Vector(SweepCallback.m_hitPointWorld[num].x(),SweepCallback.m_hitPointWorld[num].y(),SweepCallback.m_hitPointWorld[num].z());
-			glm::vec3 normal = glm::normalize(glm::vec3(SweepCallback.m_hitNormalWorld[num].x(),SweepCallback.m_hitNormalWorld[num].y(),SweepCallback.m_hitNormalWorld[num].z()));
+			hit.pos = Vector(SweepCallback.m_hitPointWorld[num].x(), SweepCallback.m_hitPointWorld[num].y(), SweepCallback.m_hitPointWorld[num].z());
+			glm::vec3 normal = glm::normalize(glm::vec3(SweepCallback.m_hitNormalWorld[num].x(), SweepCallback.m_hitNormalWorld[num].y(), SweepCallback.m_hitNormalWorld[num].z()));
 			hit.normal.x = normal.x;
 			hit.normal.y = normal.y;
 			hit.normal.z = normal.z;
 			hit.manifest = static_cast<World::physics_manifest_t*>(SweepCallback.m_collisionObjects[num]->getUserPointer());
 
 			// skip untraceable entities
-			if( hit.manifest && hit.manifest->entity ) {
+			if (hit.manifest && hit.manifest->entity) {
 				Entity* entity = hit.manifest->entity;
-				if( !entity->isShouldSave() ) {
+				if (!entity->isShouldSave()) {
 					continue;
 				}
-				if( entity==shadowCamera ) {
+				if (entity == shadowCamera) {
 					continue;
 				}
 			}
@@ -376,21 +376,21 @@ void World::convexSweepList( const btConvexShape* shape, const Vector& originPos
 			// sort and insert the hit entry into the list of results
 			int index = 0;
 			Node<hit_t>* node = nullptr;
-			for( node=outResult.getFirst(); node!=nullptr; node=node->getNext() ) {
+			for (node = outResult.getFirst(); node != nullptr; node = node->getNext()) {
 				hit_t& current = node->getData();
 
-				if( (originPos - hit.pos).lengthSquared() < (originPos - current.pos).lengthSquared() ) {
+				if ((originPos - hit.pos).lengthSquared() < (originPos - current.pos).lengthSquared()) {
 					break;
 				}
 
 				++index;
 			}
-			outResult.addNode(index,hit);
+			outResult.addNode(index, hit);
 		}
 	}
 }
 
-const World::hit_t World::lineTrace( const Vector& origin, const Vector& dest ) {
+const World::hit_t World::lineTrace(const Vector& origin, const Vector& dest) {
 	hit_t emptyResult;
 	emptyResult.pos = dest;
 
@@ -398,14 +398,14 @@ const World::hit_t World::lineTrace( const Vector& origin, const Vector& dest ) 
 	lineTraceList(origin, dest, list);
 
 	// return the first entry found
-	if( list.getSize() > 0 ) {
+	if (list.getSize() > 0) {
 		return list.getFirst()->getData();
 	}
 
 	return emptyResult;
 }
 
-void World::lineTraceList( const Vector& origin, const Vector& dest, LinkedList<World::hit_t>& outResult ) {
+void World::lineTraceList(const Vector& origin, const Vector& dest, LinkedList<World::hit_t>& outResult) {
 	btVector3 btOrigin(origin);
 	btVector3 btDest(dest);
 
@@ -413,25 +413,25 @@ void World::lineTraceList( const Vector& origin, const Vector& dest, LinkedList<
 	btCollisionWorld::AllHitsRayResultCallback RayCallback(btOrigin, btDest);
 	bulletDynamicsWorld->rayTest(btOrigin, btDest, RayCallback);
 
-	if( RayCallback.hasHit() ) {
-		for( int num=0; num<RayCallback.m_hitPointWorld.size(); ++num ) {
+	if (RayCallback.hasHit()) {
+		for (int num = 0; num < RayCallback.m_hitPointWorld.size(); ++num) {
 			hit_t hit;
 
 			// determine properties of the hit
-			hit.pos = Vector(RayCallback.m_hitPointWorld[num].x(),RayCallback.m_hitPointWorld[num].y(),RayCallback.m_hitPointWorld[num].z());
-			glm::vec3 normal = glm::normalize(glm::vec3(RayCallback.m_hitNormalWorld[num].x(),RayCallback.m_hitNormalWorld[num].y(),RayCallback.m_hitNormalWorld[num].z()));
+			hit.pos = Vector(RayCallback.m_hitPointWorld[num].x(), RayCallback.m_hitPointWorld[num].y(), RayCallback.m_hitPointWorld[num].z());
+			glm::vec3 normal = glm::normalize(glm::vec3(RayCallback.m_hitNormalWorld[num].x(), RayCallback.m_hitNormalWorld[num].y(), RayCallback.m_hitNormalWorld[num].z()));
 			hit.normal.x = normal.x;
 			hit.normal.y = normal.y;
 			hit.normal.z = normal.z;
 			hit.manifest = static_cast<World::physics_manifest_t*>(RayCallback.m_collisionObjects[num]->getUserPointer());
 
 			// skip untraceable entities
-			if( hit.manifest && hit.manifest->entity ) {
+			if (hit.manifest && hit.manifest->entity) {
 				Entity* entity = hit.manifest->entity;
-				if( !entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE) && (!mainEngine->isEditorRunning() || !entity->isShouldSave()) ) {
+				if (!entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE) && (!mainEngine->isEditorRunning() || !entity->isShouldSave())) {
 					continue;
 				}
-				if( entity==shadowCamera ) {
+				if (entity == shadowCamera) {
 					continue;
 				}
 			}
@@ -439,30 +439,30 @@ void World::lineTraceList( const Vector& origin, const Vector& dest, LinkedList<
 			// sort and insert the hit entry into the list of results
 			int index = 0;
 			Node<hit_t>* node = nullptr;
-			for( node=outResult.getFirst(); node!=nullptr; node=node->getNext() ) {
+			for (node = outResult.getFirst(); node != nullptr; node = node->getNext()) {
 				hit_t& current = node->getData();
 
-				if( (origin - hit.pos).lengthSquared() < (origin - current.pos).lengthSquared() ) {
+				if ((origin - hit.pos).lengthSquared() < (origin - current.pos).lengthSquared()) {
 					break;
 				}
 
 				++index;
 			}
-			outResult.addNode(index,hit);
+			outResult.addNode(index, hit);
 		}
 	}
 }
 
-const World::hit_t World::lineTraceNoEntities( const Vector& origin, const Vector& dest ) {
+const World::hit_t World::lineTraceNoEntities(const Vector& origin, const Vector& dest) {
 	hit_t emptyResult;
 
 	LinkedList<hit_t> list;
 	lineTraceList(origin, dest, list);
 
 	// return the first non-entity found
-	for( Node<hit_t>* node = list.getFirst(); node != nullptr; node = node->getNext() ) {
+	for (Node<hit_t>* node = list.getFirst(); node != nullptr; node = node->getNext()) {
 		hit_t& hit = node->getData();
-		if( !hit.manifest || !hit.manifest->entity ) {
+		if (!hit.manifest || !hit.manifest->entity) {
 			return hit;
 		}
 	}
@@ -493,7 +493,7 @@ void World::findSelectedEntities(LinkedList<Entity*>& outList) {
 	outList.removeAll();
 	for (auto& pair : entities) {
 		Entity* entity = pair.b;
-		if( entity->isSelected() ) {
+		if (entity->isSelected()) {
 			outList.addNodeLast(entity);
 		}
 	}
@@ -512,18 +512,18 @@ void World::process() {
 	// find out if the editor is running
 	bool editorRunning = false;
 	Client* client = mainEngine->getLocalClient();
-	if( client ) {
-		if( client->isEditorActive() ) {
+	if (client) {
+		if (client->isEditorActive()) {
 			editorRunning = true;
 		}
 	}
 
-	if( !editorRunning ) {
+	if (!editorRunning) {
 		// run world script
-		const String scriptname = filename.substr(0,filename.length()-4);
-		if( clientObj && mainEngine->isRunningClient() ) {
+		const String scriptname = filename.substr(0, filename.length() - 4);
+		if (clientObj && mainEngine->isRunningClient()) {
 			//script->run(StringBuf<128>("scripts/client/maps/%s.lua", 1, scriptname.get()).get());
-		} else if( clientObj && mainEngine->isRunningServer() ) {
+		} else if (clientObj && mainEngine->isRunningServer()) {
 			//script->run(StringBuf<128>("scripts/server/maps/%s.lua", 1, scriptname.get()).get());
 		}
 	}
@@ -541,7 +541,7 @@ void World::process() {
 	}
 
 	// step physics
-	if( !mainEngine->isEditorRunning() ) {
+	if (!mainEngine->isEditorRunning()) {
 		float step = 1.f / (float)mainEngine->getTicksPerSecond();
 		bulletDynamicsWorld->stepSimulation(step, 1, step);
 	}
@@ -556,7 +556,7 @@ void World::process() {
 	for (auto& it = entities.begin(); it != entities.end(); ++it) {
 		Entity* entity = (*it).b;
 
-		if( entity->isToBeDeleted() ) {
+		if (entity->isToBeDeleted()) {
 			bool updateNeeded = entity->isFlag(Entity::flag_t::FLAG_UPDATE) && !entity->isFlag(Entity::flag_t::FLAG_LOCAL);
 			Uint32 uid = entity->getUID();
 			entities.remove((*it).a);
@@ -564,9 +564,9 @@ void World::process() {
 			--it;
 
 			// inform clients of entity deletion
-			if( !clientObj && updateNeeded ) {
+			if (!clientObj && updateNeeded) {
 				Server* server = mainEngine->getLocalServer();
-				if( server ) {
+				if (server) {
 					Packet packet;
 					packet.write32(uid);
 					packet.write32(id);

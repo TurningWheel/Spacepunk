@@ -46,16 +46,16 @@ public:
 	Node<Entity*>* addEPopulation(Entity* entity);
 
 	// getters & setters
-	bool							isChanged() const			{ return changed; }
-	Tile*							getTile(int index)			{ return tiles[index]; }
-	const LinkedList<Entity*>&		getEPopulation() const		{ return ePopulation; }
-	LinkedList<Entity*>&			getEPopulation()			{ return ePopulation; }
-	const LinkedList<Component*>&	getCPopulation() const		{ return cPopulation; }
-	LinkedList<Component*>&			getCPopulation()			{ return cPopulation; }
+	bool							isChanged() const { return changed; }
+	Tile*							getTile(int index) { return tiles[index]; }
+	const LinkedList<Entity*>&		getEPopulation() const { return ePopulation; }
+	LinkedList<Entity*>&			getEPopulation() { return ePopulation; }
+	const LinkedList<Component*>&	getCPopulation() const { return cPopulation; }
+	LinkedList<Component*>&			getCPopulation() { return cPopulation; }
 
-	void		setWorld(World& _world)						{ world = &_world; }
-	void		setChanged(bool _changed)					{ changed = _changed; }
-	void		setTile(int index, Tile* _tile)				{ tiles[index] = _tile; }
+	void		setWorld(World& _world) { world = &_world; }
+	void		setChanged(bool _changed) { changed = _changed; }
+	void		setTile(int index, Tile* _tile) { tiles[index] = _tile; }
 
 private:
 	World* world = nullptr;
@@ -80,7 +80,7 @@ private:
 	Uint32 numIndices = 0;
 	GLuint vbo[BUFFER_TYPE_LENGTH];
 	GLuint vao = 0;
-		
+
 	GLuint findAdjacentIndex(GLuint index1, GLuint index2, GLuint index3);
 
 	void combineVertices();

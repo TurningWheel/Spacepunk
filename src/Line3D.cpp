@@ -17,13 +17,13 @@ const GLfloat Line3D::vertices[6] = {
 	1.f, 1.f, 1.f
 };
 
-const GLuint Line3D::indices[2] {
+const GLuint Line3D::indices[2]{
 	0, 1
 };
 
 Line3D::Line3D() {
 	// initialize buffer names
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		vbo[static_cast<buffer_t>(i)] = 0;
 	}
 
@@ -50,14 +50,14 @@ Line3D::Line3D() {
 }
 
 Line3D::~Line3D() {
-	for( int i=0; i<BUFFER_TYPE_LENGTH; ++i ) {
+	for (int i = 0; i < BUFFER_TYPE_LENGTH; ++i) {
 		buffer_t buffer = static_cast<buffer_t>(i);
-		if( vbo[buffer] ) {
-			glDeleteBuffers(1,&vbo[buffer]);
+		if (vbo[buffer]) {
+			glDeleteBuffers(1, &vbo[buffer]);
 		}
 	}
-	if( vao ) {
-		glDeleteVertexArrays(1,&vao);
+	if (vao) {
+		glDeleteVertexArrays(1, &vao);
 	}
 }
 
@@ -77,12 +77,12 @@ void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const
 
 	// get difference of vectors
 	glm::vec3 diff(0.f);
-	diff.x = dest.x-src.x;
-	diff.y = dest.y-src.y;
-	diff.z = dest.z-src.z;
+	diff.x = dest.x - src.x;
+	diff.y = dest.y - src.y;
+	diff.z = dest.z - src.z;
 
 	// setup model matrix
-	const glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f),glm::vec3(src.x,-src.z,src.y));
+	const glm::mat4 modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(src.x, -src.z, src.y));
 
 	// setup viewproj matrix
 	const glm::mat4 viewProjMatrix = camera.getProjViewMatrix();
@@ -92,25 +92,25 @@ void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString(material);
-	if( mat ) {
+	if (mat) {
 		ShaderProgram& shader = mat->getShader();
-		if( &shader != ShaderProgram::getCurrentShader() )
+		if (&shader != ShaderProgram::getCurrentShader())
 			shader.mount();
 
 		// upload uniform variables
-		glUniformMatrix4fv(shader.getUniformLocation("gModel"),1,GL_FALSE,glm::value_ptr(modelMatrix));
-		glUniformMatrix4fv(shader.getUniformLocation("gViewProj"),1,GL_FALSE,glm::value_ptr(viewProjMatrix));
-		glUniformMatrix4fv(shader.getUniformLocation("gModelView"),1,GL_FALSE,glm::value_ptr(modelViewMatrix));
-		glUniform3fv(shader.getUniformLocation("gDiff"),1,glm::value_ptr(glm::vec3(diff.x,-diff.z,diff.y)));
-		glUniform4fv(shader.getUniformLocation("gColor"),1,glm::value_ptr(color));
-		glm::vec3 cameraPos( camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y );
+		glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
+		glUniformMatrix4fv(shader.getUniformLocation("gViewProj"), 1, GL_FALSE, glm::value_ptr(viewProjMatrix));
+		glUniformMatrix4fv(shader.getUniformLocation("gModelView"), 1, GL_FALSE, glm::value_ptr(modelViewMatrix));
+		glUniform3fv(shader.getUniformLocation("gDiff"), 1, glm::value_ptr(glm::vec3(diff.x, -diff.z, diff.y)));
+		glUniform4fv(shader.getUniformLocation("gColor"), 1, glm::value_ptr(color));
+		glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
 		glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
 		glUniform1f(shader.getUniformLocation("gWidth"), width);
 
 		// bind textures
-		if( camera.getDrawMode() == Camera::DRAW_STANDARD || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL || camera.getDrawMode() == Camera::DRAW_GLOW ) {
-			if( mat ) {
-				if( camera.getDrawMode() == Camera::DRAW_GLOW ) {
+		if (camera.getDrawMode() == Camera::DRAW_STANDARD || camera.getDrawMode() == Camera::DRAW_DEPTHFAIL || camera.getDrawMode() == Camera::DRAW_GLOW) {
+			if (mat) {
+				if (camera.getDrawMode() == Camera::DRAW_GLOW) {
 					mat->bindTextures(Material::GLOW);
 				} else {
 					mat->bindTextures(Material::STANDARD);

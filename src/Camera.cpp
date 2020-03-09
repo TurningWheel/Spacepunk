@@ -26,12 +26,12 @@ const char* Camera::materialStr = "assets/editor/camera/material.json";
 Camera::Camera(Entity& _entity, Component* _parent) :
 	Component(_entity, _parent) {
 	Client* client = mainEngine->getLocalClient();
-	if( client ) {
+	if (client) {
 		renderer = client->getRenderer();
 	}
 
 	name = typeStr[COMPONENT_CAMERA];
-	if( renderer ) {
+	if (renderer) {
 		win.x = 0;
 		win.y = 0;
 		win.w = renderer->getXres();
@@ -39,7 +39,7 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 	}
 
 	// add a bbox for editor usage
-	if( mainEngine->isEditorRunning() && entity->isShouldSave() ) {
+	if (mainEngine->isEditorRunning() && entity->isShouldSave()) {
 		BBox* bbox = addComponent<BBox>();
 		bbox->setShape(BBox::SHAPE_SPHERE);
 		bbox->setLocalScale(Vector(16.f));
@@ -89,10 +89,10 @@ glm::mat4 Camera::makeOrthoProj(float width, float height, float depth) {
 	glm::mat4 m(1.f);
 	m[0][0] = 2.f / (right - left);
 	m[1][1] = 2.f / (top - bottom);
-	m[3][0] = - (right + left) / (right - left);
-	m[3][1] = - (top + bottom) / (top - bottom);
+	m[3][0] = -(right + left) / (right - left);
+	m[3][1] = -(top + bottom) / (top - bottom);
 	m[2][2] = 1.f / (zFar - zNear);
-	m[3][2] = - zNear / (zFar - zNear);
+	m[3][2] = -zNear / (zFar - zNear);
 	return m;
 }
 
@@ -100,17 +100,17 @@ static Cvar cvar_cameraAllOrtho("camera.allortho", "make all cameras orthographi
 
 void Camera::setupProjection(bool scissor) {
 	World* world = entity->getWorld();
-	if( !renderer ) {
+	if (!renderer) {
 		return;
 	}
-	if( !win.w || !win.h ) {
+	if (!win.w || !win.h) {
 		return;
 	}
 
 	bool o = ortho || cvar_cameraAllOrtho.toInt();
 
 	if (o) {
-		float width = (float)(fov) * ( (float)win.w / win.h );
+		float width = (float)(fov) * ((float)win.w / win.h);
 		float height = (float)(fov);
 		float depth = clipFar;
 		projMatrix = makeOrthoProj(width, height, depth);
@@ -120,24 +120,24 @@ void Camera::setupProjection(bool scissor) {
 
 	if (o) {
 		Vector pos = gPos - gAng.toVector() * clipFar * .5f;
-		Quaternion q = Quaternion(Rotation(PI/2.f, 0.f, 0.f)) * gAng;
+		Quaternion q = Quaternion(Rotation(PI / 2.f, 0.f, 0.f)) * gAng;
 		glm::mat4 cameraRotation = glm::mat4(glm::quat(-q.w, q.z, q.y, -q.x));
-		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f),glm::vec3( -pos.x, pos.z, -pos.y ));
+		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-pos.x, pos.z, -pos.y));
 		viewMatrix = cameraRotation * cameraTranslation;
 	} else {
-		Quaternion q = Quaternion(Rotation(PI/2.f, 0.f, 0.f)) * gAng;
+		Quaternion q = Quaternion(Rotation(PI / 2.f, 0.f, 0.f)) * gAng;
 		glm::mat4 cameraRotation = glm::mat4(glm::quat(-q.w, q.z, q.y, -q.x));
-		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f),glm::vec3( -gPos.x, gPos.z, -gPos.y ));
+		glm::mat4 cameraTranslation = glm::translate(glm::mat4(1.f), glm::vec3(-gPos.x, gPos.z, -gPos.y));
 		viewMatrix = cameraRotation * cameraTranslation;
 	}
 
-	if( renderer && scissor ) {
+	if (renderer && scissor) {
 		int yres = renderer->getYres();
-		glViewport( win.x, yres-win.h-win.y, win.w, win.h );
-		glScissor( win.x, yres-win.h-win.y, win.w, win.h );
+		glViewport(win.x, yres - win.h - win.y, win.w, win.h);
+		glScissor(win.x, yres - win.h - win.y, win.w, win.h);
 		glEnable(GL_SCISSOR_TEST);
 	} else {
-		glViewport( win.x, -win.y, win.w, win.h );
+		glViewport(win.x, -win.y, win.w, win.h);
 		glDisable(GL_SCISSOR_TEST);
 	}
 
@@ -145,8 +145,8 @@ void Camera::setupProjection(bool scissor) {
 	projViewMatrix = projMatrix * viewMatrix;
 }
 
-Vector Camera::worldPosToScreenPos( const Vector& original ) const {
-	if( !renderer ) {
+Vector Camera::worldPosToScreenPos(const Vector& original) const {
+	if (!renderer) {
 		return Vector();
 	}
 
@@ -154,13 +154,13 @@ Vector Camera::worldPosToScreenPos( const Vector& original ) const {
 	glm::vec3 position(original.x, -original.z, original.y);
 
 	// project object
-	glm::vec4 viewport = glm::vec4( (float)win.x, (float)win.y, (float)win.w, (float)win.h );
-	glm::vec3 projected = glm::project( position, glm::mat4(1.f), projMatrix * viewMatrix, viewport);
-	return Vector(projected.x, win.h - (projected.y - win.y*2), projected.z);
+	glm::vec4 viewport = glm::vec4((float)win.x, (float)win.y, (float)win.w, (float)win.h);
+	glm::vec3 projected = glm::project(position, glm::mat4(1.f), projMatrix * viewMatrix, viewport);
+	return Vector(projected.x, win.h - (projected.y - win.y * 2), projected.z);
 }
 
-void Camera::screenPosToWorldRay( int x, int y, Vector& out_origin, Vector& out_direction ) const {
-	if( !renderer ) {
+void Camera::screenPosToWorldRay(int x, int y, Vector& out_origin, Vector& out_direction) const {
+	if (!renderer) {
 		return;
 	}
 
@@ -169,22 +169,22 @@ void Camera::screenPosToWorldRay( int x, int y, Vector& out_origin, Vector& out_
 
 	// create ray screen vectors
 	glm::vec4 rayStart(
-		((float)x/(float)win.w  - 0.5f) * 2.0f,
-		((float)y/(float)win.h - 0.5f) * 2.0f,
+		((float)x / (float)win.w - 0.5f) * 2.0f,
+		((float)y / (float)win.h - 0.5f) * 2.0f,
 		-1.0,
 		1.0f
 	);
 	glm::vec4 rayEnd(
-		((float)x/(float)win.w  - 0.5f) * 2.0f,
-		((float)y/(float)win.h - 0.5f) * 2.0f,
+		((float)x / (float)win.w - 0.5f) * 2.0f,
+		((float)y / (float)win.h - 0.5f) * 2.0f,
 		0.0,
 		1.0f
 	);
 
 	glm::mat4 projMatrix = glm::perspective(glm::radians((float)fov), (float)win.w / win.h, clipNear, clipFar);
-	glm::mat4 inversePMM    = glm::inverse(projMatrix * viewMatrix);
+	glm::mat4 inversePMM = glm::inverse(projMatrix * viewMatrix);
 	glm::vec4 rayStartWorld = inversePMM * rayStart; rayStartWorld /= rayStartWorld.w;
-	glm::vec4 rayEndWorld   = inversePMM * rayEnd  ; rayEndWorld   /= rayEndWorld.w;
+	glm::vec4 rayEndWorld = inversePMM * rayEnd; rayEndWorld /= rayEndWorld.w;
 
 	glm::vec3 rayDirWorld(rayEndWorld - rayStartWorld);
 	rayDirWorld = glm::normalize(rayDirWorld);
@@ -199,45 +199,45 @@ void Camera::resetMatrices() {
 	projViewMatrix = glm::mat4(1.f);
 }
 
-void Camera::drawCube( const glm::mat4& transform, const glm::vec4& color ) {
-	cube.draw(*this,transform,color);
+void Camera::drawCube(const glm::mat4& transform, const glm::vec4& color) {
+	cube.draw(*this, transform, color);
 }
 
-void Camera::drawLine3D( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
-	line3D.drawLine(*this,width,src,dest,color);
+void Camera::drawLine3D(const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color) {
+	line3D.drawLine(*this, width, src, dest, color);
 }
 
-void Camera::drawLaser( const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color ) {
-	line3D.drawLaser(*this,width,src,dest,color);
+void Camera::drawLaser(const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color) {
+	line3D.drawLaser(*this, width, src, dest, color);
 }
 
 void Camera::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	// only render in the editor!
-	if( !mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho() ) {
+	if (!mainEngine->isEditorRunning() || !entity->getWorld()->isShowTools() || camera.isOrtho()) {
 		return;
 	}
 
 	// don't render ourselves
-	if( &camera == this ) {
+	if (&camera == this) {
 		return;
 	}
 
 	// don't render the editor minimap
-	if( ortho && !entity->isShouldSave() ) {
+	if (ortho && !entity->isShouldSave()) {
 		return;
 	}
 
 	// do not render for these fx passes
-	if( camera.getDrawMode() >= Camera::DRAW_GLOW ) {
+	if (camera.getDrawMode() >= Camera::DRAW_GLOW) {
 		return;
 	}
 
 	glm::mat4 matrix = glm::translate(glm::mat4(1.f), glm::vec3(0, -8.f, 0.f));
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr);
 	Material* material = mainEngine->getMaterialResource().dataForString(materialStr);
-	if( mesh && material ) {
+	if (mesh && material) {
 		ShaderProgram* shader = mesh->loadShader(*this, camera, lights, material, shaderVars, gMat * matrix);
-		if( shader ) {
+		if (shader) {
 			mesh->draw(camera, this, shader);
 		}
 	}
@@ -284,12 +284,12 @@ void Camera::markPoint(unsigned int x, unsigned int y, const glm::vec4& color) {
 void Camera::markPoint(const Vector& pos, const glm::vec4& color) {
 	Vector diff = pos - gPos;
 	float dot = diff.dot(gAng.toVector());
-	if( dot > 0 ) {
+	if (dot > 0) {
 		Vector proj = worldPosToScreenPos(pos);
 		Rect<int> src;
-		src.x = proj.x-4; src.y = proj.y-4;
+		src.x = proj.x - 4; src.y = proj.y - 4;
 		src.w = 8; src.h = 8;
-		if( win.containsPoint(src.x,src.y) ) {
+		if (win.containsPoint(src.x, src.y)) {
 			markPoint(src.x, src.y, color);
 		}
 	}
@@ -308,7 +308,7 @@ void Camera::drawDebug() {
 	{
 		Node<point_t>* node = points.getFirst();
 		Node<point_t>* nextnode = nullptr;
-		for( ; node != nullptr; node = nextnode ) {
+		for (; node != nullptr; node = nextnode) {
 			point_t& point = node->getData();
 			nextnode = node->getNext();
 
@@ -327,7 +327,7 @@ void Camera::drawDebug() {
 	{
 		Node<line_t>* node = lines.getFirst();
 		Node<line_t>* nextnode = nullptr;
-		for( ; node != nullptr; node = nextnode ) {
+		for (; node != nullptr; node = nextnode) {
 			line_t& line = node->getData();
 			nextnode = node->getNext();
 

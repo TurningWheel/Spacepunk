@@ -12,8 +12,8 @@ struct UnorderedPair {
 	B b;
 
 	bool operator==(const UnorderedPair& src) {
-		if( (a == src.a && b == src.b) ||
-			(b == src.a && a == src.b) ) {
+		if ((a == src.a && b == src.b) ||
+			(b == src.a && a == src.b)) {
 			return true;
 		} else {
 			return false;
@@ -21,8 +21,8 @@ struct UnorderedPair {
 	}
 
 	bool operator!=(const UnorderedPair& src) {
-		if( (a != src.a || b != src.b) &&
-			(b != src.a || a != src.b) ) {
+		if ((a != src.a || b != src.b) &&
+			(b != src.a || a != src.b)) {
 			return true;
 		} else {
 			return false;
@@ -31,8 +31,8 @@ struct UnorderedPair {
 
 	// @return true if the other pair shares either of our values
 	bool shares(const UnorderedPair& src) {
-		if( a == src.a || a == src.b ||
-			b == src.a || b == src.b ) {
+		if (a == src.a || a == src.b ||
+			b == src.a || b == src.b) {
 			return true;
 		} else {
 			return false;
@@ -50,7 +50,7 @@ struct OrderedPair {
 	B b;
 
 	bool operator==(const OrderedPair& src) {
-		if( a == src.a && b == src.b ) {
+		if (a == src.a && b == src.b) {
 			return true;
 		} else {
 			return false;
@@ -58,7 +58,7 @@ struct OrderedPair {
 	}
 
 	bool operator!=(const OrderedPair& src) {
-		if( a != src.a || b != src.b ) {
+		if (a != src.a || b != src.b) {
 			return true;
 		} else {
 			return false;

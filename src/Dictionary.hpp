@@ -15,8 +15,8 @@ public:
 	static const Uint32 nindex = UINT32_MAX;
 
 	// getters & setters
-	Uint32							getDepth() const				{ return depth; }
-	const ArrayList<String>&		getWords() const				{ return words; }
+	Uint32							getDepth() const { return depth; }
+	const ArrayList<String>&		getWords() const { return words; }
 
 	// insert a word into the tree
 	// @param word the word to insert

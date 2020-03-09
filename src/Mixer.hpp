@@ -25,14 +25,14 @@ public:
 	int playSound(const char* name, const bool loop);
 
 	// getters & setters
-	const ALCdevice*	getDevice() const				{ return device; }
-	const ALCcontext*	getContext() const				{ return context; }
-	bool				isInitialized() const			{ return initialized; }
-	Camera*				getListener()					{ return listener; }
-	ALuint				getLowpassFilter() const		{ return filter_lowpass; }
+	const ALCdevice*	getDevice() const { return device; }
+	const ALCcontext*	getContext() const { return context; }
+	bool				isInitialized() const { return initialized; }
+	Camera*				getListener() { return listener; }
+	ALuint				getLowpassFilter() const { return filter_lowpass; }
 
 private:
-	ALCdevice*	device  = nullptr;
+	ALCdevice*	device = nullptr;
 	ALCcontext*	context = nullptr;
 	Camera* listener = nullptr;
 	ALuint filter_lowpass = 0;

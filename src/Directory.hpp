@@ -12,9 +12,9 @@ public:
 	virtual ~Directory() {}
 
 	// getters & setters
-	virtual const type_t			getType() const		{ return ASSET_DIRECTORY; }
-	LinkedList<String>&				getList()			{ return list; }
-	const LinkedList<String>&		getList() const		{ return list; }
+	virtual const type_t			getType() const { return ASSET_DIRECTORY; }
+	LinkedList<String>&				getList() { return list; }
+	const LinkedList<String>&		getList() const { return list; }
 
 private:
 	LinkedList<String> list;

@@ -29,7 +29,7 @@ public:
 	// @param radius the radius to search in
 	// @param outList the list to populate
 	// @param flat if true, the search radius is 2-dimensional
-	virtual void findEntitiesInRadius( const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false );
+	virtual void findEntitiesInRadius(const Vector& origin, float radius, LinkedList<Entity*>& outList, bool flat = false);
 
 	// draws the world and its contents
 	virtual void draw();
@@ -38,7 +38,7 @@ public:
 	// @param _filename the filename to write to, or blank to use our last filename
 	// @param updateFilename if true, our current filename is changed, otherwise, it is not
 	// @return true on success, false on failure
-	virtual bool saveFile(const char* _filename="", bool updateFilename = false);
+	virtual bool saveFile(const char* _filename = "", bool updateFilename = false);
 
 	// remove a sector from the world
 	// @param index the index of the sector to remove
@@ -58,11 +58,11 @@ public:
 	virtual void process() override;
 
 	// getters & setters
-	virtual const type_t				getType() const					{ return WORLD_SECTORS; }
-	const ArrayList<Sector*>&			getSectors() const				{ return sectors; }
-	const ArrayList<SectorVertex*>&		getVertices() const				{ return vertices; }
-	ArrayList<Sector*>&					getSectors()					{ return sectors; }
-	ArrayList<SectorVertex*>&			getVertices()					{ return vertices; }
+	virtual const type_t				getType() const { return WORLD_SECTORS; }
+	const ArrayList<Sector*>&			getSectors() const { return sectors; }
+	const ArrayList<SectorVertex*>&		getVertices() const { return vertices; }
+	ArrayList<Sector*>&					getSectors() { return sectors; }
+	ArrayList<SectorVertex*>&			getVertices() { return vertices; }
 
 	virtual std::future<PathFinder::Path*> findAPath(int startX, int startY, int endX, int endY) override;
 

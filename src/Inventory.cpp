@@ -21,8 +21,7 @@ void Inventory::setVisibility(bool visible)
 		{
 			inventory->clear();
 		}
-	}
-	else
+	} else
 	{
 		if (inventory == nullptr)
 		{
@@ -34,7 +33,7 @@ void Inventory::setVisibility(bool visible)
 			Frame* gui = client->getGUI();
 			inventory = gui->addFrame("inventory");
 			inventory->setSize(invSize);
-			
+
 		}
 
 		// Setting sizes and adding each frame
@@ -67,7 +66,7 @@ void Inventory::setVisibility(bool visible)
 	}
 }
 
-void Inventory::setupInvSlotDisplay(String slotName, Frame* frame, Rect<int> frameSize, int xPos, int yPos) 
+void Inventory::setupInvSlotDisplay(String slotName, Frame* frame, Rect<int> frameSize, int xPos, int yPos)
 {
 	Slot* slot = *items.find(slotName);
 	//frame->addField(slotName, 20)->setText(slot-> entity->getName().length() > 0 ? slot->entity->getName() : "");
@@ -94,22 +93,20 @@ void Inventory::Slot::serialize(FileInterface * file)
 			this->entity = entity;
 		}
 		file->endArray();
-	}
-	else {
-		if (entity)	{
+	} else {
+		if (entity) {
 			Uint32 one = 1;
 			Uint32& oneref = one;
 			file->beginArray(oneref);
 			file->value(*entity);
 			file->endArray();
-		}
-		else {
+		} else {
 			Uint32 zero = 0;
 			Uint32& zeroref = zero;
 			file->beginArray(zero);
 			file->endArray();
 		}
-		
+
 
 	}
 }

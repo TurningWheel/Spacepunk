@@ -84,12 +84,12 @@ public:
 	void draw(Camera& camera, Light* light);
 
 	// getters & setters
-	const face_t*		getFace(Uint32 index) const			{ return faces[index]; }
-	const void*			getMaterial() const					{ return materialStr.get(); }
-	const bool			isUpdateNeeded() const				{ return updateNeeded; }
+	const face_t*		getFace(Uint32 index) const { return faces[index]; }
+	const void*			getMaterial() const { return materialStr.get(); }
+	const bool			isUpdateNeeded() const { return updateNeeded; }
 
-	void				setUpdateNeeded(const bool b)					{ updateNeeded = b; }
-	void				setMaterial(const char* _material)				{ materialStr = _material; }
+	void				setUpdateNeeded(const bool b) { updateNeeded = b; }
+	void				setMaterial(const char* _material) { materialStr = _material; }
 
 private:
 	SectorWorld* world = nullptr;

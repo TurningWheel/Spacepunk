@@ -13,7 +13,7 @@
 
 class Rotation {
 public:
-	float yaw=0, pitch=0, roll=0;
+	float yaw = 0, pitch = 0, roll = 0;
 
 	// constructors
 	Rotation() {}
@@ -29,14 +29,14 @@ public:
 	}
 
 	// converts the angle attributes to radians (default)
-	const float		radiansYaw() const		{ return yaw; }
-	const float		radiansPitch() const	{ return pitch; }
-	const float		radiansRoll() const		{ return roll; }
+	const float		radiansYaw() const { return yaw; }
+	const float		radiansPitch() const { return pitch; }
+	const float		radiansRoll() const { return roll; }
 
 	// converts the angle attributes to degrees
-	const float		degreesYaw() const		{ return (yaw	* radiansToDegrees); }
-	const float		degreesPitch() const	{ return (pitch	* radiansToDegrees); }
-	const float		degreesRoll() const		{ return (roll	* radiansToDegrees); }
+	const float		degreesYaw() const { return (yaw	* radiansToDegrees); }
+	const float		degreesPitch() const { return (pitch	* radiansToDegrees); }
+	const float		degreesRoll() const { return (roll	* radiansToDegrees); }
 
 	// copy the angle to another angle
 	Rotation& operator=(const Rotation& src) {
@@ -49,9 +49,9 @@ public:
 	// add one angle to another
 	Rotation operator+(const Rotation& src) const {
 		Rotation result;
-		result.yaw = yaw+src.yaw;
-		result.pitch = pitch+src.pitch;
-		result.roll = roll+src.roll;
+		result.yaw = yaw + src.yaw;
+		result.pitch = pitch + src.pitch;
+		result.roll = roll + src.roll;
 		return result;
 	}
 
@@ -66,9 +66,9 @@ public:
 	// subtract one angle from another
 	Rotation operator-(const Rotation& src) const {
 		Rotation result;
-		result.yaw = yaw-src.yaw;
-		result.pitch = pitch-src.pitch;
-		result.roll = roll-src.roll;
+		result.yaw = yaw - src.yaw;
+		result.pitch = pitch - src.pitch;
+		result.roll = roll - src.roll;
 		return result;
 	}
 
@@ -82,40 +82,40 @@ public:
 
 	// formats the values of yaw, pitch, and roll so they lie between -PI*2 (exclusive) and PI*2 (exclusive)
 	Rotation wrapAngles() {
-		yaw		= fmod(yaw,		PI*2);
-		pitch	= fmod(pitch,	PI*2);
-		roll	= fmod(roll,	PI*2);
+		yaw = fmod(yaw, PI * 2);
+		pitch = fmod(pitch, PI * 2);
+		roll = fmod(roll, PI * 2);
 		return *this;
 	}
 
 	// wraps the angles, then binds them to the range 0 (inclusive) and PI*2 (exclusive)
 	Rotation bindAngles() {
 		wrapAngles();
-		if( yaw < 0 )
-			yaw += PI*2;
-		if( pitch < 0 )
-			pitch += PI*2;
-		if( roll < 0 )
-			roll += PI*2;
-		if( yaw >= PI*2 )
-			yaw -= PI*2;
-		if( pitch >= PI*2 )
-			pitch -= PI*2;
-		if( roll >= PI*2 )
-			roll -= PI*2;
+		if (yaw < 0)
+			yaw += PI * 2;
+		if (pitch < 0)
+			pitch += PI * 2;
+		if (roll < 0)
+			roll += PI * 2;
+		if (yaw >= PI * 2)
+			yaw -= PI * 2;
+		if (pitch >= PI * 2)
+			pitch -= PI * 2;
+		if (roll >= PI * 2)
+			roll -= PI * 2;
 		return *this;
 	}
 
 	// converts the euler angle to a direction vector
 	Vector toVector() const {
-		glm::mat4 matrix = glm::yawPitchRoll( yaw, roll, pitch );
+		glm::mat4 matrix = glm::yawPitchRoll(yaw, roll, pitch);
 		glm::vec3 vector(matrix * glm::vec4(1.f, 0.f, 0.f, 0.f));
-		return Vector( vector.x, -vector.z, vector.y );
+		return Vector(vector.x, -vector.z, vector.y);
 	}
 
 	// operator ==
 	bool operator==(const Rotation& other) const {
-		if( yaw==other.yaw && pitch==other.pitch && roll==other.roll ) {
+		if (yaw == other.yaw && pitch == other.pitch && roll == other.roll) {
 			return true;
 		} else {
 			return false;
@@ -124,7 +124,7 @@ public:
 
 	// operator !=
 	bool operator!=(const Rotation& other) const {
-		if( yaw!=other.yaw || pitch!=other.pitch || roll!=other.roll ) {
+		if (yaw != other.yaw || pitch != other.pitch || roll != other.roll) {
 			return true;
 		} else {
 			return false;

@@ -30,9 +30,6 @@
     <ClInclude Include="..\..\src\Light.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\List.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Main.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

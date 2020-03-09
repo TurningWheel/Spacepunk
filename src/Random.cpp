@@ -9,15 +9,15 @@ Random::Random() {
 }
 
 void Random::seedBytes(const Uint8* seed, Uint32 size) {
-	if( !seed || !size )
+	if (!seed || !size)
 		return;
 
 	Sint32 i, j;
 
-	for( i=0; i<256; ++i )
+	for (i = 0; i < 256; ++i)
 		s[i] = i;
 
-	for( i=j=0; i<256; ++i ) { 
+	for (i = j = 0; i < 256; ++i) {
 		j = (j + s[i] + getByte(seed, size, i)) & 255;
 		swapByte(s + i, s + j);
 	}
@@ -25,18 +25,18 @@ void Random::seedBytes(const Uint8* seed, Uint32 size) {
 	s_i = s_j = 0;
 }
 
-void Random::seedTime()  {
+void Random::seedTime() {
 	static time_t t;
-	if( t == 0 ) {
+	if (t == 0) {
 		t = time(nullptr);
 	} else {
 		++t;
 	}
-	seedBytes( (const Uint8*)&t, sizeof(time_t) );
+	seedBytes((const Uint8*)&t, sizeof(time_t));
 }
 
 void Random::seedValue(Uint32 seed) {
-	seedBytes( (const Uint8*)&seed, sizeof(Uint32) );
+	seedBytes((const Uint8*)&seed, sizeof(Uint32));
 }
 
 Uint8 Random::getUint8() {
@@ -53,42 +53,42 @@ Sint8 Random::getSint8() {
 
 Uint16 Random::getUint16() {
 	Uint16 value;
-	getBytes((Uint8*)&value,sizeof(Uint16));
+	getBytes((Uint8*)&value, sizeof(Uint16));
 	return value;
 }
 
 Sint16 Random::getSint16() {
 	Sint16 value;
-	getBytes((Uint8*)&value,sizeof(Sint16));
+	getBytes((Uint8*)&value, sizeof(Sint16));
 	return value & INT16_MAX;
 }
 
 Uint32 Random::getUint32() {
 	Uint32 value;
-	getBytes((Uint8*)&value,sizeof(Uint32));
+	getBytes((Uint8*)&value, sizeof(Uint32));
 	return value;
 }
 
 Sint32 Random::getSint32() {
 	Sint32 value;
-	getBytes((Uint8*)&value,sizeof(Sint32));
+	getBytes((Uint8*)&value, sizeof(Sint32));
 	return value & INT16_MAX;
 }
 
 Uint64 Random::getUint64() {
 	Uint64 value;
-	getBytes((Uint8*)&value,sizeof(Uint64));
+	getBytes((Uint8*)&value, sizeof(Uint64));
 	return value;
 }
 
 Sint64 Random::getSint64() {
 	Sint64 value;
-	getBytes((Uint8*)&value,sizeof(Sint64));
+	getBytes((Uint8*)&value, sizeof(Sint64));
 	return value & INT16_MAX;
 }
 
 void Random::getBytes(Uint8* buffer, Uint32 size) {
-	while( size>0 ) {
+	while (size > 0) {
 		*buffer = getUint8();
 		++buffer;
 		--size;

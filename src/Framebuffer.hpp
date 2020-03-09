@@ -40,14 +40,14 @@ public:
 	void clear();
 
 	// getters & setters
-	virtual const type_t	getType() const				{ return ASSET_FRAMEBUFFER; }
-	GLuint					getFBO() const				{ return fbo; }
-	GLuint					getColor(int c) const		{ return color[c]; }
-	GLuint					getDepth() const			{ return depth; }
-	GLuint					getStencil() const			{ return stencil; }
-	Uint32					getWidth() const			{ return width; }
-	Uint32					getHeight() const			{ return height; }
-	bool					isInitialized() const		{ return fbo != 0; }
+	virtual const type_t	getType() const { return ASSET_FRAMEBUFFER; }
+	GLuint					getFBO() const { return fbo; }
+	GLuint					getColor(int c) const { return color[c]; }
+	GLuint					getDepth() const { return depth; }
+	GLuint					getStencil() const { return stencil; }
+	Uint32					getWidth() const { return width; }
+	Uint32					getHeight() const { return height; }
+	bool					isInitialized() const { return fbo != 0; }
 
 private:
 	GLuint fbo = 0;
