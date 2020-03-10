@@ -177,10 +177,7 @@ void Text::drawColor(Rect<int> src, Rect<int> dest, const glm::vec4& color) cons
 	if (!mat) {
 		return;
 	}
-	ShaderProgram& shader = mat->getShader();
-	if (&shader != ShaderProgram::getCurrentShader()) {
-		shader.mount();
-	}
+	ShaderProgram& shader = mat->getShader().mount();
 
 	glViewport(0, 0, xres, yres);
 	glDisable(GL_DEPTH_TEST);

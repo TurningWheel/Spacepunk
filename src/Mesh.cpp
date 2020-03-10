@@ -241,10 +241,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	if (!mat) {
 		return nullptr;
 	} else {
-		ShaderProgram& shader = mat->getShader();
-		if (&shader != ShaderProgram::getCurrentShader()) {
-			shader.mount();
-		}
+		ShaderProgram& shader = mat->getShader().mount();
 
 		// set line width
 		if (shaderVars.lineWidth > 0) {
@@ -278,6 +275,9 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 
 		// load common shader vars
 		glUniform1i(shader.getUniformLocation("gTime"), (GLint)mainEngine->getTicks());
+		glm::vec3 gMaxBox(maxBox.x, -maxBox.z, maxBox.y);
+		glUniform3fv(shader.getUniformLocation("gBoundingBox"), 1, glm::value_ptr(gMaxBox));
+
 		if (camera.getDrawMode() == Camera::DRAW_DEPTH) {
 
 			// load model matrix into shader

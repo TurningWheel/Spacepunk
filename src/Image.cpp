@@ -177,10 +177,7 @@ void Image::drawColor(const Rect<int>* src, const Rect<int>& dest, const glm::ve
 	if (!mat) {
 		return;
 	}
-	ShaderProgram& shader = mat->getShader();
-	if (&shader != ShaderProgram::getCurrentShader()) {
-		shader.mount();
-	}
+	ShaderProgram& shader = mat->getShader().mount();
 
 	glViewport(0, 0, xres, yres);
 	glDisable(GL_DEPTH_TEST);

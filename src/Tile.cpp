@@ -87,13 +87,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 		mainEngine->fmsg(Engine::MSG_ERROR, "failed to load tile material");
 		return nullptr;
 	}
-	ShaderProgram& shader = mat->getShader();
-
-	//glLineWidth(1);
-
-	if (&shader != ShaderProgram::getCurrentShader()) {
-		shader.mount();
-	}
+	ShaderProgram& shader = mat->getShader().mount();
 	if (camera.getDrawMode() == Camera::DRAW_DEPTH) {
 
 		// load projection matrix into shader

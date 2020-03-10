@@ -495,81 +495,78 @@ void Sector::loadShader(Camera& camera, Light* light, Material* material) {
 		}
 	}
 
-	ShaderProgram& shader = material->getShader();
+	ShaderProgram& shader = material->getShader().mount();
 	//glLineWidth(1);
 
-	if (&shader != ShaderProgram::getCurrentShader()) {
-		shader.mount();
-		if (camera.getDrawMode() == Camera::DRAW_DEPTH) {
+	if (camera.getDrawMode() == Camera::DRAW_DEPTH) {
 
-			// load projection matrix into shader
-			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
-		} else if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
+		// load projection matrix into shader
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+	} else if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
 
-			// load projection matrix into shader
-			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		// load projection matrix into shader
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 
-			// load camera position into shader
-			glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
-			glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
-		} else if (camera.getDrawMode() == Camera::DRAW_TRIANGLES) {
+		// load camera position into shader
+		glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
+		glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
+	} else if (camera.getDrawMode() == Camera::DRAW_TRIANGLES) {
 
-			// load projection matrix into shader
-			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
-		} else if (camera.getDrawMode() == Camera::DRAW_STENCIL) {
+		// load projection matrix into shader
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+	} else if (camera.getDrawMode() == Camera::DRAW_STENCIL) {
 
-			// load projection matrix into shader
-			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		// load projection matrix into shader
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
 
-			// load light data into shader
-			if (light) {
-				glm::vec3 lightPos(light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y);
-				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
-			} else {
-				glm::vec3 lightPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
-				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
-			}
+		// load light data into shader
+		if (light) {
+			glm::vec3 lightPos(light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y);
+			glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
 		} else {
-
-			// load projection matrix into shader
-			glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
-
-			glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
-
-			if (camera.getDrawMode() == Camera::DRAW_STANDARD) {
-				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
-			} else {
-				glUniform1i(shader.getUniformLocation("gActiveLight"), GL_FALSE);
-			}
-
-			// load light data into shader
-			if (light) {
-				Vector lightAng = light->getGlobalAng().toVector();
-				glm::vec3 lightDir(lightAng.x, -lightAng.z, lightAng.y);
-				glm::vec3 lightPos(light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y);
-				glm::vec3 lightScale(light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y);
-
-				glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
-				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
-				glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec3(light->getColor())));
-				glUniform1f(shader.getUniformLocation("gLightIntensity"), light->getIntensity());
-				glUniform1f(shader.getUniformLocation("gLightRadius"), light->getRadius());
-				glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(lightScale));
-				glUniform3fv(shader.getUniformLocation("gLightDirection"), 1, glm::value_ptr(lightDir));
-				glUniform1i(shader.getUniformLocation("gLightShape"), static_cast<GLint>(light->getShape()));
-			} else {
-				glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
-				glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(cameraPos));
-				glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec4(1.f, 1.f, 1.f, 1.f)));
-				glUniform1f(shader.getUniformLocation("gLightIntensity"), 1);
-				glUniform1f(shader.getUniformLocation("gLightRadius"), 16384.f);
-				glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(glm::vec3(1.f, 1.f, 1.f)));
-				glUniform1i(shader.getUniformLocation("gLightShape"), 0);
-			}
-
-			// load textures
-			material->bindTextures(Material::STANDARD);
+			glm::vec3 lightPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
+			glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
 		}
+	} else {
+
+		// load projection matrix into shader
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+
+		glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
+
+		if (camera.getDrawMode() == Camera::DRAW_STANDARD) {
+			glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
+		} else {
+			glUniform1i(shader.getUniformLocation("gActiveLight"), GL_FALSE);
+		}
+
+		// load light data into shader
+		if (light) {
+			Vector lightAng = light->getGlobalAng().toVector();
+			glm::vec3 lightDir(lightAng.x, -lightAng.z, lightAng.y);
+			glm::vec3 lightPos(light->getGlobalPos().x, -light->getGlobalPos().z, light->getGlobalPos().y);
+			glm::vec3 lightScale(light->getGlobalScale().x, -light->getGlobalScale().z, light->getGlobalScale().y);
+
+			glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
+			glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(lightPos));
+			glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec3(light->getColor())));
+			glUniform1f(shader.getUniformLocation("gLightIntensity"), light->getIntensity());
+			glUniform1f(shader.getUniformLocation("gLightRadius"), light->getRadius());
+			glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(lightScale));
+			glUniform3fv(shader.getUniformLocation("gLightDirection"), 1, glm::value_ptr(lightDir));
+			glUniform1i(shader.getUniformLocation("gLightShape"), static_cast<GLint>(light->getShape()));
+		} else {
+			glUniform3fv(shader.getUniformLocation("gCameraPos"), 1, glm::value_ptr(cameraPos));
+			glUniform3fv(shader.getUniformLocation("gLightPos"), 1, glm::value_ptr(cameraPos));
+			glUniform4fv(shader.getUniformLocation("gLightColor"), 1, glm::value_ptr(glm::vec4(1.f, 1.f, 1.f, 1.f)));
+			glUniform1f(shader.getUniformLocation("gLightIntensity"), 1);
+			glUniform1f(shader.getUniformLocation("gLightRadius"), 16384.f);
+			glUniform3fv(shader.getUniformLocation("gLightScale"), 1, glm::value_ptr(glm::vec3(1.f, 1.f, 1.f)));
+			glUniform1i(shader.getUniformLocation("gLightShape"), 0);
+		}
+
+		// load textures
+		material->bindTextures(Material::STANDARD);
 	}
 }
 

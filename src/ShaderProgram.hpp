@@ -43,7 +43,8 @@ public:
 	int link();
 
 	// mounts the shader program into the gl context
-	void mount();
+	// @return the shader that was mounted (it might not be this one!)
+	ShaderProgram& mount();
 
 	// unmounts the current shader program from the gl context
 	static void unmount();
@@ -65,4 +66,5 @@ private:
 	ArrayList<Shader> shaders;
 	GLuint programObject = 0;
 	Map<StringBuf<32>, GLuint> uniforms;
+	bool broken = false;
 };

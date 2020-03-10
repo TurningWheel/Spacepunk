@@ -744,10 +744,7 @@ void Renderer::blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuff
 	if (!mat) {
 		return;
 	}
-	ShaderProgram& shader = mat->getShader();
-	if (&shader != ShaderProgram::getCurrentShader()) {
-		shader.mount();
-	}
+	ShaderProgram& shader = mat->getShader().mount();
 
 	glViewport(0, 0, xres, yres);
 
@@ -794,10 +791,7 @@ void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType typ
 	if (!mat) {
 		return;
 	}
-	ShaderProgram& shader = mat->getShader();
-	if (&shader != ShaderProgram::getCurrentShader()) {
-		shader.mount();
-	}
+	ShaderProgram& shader = mat->getShader().mount();
 
 	glViewport(0, 0, xres, yres);
 

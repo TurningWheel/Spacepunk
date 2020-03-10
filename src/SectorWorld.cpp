@@ -556,9 +556,7 @@ void SectorWorld::drawGrid(Camera& camera, float z) {
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/grid.json");
 	if (mat) {
-		ShaderProgram& shader = mat->getShader();
-		if (&shader != ShaderProgram::getCurrentShader())
-			shader.mount();
+		ShaderProgram& shader = mat->getShader().mount();
 
 		// upload uniform variables
 		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));

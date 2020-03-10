@@ -93,9 +93,7 @@ void Line3D::draw(Camera& camera, const float width, const glm::vec3& src, const
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString(material);
 	if (mat) {
-		ShaderProgram& shader = mat->getShader();
-		if (&shader != ShaderProgram::getCurrentShader())
-			shader.mount();
+		ShaderProgram& shader = mat->getShader().mount();
 
 		// upload uniform variables
 		glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(modelMatrix));

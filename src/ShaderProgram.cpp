@@ -56,6 +56,7 @@ int ShaderProgram::link() {
 	if (linked) {
 		// successfully linked
 		mainEngine->msg(Engine::MSG_DEBUG, "linked shader program successfully");
+		broken = false;
 		return 0;
 	} else {
 		// show error message
@@ -74,14 +75,26 @@ int ShaderProgram::link() {
 			}
 		}
 
+		broken = true;
 		return 1;
 	}
 	uniforms.clear();
 }
 
-void ShaderProgram::mount() {
-	glUseProgram(programObject);
-	currentShader = this;
+ShaderProgram& ShaderProgram::mount() {
+	if (currentShader == this) {
+		return *this;
+	} else {
+		if (!broken) {
+			glUseProgram(programObject);
+			currentShader = this;
+			return *this;
+		} else {
+			Material* mat = mainEngine->getMaterialResource().dataForString("shaders/actor/error.json");
+			assert(&mat->getShader() != this);
+			return mat->getShader().mount();
+		}
+	}
 }
 
 void ShaderProgram::unmount() {

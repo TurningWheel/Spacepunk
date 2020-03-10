@@ -10,7 +10,9 @@ layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 FragColorBright;
 
 uniform mat4 gModel;
+uniform mat4 gNormalTransform;
 uniform vec3 gCameraPos;
+uniform vec3 gBoundingBox;
 
 #define MAX_LIGHTS 12
 uniform bool gActiveLight;
@@ -110,7 +112,7 @@ void main() {
 #ifndef TILED_TEXTURE
 	vec2 lTexCoord = TexCoord;
 #else
-	vec3 lWorldTexturePos = (lWorldPos - gModel[3].xyz) / 256.f;
+	vec3 lWorldTexturePos = (lWorldPos - gModel[3].xyz + (gNormalTransform * vec4(gBoundingBox, 1.f)).xyz) / 256.f;
 	vec2 lTexCoord = (lWorldTexturePos * lTBN).xy;
 	//vec2 lTexCoord = (lWorldTexturePos).xz;
 #endif
