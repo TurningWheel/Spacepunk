@@ -15,7 +15,9 @@
 				"Shader::version": 0,
 				"type": 2,
 				"path": "shaders/actor/std_f.glsl",
-				"defines": []
+				"defines": [
+					"TILED_TEXTURE"
+				]
 			}
 		]
 	},

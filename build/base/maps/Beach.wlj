@@ -1,0 +1,824 @@
+{
+    "BasicWorld::version": 0,
+    "nameStr": "Untitled World",
+    "entities": [
+        {
+            "Entity::version": 3,
+            "name": "Floor",
+            "pos": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "ang": {
+                "Quaternion::version": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            },
+            "scale": {
+                "x": 100.0,
+                "y": 100.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 129,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 32.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 1,
+                                "data": {
+                                    "Component::version": 1,
+                                    "name": "bbox",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": -16.0
+                                    },
+                                    "lAng": {
+                                        "Quaternion::version": 0,
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0,
+                                        "w": 1.0
+                                    },
+                                    "lScale": {
+                                        "x": 16.0,
+                                        "y": 16.0,
+                                        "z": 16.0
+                                    },
+                                    "components": [],
+                                    "BBox::version": 1,
+                                    "shape": 0,
+                                    "enabled": true,
+                                    "mass": 0.0
+                                }
+                            }
+                        ],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/materials/Sand.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 3,
+            "name": "Skybox",
+            "pos": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "ang": {
+                "Quaternion::version": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            },
+            "scale": {
+                "x": 1000.0,
+                "y": 1000.0,
+                "z": 1000.0
+            },
+            "scriptStr": "",
+            "flags": 16903,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 16.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": -1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Model::version": 1,
+                        "meshStr": "assets/block/block.FBX",
+                        "materialStr": "assets/skybox/material.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 3,
+            "name": "Point Light (White)",
+            "pos": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": -200.0
+            },
+            "ang": {
+                "Quaternion::version": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 3,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "light",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Light::version": 2,
+                        "color": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "intensity": 0.5,
+                        "radius": 50000.0,
+                        "shape": 0,
+                        "shadow": true,
+                        "arc": 70.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 3,
+            "name": "Man",
+            "pos": {
+                "x": 428.6153564453125,
+                "y": -186.02020263671876,
+                "z": -0.000030517578125
+            },
+            "ang": {
+                "Quaternion::version": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 385,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 2,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "model",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": -64.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": 64.0,
+                            "y": 64.0,
+                            "z": 64.0
+                        },
+                        "components": [],
+                        "Model::version": 1,
+                        "meshStr": "assets/ted/model.obj",
+                        "materialStr": "assets/ted/material.json",
+                        "depthfailStr": "",
+                        "animationStr": "",
+                        "shaderVars": {
+                            "Mesh::version": 0,
+                            "customColorEnabled": false,
+                            "customColorR": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorG": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                1.0
+                            ],
+                            "customColorB": [
+                                0.0,
+                                0.0,
+                                1.0,
+                                1.0
+                            ],
+                            "customColorA": [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ]
+                        },
+                        "genius": false
+                    }
+                },
+                {
+                    "type": 1,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "bbox",
+                        "lPos": {
+                            "x": -8.0,
+                            "y": -8.0,
+                            "z": -56.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": 16.0,
+                            "y": 16.0,
+                            "z": 56.0
+                        },
+                        "components": [],
+                        "BBox::version": 1,
+                        "shape": 2,
+                        "enabled": true,
+                        "mass": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 3,
+            "name": "Point Light (White)",
+            "pos": {
+                "x": -1000.0,
+                "y": 1000.0,
+                "z": -20000.0
+            },
+            "ang": {
+                "Quaternion::version": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "",
+            "flags": 129,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 3,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "light",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [],
+                        "Light::version": 2,
+                        "color": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "intensity": 0.75,
+                        "radius": 50000.0,
+                        "shape": 0,
+                        "shadow": true,
+                        "arc": 70.0
+                    }
+                }
+            ]
+        },
+        {
+            "Entity::version": 3,
+            "name": "Player Start",
+            "pos": {
+                "x": 73.87844848632813,
+                "y": -99.25302124023438,
+                "z": -66.6658935546875
+            },
+            "ang": {
+                "Quaternion::version": 0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+                "w": 1.0
+            },
+            "scale": {
+                "x": 1.0,
+                "y": 1.0,
+                "z": 1.0
+            },
+            "scriptStr": "PlayerStart",
+            "flags": 262,
+            "falling": false,
+            "sort": 0,
+            "EntityItem": {
+                "Item::version": 0,
+                "icon": "null.png",
+                "weight": 1.0,
+                "value": 1.0,
+                "throwable": false,
+                "throwLeadInTime": 1.0,
+                "throwRecovery": 1.0,
+                "throwDestroys": false,
+                "takesDamage": false,
+                "health": 0.0,
+                "damageImmunities": [],
+                "detonates": false,
+                "detonationDamageType": "",
+                "detonationRadius": 0.0,
+                "detonationDamage": 0.0,
+                "detonationFalloff": false,
+                "slotEffects": {
+                    "data": []
+                },
+                "distance": 0.0,
+                "spread": 0.0,
+                "radius": 0.0,
+                "animLeadSpeed": 0.0,
+                "animRecovSpeed": 0.0,
+                "spendCharges": 0,
+                "currCharges": 0,
+                "maxCharges": 0,
+                "rechargeRate": 0.0,
+                "currCooldown": 0.0,
+                "maxCooldown": 0.0,
+                "slotRestrictions": [],
+                "actions": {
+                    "data": []
+                }
+            },
+            "keys": {
+                "data": []
+            },
+            "components": [
+                {
+                    "type": 0,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "models",
+                        "lPos": {
+                            "x": -16.0,
+                            "y": 0.0,
+                            "z": 56.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": 1.0,
+                            "y": 1.0,
+                            "z": 1.0
+                        },
+                        "components": [
+                            {
+                                "type": 2,
+                                "data": {
+                                    "Component::version": 1,
+                                    "name": "model",
+                                    "lPos": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "lAng": {
+                                        "Quaternion::version": 0,
+                                        "x": 0.0,
+                                        "y": -0.7071067690849304,
+                                        "z": 0.0,
+                                        "w": 0.7071067690849304
+                                    },
+                                    "lScale": {
+                                        "x": 64.0,
+                                        "y": 64.0,
+                                        "z": 64.0
+                                    },
+                                    "components": [],
+                                    "Model::version": 1,
+                                    "meshStr": "assets/josh/trooper.FBX",
+                                    "materialStr": "assets/josh/material_trooper1.json",
+                                    "depthfailStr": "",
+                                    "animationStr": "assets/josh/animation.json",
+                                    "shaderVars": {
+                                        "Mesh::version": 0,
+                                        "customColorEnabled": false,
+                                        "customColorR": [
+                                            1.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "customColorG": [
+                                            0.0,
+                                            1.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "customColorB": [
+                                            0.0,
+                                            0.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "customColorA": [
+                                            1.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ]
+                                    },
+                                    "genius": false
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": 1,
+                    "data": {
+                        "Component::version": 1,
+                        "name": "bbox",
+                        "lPos": {
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0
+                        },
+                        "lAng": {
+                            "Quaternion::version": 0,
+                            "x": 0.0,
+                            "y": 0.0,
+                            "z": 0.0,
+                            "w": 1.0
+                        },
+                        "lScale": {
+                            "x": 32.0,
+                            "y": 32.0,
+                            "z": 64.0
+                        },
+                        "components": [],
+                        "BBox::version": 1,
+                        "shape": 2,
+                        "enabled": true,
+                        "mass": 0.0
+                    }
+                }
+            ]
+        }
+    ]
+}

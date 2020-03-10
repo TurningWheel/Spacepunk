@@ -1,0 +1,83 @@
+{
+	"Animation::version": 0,
+	"animations": [
+		{
+			"Animation::entry_t::version": 0,
+			"name": "walk",
+			"begin": 0,
+			"end": 30,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "run",
+			"begin": 31,
+			"end": 51,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "stand",
+			"begin": 52,
+			"end": 122,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "idle",
+			"begin": 123,
+			"end": 473,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "ready",
+			"begin": 474,
+			"end": 514,
+			"loop": true
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "attack1",
+			"begin": 515,
+			"end": 545,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "attack2",
+			"begin": 546,
+			"end": 576,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "attack3",
+			"begin": 577,
+			"end": 602,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "hit1",
+			"begin": 603,
+			"end": 618,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "hit2",
+			"begin": 619,
+			"end": 634,
+			"loop": false
+		},
+		{
+			"Animation::entry_t::version": 0,
+			"name": "dead",
+			"begin": 635,
+			"end": 700,
+			"loop": false
+		}
+	],
+	"sounds": []
+}

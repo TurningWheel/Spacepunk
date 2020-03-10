@@ -9,6 +9,7 @@ in vec3 Tangent;
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 FragColorBright;
 
+uniform mat4 gModel;
 uniform vec3 gCameraPos;
 
 #define MAX_LIGHTS 12
@@ -80,7 +81,8 @@ float ShadowFactor(int light)
 		case 11: lSample = texture(gShadowmap[11], lUVC); lUID = texture(gUIDmap[11], lUVC.xyz); break;
 	}
 
-	return (lUID.r == gUID) ? 1.f : lSample;
+	//return (lUID.r == gUID) ? 1.f : lSample;
+	return lSample;
 }
 #endif
 
@@ -108,7 +110,7 @@ void main() {
 #ifndef TILED_TEXTURE
 	vec2 lTexCoord = TexCoord;
 #else
-	vec3 lWorldTexturePos = lWorldPos / 256.f;
+	vec3 lWorldTexturePos = (lWorldPos - gModel[3].xyz) / 256.f;
 	vec2 lTexCoord = (lWorldTexturePos * lTBN).xy;
 	//vec2 lTexCoord = (lWorldTexturePos).xz;
 #endif

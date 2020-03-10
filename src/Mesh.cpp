@@ -944,13 +944,12 @@ void Mesh::SubMesh::readNodeHierarchy(const AnimationMap* animations, skincache_
 	glm::mat4 glmTransform = glm::transpose(glm::make_mat4(&nodeTransform.a1));
 	glm::mat4 globalTransform = *rootTransform * glmTransform;
 
-	unsigned int boneIndex = 0;
 	const unsigned int* boneIndexPtr = boneMapping[nodeName];
-	assert(boneIndexPtr);
-	boneIndex = *boneIndexPtr;
-
-	skin->offsets[boneIndex] = globalTransform;
-	skin->anims[boneIndex] = globalTransform * bones[boneIndex].offset;
+	if (boneIndexPtr) {
+		unsigned int boneIndex = *boneIndexPtr;
+		skin->offsets[boneIndex] = globalTransform;
+		skin->anims[boneIndex] = globalTransform * bones[boneIndex].offset;
+	}
 
 	if (node->mNumChildren > 1) {
 		std::vector<std::future<void>> jobs;

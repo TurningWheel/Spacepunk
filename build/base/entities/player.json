@@ -1,6 +1,6 @@
 {
     "Entity::def_t::version": 1,
-    "editor": false,
+    "editor": true,
     "entity": {
         "Entity::version": 3,
         "name": "Player",

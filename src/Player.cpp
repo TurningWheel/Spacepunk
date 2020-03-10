@@ -25,7 +25,7 @@ static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while 
 static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "4.0");
 static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "1");
 static Cvar cvar_crouchSpeed("player.crouch.speed", "movement speed modifier while crouching", ".25");
-static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "1");
+static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "0");
 static Cvar cvar_wallWalkLimit("player.wallwalk.limit", "the maximum difference in slope that can be overcome with wall-walking", "45");
 static Cvar cvar_zeroGravity("player.zerog.enabled", "enable zero-g effects on the player", "0");
 static Cvar cvar_slopeLimit("player.slope.limit", "the maximum slope of a floor traversible by a player", "45");

@@ -67,6 +67,8 @@ Image::Image(const char* _name) : Asset(_name) {
 	surf = newSurf;
 }
 
+static Cvar cvar_anisotropy("render.anisotropy", "anisotropy applied on textures", "4.0");
+
 bool Image::finalize() {
 	if (surf) {
 		SDL_LockSurface(surf);
@@ -88,7 +90,9 @@ bool Image::finalize() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 #ifdef PLATFORM_WINDOWS
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.f);
+			if (cvar_anisotropy.toFloat() > 0.0) {
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, cvar_anisotropy.toFloat());
+			}
 #endif
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}

@@ -176,7 +176,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc140-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc141-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
@@ -241,7 +241,7 @@
       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc140-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc141-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -263,7 +263,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc140-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
+      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc141-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
