@@ -1,4 +1,4 @@
-// Voxel.hpp
+//! @file Voxel.hpp
 
 #pragma once
 
@@ -8,7 +8,7 @@
 
 class Mesh;
 
-// this is the real meat
+//! Contains all the data associated with a voxel Mesh.
 struct VoxelMeshData {
 	VoxelMeshData(Uint32 numFaces) {
 		vertexCount = 3 * numFaces;
@@ -28,7 +28,7 @@ struct VoxelMeshData {
 		}
 	}
 
-	// 24bit positions, colors
+	//! 24bit positions, colors
 	std::unique_ptr<GLfloat[]> positions;
 	std::unique_ptr<GLfloat[]> colors;
 	std::unique_ptr<GLfloat[]> normals;
@@ -43,7 +43,7 @@ private:
 
 class VoxelReader {
 public:
-	// import a voxel model into a mesh
-	// @param path full file path
+	//! import a voxel model into a mesh
+	//! @param path full file path
 	static VoxelMeshData readVoxel(const char* path);
 };

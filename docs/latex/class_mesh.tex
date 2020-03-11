@@ -1,0 +1,197 @@
+\hypertarget{class_mesh}{}\doxysection{Mesh Class Reference}
+\label{class_mesh}\index{Mesh@{Mesh}}
+
+
+{\ttfamily \#include $<$Mesh.\+hpp$>$}
+
+Inheritance diagram for Mesh\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_mesh}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{shadervars\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em shader vars \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_mesh_1_1_sub_mesh}{Sub\+Mesh}}
+\begin{DoxyCompactList}\small\item\em submesh entry \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mesh_a6680c658d70d67f71f4ba7ad8f27c512}\label{class_mesh_a6680c658d70d67f71f4ba7ad8f27c512}} 
+{\bfseries Mesh} (const char $\ast$\+\_\+name)
+\item 
+virtual bool \mbox{\hyperlink{class_mesh_af9b7fd2647117a218b008e8e5f4e060b}{finalize}} () override
+\item 
+const bool \mbox{\hyperlink{class_mesh_a9b019359ab2c440377157da0c6901f6e}{has\+Animations}} () const
+\item 
+\mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$ \mbox{\hyperlink{class_mesh_a50f3746496d7d5da9041d04336c8f1a6}{load\+Shader}} (const \mbox{\hyperlink{class_component}{Component}} \&component, \mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights, \mbox{\hyperlink{class_material}{Material}} $\ast$material, const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{shadervars\+\_\+t}} \&shader\+Vars, const glm\+::mat4 \&matrix)
+\item 
+void \mbox{\hyperlink{class_mesh_ac87bc1337288b96bbf6ac5d109541a36}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_component}{Component}} $\ast$component, \mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$shader)
+\item 
+void \mbox{\hyperlink{class_mesh_a021466f8749fb81a465e14ee5157cef1}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_component}{Component}} $\ast$component, \mbox{\hyperlink{class_array_list}{Skin\+Cache}} \&skincache, \mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$shader)
+\item 
+void \mbox{\hyperlink{class_mesh_a8ff79a17f4dc1a755b908fbaafff43bb}{skin}} (const \mbox{\hyperlink{class_map}{Animation\+Map}} \&animations, \mbox{\hyperlink{class_array_list}{Skin\+Cache}} \&skincache) const
+\item 
+unsigned int \mbox{\hyperlink{class_mesh_a6c9177c34507fa5560f49e3af2f68608}{bone\+Index\+For\+Name}} (const char $\ast$name) const
+\item 
+\mbox{\Hypertarget{class_mesh_a7008e23cbaacd2878b7e81a01ac5d96b}\label{class_mesh_a7008e23cbaacd2878b7e81a01ac5d96b}} 
+void \mbox{\hyperlink{class_mesh_a7008e23cbaacd2878b7e81a01ac5d96b}{clear}} ()
+\begin{DoxyCompactList}\small\item\em empties all data from this mesh \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_mesh_ab3681cd0bf7dfacbe3c3b1e66e66fd81}{compose\+Mesh}} (const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_model}{Model}} $\ast$ $>$ \&models, const glm\+::mat4 \&root)
+\item 
+\mbox{\Hypertarget{class_mesh_aa1a630dab14b63f013ea6bfcf347e819}\label{class_mesh_aa1a630dab14b63f013ea6bfcf347e819}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{Asset\+::type\+\_\+t}} \mbox{\hyperlink{class_mesh_aa1a630dab14b63f013ea6bfcf347e819}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mesh_ae8979bb2721892a8edd7468cf5737e4e}\label{class_mesh_ae8979bb2721892a8edd7468cf5737e4e}} 
+const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_mesh_1_1_sub_mesh}{Mesh\+::\+Sub\+Mesh}} $\ast$ $>$ \& {\bfseries get\+Sub\+Meshes} () const
+\item 
+\mbox{\Hypertarget{class_mesh_af3bfbbf5cb687964f93b6144c8a87d9e}\label{class_mesh_af3bfbbf5cb687964f93b6144c8a87d9e}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Min\+Box} () const
+\item 
+\mbox{\Hypertarget{class_mesh_aabd72cc399401cc86fff2750503030f1}\label{class_mesh_aabd72cc399401cc86fff2750503030f1}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Max\+Box} () const
+\item 
+\mbox{\Hypertarget{class_mesh_a473234eea8a2afde77db0d86d40cc54e}\label{class_mesh_a473234eea8a2afde77db0d86d40cc54e}} 
+float {\bfseries get\+Anim\+Length} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mesh_a6deb0cacedc68c622996ac3efa50e533}\label{class_mesh_a6deb0cacedc68c622996ac3efa50e533}} 
+static const Uint32 \mbox{\hyperlink{class_mesh_a6deb0cacedc68c622996ac3efa50e533}{max\+Lights}} = 12
+\begin{DoxyCompactList}\small\item\em maximum number of lights that will fit in the tile shader \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Meshes are the raw 3D assets loaded from disk that populate a game \mbox{\hyperlink{class_world}{World}}. Do not confuse a \mbox{\hyperlink{class_mesh}{Mesh}} with a \mbox{\hyperlink{class_model}{Model}}. Meshes are unique and represent the raw data itself; a \mbox{\hyperlink{class_model}{Model}} is an \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that binds a \mbox{\hyperlink{class_mesh}{Mesh}} to an \mbox{\hyperlink{class_entity}{Entity}}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_mesh_a6c9177c34507fa5560f49e3af2f68608}\label{class_mesh_a6c9177c34507fa5560f49e3af2f68608}} 
+\index{Mesh@{Mesh}!boneIndexForName@{boneIndexForName}}
+\index{boneIndexForName@{boneIndexForName}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{boneIndexForName()}{boneIndexForName()}}
+{\footnotesize\ttfamily unsigned int Mesh\+::bone\+Index\+For\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption}) const}
+
+find the bone with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the bone to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the bone we are searching for, or U\+I\+N\+T32\+\_\+\+M\+AX if the bone could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_mesh_ab3681cd0bf7dfacbe3c3b1e66e66fd81}\label{class_mesh_ab3681cd0bf7dfacbe3c3b1e66e66fd81}} 
+\index{Mesh@{Mesh}!composeMesh@{composeMesh}}
+\index{composeMesh@{composeMesh}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{composeMesh()}{composeMesh()}}
+{\footnotesize\ttfamily void Mesh\+::compose\+Mesh (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_model}{Model}} $\ast$ $>$ \&}]{models,  }\item[{const glm\+::mat4 \&}]{root }\end{DoxyParamCaption})}
+
+builds a composite mesh from several models 
+\begin{DoxyParams}{Parameters}
+{\em models} & The models to compose the mesh from \\
+\hline
+{\em root} & The root transform of all the models \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_mesh_ac87bc1337288b96bbf6ac5d109541a36}\label{class_mesh_ac87bc1337288b96bbf6ac5d109541a36}} 
+\index{Mesh@{Mesh}!draw@{draw}}
+\index{draw@{draw}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Mesh\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_component}{Component}} $\ast$}]{component,  }\item[{\mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$}]{shader }\end{DoxyParamCaption})}
+
+draws the mesh without animating it 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera to render the mesh through \\
+\hline
+{\em component} & optional component tied to the mesh \\
+\hline
+{\em shader} & the shader program to draw the mesh with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_mesh_a021466f8749fb81a465e14ee5157cef1}\label{class_mesh_a021466f8749fb81a465e14ee5157cef1}} 
+\index{Mesh@{Mesh}!draw@{draw}}
+\index{draw@{draw}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Mesh\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_component}{Component}} $\ast$}]{component,  }\item[{\mbox{\hyperlink{class_array_list}{Skin\+Cache}} \&}]{skincache,  }\item[{\mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$}]{shader }\end{DoxyParamCaption})}
+
+draws the mesh 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera to render the mesh through \\
+\hline
+{\em component} & optional component tied to the mesh \\
+\hline
+{\em skincache} & skincache to render with \\
+\hline
+{\em shader} & the shader program to draw the mesh with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_mesh_af9b7fd2647117a218b008e8e5f4e060b}\label{class_mesh_af9b7fd2647117a218b008e8e5f4e060b}} 
+\index{Mesh@{Mesh}!finalize@{finalize}}
+\index{finalize@{finalize}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily bool Mesh\+::finalize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+optional function for streamable types \begin{DoxyReturn}{Returns}
+true if the asset was successfully loaded, otherwise false 
+\end{DoxyReturn}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a314c70b04a032a2e27283c1fffb8eaf9}{Asset}}.
+
+\mbox{\Hypertarget{class_mesh_a9b019359ab2c440377157da0c6901f6e}\label{class_mesh_a9b019359ab2c440377157da0c6901f6e}} 
+\index{Mesh@{Mesh}!hasAnimations@{hasAnimations}}
+\index{hasAnimations@{hasAnimations}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{hasAnimations()}{hasAnimations()}}
+{\footnotesize\ttfamily const bool Mesh\+::has\+Animations (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+determines whether any of the mesh entries have animations or not \begin{DoxyReturn}{Returns}
+true if the mesh has animations, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_mesh_a50f3746496d7d5da9041d04336c8f1a6}\label{class_mesh_a50f3746496d7d5da9041d04336c8f1a6}} 
+\index{Mesh@{Mesh}!loadShader@{loadShader}}
+\index{loadShader@{loadShader}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{loadShader()}{loadShader()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$ Mesh\+::load\+Shader (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_component}{Component}} \&}]{component,  }\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights,  }\item[{\mbox{\hyperlink{class_material}{Material}} $\ast$}]{material,  }\item[{const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{shadervars\+\_\+t}} \&}]{shader\+Vars,  }\item[{const glm\+::mat4 \&}]{matrix }\end{DoxyParamCaption})}
+
+loads the appropriate shader to draw the mesh 
+\begin{DoxyParams}{Parameters}
+{\em component} & the component that contains the mesh \\
+\hline
+{\em camera} & the camera object to render the scene with \\
+\hline
+{\em light} & the light object to light the scene with, or nullptr for no light source \\
+\hline
+{\em material} & path to the material asset used to render the mesh \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the \mbox{\hyperlink{class_shader_program}{Shader\+Program}} object with the given name, or nullptr if no shader was loaded 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em matrix} & model matrix \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_mesh_a8ff79a17f4dc1a755b908fbaafff43bb}\label{class_mesh_a8ff79a17f4dc1a755b908fbaafff43bb}} 
+\index{Mesh@{Mesh}!skin@{skin}}
+\index{skin@{skin}!Mesh@{Mesh}}
+\doxysubsubsection{\texorpdfstring{skin()}{skin()}}
+{\footnotesize\ttfamily void Mesh\+::skin (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_map}{Animation\+Map}} \&}]{animations,  }\item[{\mbox{\hyperlink{class_array_list}{Skin\+Cache}} \&}]{skincache }\end{DoxyParamCaption}) const}
+
+skins the mesh 
+\begin{DoxyParams}{Parameters}
+{\em animations} & animations to skin with \\
+\hline
+{\em skincache} & where to store resulting skin \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_mesh_8hpp}{Mesh.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Mesh.\+cpp\end{DoxyCompactItemize}

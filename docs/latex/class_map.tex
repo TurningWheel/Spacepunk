@@ -1,0 +1,217 @@
+\hypertarget{class_map}{}\doxysection{Map$<$ K, T $>$ Class Template Reference}
+\label{class_map}\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+
+
+A key/value hash map. Provides a fast way to relate one data (the \char`\"{}key\char`\"{}) to another (the \char`\"{}value\char`\"{})  
+
+
+
+
+{\ttfamily \#include $<$Map.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_map_1_1_const_iterator}{Const\+Iterator}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_map_1_1_const_iterator}{Const\+Iterator}}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_map_1_1_iterator}{Iterator}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_map_1_1_iterator}{Iterator}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_map_a11f36e0d31d18f0e30c127113e21e61b}\label{class_map_a11f36e0d31d18f0e30c127113e21e61b}} 
+{\bfseries Map} (const \mbox{\hyperlink{class_map}{Map}} \&src)
+\item 
+\mbox{\Hypertarget{class_map_ad743b602a7cc95ff3a5ca55e7f4c11d2}\label{class_map_ad743b602a7cc95ff3a5ca55e7f4c11d2}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_ordered_pair}{Ordered\+Pair}}$<$ K, T $>$ $>$ \& \mbox{\hyperlink{class_map_ad743b602a7cc95ff3a5ca55e7f4c11d2}{get\+Hash}} (Uint32 index)
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_map_ada2d37d8554a1bd0b0d2375d3c25e191}\label{class_map_ada2d37d8554a1bd0b0d2375d3c25e191}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_ordered_pair}{Ordered\+Pair}}$<$ K, T $>$ $>$ \& {\bfseries get\+Hash} (Uint32 index) const
+\item 
+\mbox{\Hypertarget{class_map_a85fcbdc93b724c10d295a68df2ae2358}\label{class_map_a85fcbdc93b724c10d295a68df2ae2358}} 
+Uint32 {\bfseries get\+Num\+Buckets} () const
+\item 
+\mbox{\Hypertarget{class_map_ab017bf4741b658be7729f2fc05f0d6f5}\label{class_map_ab017bf4741b658be7729f2fc05f0d6f5}} 
+Uint32 {\bfseries get\+Size} () const
+\item 
+\mbox{\Hypertarget{class_map_af2db0720c99f3b2ad56b21c2ae549211}\label{class_map_af2db0720c99f3b2ad56b21c2ae549211}} 
+void \mbox{\hyperlink{class_map_af2db0720c99f3b2ad56b21c2ae549211}{clear}} ()
+\begin{DoxyCompactList}\small\item\em clears the map of all key/value pairs \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_map_a6cd06effae49b2943d4835a3cd80a644}\label{class_map_a6cd06effae49b2943d4835a3cd80a644}} 
+void \mbox{\hyperlink{class_map_a6cd06effae49b2943d4835a3cd80a644}{reset}} ()
+\begin{DoxyCompactList}\small\item\em not only clears the map, but also resets its size \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_map_a04600d67af6089ccc3bb63ea4626109a}{insert}} (const K \&key, const T \&value)
+\item 
+void \mbox{\hyperlink{class_map_aa3b5075f83fa71c43a2dce128e680106}{insert\+Unique}} (const K \&key, const T \&value)
+\item 
+void \mbox{\hyperlink{class_map_ae9c6465e284cabff45ef7f49126aeff2}{rehash}} (Uint32 new\+Bucket\+Count)
+\item 
+bool \mbox{\hyperlink{class_map_ac62c9715af0e8ada3f2ae1e992836eeb}{exists}} (const K \&key) const
+\item 
+bool \mbox{\hyperlink{class_map_a2a2fa5c25009f9322144916904e5df38}{remove}} (const K \&key)
+\item 
+T $\ast$ \mbox{\hyperlink{class_map_ab920b4284f78691656825a2dc2205ce0}{find}} (const K \&key)
+\item 
+\mbox{\Hypertarget{class_map_a860b02e621cece6106ce7e7a15ac4126}\label{class_map_a860b02e621cece6106ce7e7a15ac4126}} 
+const T $\ast$ {\bfseries find} (const K \&key) const
+\item 
+void \mbox{\hyperlink{class_map_a1938d438112b82a559dfc37e05bf8305}{copy}} (const \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$ \&src)
+\item 
+void \mbox{\hyperlink{class_map_a17d2e114ada1781daf1b06faa5bb4f12}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+T $\ast$ \mbox{\hyperlink{class_map_a9c624148b21be3aa7c927c6479332fac}{operator\mbox{[}$\,$\mbox{]}}} (const K \&key)
+\item 
+\mbox{\Hypertarget{class_map_a06e24fd31eafbc16f771975dd173818f}\label{class_map_a06e24fd31eafbc16f771975dd173818f}} 
+const T $\ast$ {\bfseries operator\mbox{[}$\,$\mbox{]}} (const K \&key) const
+\item 
+\mbox{\Hypertarget{class_map_a013ec9ee7f9a7fad017dea714e1f1e4c}\label{class_map_a013ec9ee7f9a7fad017dea714e1f1e4c}} 
+\mbox{\hyperlink{class_map_1_1_iterator}{Iterator}} \mbox{\hyperlink{class_map_a013ec9ee7f9a7fad017dea714e1f1e4c}{begin}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_map_a013ec9ee7f9a7fad017dea714e1f1e4c}{begin()}} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_map_abcec3b50281c507bc96912344238febb}\label{class_map_abcec3b50281c507bc96912344238febb}} 
+const \mbox{\hyperlink{class_map_1_1_const_iterator}{Const\+Iterator}} {\bfseries begin} () const
+\item 
+\mbox{\Hypertarget{class_map_ac58ae05fe0971661839862b8989a9f51}\label{class_map_ac58ae05fe0971661839862b8989a9f51}} 
+\mbox{\hyperlink{class_map_1_1_iterator}{Iterator}} \mbox{\hyperlink{class_map_ac58ae05fe0971661839862b8989a9f51}{end}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_map_ac58ae05fe0971661839862b8989a9f51}{end()}} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_map_a980d4e8186542e3fb374a7b57560b0d0}\label{class_map_a980d4e8186542e3fb374a7b57560b0d0}} 
+const \mbox{\hyperlink{class_map_1_1_const_iterator}{Const\+Iterator}} {\bfseries end} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_map_a6c0cdf2a456c76eadbd9af2a00f395ce}\label{class_map_a6c0cdf2a456c76eadbd9af2a00f395ce}} 
+static const Uint32 {\bfseries max\+Bucket\+Size} = 1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename K, typename T$>$\newline
+class Map$<$ K, T $>$}
+
+A key/value hash map. Provides a fast way to relate one data (the \char`\"{}key\char`\"{}) to another (the \char`\"{}value\char`\"{}) 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_map_a1938d438112b82a559dfc37e05bf8305}\label{class_map_a1938d438112b82a559dfc37e05bf8305}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!copy@{copy}}
+\index{copy@{copy}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+void \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::copy (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$ \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+replace the contents of this map with those of another 
+\begin{DoxyParams}{Parameters}
+{\em src} & The map to copy \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_map_ac62c9715af0e8ada3f2ae1e992836eeb}\label{class_map_ac62c9715af0e8ada3f2ae1e992836eeb}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!exists@{exists}}
+\index{exists@{exists}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{exists()}{exists()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+bool \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::exists (\begin{DoxyParamCaption}\item[{const K \&}]{key }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+determine if the key with the given name exists \begin{DoxyReturn}{Returns}
+true if key/value pair exists, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_ab920b4284f78691656825a2dc2205ce0}\label{class_map_ab920b4284f78691656825a2dc2205ce0}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!find@{find}}
+\index{find@{find}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+T$\ast$ \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::find (\begin{DoxyParamCaption}\item[{const K \&}]{key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+find the key/value pair with the given name 
+\begin{DoxyParams}{Parameters}
+{\em key} & The name of the pair to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the key, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_a04600d67af6089ccc3bb63ea4626109a}\label{class_map_a04600d67af6089ccc3bb63ea4626109a}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!insert@{insert}}
+\index{insert@{insert}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+void \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::insert (\begin{DoxyParamCaption}\item[{const K \&}]{key,  }\item[{const T \&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+inserts a key/value pair into the \mbox{\hyperlink{class_map}{Map}} 
+\begin{DoxyParams}{Parameters}
+{\em key} & The key \\
+\hline
+{\em value} & The value associated with the key \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_map_aa3b5075f83fa71c43a2dce128e680106}\label{class_map_aa3b5075f83fa71c43a2dce128e680106}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!insertUnique@{insertUnique}}
+\index{insertUnique@{insertUnique}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{insertUnique()}{insertUnique()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+void \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::insert\+Unique (\begin{DoxyParamCaption}\item[{const K \&}]{key,  }\item[{const T \&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+insert a key/value pair into the \mbox{\hyperlink{class_map}{Map}}, presuming uniqueness 
+\begin{DoxyParams}{Parameters}
+{\em key} & The key \\
+\hline
+{\em value} & The value associated with the key \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_map_a9c624148b21be3aa7c927c6479332fac}\label{class_map_a9c624148b21be3aa7c927c6479332fac}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+T$\ast$ \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{const K \&}]{key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+find the key/value pair with the given name 
+\begin{DoxyParams}{Parameters}
+{\em key} & The name of the pair to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the key 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_ae9c6465e284cabff45ef7f49126aeff2}\label{class_map_ae9c6465e284cabff45ef7f49126aeff2}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!rehash@{rehash}}
+\index{rehash@{rehash}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{rehash()}{rehash()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+void \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::rehash (\begin{DoxyParamCaption}\item[{Uint32}]{new\+Bucket\+Count }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+resize and rebuild the hash map 
+\begin{DoxyParams}{Parameters}
+{\em new\+Bucket\+Count} & Updated number of buckets in the map \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_map_a2a2fa5c25009f9322144916904e5df38}\label{class_map_a2a2fa5c25009f9322144916904e5df38}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!remove@{remove}}
+\index{remove@{remove}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{remove()}{remove()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+bool \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::remove (\begin{DoxyParamCaption}\item[{const K \&}]{key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+removes a key/value pair from the \mbox{\hyperlink{class_map}{Map}} 
+\begin{DoxyParams}{Parameters}
+{\em key} & The key \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the key/value pair was removed, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_map_a17d2e114ada1781daf1b06faa5bb4f12}\label{class_map_a17d2e114ada1781daf1b06faa5bb4f12}} 
+\index{Map$<$ K, T $>$@{Map$<$ K, T $>$}!serialize@{serialize}}
+\index{serialize@{serialize}!Map$<$ K, T $>$@{Map$<$ K, T $>$}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename K , typename T $>$ \\
+void \mbox{\hyperlink{class_map}{Map}}$<$ K, T $>$\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_map_8hpp}{Map.\+hpp}}\end{DoxyCompactItemize}

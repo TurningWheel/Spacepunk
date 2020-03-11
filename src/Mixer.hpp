@@ -1,30 +1,32 @@
-// Mixer.hpp
+//! @file Mixer.hpp
 
 #pragma once
 
 class Camera;
 
+//! The Mixer class contains all the state about 3D listeners in the world and the audio engine,
+//! and provides methods for playing 2D sounds, among other things.
 class Mixer {
 public:
 	Mixer();
 	~Mixer();
 
-	// opens the mixer
+	//! opens the mixer
 	void init();
 
-	// prints a list of all audio devices available to the mixer
+	//! prints a list of all audio devices available to the mixer
 	void listDevices();
 
-	// set the 3D listener properties for the mixer
-	// @param camera the viewpoint to set the listener properties to
+	//! set the 3D listener properties for the mixer
+	//! @param camera the viewpoint to set the listener properties to
 	void setListener(Camera* camera);
 
-	// play the given sound effect
-	// @param loop if true, the sound will loop indefinitely; otherwise, it will only play once
-	// @return the Mix_Channel the sound is playing on, or -1 for errors
+	//! play the given sound effect
+	//! @param loop if true, the sound will loop indefinitely; otherwise, it will only play once
+	//! @return the Mix_Channel the sound is playing on, or -1 for errors
 	int playSound(const char* name, const bool loop);
 
-	// getters & setters
+	//! getters & setters
 	const ALCdevice*	getDevice() const { return device; }
 	const ALCcontext*	getContext() const { return context; }
 	bool				isInitialized() const { return initialized; }

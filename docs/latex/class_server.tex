@@ -1,0 +1,85 @@
+\hypertarget{class_server}{}\doxysection{Server Class Reference}
+\label{class_server}\index{Server@{Server}}
+
+
+{\ttfamily \#include $<$Server.\+hpp$>$}
+
+Inheritance diagram for Server\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_server}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_server_a25ce9a043664b118af37213392606aee}\label{class_server_a25ce9a043664b118af37213392606aee}} 
+virtual bool \mbox{\hyperlink{class_server_a25ce9a043664b118af37213392606aee}{is\+Server}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_server_a9dd3f4ecf93febf6bf18cd39cf97cf15}\label{class_server_a9dd3f4ecf93febf6bf18cd39cf97cf15}} 
+virtual bool {\bfseries is\+Client} () const override
+\item 
+\mbox{\Hypertarget{class_server_aa3163f91d5f7a7d4aa4b70fc031602d5}\label{class_server_aa3163f91d5f7a7d4aa4b70fc031602d5}} 
+virtual void \mbox{\hyperlink{class_server_aa3163f91d5f7a7d4aa4b70fc031602d5}{init}} () override
+\begin{DoxyCompactList}\small\item\em starts up the server \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_server_a08349a6ed73543e6e82c8fce0fbe2379}\label{class_server_a08349a6ed73543e6e82c8fce0fbe2379}} 
+void \mbox{\hyperlink{class_server_a08349a6ed73543e6e82c8fce0fbe2379}{handle\+Net\+Messages}} ()
+\begin{DoxyCompactList}\small\item\em read messages from the net interface \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_server_ae2f332a8cf32fa4690fdf75d2c96121e}\label{class_server_ae2f332a8cf32fa4690fdf75d2c96121e}} 
+virtual void \mbox{\hyperlink{class_server_ae2f332a8cf32fa4690fdf75d2c96121e}{pre\+Process}} () override
+\begin{DoxyCompactList}\small\item\em perform pre-\/processing on the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_server_ac4906f6ef5e192b989260022089b22dc}\label{class_server_ac4906f6ef5e192b989260022089b22dc}} 
+virtual void \mbox{\hyperlink{class_server_ac4906f6ef5e192b989260022089b22dc}{process}} () override
+\begin{DoxyCompactList}\small\item\em process the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_server_af98704bd2227fd0df532ed303d9a003f}\label{class_server_af98704bd2227fd0df532ed303d9a003f}} 
+virtual void \mbox{\hyperlink{class_server_af98704bd2227fd0df532ed303d9a003f}{post\+Process}} () override
+\begin{DoxyCompactList}\small\item\em perform post-\/processing on the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_server_a3008cd1e111a00772e6008b78c9fadad}\label{class_server_a3008cd1e111a00772e6008b78c9fadad}} 
+virtual void \mbox{\hyperlink{class_server_a3008cd1e111a00772e6008b78c9fadad}{on\+Establish\+Connection}} (Uint32 remote\+ID) override
+\begin{DoxyCompactList}\small\item\em called when a client connects to our server \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_server_a81af08d9ca88b12ad27975983708541a}{on\+Disconnect}} (Uint32 remote\+ID) override
+\item 
+void \mbox{\hyperlink{class_server_a4c1b7b1eb28fe6579be033224b3804bb}{update\+Client\+About\+Players}} (Uint32 remote\+ID)
+\item 
+\mbox{\Hypertarget{class_server_ae0c9accb7bac77ca173f6151af92570d}\label{class_server_ae0c9accb7bac77ca173f6151af92570d}} 
+void \mbox{\hyperlink{class_server_ae0c9accb7bac77ca173f6151af92570d}{update\+All\+Clients\+About\+Players}} ()
+\begin{DoxyCompactList}\small\item\em update all clients about the players that are connected to me \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_server}{Server}} implements the \mbox{\hyperlink{class_game}{Game}} interface and lives in the \mbox{\hyperlink{class_engine}{Engine}}. In order to play a singleplayer or listening game, the engine instantiates a \mbox{\hyperlink{class_client}{Client}} and a \mbox{\hyperlink{class_server}{Server}}, meaning there are two \mbox{\hyperlink{class_game}{Game}} states running at once. A \mbox{\hyperlink{class_server}{Server}} will dictate game updates to a client, but in other respects they are mostly identical. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_server_a81af08d9ca88b12ad27975983708541a}\label{class_server_a81af08d9ca88b12ad27975983708541a}} 
+\index{Server@{Server}!onDisconnect@{onDisconnect}}
+\index{onDisconnect@{onDisconnect}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{onDisconnect()}{onDisconnect()}}
+{\footnotesize\ttfamily void Server\+::on\+Disconnect (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+called when we disconnect from a client 
+\begin{DoxyParams}{Parameters}
+{\em remote\+ID} & canonical id associated with this client \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_game_a8d7612edc496607f921cf691bf4a0046}{Game}}.
+
+\mbox{\Hypertarget{class_server_a4c1b7b1eb28fe6579be033224b3804bb}\label{class_server_a4c1b7b1eb28fe6579be033224b3804bb}} 
+\index{Server@{Server}!updateClientAboutPlayers@{updateClientAboutPlayers}}
+\index{updateClientAboutPlayers@{updateClientAboutPlayers}!Server@{Server}}
+\doxysubsubsection{\texorpdfstring{updateClientAboutPlayers()}{updateClientAboutPlayers()}}
+{\footnotesize\ttfamily void Server\+::update\+Client\+About\+Players (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID }\end{DoxyParamCaption})}
+
+update the specified client about players on this server 
+\begin{DoxyParams}{Parameters}
+{\em remote\+ID} & id of the client to update \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_server_8hpp}{Server.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Server.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,111 @@
+\hypertarget{class_multimesh}{}\doxysection{Multimesh Class Reference}
+\label{class_multimesh}\index{Multimesh@{Multimesh}}
+
+
+{\ttfamily \#include $<$Multimesh.\+hpp$>$}
+
+Inheritance diagram for Multimesh\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_multimesh}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_multimesh_a49e16f1adb42c697c4c5f269087abc65}\label{class_multimesh_a49e16f1adb42c697c4c5f269087abc65}} 
+{\bfseries Multimesh} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity, \mbox{\hyperlink{class_component}{Component}} $\ast$\+\_\+parent)
+\item 
+virtual void \mbox{\hyperlink{class_multimesh_ad0296c2ac56e645593f51985c1220799}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights) override
+\item 
+virtual void \mbox{\hyperlink{class_multimesh_a9fdc0a75f97c52a135a9e5d880878c7b}{after\+World\+Insertion}} (const \mbox{\hyperlink{class_world}{World}} $\ast$world) override
+\item 
+\mbox{\Hypertarget{class_multimesh_a039f39019a26d706bd3301e85acfbed0}\label{class_multimesh_a039f39019a26d706bd3301e85acfbed0}} 
+virtual void \mbox{\hyperlink{class_multimesh_a039f39019a26d706bd3301e85acfbed0}{update}} () override
+\begin{DoxyCompactList}\small\item\em updates matrices \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_multimesh_aa23f83f71347e09b7cf791ac580078a9}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_multimesh_a5c5fb36b45db29cfee72e59f57d76b45}\label{class_multimesh_a5c5fb36b45db29cfee72e59f57d76b45}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_multimesh_a5c5fb36b45db29cfee72e59f57d76b45}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_multimesh_aae0679d5a3ec2dd28932ec7baa48e624}\label{class_multimesh_aae0679d5a3ec2dd28932ec7baa48e624}} 
+const char $\ast$ {\bfseries get\+Material} () const
+\item 
+\mbox{\Hypertarget{class_multimesh_aa541138f2fe29bd77e576527172b53a3}\label{class_multimesh_aa541138f2fe29bd77e576527172b53a3}} 
+const char $\ast$ {\bfseries get\+Depth\+Fail\+Mat} () const
+\item 
+\mbox{\Hypertarget{class_multimesh_a643ee1d2892f7850e8f80c28f20ce0a3}\label{class_multimesh_a643ee1d2892f7850e8f80c28f20ce0a3}} 
+const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{Mesh\+::shadervars\+\_\+t}} \& {\bfseries get\+Shader\+Vars} () const
+\item 
+\mbox{\Hypertarget{class_multimesh_afceeb8511c95a0256e81a173f6ce6411}\label{class_multimesh_afceeb8511c95a0256e81a173f6ce6411}} 
+void {\bfseries set\+Material} (const char $\ast$\+\_\+material)
+\item 
+\mbox{\Hypertarget{class_multimesh_a17ddbe4ad5101d3ebc0fc96f83ccbd01}\label{class_multimesh_a17ddbe4ad5101d3ebc0fc96f83ccbd01}} 
+void {\bfseries set\+Depth\+Fail\+Mat} (const char $\ast$\+\_\+depthfailmat)
+\item 
+\mbox{\Hypertarget{class_multimesh_a0f22f3b656e30a13530a6f5841490b28}\label{class_multimesh_a0f22f3b656e30a13530a6f5841490b28}} 
+void {\bfseries set\+Shader\+Vars} (const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{Mesh\+::shadervars\+\_\+t}} \&\+\_\+shader\+Vars)
+\item 
+\mbox{\Hypertarget{class_multimesh_aa6b946c861142af5bbe0746c83fd1ee5}\label{class_multimesh_aa6b946c861142af5bbe0746c83fd1ee5}} 
+\mbox{\hyperlink{class_multimesh}{Multimesh}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_multimesh}{Multimesh}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_multimesh}{Multimesh}} is a unique kind of \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that allows you to combine multiple meshes into a single draw call. This allows you to build a room for instance out of multiple small meshes that get optimized for the engine. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_multimesh_a9fdc0a75f97c52a135a9e5d880878c7b}\label{class_multimesh_a9fdc0a75f97c52a135a9e5d880878c7b}} 
+\index{Multimesh@{Multimesh}!afterWorldInsertion@{afterWorldInsertion}}
+\index{afterWorldInsertion@{afterWorldInsertion}!Multimesh@{Multimesh}}
+\doxysubsubsection{\texorpdfstring{afterWorldInsertion()}{afterWorldInsertion()}}
+{\footnotesize\ttfamily void Multimesh\+::after\+World\+Insertion (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_world}{World}} $\ast$}]{world }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+called just after the parent is inserted into a new world 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world we have been placed into, if any \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a85730d7d101e68fca099361dc9ddb676}{Component}}.
+
+\mbox{\Hypertarget{class_multimesh_ad0296c2ac56e645593f51985c1220799}\label{class_multimesh_ad0296c2ac56e645593f51985c1220799}} 
+\index{Multimesh@{Multimesh}!draw@{draw}}
+\index{draw@{draw}!Multimesh@{Multimesh}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Multimesh\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+draws the component 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the component \\
+\hline
+{\em light} & the light by which the component should be illuminated (or nullptr for no illumination) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}{Component}}.
+
+\mbox{\Hypertarget{class_multimesh_aa23f83f71347e09b7cf791ac580078a9}\label{class_multimesh_aa23f83f71347e09b7cf791ac580078a9}} 
+\index{Multimesh@{Multimesh}!serialize@{serialize}}
+\index{serialize@{serialize}!Multimesh@{Multimesh}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Multimesh\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{Component}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_multimesh_8hpp}{Multimesh.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Multimesh.\+cpp\end{DoxyCompactItemize}

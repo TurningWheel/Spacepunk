@@ -1,4 +1,4 @@
-// Mesh.hpp
+//! @file Mesh.hpp
 
 #pragma once
 
@@ -26,13 +26,15 @@ class Material;
 class Model;
 typedef Map<StringBuf<64>, AnimationState> AnimationMap;
 
-// skin cache
+//! skin cache
 struct skincache_t {
 	ArrayList<glm::mat4> anims;
 	ArrayList<glm::mat4> offsets;
 };
 typedef ArrayList<skincache_t> SkinCache;
 
+//! Meshes are the raw 3D assets loaded from disk that populate a game World.
+//! Do not confuse a Mesh with a Model. Meshes are unique and represent the raw data itself; a Model is an Entity Component that binds a Mesh to an Entity.
 class Mesh : public Asset {
 public:
 	Mesh() {}
@@ -41,10 +43,10 @@ public:
 
 	virtual bool finalize() override;
 
-	// maximum number of lights that will fit in the tile shader
+	//! maximum number of lights that will fit in the tile shader
 	static const Uint32 maxLights = 12;
 
-	// shader vars
+	//! shader vars
 	struct shadervars_t {
 		bool customColorEnabled = false;
 		ArrayList<GLfloat> customColorR = { 1.f, 0.f, 0.f, 1.f };
@@ -54,8 +56,8 @@ public:
 		glm::vec4 highlightColor = { 1.f, 1.f, 0.f, 1.f };
 		GLfloat lineWidth = 4.f;
 
-		// save/load this object to a file
-		// @param file interface to serialize with
+		//! save/load this object to a file
+		//! @param file interface to serialize with
 		void serialize(FileInterface * file) {
 			Uint32 version = 0;
 			file->property("Mesh::version", version);
@@ -67,51 +69,51 @@ public:
 		}
 	};
 
-	// determines whether any of the mesh entries have animations or not
-	// @return true if the mesh has animations, false otherwise
+	//! determines whether any of the mesh entries have animations or not
+	//! @return true if the mesh has animations, false otherwise
 	const bool hasAnimations() const;
 
-	// loads the appropriate shader to draw the mesh
-	// @param component the component that contains the mesh
-	// @param camera the camera object to render the scene with
-	// @param light the light object to light the scene with, or nullptr for no light source
-	// @param material path to the material asset used to render the mesh
-	// @return the ShaderProgram object with the given name, or nullptr if no shader was loaded
-	// @param matrix model matrix
+	//! loads the appropriate shader to draw the mesh
+	//! @param component the component that contains the mesh
+	//! @param camera the camera object to render the scene with
+	//! @param light the light object to light the scene with, or nullptr for no light source
+	//! @param material path to the material asset used to render the mesh
+	//! @return the ShaderProgram object with the given name, or nullptr if no shader was loaded
+	//! @param matrix model matrix
 	ShaderProgram* loadShader(const Component& component, Camera& camera, const ArrayList<Light*>& lights, Material* material, const shadervars_t& shaderVars, const glm::mat4& matrix);
 
-	// draws the mesh without animating it
-	// @param camera the camera to render the mesh through
-	// @param component optional component tied to the mesh
-	// @param shader the shader program to draw the mesh with
+	//! draws the mesh without animating it
+	//! @param camera the camera to render the mesh through
+	//! @param component optional component tied to the mesh
+	//! @param shader the shader program to draw the mesh with
 	void draw(Camera& camera, const Component* component, ShaderProgram* shader);
 
-	// draws the mesh
-	// @param camera the camera to render the mesh through
-	// @param component optional component tied to the mesh
-	// @param skincache skincache to render with
-	// @param shader the shader program to draw the mesh with
+	//! draws the mesh
+	//! @param camera the camera to render the mesh through
+	//! @param component optional component tied to the mesh
+	//! @param skincache skincache to render with
+	//! @param shader the shader program to draw the mesh with
 	void draw(Camera& camera, const Component* component, SkinCache& skincache, ShaderProgram* shader);
 
-	// skins the mesh
-	// @param animations animations to skin with
-	// @param skincache where to store resulting skin
+	//! skins the mesh
+	//! @param animations animations to skin with
+	//! @param skincache where to store resulting skin
 	void skin(const AnimationMap& animations, SkinCache& skincache) const;
 
-	// find the bone with the given name
-	// @param name the name of the bone to search for
-	// @return the index of the bone we are searching for, or UINT32_MAX if the bone could not be found
+	//! find the bone with the given name
+	//! @param name the name of the bone to search for
+	//! @return the index of the bone we are searching for, or UINT32_MAX if the bone could not be found
 	unsigned int boneIndexForName(const char* name) const;
 
-	// empties all data from this mesh
+	//! empties all data from this mesh
 	void clear();
 
-	// builds a composite mesh from several models
-	// @param models The models to compose the mesh from
-	// @param root The root transform of all the models
+	//! builds a composite mesh from several models
+	//! @param models The models to compose the mesh from
+	//! @param root The root transform of all the models
 	void composeMesh(const LinkedList<Model*>& models, const glm::mat4& root);
 
-	// submesh entry
+	//! submesh entry
 	class SubMesh {
 	public:
 		enum buffer_t {
@@ -125,13 +127,13 @@ public:
 			BUFFER_TYPE_LENGTH
 		};
 
-		// max number of bones in a mesh
+		//! max number of bones in a mesh
 		static const int maxBones = 100;
 
-		// max number of bone weight per vertex
+		//! max number of bone weight per vertex
 		static const int numBonesPerVertex = 4;
 
-		// the number of elements to be drawn
+		//! the number of elements to be drawn
 		unsigned int elementCount;
 
 		SubMesh(unsigned int _numIndices, unsigned int _numVertices);
@@ -146,7 +148,7 @@ public:
 		const Vector& getMaxBox() const { return maxBox; }
 		const Vector& getMinBox() const { return minBox; }
 
-		// subclass for vertex bones and weights
+		//! subclass for vertex bones and weights
 		class VertexBoneData {
 		public:
 			GLint ids[numBonesPerVertex];
@@ -155,7 +157,7 @@ public:
 			void addBoneData(unsigned int boneID, float weight);
 		};
 
-		// substruct for bone data
+		//! substruct for bone data
 		struct boneinfo_t {
 			glm::mat4 offset;
 			String name;
@@ -179,7 +181,7 @@ public:
 		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
 		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
 
-		// getters & setters
+		//! getters & setters
 		virtual const type_t				getType() const { return ASSET_MESH; }
 		virtual const bool					isStreamable() const { return true; }
 		const unsigned int					getNumVertices() const { return numVertices; }
@@ -197,30 +199,30 @@ public:
 		const unsigned int					getLastIndex() const { return lastIndex; }
 
 	private:
-		Map<String, unsigned int> boneMapping; // maps a bone name to its index
+		Map<String, unsigned int> boneMapping; //!< maps a bone name to its index
 		ArrayList<boneinfo_t> bones;
 		unsigned int numBones = 0;
 		unsigned int numVertices = 0;
 		GLuint vao = 0;
 		GLuint vbo[BUFFER_TYPE_LENGTH];
-		const aiScene* scene = nullptr; // points to parent's aiScene object, DO NOT DELETE
+		const aiScene* scene = nullptr; //!< points to parent's aiScene object, DO NOT DELETE
 		GLuint gBonesLocation[maxBones];
 		Vector minBox, maxBox;
 
-		// raw data
+		//! raw data
 		VertexBoneData* vertexbonedata = nullptr;
-		float* vertices = nullptr;		// position  3 floats per vertex
-		float* texCoords = nullptr;		// texCoords 2 floats per vertex
-		float* normals = nullptr;		// normals   3 floats per vertex
-		float* colors = nullptr;		// colors    4 floats per vertex
-		float* tangents = nullptr;		// tangents  3 floats per vertex
-		GLuint* indices = nullptr;		// indices   2 uints per vertex (first is vertex, second is adjacent vertex)
+		float* vertices = nullptr;		//!< position  3 floats per vertex
+		float* texCoords = nullptr;		//!< texCoords 2 floats per vertex
+		float* normals = nullptr;		//!< normals   3 floats per vertex
+		float* colors = nullptr;		//!< colors    4 floats per vertex
+		float* tangents = nullptr;		//!< tangents  3 floats per vertex
+		GLuint* indices = nullptr;		//!< indices   2 uints per vertex (first is vertex, second is adjacent vertex)
 
-		unsigned int lastVertex = 0;	// last vertex modified
-		unsigned int lastIndex = 0;		// last index modified
+		unsigned int lastVertex = 0;	//!< last vertex modified
+		unsigned int lastIndex = 0;		//!< last index modified
 	};
 
-	// getters & setters
+	//! getters & setters
 	virtual const Asset::type_t				getType() const override { return Asset::ASSET_MESH; }
 	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const { return subMeshes; }
 	const Vector&							getMinBox() const { return minBox; }

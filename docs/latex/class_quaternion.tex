@@ -1,0 +1,99 @@
+\hypertarget{class_quaternion}{}\doxysection{Quaternion Class Reference}
+\label{class_quaternion}\index{Quaternion@{Quaternion}}
+
+
+A quaternion describes a rotation in 3D space.  
+
+
+
+
+{\ttfamily \#include $<$Quaternion.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_quaternion_af17f4f2abafce070ff473979f18954e1}\label{class_quaternion_af17f4f2abafce070ff473979f18954e1}} 
+{\bfseries Quaternion} (float \+\_\+x, float \+\_\+y, float \+\_\+z, float \+\_\+w)
+\item 
+\mbox{\Hypertarget{class_quaternion_ab3b8862f9fd86c7ebb426b4940d08b39}\label{class_quaternion_ab3b8862f9fd86c7ebb426b4940d08b39}} 
+{\bfseries Quaternion} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&q)
+\item 
+\mbox{\Hypertarget{class_quaternion_a5da7aecc5aa870de835f8104c26cd849}\label{class_quaternion_a5da7aecc5aa870de835f8104c26cd849}} 
+{\bfseries Quaternion} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&rot)
+\item 
+\mbox{\Hypertarget{class_quaternion_a9b2361d99105dc963ce14b3080b52488}\label{class_quaternion_a9b2361d99105dc963ce14b3080b52488}} 
+{\bfseries Quaternion} (const glm\+::mat4 \&mat)
+\item 
+\mbox{\Hypertarget{class_quaternion_ae135cf0f216f3439aa4c24388b9d64a3}\label{class_quaternion_ae135cf0f216f3439aa4c24388b9d64a3}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} {\bfseries lerp} (\mbox{\hyperlink{class_quaternion}{Quaternion}} q, float t) const
+\item 
+\mbox{\Hypertarget{class_quaternion_ab870ceae8636686a3006fce112f498ec}\label{class_quaternion_ab870ceae8636686a3006fce112f498ec}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} {\bfseries slerp} (\mbox{\hyperlink{class_quaternion}{Quaternion}} q, float t) const
+\item 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} \mbox{\hyperlink{class_quaternion_ac6794fb90403f46c1a18ea5daf7e05f6}{rotate}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&rot) const
+\item 
+\mbox{\hyperlink{class_rotation}{Rotation}} \mbox{\hyperlink{class_quaternion_a846f26e794684cc31d00dce14fa77be8}{to\+Rotation}} () const
+\item 
+\mbox{\Hypertarget{class_quaternion_a2aee81b36a93e99c445f9dc768ddab32}\label{class_quaternion_a2aee81b36a93e99c445f9dc768ddab32}} 
+\mbox{\hyperlink{class_vector}{Vector}} {\bfseries to\+Vector} () const
+\item 
+\mbox{\Hypertarget{class_quaternion_a061fbf2b0f0a544acf1e66a34af6e4ba}\label{class_quaternion_a061fbf2b0f0a544acf1e66a34af6e4ba}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} {\bfseries mul} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&q)
+\item 
+\mbox{\Hypertarget{class_quaternion_ae897d8ee92c5ac1f7cfd534170eb521c}\label{class_quaternion_ae897d8ee92c5ac1f7cfd534170eb521c}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} \& {\bfseries operator$\ast$=} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&q)
+\item 
+\mbox{\Hypertarget{class_quaternion_ab178e12364d87fb676d85695e491361f}\label{class_quaternion_ab178e12364d87fb676d85695e491361f}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} {\bfseries operator$\ast$} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&q) const
+\item 
+\mbox{\Hypertarget{class_quaternion_a516d4dcc7c6f13d8846070b72f588210}\label{class_quaternion_a516d4dcc7c6f13d8846070b72f588210}} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&q) const
+\item 
+\mbox{\Hypertarget{class_quaternion_a1a97201d7deb56f543d65be9741cd2bd}\label{class_quaternion_a1a97201d7deb56f543d65be9741cd2bd}} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&q) const
+\item 
+\mbox{\Hypertarget{class_quaternion_a7ad80fe1cccb9b3a15fa31c7510311eb}\label{class_quaternion_a7ad80fe1cccb9b3a15fa31c7510311eb}} 
+void {\bfseries serialize} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_quaternion_a8b80f191a3155cc0158d2b4f4d50b2cb}\label{class_quaternion_a8b80f191a3155cc0158d2b4f4d50b2cb}} 
+float {\bfseries x} = 0.f
+\item 
+\mbox{\Hypertarget{class_quaternion_a3bd3f270462944423611f44e19d2511b}\label{class_quaternion_a3bd3f270462944423611f44e19d2511b}} 
+float {\bfseries y} = 0.f
+\item 
+\mbox{\Hypertarget{class_quaternion_a625cb732d8ff3083e7852b86b736ab29}\label{class_quaternion_a625cb732d8ff3083e7852b86b736ab29}} 
+float {\bfseries z} = 0.f
+\item 
+\mbox{\Hypertarget{class_quaternion_aa44a65ab99e36f6ab8771030eed8a7ad}\label{class_quaternion_aa44a65ab99e36f6ab8771030eed8a7ad}} 
+float {\bfseries w} = 1.f
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A quaternion describes a rotation in 3D space. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_quaternion_ac6794fb90403f46c1a18ea5daf7e05f6}\label{class_quaternion_ac6794fb90403f46c1a18ea5daf7e05f6}} 
+\index{Quaternion@{Quaternion}!rotate@{rotate}}
+\index{rotate@{rotate}!Quaternion@{Quaternion}}
+\doxysubsubsection{\texorpdfstring{rotate()}{rotate()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_quaternion}{Quaternion}} Quaternion\+::rotate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_rotation}{Rotation}} \&}]{rot }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+z
+
+x
+
+y\mbox{\Hypertarget{class_quaternion_a846f26e794684cc31d00dce14fa77be8}\label{class_quaternion_a846f26e794684cc31d00dce14fa77be8}} 
+\index{Quaternion@{Quaternion}!toRotation@{toRotation}}
+\index{toRotation@{toRotation}!Quaternion@{Quaternion}}
+\doxysubsubsection{\texorpdfstring{toRotation()}{toRotation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_rotation}{Rotation}} Quaternion\+::to\+Rotation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+reference\+: \href{http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/}{\texttt{ http\+://www.\+euclideanspace.\+com/maths/geometry/rotations/conversions/quaternion\+To\+Euler/}}
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_quaternion_8hpp}{Quaternion.\+hpp}}\end{DoxyCompactItemize}

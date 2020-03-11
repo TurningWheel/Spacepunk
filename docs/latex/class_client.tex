@@ -1,0 +1,134 @@
+\hypertarget{class_client}{}\doxysection{Client Class Reference}
+\label{class_client}\index{Client@{Client}}
+
+
+{\ttfamily \#include $<$Client.\+hpp$>$}
+
+Inheritance diagram for Client\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_client}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_client_ae54c6d11d379b45b3326cd9c32695b3e}\label{class_client_ae54c6d11d379b45b3326cd9c32695b3e}} 
+typedef \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_engine_1_1logmsg__t}{Engine\+::logmsg\+\_\+t}} $>$ {\bfseries Log\+List}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_client_a70dc6c54412dc6fb9cfdaa41bd1974d0}\label{class_client_a70dc6c54412dc6fb9cfdaa41bd1974d0}} 
+virtual bool {\bfseries is\+Server} () const override
+\item 
+\mbox{\Hypertarget{class_client_ab0db6eae9c17dfa40e6440e92f226f33}\label{class_client_ab0db6eae9c17dfa40e6440e92f226f33}} 
+virtual bool {\bfseries is\+Client} () const override
+\item 
+\mbox{\Hypertarget{class_client_a775da28f37c6f5093b182a0dcd2a3d5d}\label{class_client_a775da28f37c6f5093b182a0dcd2a3d5d}} 
+virtual void \mbox{\hyperlink{class_client_a775da28f37c6f5093b182a0dcd2a3d5d}{init}} () override
+\begin{DoxyCompactList}\small\item\em starts up the client \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_client_a45f27d6ab40a92e1722961e32e2a42cf}\label{class_client_a45f27d6ab40a92e1722961e32e2a42cf}} 
+void \mbox{\hyperlink{class_client_a45f27d6ab40a92e1722961e32e2a42cf}{handle\+Net\+Messages}} ()
+\begin{DoxyCompactList}\small\item\em read messages from the net interface \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_client_a78554fdbd925eed9c615a1f1ac17fb5a}\label{class_client_a78554fdbd925eed9c615a1f1ac17fb5a}} 
+virtual void \mbox{\hyperlink{class_client_a78554fdbd925eed9c615a1f1ac17fb5a}{pre\+Process}} () override
+\begin{DoxyCompactList}\small\item\em perform pre-\/processing on the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_client_a02ffd4d9d63aaf54073f00854f7429bc}\label{class_client_a02ffd4d9d63aaf54073f00854f7429bc}} 
+virtual void \mbox{\hyperlink{class_client_a02ffd4d9d63aaf54073f00854f7429bc}{process}} () override
+\begin{DoxyCompactList}\small\item\em process the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_client_aca80aa1cea45e1a106db24a6dabfb271}\label{class_client_aca80aa1cea45e1a106db24a6dabfb271}} 
+virtual void \mbox{\hyperlink{class_client_aca80aa1cea45e1a106db24a6dabfb271}{post\+Process}} () override
+\begin{DoxyCompactList}\small\item\em perform post-\/processing on the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_client_a7304cbd0e2275dadc763b5ad78300dd4}\label{class_client_a7304cbd0e2275dadc763b5ad78300dd4}} 
+virtual void \mbox{\hyperlink{class_client_a7304cbd0e2275dadc763b5ad78300dd4}{on\+Establish\+Connection}} (Uint32 remote\+ID) override
+\begin{DoxyCompactList}\small\item\em called when we connect to a server \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_client_a873f97048d1aebb46ac75b844754d3ae}{on\+Disconnect}} (Uint32 remote\+ID) override
+\item 
+void \mbox{\hyperlink{class_client_a0b09dae5ea1c68d8702b6991ca278683}{spawn}} (Uint32 local\+ID)
+\item 
+void \mbox{\hyperlink{class_client_a5526cbb00e9c3603b97e9de79f64ea0a}{start\+Editor}} (const char $\ast$path=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{class_client_aa4343dfe2cc965c05cb6a777010dd3b7}\label{class_client_aa4343dfe2cc965c05cb6a777010dd3b7}} 
+void \mbox{\hyperlink{class_client_aa4343dfe2cc965c05cb6a777010dd3b7}{close\+Editor}} ()
+\begin{DoxyCompactList}\small\item\em closes the editor without terminating the client \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_client_a57bb73135e42051a5944277f5b7fe9ea}\label{class_client_a57bb73135e42051a5944277f5b7fe9ea}} 
+\mbox{\hyperlink{class_renderer}{Renderer}} $\ast$\& \mbox{\hyperlink{class_client_a57bb73135e42051a5944277f5b7fe9ea}{get\+Renderer}} ()
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_client_ade099912289cc463c12e7a98cca62569}\label{class_client_ade099912289cc463c12e7a98cca62569}} 
+\mbox{\hyperlink{class_mixer}{Mixer}} $\ast$\& {\bfseries get\+Mixer} ()
+\item 
+\mbox{\Hypertarget{class_client_a081c6a9485a1f7ee258c29ef7304efe7}\label{class_client_a081c6a9485a1f7ee258c29ef7304efe7}} 
+\mbox{\hyperlink{class_frame}{Frame}} $\ast$\& {\bfseries get\+G\+UI} ()
+\item 
+\mbox{\Hypertarget{class_client_a99a7fea8dc7944ddc45c6155f65a99f5}\label{class_client_a99a7fea8dc7944ddc45c6155f65a99f5}} 
+\mbox{\hyperlink{class_editor}{Editor}} $\ast$\& {\bfseries get\+Editor} ()
+\item 
+\mbox{\Hypertarget{class_client_a6c30a5fc20bd49ea94d5c80e3be2a1fa}\label{class_client_a6c30a5fc20bd49ea94d5c80e3be2a1fa}} 
+const bool {\bfseries is\+Console\+Allowed} () const
+\item 
+\mbox{\Hypertarget{class_client_a07402a438e8a9b694f2a1c1c4256e34e}\label{class_client_a07402a438e8a9b694f2a1c1c4256e34e}} 
+const bool {\bfseries is\+Console\+Active} () const
+\item 
+\mbox{\Hypertarget{class_client_aa991aa1903dbb47a7772c81b5905b25d}\label{class_client_aa991aa1903dbb47a7772c81b5905b25d}} 
+const bool {\bfseries is\+Editor\+Active} () const
+\item 
+\mbox{\Hypertarget{class_client_a8403f6f1366be4014faba9a9bfd4dddc}\label{class_client_a8403f6f1366be4014faba9a9bfd4dddc}} 
+const \mbox{\hyperlink{class_linked_list}{Log\+List}} \& {\bfseries get\+Console} () const
+\item 
+\mbox{\Hypertarget{class_client_a92ed36e2b4729b959c927501219448e2}\label{class_client_a92ed36e2b4729b959c927501219448e2}} 
+void {\bfseries set\+Cu\+Command} (\mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ $\ast$const node)
+\item 
+\mbox{\Hypertarget{class_client_a8835173da18818caed6cfca68d08e093}\label{class_client_a8835173da18818caed6cfca68d08e093}} 
+void {\bfseries set\+Log\+Start} (\mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{struct_engine_1_1logmsg__t}{Engine\+::logmsg\+\_\+t}} $>$ $\ast$const node)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_client}{Client}} implements the \mbox{\hyperlink{class_game}{Game}} interface and lives in the \mbox{\hyperlink{class_engine}{Engine}}. In order to play a singleplayer or listening game, the engine instantiates a \mbox{\hyperlink{class_client}{Client}} and a \mbox{\hyperlink{class_server}{Server}}, meaning there are two \mbox{\hyperlink{class_game}{Game}} states running at once. A \mbox{\hyperlink{class_server}{Server}} will dictate game updates to a client, but in other respects they are mostly identical. The \mbox{\hyperlink{class_client}{Client}} does own a \mbox{\hyperlink{class_renderer}{Renderer}} however. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_client_a873f97048d1aebb46ac75b844754d3ae}\label{class_client_a873f97048d1aebb46ac75b844754d3ae}} 
+\index{Client@{Client}!onDisconnect@{onDisconnect}}
+\index{onDisconnect@{onDisconnect}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{onDisconnect()}{onDisconnect()}}
+{\footnotesize\ttfamily void Client\+::on\+Disconnect (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+called when we disconnect from a server 
+\begin{DoxyParams}{Parameters}
+{\em remote\+ID} & always zero, since the server is our only remote host \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_game_a8d7612edc496607f921cf691bf4a0046}{Game}}.
+
+\mbox{\Hypertarget{class_client_a0b09dae5ea1c68d8702b6991ca278683}\label{class_client_a0b09dae5ea1c68d8702b6991ca278683}} 
+\index{Client@{Client}!spawn@{spawn}}
+\index{spawn@{spawn}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{spawn()}{spawn()}}
+{\footnotesize\ttfamily void Client\+::spawn (\begin{DoxyParamCaption}\item[{Uint32}]{local\+ID }\end{DoxyParamCaption})}
+
+spawns a player on the server 
+\begin{DoxyParams}{Parameters}
+{\em local\+ID} & the local number of player to spawn \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_client_a5526cbb00e9c3603b97e9de79f64ea0a}\label{class_client_a5526cbb00e9c3603b97e9de79f64ea0a}} 
+\index{Client@{Client}!startEditor@{startEditor}}
+\index{startEditor@{startEditor}!Client@{Client}}
+\doxysubsubsection{\texorpdfstring{startEditor()}{startEditor()}}
+{\footnotesize\ttfamily void Client\+::start\+Editor (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+
+starts up the level editor 
+\begin{DoxyParams}{Parameters}
+{\em path} & optional path to a level to startup \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_client_8hpp}{Client.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Client.\+cpp\end{DoxyCompactItemize}

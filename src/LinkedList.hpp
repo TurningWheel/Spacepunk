@@ -1,4 +1,4 @@
-// LinkedList.hpp
+//! @file LinkedList.hpp
 
 #pragma once
 
@@ -8,6 +8,8 @@
 #include <luajit-2.0/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 
+//! A LinkedList is a type of list that can add and remove nodes anywhere in the list efficiently, and create loops on itself (though this can be dangerous!)
+//! Linked lists do not have fast lookup times unlike ArrayLists, but they are better suited to be queues and other things.
 template <typename T>
 class LinkedList {
 public:
@@ -16,7 +18,7 @@ public:
 		removeAll();
 	}
 
-	// parameter functions
+	//! parameter functions
 	Node<T>* 			getFirst() { return first; }
 	Node<T>* 			getLast() { return last; }
 
@@ -27,9 +29,9 @@ public:
 	void 				setFirst(Node<T> *node) { first = node; }
 	void 				setLast(Node<T> *node) { last = node; }
 
-	// returns the node at the given index
-	// @param index the index of the node to be returned
-	// @return the Node at the given index, or nullptr if the Node does not exist
+	//! returns the node at the given index
+	//! @param index the index of the node to be returned
+	//! @return the Node at the given index, or nullptr if the Node does not exist
 	Node<T>* nodeForIndex(const Uint32 index) {
 		if (index >= size) {
 			return nullptr;
@@ -57,9 +59,9 @@ public:
 		}
 	}
 
-	// returns the index of the given node in the list
-	// @param node the node for whom you wish to retrieve the index
-	// @return the index for the given node, or -1 if the node does not exist in the list
+	//! returns the index of the given node in the list
+	//! @param node the node for whom you wish to retrieve the index
+	//! @return the index for the given node, or -1 if the node does not exist in the list
 	Uint32 indexForNode(const Node<T>* node) const {
 		if (node->getList() != this)
 			return -1;
@@ -77,34 +79,34 @@ public:
 		}
 	}
 
-	// adds a node to the list
-	// @param index the position within the list to insert the node
-	// @param data the data to be assigned to the node
-	// @return the newly created Node
+	//! adds a node to the list
+	//! @param index the position within the list to insert the node
+	//! @param data the data to be assigned to the node
+	//! @return the newly created Node
 	Node<T>* addNode(const Uint32 index, const T& data) {
 		Node<T>* node = nodeForIndex(index);
 		++size;
 		return new Node<T>(*this, node, data);
 	}
 
-	// adds a node to the beginning of the list
-	// @param data the data to be assigned to the node
-	// @return the newly created Node
+	//! adds a node to the beginning of the list
+	//! @param data the data to be assigned to the node
+	//! @return the newly created Node
 	Node<T>* addNodeFirst(const T& data) {
 		++size;
 		return new Node<T>(*this, first, data);
 	}
 
-	// adds a node to the end of the list
-	// @param data the data to be assigned to the node
-	// @return the newly created Node
+	//! adds a node to the end of the list
+	//! @param data the data to be assigned to the node
+	//! @return the newly created Node
 	Node<T>* addNodeLast(const T& data) {
 		++size;
 		return new Node<T>(*this, nullptr, data);
 	}
 
-	// removes a node from the list
-	// @param node the node to remove from the list
+	//! removes a node from the list
+	//! @param node the node to remove from the list
 	void removeNode(Node<T>* node) {
 		if (this != node->getList())
 		{
@@ -131,13 +133,13 @@ public:
 		delete node;
 	}
 
-	// removes a node from the list
-	// @param index the index of the node to be removed from the list
+	//! removes a node from the list
+	//! @param index the index of the node to be removed from the list
 	void removeNode(const Uint32 index) {
 		removeNode(nodeForIndex(index));
 	}
 
-	// remove all nodes from the list
+	//! remove all nodes from the list
 	void removeAll() {
 		Node<T>* node;
 		Node<T>* nextnode;
@@ -151,15 +153,15 @@ public:
 		size = 0;
 	}
 
-	// copy one list to another (also copies data)
+	//! copy one list to another (also copies data)
 	void copy(const LinkedList<T>& src) {
 		for (const Node<T>* node = src.getFirst(); node != nullptr; node = node->getNext()) {
 			addNodeLast(node->getData());
 		}
 	}
 
-	// sort the list from least significant elements to most significant elements
-	// @return a reference to the sorted list
+	//! sort the list from least significant elements to most significant elements
+	//! @return a reference to the sorted list
 	LinkedList<T>& sort() {
 		Uint32 len = size;
 		if (len <= 1) {
@@ -183,9 +185,9 @@ public:
 		return merge(left, right);
 	}
 
-	// linear search for the node with the given index
-	// @param index the index of the node to be returned
-	// @return the Node at the given index, or nullptr if the Node does not exist
+	//! linear search for the node with the given index
+	//! @param index the index of the node to be returned
+	//! @return the Node at the given index, or nullptr if the Node does not exist
 	Node<T>* operator[](const Uint32 index) {
 		return nodeForIndex(index);
 	}
@@ -193,7 +195,7 @@ public:
 		return (const Node<T>*)(nodeForIndex(index));
 	}
 
-	// Iterator
+	//! Iterator
 	class Iterator {
 	public:
 		Iterator(Node<T>* _position) :
@@ -215,7 +217,7 @@ public:
 		Node<T>* position;
 	};
 
-	// ConstIterator
+	//! ConstIterator
 	class ConstIterator {
 	public:
 		ConstIterator(const Node<T>* _position) :
@@ -237,7 +239,7 @@ public:
 		const Node<T>* position;
 	};
 
-	// begin()
+	//! begin()
 	Iterator begin() {
 		return Iterator(first);
 	}
@@ -245,7 +247,7 @@ public:
 		return ConstIterator(first);
 	}
 
-	// end()
+	//! end()
 	Iterator end() {
 		return Iterator(nullptr);
 	}
@@ -253,10 +255,10 @@ public:
 		return ConstIterator(nullptr);
 	}
 
-	// exposes this list type to a script
-	// @param lua The script engine to expose to
-	// @param listName The type name for the list in lua
-	// @param nodeName The type name for the node in lua
+	//! exposes this list type to a script
+	//! @param lua The script engine to expose to
+	//! @param listName The type name for the list in lua
+	//! @param nodeName The type name for the node in lua
 	static void exposeToScript(lua_State* lua, const char* listName, const char* nodeName) {
 		typedef Node<T>* (LinkedList<T>::*NodeFn)();
 		NodeFn getFirst = static_cast<NodeFn>(&LinkedList<T>::getFirst);

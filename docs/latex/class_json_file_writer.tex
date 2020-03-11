@@ -1,0 +1,207 @@
+\hypertarget{class_json_file_writer}{}\doxysection{Json\+File\+Writer Class Reference}
+\label{class_json_file_writer}\index{JsonFileWriter@{JsonFileWriter}}
+Inheritance diagram for Json\+File\+Writer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_json_file_writer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{class_json_file_writer_a15bfaab800c0ef8a084cb6abbaa563a8}{is\+Reading}} () const override
+\item 
+\mbox{\Hypertarget{class_json_file_writer_aae54b96a5cce51bfd999f868b57a3112}\label{class_json_file_writer_aae54b96a5cce51bfd999f868b57a3112}} 
+virtual void \mbox{\hyperlink{class_json_file_writer_aae54b96a5cce51bfd999f868b57a3112}{begin\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the beginning of an object in the file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_file_writer_a5c07c86dffdbce1523ff2fba3dc7a2aa}\label{class_json_file_writer_a5c07c86dffdbce1523ff2fba3dc7a2aa}} 
+virtual void \mbox{\hyperlink{class_json_file_writer_a5c07c86dffdbce1523ff2fba3dc7a2aa}{end\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an object in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_af6d2e6827e03509e3adaecc4d3f42155}{begin\+Array}} (Uint32 \&size) override
+\item 
+\mbox{\Hypertarget{class_json_file_writer_a0bcb56b754b37bf718c0c8027027b061}\label{class_json_file_writer_a0bcb56b754b37bf718c0c8027027b061}} 
+virtual void \mbox{\hyperlink{class_json_file_writer_a0bcb56b754b37bf718c0c8027027b061}{end\+Array}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an array in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_a9c82c95a3c6a9f71443cd6a000cae2fa}{property\+Name}} (const char $\ast$field\+Name) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_ab4945b7345bf970115bc47ffb52dbe2b}{value}} (Uint32 \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_a83052bcf33c336644f7804a5e0f1debf}{value}} (Sint32 \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_a87db8109671d35d129b33ece34c9bd16}{value}} (float \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_aef1cdebe4144073cd2964b967a872af0}{value}} (double \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_a5ad691b27e1f674ed9d0e30d5c79a753}{value}} (bool \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_a454faa02a1b63632178b21ba4f835a23}{value}} (\mbox{\hyperlink{class_string}{String}} \&value, Uint32 max\+Length) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_writer_ad5a6429c76192c4018fdc0cc23617479}{value}} (Uint32 \&v, \mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$lookup) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_json_file_writer_ad5421a618ca9c72cc6f2d5521592b23d}\label{class_json_file_writer_ad5421a618ca9c72cc6f2d5521592b23d}} 
+static bool {\bfseries write\+Object} (F\+I\+LE $\ast$file, const File\+Helper\+::\+Serialization\+Func \&serialize)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_json_file_writer_af6d2e6827e03509e3adaecc4d3f42155}\label{class_json_file_writer_af6d2e6827e03509e3adaecc4d3f42155}} 
+\index{JsonFileWriter@{JsonFileWriter}!beginArray@{beginArray}}
+\index{beginArray@{beginArray}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{beginArray()}{beginArray()}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::begin\+Array (\begin{DoxyParamCaption}\item[{Uint32 \&}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Signals the beginning of an array in the file 
+\begin{DoxyParams}{Parameters}
+{\em size} & number of items in the array \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac2592d28bcfb9197e06af8b02706a936}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_a15bfaab800c0ef8a084cb6abbaa563a8}\label{class_json_file_writer_a15bfaab800c0ef8a084cb6abbaa563a8}} 
+\index{JsonFileWriter@{JsonFileWriter}!isReading@{isReading}}
+\index{isReading@{isReading}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{isReading()}{isReading()}}
+{\footnotesize\ttfamily virtual bool Json\+File\+Writer\+::is\+Reading (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+true if this interface is reading data from a file, false if it is writing 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ad61705edebf54359260990e04328dd30}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_a9c82c95a3c6a9f71443cd6a000cae2fa}\label{class_json_file_writer_a9c82c95a3c6a9f71443cd6a000cae2fa}} 
+\index{JsonFileWriter@{JsonFileWriter}!propertyName@{propertyName}}
+\index{propertyName@{propertyName}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{propertyName()}{propertyName()}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::property\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Serializes the name of a property 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the property ~\newline
+ \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac1a94367435eb8596352591bdf0309fc}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_a5ad691b27e1f674ed9d0e30d5c79a753}\label{class_json_file_writer_a5ad691b27e1f674ed9d0e30d5c79a753}} 
+\index{JsonFileWriter@{JsonFileWriter}!value@{value}}
+\index{value@{value}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{bool \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a182e8548d9ec1ff1a678cfdd81c916a5}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_aef1cdebe4144073cd2964b967a872af0}\label{class_json_file_writer_aef1cdebe4144073cd2964b967a872af0}} 
+\index{JsonFileWriter@{JsonFileWriter}!value@{value}}
+\index{value@{value}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{double \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a1dbcb186f5edfe415764dd1571d18453}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_a87db8109671d35d129b33ece34c9bd16}\label{class_json_file_writer_a87db8109671d35d129b33ece34c9bd16}} 
+\index{JsonFileWriter@{JsonFileWriter}!value@{value}}
+\index{value@{value}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [3/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{float \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_af05569388f2ff0b7ba05dd8d4a5c6b80}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_a83052bcf33c336644f7804a5e0f1debf}\label{class_json_file_writer_a83052bcf33c336644f7804a5e0f1debf}} 
+\index{JsonFileWriter@{JsonFileWriter}!value@{value}}
+\index{value@{value}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [4/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{Sint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a8cf6bb65a6a0368931bad5819075e8a6}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_a454faa02a1b63632178b21ba4f835a23}\label{class_json_file_writer_a454faa02a1b63632178b21ba4f835a23}} 
+\index{JsonFileWriter@{JsonFileWriter}!value@{value}}
+\index{value@{value}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [5/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_string}{String}} \&}]{v,  }\item[{Uint32}]{max\+Length }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+{\em max\+Length} & maximum length of the string allowed, 0 is no limit \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ab4c1463bd34577a972a20a8ac3442fdf}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_ad5a6429c76192c4018fdc0cc23617479}\label{class_json_file_writer_ad5a6429c76192c4018fdc0cc23617479}} 
+\index{JsonFileWriter@{JsonFileWriter}!value@{value}}
+\index{value@{value}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [6/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v,  }\item[{\mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$}]{lookup }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Given an int, serialize it as the corresponding string value from the dict 
+\begin{DoxyParams}{Parameters}
+{\em v} & value to look up \\
+\hline
+{\em lookup} & dictionary to lookup the string in \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_aaf3331d0f87fb8277d20c5ebc3ea4f31}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_writer_ab4945b7345bf970115bc47ffb52dbe2b}\label{class_json_file_writer_ab4945b7345bf970115bc47ffb52dbe2b}} 
+\index{JsonFileWriter@{JsonFileWriter}!value@{value}}
+\index{value@{value}!JsonFileWriter@{JsonFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [7/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a446679019f93342e10194317ee1f9aa0}{File\+Interface}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/File.\+cpp\end{DoxyCompactItemize}

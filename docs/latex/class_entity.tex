@@ -1,0 +1,1221 @@
+\hypertarget{class_entity}{}\doxysection{Entity Class Reference}
+\label{class_entity}\index{Entity@{Entity}}
+
+
+{\ttfamily \#include $<$Entity.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_entity_1_1def__t}{def\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_entity_ac0ea1218aa87736901bc3bd2e9619c11}\label{class_entity_ac0ea1218aa87736901bc3bd2e9619c11}} 
+enum \mbox{\hyperlink{class_entity_ac0ea1218aa87736901bc3bd2e9619c11}{flag\+\_\+t}} \{ \newline
+{\bfseries F\+L\+A\+G\+\_\+\+V\+I\+S\+I\+B\+LE} = 1 $<$$<$ 0, 
+{\bfseries F\+L\+A\+G\+\_\+\+P\+A\+S\+S\+A\+B\+LE} = 1 $<$$<$ 1, 
+{\bfseries F\+L\+A\+G\+\_\+\+L\+O\+C\+AL} = 1 $<$$<$ 2, 
+{\bfseries F\+L\+A\+G\+\_\+\+U\+P\+D\+A\+TE} = 1 $<$$<$ 3, 
+\newline
+{\bfseries F\+L\+A\+G\+\_\+\+G\+E\+N\+I\+US} = 1 $<$$<$ 4, 
+{\bfseries F\+L\+A\+G\+\_\+\+O\+V\+E\+R\+D\+R\+AW} = 1 $<$$<$ 5, 
+{\bfseries F\+L\+A\+G\+\_\+\+S\+P\+R\+I\+TE} = 1 $<$$<$ 6, 
+{\bfseries F\+L\+A\+G\+\_\+\+A\+L\+L\+O\+W\+T\+R\+A\+CE} = 1 $<$$<$ 7, 
+\newline
+{\bfseries F\+L\+A\+G\+\_\+\+S\+H\+A\+D\+OW} = 1 $<$$<$ 8, 
+{\bfseries F\+L\+A\+G\+\_\+\+F\+U\+L\+L\+Y\+L\+IT} = 1 $<$$<$ 9, 
+{\bfseries F\+L\+A\+G\+\_\+\+G\+L\+O\+W\+I\+NG} = 1 $<$$<$ 10, 
+{\bfseries F\+L\+A\+G\+\_\+\+D\+E\+P\+T\+H\+F\+A\+IL} = 1 $<$$<$ 11, 
+\newline
+{\bfseries F\+L\+A\+G\+\_\+\+O\+C\+C\+L\+U\+DE} = 1 $<$$<$ 12, 
+{\bfseries F\+L\+A\+G\+\_\+\+I\+N\+T\+E\+R\+A\+C\+T\+A\+B\+LE} = 1 $<$$<$ 13, 
+{\bfseries F\+L\+A\+G\+\_\+\+S\+T\+A\+T\+IC} = 1 $<$$<$ 14, 
+{\bfseries F\+L\+A\+G\+\_\+\+N\+UM} = 15
+ \}
+\begin{DoxyCompactList}\small\item\em entity flags \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a7a204f6ae61617484430dad15270f190}\label{class_entity_a7a204f6ae61617484430dad15270f190}} 
+enum \mbox{\hyperlink{class_entity_a7a204f6ae61617484430dad15270f190}{sort\+\_\+t}} \{ \newline
+{\bfseries S\+O\+R\+T\+\_\+\+A\+NY}, 
+{\bfseries S\+O\+R\+T\+\_\+\+C\+H\+AR}, 
+{\bfseries S\+O\+R\+T\+\_\+\+D\+E\+C\+OR}, 
+{\bfseries S\+O\+R\+T\+\_\+\+I\+N\+T\+E\+R\+A\+CT}, 
+\newline
+{\bfseries S\+O\+R\+T\+\_\+\+I\+T\+EM}, 
+{\bfseries S\+O\+R\+T\+\_\+\+L\+I\+G\+HT}, 
+{\bfseries S\+O\+R\+T\+\_\+\+T\+R\+I\+G\+G\+ER}, 
+{\bfseries S\+O\+R\+T\+\_\+\+M\+AX}
+ \}
+\begin{DoxyCompactList}\small\item\em entity sorting filter \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_entity_aabadba8ab073f45a6595e6903b108ce5}\label{class_entity_aabadba8ab073f45a6595e6903b108ce5}} 
+{\bfseries Entity} (\mbox{\hyperlink{class_world}{World}} $\ast$\+\_\+world, Uint32 \mbox{\hyperlink{class_entity_ac5a6bb77c4727c509d99b724225b5393}{uid}}=U\+I\+N\+T32\+\_\+\+M\+AX)
+\item 
+\mbox{\Hypertarget{class_entity_a38ae26e68c45d61538af81cc4ba133e6}\label{class_entity_a38ae26e68c45d61538af81cc4ba133e6}} 
+const \mbox{\hyperlink{class_string}{String}} \& \mbox{\hyperlink{class_entity_a38ae26e68c45d61538af81cc4ba133e6}{get\+Name}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a48d67f6c888e719461b1b47b07f64173}\label{class_entity_a48d67f6c888e719461b1b47b07f64173}} 
+const Uint32 \& {\bfseries get\+U\+ID} () const
+\item 
+\mbox{\Hypertarget{class_entity_a1ca59dbe542a57256d04bce2d1760635}\label{class_entity_a1ca59dbe542a57256d04bce2d1760635}} 
+const Uint32 \& {\bfseries get\+Ticks} () const
+\item 
+\mbox{\Hypertarget{class_entity_a8ae1c41a18b3b2b081fecb1cc670ba72}\label{class_entity_a8ae1c41a18b3b2b081fecb1cc670ba72}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Pos} () const
+\item 
+\mbox{\Hypertarget{class_entity_a0e4ac53c539ec032726e465c5d6d2ce3}\label{class_entity_a0e4ac53c539ec032726e465c5d6d2ce3}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+New\+Pos} () const
+\item 
+\mbox{\Hypertarget{class_entity_a3565f529bce2f0ecc57a17e8c63bbbbc}\label{class_entity_a3565f529bce2f0ecc57a17e8c63bbbbc}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Vel} () const
+\item 
+\mbox{\Hypertarget{class_entity_ab36f87ef3127eb35040300c2cb707749}\label{class_entity_ab36f87ef3127eb35040300c2cb707749}} 
+const \mbox{\hyperlink{class_quaternion}{Quaternion}} \& {\bfseries get\+Ang} () const
+\item 
+\mbox{\Hypertarget{class_entity_a363986f930e2feafc034df9606b97429}\label{class_entity_a363986f930e2feafc034df9606b97429}} 
+const \mbox{\hyperlink{class_quaternion}{Quaternion}} \& {\bfseries get\+New\+Ang} () const
+\item 
+\mbox{\Hypertarget{class_entity_a6bb8ccbf6220aec2a5fb119d55585cf2}\label{class_entity_a6bb8ccbf6220aec2a5fb119d55585cf2}} 
+const \mbox{\hyperlink{class_rotation}{Rotation}} \& {\bfseries get\+Rot} () const
+\item 
+\mbox{\Hypertarget{class_entity_aef55fa8a02acae96f797bd2c8b600e5c}\label{class_entity_aef55fa8a02acae96f797bd2c8b600e5c}} 
+const glm\+::mat4 \& {\bfseries get\+Mat} () const
+\item 
+\mbox{\Hypertarget{class_entity_aa11d9b58db4f20f0dce762382c44272a}\label{class_entity_aa11d9b58db4f20f0dce762382c44272a}} 
+const char $\ast$ {\bfseries get\+Script\+Str} () const
+\item 
+\mbox{\Hypertarget{class_entity_a8bf9827e534aa456ef55c1312e5bcf5b}\label{class_entity_a8bf9827e534aa456ef55c1312e5bcf5b}} 
+const bool {\bfseries is\+To\+Be\+Deleted} () const
+\item 
+\mbox{\Hypertarget{class_entity_af323e519567ae05117cd981268e711dc}\label{class_entity_af323e519567ae05117cd981268e711dc}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Scale} () const
+\item 
+\mbox{\Hypertarget{class_entity_a1374f434a2eeb650b9ded824d6b8447c}\label{class_entity_a1374f434a2eeb650b9ded824d6b8447c}} 
+const Uint32 \& {\bfseries get\+Flags} () const
+\item 
+\mbox{\Hypertarget{class_entity_aaeb653b94a71372c2a5a7bb25824fd98}\label{class_entity_aaeb653b94a71372c2a5a7bb25824fd98}} 
+const \mbox{\hyperlink{class_map}{Map}}$<$ \mbox{\hyperlink{class_string}{String}}, \mbox{\hyperlink{class_string}{String}} $>$ \& {\bfseries get\+Key\+Values} () const
+\item 
+\mbox{\Hypertarget{class_entity_a66d9ed1b8d5ff9870cc0e495a5c7f4ee}\label{class_entity_a66d9ed1b8d5ff9870cc0e495a5c7f4ee}} 
+const bool {\bfseries is\+Flag} (const \mbox{\hyperlink{class_entity_ac0ea1218aa87736901bc3bd2e9619c11}{flag\+\_\+t}} flag) const
+\item 
+\mbox{\Hypertarget{class_entity_a20a45f22af6032935cdd45b9c284f9f5}\label{class_entity_a20a45f22af6032935cdd45b9c284f9f5}} 
+const bool {\bfseries is\+Should\+Save} () const
+\item 
+\mbox{\Hypertarget{class_entity_a174aaaaeaeab8430393831dee8e8498c}\label{class_entity_a174aaaaeaeab8430393831dee8e8498c}} 
+\mbox{\hyperlink{class_world}{World}} $\ast$ {\bfseries get\+World} ()
+\item 
+\mbox{\Hypertarget{class_entity_a595af08a4d086758c9e20f8cea0c2e49}\label{class_entity_a595af08a4d086758c9e20f8cea0c2e49}} 
+const \mbox{\hyperlink{class_world}{World}} $\ast$ {\bfseries get\+World} () const
+\item 
+\mbox{\Hypertarget{class_entity_a66f576b4ce9f4606b8191402ef645740}\label{class_entity_a66f576b4ce9f4606b8191402ef645740}} 
+\mbox{\hyperlink{class_player}{Player}} $\ast$ {\bfseries get\+Player} ()
+\item 
+\mbox{\Hypertarget{class_entity_ab8607df4468d467d60a4acc82cf367b2}\label{class_entity_ab8607df4468d467d60a4acc82cf367b2}} 
+const bool \& {\bfseries is\+Falling} ()
+\item 
+\mbox{\Hypertarget{class_entity_a2b625abf96f75950c2258312dc2e5ff2}\label{class_entity_a2b625abf96f75950c2258312dc2e5ff2}} 
+Uint32 {\bfseries get\+Last\+Update} ()
+\item 
+\mbox{\Hypertarget{class_entity_a478c29496ea20d22e16c5902f0685b91}\label{class_entity_a478c29496ea20d22e16c5902f0685b91}} 
+const char $\ast$ {\bfseries get\+Def\+Name} () const
+\item 
+\mbox{\Hypertarget{class_entity_a524448b6d773b515ac6f3374149c2a2a}\label{class_entity_a524448b6d773b515ac6f3374149c2a2a}} 
+Uint32 {\bfseries get\+Def\+Index} () const
+\item 
+\mbox{\Hypertarget{class_entity_afc02631df7e9720dd316050505d0f0b3}\label{class_entity_afc02631df7e9720dd316050505d0f0b3}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ \& {\bfseries get\+Components} () const
+\item 
+\mbox{\Hypertarget{class_entity_a1c658c911537a21cd667d1443948c148}\label{class_entity_a1c658c911537a21cd667d1443948c148}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ \& {\bfseries get\+Components} ()
+\item 
+\mbox{\Hypertarget{class_entity_a080481d6e63d7d77473d0f978fb7c8de}\label{class_entity_a080481d6e63d7d77473d0f978fb7c8de}} 
+const \mbox{\hyperlink{class_entity_a7a204f6ae61617484430dad15270f190}{sort\+\_\+t}} \& {\bfseries get\+Sort} () const
+\item 
+\mbox{\Hypertarget{class_entity_a787dde78015e32d67a10320ff7aa20a8}\label{class_entity_a787dde78015e32d67a10320ff7aa20a8}} 
+Sint32 {\bfseries get\+Current\+CX} () const
+\item 
+\mbox{\Hypertarget{class_entity_a1df826d3b2329327459a6225c6c3d349}\label{class_entity_a1df826d3b2329327459a6225c6c3d349}} 
+Sint32 {\bfseries get\+Current\+CY} () const
+\item 
+\mbox{\Hypertarget{class_entity_a4458ed2f82c43004aea86703746ca293}\label{class_entity_a4458ed2f82c43004aea86703746ca293}} 
+int {\bfseries get\+Current\+TileX} () const
+\item 
+\mbox{\Hypertarget{class_entity_ac94c6adc2e9544f3bacda984c99a6824}\label{class_entity_ac94c6adc2e9544f3bacda984c99a6824}} 
+int {\bfseries get\+Current\+TileY} () const
+\item 
+\mbox{\Hypertarget{class_entity_a77abc37696599c22835dfcf5d2ccbec0}\label{class_entity_a77abc37696599c22835dfcf5d2ccbec0}} 
+int {\bfseries get\+Current\+TileZ} () const
+\item 
+\mbox{\Hypertarget{class_entity_ac3c0d2e482bebbcd5f2cd37917ff1bfc}\label{class_entity_ac3c0d2e482bebbcd5f2cd37917ff1bfc}} 
+bool {\bfseries is\+Path\+Requested} () const
+\item 
+\mbox{\Hypertarget{class_entity_ab0a5acf1519e3aa87f4f243fb1dede69}\label{class_entity_ab0a5acf1519e3aa87f4f243fb1dede69}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Path\+Node\+Position} () const
+\item 
+\mbox{\Hypertarget{class_entity_a646587b88eab946e5b5f9be44960f51c}\label{class_entity_a646587b88eab946e5b5f9be44960f51c}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Path\+Node\+Dir} () const
+\item 
+\mbox{\Hypertarget{class_entity_a0221218232b0b9dbe519b98f58121050}\label{class_entity_a0221218232b0b9dbe519b98f58121050}} 
+bool {\bfseries has\+Path} () const
+\item 
+\mbox{\Hypertarget{class_entity_a6fad330c882f3b433deb4fec124a8fb7}\label{class_entity_a6fad330c882f3b433deb4fec124a8fb7}} 
+const \mbox{\hyperlink{class_entity}{Entity}} $\ast$ {\bfseries get\+Anchor} () const
+\item 
+\mbox{\Hypertarget{class_entity_a3f11ae8012251c33f50361d820980ef6}\label{class_entity_a3f11ae8012251c33f50361d820980ef6}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Offset} () const
+\item 
+\mbox{\Hypertarget{class_entity_a26cc375e77be0a00b062875be700dc11}\label{class_entity_a26cc375e77be0a00b062875be700dc11}} 
+bool {\bfseries is\+Pickupable} () const
+\item 
+\mbox{\Hypertarget{class_entity_a48613c301abb54cf6c70a9b58c58ad7a}\label{class_entity_a48613c301abb54cf6c70a9b58c58ad7a}} 
+const \mbox{\hyperlink{class_rotation}{Rotation}} \& {\bfseries get\+Look\+Dir} () const
+\item 
+\mbox{\Hypertarget{class_entity_a5794b020a5a77072287be57a6398da5b}\label{class_entity_a5794b020a5a77072287be57a6398da5b}} 
+void {\bfseries set\+Name} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_entity_ac2131b08a1ca0ee72afea22e9ef6bf68}\label{class_entity_ac2131b08a1ca0ee72afea22e9ef6bf68}} 
+void {\bfseries set\+Mat} (const glm\+::mat4 \&\+\_\+mat)
+\item 
+\mbox{\Hypertarget{class_entity_a203762817113f02bb01b9b7536719036}\label{class_entity_a203762817113f02bb01b9b7536719036}} 
+void {\bfseries set\+Pos} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+pos)
+\item 
+\mbox{\Hypertarget{class_entity_ae0c0589c6d25e09653954f36d725a53d}\label{class_entity_ae0c0589c6d25e09653954f36d725a53d}} 
+void {\bfseries set\+Vel} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+vel)
+\item 
+\mbox{\Hypertarget{class_entity_afa03e1dbf498bddca15c9ca1e5ab7e64}\label{class_entity_afa03e1dbf498bddca15c9ca1e5ab7e64}} 
+void {\bfseries set\+New\+Pos} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+new\+Pos)
+\item 
+\mbox{\Hypertarget{class_entity_ad33bcec418d0e7030f933a7b44a699c1}\label{class_entity_ad33bcec418d0e7030f933a7b44a699c1}} 
+void {\bfseries set\+Ang} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&\+\_\+ang)
+\item 
+\mbox{\Hypertarget{class_entity_ae39098ba5e36b568377304b1d50cea2f}\label{class_entity_ae39098ba5e36b568377304b1d50cea2f}} 
+void {\bfseries set\+Rot} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&\+\_\+rot)
+\item 
+\mbox{\Hypertarget{class_entity_adb760298e230090600902bb4249681cb}\label{class_entity_adb760298e230090600902bb4249681cb}} 
+void {\bfseries set\+New\+Ang} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&\+\_\+new\+Ang)
+\item 
+\mbox{\Hypertarget{class_entity_a4fba1845a7e96a8403981f1ffa71a998}\label{class_entity_a4fba1845a7e96a8403981f1ffa71a998}} 
+void {\bfseries set\+Script\+Str} (const char $\ast$\+\_\+script\+Str)
+\item 
+\mbox{\Hypertarget{class_entity_a5532851f57001b8e7ea80965a67be13f}\label{class_entity_a5532851f57001b8e7ea80965a67be13f}} 
+void {\bfseries set\+Scale} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+scale)
+\item 
+\mbox{\Hypertarget{class_entity_aa5e0feddf9ddd4c48dadd8629022c3d8}\label{class_entity_aa5e0feddf9ddd4c48dadd8629022c3d8}} 
+void {\bfseries set\+Flags} (const Uint32 \+\_\+flags)
+\item 
+\mbox{\Hypertarget{class_entity_a3e9b4f4b66502fb9367c9809d912cb66}\label{class_entity_a3e9b4f4b66502fb9367c9809d912cb66}} 
+void {\bfseries set\+Flag} (const Uint32 flag)
+\item 
+\mbox{\Hypertarget{class_entity_adf2ca334f9a048e26dd19e1e871cc32d}\label{class_entity_adf2ca334f9a048e26dd19e1e871cc32d}} 
+void {\bfseries reset\+Flag} (const Uint32 flag)
+\item 
+\mbox{\Hypertarget{class_entity_a648f1d900231ba8df662252f2d850067}\label{class_entity_a648f1d900231ba8df662252f2d850067}} 
+void {\bfseries toggle\+Flag} (const Uint32 flag)
+\item 
+\mbox{\Hypertarget{class_entity_ab0e718f9587795d6b171a6d93daf4c1b}\label{class_entity_ab0e718f9587795d6b171a6d93daf4c1b}} 
+void {\bfseries set\+Should\+Save} (const bool \+\_\+should\+Save)
+\item 
+\mbox{\Hypertarget{class_entity_aba9b145c56227dd2e2bc7c1e39ec9b23}\label{class_entity_aba9b145c56227dd2e2bc7c1e39ec9b23}} 
+void {\bfseries set\+Player} (\mbox{\hyperlink{class_player}{Player}} $\ast$\+\_\+player)
+\item 
+\mbox{\Hypertarget{class_entity_a080941f3167c48b4ab7fae5e0ace7b2e}\label{class_entity_a080941f3167c48b4ab7fae5e0ace7b2e}} 
+void {\bfseries set\+Falling} (const bool b)
+\item 
+\mbox{\Hypertarget{class_entity_aaf393da443d5cd45f16d23a3fb68d8b5}\label{class_entity_aaf393da443d5cd45f16d23a3fb68d8b5}} 
+void {\bfseries set\+Last\+Update} (const Uint32 \+\_\+last\+Update)
+\item 
+\mbox{\Hypertarget{class_entity_a3c3eeab1a8be365ea4d6470ee809aa08}\label{class_entity_a3c3eeab1a8be365ea4d6470ee809aa08}} 
+void {\bfseries set\+Def\+Name} (const char $\ast$\+\_\+def\+Name)
+\item 
+\mbox{\Hypertarget{class_entity_ac91999eb01ab9f3058710feedb348110}\label{class_entity_ac91999eb01ab9f3058710feedb348110}} 
+void {\bfseries set\+Def\+Index} (Uint32 \+\_\+def\+Index)
+\item 
+\mbox{\Hypertarget{class_entity_a35da9fd36d26794f21575e46e03354ed}\label{class_entity_a35da9fd36d26794f21575e46e03354ed}} 
+void {\bfseries set\+Sort} (\mbox{\hyperlink{class_entity_a7a204f6ae61617484430dad15270f190}{sort\+\_\+t}} \+\_\+sort)
+\item 
+\mbox{\Hypertarget{class_entity_a49c811c6b92d849cfe6eecebd511794d}\label{class_entity_a49c811c6b92d849cfe6eecebd511794d}} 
+void {\bfseries set\+Pickupable} (bool \+\_\+pickupable)
+\item 
+\mbox{\Hypertarget{class_entity_ae6e73da9d5098d7761ac72591d38d7c6}\label{class_entity_ae6e73da9d5098d7761ac72591d38d7c6}} 
+void {\bfseries set\+Look\+Dir} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&\+\_\+ang)
+\item 
+\mbox{\Hypertarget{class_entity_a1d25a5bf829191e7423181f36815e640}\label{class_entity_a1d25a5bf829191e7423181f36815e640}} 
+const bool \mbox{\hyperlink{class_entity_a1d25a5bf829191e7423181f36815e640}{is\+Selected}} () const
+\begin{DoxyCompactList}\small\item\em editor properties \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_acba9baa912c718af35cd83d59d6a0b55}\label{class_entity_acba9baa912c718af35cd83d59d6a0b55}} 
+const bool {\bfseries is\+Highlighted} () const
+\item 
+\mbox{\Hypertarget{class_entity_a8dd3508d9a572150dd426c25bbdda838}\label{class_entity_a8dd3508d9a572150dd426c25bbdda838}} 
+void {\bfseries set\+Selected} (const bool \+\_\+selected)
+\item 
+\mbox{\Hypertarget{class_entity_a23cb7859437f714b4c882caa8b8f5673}\label{class_entity_a23cb7859437f714b4c882caa8b8f5673}} 
+void {\bfseries set\+Highlighted} (const bool \+\_\+highlighted)
+\item 
+\mbox{\hyperlink{class_game}{Game}} $\ast$ \mbox{\hyperlink{class_entity_a536aff4d7e94e09cde874d1dffd51a11}{get\+Game}} ()
+\item 
+\mbox{\Hypertarget{class_entity_adfdb1e3489e4d6b97f5c4339505af7c7}\label{class_entity_adfdb1e3489e4d6b97f5c4339505af7c7}} 
+void \mbox{\hyperlink{class_entity_adfdb1e3489e4d6b97f5c4339505af7c7}{add\+To\+Editor\+List}} ()
+\begin{DoxyCompactList}\small\item\em add to level navigator in editor \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_entity_ac0058583a0488f71d81edad7b86c7d33}{remote\+Execute}} (const char $\ast$func\+Name, const \mbox{\hyperlink{class_script_1_1_args}{Script\+::\+Args}} \&args)
+\item 
+void \mbox{\hyperlink{class_entity_a3af8f99cf92d181f5b98907238451532}{update\+Packet}} (\mbox{\hyperlink{class_packet}{Packet}} \&packet) const
+\item 
+void \mbox{\hyperlink{class_entity_a8533191f9bc7d9679cc907dc634f8dbd}{dispatch}} (const char $\ast$func\+Name, \mbox{\hyperlink{class_script_1_1_args}{Script\+::\+Args}} \&args)
+\item 
+float \mbox{\hyperlink{class_entity_abc65ab713b3e1dd17170e53235cdc2a7}{nearest\+Floor}} (\mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} \&hit)
+\item 
+float \mbox{\hyperlink{class_entity_a4f5aafe2cf216b0b72f9e71bda7fa4c8}{nearest\+Ceiling}} (\mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} \&hit)
+\item 
+\mbox{\Hypertarget{class_entity_aa84c32a5d1baceccefec62568edc0a4f}\label{class_entity_aa84c32a5d1baceccefec62568edc0a4f}} 
+void \mbox{\hyperlink{class_entity_aa84c32a5d1baceccefec62568edc0a4f}{remove}} ()
+\begin{DoxyCompactList}\small\item\em removes the entity from the current simulation \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a205b0c38bd21190fba581f24b034e412}\label{class_entity_a205b0c38bd21190fba581f24b034e412}} 
+void \mbox{\hyperlink{class_entity_a205b0c38bd21190fba581f24b034e412}{delete\+All\+Vis\+Maps}} ()
+\begin{DoxyCompactList}\small\item\em delete occlusion data for self and children \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_entity_ad3f711628d0178f409db91284a79ca27}{find\+Entities\+In\+Radius}} (float radius, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&out\+List) const
+\item 
+void \mbox{\hyperlink{class_entity_ad8fab3e0f213be90585184abdefc8cf2}{set\+Key\+Value}} (const char $\ast$key, const char $\ast$value)
+\item 
+void \mbox{\hyperlink{class_entity_a3e66b3808bb4e400c0173f76cd2fca66}{delete\+Key\+Value}} (const char $\ast$key)
+\item 
+const char $\ast$ \mbox{\hyperlink{class_entity_a22cec574a32d24f8aba4b60b96a249c0}{get\+Key\+Value\+As\+String}} (const char $\ast$key) const
+\item 
+float \mbox{\hyperlink{class_entity_a897ba343e505e8a5c7639640c59e1e71}{get\+Key\+Value\+As\+Float}} (const char $\ast$key) const
+\item 
+int \mbox{\hyperlink{class_entity_a9576c00c845df413b0f5ca7c2488eec4}{get\+Key\+Value\+As\+Int}} (const char $\ast$key) const
+\item 
+bool \mbox{\hyperlink{class_entity_a70c1a05723a38d39242b2c309db00baf}{get\+Key\+Value\+As\+Bool}} (const char $\ast$key) const
+\item 
+const char $\ast$ \mbox{\hyperlink{class_entity_a715b35f9f65d067b397d0742a1828847}{get\+Key\+Value}} (const char $\ast$key) const
+\item 
+\mbox{\Hypertarget{class_entity_a44081bf7a8d6f95b9b758aa5069a2a2d}\label{class_entity_a44081bf7a8d6f95b9b758aa5069a2a2d}} 
+void \mbox{\hyperlink{class_entity_a44081bf7a8d6f95b9b758aa5069a2a2d}{pre\+Process}} ()
+\begin{DoxyCompactList}\small\item\em runs the entity\textquotesingle{}s pre-\/process script \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a5a85a56abc8731c008b733cbc91dbb01}\label{class_entity_a5a85a56abc8731c008b733cbc91dbb01}} 
+void \mbox{\hyperlink{class_entity_a5a85a56abc8731c008b733cbc91dbb01}{process}} ()
+\begin{DoxyCompactList}\small\item\em updates the entity and runs the entity script \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a3cd0b0d52a99d1ab02a46ff13802c655}\label{class_entity_a3cd0b0d52a99d1ab02a46ff13802c655}} 
+void \mbox{\hyperlink{class_entity_a3cd0b0d52a99d1ab02a46ff13802c655}{post\+Process}} ()
+\begin{DoxyCompactList}\small\item\em runs the entity\textquotesingle{}s post-\/process script \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_entity_a9c61e4e1eb3928b382dccb2c5f4d24d7}{insert\+Into\+World}} (\mbox{\hyperlink{class_world}{World}} $\ast$\+\_\+world, const \mbox{\hyperlink{class_entity}{Entity}} $\ast$\+\_\+anchor=nullptr, const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+offset=\mbox{\hyperlink{class_vector}{Vector}}(0.f))
+\item 
+\mbox{\Hypertarget{class_entity_a78a7cbadda23a9915873e62689fabea4}\label{class_entity_a78a7cbadda23a9915873e62689fabea4}} 
+void \mbox{\hyperlink{class_entity_a78a7cbadda23a9915873e62689fabea4}{finish\+Insert\+Into\+World}} ()
+\begin{DoxyCompactList}\small\item\em finish transfering the object into another world \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_entity_a773d082bc703da27f0b3c156d5f5e4e7}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights) const
+\item 
+void \mbox{\hyperlink{class_entity_ac5b9353309295281b97ff195e5ac2fc0}{animate}} (const char $\ast$\mbox{\hyperlink{class_entity_ab4173cd8b2129a3d514204c06f64d5cf}{name}}, bool blend=true)
+\item 
+bool \mbox{\hyperlink{class_entity_aac8c4e13d20f8535521e369ab69d5afc}{move}} ()
+\item 
+void \mbox{\hyperlink{class_entity_a62445da6109611cc172403ed6a8442a1}{apply\+Force}} (const \mbox{\hyperlink{class_vector}{Vector}} \&force, const \mbox{\hyperlink{class_vector}{Vector}} \&origin)
+\item 
+bool \mbox{\hyperlink{class_entity_a7439705c99a4c8a79462610ab84f4ada}{save\+Def}} (const char $\ast$filename) const
+\item 
+bool \mbox{\hyperlink{class_entity_a078dd15622164b06c1c7ea505e9c75c7}{is\+Near\+Character}} (float radius) const
+\item 
+bool \mbox{\hyperlink{class_entity_aa662b35fca6674ec38c902542b8f4f08}{is\+Crouching}} () const
+\item 
+bool \mbox{\hyperlink{class_entity_a012d9f1dd3cc465f1423f228eea3d4e5}{is\+Moving}} () const
+\item 
+bool \mbox{\hyperlink{class_entity_af649315e9776a615e6fb050e5e7f6f06}{has\+Jumped}} () const
+\item 
+bool \mbox{\hyperlink{class_entity_adada944e0c3ead1deafd666d4f9195da}{check\+Collision}} (const \mbox{\hyperlink{class_vector}{Vector}} \&\mbox{\hyperlink{class_entity_a495d06329009168b8ff02e5c25ace943}{new\+Pos}})
+\item 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ \mbox{\hyperlink{class_entity_a4b3653f144f82052cf3aa727ec9b80cc}{copy}} (\mbox{\hyperlink{class_world}{World}} $\ast$\mbox{\hyperlink{class_entity_a038b06c38fe6bb385f37c05a5647c0dc}{world}}, \mbox{\hyperlink{class_entity}{Entity}} $\ast$entity=nullptr) const
+\item 
+\mbox{\Hypertarget{class_entity_a00b6eeaf99b35c8f8b10b5fbfc1baf4f}\label{class_entity_a00b6eeaf99b35c8f8b10b5fbfc1baf4f}} 
+void \mbox{\hyperlink{class_entity_a00b6eeaf99b35c8f8b10b5fbfc1baf4f}{update}} ()
+\begin{DoxyCompactList}\small\item\em updates matrices \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a69afb26f03d740191ed2eab70459c479}\label{class_entity_a69afb26f03d740191ed2eab70459c479}} 
+void \mbox{\hyperlink{class_entity_a69afb26f03d740191ed2eab70459c479}{clear\+Chunk\+Node}} ()
+\begin{DoxyCompactList}\small\item\em clears the node pointing to us in the chunk we are occupying \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_ad6e5008512d9712bf4eb5e1ed0cf19cb}\label{class_entity_ad6e5008512d9712bf4eb5e1ed0cf19cb}} 
+void \mbox{\hyperlink{class_entity_ad6e5008512d9712bf4eb5e1ed0cf19cb}{clear\+All\+Chunk\+Nodes}} ()
+\begin{DoxyCompactList}\small\item\em clears the chunk nodes of all components \end{DoxyCompactList}\item 
+Uint32 \mbox{\hyperlink{class_entity_ae8dd450aba822703f2e72e6404496bf5}{get\+New\+Component\+ID}} ()
+\item 
+bool \mbox{\hyperlink{class_entity_a2d61cb380577221f217535770ed05287}{has\+Component}} (\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}} type) const
+\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{class_entity_a91f23c370b31e14bf9bb7a4d59ba4ac5}{find\+Component\+By\+Name}} (const char $\ast$\mbox{\hyperlink{class_entity_ab4173cd8b2129a3d514204c06f64d5cf}{name}})
+\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{class_entity_a38a568dcfe52fecd1ec332141077aa3e}{find\+Component\+By\+U\+ID}} (const Uint32 \mbox{\hyperlink{class_entity_ac5a6bb77c4727c509d99b724225b5393}{uid}})
+\item 
+bool \mbox{\hyperlink{class_entity_a8079de30d0010130520b4dd8cda4595b}{remove\+Component\+By\+Name}} (const char $\ast$\mbox{\hyperlink{class_entity_ab4173cd8b2129a3d514204c06f64d5cf}{name}})
+\item 
+bool \mbox{\hyperlink{class_entity_ae4e48b5a05dd0a052c03e7795d5cf2ca}{remove\+Component\+By\+U\+ID}} (const Uint32 \mbox{\hyperlink{class_entity_ac5a6bb77c4727c509d99b724225b5393}{uid}})
+\item 
+\mbox{\Hypertarget{class_entity_ac7050d3cce8b9c17aa8fe2ce2f8d5937}\label{class_entity_ac7050d3cce8b9c17aa8fe2ce2f8d5937}} 
+\mbox{\hyperlink{class_component}{Component}} $\ast$ {\bfseries add\+Component} (\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}} type)
+\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{class_entity_a7183edcbfb7db1f38339e1e3217b8581}{add\+Component}} ()
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{class_entity_aabc19894db9fa321c1bed34f137599ab}{find\+All\+Components}} (\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}} type, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $\ast$ $>$ \&list) const
+\item 
+const \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} \mbox{\hyperlink{class_entity_a0af46f4fa6c6ddef6dcb62b1585b7a05}{line\+Trace}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest)
+\item 
+bool \mbox{\hyperlink{class_entity_acc4d5595dfd0e902724e457661161e7a}{interact}} (\mbox{\hyperlink{class_entity}{Entity}} \&user, \mbox{\hyperlink{class_b_box}{B\+Box}} \&bbox)
+\item 
+void \mbox{\hyperlink{class_entity_a69971f83dae3d918e72f1126cb1021da}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+void \mbox{\hyperlink{class_entity_a9198739233bd8878dc51810da8316b21}{find\+A\+Path}} (int endX, int endY)
+\item 
+\mbox{\Hypertarget{class_entity_aaffa149e6f3c66ba97fe4a8440c16231}\label{class_entity_aaffa149e6f3c66ba97fe4a8440c16231}} 
+void \mbox{\hyperlink{class_entity_aaffa149e6f3c66ba97fe4a8440c16231}{find\+Random\+Path}} ()
+\begin{DoxyCompactList}\small\item\em kicks off an async pathfinding task to a random destination \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_entity_a8df09e74dac3bd9e5fbbfb02ae9b2250}{path\+Finished}} ()
+\item 
+bool \mbox{\hyperlink{class_entity_aba2058a3b3541f9dcb785dcc8c38ee85}{is\+Local\+Player}} () const
+\item 
+\mbox{\Hypertarget{class_entity_aaecec91b3bd921465d430408972d3fb5}\label{class_entity_aaecec91b3bd921465d430408972d3fb5}} 
+void \mbox{\hyperlink{class_entity_aaecec91b3bd921465d430408972d3fb5}{warp}} ()
+\begin{DoxyCompactList}\small\item\em updates the physics component of the entity to move it to the current location \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_ab597514ad65262c899be098ec10647cf}\label{class_entity_ab597514ad65262c899be098ec10647cf}} 
+void \mbox{\hyperlink{class_entity_ab597514ad65262c899be098ec10647cf}{deposit\+Item}} (\mbox{\hyperlink{class_entity}{Entity}} $\ast$entity\+To\+Deposit, \mbox{\hyperlink{class_string}{String}} inv\+Slot)
+\begin{DoxyCompactList}\small\item\em deposit an item into the specified inventory slot \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_entity_ad344e064b73b27b3c4b3d28f1e1c550a}{is\+Client\+Obj}} () const
+\item 
+bool \mbox{\hyperlink{class_entity_ad32a6c1ba100d67576d6cd0f146dab67}{is\+Server\+Obj}} () const
+\item 
+\mbox{\Hypertarget{class_entity_a14ebd8827ca622bcbf31b2ab59ff3dbf}\label{class_entity_a14ebd8827ca622bcbf31b2ab59ff3dbf}} 
+void \mbox{\hyperlink{class_entity_a14ebd8827ca622bcbf31b2ab59ff3dbf}{deposit\+In\+Available\+Slot}} (\mbox{\hyperlink{class_entity}{Entity}} $\ast$entity\+To\+Deposit)
+\begin{DoxyCompactList}\small\item\em deposits in first empty slot or right hand if all filled \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a0741cc4c21032500335fd40d39ae06f2}\label{class_entity_a0741cc4c21032500335fd40d39ae06f2}} 
+void \mbox{\hyperlink{class_entity_a0741cc4c21032500335fd40d39ae06f2}{set\+Inventory\+Visibility}} (bool visible)
+\begin{DoxyCompactList}\small\item\em toggles inventory on/off \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_entity_1_1def__t}{def\+\_\+t}} $\ast$ \mbox{\hyperlink{class_entity_a8ce23ffa1337c0ba8b20dcda236ca95b}{load\+Def}} (const char $\ast$filename)
+\item 
+static const \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} $\ast$ \mbox{\hyperlink{class_entity_a76c3fd4a17cf24250a63d75d7cb5322d}{find\+Def}} (const char $\ast$\mbox{\hyperlink{class_entity_ab4173cd8b2129a3d514204c06f64d5cf}{name}})
+\item 
+static const \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} $\ast$ \mbox{\hyperlink{class_entity_a42de842d9df6f0a720df1afc5d7a6732}{find\+Def}} (const Uint32 index)
+\item 
+static \mbox{\hyperlink{class_entity}{Entity}} $\ast$ \mbox{\hyperlink{class_entity_a0d566b36eeef19ed4688e05693612a6f}{spawn\+From\+Def}} (\mbox{\hyperlink{class_world}{World}} $\ast$\mbox{\hyperlink{class_entity_a038b06c38fe6bb385f37c05a5647c0dc}{world}}, const \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} \&def, const \mbox{\hyperlink{class_vector}{Vector}} \&\mbox{\hyperlink{class_entity_a88416c499342d35168f287a78e9c855a}{pos}}, const \mbox{\hyperlink{class_rotation}{Rotation}} \&\mbox{\hyperlink{class_entity_a5101a0608ee70fd6b158888e4f2129c2}{ang}}, Uint32 \mbox{\hyperlink{class_entity_ac5a6bb77c4727c509d99b724225b5393}{uid}}=U\+I\+N\+T32\+\_\+\+M\+AX)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ {\bfseries flag\+Str} \mbox{[}static\+\_\+cast$<$ int $>$(flag\+\_\+t\+::\+F\+L\+A\+G\+\_\+\+N\+UM)\mbox{]}
+\item 
+static const char $\ast$ {\bfseries flag\+Desc} \mbox{[}static\+\_\+cast$<$ int $>$(flag\+\_\+t\+::\+F\+L\+A\+G\+\_\+\+N\+UM)\mbox{]}
+\item 
+static const char $\ast$ {\bfseries sort\+Str} \mbox{[}S\+O\+R\+T\+\_\+\+M\+AX\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_entity_a038b06c38fe6bb385f37c05a5647c0dc}\label{class_entity_a038b06c38fe6bb385f37c05a5647c0dc}} 
+\mbox{\hyperlink{class_world}{World}} $\ast$ \mbox{\hyperlink{class_entity_a038b06c38fe6bb385f37c05a5647c0dc}{world}} = nullptr
+\begin{DoxyCompactList}\small\item\em parent world object \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a7fc0e8ce2510e7aa34b2a9d01c4060bd}\label{class_entity_a7fc0e8ce2510e7aa34b2a9d01c4060bd}} 
+\mbox{\hyperlink{class_script}{Script}} $\ast$ \mbox{\hyperlink{class_entity_a7fc0e8ce2510e7aa34b2a9d01c4060bd}{script}} = nullptr
+\begin{DoxyCompactList}\small\item\em scripting engine \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_abb029a125dcbdd074e3bb14538b622d5}\label{class_entity_abb029a125dcbdd074e3bb14538b622d5}} 
+\mbox{\hyperlink{class_player}{Player}} $\ast$ \mbox{\hyperlink{class_entity_abb029a125dcbdd074e3bb14538b622d5}{player}} = nullptr
+\begin{DoxyCompactList}\small\item\em player associated with this entity, if any \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_ae8cce32fa3f1c06cafda0fc2423d193b}\label{class_entity_ae8cce32fa3f1c06cafda0fc2423d193b}} 
+\mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{class_entity_ae8cce32fa3f1c06cafda0fc2423d193b}{chunk\+Node}} = nullptr
+\begin{DoxyCompactList}\small\item\em pointer to our node in the chunk we are occupying (if any) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a476d4703f84f3bc044b576719e0cd517}\label{class_entity_a476d4703f84f3bc044b576719e0cd517}} 
+\mbox{\hyperlink{class_world}{World}} $\ast$ \mbox{\hyperlink{class_entity_a476d4703f84f3bc044b576719e0cd517}{new\+World}} = nullptr
+\begin{DoxyCompactList}\small\item\em world we are moving to, if any \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_adae66be24a727a45cf5642ca500b4d62}\label{class_entity_adae66be24a727a45cf5642ca500b4d62}} 
+const \mbox{\hyperlink{class_entity}{Entity}} $\ast$ \mbox{\hyperlink{class_entity_adae66be24a727a45cf5642ca500b4d62}{anchor}} = nullptr
+\begin{DoxyCompactList}\small\item\em entity we are attached to for the transition \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_afa69476bc581806f6ab3d131a741b4d6}\label{class_entity_afa69476bc581806f6ab3d131a741b4d6}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_entity_afa69476bc581806f6ab3d131a741b4d6}{offset}}
+\begin{DoxyCompactList}\small\item\em offset from the anchor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a2f43fb64a58912a9025254b7f2ffc27d}\label{class_entity_a2f43fb64a58912a9025254b7f2ffc27d}} 
+Uint32 {\bfseries component\+I\+Ds} = 0
+\item 
+\mbox{\Hypertarget{class_entity_acc9367a91ed32092918f6956a550af22}\label{class_entity_acc9367a91ed32092918f6956a550af22}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ \mbox{\hyperlink{class_entity_acc9367a91ed32092918f6956a550af22}{components}}
+\begin{DoxyCompactList}\small\item\em component list \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a88416c499342d35168f287a78e9c855a}\label{class_entity_a88416c499342d35168f287a78e9c855a}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_entity_a88416c499342d35168f287a78e9c855a}{pos}}
+\begin{DoxyCompactList}\small\item\em position \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a495d06329009168b8ff02e5c25ace943}\label{class_entity_a495d06329009168b8ff02e5c25ace943}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_entity_a495d06329009168b8ff02e5c25ace943}{new\+Pos}}
+\begin{DoxyCompactList}\small\item\em new position to interpolate towards (net) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_aaeff6023fd3586ce5f0d74660c82e92e}\label{class_entity_aaeff6023fd3586ce5f0d74660c82e92e}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_entity_aaeff6023fd3586ce5f0d74660c82e92e}{vel}}
+\begin{DoxyCompactList}\small\item\em velocity \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a5101a0608ee70fd6b158888e4f2129c2}\label{class_entity_a5101a0608ee70fd6b158888e4f2129c2}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} \mbox{\hyperlink{class_entity_a5101a0608ee70fd6b158888e4f2129c2}{ang}}
+\begin{DoxyCompactList}\small\item\em angle \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_aa9f1b9091cc5e6cd586c32ba1ac052bb}\label{class_entity_aa9f1b9091cc5e6cd586c32ba1ac052bb}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} \mbox{\hyperlink{class_entity_aa9f1b9091cc5e6cd586c32ba1ac052bb}{new\+Ang}}
+\begin{DoxyCompactList}\small\item\em new angle to interpolate towards (net) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a5226678d6ac016547af407341055f87c}\label{class_entity_a5226678d6ac016547af407341055f87c}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \mbox{\hyperlink{class_entity_a5226678d6ac016547af407341055f87c}{rot}}
+\begin{DoxyCompactList}\small\item\em angular velocity \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a5a1467c5966758a447b3e046471521ba}\label{class_entity_a5a1467c5966758a447b3e046471521ba}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \mbox{\hyperlink{class_entity_a5a1467c5966758a447b3e046471521ba}{look\+Dir}}
+\begin{DoxyCompactList}\small\item\em euler-\/based look dir \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_ab5f5aee0da243d6497ca6fa09af6f6b5}\label{class_entity_ab5f5aee0da243d6497ca6fa09af6f6b5}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_entity_ab5f5aee0da243d6497ca6fa09af6f6b5}{scale}}
+\begin{DoxyCompactList}\small\item\em visual scale \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a59057b081d2ff6906a555cf2d7178ac4}\label{class_entity_a59057b081d2ff6906a555cf2d7178ac4}} 
+glm\+::mat4 \mbox{\hyperlink{class_entity_a59057b081d2ff6906a555cf2d7178ac4}{mat}}
+\begin{DoxyCompactList}\small\item\em matrix (position $\ast$ rotation $\ast$ scale) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a147cb22ad3d16a5ffe9c4735a3fcfbae}\label{class_entity_a147cb22ad3d16a5ffe9c4735a3fcfbae}} 
+bool \mbox{\hyperlink{class_entity_a147cb22ad3d16a5ffe9c4735a3fcfbae}{update\+Needed}} = false
+\begin{DoxyCompactList}\small\item\em if true, matrix gets updated, and component matrices get updated \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a94a8be6aaca452c31d26942c27b5c5f7}\label{class_entity_a94a8be6aaca452c31d26942c27b5c5f7}} 
+Sint32 \mbox{\hyperlink{class_entity_a94a8be6aaca452c31d26942c27b5c5f7}{current\+CX}} = I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em X coord of the chunk we are currently occupying. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a09618af1e661feb301dfb16e9a91c6cd}\label{class_entity_a09618af1e661feb301dfb16e9a91c6cd}} 
+Sint32 \mbox{\hyperlink{class_entity_a09618af1e661feb301dfb16e9a91c6cd}{current\+CY}} = I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em Y coord of the chunk we are currently occupying. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a29a8594c0aaa4b90c9d630b0bf0e2da0}\label{class_entity_a29a8594c0aaa4b90c9d630b0bf0e2da0}} 
+\mbox{\hyperlink{class_entity_a7a204f6ae61617484430dad15270f190}{sort\+\_\+t}} \mbox{\hyperlink{class_entity_a29a8594c0aaa4b90c9d630b0bf0e2da0}{sort}} = S\+O\+R\+T\+\_\+\+A\+NY
+\begin{DoxyCompactList}\small\item\em editing filter \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a576ad8a1d9e31da0d20ab3d5287273d3}\label{class_entity_a576ad8a1d9e31da0d20ab3d5287273d3}} 
+Uint32 \mbox{\hyperlink{class_entity_a576ad8a1d9e31da0d20ab3d5287273d3}{flags}} = 0
+\begin{DoxyCompactList}\small\item\em flags \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a198ccd1386cb3ea3219ec9669242e9e1}\label{class_entity_a198ccd1386cb3ea3219ec9669242e9e1}} 
+Uint32 \mbox{\hyperlink{class_entity_a198ccd1386cb3ea3219ec9669242e9e1}{def\+Index}} = U\+I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em index of the definition used to make the entity \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a051bbfc9259d11bd559e32312ed5a353}\label{class_entity_a051bbfc9259d11bd559e32312ed5a353}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_entity_a051bbfc9259d11bd559e32312ed5a353}{def\+Name}}
+\begin{DoxyCompactList}\small\item\em name gained from def file \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_ab4173cd8b2129a3d514204c06f64d5cf}\label{class_entity_ab4173cd8b2129a3d514204c06f64d5cf}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_entity_ab4173cd8b2129a3d514204c06f64d5cf}{name}}
+\begin{DoxyCompactList}\small\item\em the entity\textquotesingle{}s name \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a94c90b9cae7b3a24949fa4ee7b0e6d08}\label{class_entity_a94c90b9cae7b3a24949fa4ee7b0e6d08}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_entity_a94c90b9cae7b3a24949fa4ee7b0e6d08}{script\+Str}}
+\begin{DoxyCompactList}\small\item\em entity script filename \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a111e32fa8fe6d8772597bfac0cb6603b}\label{class_entity_a111e32fa8fe6d8772597bfac0cb6603b}} 
+bool \mbox{\hyperlink{class_entity_a111e32fa8fe6d8772597bfac0cb6603b}{ran\+Script}} = false
+\begin{DoxyCompactList}\small\item\em is true if script has run at least once \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_ac5a6bb77c4727c509d99b724225b5393}\label{class_entity_ac5a6bb77c4727c509d99b724225b5393}} 
+Uint32 \mbox{\hyperlink{class_entity_ac5a6bb77c4727c509d99b724225b5393}{uid}} = 0
+\begin{DoxyCompactList}\small\item\em entity id number \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a19f332b580b621e96c4468a011e415f2}\label{class_entity_a19f332b580b621e96c4468a011e415f2}} 
+Uint32 \mbox{\hyperlink{class_entity_a19f332b580b621e96c4468a011e415f2}{ticks}} = 0
+\begin{DoxyCompactList}\small\item\em lifespan of the entity \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_aa4f1f882d2afbb97eb50deb246a9edc4}\label{class_entity_aa4f1f882d2afbb97eb50deb246a9edc4}} 
+Uint32 \mbox{\hyperlink{class_entity_aa4f1f882d2afbb97eb50deb246a9edc4}{last\+Update}} = 0
+\begin{DoxyCompactList}\small\item\em time of last remote update of the entity (netplay) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a0dbb2b7f6c8ca63efd24c989cf36d13f}\label{class_entity_a0dbb2b7f6c8ca63efd24c989cf36d13f}} 
+bool \mbox{\hyperlink{class_entity_a0dbb2b7f6c8ca63efd24c989cf36d13f}{to\+Be\+Deleted}} = false
+\begin{DoxyCompactList}\small\item\em if true, the entity has been marked for deletion at the end of the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a73a2e32876990896d78c97856ddbb762}\label{class_entity_a73a2e32876990896d78c97856ddbb762}} 
+bool \mbox{\hyperlink{class_entity_a73a2e32876990896d78c97856ddbb762}{should\+Save}} = true
+\begin{DoxyCompactList}\small\item\em if true, the entity is saved when the world is saved to a file; if false, it is not \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a640b78c7c0e08e0fe135a58db874441c}\label{class_entity_a640b78c7c0e08e0fe135a58db874441c}} 
+bool \mbox{\hyperlink{class_entity_a640b78c7c0e08e0fe135a58db874441c}{falling}} = false
+\begin{DoxyCompactList}\small\item\em when true the entity is off the floor, otherwise they are on the floor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_ada66d10f412b5b15a95d64cc49244635}\label{class_entity_ada66d10f412b5b15a95d64cc49244635}} 
+\mbox{\hyperlink{class_map}{Map}}$<$ \mbox{\hyperlink{class_string}{String}}, \mbox{\hyperlink{class_string}{String}} $>$ {\bfseries keyvalues}
+\item 
+\mbox{\Hypertarget{class_entity_a5aad7cdc19d6fdeeff84722a811467fc}\label{class_entity_a5aad7cdc19d6fdeeff84722a811467fc}} 
+\mbox{\hyperlink{class_item}{Item}} {\bfseries item}
+\item 
+\mbox{\Hypertarget{class_entity_a1a4d725a882c54f7cd99549b40f13129}\label{class_entity_a1a4d725a882c54f7cd99549b40f13129}} 
+bool {\bfseries can\+Be\+Picked\+Up} = false
+\item 
+\mbox{\Hypertarget{class_entity_a58858410e67b146b0d830568d5eefa01}\label{class_entity_a58858410e67b146b0d830568d5eefa01}} 
+bool \mbox{\hyperlink{class_entity_a58858410e67b146b0d830568d5eefa01}{selected}} = false
+\begin{DoxyCompactList}\small\item\em editor variables \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_entity_a0fe161835e446283338fca3feab6af25}\label{class_entity_a0fe161835e446283338fca3feab6af25}} 
+bool {\bfseries highlighted} = false
+\item 
+\mbox{\Hypertarget{class_entity_a5b5f4ba5d19fe10bbab7b53e48794312}\label{class_entity_a5b5f4ba5d19fe10bbab7b53e48794312}} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{struct_frame_1_1listener__t}{Frame\+::listener\+\_\+t}} $>$ {\bfseries listener}
+\item 
+\mbox{\Hypertarget{class_entity_ac9498d42ac4e2dc691d0b58c88ee79f7}\label{class_entity_ac9498d42ac4e2dc691d0b58c88ee79f7}} 
+\mbox{\hyperlink{class_vector}{Vector}} {\bfseries path\+Node}
+\item 
+\mbox{\Hypertarget{class_entity_a2da671820d43ec52c600e917dfb8fadc}\label{class_entity_a2da671820d43ec52c600e917dfb8fadc}} 
+\mbox{\hyperlink{class_vector}{Vector}} {\bfseries path\+Dir}
+\item 
+\mbox{\Hypertarget{class_entity_ad495d7197ecf1249304baaed9cd11fe0}\label{class_entity_ad495d7197ecf1249304baaed9cd11fe0}} 
+std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ $>$ {\bfseries path\+Task}
+\item 
+\mbox{\Hypertarget{class_entity_ae4fa6ce46d6f3d41a22431d7962f25dd}\label{class_entity_ae4fa6ce46d6f3d41a22431d7962f25dd}} 
+\mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ {\bfseries path} = nullptr
+\item 
+\mbox{\Hypertarget{class_entity_a9cf8d18ff21f9a3a91fc43ca00eb8f19}\label{class_entity_a9cf8d18ff21f9a3a91fc43ca00eb8f19}} 
+bool {\bfseries path\+Requested} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An entity is an object that lives in a \mbox{\hyperlink{class_world}{World}}. It is made up of many \mbox{\hyperlink{class_component}{Component}} objects in a tree hierarchy. An entity can move about the world and store unique data about itself as key/value pairs. An entity also has a \mbox{\hyperlink{class_script}{Script}} that defines its unique behavior in the \mbox{\hyperlink{class_world}{World}}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_entity_a7183edcbfb7db1f38339e1e3217b8581}\label{class_entity_a7183edcbfb7db1f38339e1e3217b8581}} 
+\index{Entity@{Entity}!addComponent@{addComponent}}
+\index{addComponent@{addComponent}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{addComponent()}{addComponent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T$\ast$ Entity\+::add\+Component (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+adds a new component to our list of components \begin{DoxyReturn}{Returns}
+a pointer to our new component 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_ac5b9353309295281b97ff195e5ac2fc0}\label{class_entity_ac5b9353309295281b97ff195e5ac2fc0}} 
+\index{Entity@{Entity}!animate@{animate}}
+\index{animate@{animate}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{animate()}{animate()}}
+{\footnotesize\ttfamily void Entity\+::animate (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{bool}]{blend = {\ttfamily true} }\end{DoxyParamCaption})}
+
+animates all the entity\textquotesingle{}s meshes in unison 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the animation to play \\
+\hline
+{\em blend} & If true, blend to the new animation \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a62445da6109611cc172403ed6a8442a1}\label{class_entity_a62445da6109611cc172403ed6a8442a1}} 
+\index{Entity@{Entity}!applyForce@{applyForce}}
+\index{applyForce@{applyForce}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{applyForce()}{applyForce()}}
+{\footnotesize\ttfamily void Entity\+::apply\+Force (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{force,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin }\end{DoxyParamCaption})}
+
+apply a force to the entity\textquotesingle{}s rigid body (if any) 
+\begin{DoxyParams}{Parameters}
+{\em force} & the force to apply in world coordinates \\
+\hline
+{\em origin} & point of origin for the force in world space \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_adada944e0c3ead1deafd666d4f9195da}\label{class_entity_adada944e0c3ead1deafd666d4f9195da}} 
+\index{Entity@{Entity}!checkCollision@{checkCollision}}
+\index{checkCollision@{checkCollision}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{checkCollision()}{checkCollision()}}
+{\footnotesize\ttfamily bool Entity\+::check\+Collision (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{new\+Pos }\end{DoxyParamCaption})}
+
+check whether the entity collides with anything at the given location 
+\begin{DoxyParams}{Parameters}
+{\em new\+Pos} & the position to test \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if we collide, false if we do not 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a4b3653f144f82052cf3aa727ec9b80cc}\label{class_entity_a4b3653f144f82052cf3aa727ec9b80cc}} 
+\index{Entity@{Entity}!copy@{copy}}
+\index{copy@{copy}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_entity}{Entity}} $\ast$ Entity\+::copy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_world}{World}} $\ast$}]{world,  }\item[{\mbox{\hyperlink{class_entity}{Entity}} $\ast$}]{entity = {\ttfamily nullptr} }\end{DoxyParamCaption}) const}
+
+builds a copy of this entity 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world to place the new entity into \\
+\hline
+{\em entity} & a pre-\/made entity object, or nullptr to make a new one \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the copied entity 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a3e66b3808bb4e400c0173f76cd2fca66}\label{class_entity_a3e66b3808bb4e400c0173f76cd2fca66}} 
+\index{Entity@{Entity}!deleteKeyValue@{deleteKeyValue}}
+\index{deleteKeyValue@{deleteKeyValue}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{deleteKeyValue()}{deleteKeyValue()}}
+{\footnotesize\ttfamily void Entity\+::delete\+Key\+Value (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key }\end{DoxyParamCaption})}
+
+remove the specified key value pair 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to remove \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a8533191f9bc7d9679cc907dc634f8dbd}\label{class_entity_a8533191f9bc7d9679cc907dc634f8dbd}} 
+\index{Entity@{Entity}!dispatch@{dispatch}}
+\index{dispatch@{dispatch}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{dispatch()}{dispatch()}}
+{\footnotesize\ttfamily void Entity\+::dispatch (\begin{DoxyParamCaption}\item[{const char $\ast$}]{func\+Name,  }\item[{\mbox{\hyperlink{class_script_1_1_args}{Script\+::\+Args}} \&}]{args }\end{DoxyParamCaption})}
+
+run a script function with the given name 
+\begin{DoxyParams}{Parameters}
+{\em func\+Name} & the name of the function to execute \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a773d082bc703da27f0b3c156d5f5e4e7}\label{class_entity_a773d082bc703da27f0b3c156d5f5e4e7}} 
+\index{Entity@{Entity}!draw@{draw}}
+\index{draw@{draw}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Entity\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+draws the entity 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the entity \\
+\hline
+{\em light} & the light by which the entity should be illuminated (or nullptr for no illumination) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_aabc19894db9fa321c1bed34f137599ab}\label{class_entity_aabc19894db9fa321c1bed34f137599ab}} 
+\index{Entity@{Entity}!findAllComponents@{findAllComponents}}
+\index{findAllComponents@{findAllComponents}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{findAllComponents()}{findAllComponents()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Entity\+::find\+All\+Components (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}}}]{type,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $\ast$ $>$ \&}]{list }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+find all components of a given type 
+\begin{DoxyParams}{Parameters}
+{\em type} & the type of component to search for \\
+\hline
+{\em list} & list to populate \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a9198739233bd8878dc51810da8316b21}\label{class_entity_a9198739233bd8878dc51810da8316b21}} 
+\index{Entity@{Entity}!findAPath@{findAPath}}
+\index{findAPath@{findAPath}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{findAPath()}{findAPath()}}
+{\footnotesize\ttfamily void Entity\+::find\+A\+Path (\begin{DoxyParamCaption}\item[{int}]{endX,  }\item[{int}]{endY }\end{DoxyParamCaption})}
+
+kicks off an async pathfinding task 
+\begin{DoxyParams}{Parameters}
+{\em goalX} & target x coordinate \\
+\hline
+{\em goalY} & target y coordinate \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a91f23c370b31e14bf9bb7a4d59ba4ac5}\label{class_entity_a91f23c370b31e14bf9bb7a4d59ba4ac5}} 
+\index{Entity@{Entity}!findComponentByName@{findComponentByName}}
+\index{findComponentByName@{findComponentByName}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{findComponentByName()}{findComponentByName()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T$\ast$ Entity\+::find\+Component\+By\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+find the component with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the component, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a38a568dcfe52fecd1ec332141077aa3e}\label{class_entity_a38a568dcfe52fecd1ec332141077aa3e}} 
+\index{Entity@{Entity}!findComponentByUID@{findComponentByUID}}
+\index{findComponentByUID@{findComponentByUID}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{findComponentByUID()}{findComponentByUID()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T$\ast$ Entity\+::find\+Component\+By\+U\+ID (\begin{DoxyParamCaption}\item[{const Uint32}]{uid }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+find the component with the given uid 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the component, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a76c3fd4a17cf24250a63d75d7cb5322d}\label{class_entity_a76c3fd4a17cf24250a63d75d7cb5322d}} 
+\index{Entity@{Entity}!findDef@{findDef}}
+\index{findDef@{findDef}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{findDef()}{findDef()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} $\ast$ Entity\+::find\+Def (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+locates the entity definition with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the entity to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the entity def, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a42de842d9df6f0a720df1afc5d7a6732}\label{class_entity_a42de842d9df6f0a720df1afc5d7a6732}} 
+\index{Entity@{Entity}!findDef@{findDef}}
+\index{findDef@{findDef}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{findDef()}{findDef()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} $\ast$ Entity\+::find\+Def (\begin{DoxyParamCaption}\item[{const Uint32}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+locates the entity definition with the given index 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the definition to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the entity def, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_ad3f711628d0178f409db91284a79ca27}\label{class_entity_ad3f711628d0178f409db91284a79ca27}} 
+\index{Entity@{Entity}!findEntitiesInRadius@{findEntitiesInRadius}}
+\index{findEntitiesInRadius@{findEntitiesInRadius}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{findEntitiesInRadius()}{findEntitiesInRadius()}}
+{\footnotesize\ttfamily void Entity\+::find\+Entities\+In\+Radius (\begin{DoxyParamCaption}\item[{float}]{radius,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&}]{out\+List }\end{DoxyParamCaption}) const}
+
+finds all entities within a given radius to this entity 
+\begin{DoxyParams}{Parameters}
+{\em radius} & the radius to search in \\
+\hline
+{\em out\+List} & the list to populate \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a536aff4d7e94e09cde874d1dffd51a11}\label{class_entity_a536aff4d7e94e09cde874d1dffd51a11}} 
+\index{Entity@{Entity}!getGame@{getGame}}
+\index{getGame@{getGame}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{getGame()}{getGame()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_game}{Game}} $\ast$ Entity\+::get\+Game (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+get game sim that we are living in (if any) \begin{DoxyReturn}{Returns}
+the Game$\ast$ that we are in, or nullptr if we aren\textquotesingle{}t in a game 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a715b35f9f65d067b397d0742a1828847}\label{class_entity_a715b35f9f65d067b397d0742a1828847}} 
+\index{Entity@{Entity}!getKeyValue@{getKeyValue}}
+\index{getKeyValue@{getKeyValue}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{getKeyValue()}{getKeyValue()}}
+{\footnotesize\ttfamily const char $\ast$ Entity\+::get\+Key\+Value (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key }\end{DoxyParamCaption}) const}
+
+same as \mbox{\hyperlink{class_entity_a22cec574a32d24f8aba4b60b96a249c0}{get\+Key\+Value\+As\+String()}} 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the key, or \char`\"{}\char`\"{} if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a70c1a05723a38d39242b2c309db00baf}\label{class_entity_a70c1a05723a38d39242b2c309db00baf}} 
+\index{Entity@{Entity}!getKeyValueAsBool@{getKeyValueAsBool}}
+\index{getKeyValueAsBool@{getKeyValueAsBool}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{getKeyValueAsBool()}{getKeyValueAsBool()}}
+{\footnotesize\ttfamily bool Entity\+::get\+Key\+Value\+As\+Bool (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key }\end{DoxyParamCaption}) const}
+
+get the specified key value as a bool 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the key, or false if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a897ba343e505e8a5c7639640c59e1e71}\label{class_entity_a897ba343e505e8a5c7639640c59e1e71}} 
+\index{Entity@{Entity}!getKeyValueAsFloat@{getKeyValueAsFloat}}
+\index{getKeyValueAsFloat@{getKeyValueAsFloat}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{getKeyValueAsFloat()}{getKeyValueAsFloat()}}
+{\footnotesize\ttfamily float Entity\+::get\+Key\+Value\+As\+Float (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key }\end{DoxyParamCaption}) const}
+
+get the specified key value as a float 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the key, or 0.\+f if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a9576c00c845df413b0f5ca7c2488eec4}\label{class_entity_a9576c00c845df413b0f5ca7c2488eec4}} 
+\index{Entity@{Entity}!getKeyValueAsInt@{getKeyValueAsInt}}
+\index{getKeyValueAsInt@{getKeyValueAsInt}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{getKeyValueAsInt()}{getKeyValueAsInt()}}
+{\footnotesize\ttfamily int Entity\+::get\+Key\+Value\+As\+Int (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key }\end{DoxyParamCaption}) const}
+
+get the specified key value as an int 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the key, or 0 if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a22cec574a32d24f8aba4b60b96a249c0}\label{class_entity_a22cec574a32d24f8aba4b60b96a249c0}} 
+\index{Entity@{Entity}!getKeyValueAsString@{getKeyValueAsString}}
+\index{getKeyValueAsString@{getKeyValueAsString}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{getKeyValueAsString()}{getKeyValueAsString()}}
+{\footnotesize\ttfamily const char $\ast$ Entity\+::get\+Key\+Value\+As\+String (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key }\end{DoxyParamCaption}) const}
+
+get the specified key value as a string 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value associated with the key, or \char`\"{}\char`\"{} if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_ae8dd450aba822703f2e72e6404496bf5}\label{class_entity_ae8dd450aba822703f2e72e6404496bf5}} 
+\index{Entity@{Entity}!getNewComponentID@{getNewComponentID}}
+\index{getNewComponentID@{getNewComponentID}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{getNewComponentID()}{getNewComponentID()}}
+{\footnotesize\ttfamily Uint32 Entity\+::get\+New\+Component\+ID (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+generate a new ID for a component and advance the component ID counter \begin{DoxyReturn}{Returns}
+the fresh ID 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a2d61cb380577221f217535770ed05287}\label{class_entity_a2d61cb380577221f217535770ed05287}} 
+\index{Entity@{Entity}!hasComponent@{hasComponent}}
+\index{hasComponent@{hasComponent}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{hasComponent()}{hasComponent()}}
+{\footnotesize\ttfamily bool Entity\+::has\+Component (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}}}]{type }\end{DoxyParamCaption}) const}
+
+checks the entity for any components with the given type 
+\begin{DoxyParams}{Parameters}
+{\em type} & the type to look for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the component was found, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_af649315e9776a615e6fb050e5e7f6f06}\label{class_entity_af649315e9776a615e6fb050e5e7f6f06}} 
+\index{Entity@{Entity}!hasJumped@{hasJumped}}
+\index{hasJumped@{hasJumped}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{hasJumped()}{hasJumped()}}
+{\footnotesize\ttfamily bool Entity\+::has\+Jumped (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+only valid for player entities, determine if entity is jumping or not \begin{DoxyReturn}{Returns}
+true if jumping, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a9c61e4e1eb3928b382dccb2c5f4d24d7}\label{class_entity_a9c61e4e1eb3928b382dccb2c5f4d24d7}} 
+\index{Entity@{Entity}!insertIntoWorld@{insertIntoWorld}}
+\index{insertIntoWorld@{insertIntoWorld}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{insertIntoWorld()}{insertIntoWorld()}}
+{\footnotesize\ttfamily void Entity\+::insert\+Into\+World (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_world}{World}} $\ast$}]{\+\_\+world,  }\item[{const \mbox{\hyperlink{class_entity}{Entity}} $\ast$}]{\+\_\+anchor = {\ttfamily nullptr},  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{\+\_\+offset = {\ttfamily \mbox{\hyperlink{class_vector}{Vector}}(0.f)} }\end{DoxyParamCaption})}
+
+mark the object to be transfered into another world 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+world} & the world to move the entity into \\
+\hline
+{\em \+\_\+anchor} & the entity we need to remain attached to during the move \\
+\hline
+{\em \+\_\+offset} & offset from the anchor if one exists \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_acc4d5595dfd0e902724e457661161e7a}\label{class_entity_acc4d5595dfd0e902724e457661161e7a}} 
+\index{Entity@{Entity}!interact@{interact}}
+\index{interact@{interact}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{interact()}{interact()}}
+{\footnotesize\ttfamily bool Entity\+::interact (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_entity}{Entity}} \&}]{user,  }\item[{\mbox{\hyperlink{class_b_box}{B\+Box}} \&}]{bbox }\end{DoxyParamCaption})}
+
+dispatches the entity\textquotesingle{}s interaction function in L\+UA. 
+\begin{DoxyParams}{Parameters}
+{\em user} & the entity that interacted with this entity \\
+\hline
+{\em bbox} & the bbox that got clicked \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the interaction was successful, false if object is uninteractable or if there were script errors 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_ad344e064b73b27b3c4b3d28f1e1c550a}\label{class_entity_ad344e064b73b27b3c4b3d28f1e1c550a}} 
+\index{Entity@{Entity}!isClientObj@{isClientObj}}
+\index{isClientObj@{isClientObj}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{isClientObj()}{isClientObj()}}
+{\footnotesize\ttfamily bool Entity\+::is\+Client\+Obj (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+check if this entity is existing on the client \begin{DoxyReturn}{Returns}
+true if the entity is a client object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_aa662b35fca6674ec38c902542b8f4f08}\label{class_entity_aa662b35fca6674ec38c902542b8f4f08}} 
+\index{Entity@{Entity}!isCrouching@{isCrouching}}
+\index{isCrouching@{isCrouching}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{isCrouching()}{isCrouching()}}
+{\footnotesize\ttfamily bool Entity\+::is\+Crouching (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+only valid for player entities, determine if entity is crouching or not \begin{DoxyReturn}{Returns}
+true if crouching, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_aba2058a3b3541f9dcb785dcc8c38ee85}\label{class_entity_aba2058a3b3541f9dcb785dcc8c38ee85}} 
+\index{Entity@{Entity}!isLocalPlayer@{isLocalPlayer}}
+\index{isLocalPlayer@{isLocalPlayer}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{isLocalPlayer()}{isLocalPlayer()}}
+{\footnotesize\ttfamily bool Entity\+::is\+Local\+Player (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+check if this entity is a player owned by this client \begin{DoxyReturn}{Returns}
+true if the entity is a player from this client, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a012d9f1dd3cc465f1423f228eea3d4e5}\label{class_entity_a012d9f1dd3cc465f1423f228eea3d4e5}} 
+\index{Entity@{Entity}!isMoving@{isMoving}}
+\index{isMoving@{isMoving}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{isMoving()}{isMoving()}}
+{\footnotesize\ttfamily bool Entity\+::is\+Moving (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+only valid for player entities, determine if entity is moving or not \begin{DoxyReturn}{Returns}
+true if moving, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a078dd15622164b06c1c7ea505e9c75c7}\label{class_entity_a078dd15622164b06c1c7ea505e9c75c7}} 
+\index{Entity@{Entity}!isNearCharacter@{isNearCharacter}}
+\index{isNearCharacter@{isNearCharacter}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{isNearCharacter()}{isNearCharacter()}}
+{\footnotesize\ttfamily bool Entity\+::is\+Near\+Character (\begin{DoxyParamCaption}\item[{float}]{radius }\end{DoxyParamCaption}) const}
+
+determines if we are near a character or not 
+\begin{DoxyParams}{Parameters}
+{\em radius} & the search radius \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if we are near a character, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_ad32a6c1ba100d67576d6cd0f146dab67}\label{class_entity_ad32a6c1ba100d67576d6cd0f146dab67}} 
+\index{Entity@{Entity}!isServerObj@{isServerObj}}
+\index{isServerObj@{isServerObj}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{isServerObj()}{isServerObj()}}
+{\footnotesize\ttfamily bool Entity\+::is\+Server\+Obj (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+check if this entity is existing on the server \begin{DoxyReturn}{Returns}
+true if the entity is a server object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a0af46f4fa6c6ddef6dcb62b1585b7a05}\label{class_entity_a0af46f4fa6c6ddef6dcb62b1585b7a05}} 
+\index{Entity@{Entity}!lineTrace@{lineTrace}}
+\index{lineTrace@{lineTrace}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{lineTrace()}{lineTrace()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} Entity\+::line\+Trace (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest }\end{DoxyParamCaption})}
+
+perform a line test (raytrace) through the entity\textquotesingle{}s parent world which stops at first hit object 
+\begin{DoxyParams}{Parameters}
+{\em origin} & the starting point of the ray \\
+\hline
+{\em dest} & the ending point of the ray \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a hit\+\_\+t structure containing information on the hit object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a8ce23ffa1337c0ba8b20dcda236ca95b}\label{class_entity_a8ce23ffa1337c0ba8b20dcda236ca95b}} 
+\index{Entity@{Entity}!loadDef@{loadDef}}
+\index{loadDef@{loadDef}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{loadDef()}{loadDef()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} $\ast$ Entity\+::load\+Def (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+loads an entity definition from a json file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & the file to load \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a newly created \mbox{\hyperlink{struct_entity_1_1def__t}{def\+\_\+t}} struct 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_aac8c4e13d20f8535521e369ab69d5afc}\label{class_entity_aac8c4e13d20f8535521e369ab69d5afc}} 
+\index{Entity@{Entity}!move@{move}}
+\index{move@{move}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{move()}{move()}}
+{\footnotesize\ttfamily bool Entity\+::move (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+move the entity by its translational and rotational velocity \begin{DoxyReturn}{Returns}
+true if we moved without hitting any obstacles, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a4f5aafe2cf216b0b72f9e71bda7fa4c8}\label{class_entity_a4f5aafe2cf216b0b72f9e71bda7fa4c8}} 
+\index{Entity@{Entity}!nearestCeiling@{nearestCeiling}}
+\index{nearestCeiling@{nearestCeiling}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{nearestCeiling()}{nearestCeiling()}}
+{\footnotesize\ttfamily float Entity\+::nearest\+Ceiling (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} \&}]{hit }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em hit} & information about the collision \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the nearest ceiling, if any 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_abc65ab713b3e1dd17170e53235cdc2a7}\label{class_entity_abc65ab713b3e1dd17170e53235cdc2a7}} 
+\index{Entity@{Entity}!nearestFloor@{nearestFloor}}
+\index{nearestFloor@{nearestFloor}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{nearestFloor()}{nearestFloor()}}
+{\footnotesize\ttfamily float Entity\+::nearest\+Floor (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} \&}]{hit }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em hit} & information about the collision \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the nearest floor, if any 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a8df09e74dac3bd9e5fbbfb02ae9b2250}\label{class_entity_a8df09e74dac3bd9e5fbbfb02ae9b2250}} 
+\index{Entity@{Entity}!pathFinished@{pathFinished}}
+\index{pathFinished@{pathFinished}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{pathFinished()}{pathFinished()}}
+{\footnotesize\ttfamily bool Entity\+::path\+Finished (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+checks if the async pathfinding task has finished. This M\+U\+ST be referenced before making use of Entity\+::path \begin{DoxyReturn}{Returns}
+true if the async pathfinding task has finished yet, false if the pathfinding task has not finished yet 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_ac0058583a0488f71d81edad7b86c7d33}\label{class_entity_ac0058583a0488f71d81edad7b86c7d33}} 
+\index{Entity@{Entity}!remoteExecute@{remoteExecute}}
+\index{remoteExecute@{remoteExecute}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{remoteExecute()}{remoteExecute()}}
+{\footnotesize\ttfamily void Entity\+::remote\+Execute (\begin{DoxyParamCaption}\item[{const char $\ast$}]{func\+Name,  }\item[{const \mbox{\hyperlink{class_script_1_1_args}{Script\+::\+Args}} \&}]{args }\end{DoxyParamCaption})}
+
+send a signal from server/client or vice versa requesting they run a function 
+\begin{DoxyParams}{Parameters}
+{\em func\+Name} & the name of the function to remote execute \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a8079de30d0010130520b4dd8cda4595b}\label{class_entity_a8079de30d0010130520b4dd8cda4595b}} 
+\index{Entity@{Entity}!removeComponentByName@{removeComponentByName}}
+\index{removeComponentByName@{removeComponentByName}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{removeComponentByName()}{removeComponentByName()}}
+{\footnotesize\ttfamily bool Entity\+::remove\+Component\+By\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find the component with the given name and remove it 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the name of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the component was removed, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_ae4e48b5a05dd0a052c03e7795d5cf2ca}\label{class_entity_ae4e48b5a05dd0a052c03e7795d5cf2ca}} 
+\index{Entity@{Entity}!removeComponentByUID@{removeComponentByUID}}
+\index{removeComponentByUID@{removeComponentByUID}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{removeComponentByUID()}{removeComponentByUID()}}
+{\footnotesize\ttfamily bool Entity\+::remove\+Component\+By\+U\+ID (\begin{DoxyParamCaption}\item[{const Uint32}]{uid }\end{DoxyParamCaption})}
+
+find the component with the given uid and remove it 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the component was removed, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a7439705c99a4c8a79462610ab84f4ada}\label{class_entity_a7439705c99a4c8a79462610ab84f4ada}} 
+\index{Entity@{Entity}!saveDef@{saveDef}}
+\index{saveDef@{saveDef}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{saveDef()}{saveDef()}}
+{\footnotesize\ttfamily bool Entity\+::save\+Def (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption}) const}
+
+saves an entity definition to a json file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & the file to load \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false on failure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a69971f83dae3d918e72f1126cb1021da}\label{class_entity_a69971f83dae3d918e72f1126cb1021da}} 
+\index{Entity@{Entity}!serialize@{serialize}}
+\index{serialize@{serialize}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Entity\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_ad8fab3e0f213be90585184abdefc8cf2}\label{class_entity_ad8fab3e0f213be90585184abdefc8cf2}} 
+\index{Entity@{Entity}!setKeyValue@{setKeyValue}}
+\index{setKeyValue@{setKeyValue}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{setKeyValue()}{setKeyValue()}}
+{\footnotesize\ttfamily void Entity\+::set\+Key\+Value (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key,  }\item[{const char $\ast$}]{value }\end{DoxyParamCaption})}
+
+set the specified key value pair 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to insert or modify \\
+\hline
+{\em value} & the value to set \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_entity_a0d566b36eeef19ed4688e05693612a6f}\label{class_entity_a0d566b36eeef19ed4688e05693612a6f}} 
+\index{Entity@{Entity}!spawnFromDef@{spawnFromDef}}
+\index{spawnFromDef@{spawnFromDef}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{spawnFromDef()}{spawnFromDef()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_entity}{Entity}} $\ast$ Entity\+::spawn\+From\+Def (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_world}{World}} $\ast$}]{world,  }\item[{const \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} \&}]{def,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{pos,  }\item[{const \mbox{\hyperlink{class_rotation}{Rotation}} \&}]{ang,  }\item[{Uint32}]{uid = {\ttfamily UINT32\+\_\+MAX} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+spawns an entity using an entity def 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world to spawn the entity into \\
+\hline
+{\em def} & the definition to use \\
+\hline
+{\em pos} & where to spawn the entity \\
+\hline
+{\em ang} & the new entity\textquotesingle{}s orientation \\
+\hline
+{\em uid} & the uid of the entity to be created, if any \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the entity, or nullptr if the associated def was not found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_entity_a3af8f99cf92d181f5b98907238451532}\label{class_entity_a3af8f99cf92d181f5b98907238451532}} 
+\index{Entity@{Entity}!updatePacket@{updatePacket}}
+\index{updatePacket@{updatePacket}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{updatePacket()}{updatePacket()}}
+{\footnotesize\ttfamily void Entity\+::update\+Packet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_packet}{Packet}} \&}]{packet }\end{DoxyParamCaption}) const}
+
+fill out an update packet for this entity 
+\begin{DoxyParams}{Parameters}
+{\em packet} & the packet to fill out \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_entity_a064c7d2f343a92cbf511eb7c18e1e348}\label{class_entity_a064c7d2f343a92cbf511eb7c18e1e348}} 
+\index{Entity@{Entity}!flagDesc@{flagDesc}}
+\index{flagDesc@{flagDesc}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{flagDesc}{flagDesc}}
+{\footnotesize\ttfamily const char $\ast$ Entity\+::flag\+Desc\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Makes the entity visible for gameplay"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Disables the entity's collision volume"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Turns the entity into a client-\/side only object"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Allows network updates for the entity"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Causes the entity's cameras to not draw the entity's 1st model"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Causes the entity to be drawn over most objects"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Makes the entity render a sprite rather than a mesh"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Enables line tracing against the entity's physics volume"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Permits the entity to cast stencil shadows"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Causes the entity to be lit with 100\% brightness"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Enables drawing in the glow pass"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Enables drawing in the depth fail pass"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Causes the entity to block occlusion tests"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Indicates to clients whether an entity is interactible"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Heavily optimize the entity but render it immobile"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{class_entity_a4d723b68e022957adf457d0057ba69c4}\label{class_entity_a4d723b68e022957adf457d0057ba69c4}} 
+\index{Entity@{Entity}!flagStr@{flagStr}}
+\index{flagStr@{flagStr}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{flagStr}{flagStr}}
+{\footnotesize\ttfamily const char $\ast$ Entity\+::flag\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"VISIBLE"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"PASSABLE"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"LOCAL"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"UPDATE"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"GENIUS"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"OVERDRAW"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"SPRITE"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"ALLOWTRACE"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"SHADOW"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"FULLYLIT"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"GLOWING"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"DEPTHFAIL"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"OCCLUDE"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"INTERACTABLE"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"STATIC"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{class_entity_a6d19b29315fe76ba8e3cc644f8f7ab0e}\label{class_entity_a6d19b29315fe76ba8e3cc644f8f7ab0e}} 
+\index{Entity@{Entity}!sortStr@{sortStr}}
+\index{sortStr@{sortStr}!Entity@{Entity}}
+\doxysubsubsection{\texorpdfstring{sortStr}{sortStr}}
+{\footnotesize\ttfamily const char $\ast$ Entity\+::sort\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"any"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"char"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"decor"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"interact"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"item"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"light"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"trigger"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_entity_8hpp}{Entity.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Entity.\+cpp\end{DoxyCompactItemize}

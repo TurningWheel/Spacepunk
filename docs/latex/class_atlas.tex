@@ -1,0 +1,96 @@
+\hypertarget{class_atlas}{}\doxysection{Atlas Class Reference}
+\label{class_atlas}\index{Atlas@{Atlas}}
+
+
+An \mbox{\hyperlink{class_atlas}{Atlas}} is a 2D \mbox{\hyperlink{class_texture}{Texture}} Array that was mainly used for \mbox{\hyperlink{class_tile_world}{Tile\+World}} textures.  
+
+
+
+
+{\ttfamily \#include $<$Atlas.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_atlas_1_1pair__t}{pair\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em an image element \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_atlas_a0f56d452ba746ae9c98cc54a2e40c8c7}\label{class_atlas_a0f56d452ba746ae9c98cc54a2e40c8c7}} 
+void \mbox{\hyperlink{class_atlas_a0f56d452ba746ae9c98cc54a2e40c8c7}{init}} ()
+\begin{DoxyCompactList}\small\item\em allocates GL data for the texture atlas \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_atlas_a909c025eea51d71d5cc4d1f9cb5fe93b}{load\+Image}} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_atlas_a24efa8cf799ad0953db8e419e798957f}\label{class_atlas_a24efa8cf799ad0953db8e419e798957f}} 
+void \mbox{\hyperlink{class_atlas_a24efa8cf799ad0953db8e419e798957f}{refresh}} ()
+\begin{DoxyCompactList}\small\item\em uploads all loaded images to the G\+PU \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_atlas_a33f571189b4feb99f2328d7fd405f3ee}\label{class_atlas_a33f571189b4feb99f2328d7fd405f3ee}} 
+void \mbox{\hyperlink{class_atlas_a33f571189b4feb99f2328d7fd405f3ee}{cleanup}} ()
+\begin{DoxyCompactList}\small\item\em removes all existing images from the atlas and starts fresh \end{DoxyCompactList}\item 
+const G\+Luint \mbox{\hyperlink{class_atlas_aea041139883bd2bd7600745c03eaadf1}{index\+For\+Name}} (const char $\ast$\+\_\+name) const
+\item 
+\mbox{\Hypertarget{class_atlas_acbf3b2d975b5eefee1ecf77853fcaa5a}\label{class_atlas_acbf3b2d975b5eefee1ecf77853fcaa5a}} 
+const G\+Luint {\bfseries get\+Tex\+ID} () const
+\item 
+\mbox{\Hypertarget{class_atlas_a313816605fc4b8fb904b4c71942435d6}\label{class_atlas_a313816605fc4b8fb904b4c71942435d6}} 
+const \mbox{\hyperlink{class_string}{String}} \& {\bfseries get\+Name} (G\+Luint index) const
+\item 
+\mbox{\Hypertarget{class_atlas_accd3d327ac78577afa4622fa09de8c62}\label{class_atlas_accd3d327ac78577afa4622fa09de8c62}} 
+const S\+D\+L\+\_\+\+Surface $\ast$ {\bfseries get\+Surf} (G\+Luint index) const
+\item 
+\mbox{\Hypertarget{class_atlas_a2123a32acfb8195647e9dbe06dacb4f4}\label{class_atlas_a2123a32acfb8195647e9dbe06dacb4f4}} 
+const unsigned int {\bfseries get\+Width} (G\+Luint index) const
+\item 
+\mbox{\Hypertarget{class_atlas_a11625a90b7eee3626fff48c60331fd55}\label{class_atlas_a11625a90b7eee3626fff48c60331fd55}} 
+const unsigned int {\bfseries get\+Height} (G\+Luint index) const
+\item 
+\mbox{\Hypertarget{class_atlas_ab382a9b21f59abcbb312acc07fa3cba5}\label{class_atlas_ab382a9b21f59abcbb312acc07fa3cba5}} 
+const bool {\bfseries is\+Valid\+Index} (G\+Luint index) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_atlas_a4bde73177f9a83f52a4c12334a53ace2}\label{class_atlas_a4bde73177f9a83f52a4c12334a53ace2}} 
+static const G\+Luint \mbox{\hyperlink{class_atlas_a4bde73177f9a83f52a4c12334a53ace2}{nindex}} = 0
+\begin{DoxyCompactList}\small\item\em invalid index (null image) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An \mbox{\hyperlink{class_atlas}{Atlas}} is a 2D \mbox{\hyperlink{class_texture}{Texture}} Array that was mainly used for \mbox{\hyperlink{class_tile_world}{Tile\+World}} textures. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_atlas_aea041139883bd2bd7600745c03eaadf1}\label{class_atlas_aea041139883bd2bd7600745c03eaadf1}} 
+\index{Atlas@{Atlas}!indexForName@{indexForName}}
+\index{indexForName@{indexForName}!Atlas@{Atlas}}
+\doxysubsubsection{\texorpdfstring{indexForName()}{indexForName()}}
+{\footnotesize\ttfamily const G\+Luint Atlas\+::index\+For\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+name }\end{DoxyParamCaption}) const}
+
+find the index of an image 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+name} & the name of the image whose index we are looking for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the image with the given name, or nindex if no such image exists 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_atlas_a909c025eea51d71d5cc4d1f9cb5fe93b}\label{class_atlas_a909c025eea51d71d5cc4d1f9cb5fe93b}} 
+\index{Atlas@{Atlas}!loadImage@{loadImage}}
+\index{loadImage@{loadImage}!Atlas@{Atlas}}
+\doxysubsubsection{\texorpdfstring{loadImage()}{loadImage()}}
+{\footnotesize\ttfamily bool Atlas\+::load\+Image (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+name }\end{DoxyParamCaption})}
+
+loads a new image into the atlas ... after all images are loaded, the atlas must be refreshed or rendering will be messed up you cannot load two images with the same name 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+name} & the filename of the image to load \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false on failure 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_atlas_8hpp}{Atlas.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Atlas.\+cpp\end{DoxyCompactItemize}

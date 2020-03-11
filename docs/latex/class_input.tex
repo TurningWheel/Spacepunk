@@ -1,0 +1,130 @@
+\hypertarget{class_input}{}\doxysection{Input Class Reference}
+\label{class_input}\index{Input@{Input}}
+
+
+{\ttfamily \#include $<$Input.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_input_1_1binding__t}{binding\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em input mapping \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{class_input_a8de6eecc4a25a79f50ea8484d45ab373}{analog}} (const char $\ast$\mbox{\hyperlink{class_input_aaeede41e5dfe5c793f354e061af11335}{binding}}) const
+\item 
+bool \mbox{\hyperlink{class_input_a61cd869804e38668f3c41bf9ff9940aa}{binary}} (const char $\ast$\mbox{\hyperlink{class_input_aaeede41e5dfe5c793f354e061af11335}{binding}}) const
+\item 
+bool \mbox{\hyperlink{class_input_a123d58726dbf69408b519103dc89b87a}{binary\+Toggle}} (const char $\ast$\mbox{\hyperlink{class_input_aaeede41e5dfe5c793f354e061af11335}{binding}}) const
+\item 
+void \mbox{\hyperlink{class_input_aa0f472ace45c15567cb363146ab6a28c}{consume\+Binary\+Toggle}} (const char $\ast$\mbox{\hyperlink{class_input_aaeede41e5dfe5c793f354e061af11335}{binding}})
+\item 
+const char $\ast$ \mbox{\hyperlink{class_input_aaeede41e5dfe5c793f354e061af11335}{binding}} (const char $\ast$binding) const
+\item 
+void \mbox{\hyperlink{class_input_a6f98ae3d682fd708d86fceb33ace8036}{rebind}} (const char $\ast$\mbox{\hyperlink{class_input_aaeede41e5dfe5c793f354e061af11335}{binding}}, const char $\ast$input)
+\item 
+\mbox{\Hypertarget{class_input_a3d7f5544085f88a634986108d8602e8e}\label{class_input_a3d7f5544085f88a634986108d8602e8e}} 
+void \mbox{\hyperlink{class_input_a3d7f5544085f88a634986108d8602e8e}{refresh}} ()
+\begin{DoxyCompactList}\small\item\em refresh bindings (eg after a new controller is detected) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_input_aa7fe26710dd863d11737bf2f6de4ad05}\label{class_input_aa7fe26710dd863d11737bf2f6de4ad05}} 
+void \mbox{\hyperlink{class_input_aa7fe26710dd863d11737bf2f6de4ad05}{update}} ()
+\begin{DoxyCompactList}\small\item\em updates the state of all current bindings from the physical devices \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_input_ad4c688a30644217dbe198f05a1fb89f0}\label{class_input_ad4c688a30644217dbe198f05a1fb89f0}} 
+const bool \mbox{\hyperlink{class_input_ad4c688a30644217dbe198f05a1fb89f0}{is\+Inverted}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_input_a078cba46c7bc58dbc1f78bea6cdc56f8}\label{class_input_a078cba46c7bc58dbc1f78bea6cdc56f8}} 
+void {\bfseries set\+Inverted} (bool b)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_input}{Input}} class provides a way to bind physical keys to abstract names like \char`\"{}\+Move Forward\char`\"{}, collect the input data from the physical devices, and provide it back to you for scripting purposes. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_input_a8de6eecc4a25a79f50ea8484d45ab373}\label{class_input_a8de6eecc4a25a79f50ea8484d45ab373}} 
+\index{Input@{Input}!analog@{analog}}
+\index{analog@{analog}!Input@{Input}}
+\doxysubsubsection{\texorpdfstring{analog()}{analog()}}
+{\footnotesize\ttfamily float Input\+::analog (\begin{DoxyParamCaption}\item[{const char $\ast$}]{binding }\end{DoxyParamCaption}) const}
+
+gets the analog value of a particular input binding 
+\begin{DoxyParams}{Parameters}
+{\em binding} & the binding to query \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the analog value (range = -\/1.\+f \+: +1.\+f) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_input_a61cd869804e38668f3c41bf9ff9940aa}\label{class_input_a61cd869804e38668f3c41bf9ff9940aa}} 
+\index{Input@{Input}!binary@{binary}}
+\index{binary@{binary}!Input@{Input}}
+\doxysubsubsection{\texorpdfstring{binary()}{binary()}}
+{\footnotesize\ttfamily bool Input\+::binary (\begin{DoxyParamCaption}\item[{const char $\ast$}]{binding }\end{DoxyParamCaption}) const}
+
+gets the binary value of a particular input binding 
+\begin{DoxyParams}{Parameters}
+{\em binding} & the binding to query \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the bool value (false = not pressed, true = pressed) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_input_a123d58726dbf69408b519103dc89b87a}\label{class_input_a123d58726dbf69408b519103dc89b87a}} 
+\index{Input@{Input}!binaryToggle@{binaryToggle}}
+\index{binaryToggle@{binaryToggle}!Input@{Input}}
+\doxysubsubsection{\texorpdfstring{binaryToggle()}{binaryToggle()}}
+{\footnotesize\ttfamily bool Input\+::binary\+Toggle (\begin{DoxyParamCaption}\item[{const char $\ast$}]{binding }\end{DoxyParamCaption}) const}
+
+gets the binary value of a particular input binding, if it\textquotesingle{}s not been consumed releasing the input and retriggering it \char`\"{}unconsumes\char`\"{} 
+\begin{DoxyParams}{Parameters}
+{\em binding} & the binding to query \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the bool value (false = not pressed, true = pressed) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_input_aaeede41e5dfe5c793f354e061af11335}\label{class_input_aaeede41e5dfe5c793f354e061af11335}} 
+\index{Input@{Input}!binding@{binding}}
+\index{binding@{binding}!Input@{Input}}
+\doxysubsubsection{\texorpdfstring{binding()}{binding()}}
+{\footnotesize\ttfamily const char $\ast$ Input\+::binding (\begin{DoxyParamCaption}\item[{const char $\ast$}]{binding }\end{DoxyParamCaption}) const}
+
+gets the input mapped to a particular input binding 
+\begin{DoxyParams}{Parameters}
+{\em binding} & the binding to query \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the input mapped to the given binding 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_input_aa0f472ace45c15567cb363146ab6a28c}\label{class_input_aa0f472ace45c15567cb363146ab6a28c}} 
+\index{Input@{Input}!consumeBinaryToggle@{consumeBinaryToggle}}
+\index{consumeBinaryToggle@{consumeBinaryToggle}!Input@{Input}}
+\doxysubsubsection{\texorpdfstring{consumeBinaryToggle()}{consumeBinaryToggle()}}
+{\footnotesize\ttfamily void Input\+::consume\+Binary\+Toggle (\begin{DoxyParamCaption}\item[{const char $\ast$}]{binding }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em binding} & the binding to flag consumed \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_input_a6f98ae3d682fd708d86fceb33ace8036}\label{class_input_a6f98ae3d682fd708d86fceb33ace8036}} 
+\index{Input@{Input}!rebind@{rebind}}
+\index{rebind@{rebind}!Input@{Input}}
+\doxysubsubsection{\texorpdfstring{rebind()}{rebind()}}
+{\footnotesize\ttfamily void Input\+::rebind (\begin{DoxyParamCaption}\item[{const char $\ast$}]{binding,  }\item[{const char $\ast$}]{input }\end{DoxyParamCaption})}
+
+rebind the given action to the given input 
+\begin{DoxyParams}{Parameters}
+{\em name} & the action to rebind \\
+\hline
+{\em input} & the input to rebind to the action \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_input_8hpp}{Input.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Input.\+cpp\end{DoxyCompactItemize}

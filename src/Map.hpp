@@ -1,5 +1,4 @@
-// Map.hpp
-// Key/value hash map
+//! @file Map.hpp
 
 #pragma once
 
@@ -9,6 +8,7 @@
 
 #include <type_traits>
 
+//! A key/value hash map. Provides a fast way to relate one data (the "key") to another (the "value")
 template <typename K, typename T>
 class Map {
 public:
@@ -24,13 +24,13 @@ public:
 	~Map() {
 	}
 
-	// getters & setters
+	//! getters & setters
 	ArrayList<OrderedPair<K, T>>&				getHash(Uint32 index) { return data[index]; }
 	const ArrayList<OrderedPair<K, T>>&			getHash(Uint32 index) const { return data[index]; }
 	Uint32										getNumBuckets() const { return numBuckets; }
 	Uint32										getSize() const { return size; }
 
-	// clears the map of all key/value pairs
+	//! clears the map of all key/value pairs
 	void clear() {
 		for (auto& bucket : data) {
 			bucket.clear();
@@ -38,7 +38,7 @@ public:
 		size = 0;
 	}
 
-	// not only clears the map, but also resets its size
+	//! not only clears the map, but also resets its size
 	void reset() {
 		data.clear();
 		size = 0;
@@ -46,9 +46,9 @@ public:
 		data.resize(numBuckets);
 	}
 
-	// inserts a key/value pair into the Map
-	// @param key The key
-	// @param value The value associated with the key
+	//! inserts a key/value pair into the Map
+	//! @param key The key
+	//! @param value The value associated with the key
 	void insert(const K& key, const T& value) {
 		T* oldValue = find(key);
 		if (oldValue) {
@@ -65,9 +65,9 @@ public:
 		}
 	}
 
-	// insert a key/value pair into the Map, presuming uniqueness
-	// @param key The key
-	// @param value The value associated with the key
+	//! insert a key/value pair into the Map, presuming uniqueness
+	//! @param key The key
+	//! @param value The value associated with the key
 	void insertUnique(const K& key, const T& value) {
 		if (size + 1 >= numBuckets * maxBucketSize) {
 			rehash(numBuckets * 2);
@@ -78,8 +78,8 @@ public:
 		++size;
 	}
 
-	// resize and rebuild the hash map
-	// @param newBucketCount Updated number of buckets in the map
+	//! resize and rebuild the hash map
+	//! @param newBucketCount Updated number of buckets in the map
 	void rehash(Uint32 newBucketCount) {
 		ArrayList<OrderedPair<K, T>> list;
 		for (auto& it : *this) {
@@ -93,8 +93,8 @@ public:
 		}
 	}
 
-	// determine if the key with the given name exists
-	// @return true if key/value pair exists, false otherwise
+	//! determine if the key with the given name exists
+	//! @return true if key/value pair exists, false otherwise
 	bool exists(const K& key) const {
 		auto& list = data[hash(key) & (numBuckets - 1)];
 		for (auto& pair : list) {
@@ -105,9 +105,9 @@ public:
 		return false;
 	}
 
-	// removes a key/value pair from the Map
-	// @param key The key
-	// @return true if the key/value pair was removed, otherwise false
+	//! removes a key/value pair from the Map
+	//! @param key The key
+	//! @return true if the key/value pair was removed, otherwise false
 	bool remove(const K& key) {
 		auto& list = data[hash(key) & (numBuckets - 1)];
 		for (Uint32 c = 0; c < list.getSize(); ++c) {
@@ -121,9 +121,9 @@ public:
 		return false;
 	}
 
-	// find the key/value pair with the given name
-	// @param key The name of the pair to find
-	// @return the value associated with the key, or nullptr if it could not be found
+	//! find the key/value pair with the given name
+	//! @param key The name of the pair to find
+	//! @return the value associated with the key, or nullptr if it could not be found
 	T* find(const K& key) {
 		auto& list = data[hash(key) & (numBuckets - 1)];
 		for (auto& pair : list) {
@@ -143,8 +143,8 @@ public:
 		return nullptr;
 	}
 
-	// replace the contents of this map with those of another
-	// @param src The map to copy
+	//! replace the contents of this map with those of another
+	//! @param src The map to copy
 	void copy(const Map<K, T>& src) {
 		clear();
 		rehash(src.getNumBuckets());
@@ -153,8 +153,8 @@ public:
 		}
 	}
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	void serialize(FileInterface * file) {
 		if (file->isReading()) {
 			Uint32 keyCount = 0;
@@ -190,9 +190,9 @@ public:
 		}
 	}
 
-	// find the key/value pair with the given name
-	// @param key The name of the pair to find
-	// @return the value associated with the key
+	//! find the key/value pair with the given name
+	//! @param key The name of the pair to find
+	//! @return the value associated with the key
 	T* operator[](const K& key) {
 		return find(key);
 	}
@@ -200,7 +200,7 @@ public:
 		return (const T*)(find(key));
 	}
 
-	// Iterator
+	//! Iterator
 	class Iterator {
 	public:
 		Iterator(Map<K, T>& _map, Uint32 _position, Uint32 _bucket) :
@@ -234,7 +234,7 @@ public:
 		Uint32 bucket;
 	};
 
-	// ConstIterator
+	//! ConstIterator
 	class ConstIterator {
 	public:
 		ConstIterator(const Map<K, T>& _map, Uint32 _position, Uint32 _bucket) :
@@ -268,7 +268,7 @@ public:
 		Uint32 bucket;
 	};
 
-	// begin()
+	//! begin()
 	Iterator begin() {
 		Uint32 c = 0;
 		for (; c < numBuckets; ++c) {
@@ -288,7 +288,7 @@ public:
 		return ConstIterator(*this, 0, c);
 	}
 
-	// end()
+	//! end()
 	Iterator end() {
 		return Iterator(*this, 0, numBuckets);
 	}

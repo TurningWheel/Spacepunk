@@ -1,0 +1,272 @@
+\hypertarget{class_model}{}\doxysection{Model Class Reference}
+\label{class_model}\index{Model@{Model}}
+
+
+A \mbox{\hyperlink{class_model}{Model}} is an entity component that combines a \mbox{\hyperlink{class_mesh}{Mesh}}, an \mbox{\hyperlink{class_animation}{Animation}}, and a \mbox{\hyperlink{class_material}{Material}} to form a viewable 3D object.  
+
+
+
+
+{\ttfamily \#include $<$Model.\+hpp$>$}
+
+Inheritance diagram for Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_model}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_model_aac649c9e27e914555d3c9ace0e57ba7c}\label{class_model_aac649c9e27e914555d3c9ace0e57ba7c}} 
+{\bfseries Model} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity, \mbox{\hyperlink{class_component}{Component}} $\ast$\+\_\+parent)
+\item 
+virtual void \mbox{\hyperlink{class_model_add1a055b64372d89aff6ed40e7f21e52}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights) override
+\item 
+\mbox{\Hypertarget{class_model_acd33bfcdade8918e201bf8539d0997a0}\label{class_model_acd33bfcdade8918e201bf8539d0997a0}} 
+virtual void \mbox{\hyperlink{class_model_acd33bfcdade8918e201bf8539d0997a0}{process}} () override
+\begin{DoxyCompactList}\small\item\em update the component \end{DoxyCompactList}\item 
+Uint32 \mbox{\hyperlink{class_model_a87a4c856fb02a6c3cab89d06dfa0c032}{find\+Bone\+Index}} (const char $\ast$\mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}}) const
+\item 
+glm\+::mat4 \mbox{\hyperlink{class_model_a0f58637eefb6f5bdcd27cbfaeb8ca6e9}{find\+Bone}} (Uint32 index) const
+\item 
+bool \mbox{\hyperlink{class_model_a5a6e69e429760c24aa77e70843e988ca}{has\+Animations}} () const
+\item 
+virtual void \mbox{\hyperlink{class_model_a6187dbde04e0e031468eb02724dd1c9b}{load}} (F\+I\+LE $\ast$fp) override
+\item 
+virtual void \mbox{\hyperlink{class_model_ae6ee10b29ec4a9449435e164ec2c034a}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_model_ad17fa3534a7f3b16168f85c58505d3ed}\label{class_model_ad17fa3534a7f3b16168f85c58505d3ed}} 
+void \mbox{\hyperlink{class_model_ad17fa3534a7f3b16168f85c58505d3ed}{update\+Skin}} ()
+\begin{DoxyCompactList}\small\item\em updates skin if necessary \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_animation_state}{Animation\+State}} $\ast$ \mbox{\hyperlink{class_model_a8874c55f85f9bfa3f4edad72526b0202}{find\+Animation}} (const char $\ast$\mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}})
+\item 
+bool \mbox{\hyperlink{class_model_afc38697ee3d8d238c46d34ee2e848319}{animate}} (const char $\ast$\mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}}, bool blend=true)
+\item 
+float \mbox{\hyperlink{class_model_a568ce7744090b3badf854af18e63a4e5}{get\+Anim\+Ticks}} () const
+\item 
+bool \mbox{\hyperlink{class_model_a2f484a2fd087f7c6b2da2417a83ed3ed}{is\+Anim\+Done}} () const
+\item 
+\mbox{\Hypertarget{class_model_aa82d943a9b6e38f86b265c766b20cd5c}\label{class_model_aa82d943a9b6e38f86b265c766b20cd5c}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_model_aa82d943a9b6e38f86b265c766b20cd5c}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_model_a7b3d1caa6eedf3938f3c265d152f54aa}\label{class_model_a7b3d1caa6eedf3938f3c265d152f54aa}} 
+const char $\ast$ {\bfseries get\+Mesh} () const
+\item 
+\mbox{\Hypertarget{class_model_ad2e798e2b0f4b82aa2ba40e049a624bd}\label{class_model_ad2e798e2b0f4b82aa2ba40e049a624bd}} 
+const char $\ast$ {\bfseries get\+Material} () const
+\item 
+\mbox{\Hypertarget{class_model_a48e4311106d1b9a443bf95809851b589}\label{class_model_a48e4311106d1b9a443bf95809851b589}} 
+const char $\ast$ {\bfseries get\+Depth\+Fail\+Mat} () const
+\item 
+\mbox{\Hypertarget{class_model_adf6d8c2d3e24ff336a99be9f2e065646}\label{class_model_adf6d8c2d3e24ff336a99be9f2e065646}} 
+const char $\ast$ {\bfseries get\+Animation} () const
+\item 
+\mbox{\Hypertarget{class_model_a15c9517b879c0fb976078e5102277328}\label{class_model_a15c9517b879c0fb976078e5102277328}} 
+const \mbox{\hyperlink{class_map}{Animation\+Map}} \& {\bfseries get\+Animations} () const
+\item 
+\mbox{\Hypertarget{class_model_ab1b65857b9ede8c318b5297f3a3c493b}\label{class_model_ab1b65857b9ede8c318b5297f3a3c493b}} 
+\mbox{\hyperlink{class_map}{Animation\+Map}} \& {\bfseries get\+Animations} ()
+\item 
+\mbox{\Hypertarget{class_model_aa15fa579a5efd27ee1ff22124b998407}\label{class_model_aa15fa579a5efd27ee1ff22124b998407}} 
+const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{Mesh\+::shadervars\+\_\+t}} \& {\bfseries get\+Shader\+Vars} () const
+\item 
+\mbox{\Hypertarget{class_model_ad30253bb3a0d601fe52c08acb31e3403}\label{class_model_ad30253bb3a0d601fe52c08acb31e3403}} 
+const \mbox{\hyperlink{class_array_list}{Skin\+Cache}} \& {\bfseries get\+Skin\+Cache} () const
+\item 
+\mbox{\Hypertarget{class_model_afc4fc19cb227bd49a3c0139b8456e200}\label{class_model_afc4fc19cb227bd49a3c0139b8456e200}} 
+float {\bfseries get\+Animation\+Speed} () const
+\item 
+\mbox{\Hypertarget{class_model_ac287af9c6344cad85272ab7211b5d344}\label{class_model_ac287af9c6344cad85272ab7211b5d344}} 
+bool {\bfseries is\+Skin\+Update\+Needed} () const
+\item 
+\mbox{\Hypertarget{class_model_abb052d4b4ee4272f3188c0639935b7dd}\label{class_model_abb052d4b4ee4272f3188c0639935b7dd}} 
+bool {\bfseries is\+Genius} () const
+\item 
+\mbox{\Hypertarget{class_model_a1b85866017e96d65bfd8877f98f8c71f}\label{class_model_a1b85866017e96d65bfd8877f98f8c71f}} 
+const char $\ast$ {\bfseries get\+Current\+Animation} () const
+\item 
+\mbox{\Hypertarget{class_model_a01d63729bce59ddcd9b5eaf5f96a87c7}\label{class_model_a01d63729bce59ddcd9b5eaf5f96a87c7}} 
+const char $\ast$ {\bfseries get\+Previous\+Animation} () const
+\item 
+\mbox{\Hypertarget{class_model_a1e9b33b03e84db2b768dd4107440d664}\label{class_model_a1e9b33b03e84db2b768dd4107440d664}} 
+void {\bfseries set\+Mesh} (const char $\ast$\+\_\+mesh)
+\item 
+\mbox{\Hypertarget{class_model_afe1eb921ea06b6091d8f09f40dae552d}\label{class_model_afe1eb921ea06b6091d8f09f40dae552d}} 
+void {\bfseries set\+Material} (const char $\ast$\+\_\+material)
+\item 
+\mbox{\Hypertarget{class_model_acdaf55bc645f954fb5112e5fec968879}\label{class_model_acdaf55bc645f954fb5112e5fec968879}} 
+void {\bfseries set\+Depth\+Fail\+Mat} (const char $\ast$\+\_\+depthfailmat)
+\item 
+\mbox{\Hypertarget{class_model_a2c3daa652139ced720265e1faf00d233}\label{class_model_a2c3daa652139ced720265e1faf00d233}} 
+void {\bfseries set\+Animation} (const char $\ast$\+\_\+animation)
+\item 
+\mbox{\Hypertarget{class_model_aa5d9b97ae3c58fe6cd421b981225514f}\label{class_model_aa5d9b97ae3c58fe6cd421b981225514f}} 
+void {\bfseries set\+Shader\+Vars} (const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{Mesh\+::shadervars\+\_\+t}} \&\+\_\+shader\+Vars)
+\item 
+\mbox{\Hypertarget{class_model_ab5cba86663e22019a5c594c12337446f}\label{class_model_ab5cba86663e22019a5c594c12337446f}} 
+void {\bfseries set\+Animation\+Speed} (const float \+\_\+animation\+Speed)
+\item 
+\mbox{\Hypertarget{class_model_aac15c794e6dbf6e179d48f8404f9393f}\label{class_model_aac15c794e6dbf6e179d48f8404f9393f}} 
+void {\bfseries set\+Genius} (const bool \+\_\+genius)
+\item 
+\mbox{\Hypertarget{class_model_a88a896745318b9c052ca95c869daba57}\label{class_model_a88a896745318b9c052ca95c869daba57}} 
+\mbox{\hyperlink{class_model}{Model}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_model}{Model}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_model_a8d49f76763ac63e3376f176e281ef219}\label{class_model_a8d49f76763ac63e3376f176e281ef219}} 
+static const int \mbox{\hyperlink{class_model_a8d49f76763ac63e3376f176e281ef219}{max\+Animations}} = 8
+\begin{DoxyCompactList}\small\item\em max animations that a model can play \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_model_ace18b9456a6e340fc64bce42b2472f7f}\label{class_model_ace18b9456a6e340fc64bce42b2472f7f}} 
+static const char $\ast$ \mbox{\hyperlink{class_model_ace18b9456a6e340fc64bce42b2472f7f}{default\+Mesh}} = \char`\"{}assets/block/block.\+F\+BX\char`\"{}
+\begin{DoxyCompactList}\small\item\em default mesh \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_model_ac6c98e8535c47dd3f34ca822bd450808}\label{class_model_ac6c98e8535c47dd3f34ca822bd450808}} 
+static bool \mbox{\hyperlink{class_model_ac6c98e8535c47dd3f34ca822bd450808}{dont\+Load\+Mesh}} = false
+\begin{DoxyCompactList}\small\item\em used by entity def importer to prevent meshes loading when def is imported \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_model}{Model}} is an entity component that combines a \mbox{\hyperlink{class_mesh}{Mesh}}, an \mbox{\hyperlink{class_animation}{Animation}}, and a \mbox{\hyperlink{class_material}{Material}} to form a viewable 3D object. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_model_afc38697ee3d8d238c46d34ee2e848319}\label{class_model_afc38697ee3d8d238c46d34ee2e848319}} 
+\index{Model@{Model}!animate@{animate}}
+\index{animate@{animate}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{animate()}{animate()}}
+{\footnotesize\ttfamily bool Model\+::animate (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{bool}]{blend = {\ttfamily true} }\end{DoxyParamCaption})}
+
+cancel all other animations on the mesh and use only the given one 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the animation to play \\
+\hline
+{\em blend} & Blend from the previous animation to the new one \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the animation was found, otherwise false (and do nothing) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_model_add1a055b64372d89aff6ed40e7f21e52}\label{class_model_add1a055b64372d89aff6ed40e7f21e52}} 
+\index{Model@{Model}!draw@{draw}}
+\index{draw@{draw}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Model\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+draws the component 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the component \\
+\hline
+{\em light} & the light by which the component should be illuminated (or nullptr for no illumination) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}{Component}}.
+
+\mbox{\Hypertarget{class_model_a8874c55f85f9bfa3f4edad72526b0202}\label{class_model_a8874c55f85f9bfa3f4edad72526b0202}} 
+\index{Model@{Model}!findAnimation@{findAnimation}}
+\index{findAnimation@{findAnimation}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{findAnimation()}{findAnimation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_animation_state}{Animation\+State}} $\ast$ Model\+::find\+Animation (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find and return the animation state with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the animation state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The animation state with the given name, if any 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_model_a0f58637eefb6f5bdcd27cbfaeb8ca6e9}\label{class_model_a0f58637eefb6f5bdcd27cbfaeb8ca6e9}} 
+\index{Model@{Model}!findBone@{findBone}}
+\index{findBone@{findBone}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{findBone()}{findBone()}}
+{\footnotesize\ttfamily glm\+::mat4 Model\+::find\+Bone (\begin{DoxyParamCaption}\item[{Uint32}]{index }\end{DoxyParamCaption}) const}
+
+get the position of the given bone 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the bone \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the bone\textquotesingle{}s matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_model_a87a4c856fb02a6c3cab89d06dfa0c032}\label{class_model_a87a4c856fb02a6c3cab89d06dfa0c032}} 
+\index{Model@{Model}!findBoneIndex@{findBoneIndex}}
+\index{findBoneIndex@{findBoneIndex}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{findBoneIndex()}{findBoneIndex()}}
+{\footnotesize\ttfamily Uint32 Model\+::find\+Bone\+Index (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption}) const}
+
+finds a bone with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the bone to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the bone in the skin cache, or U\+I\+N\+T32\+\_\+\+M\+AX if not found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_model_a568ce7744090b3badf854af18e63a4e5}\label{class_model_a568ce7744090b3badf854af18e63a4e5}} 
+\index{Model@{Model}!getAnimTicks@{getAnimTicks}}
+\index{getAnimTicks@{getAnimTicks}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{getAnimTicks()}{getAnimTicks()}}
+{\footnotesize\ttfamily float Model\+::get\+Anim\+Ticks (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+get the duration of the currently playing animation \begin{DoxyReturn}{Returns}
+the amount of time the current animation has been playing 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_model_a5a6e69e429760c24aa77e70843e988ca}\label{class_model_a5a6e69e429760c24aa77e70843e988ca}} 
+\index{Model@{Model}!hasAnimations@{hasAnimations}}
+\index{hasAnimations@{hasAnimations}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{hasAnimations()}{hasAnimations()}}
+{\footnotesize\ttfamily bool Model\+::has\+Animations (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+true if the model has any animation keyfile assigned 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_model_a2f484a2fd087f7c6b2da2417a83ed3ed}\label{class_model_a2f484a2fd087f7c6b2da2417a83ed3ed}} 
+\index{Model@{Model}!isAnimDone@{isAnimDone}}
+\index{isAnimDone@{isAnimDone}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{isAnimDone()}{isAnimDone()}}
+{\footnotesize\ttfamily bool Model\+::is\+Anim\+Done (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+determines if the current animation is done \begin{DoxyReturn}{Returns}
+true if the animation has wrapped, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_model_a6187dbde04e0e031468eb02724dd1c9b}\label{class_model_a6187dbde04e0e031468eb02724dd1c9b}} 
+\index{Model@{Model}!load@{load}}
+\index{load@{load}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Model\+::load (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+load the component from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ab1ddbf2ef322928e0ac52775ce1050db}{Component}}.
+
+\mbox{\Hypertarget{class_model_ae6ee10b29ec4a9449435e164ec2c034a}\label{class_model_ae6ee10b29ec4a9449435e164ec2c034a}} 
+\index{Model@{Model}!serialize@{serialize}}
+\index{serialize@{serialize}!Model@{Model}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Model\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{Component}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_model_8hpp}{Model.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Model.\+cpp\end{DoxyCompactItemize}

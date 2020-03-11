@@ -1,0 +1,407 @@
+\hypertarget{class_tile}{}\doxysection{Tile Class Reference}
+\label{class_tile}\index{Tile@{Tile}}
+
+
+{\ttfamily \#include $<$Tile.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_tile_1_1shadervars__t}{shadervars\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em shader vars \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_tile_1_1vertex__t}{vertex\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em geometry vertex \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}\label{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}} 
+enum \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} \{ \newline
+{\bfseries S\+I\+D\+E\+\_\+\+E\+A\+ST} = 0, 
+{\bfseries S\+I\+D\+E\+\_\+\+S\+O\+U\+TH} = 1, 
+{\bfseries S\+I\+D\+E\+\_\+\+W\+E\+ST} = 2, 
+{\bfseries S\+I\+D\+E\+\_\+\+N\+O\+R\+TH} = 3, 
+\newline
+{\bfseries S\+I\+D\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\begin{DoxyCompactList}\small\item\em four cardinal directions \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_ab58ce6060648742e2e36bb82f90d893d}\label{class_tile_ab58ce6060648742e2e36bb82f90d893d}} 
+enum \mbox{\hyperlink{class_tile_ab58ce6060648742e2e36bb82f90d893d}{corner\+\_\+t}} \{ {\bfseries C\+O\+R\+N\+E\+R\+\_\+\+L\+E\+FT} = 0, 
+{\bfseries C\+O\+R\+N\+E\+R\+\_\+\+R\+I\+G\+HT} = 1, 
+{\bfseries C\+O\+R\+N\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\begin{DoxyCompactList}\small\item\em left hand corner, right hand corner (paired with side\+\_\+t) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_tile_af2bcf5d134d3e6e85b3d457a0530b887}\label{class_tile_af2bcf5d134d3e6e85b3d457a0530b887}} 
+Uint32 \mbox{\hyperlink{class_tile_af2bcf5d134d3e6e85b3d457a0530b887}{getX}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_a69cc6e074cb6776c104d46c1de37e83a}\label{class_tile_a69cc6e074cb6776c104d46c1de37e83a}} 
+Uint32 {\bfseries getY} () const
+\item 
+\mbox{\Hypertarget{class_tile_a8283f25d9f3087c7722d4b155a80386f}\label{class_tile_a8283f25d9f3087c7722d4b155a80386f}} 
+\mbox{\hyperlink{class_chunk}{Chunk}} $\ast$\& {\bfseries get\+Chunk} ()
+\item 
+\mbox{\Hypertarget{class_tile_a656d7800711eca890ca6ddb783fbe903}\label{class_tile_a656d7800711eca890ca6ddb783fbe903}} 
+const Sint32 \& {\bfseries get\+Ceiling\+Height} () const
+\item 
+\mbox{\Hypertarget{class_tile_a8a4c7b00bfd51cc052dbe73c01228d6b}\label{class_tile_a8a4c7b00bfd51cc052dbe73c01228d6b}} 
+const Sint32 \& {\bfseries get\+Floor\+Height} () const
+\item 
+\mbox{\Hypertarget{class_tile_a8b9be4e124274c7548d27420c4346bd0}\label{class_tile_a8b9be4e124274c7548d27420c4346bd0}} 
+Uint32 {\bfseries get\+Upper\+Texture} (\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side) const
+\item 
+\mbox{\Hypertarget{class_tile_a04fa6b4eceab44b0007b929885ef9d98}\label{class_tile_a04fa6b4eceab44b0007b929885ef9d98}} 
+Uint32 {\bfseries get\+Lower\+Texture} (\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side) const
+\item 
+\mbox{\Hypertarget{class_tile_ae40e599e2ab4d10d5f02837a7ce2b4a6}\label{class_tile_ae40e599e2ab4d10d5f02837a7ce2b4a6}} 
+Uint32 {\bfseries get\+Ceiling\+Texture} () const
+\item 
+\mbox{\Hypertarget{class_tile_a13c7009efc6c132f5d0a2ad81d141ba2}\label{class_tile_a13c7009efc6c132f5d0a2ad81d141ba2}} 
+Uint32 {\bfseries get\+Floor\+Texture} () const
+\item 
+\mbox{\Hypertarget{class_tile_a815a7c401e5da789bb2ba47ff2268893}\label{class_tile_a815a7c401e5da789bb2ba47ff2268893}} 
+const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} \& {\bfseries get\+Ceiling\+Slope\+Side} () const
+\item 
+\mbox{\Hypertarget{class_tile_a792948c2d6b0570d4f37fe3240bba4e5}\label{class_tile_a792948c2d6b0570d4f37fe3240bba4e5}} 
+const Sint32 \& {\bfseries get\+Ceiling\+Slope\+Size} () const
+\item 
+\mbox{\Hypertarget{class_tile_adacfee1be73771d842708fa5f6a8c1a8}\label{class_tile_adacfee1be73771d842708fa5f6a8c1a8}} 
+const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} \& {\bfseries get\+Floor\+Slope\+Side} () const
+\item 
+\mbox{\Hypertarget{class_tile_ab7c52ab88611c968232428a432372306}\label{class_tile_ab7c52ab88611c968232428a432372306}} 
+const Sint32 \& {\bfseries get\+Floor\+Slope\+Size} () const
+\item 
+\mbox{\Hypertarget{class_tile_a3f07d74870a4bf507fdbecbfafbca650}\label{class_tile_a3f07d74870a4bf507fdbecbfafbca650}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_tile_1_1vertex__t}{vertex\+\_\+t}} $>$ \& {\bfseries get\+Ceiling\+Vertices} ()
+\item 
+\mbox{\Hypertarget{class_tile_a2c1d3de056be4db6d7d48d82b5944cb2}\label{class_tile_a2c1d3de056be4db6d7d48d82b5944cb2}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_tile_1_1vertex__t}{vertex\+\_\+t}} $>$ \& {\bfseries get\+Floor\+Vertices} ()
+\item 
+\mbox{\Hypertarget{class_tile_a0a11f34280794422ca2881279ed315b9}\label{class_tile_a0a11f34280794422ca2881279ed315b9}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_tile_1_1vertex__t}{vertex\+\_\+t}} $>$ \& {\bfseries get\+Lower\+Vertices} (const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side)
+\item 
+\mbox{\Hypertarget{class_tile_a94132d58c0138bc0a2c8fec596025aa3}\label{class_tile_a94132d58c0138bc0a2c8fec596025aa3}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_tile_1_1vertex__t}{vertex\+\_\+t}} $>$ \& {\bfseries get\+Upper\+Vertices} (const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side)
+\item 
+\mbox{\Hypertarget{class_tile_ab6faf47c66101f0221278e513d09fce0}\label{class_tile_ab6faf47c66101f0221278e513d09fce0}} 
+const bool {\bfseries is\+Changed} () const
+\item 
+\mbox{\Hypertarget{class_tile_a808024b187c30ec322d0099b52579ee9}\label{class_tile_a808024b187c30ec322d0099b52579ee9}} 
+const Uint32 {\bfseries get\+Num\+Vertices} () const
+\item 
+\mbox{\Hypertarget{class_tile_a48046870e063ac43ce30a1e017f86ec3}\label{class_tile_a48046870e063ac43ce30a1e017f86ec3}} 
+bool {\bfseries is\+Locked} () const
+\item 
+\mbox{\Hypertarget{class_tile_ac9ffae9cc2e0d7bdc3df53fe0bd2ca8c}\label{class_tile_ac9ffae9cc2e0d7bdc3df53fe0bd2ca8c}} 
+const \mbox{\hyperlink{struct_tile_1_1shadervars__t}{shadervars\+\_\+t}} \& {\bfseries get\+Shader\+Vars} () const
+\item 
+\mbox{\Hypertarget{class_tile_ae1900d41fd88087430ac3a6adfa29ccf}\label{class_tile_ae1900d41fd88087430ac3a6adfa29ccf}} 
+void {\bfseries setX} (Uint32 \+\_\+x)
+\item 
+\mbox{\Hypertarget{class_tile_ac4116f516870f53a84e46f12afbcd49f}\label{class_tile_ac4116f516870f53a84e46f12afbcd49f}} 
+void {\bfseries setY} (Uint32 \+\_\+y)
+\item 
+\mbox{\Hypertarget{class_tile_aaf1b6183f325739adf09ec003899ab4a}\label{class_tile_aaf1b6183f325739adf09ec003899ab4a}} 
+void {\bfseries set\+World} (\mbox{\hyperlink{class_tile_world}{Tile\+World}} \&\+\_\+world)
+\item 
+\mbox{\Hypertarget{class_tile_adbb06db35faa549a825ba3edb6a1484e}\label{class_tile_adbb06db35faa549a825ba3edb6a1484e}} 
+void {\bfseries set\+Chunk} (\mbox{\hyperlink{class_chunk}{Chunk}} \&\+\_\+chunk)
+\item 
+\mbox{\Hypertarget{class_tile_a8f901fa9829e020e3869bda358cf4c5f}\label{class_tile_a8f901fa9829e020e3869bda358cf4c5f}} 
+void {\bfseries set\+Ceiling\+Height} (Sint32 \+\_\+ceiling\+Height)
+\item 
+\mbox{\Hypertarget{class_tile_aaf5d84fa9f29e8fa86eccdcff68da87c}\label{class_tile_aaf5d84fa9f29e8fa86eccdcff68da87c}} 
+void {\bfseries set\+Floor\+Height} (Sint32 \+\_\+floor\+Height)
+\item 
+\mbox{\Hypertarget{class_tile_a4bc5c3345147aeceffa060b076b5c4c7}\label{class_tile_a4bc5c3345147aeceffa060b076b5c4c7}} 
+void {\bfseries set\+Upper\+Texture} (\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side, Uint32 texture)
+\item 
+\mbox{\Hypertarget{class_tile_a8b18c4b40bff6355767a48e34a11d319}\label{class_tile_a8b18c4b40bff6355767a48e34a11d319}} 
+void {\bfseries set\+Lower\+Texture} (\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side, Uint32 texture)
+\item 
+\mbox{\Hypertarget{class_tile_a9166b08c7b1b6a6989294524b0e67d0b}\label{class_tile_a9166b08c7b1b6a6989294524b0e67d0b}} 
+void {\bfseries set\+Ceiling\+Texture} (Uint32 texture)
+\item 
+\mbox{\Hypertarget{class_tile_a1da947997d4a0c1c907a4eb094d6188a}\label{class_tile_a1da947997d4a0c1c907a4eb094d6188a}} 
+void {\bfseries set\+Floor\+Texture} (Uint32 texture)
+\item 
+\mbox{\Hypertarget{class_tile_a4563d6f84e1610409a947c880ab81258}\label{class_tile_a4563d6f84e1610409a947c880ab81258}} 
+void {\bfseries set\+Ceiling\+Slope\+Side} (\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side)
+\item 
+\mbox{\Hypertarget{class_tile_a0cdaf8624702795d64e0b99d0cfe0dd5}\label{class_tile_a0cdaf8624702795d64e0b99d0cfe0dd5}} 
+void {\bfseries set\+Ceiling\+Slope\+Size} (Sint32 \mbox{\hyperlink{class_tile_a26f3cfd46b02cbc51545e81b07518d9c}{size}})
+\item 
+\mbox{\Hypertarget{class_tile_adee73d46200d6eb7e27d6cc7a46687de}\label{class_tile_adee73d46200d6eb7e27d6cc7a46687de}} 
+void {\bfseries set\+Floor\+Slope\+Side} (\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side)
+\item 
+\mbox{\Hypertarget{class_tile_a4fc5548e5f082e108ba7d1c1f3c156c4}\label{class_tile_a4fc5548e5f082e108ba7d1c1f3c156c4}} 
+void {\bfseries set\+Floor\+Slope\+Size} (Sint32 \mbox{\hyperlink{class_tile_a26f3cfd46b02cbc51545e81b07518d9c}{size}})
+\item 
+\mbox{\Hypertarget{class_tile_a70995ecc99545fb2280719eb6677ee4d}\label{class_tile_a70995ecc99545fb2280719eb6677ee4d}} 
+void {\bfseries set\+Dynamics\+World} (bt\+Discrete\+Dynamics\+World \&\+\_\+dynamics\+World)
+\item 
+\mbox{\Hypertarget{class_tile_a09c19d3c0d62dfabef726b54c8982bf4}\label{class_tile_a09c19d3c0d62dfabef726b54c8982bf4}} 
+void {\bfseries set\+Changed} (bool \+\_\+changed)
+\item 
+\mbox{\Hypertarget{class_tile_afa791ec755fa7ad738c43febcb1d4261}\label{class_tile_afa791ec755fa7ad738c43febcb1d4261}} 
+void {\bfseries set\+Locked} (bool \+\_\+locked)
+\item 
+\mbox{\Hypertarget{class_tile_aec5eadf1b5b867a2373eb3e44a312071}\label{class_tile_aec5eadf1b5b867a2373eb3e44a312071}} 
+void {\bfseries set\+Shader\+Vars} (const \mbox{\hyperlink{struct_tile_1_1shadervars__t}{shadervars\+\_\+t}} \&src)
+\item 
+\mbox{\Hypertarget{class_tile_aab0b303c65650b63f51c2bb54edb3110}\label{class_tile_aab0b303c65650b63f51c2bb54edb3110}} 
+void \mbox{\hyperlink{class_tile_aab0b303c65650b63f51c2bb54edb3110}{clean\+Vertex\+Buffers}} ()
+\begin{DoxyCompactList}\small\item\em cleans out our vertex lists \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_a575a9c56ba4f7619dddabd0d2f12176e}\label{class_tile_a575a9c56ba4f7619dddabd0d2f12176e}} 
+void \mbox{\hyperlink{class_tile_a575a9c56ba4f7619dddabd0d2f12176e}{compile\+Ceiling\+Vertices}} ()
+\begin{DoxyCompactList}\small\item\em rebuild the list of vertices for the ceiling of this tile \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_a2ab2d5311d9828b0ff090d7e0af84f03}\label{class_tile_a2ab2d5311d9828b0ff090d7e0af84f03}} 
+void \mbox{\hyperlink{class_tile_a2ab2d5311d9828b0ff090d7e0af84f03}{compile\+Floor\+Vertices}} ()
+\begin{DoxyCompactList}\small\item\em rebuild the list of vertices for the floor of this tile \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_tile_ac6411df6216a4f5b06fce1513352b384}{compile\+Upper\+Vertices}} (\mbox{\hyperlink{class_tile}{Tile}} \&neighbor, const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side)
+\item 
+void \mbox{\hyperlink{class_tile_ac5468f46be3dcf6289dd1427d392bd02}{compile\+Lower\+Vertices}} (\mbox{\hyperlink{class_tile}{Tile}} \&neighbor, const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side)
+\item 
+Uint32 \mbox{\hyperlink{class_tile_a119004a9c845c1a93c91c27f83a329a6}{calculate\+Vertices}} () const
+\item 
+bool \mbox{\hyperlink{class_tile_a46b465eccbb8418b3505f01840a09cc4}{has\+Volume}} () const
+\item 
+\mbox{\Hypertarget{class_tile_adb4c34ed3c81de49337bd676bcb16715}\label{class_tile_adb4c34ed3c81de49337bd676bcb16715}} 
+void \mbox{\hyperlink{class_tile_adb4c34ed3c81de49337bd676bcb16715}{build\+Buffers}} ()
+\begin{DoxyCompactList}\small\item\em rebuilds the vertex buffers for the tile \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_tile_ae08b0242204f44f3948696cf2f0e4f12}{set\+Ceiling\+Slope\+Height\+For\+Vec}} (glm\+::vec3 \&vec)
+\item 
+void \mbox{\hyperlink{class_tile_acd01b378d2a2b1bbb08c9e1ae6790393}{set\+Floor\+Slope\+Height\+For\+Vec}} (glm\+::vec3 \&vec)
+\item 
+Sint32 \mbox{\hyperlink{class_tile_ab79138cf1bc79ce65cdf1dbb1914ed22}{upper\+Wall\+Height}} (const \mbox{\hyperlink{class_tile}{Tile}} \&neighbor, const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side, const \mbox{\hyperlink{class_tile_ab58ce6060648742e2e36bb82f90d893d}{corner\+\_\+t}} corner)
+\item 
+Sint32 \mbox{\hyperlink{class_tile_a060f2acd1619b1894a93a786574074a3}{lower\+Wall\+Height}} (const \mbox{\hyperlink{class_tile}{Tile}} \&neighbor, const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side, const \mbox{\hyperlink{class_tile_ab58ce6060648742e2e36bb82f90d893d}{corner\+\_\+t}} corner)
+\item 
+\mbox{\Hypertarget{class_tile_a35bebb924365e63fc2b4877cc251b10f}\label{class_tile_a35bebb924365e63fc2b4877cc251b10f}} 
+void \mbox{\hyperlink{class_tile_a35bebb924365e63fc2b4877cc251b10f}{compile\+Bullet\+Physics\+Mesh}} ()
+\begin{DoxyCompactList}\small\item\em recompile the physics mesh for this tile \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_tile}{Tile}} $\ast$ \mbox{\hyperlink{class_tile_addaeee30c2a45ac13e9caad8784b9810}{find\+Neighbor}} (const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}} side)
+\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_tile_1_1vertex__t}{vertex\+\_\+t}} $>$ $\ast$ \mbox{\hyperlink{class_tile_af4be0d040f7da40f6b1f5195cd61d2a2}{int\+For\+Vertices}} (const int i)
+\item 
+bool \mbox{\hyperlink{class_tile_a2721c28f329570bb5f5d474d7af950df}{selected}} () const
+\item 
+void \mbox{\hyperlink{class_tile_a4d57c69b4c693a57840019b20b3b9459}{operator=}} (const \mbox{\hyperlink{class_tile}{Tile}} \&src)
+\begin{DoxyCompactList}\small\item\em conversion to const char$\ast$ \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_tile_a8bf9bb2ed3fa0ff75909296203248e9c}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$ \mbox{\hyperlink{class_tile_abf185bd086b3d791335797e13c1c149c}{load\+Shader}} (const \mbox{\hyperlink{class_tile_world}{Tile\+World}} \&world, const \mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_tile_a26f3cfd46b02cbc51545e81b07518d9c}\label{class_tile_a26f3cfd46b02cbc51545e81b07518d9c}} 
+static const int \mbox{\hyperlink{class_tile_a26f3cfd46b02cbc51545e81b07518d9c}{size}} = 128
+\begin{DoxyCompactList}\small\item\em the smallest possible size of a leaf tile (ie a single tile) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_ab313b11eb35b59680100bbb58ed4136e}\label{class_tile_ab313b11eb35b59680100bbb58ed4136e}} 
+static const int \mbox{\hyperlink{class_tile_ab313b11eb35b59680100bbb58ed4136e}{solid\+Wall\+Height}} = 0
+\begin{DoxyCompactList}\small\item\em the floor and ceiling height of a completely solid tile \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_ae72212265e6a7038da6d04c4143324da}\label{class_tile_ae72212265e6a7038da6d04c4143324da}} 
+static const Uint32 \mbox{\hyperlink{class_tile_ae72212265e6a7038da6d04c4143324da}{max\+Lights}} = 12
+\begin{DoxyCompactList}\small\item\em maximum number of lights that will fit in the tile shader \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_acd8af398fd774bc1f7752b092fbd2beb}\label{class_tile_acd8af398fd774bc1f7752b092fbd2beb}} 
+static const char $\ast$ \mbox{\hyperlink{class_tile_acd8af398fd774bc1f7752b092fbd2beb}{default\+Texture}} = \char`\"{}images/tile/null.\+json\char`\"{}
+\begin{DoxyCompactList}\small\item\em default texture \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A tile is a grid space from a \mbox{\hyperlink{class_tile_world}{Tile\+World}} structure. Walls are automatically defined between tiles of varying elevation. Each tile defines vertices and textures for any wall that points towards the tile For tiles with no neighboring tiles in any one of the cardinal directions, the upper texture is used to texture the wall separating the \mbox{\hyperlink{class_tile_world}{Tile\+World}} from the void beyond. A sloped tile can be sloped in any one of the cardinal directions. The slope size determines how much lower the end of the slope descends from the other end. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_tile_a119004a9c845c1a93c91c27f83a329a6}\label{class_tile_a119004a9c845c1a93c91c27f83a329a6}} 
+\index{Tile@{Tile}!calculateVertices@{calculateVertices}}
+\index{calculateVertices@{calculateVertices}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{calculateVertices()}{calculateVertices()}}
+{\footnotesize\ttfamily Uint32 Tile\+::calculate\+Vertices (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+calculates the number of vertices in the tile \begin{DoxyReturn}{Returns}
+the number of vertices for all surfaces in the tile 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tile_ac5468f46be3dcf6289dd1427d392bd02}\label{class_tile_ac5468f46be3dcf6289dd1427d392bd02}} 
+\index{Tile@{Tile}!compileLowerVertices@{compileLowerVertices}}
+\index{compileLowerVertices@{compileLowerVertices}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{compileLowerVertices()}{compileLowerVertices()}}
+{\footnotesize\ttfamily void Tile\+::compile\+Lower\+Vertices (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_tile}{Tile}} \&}]{neighbor,  }\item[{const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}}}]{side }\end{DoxyParamCaption})}
+
+rebuild the list of vertices for the given lower wall of this tile 
+\begin{DoxyParams}{Parameters}
+{\em neighbor} & the neighboring tile to build the wall against \\
+\hline
+{\em side} & the vertices for which wall to build \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_ac6411df6216a4f5b06fce1513352b384}\label{class_tile_ac6411df6216a4f5b06fce1513352b384}} 
+\index{Tile@{Tile}!compileUpperVertices@{compileUpperVertices}}
+\index{compileUpperVertices@{compileUpperVertices}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{compileUpperVertices()}{compileUpperVertices()}}
+{\footnotesize\ttfamily void Tile\+::compile\+Upper\+Vertices (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_tile}{Tile}} \&}]{neighbor,  }\item[{const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}}}]{side }\end{DoxyParamCaption})}
+
+rebuild the list of vertices for the given lower wall of this tile 
+\begin{DoxyParams}{Parameters}
+{\em neighbor} & the neighboring tile to build the wall against \\
+\hline
+{\em side} & the vertices for which wall to build \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_addaeee30c2a45ac13e9caad8784b9810}\label{class_tile_addaeee30c2a45ac13e9caad8784b9810}} 
+\index{Tile@{Tile}!findNeighbor@{findNeighbor}}
+\index{findNeighbor@{findNeighbor}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{findNeighbor()}{findNeighbor()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_tile}{Tile}} $\ast$ Tile\+::find\+Neighbor (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}}}]{side }\end{DoxyParamCaption})}
+
+finds the tile neighboring this one, if one exists 
+\begin{DoxyParams}{Parameters}
+{\em side} & the particular neighbor we are looking for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the tile, or nullptr if the tile does not exist 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tile_a46b465eccbb8418b3505f01840a09cc4}\label{class_tile_a46b465eccbb8418b3505f01840a09cc4}} 
+\index{Tile@{Tile}!hasVolume@{hasVolume}}
+\index{hasVolume@{hasVolume}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{hasVolume()}{hasVolume()}}
+{\footnotesize\ttfamily bool Tile\+::has\+Volume (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+determines if the tile has any space or not \begin{DoxyReturn}{Returns}
+true if the tile has any visible surfaces, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tile_af4be0d040f7da40f6b1f5195cd61d2a2}\label{class_tile_af4be0d040f7da40f6b1f5195cd61d2a2}} 
+\index{Tile@{Tile}!intForVertices@{intForVertices}}
+\index{intForVertices@{intForVertices}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{intForVertices()}{intForVertices()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_tile_1_1vertex__t}{Tile\+::vertex\+\_\+t}} $>$ $\ast$ Tile\+::int\+For\+Vertices (\begin{DoxyParamCaption}\item[{const int}]{i }\end{DoxyParamCaption})}
+
+converts an int to one of the tile\textquotesingle{}s several vertex lists 
+\begin{DoxyParams}{Parameters}
+{\em i} & the int to convert. accepted values\+: 0 = ceiling\+Vertices 1 = floor\+Vertices 2-\/5 = upper\+Vertices(\+S\+I\+D\+E\+\_\+\+E\+A\+S\+T) ... upper\+Vertices(\+S\+I\+D\+E\+\_\+\+N\+O\+R\+T\+H) 6-\/9 = lower\+Vertices(\+S\+I\+D\+E\+\_\+\+S\+O\+U\+T\+H) ... lower\+Vertices(\+S\+I\+D\+E\+\_\+\+N\+O\+R\+T\+H) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the specified list of vertices, or nullptr if the given int doesn\textquotesingle{}t match with a list 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tile_abf185bd086b3d791335797e13c1c149c}\label{class_tile_abf185bd086b3d791335797e13c1c149c}} 
+\index{Tile@{Tile}!loadShader@{loadShader}}
+\index{loadShader@{loadShader}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{loadShader()}{loadShader()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$ Tile\+::load\+Shader (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_tile_world}{Tile\+World}} \&}]{world,  }\item[{const \mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+load the shader that we will use to draw the tile with 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world object that contains the scene \\
+\hline
+{\em camera} & the camera object that will be used to render the scene \\
+\hline
+{\em light} & the light object to illuminate the scene with, or nullptr for no light \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the shader program that was loaded, or nullptr if the shader failed to load 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tile_a060f2acd1619b1894a93a786574074a3}\label{class_tile_a060f2acd1619b1894a93a786574074a3}} 
+\index{Tile@{Tile}!lowerWallHeight@{lowerWallHeight}}
+\index{lowerWallHeight@{lowerWallHeight}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{lowerWallHeight()}{lowerWallHeight()}}
+{\footnotesize\ttfamily Sint32 Tile\+::lower\+Wall\+Height (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_tile}{Tile}} \&}]{neighbor,  }\item[{const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}}}]{side,  }\item[{const \mbox{\hyperlink{class_tile_ab58ce6060648742e2e36bb82f90d893d}{corner\+\_\+t}}}]{corner }\end{DoxyParamCaption})}
+
+get the height of the given lower wall 
+\begin{DoxyParams}{Parameters}
+{\em neighbor} & the neighboring tile to test against \\
+\hline
+{\em side} & the height of which wall to retrieve \\
+\hline
+{\em corner} & the corner of the wall to calculate height for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the height of the wall corner in map units 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tile_a4d57c69b4c693a57840019b20b3b9459}\label{class_tile_a4d57c69b4c693a57840019b20b3b9459}} 
+\index{Tile@{Tile}!operator=@{operator=}}
+\index{operator=@{operator=}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily void Tile\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_tile}{Tile}} \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+conversion to const char$\ast$ 
+
+ceiling data
+
+floor data
+
+wall data\mbox{\Hypertarget{class_tile_a2721c28f329570bb5f5d474d7af950df}\label{class_tile_a2721c28f329570bb5f5d474d7af950df}} 
+\index{Tile@{Tile}!selected@{selected}}
+\index{selected@{selected}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{selected()}{selected()}}
+{\footnotesize\ttfamily bool Tile\+::selected (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+determines if the tile is selected by testing it against the selection rectangle in its parent world \begin{DoxyReturn}{Returns}
+true if the tile is selected, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_tile_a8bf9bb2ed3fa0ff75909296203248e9c}\label{class_tile_a8bf9bb2ed3fa0ff75909296203248e9c}} 
+\index{Tile@{Tile}!serialize@{serialize}}
+\index{serialize@{serialize}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Tile\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_ae08b0242204f44f3948696cf2f0e4f12}\label{class_tile_ae08b0242204f44f3948696cf2f0e4f12}} 
+\index{Tile@{Tile}!setCeilingSlopeHeightForVec@{setCeilingSlopeHeightForVec}}
+\index{setCeilingSlopeHeightForVec@{setCeilingSlopeHeightForVec}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{setCeilingSlopeHeightForVec()}{setCeilingSlopeHeightForVec()}}
+{\footnotesize\ttfamily void Tile\+::set\+Ceiling\+Slope\+Height\+For\+Vec (\begin{DoxyParamCaption}\item[{glm\+::vec3 \&}]{vec }\end{DoxyParamCaption})}
+
+modify the z value of the given vector by the amount of slope exhibited by the ceiling 
+\begin{DoxyParams}{Parameters}
+{\em vec} & the vector to modify \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_acd01b378d2a2b1bbb08c9e1ae6790393}\label{class_tile_acd01b378d2a2b1bbb08c9e1ae6790393}} 
+\index{Tile@{Tile}!setFloorSlopeHeightForVec@{setFloorSlopeHeightForVec}}
+\index{setFloorSlopeHeightForVec@{setFloorSlopeHeightForVec}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{setFloorSlopeHeightForVec()}{setFloorSlopeHeightForVec()}}
+{\footnotesize\ttfamily void Tile\+::set\+Floor\+Slope\+Height\+For\+Vec (\begin{DoxyParamCaption}\item[{glm\+::vec3 \&}]{vec }\end{DoxyParamCaption})}
+
+modify the z value of the given vector by the amount of slope exhibited by the floor 
+\begin{DoxyParams}{Parameters}
+{\em vec} & the vector to modify \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_ab79138cf1bc79ce65cdf1dbb1914ed22}\label{class_tile_ab79138cf1bc79ce65cdf1dbb1914ed22}} 
+\index{Tile@{Tile}!upperWallHeight@{upperWallHeight}}
+\index{upperWallHeight@{upperWallHeight}!Tile@{Tile}}
+\doxysubsubsection{\texorpdfstring{upperWallHeight()}{upperWallHeight()}}
+{\footnotesize\ttfamily Sint32 Tile\+::upper\+Wall\+Height (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_tile}{Tile}} \&}]{neighbor,  }\item[{const \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{side\+\_\+t}}}]{side,  }\item[{const \mbox{\hyperlink{class_tile_ab58ce6060648742e2e36bb82f90d893d}{corner\+\_\+t}}}]{corner }\end{DoxyParamCaption})}
+
+get the height of the given upper wall 
+\begin{DoxyParams}{Parameters}
+{\em neighbor} & the neighboring tile to test against \\
+\hline
+{\em side} & the height of which wall to retrieve \\
+\hline
+{\em corner} & the corner of the wall to calculate height for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the height of the wall corner in map units 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_tile_8hpp}{Tile.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Tile.\+cpp\end{DoxyCompactItemize}

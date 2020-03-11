@@ -1,0 +1,55 @@
+\hypertarget{struct_net_1_1remote__t}{}\doxysection{Net\+::remote\+\_\+t Struct Reference}
+\label{struct_net_1_1remote__t}\index{Net::remote\_t@{Net::remote\_t}}
+
+
+remote host  
+
+
+
+
+{\ttfamily \#include $<$Net.\+hpp$>$}
+
+Inheritance diagram for Net\+::remote\+\_\+t\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{struct_net_1_1remote__t}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_a576a086fee56960ee387f072ed139c06}\label{struct_net_1_1remote__t_a576a086fee56960ee387f072ed139c06}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_packet}{Packet}} $\ast$ $>$ {\bfseries packet\+Stack}
+\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_a521657977b6665ba78f003b905ec7863}\label{struct_net_1_1remote__t_a521657977b6665ba78f003b905ec7863}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ Uint32 $>$ \mbox{\hyperlink{struct_net_1_1remote__t_a521657977b6665ba78f003b905ec7863}{safe\+Rcvd\+Hash}} \mbox{[}128\mbox{]}
+\begin{DoxyCompactList}\small\item\em packets received from the host \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_aa36a5832f43784c7a83fbfb2cbaf42b6}\label{struct_net_1_1remote__t_aa36a5832f43784c7a83fbfb2cbaf42b6}} 
+char \mbox{\hyperlink{struct_net_1_1remote__t_aa36a5832f43784c7a83fbfb2cbaf42b6}{address}} \mbox{[}256\mbox{]} = \{ 0 \}
+\begin{DoxyCompactList}\small\item\em hash list of safe packets received \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_a1999a58cabd3eac39a6cead723453b40}\label{struct_net_1_1remote__t_a1999a58cabd3eac39a6cead723453b40}} 
+Uint16 \mbox{\hyperlink{struct_net_1_1remote__t_a1999a58cabd3eac39a6cead723453b40}{port}} = 0
+\begin{DoxyCompactList}\small\item\em address (hostname or ip address) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_a794632b0ff2dbcaa5a3a33fddad95ae7}\label{struct_net_1_1remote__t_a794632b0ff2dbcaa5a3a33fddad95ae7}} 
+Uint32 \mbox{\hyperlink{struct_net_1_1remote__t_a794632b0ff2dbcaa5a3a33fddad95ae7}{id}} = \mbox{\hyperlink{class_net_ab2a8bab3feb9eb3ad3436412c01ef36d}{invalid\+ID}}
+\begin{DoxyCompactList}\small\item\em port number \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_a13b61a09c9f868d22756365b25ca8158}\label{struct_net_1_1remote__t_a13b61a09c9f868d22756365b25ca8158}} 
+Uint32 \mbox{\hyperlink{struct_net_1_1remote__t_a13b61a09c9f868d22756365b25ca8158}{gid}} = \mbox{\hyperlink{class_net_ab2a8bab3feb9eb3ad3436412c01ef36d}{invalid\+ID}}
+\begin{DoxyCompactList}\small\item\em universal id number \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_ac7bcc590763d9d75316ab9a57c5f54fd}\label{struct_net_1_1remote__t_ac7bcc590763d9d75316ab9a57c5f54fd}} 
+Uint32 \mbox{\hyperlink{struct_net_1_1remote__t_ac7bcc590763d9d75316ab9a57c5f54fd}{timestamp}} = 0
+\begin{DoxyCompactList}\small\item\em client\textquotesingle{}s generated id \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_a2934c46891799f3b7a4d2b2e8eb3e772}\label{struct_net_1_1remote__t_a2934c46891799f3b7a4d2b2e8eb3e772}} 
+Uint32 \mbox{\hyperlink{struct_net_1_1remote__t_a2934c46891799f3b7a4d2b2e8eb3e772}{safe\+Packets\+Sent}} = 0
+\begin{DoxyCompactList}\small\item\em the latest timestamp from this host; earlier packets might not be read \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_net_1_1remote__t_a650b184e06ddedb0ec6e082702c861bc}\label{struct_net_1_1remote__t_a650b184e06ddedb0ec6e082702c861bc}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_net_1_1safepacket__t}{safepacket\+\_\+t}} $\ast$ $>$ \mbox{\hyperlink{struct_net_1_1remote__t_a650b184e06ddedb0ec6e082702c861bc}{resend\+Stack}}
+\begin{DoxyCompactList}\small\item\em total number of safe packets sent TO this host \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+remote host 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_net_8hpp}{Net.\+hpp}}\end{DoxyCompactItemize}

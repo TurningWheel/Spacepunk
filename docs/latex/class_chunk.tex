@@ -1,0 +1,115 @@
+\hypertarget{class_chunk}{}\doxysection{Chunk Class Reference}
+\label{class_chunk}\index{Chunk@{Chunk}}
+
+
+A \mbox{\hyperlink{class_chunk}{Chunk}} combines lots of internal data for multiple \mbox{\hyperlink{class_tile}{Tile}} objects.  
+
+
+
+
+{\ttfamily \#include $<$Chunk.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_chunk_a3414171ef69fe2a55e0c388d462cde75}\label{class_chunk_a3414171ef69fe2a55e0c388d462cde75}} 
+void \mbox{\hyperlink{class_chunk_a3414171ef69fe2a55e0c388d462cde75}{build\+Buffers}} ()
+\begin{DoxyCompactList}\small\item\em builds vertex buffers \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_chunk_ac5411ba2d4f9fbc67f46fdc70128ba85}\label{class_chunk_ac5411ba2d4f9fbc67f46fdc70128ba85}} 
+void \mbox{\hyperlink{class_chunk_ac5411ba2d4f9fbc67f46fdc70128ba85}{optimize\+Buffers}} ()
+\begin{DoxyCompactList}\small\item\em consolidates vertex data among the tiles \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_chunk_aca38f6686f503ce70d487d9e94851cd7}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, \mbox{\hyperlink{class_shader_program}{Shader\+Program}} \&shader) const
+\item 
+Uint32 \mbox{\hyperlink{class_chunk_acd1ff1d07c77c84521aecea3e0e26e7d}{calculate\+Vertices}} () const
+\item 
+\mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{class_chunk_a63f1c6d0622e9386ebb10a77d58e703b}{add\+C\+Population}} (\mbox{\hyperlink{class_component}{Component}} $\ast$component)
+\item 
+\mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{class_chunk_ad38466e160f522e2dc7b7c587f6cb70e}{add\+E\+Population}} (\mbox{\hyperlink{class_entity}{Entity}} $\ast$entity)
+\item 
+\mbox{\Hypertarget{class_chunk_ac97fae7a8386fd3e279750a4c0831ba1}\label{class_chunk_ac97fae7a8386fd3e279750a4c0831ba1}} 
+bool \mbox{\hyperlink{class_chunk_ac97fae7a8386fd3e279750a4c0831ba1}{is\+Changed}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_chunk_ad4b653588ef2956c7f0d03b8c0001a54}\label{class_chunk_ad4b653588ef2956c7f0d03b8c0001a54}} 
+\mbox{\hyperlink{class_tile}{Tile}} $\ast$ {\bfseries get\+Tile} (int index)
+\item 
+\mbox{\Hypertarget{class_chunk_a1a9f266136ce321625c0497c702b9904}\label{class_chunk_a1a9f266136ce321625c0497c702b9904}} 
+const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \& {\bfseries get\+E\+Population} () const
+\item 
+\mbox{\Hypertarget{class_chunk_a0ae7e4b2e8f2b05e561de7194c28a455}\label{class_chunk_a0ae7e4b2e8f2b05e561de7194c28a455}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \& {\bfseries get\+E\+Population} ()
+\item 
+\mbox{\Hypertarget{class_chunk_a4639dcde9faef1dd2ca6e4e17ea676b4}\label{class_chunk_a4639dcde9faef1dd2ca6e4e17ea676b4}} 
+const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ \& {\bfseries get\+C\+Population} () const
+\item 
+\mbox{\Hypertarget{class_chunk_ae6bdb41e712aaa15cbb742add484ce99}\label{class_chunk_ae6bdb41e712aaa15cbb742add484ce99}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ \& {\bfseries get\+C\+Population} ()
+\item 
+\mbox{\Hypertarget{class_chunk_af6f12ccf9c167c56e493fd95e8ee54de}\label{class_chunk_af6f12ccf9c167c56e493fd95e8ee54de}} 
+void {\bfseries set\+World} (\mbox{\hyperlink{class_world}{World}} \&\+\_\+world)
+\item 
+\mbox{\Hypertarget{class_chunk_a408f1b47e22107bc574af7e830cbc190}\label{class_chunk_a408f1b47e22107bc574af7e830cbc190}} 
+void {\bfseries set\+Changed} (bool \+\_\+changed)
+\item 
+\mbox{\Hypertarget{class_chunk_a9987b125261a0e84a918515bd2fba5d4}\label{class_chunk_a9987b125261a0e84a918515bd2fba5d4}} 
+void {\bfseries set\+Tile} (int index, \mbox{\hyperlink{class_tile}{Tile}} $\ast$\+\_\+tile)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_chunk_a9230fecc1e3c10d603e3d42346a412ab}\label{class_chunk_a9230fecc1e3c10d603e3d42346a412ab}} 
+static const unsigned int \mbox{\hyperlink{class_chunk_a9230fecc1e3c10d603e3d42346a412ab}{size}} = 2
+\begin{DoxyCompactList}\small\item\em the size of a chunk in tiles \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_chunk}{Chunk}} combines lots of internal data for multiple \mbox{\hyperlink{class_tile}{Tile}} objects. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_chunk_a63f1c6d0622e9386ebb10a77d58e703b}\label{class_chunk_a63f1c6d0622e9386ebb10a77d58e703b}} 
+\index{Chunk@{Chunk}!addCPopulation@{addCPopulation}}
+\index{addCPopulation@{addCPopulation}!Chunk@{Chunk}}
+\doxysubsubsection{\texorpdfstring{addCPopulation()}{addCPopulation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ $\ast$ Chunk\+::add\+C\+Population (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_component}{Component}} $\ast$}]{component }\end{DoxyParamCaption})}
+
+adds an entity component to our population list 
+\begin{DoxyParams}{Parameters}
+{\em component} & the entity component to add to our list \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_chunk_ad38466e160f522e2dc7b7c587f6cb70e}\label{class_chunk_ad38466e160f522e2dc7b7c587f6cb70e}} 
+\index{Chunk@{Chunk}!addEPopulation@{addEPopulation}}
+\index{addEPopulation@{addEPopulation}!Chunk@{Chunk}}
+\doxysubsubsection{\texorpdfstring{addEPopulation()}{addEPopulation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ $\ast$ Chunk\+::add\+E\+Population (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_entity}{Entity}} $\ast$}]{entity }\end{DoxyParamCaption})}
+
+adds an entity to our population list 
+\begin{DoxyParams}{Parameters}
+{\em entity} & the entity to add to our list \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_chunk_acd1ff1d07c77c84521aecea3e0e26e7d}\label{class_chunk_acd1ff1d07c77c84521aecea3e0e26e7d}} 
+\index{Chunk@{Chunk}!calculateVertices@{calculateVertices}}
+\index{calculateVertices@{calculateVertices}!Chunk@{Chunk}}
+\doxysubsubsection{\texorpdfstring{calculateVertices()}{calculateVertices()}}
+{\footnotesize\ttfamily Uint32 Chunk\+::calculate\+Vertices (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+calculates the number of vertices in the chunk \begin{DoxyReturn}{Returns}
+the number of vertices for all surfaces in the chunk 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_chunk_aca38f6686f503ce70d487d9e94851cd7}\label{class_chunk_aca38f6686f503ce70d487d9e94851cd7}} 
+\index{Chunk@{Chunk}!draw@{draw}}
+\index{draw@{draw}!Chunk@{Chunk}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Chunk\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{\mbox{\hyperlink{class_shader_program}{Shader\+Program}} \&}]{shader }\end{DoxyParamCaption}) const}
+
+draws the chunk 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera to render the chunk with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_chunk_8hpp}{Chunk.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Chunk.\+cpp\end{DoxyCompactItemize}

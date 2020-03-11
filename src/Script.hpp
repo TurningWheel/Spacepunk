@@ -1,4 +1,4 @@
-// Script.hpp
+//! @file Script.hpp
 
 #pragma once
 
@@ -14,6 +14,8 @@ class Editor;
 #include "String.hpp"
 #include <luajit-2.0/lua.hpp>
 
+//! The Script class defines a Lua script engine instance.
+//! Different functions are exposed to different scripts, depending on the class that owns it.
 class Script {
 public:
 	Script(Client& _client);
@@ -23,7 +25,7 @@ public:
 	Script(Frame& _frame);
 	~Script();
 
-	// script variable types
+	//! script variable types
 	enum var_t {
 		TYPE_BOOLEAN,
 		TYPE_INTEGER,
@@ -34,7 +36,7 @@ public:
 		TYPE_MAX
 	};
 
-	// script function parameter
+	//! script function parameter
 	struct param_t {
 		param_t() {}
 		virtual ~param_t() {}
@@ -49,7 +51,7 @@ public:
 		String string;
 	};
 
-	// boolean parameter
+	//! boolean parameter
 	struct param_bool_t : param_t {
 		param_bool_t() {
 			string.alloc(2);
@@ -71,7 +73,7 @@ public:
 		bool value = false;
 	};
 
-	// integer parameter
+	//! integer parameter
 	struct param_int_t : param_t {
 		param_int_t() {
 			string.alloc(5);
@@ -96,7 +98,7 @@ public:
 		int value = 0;
 	};
 
-	// float parameter
+	//! float parameter
 	struct param_float_t : param_t {
 		param_float_t() {
 			string.alloc(5);
@@ -121,7 +123,7 @@ public:
 		float value = 0.f;
 	};
 
-	// string parameter
+	//! string parameter
 	struct param_string_t : param_t {
 		param_string_t() {}
 		param_string_t(const String& _value) : value(_value) {}
@@ -144,7 +146,7 @@ public:
 		String value;
 	};
 
-	// pointer parameter
+	//! pointer parameter
 	struct param_pointer_t : param_t {
 		param_pointer_t() {
 			string.alloc(1);
@@ -166,7 +168,7 @@ public:
 		void* value = nullptr;
 	};
 
-	// nil parameter
+	//! nil parameter
 	struct param_nil_t : param_t {
 		param_nil_t() {
 			string.alloc(1);
@@ -184,7 +186,7 @@ public:
 		}
 	};
 
-	// script function arguments
+	//! script function arguments
 	class Args {
 	public:
 		Args() {}
@@ -199,12 +201,12 @@ public:
 			}
 		}
 
-		// getters & setters
+		//! getters & setters
 		const ArrayList<param_t*>&		getList() const { return list; }
 		const Uint32					getSize() const { return list.getSize(); }
 
-		// push all args onto the lua stack
-		// @param lua the lua stack to push args into
+		//! push all args onto the lua stack
+		//! @param lua the lua stack to push args into
 		void push(lua_State* lua) {
 			for (Uint32 c = 0; c < list.getSize(); ++c) {
 				param_t* param = list[c];
@@ -215,37 +217,37 @@ public:
 			}
 		}
 
-		// add a bool to the args list
-		// @param value the value to init with
+		//! add a bool to the args list
+		//! @param value the value to init with
 		void addBool(const bool value) {
 			list.push(new param_bool_t(value));
 		}
 
-		// add an int to the args list
-		// @param value the value to init with
+		//! add an int to the args list
+		//! @param value the value to init with
 		void addInt(const int value) {
 			list.push(new param_int_t(value));
 		}
 
-		// add a float to the args list
-		// @param value the value to init with
+		//! add a float to the args list
+		//! @param value the value to init with
 		void addFloat(const float value) {
 			list.push(new param_float_t(value));
 		}
 
-		// add a string to the args list
-		// @param value the value to init with
+		//! add a string to the args list
+		//! @param value the value to init with
 		void addString(const String& value) {
 			list.push(new param_string_t(value));
 		}
 
-		// add a pointer to the args list
-		// @param value the value to init with
+		//! add a pointer to the args list
+		//! @param value the value to init with
 		void addPointer(void* value) {
 			list.push(new param_pointer_t(value));
 		}
 
-		// add a nil to the args list
+		//! add a nil to the args list
 		void addNil() {
 			list.push(new param_nil_t());
 		}
@@ -254,31 +256,31 @@ public:
 		ArrayList<param_t*> list;
 	};
 
-	// native callback function for processing script args
+	//! native callback function for processing script args
 	class Function {
 	public:
 		virtual ~Function() {}
 
-		// handle the script args
-		// @param args the args to consume
-		// @return error code
+		//! handle the script args
+		//! @param args the args to consume
+		//! @return error code
 		virtual int operator()(Args& args) const = 0;
 	};
 
-	// load and evaluate the given script
-	// @param filename filename of the script to run
-	// @return 0 on success, nonzero on failure
+	//! load and evaluate the given script
+	//! @param filename filename of the script to run
+	//! @return 0 on success, nonzero on failure
 	int load(const char* filename);
 
-	// evaluate a function. args are discarded after use
-	// @param function name of the function to execute
-	// @param args a list of args to pass to the function
-	// @return 0 on success, nonzero on failure
+	//! evaluate a function. args are discarded after use
+	//! @param function name of the function to execute
+	//! @param args a list of args to pass to the function
+	//! @return 0 on success, nonzero on failure
 	int dispatch(const char* function, Args* args = nullptr);
 
 private:
-	// class pointers:
-	// if these are set, this script engine reliably owns that object's functionality
+	//! class pointers:
+	//! if these are set, this script engine reliably owns that object's functionality
 	Engine* engine = nullptr;
 	Client* client = nullptr;
 	Editor* editor = nullptr;
@@ -287,13 +289,13 @@ private:
 	Entity* entity = nullptr;
 	Frame*  frame = nullptr;
 
-	// script filename
+	//! script filename
 	String filename;
 
-	// if an error occurs, this flag will raise, then no more dispatches will work
+	//! if an error occurs, this flag will raise, then no more dispatches will work
 	bool broken = false;
 
-	// exposition functions
+	//! exposition functions
 	void exposeEngine();
 	void exposeFrame();
 	void exposeAngle();

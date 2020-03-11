@@ -1,4 +1,4 @@
-// SectorVertex.hpp
+//! @file SectorVertex.hpp
 
 #pragma once
 
@@ -13,6 +13,7 @@
 
 class SectorWorld;
 
+//! Defines a vertex in a Sector
 class SectorVertex {
 public:
 	SectorVertex(SectorWorld& _world);
@@ -23,19 +24,19 @@ public:
 
 	static const char* materialStr;
 
-	// draws the vertex
-	// @param camera the camera through which to draw the vertex
+	//! draws the vertex
+	//! @param camera the camera through which to draw the vertex
 	void draw(Camera& camera);
 
-	// move all the vertices to the given location
-	// @param pos where to move them to
+	//! move all the vertices to the given location
+	//! @param pos where to move them to
 	void move(const glm::vec3& pos);
 
-	// assign a vertex to us
-	// @param vertex vertex to assign
+	//! assign a vertex to us
+	//! @param vertex vertex to assign
 	void own(Sector::vertex_t& vertex);
 
-	// getters & setters
+	//! getters & setters
 	bool									isSelected() const { return selected; }
 	bool									isHighlighted() const { return highlighted; }
 	const ArrayList<Sector::vertex_t*>&		getVertices() const { return vertices; }
@@ -55,7 +56,7 @@ private:
 	ArrayList<Sector::vertex_t*> vertices;
 	Vector pos;
 
-	// bullet physics objects
+	//! bullet physics objects
 	btDiscreteDynamicsWorld* dynamicsWorld = nullptr;
 	btCollisionShape* collisionShapePtr = nullptr;
 	btDefaultMotionState* motionState = nullptr;

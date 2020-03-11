@@ -1,5 +1,4 @@
-// Material.hpp
-// Materials combine images, shaders, and other meta-data into a single class
+//! @file Material.hpp
 
 #pragma once
 
@@ -9,6 +8,7 @@
 #include "Cubemap.hpp"
 #include "ShaderProgram.hpp"
 
+//! Materials combine Image objects, a ShaderProgram, and other meta-data into a single class
 class Material : public Asset {
 public:
 	Material() {}
@@ -21,16 +21,16 @@ public:
 		TEXTUREKIND_TYPE_LENGTH
 	};
 
-	// binds all the material textures (should be called after the shader is mounted)
-	// @param textureKind the kind of textures you wish to load
-	// @return the next unused texture unit
+	//! binds all the material textures (should be called after the shader is mounted)
+	//! @param textureKind the kind of textures you wish to load
+	//! @return the next unused texture unit
 	unsigned int bindTextures(texturekind_t textureKind);
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	// getters & setters
+	//! getters & setters
 	virtual const type_t		getType() const { return ASSET_MATERIAL; }
 	const ShaderProgram&		getShader() const { return shader; }
 	ShaderProgram&				getShader() { return shader; }

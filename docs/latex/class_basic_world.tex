@@ -1,0 +1,156 @@
+\hypertarget{class_basic_world}{}\doxysection{Basic\+World Class Reference}
+\label{class_basic_world}\index{BasicWorld@{BasicWorld}}
+
+
+{\ttfamily \#include $<$Basic\+World.\+hpp$>$}
+
+Inheritance diagram for Basic\+World\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_basic_world}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_basic_world_a0f4ad9c793c54f5277d276b63fac60b2}\label{class_basic_world_a0f4ad9c793c54f5277d276b63fac60b2}} 
+{\bfseries Basic\+World} (\mbox{\hyperlink{class_game}{Game}} $\ast$\+\_\+game, bool \+\_\+silent, Uint32 \+\_\+id, const char $\ast$\+\_\+name)
+\item 
+virtual void \mbox{\hyperlink{class_basic_world_a8f6e379aed44372b0598c408169ca754}{initialize}} (bool empty) override
+\item 
+\mbox{\Hypertarget{class_basic_world_a28f028c95f732dd857bb468b8222f335}\label{class_basic_world_a28f028c95f732dd857bb468b8222f335}} 
+virtual void \mbox{\hyperlink{class_basic_world_a28f028c95f732dd857bb468b8222f335}{deselect\+Geometry}} ()
+\begin{DoxyCompactList}\small\item\em clears all geometry selection \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_basic_world_ac1b0f55ce4a1b5a07fa1d3f89cc8b2bc}{find\+Entities\+In\+Radius}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, float radius, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&out\+List, bool flat=false)
+\item 
+\mbox{\Hypertarget{class_basic_world_a844ec597b90b0e105a75913d8df4e51c}\label{class_basic_world_a844ec597b90b0e105a75913d8df4e51c}} 
+virtual void \mbox{\hyperlink{class_basic_world_a844ec597b90b0e105a75913d8df4e51c}{draw}} ()
+\begin{DoxyCompactList}\small\item\em draws the world and its contents \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_basic_world_a9ad48e9a500252f0f8b64cf439c0abaa}{draw\+Scene\+Objects}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights)
+\item 
+virtual bool \mbox{\hyperlink{class_basic_world_ab358b91a29bf6fc6b0c2955ff76b8b1a}{save\+File}} (const char $\ast$\+\_\+filename=\char`\"{}\char`\"{}, bool update\+Filename=false)
+\item 
+virtual void \mbox{\hyperlink{class_basic_world_a7faa232084704356f40b31c337360cdd}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+\mbox{\Hypertarget{class_basic_world_a1c7ac2de6fb32ceb6391bc7b08f1179a}\label{class_basic_world_a1c7ac2de6fb32ceb6391bc7b08f1179a}} 
+virtual void \mbox{\hyperlink{class_basic_world_a1c7ac2de6fb32ceb6391bc7b08f1179a}{process}} () override
+\begin{DoxyCompactList}\small\item\em process world events \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_basic_world_a267205c86c5c3eecf7af17bb6b7320a7}\label{class_basic_world_a267205c86c5c3eecf7af17bb6b7320a7}} 
+virtual std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ $>$ \mbox{\hyperlink{class_basic_world_a267205c86c5c3eecf7af17bb6b7320a7}{find\+A\+Path}} (int startX, int startY, int endX, int endY) override
+\begin{DoxyCompactList}\small\item\em pathfinding \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_basic_world_a9b191671cf48ce66d55b6efed65f3872}\label{class_basic_world_a9b191671cf48ce66d55b6efed65f3872}} 
+virtual const \mbox{\hyperlink{class_world_a057932947935db98a3c29fb9175251a5}{type\+\_\+t}} {\bfseries get\+Type} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_basic_world_a222fa48386cbceb5f41ee2bb73286adf}\label{class_basic_world_a222fa48386cbceb5f41ee2bb73286adf}} 
+static const int \mbox{\hyperlink{class_basic_world_a222fa48386cbceb5f41ee2bb73286adf}{file\+Magic\+Number\+Len}} = 16
+\begin{DoxyCompactList}\small\item\em const variables \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_basic_world_ad46d1b1fddf35c04e7af68c85a8dbea8}\label{class_basic_world_ad46d1b1fddf35c04e7af68c85a8dbea8}} 
+static const char $\ast$ {\bfseries file\+Magic\+Number} = \char`\"{}S\+P\+A\+C\+E\+P\+U\+N\+K\+\_\+\+B\+W\+D\+\_\+01\char`\"{}
+\item 
+\mbox{\Hypertarget{class_basic_world_a8040b1f6348aa3f11cb144962eac2a34}\label{class_basic_world_a8040b1f6348aa3f11cb144962eac2a34}} 
+static const char $\ast$ {\bfseries file\+Magic\+Number\+Save\+Out} = \char`\"{}S\+P\+A\+C\+E\+P\+U\+N\+K\+\_\+\+B\+W\+D\+\_\+01\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_basic_world_a88b637bca68e43c4a28abb506fdef5de}\label{class_basic_world_a88b637bca68e43c4a28abb506fdef5de}} 
+virtual void \mbox{\hyperlink{class_basic_world_a88b637bca68e43c4a28abb506fdef5de}{generate\+Obstacle\+Cache}} ()
+\begin{DoxyCompactList}\small\item\em when a new world is spawned, it generates an obstacle map/cache of all static obstacles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{class_basic_world}{Basic\+World}} is the primary world implementation as of the latest version of the engine. See \mbox{\hyperlink{class_world}{World}} for more info. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_basic_world_a9ad48e9a500252f0f8b64cf439c0abaa}\label{class_basic_world_a9ad48e9a500252f0f8b64cf439c0abaa}} 
+\index{BasicWorld@{BasicWorld}!drawSceneObjects@{drawSceneObjects}}
+\index{drawSceneObjects@{drawSceneObjects}!BasicWorld@{BasicWorld}}
+\doxysubsubsection{\texorpdfstring{drawSceneObjects()}{drawSceneObjects()}}
+{\footnotesize\ttfamily void Basic\+World\+::draw\+Scene\+Objects (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})}
+
+draws entities in the world 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the scene \\
+\hline
+{\em light} & the light by which the scene should be illuminated (or nullptr for no illumination) \\
+\hline
+{\em entities} & the entities to draw \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_basic_world_ac1b0f55ce4a1b5a07fa1d3f89cc8b2bc}\label{class_basic_world_ac1b0f55ce4a1b5a07fa1d3f89cc8b2bc}} 
+\index{BasicWorld@{BasicWorld}!findEntitiesInRadius@{findEntitiesInRadius}}
+\index{findEntitiesInRadius@{findEntitiesInRadius}!BasicWorld@{BasicWorld}}
+\doxysubsubsection{\texorpdfstring{findEntitiesInRadius()}{findEntitiesInRadius()}}
+{\footnotesize\ttfamily void Basic\+World\+::find\+Entities\+In\+Radius (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{float}]{radius,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&}]{out\+List,  }\item[{bool}]{flat = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+finds all entities within a given radius of the provided point 
+\begin{DoxyParams}{Parameters}
+{\em origin} & position to search from \\
+\hline
+{\em radius} & the radius to search in \\
+\hline
+{\em out\+List} & the list to populate \\
+\hline
+{\em flat} & if true, the search radius is 2-\/dimensional \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_world_aecb9f8f920ffa9b5fef23cb88f8fba90}{World}}.
+
+\mbox{\Hypertarget{class_basic_world_a8f6e379aed44372b0598c408169ca754}\label{class_basic_world_a8f6e379aed44372b0598c408169ca754}} 
+\index{BasicWorld@{BasicWorld}!initialize@{initialize}}
+\index{initialize@{initialize}!BasicWorld@{BasicWorld}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily void Basic\+World\+::initialize (\begin{DoxyParamCaption}\item[{bool}]{empty }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+post-\/load world initialization 
+\begin{DoxyParams}{Parameters}
+{\em empty} & if the world is empty \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_world_a31da58665957f271689fed2819246cae}{World}}.
+
+\mbox{\Hypertarget{class_basic_world_ab358b91a29bf6fc6b0c2955ff76b8b1a}\label{class_basic_world_ab358b91a29bf6fc6b0c2955ff76b8b1a}} 
+\index{BasicWorld@{BasicWorld}!saveFile@{saveFile}}
+\index{saveFile@{saveFile}!BasicWorld@{BasicWorld}}
+\doxysubsubsection{\texorpdfstring{saveFile()}{saveFile()}}
+{\footnotesize\ttfamily bool Basic\+World\+::save\+File (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+filename = {\ttfamily \char`\"{}\char`\"{}},  }\item[{bool}]{update\+Filename = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+writes the world contents to a file 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+filename} & the filename to write to, or blank to use our last filename \\
+\hline
+{\em update\+Filename} & if true, our current filename is changed, otherwise, it is not \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false on failure 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_world_a5684fb5aa9fb4cda9a700c610376faeb}{World}}.
+
+\mbox{\Hypertarget{class_basic_world_a7faa232084704356f40b31c337360cdd}\label{class_basic_world_a7faa232084704356f40b31c337360cdd}} 
+\index{BasicWorld@{BasicWorld}!serialize@{serialize}}
+\index{serialize@{serialize}!BasicWorld@{BasicWorld}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Basic\+World\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_basic_world_8hpp}{Basic\+World.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Basic\+World.\+cpp\end{DoxyCompactItemize}

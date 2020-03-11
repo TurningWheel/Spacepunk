@@ -1,0 +1,151 @@
+\hypertarget{class_asset}{}\doxysection{Asset Class Reference}
+\label{class_asset}\index{Asset@{Asset}}
+
+
+Abstract interface that defines an object stored in a \mbox{\hyperlink{class_resource}{Resource}} hash.  
+
+
+
+
+{\ttfamily \#include $<$Asset.\+hpp$>$}
+
+Inheritance diagram for Asset\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=12.000000cm]{class_asset}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_asset_a9659c3eb9169979441df25bad80153f8}\label{class_asset_a9659c3eb9169979441df25bad80153f8}} 
+enum \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \{ \newline
+{\bfseries A\+S\+S\+E\+T\+\_\+\+I\+N\+V\+A\+L\+ID}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+A\+N\+I\+M\+A\+T\+I\+ON}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+C\+U\+B\+E\+M\+AP}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+D\+I\+R\+E\+C\+T\+O\+RY}, 
+\newline
+{\bfseries A\+S\+S\+E\+T\+\_\+\+I\+M\+A\+GE}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+M\+A\+T\+E\+R\+I\+AL}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+M\+E\+SH}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+S\+H\+A\+D\+ER}, 
+\newline
+{\bfseries A\+S\+S\+E\+T\+\_\+\+S\+H\+A\+D\+E\+R\+P\+R\+O\+G\+R\+AM}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+S\+O\+U\+ND}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+T\+E\+XT}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+T\+E\+X\+T\+U\+RE}, 
+\newline
+{\bfseries A\+S\+S\+E\+T\+\_\+\+F\+R\+A\+M\+E\+B\+U\+F\+F\+ER}, 
+{\bfseries A\+S\+S\+E\+T\+\_\+\+N\+UM}
+ \}
+\begin{DoxyCompactList}\small\item\em asset type \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_asset_ad118a0cc342f001b06f2f0455ef84885}\label{class_asset_ad118a0cc342f001b06f2f0455ef84885}} 
+{\bfseries Asset} (const char $\ast$\+\_\+name)
+\item 
+virtual bool \mbox{\hyperlink{class_asset_a314c70b04a032a2e27283c1fffb8eaf9}{finalize}} ()
+\item 
+virtual void \mbox{\hyperlink{class_asset_a957199c8b4a4a912d9020bb0ba605251}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+\mbox{\Hypertarget{class_asset_ad12768669c818a9906d344cc0b97070a}\label{class_asset_ad12768669c818a9906d344cc0b97070a}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} {\bfseries get\+Type} () const
+\item 
+\mbox{\Hypertarget{class_asset_adee4d64877287f880bbb578eeff98c54}\label{class_asset_adee4d64877287f880bbb578eeff98c54}} 
+virtual const bool {\bfseries is\+Streamable} () const
+\item 
+\mbox{\Hypertarget{class_asset_a14a8c6cb6ae3d2ae6e82291a34e97b5d}\label{class_asset_a14a8c6cb6ae3d2ae6e82291a34e97b5d}} 
+const char $\ast$ {\bfseries get\+Name} () const
+\item 
+\mbox{\Hypertarget{class_asset_a3892525123e0888de87954760e5c6604}\label{class_asset_a3892525123e0888de87954760e5c6604}} 
+const char $\ast$ {\bfseries get\+Path} () const
+\item 
+\mbox{\Hypertarget{class_asset_acb2886bb81f3e989ee3d35187e94848c}\label{class_asset_acb2886bb81f3e989ee3d35187e94848c}} 
+const bool {\bfseries is\+Loaded} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ {\bfseries type\+Str} \mbox{[}A\+S\+S\+E\+T\+\_\+\+N\+UM\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_asset_acbeb14f62c5ecad9d3aa0d9977a70f16}\label{class_asset_acbeb14f62c5ecad9d3aa0d9977a70f16}} 
+\mbox{\hyperlink{class_string}{String}} {\bfseries name}
+\item 
+\mbox{\Hypertarget{class_asset_a62cc614081a05c249c28ac0bc8390e80}\label{class_asset_a62cc614081a05c249c28ac0bc8390e80}} 
+\mbox{\hyperlink{class_string}{String}} {\bfseries path}
+\item 
+\mbox{\Hypertarget{class_asset_a5b562bb5401a46c635f5c10845a09b6c}\label{class_asset_a5b562bb5401a46c635f5c10845a09b6c}} 
+bool {\bfseries loaded} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract interface that defines an object stored in a \mbox{\hyperlink{class_resource}{Resource}} hash. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_asset_a314c70b04a032a2e27283c1fffb8eaf9}\label{class_asset_a314c70b04a032a2e27283c1fffb8eaf9}} 
+\index{Asset@{Asset}!finalize@{finalize}}
+\index{finalize@{finalize}!Asset@{Asset}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily bool Asset\+::finalize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+optional function for streamable types \begin{DoxyReturn}{Returns}
+true if the asset was successfully loaded, otherwise false 
+\end{DoxyReturn}
+
+
+Reimplemented in \mbox{\hyperlink{class_mesh_af9b7fd2647117a218b008e8e5f4e060b}{Mesh}}, and \mbox{\hyperlink{class_image_ab2dcd5262cee88065ed16b6c86d7e459}{Image}}.
+
+\mbox{\Hypertarget{class_asset_a957199c8b4a4a912d9020bb0ba605251}\label{class_asset_a957199c8b4a4a912d9020bb0ba605251}} 
+\index{Asset@{Asset}!serialize@{serialize}}
+\index{serialize@{serialize}!Asset@{Asset}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Asset\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_shader_program_ac84a0a4c3c2f77bb28e37812e87f7bd2}{Shader\+Program}}, \mbox{\hyperlink{class_animation_a7d4057dfb0b3eb7246b6a4157534aec9}{Animation}}, \mbox{\hyperlink{class_material_ac9e816c9d2c82f062c2d58526ea1f462}{Material}}, \mbox{\hyperlink{class_shader_a587a065b380dac18431fcbabeae2526d}{Shader}}, \mbox{\hyperlink{class_texture_a10e6b63e9f8b53bffb73375f8f5f9ce8}{Texture}}, and \mbox{\hyperlink{class_cubemap_a0e46dd234c7d82dd031ec5bd9a879077}{Cubemap}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_asset_ac17f2e60872c3b00f3f675ade3e3b059}\label{class_asset_ac17f2e60872c3b00f3f675ade3e3b059}} 
+\index{Asset@{Asset}!typeStr@{typeStr}}
+\index{typeStr@{typeStr}!Asset@{Asset}}
+\doxysubsubsection{\texorpdfstring{typeStr}{typeStr}}
+{\footnotesize\ttfamily const char $\ast$ Asset\+::type\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"invalid"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"animation"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"cubemap"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"directory"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"image"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"material"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"mesh"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"shader"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"shaderprogram"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"sound"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"text"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"texture"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"framebuffer"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_asset_8hpp}{Asset.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Asset.\+cpp\end{DoxyCompactItemize}

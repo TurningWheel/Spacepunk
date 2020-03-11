@@ -1,0 +1,187 @@
+\hypertarget{class_speaker}{}\doxysection{Speaker Class Reference}
+\label{class_speaker}\index{Speaker@{Speaker}}
+
+
+A \mbox{\hyperlink{class_speaker}{Speaker}} is a type of \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that can play 3D sounds, among other things.  
+
+
+
+
+{\ttfamily \#include $<$Speaker.\+hpp$>$}
+
+Inheritance diagram for Speaker\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_speaker}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_speaker_a7f9ac535e662f5b9a943ed203678e7dd}\label{class_speaker_a7f9ac535e662f5b9a943ed203678e7dd}} 
+{\bfseries Speaker} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity, \mbox{\hyperlink{class_component}{Component}} $\ast$\+\_\+parent)
+\item 
+virtual void \mbox{\hyperlink{class_speaker_a6579d83e44b7a728f866e31bab9bf40a}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights) override
+\item 
+\mbox{\Hypertarget{class_speaker_aced884c4c1d00521aa2e03ace9a79a98}\label{class_speaker_aced884c4c1d00521aa2e03ace9a79a98}} 
+virtual void \mbox{\hyperlink{class_speaker_aced884c4c1d00521aa2e03ace9a79a98}{process}} () override
+\begin{DoxyCompactList}\small\item\em update the component \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_speaker_afd3d0917a235eae1e3304c70b72751c4}{play\+Sound}} (const char $\ast$\mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}}, const bool loop, const float range)
+\item 
+bool \mbox{\hyperlink{class_speaker_ab0b6217185e6a6ef3d4757c1b8279456}{stop\+Sound}} (const int index)
+\item 
+bool \mbox{\hyperlink{class_speaker_aca128a1e7ba6c070f2ed8f665fa376a5}{stop\+All\+Sounds}} ()
+\item 
+virtual void \mbox{\hyperlink{class_speaker_a4374760987a17a03e0d71deb2bfa9e8c}{load}} (F\+I\+LE $\ast$fp) override
+\item 
+virtual void \mbox{\hyperlink{class_speaker_afda5ca9a2a2f762e1134e9a22896c334}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+bool \mbox{\hyperlink{class_speaker_a764e34755461e9df39d27e3585d548c9}{is\+Playing}} (const int index)
+\item 
+\mbox{\Hypertarget{class_speaker_a8b8b381387b969039945eba625e71092}\label{class_speaker_a8b8b381387b969039945eba625e71092}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_speaker_a8b8b381387b969039945eba625e71092}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_speaker_a818b5309689776a71b53bd485c54cec5}\label{class_speaker_a818b5309689776a71b53bd485c54cec5}} 
+const char $\ast$ {\bfseries get\+Default\+Sound} () const
+\item 
+\mbox{\Hypertarget{class_speaker_a16fd2edea259c2591b1526be2e259274}\label{class_speaker_a16fd2edea259c2591b1526be2e259274}} 
+bool {\bfseries is\+Default\+Loop} () const
+\item 
+\mbox{\Hypertarget{class_speaker_aa6ba4f054620876607822bc3f8750267}\label{class_speaker_aa6ba4f054620876607822bc3f8750267}} 
+float {\bfseries get\+Default\+Range} () const
+\item 
+\mbox{\Hypertarget{class_speaker_af0fd5b47998bc8884b62059971e2305b}\label{class_speaker_af0fd5b47998bc8884b62059971e2305b}} 
+void {\bfseries set\+Default\+Sound} (const char $\ast$\mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}})
+\item 
+\mbox{\Hypertarget{class_speaker_a8297572f520d7899087e838c3263c41a}\label{class_speaker_a8297572f520d7899087e838c3263c41a}} 
+void {\bfseries set\+Default\+Loop} (const bool b)
+\item 
+\mbox{\Hypertarget{class_speaker_af621e98ae5f9ec3bd46b006430e1c841}\label{class_speaker_af621e98ae5f9ec3bd46b006430e1c841}} 
+void {\bfseries set\+Default\+Range} (const float \+\_\+range)
+\item 
+\mbox{\Hypertarget{class_speaker_aa888d6b20ae78c4baa4391f38b7f5d9d}\label{class_speaker_aa888d6b20ae78c4baa4391f38b7f5d9d}} 
+\mbox{\hyperlink{class_speaker}{Speaker}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_speaker}{Speaker}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_speaker_a7249772da0d06f86cd147b9f7f2fd525}\label{class_speaker_a7249772da0d06f86cd147b9f7f2fd525}} 
+const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{Mesh\+::shadervars\+\_\+t}} {\bfseries shader\+Vars}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_speaker_adf6b0c8ca76796aeb13d7882582d6b3c}\label{class_speaker_adf6b0c8ca76796aeb13d7882582d6b3c}} 
+static const int \mbox{\hyperlink{class_speaker_adf6b0c8ca76796aeb13d7882582d6b3c}{max\+Sources}} = 8
+\begin{DoxyCompactList}\small\item\em max sounds per component \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_speaker_abfcdb2dc4d02a78a415c07d743ac094f}\label{class_speaker_abfcdb2dc4d02a78a415c07d743ac094f}} 
+static const char $\ast$ \mbox{\hyperlink{class_speaker_abfcdb2dc4d02a78a415c07d743ac094f}{mesh\+Str}} = \char`\"{}assets/editor/speaker/speaker.\+F\+BX\char`\"{}
+\begin{DoxyCompactList}\small\item\em speaker model \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_speaker_a92a4200e1c635f85e77a4ce7e4090f22}\label{class_speaker_a92a4200e1c635f85e77a4ce7e4090f22}} 
+static const char $\ast$ {\bfseries material\+Str} = \char`\"{}assets/editor/speaker/material.\+json\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_speaker}{Speaker}} is a type of \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that can play 3D sounds, among other things. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_speaker_a6579d83e44b7a728f866e31bab9bf40a}\label{class_speaker_a6579d83e44b7a728f866e31bab9bf40a}} 
+\index{Speaker@{Speaker}!draw@{draw}}
+\index{draw@{draw}!Speaker@{Speaker}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Speaker\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+draws the component 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the component \\
+\hline
+{\em light} & the light by which the component should be illuminated (or nullptr for no illumination) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}{Component}}.
+
+\mbox{\Hypertarget{class_speaker_a764e34755461e9df39d27e3585d548c9}\label{class_speaker_a764e34755461e9df39d27e3585d548c9}} 
+\index{Speaker@{Speaker}!isPlaying@{isPlaying}}
+\index{isPlaying@{isPlaying}!Speaker@{Speaker}}
+\doxysubsubsection{\texorpdfstring{isPlaying()}{isPlaying()}}
+{\footnotesize\ttfamily bool Speaker\+::is\+Playing (\begin{DoxyParamCaption}\item[{const int}]{index }\end{DoxyParamCaption})}
+
+determine if the speaker is playing a sound \begin{DoxyReturn}{Returns}
+true if the given sound source index is playing 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_speaker_a4374760987a17a03e0d71deb2bfa9e8c}\label{class_speaker_a4374760987a17a03e0d71deb2bfa9e8c}} 
+\index{Speaker@{Speaker}!load@{load}}
+\index{load@{load}!Speaker@{Speaker}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Speaker\+::load (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+load the component from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ab1ddbf2ef322928e0ac52775ce1050db}{Component}}.
+
+\mbox{\Hypertarget{class_speaker_afd3d0917a235eae1e3304c70b72751c4}\label{class_speaker_afd3d0917a235eae1e3304c70b72751c4}} 
+\index{Speaker@{Speaker}!playSound@{playSound}}
+\index{playSound@{playSound}!Speaker@{Speaker}}
+\doxysubsubsection{\texorpdfstring{playSound()}{playSound()}}
+{\footnotesize\ttfamily int Speaker\+::play\+Sound (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{const bool}]{loop,  }\item[{const float}]{range }\end{DoxyParamCaption})}
+
+plays the given sound 
+\begin{DoxyParams}{Parameters}
+{\em name} & the filename of the sound \\
+\hline
+{\em loop} & if true, the sound will loop when played; otherwise, it will not \\
+\hline
+{\em range} & max distance the sound will play over \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the sound source index, or -\/1 for failure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_speaker_afda5ca9a2a2f762e1134e9a22896c334}\label{class_speaker_afda5ca9a2a2f762e1134e9a22896c334}} 
+\index{Speaker@{Speaker}!serialize@{serialize}}
+\index{serialize@{serialize}!Speaker@{Speaker}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Speaker\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{Component}}.
+
+\mbox{\Hypertarget{class_speaker_aca128a1e7ba6c070f2ed8f665fa376a5}\label{class_speaker_aca128a1e7ba6c070f2ed8f665fa376a5}} 
+\index{Speaker@{Speaker}!stopAllSounds@{stopAllSounds}}
+\index{stopAllSounds@{stopAllSounds}!Speaker@{Speaker}}
+\doxysubsubsection{\texorpdfstring{stopAllSounds()}{stopAllSounds()}}
+{\footnotesize\ttfamily bool Speaker\+::stop\+All\+Sounds (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+stops all sounds playing on the speaker \begin{DoxyReturn}{Returns}
+true if any sound was stopped, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_speaker_ab0b6217185e6a6ef3d4757c1b8279456}\label{class_speaker_ab0b6217185e6a6ef3d4757c1b8279456}} 
+\index{Speaker@{Speaker}!stopSound@{stopSound}}
+\index{stopSound@{stopSound}!Speaker@{Speaker}}
+\doxysubsubsection{\texorpdfstring{stopSound()}{stopSound()}}
+{\footnotesize\ttfamily bool Speaker\+::stop\+Sound (\begin{DoxyParamCaption}\item[{const int}]{index }\end{DoxyParamCaption})}
+
+stops the given sound if it is playing \begin{DoxyReturn}{Returns}
+true if the sound was successfully stopped, otherwise return false 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_speaker_8hpp}{Speaker.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Speaker.\+cpp\end{DoxyCompactItemize}

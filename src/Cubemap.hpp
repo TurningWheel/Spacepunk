@@ -1,21 +1,21 @@
-// Cubemap.hpp
+//! @file Cubemap.hpp
 
 #pragma once
 
 #include "Main.hpp"
 #include "Asset.hpp"
 
+//! A Cubemap is a texture with 6 sides.
 class Cubemap : public Asset {
 public:
 	Cubemap() {}
 	Cubemap(const char* _name);
 	virtual ~Cubemap();
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	// getters & setters
 	virtual const type_t	getType() const { return ASSET_CUBEMAP; }
 	const GLuint			getTexID() const { return texid; }
 

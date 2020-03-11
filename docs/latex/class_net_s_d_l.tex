@@ -1,0 +1,382 @@
+\hypertarget{class_net_s_d_l}{}\doxysection{Net\+S\+DL Class Reference}
+\label{class_net_s_d_l}\index{NetSDL@{NetSDL}}
+
+
+Implements the \mbox{\hyperlink{class_net}{Net}} class using S\+DL.  
+
+
+
+
+{\ttfamily \#include $<$Net\+S\+D\+L.\+hpp$>$}
+
+Inheritance diagram for Net\+S\+DL\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_net_s_d_l}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_net_s_d_l_1_1sdlremote__t}{sdlremote\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em remote host \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_net_s_d_l_1_1sdlrequest__t}{sdlrequest\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em connection request \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_ac2d9a6d7d92be6a266b266222c71cf4b}\label{class_net_s_d_l_ac2d9a6d7d92be6a266b266222c71cf4b}} 
+{\bfseries Net\+S\+DL} (\mbox{\hyperlink{class_game}{Game}} \&\+\_\+parent)
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_a32c489e9c5536b897b89dd2e4493f8e2}\label{class_net_s_d_l_a32c489e9c5536b897b89dd2e4493f8e2}} 
+virtual void \mbox{\hyperlink{class_net_s_d_l_a32c489e9c5536b897b89dd2e4493f8e2}{init}} () override
+\begin{DoxyCompactList}\small\item\em inits the net interface \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_net_s_d_l_aa968cb462b88c0de0d061b5576073fc2}\label{class_net_s_d_l_aa968cb462b88c0de0d061b5576073fc2}} 
+virtual void \mbox{\hyperlink{class_net_s_d_l_aa968cb462b88c0de0d061b5576073fc2}{term}} () override
+\begin{DoxyCompactList}\small\item\em closes the network connection \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_ae30bd6fe3527a3ba3bb859b88b0d35f8}{host}} (Uint16 port) override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_aac370660cfda5e0cd0827dc2c8b34642}{connect}} (const char $\ast$address, Uint16 port) override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_aee3a1ee33e770cba170a0822b56aee9f}{disconnect}} (Uint32 remote\+ID, bool inform=true) override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_a5eb5cf8535262748a10f627748964e50}{disconnect\+Host}} () override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_a7d5212eef5073fd04fc758a7d427f2e8}{disconnect\+All}} () override
+\item 
+virtual const char $\ast$ \mbox{\hyperlink{class_net_s_d_l_a82d1864becc0f9dd6467dd0678293732}{get\+Hostname}} (Uint32 remote\+ID) const override
+\item 
+virtual const \mbox{\hyperlink{class_net_a6165574a0d9e6e044e10a5344cf7d2ed}{kind\+\_\+t}} \mbox{\hyperlink{class_net_s_d_l_a762b154dfc4bbb6202754d0a21ae64ef}{get\+Kind}} () const override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_a62c0603631543211be75310bd2927638}{send\+Packet}} (Uint32 remote\+ID, const \mbox{\hyperlink{class_packet}{Packet}} \&packet) override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_afa97bac63bafc2795efdade3506f6a2c}{send\+Packet\+Safe}} (Uint32 remote\+ID, const \mbox{\hyperlink{class_packet}{Packet}} \&packet) override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_a5bacd25359986b51e700b8c95ce825bf}{broadcast}} (\mbox{\hyperlink{class_packet}{Packet}} \&packet) override
+\item 
+virtual bool \mbox{\hyperlink{class_net_s_d_l_ad9888899e1b83e4c8f22433ea91ca99e}{broadcast\+Safe}} (\mbox{\hyperlink{class_packet}{Packet}} \&packet) override
+\item 
+virtual \mbox{\hyperlink{class_packet}{Packet}} $\ast$ \mbox{\hyperlink{class_net_s_d_l_a34e0f358ca74b76362505aba1432d1a4}{recv\+Packet}} (unsigned int remote\+Index) override
+\item 
+virtual Uint32 \mbox{\hyperlink{class_net_s_d_l_aee3fc850dde4434e61eb3db4f1f4bf5d}{num\+Remote\+Hosts}} () const override
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_aa14916c6b34dcc4238ec938fb5762a13}\label{class_net_s_d_l_aa14916c6b34dcc4238ec938fb5762a13}} 
+virtual void \mbox{\hyperlink{class_net_s_d_l_aa14916c6b34dcc4238ec938fb5762a13}{update}} () override
+\begin{DoxyCompactList}\small\item\em detects and completes any active connection requests \end{DoxyCompactList}\item 
+virtual int \mbox{\hyperlink{class_net_s_d_l_ae8e00b4b3dc4083ad9436abd0febfadf}{handle\+Network\+Packet}} (\mbox{\hyperlink{class_packet}{Packet}} \&packet, const char $\ast$type, Uint32 remote\+ID) override
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_a0e8a92818fef61a4abd83b4537b2f521}\label{class_net_s_d_l_a0e8a92818fef61a4abd83b4537b2f521}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_net_s_d_l_1_1sdlremote__t}{sdlremote\+\_\+t}} $\ast$ $>$ \& \mbox{\hyperlink{class_net_s_d_l_a0e8a92818fef61a4abd83b4537b2f521}{get\+S\+D\+L\+Remote\+Hosts}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_net_s_d_l_acf5bc64df6c42042833f8aec8d87e399}{complete\+Connection}} (void $\ast$data) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static int \mbox{\hyperlink{class_net_s_d_l_a4c83740345144d6629a476750c9f2b23}{run\+Thread}} (void $\ast$data)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_a9b1db577e32fdb993877f054365aff1b}\label{class_net_s_d_l_a9b1db577e32fdb993877f054365aff1b}} 
+U\+D\+Ppacket $\ast$ {\bfseries S\+D\+Lsend\+Packet} = nullptr
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_ace3902ce3871c7b6c84ef4b4112b8c68}\label{class_net_s_d_l_ace3902ce3871c7b6c84ef4b4112b8c68}} 
+U\+D\+Ppacket $\ast$ {\bfseries S\+D\+Lrecv\+Packet} = nullptr
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_a095575448a561937a1bd3078949fa119}\label{class_net_s_d_l_a095575448a561937a1bd3078949fa119}} 
+U\+D\+Psocket {\bfseries S\+D\+Lsocket}
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_a8e5e0969b342bc997ca047cbe94066ce}\label{class_net_s_d_l_a8e5e0969b342bc997ca047cbe94066ce}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_net_s_d_l_1_1sdlremote__t}{sdlremote\+\_\+t}} $\ast$ $>$ {\bfseries S\+D\+Lremotes}
+\item 
+\mbox{\Hypertarget{class_net_s_d_l_a8a8a36ae9cabc99576834911457e3f7f}\label{class_net_s_d_l_a8a8a36ae9cabc99576834911457e3f7f}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_net_s_d_l_1_1sdlrequest__t}{sdlrequest\+\_\+t}} $>$ {\bfseries S\+D\+Lrequests}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Implements the \mbox{\hyperlink{class_net}{Net}} class using S\+DL. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_net_s_d_l_a5bacd25359986b51e700b8c95ce825bf}\label{class_net_s_d_l_a5bacd25359986b51e700b8c95ce825bf}} 
+\index{NetSDL@{NetSDL}!broadcast@{broadcast}}
+\index{broadcast@{broadcast}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{broadcast()}{broadcast()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::broadcast (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_packet}{Packet}} \&}]{packet }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+broadcasts a packet to all remote hosts 
+\begin{DoxyParams}{Parameters}
+{\em packet} & the packet to send \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the send succeeded, false otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a7b3e3e099c5a575876b9e3325f505adf}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_ad9888899e1b83e4c8f22433ea91ca99e}\label{class_net_s_d_l_ad9888899e1b83e4c8f22433ea91ca99e}} 
+\index{NetSDL@{NetSDL}!broadcastSafe@{broadcastSafe}}
+\index{broadcastSafe@{broadcastSafe}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{broadcastSafe()}{broadcastSafe()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::broadcast\+Safe (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_packet}{Packet}} \&}]{packet }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+just like broadcast, except guarantees delivery 
+\begin{DoxyParams}{Parameters}
+{\em packet} & the packet to send \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the send succeeded, false otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a8d728f693e8d704afa498d6272fb6554}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_acf5bc64df6c42042833f8aec8d87e399}\label{class_net_s_d_l_acf5bc64df6c42042833f8aec8d87e399}} 
+\index{NetSDL@{NetSDL}!completeConnection@{completeConnection}}
+\index{completeConnection@{completeConnection}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{completeConnection()}{completeConnection()}}
+{\footnotesize\ttfamily void Net\+S\+D\+L\+::complete\+Connection (\begin{DoxyParamCaption}\item[{void $\ast$}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+completes a connection to a host 
+\begin{DoxyParams}{Parameters}
+{\em data} & the request data \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_net_ab62e4958357d292d84fed48ada9096d8}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_aac370660cfda5e0cd0827dc2c8b34642}\label{class_net_s_d_l_aac370660cfda5e0cd0827dc2c8b34642}} 
+\index{NetSDL@{NetSDL}!connect@{connect}}
+\index{connect@{connect}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{connect()}{connect()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::connect (\begin{DoxyParamCaption}\item[{const char $\ast$}]{address,  }\item[{Uint16}]{port }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+terminates any existing connection, then connects to the given address 
+\begin{DoxyParams}{Parameters}
+{\em address} & the address to connect to, or nullptr to host an open connection \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on connection success, false on failure 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_aa8cf78cd34dabe21627ef5d441947213}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_aee3a1ee33e770cba170a0822b56aee9f}\label{class_net_s_d_l_aee3a1ee33e770cba170a0822b56aee9f}} 
+\index{NetSDL@{NetSDL}!disconnect@{disconnect}}
+\index{disconnect@{disconnect}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{disconnect()}{disconnect()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::disconnect (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID,  }\item[{bool}]{inform = {\ttfamily true} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+disconnects a remote host 
+\begin{DoxyParams}{Parameters}
+{\em remote\+ID} & the remote host to disconnect from \\
+\hline
+{\em inform} & if true, remote host will be notified of disconnect; otherwise it will not \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the disconnect succeeded, false otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a46095a7941cf07131524e37127b50a88}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_a7d5212eef5073fd04fc758a7d427f2e8}\label{class_net_s_d_l_a7d5212eef5073fd04fc758a7d427f2e8}} 
+\index{NetSDL@{NetSDL}!disconnectAll@{disconnectAll}}
+\index{disconnectAll@{disconnectAll}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{disconnectAll()}{disconnectAll()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::disconnect\+All (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+shuts down any and all remote connections \begin{DoxyReturn}{Returns}
+true if the disconnect succeeded, false otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a2aedeaf53e593ece752f140b4bb2c840}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_a5eb5cf8535262748a10f627748964e50}\label{class_net_s_d_l_a5eb5cf8535262748a10f627748964e50}} 
+\index{NetSDL@{NetSDL}!disconnectHost@{disconnectHost}}
+\index{disconnectHost@{disconnectHost}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{disconnectHost()}{disconnectHost()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::disconnect\+Host (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+shuts down an open localhost connection, if any are open \begin{DoxyReturn}{Returns}
+true if the disconnect succeeded, false otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a16faf2516bcf58914c29c7eae3ea872b}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_a82d1864becc0f9dd6467dd0678293732}\label{class_net_s_d_l_a82d1864becc0f9dd6467dd0678293732}} 
+\index{NetSDL@{NetSDL}!getHostname@{getHostname}}
+\index{getHostname@{getHostname}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{getHostname()}{getHostname()}}
+{\footnotesize\ttfamily const char $\ast$ Net\+S\+D\+L\+::get\+Hostname (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+find the name of the given remote host 
+\begin{DoxyParams}{Parameters}
+{\em remote\+ID} & the id of the remote host we wish to query \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the name of a remote host in a string 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a1244eba2c3385d86950b94c31cc13858}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_a762b154dfc4bbb6202754d0a21ae64ef}\label{class_net_s_d_l_a762b154dfc4bbb6202754d0a21ae64ef}} 
+\index{NetSDL@{NetSDL}!getKind@{getKind}}
+\index{getKind@{getKind}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{getKind()}{getKind()}}
+{\footnotesize\ttfamily virtual const \mbox{\hyperlink{class_net_a6165574a0d9e6e044e10a5344cf7d2ed}{kind\+\_\+t}} Net\+S\+D\+L\+::get\+Kind (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+the type of \mbox{\hyperlink{class_net}{Net}} layer this is 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a98ebd3bd6abe365a7d9908a4cfa121ee}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_ae8e00b4b3dc4083ad9436abd0febfadf}\label{class_net_s_d_l_ae8e00b4b3dc4083ad9436abd0febfadf}} 
+\index{NetSDL@{NetSDL}!handleNetworkPacket@{handleNetworkPacket}}
+\index{handleNetworkPacket@{handleNetworkPacket}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{handleNetworkPacket()}{handleNetworkPacket()}}
+{\footnotesize\ttfamily int Net\+S\+D\+L\+::handle\+Network\+Packet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_packet}{Packet}} \&}]{packet,  }\item[{const char $\ast$}]{type,  }\item[{Uint32}]{remote\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+handles network level packets 
+\begin{DoxyParams}{Parameters}
+{\em packet} & the packet data \\
+\hline
+{\em type} & the 4 char packet type string \\
+\hline
+{\em remote\+ID} & the remote id that the packet came from \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+positive number if the packet was interpreted here, 0 otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_ab663385137c19678d1cdf2c9bac1cdb4}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_ae30bd6fe3527a3ba3bb859b88b0d35f8}\label{class_net_s_d_l_ae30bd6fe3527a3ba3bb859b88b0d35f8}} 
+\index{NetSDL@{NetSDL}!host@{host}}
+\index{host@{host}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{host()}{host()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::host (\begin{DoxyParamCaption}\item[{Uint16}]{port }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+hosts a new open connection 
+\begin{DoxyParams}{Parameters}
+{\em port} & the port to host the connection on \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true when the port is successfully opened, false on failure 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a30facfaf69c1ae91c0d3685a79fa0176}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_aee3fc850dde4434e61eb3db4f1f4bf5d}\label{class_net_s_d_l_aee3fc850dde4434e61eb3db4f1f4bf5d}} 
+\index{NetSDL@{NetSDL}!numRemoteHosts@{numRemoteHosts}}
+\index{numRemoteHosts@{numRemoteHosts}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{numRemoteHosts()}{numRemoteHosts()}}
+{\footnotesize\ttfamily Uint32 Net\+S\+D\+L\+::num\+Remote\+Hosts (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+the number of remote hosts we have connections with 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_aa4265361fbac27a9eb393c225f5ca494}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_a34e0f358ca74b76362505aba1432d1a4}\label{class_net_s_d_l_a34e0f358ca74b76362505aba1432d1a4}} 
+\index{NetSDL@{NetSDL}!recvPacket@{recvPacket}}
+\index{recvPacket@{recvPacket}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{recvPacket()}{recvPacket()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_packet}{Packet}} $\ast$ Net\+S\+D\+L\+::recv\+Packet (\begin{DoxyParamCaption}\item[{unsigned int}]{remote\+Index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+pops a packet from the stack and returns it 
+\begin{DoxyParams}{Parameters}
+{\em remote\+Index} & the index of the remote host to read a packet from (not the id!) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the highest packet on the stack, or nullptr if no packets are left 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a63806cabfb3b0bf54efd140506dbb957}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_a4c83740345144d6629a476750c9f2b23}\label{class_net_s_d_l_a4c83740345144d6629a476750c9f2b23}} 
+\index{NetSDL@{NetSDL}!runThread@{runThread}}
+\index{runThread@{runThread}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{runThread()}{runThread()}}
+{\footnotesize\ttfamily int Net\+S\+D\+L\+::run\+Thread (\begin{DoxyParamCaption}\item[{void $\ast$}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+collects any available packets from the remote hosts and place them on a local stack 
+\begin{DoxyParams}{Parameters}
+{\em data} & the Net\+S\+D\+L$\ast$ obj to process \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, non-\/zero on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_net_s_d_l_a62c0603631543211be75310bd2927638}\label{class_net_s_d_l_a62c0603631543211be75310bd2927638}} 
+\index{NetSDL@{NetSDL}!sendPacket@{sendPacket}}
+\index{sendPacket@{sendPacket}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{sendPacket()}{sendPacket()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::send\+Packet (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID,  }\item[{const \mbox{\hyperlink{class_packet}{Packet}} \&}]{packet }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+sends a packet to a remote recipient 
+\begin{DoxyParams}{Parameters}
+{\em packet} & the packet to send \\
+\hline
+{\em remote\+ID} & the id of the recipient \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the send succeeded, false otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_ad942906f58acf56f8e6188953e729dae}{Net}}.
+
+\mbox{\Hypertarget{class_net_s_d_l_afa97bac63bafc2795efdade3506f6a2c}\label{class_net_s_d_l_afa97bac63bafc2795efdade3506f6a2c}} 
+\index{NetSDL@{NetSDL}!sendPacketSafe@{sendPacketSafe}}
+\index{sendPacketSafe@{sendPacketSafe}!NetSDL@{NetSDL}}
+\doxysubsubsection{\texorpdfstring{sendPacketSafe()}{sendPacketSafe()}}
+{\footnotesize\ttfamily bool Net\+S\+D\+L\+::send\+Packet\+Safe (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID,  }\item[{const \mbox{\hyperlink{class_packet}{Packet}} \&}]{packet }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+just like send\+Packet, except guarantees delivery 
+\begin{DoxyParams}{Parameters}
+{\em packet} & the packet to send \\
+\hline
+{\em remote\+ID} & the id of the recipient \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the send succeeded, false otherwise 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_net_a82b4d87b7f7a3ace38a6020bc9725066}{Net}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_net_s_d_l_8hpp}{Net\+S\+D\+L.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Net\+S\+D\+L.\+cpp\end{DoxyCompactItemize}

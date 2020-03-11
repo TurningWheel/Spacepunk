@@ -1,13 +1,4 @@
-// Tile.hpp
-
-// A tile is a grid space from a TileWorld structure.
-// Walls are automatically defined between tiles of varying elevation.
-// Each tile defines vertices and textures for any wall that points towards the tile
-// For tiles with no neighboring tiles in any one of the cardinal directions,
-// the upper texture is used to texture the wall separating the TileWorld from the void beyond.
-
-// A sloped tile can be sloped in any one of the cardinal directions.
-// The slope size determines how much lower the end of the slope descends from the other end.
+//! @file Tile.hpp
 
 #pragma once
 
@@ -29,24 +20,31 @@ class TileWorld;
 class Chunk;
 class ShaderProgram;
 
+//! A tile is a grid space from a TileWorld structure.
+//! Walls are automatically defined between tiles of varying elevation.
+//! Each tile defines vertices and textures for any wall that points towards the tile
+//! For tiles with no neighboring tiles in any one of the cardinal directions,
+//! the upper texture is used to texture the wall separating the TileWorld from the void beyond.
+//! A sloped tile can be sloped in any one of the cardinal directions.
+//! The slope size determines how much lower the end of the slope descends from the other end.
 class Tile {
 public:
 	Tile();
 	~Tile();
 
-	// the smallest possible size of a leaf tile (ie a single tile)
+	//! the smallest possible size of a leaf tile (ie a single tile)
 	static const int size = 128;
 
-	// the floor and ceiling height of a completely solid tile
+	//! the floor and ceiling height of a completely solid tile
 	static const int solidWallHeight = 0;
 
-	// maximum number of lights that will fit in the tile shader
+	//! maximum number of lights that will fit in the tile shader
 	static const Uint32 maxLights = 12;
 
-	// default texture
+	//! default texture
 	static const char* defaultTexture;
 
-	// four cardinal directions
+	//! four cardinal directions
 	enum side_t {
 		SIDE_EAST = 0,
 		SIDE_SOUTH = 1,
@@ -55,26 +53,26 @@ public:
 		SIDE_TYPE_LENGTH
 	};
 
-	// left hand corner, right hand corner (paired with side_t)
+	//! left hand corner, right hand corner (paired with side_t)
 	enum corner_t {
 		CORNER_LEFT = 0,
 		CORNER_RIGHT = 1,
 		CORNER_TYPE_LENGTH
 	};
 
-	// shader vars
+	//! shader vars
 	struct shadervars_t {
 		ArrayList<GLfloat> customColorR = { 1.f, 0.f, 0.f };
 		ArrayList<GLfloat> customColorG = { 0.f, 1.f, 0.f };
 		ArrayList<GLfloat> customColorB = { 0.f, 0.f, 1.f };
 	};
 
-	// geometry vertex
+	//! geometry vertex
 	struct vertex_t {
 		glm::vec3 pos;
 	};
 
-	// getters & setters
+	//! getters & setters
 	Uint32					getX() const { return x; }
 	Uint32					getY() const { return y; }
 	Chunk*&					getChunk() { return chunk; }
@@ -116,103 +114,103 @@ public:
 	void	setLocked(bool _locked) { locked = _locked; }
 	void	setShaderVars(const shadervars_t& src) { shaderVars = src; }
 
-	// load the shader that we will use to draw the tile with
-	// @param world the world object that contains the scene
-	// @param camera the camera object that will be used to render the scene
-	// @param light the light object to illuminate the scene with, or nullptr for no light
-	// @return the shader program that was loaded, or nullptr if the shader failed to load
+	//! load the shader that we will use to draw the tile with
+	//! @param world the world object that contains the scene
+	//! @param camera the camera object that will be used to render the scene
+	//! @param light the light object to illuminate the scene with, or nullptr for no light
+	//! @return the shader program that was loaded, or nullptr if the shader failed to load
 	static ShaderProgram* loadShader(const TileWorld& world, const Camera& camera, const ArrayList<Light*>& lights);
 
-	// cleans out our vertex lists
+	//! cleans out our vertex lists
 	void cleanVertexBuffers();
 
-	// rebuild the list of vertices for the ceiling of this tile
+	//! rebuild the list of vertices for the ceiling of this tile
 	void compileCeilingVertices();
 
-	// rebuild the list of vertices for the floor of this tile
+	//! rebuild the list of vertices for the floor of this tile
 	void compileFloorVertices();
 
-	// rebuild the list of vertices for the given lower wall of this tile
-	// @param neighbor the neighboring tile to build the wall against
-	// @param side the vertices for which wall to build
+	//! rebuild the list of vertices for the given lower wall of this tile
+	//! @param neighbor the neighboring tile to build the wall against
+	//! @param side the vertices for which wall to build
 	void compileUpperVertices(Tile& neighbor, const side_t side);
 
-	// rebuild the list of vertices for the given lower wall of this tile
-	// @param neighbor the neighboring tile to build the wall against
-	// @param side the vertices for which wall to build
+	//! rebuild the list of vertices for the given lower wall of this tile
+	//! @param neighbor the neighboring tile to build the wall against
+	//! @param side the vertices for which wall to build
 	void compileLowerVertices(Tile& neighbor, const side_t side);
 
-	// calculates the number of vertices in the tile
-	// @return the number of vertices for all surfaces in the tile
+	//! calculates the number of vertices in the tile
+	//! @return the number of vertices for all surfaces in the tile
 	Uint32 calculateVertices() const;
 
-	// determines if the tile has any space or not
-	// @return true if the tile has any visible surfaces, false otherwise
+	//! determines if the tile has any space or not
+	//! @return true if the tile has any visible surfaces, false otherwise
 	bool hasVolume() const;
 
-	// rebuilds the vertex buffers for the tile
+	//! rebuilds the vertex buffers for the tile
 	void buildBuffers();
 
-	// modify the z value of the given vector by the amount of slope exhibited by the ceiling
-	// @param vec the vector to modify
+	//! modify the z value of the given vector by the amount of slope exhibited by the ceiling
+	//! @param vec the vector to modify
 	void setCeilingSlopeHeightForVec(glm::vec3& vec);
 
-	// modify the z value of the given vector by the amount of slope exhibited by the floor
-	// @param vec the vector to modify
+	//! modify the z value of the given vector by the amount of slope exhibited by the floor
+	//! @param vec the vector to modify
 	void setFloorSlopeHeightForVec(glm::vec3& vec);
 
-	// get the height of the given upper wall
-	// @param neighbor the neighboring tile to test against
-	// @param side the height of which wall to retrieve
-	// @param corner the corner of the wall to calculate height for
-	// @return the height of the wall corner in map units
+	//! get the height of the given upper wall
+	//! @param neighbor the neighboring tile to test against
+	//! @param side the height of which wall to retrieve
+	//! @param corner the corner of the wall to calculate height for
+	//! @return the height of the wall corner in map units
 	Sint32 upperWallHeight(const Tile& neighbor, const side_t side, const corner_t corner);
 
-	// get the height of the given lower wall
-	// @param neighbor the neighboring tile to test against
-	// @param side the height of which wall to retrieve
-	// @param corner the corner of the wall to calculate height for
-	// @return the height of the wall corner in map units
+	//! get the height of the given lower wall
+	//! @param neighbor the neighboring tile to test against
+	//! @param side the height of which wall to retrieve
+	//! @param corner the corner of the wall to calculate height for
+	//! @return the height of the wall corner in map units
 	Sint32 lowerWallHeight(const Tile& neighbor, const side_t side, const corner_t corner);
 
-	// recompile the physics mesh for this tile
+	//! recompile the physics mesh for this tile
 	void compileBulletPhysicsMesh();
 
-	// finds the tile neighboring this one, if one exists
-	// @param side the particular neighbor we are looking for
-	// @return a pointer to the tile, or nullptr if the tile does not exist
+	//! finds the tile neighboring this one, if one exists
+	//! @param side the particular neighbor we are looking for
+	//! @return a pointer to the tile, or nullptr if the tile does not exist
 	Tile* findNeighbor(const side_t side);
 
-	// converts an int to one of the tile's several vertex lists
-	// @param i the int to convert. accepted values:
-	// 0 = ceilingVertices
-	// 1 = floorVertices
-	// 2-5 = upperVertices(SIDE_EAST) ... upperVertices(SIDE_NORTH)
-	// 6-9 = lowerVertices(SIDE_SOUTH) ... lowerVertices(SIDE_NORTH)
-	// @return a pointer to the specified list of vertices, or nullptr if the given int doesn't match with a list
+	//! converts an int to one of the tile's several vertex lists
+	//! @param i the int to convert. accepted values:
+	//! 0 = ceilingVertices
+	//! 1 = floorVertices
+	//! 2-5 = upperVertices(SIDE_EAST) ... upperVertices(SIDE_NORTH)
+	//! 6-9 = lowerVertices(SIDE_SOUTH) ... lowerVertices(SIDE_NORTH)
+	//! @return a pointer to the specified list of vertices, or nullptr if the given int doesn't match with a list
 	LinkedList<vertex_t>* intForVertices(const int i);
 
-	// determines if the tile is selected by testing it against the selection rectangle in its parent world
-	// @return true if the tile is selected, false otherwise
+	//! determines if the tile is selected by testing it against the selection rectangle in its parent world
+	//! @return true if the tile is selected, false otherwise
 	bool selected() const;
 
-	// conversion to const char*
+	//! conversion to const char*
 	void operator=(const Tile& src) {
 		shaderVars = src.shaderVars;
 
-		// ceiling data
+		//! ceiling data
 		ceilingHeight = src.getCeilingHeight();
 		ceilingTexture = src.getCeilingTexture();
 		ceilingSlopeSide = src.getCeilingSlopeSide();
 		ceilingSlopeSize = src.getCeilingSlopeSize();
 
-		// floor data
+		//! floor data
 		floorHeight = src.getFloorHeight();
 		floorTexture = src.getFloorTexture();
 		floorSlopeSide = src.getFloorSlopeSide();
 		floorSlopeSize = src.getFloorSlopeSize();
 
-		// wall data
+		//! wall data
 		for (Uint32 c = 0; c < SIDE_TYPE_LENGTH; ++c) {
 			side_t side = static_cast<side_t>(c);
 			upperTextures[side] = src.getUpperTexture(side);
@@ -220,51 +218,51 @@ public:
 		}
 	}
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	void serialize(FileInterface * file);
 
 private:
-	TileWorld* world = nullptr; // the parent world object
-	Chunk* chunk = nullptr; // the parent chunk object
+	TileWorld* world = nullptr; //! the parent world object
+	Chunk* chunk = nullptr; //! the parent chunk object
 
-	// the x/y index in the parent world's tile tree
+	//! the x/y index in the parent world's tile tree
 	Uint32 x = 0;
 	Uint32 y = 0;
 
-	// floor/ceiling height
+	//! floor/ceiling height
 	Sint32 ceilingHeight = 0;
 	Sint32 floorHeight = 0;
 
-	// textures
+	//! textures
 	Uint32 upperTextures[SIDE_TYPE_LENGTH];
 	Uint32 lowerTextures[SIDE_TYPE_LENGTH];
 	Uint32 ceilingTexture;
 	Uint32 floorTexture;
 
-	// shader vars
+	//! shader vars
 	shadervars_t shaderVars;
 
-	// slope data
+	//! slope data
 	side_t ceilingSlopeSide = SIDE_EAST;
 	Sint32 ceilingSlopeSize = 0;
 	side_t floorSlopeSide = SIDE_EAST;
 	Sint32 floorSlopeSize = 0;
 
-	// editing data
+	//! editing data
 	bool changed = false;
 
-	// generation data
+	//! generation data
 	bool locked = false;
 
-	// bullet physics objects
+	//! bullet physics objects
 	btDiscreteDynamicsWorld* dynamicsWorld = nullptr;
 	btTriangleMesh* triMesh = nullptr;
 	btCollisionShape* triMeshShape = nullptr;
 	btDefaultMotionState* motionState = nullptr;
 	btRigidBody* rigidBody = nullptr;
 
-	// vertex lists
+	//! vertex lists
 	Uint32 numVertices = 0;
 	LinkedList<vertex_t> ceilingVertices;
 	LinkedList<vertex_t> floorVertices;

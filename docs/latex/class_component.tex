@@ -1,0 +1,842 @@
+\hypertarget{class_component}{}\doxysection{Component Class Reference}
+\label{class_component}\index{Component@{Component}}
+
+
+{\ttfamily \#include $<$Component.\+hpp$>$}
+
+Inheritance diagram for Component\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.927711cm]{class_component}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_component_1_1_attribute}{Attribute}}
+\begin{DoxyCompactList}\small\item\em An exposed attribute (modifiable in editor) \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_bool}{Attribute\+Bool}}
+\begin{DoxyCompactList}\small\item\em bool attribute \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_color}{Attribute\+Color}}
+\begin{DoxyCompactList}\small\item\em color attribute \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_enum}{Attribute\+Enum}}
+\begin{DoxyCompactList}\small\item\em enum attribute \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_file}{Attribute\+File}}
+\begin{DoxyCompactList}\small\item\em file attribute \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_float}{Attribute\+Float}}
+\begin{DoxyCompactList}\small\item\em float attribute \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_int}{Attribute\+Int}}
+\begin{DoxyCompactList}\small\item\em integer attribute \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_string}{Attribute\+String}}
+\begin{DoxyCompactList}\small\item\em string attribute \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_component_1_1_attribute_vector}{Attribute\+Vector}}
+\begin{DoxyCompactList}\small\item\em vector attribute \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_component_1_1bboxrect__t}{bboxrect\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em bbox rect \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \{ \newline
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a9cf6032be6dda4178764c33c11c45d49}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+B\+A\+S\+IC}}, 
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a8b303d1b1bbae4bfb02eb6fa01a5eaff}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+B\+B\+OX}}, 
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a8170d89d1937d62a3f2b92073e79adb7}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+M\+O\+D\+EL}}, 
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1adee30b06569a2ef35b922923e57ec8a8}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+L\+I\+G\+HT}}, 
+\newline
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a39a13c8423670322da97908fec3db6e6}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+C\+A\+M\+E\+RA}}, 
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a6519877130099f414cf9f5bd2bd4c247}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+S\+P\+E\+A\+K\+ER}}, 
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a75f069f4e49d62026e8654e9d7d18149}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+E\+M\+I\+T\+T\+ER}}, 
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a144fafc8784d075f3dc4b8766509d2ac}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+C\+H\+A\+R\+A\+C\+T\+ER}}, 
+\newline
+\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1ade8b057a608b0ea05a1d723889969e80}{C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+M\+U\+L\+T\+I\+M\+E\+SH}}, 
+{\bfseries C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+M\+AX}
+ \}
+\begin{DoxyCompactList}\small\item\em component type \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_component_a7c985427b3055ea00ca24fba11d583ba}\label{class_component_a7c985427b3055ea00ca24fba11d583ba}} 
+{\bfseries Component} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity, \mbox{\hyperlink{class_component}{Component}} $\ast$\+\_\+parent)
+\item 
+virtual void \mbox{\hyperlink{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights)
+\item 
+\mbox{\Hypertarget{class_component_ab878e40772c7b08729ca727333675824}\label{class_component_ab878e40772c7b08729ca727333675824}} 
+virtual void \mbox{\hyperlink{class_component_ab878e40772c7b08729ca727333675824}{process}} ()
+\begin{DoxyCompactList}\small\item\em update the component \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_component_a5ed87a96c775a3c067a14fadca5b6250}{before\+World\+Insertion}} (const \mbox{\hyperlink{class_world}{World}} $\ast$world)
+\item 
+virtual void \mbox{\hyperlink{class_component_a85730d7d101e68fca099361dc9ddb676}{after\+World\+Insertion}} (const \mbox{\hyperlink{class_world}{World}} $\ast$world)
+\item 
+virtual bool \mbox{\hyperlink{class_component_aa3f40842a274a6a9aa55c7a36de94cef}{check\+Collision}} () const
+\item 
+void \mbox{\hyperlink{class_component_a8e63ae6acc4ab3dd5718200c8eb69e69}{occlusion\+Test}} (float range, int accuracy)
+\item 
+bool \mbox{\hyperlink{class_component_af303b6892c307ee8bf273ac4b765daad}{sees\+Entity}} (const \mbox{\hyperlink{class_entity}{Entity}} \&entity, float range, int accuracy)
+\item 
+\mbox{\Hypertarget{class_component_a6ed0946c4b6ae9b73819907bb098a863}\label{class_component_a6ed0946c4b6ae9b73819907bb098a863}} 
+void \mbox{\hyperlink{class_component_a6ed0946c4b6ae9b73819907bb098a863}{delete\+Vis\+Maps}} ()
+\begin{DoxyCompactList}\small\item\em delete occlusion data \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a6c24ecd70bc2387e786cdf7259ba218b}\label{class_component_a6c24ecd70bc2387e786cdf7259ba218b}} 
+void \mbox{\hyperlink{class_component_a6c24ecd70bc2387e786cdf7259ba218b}{delete\+All\+Vis\+Maps}} ()
+\begin{DoxyCompactList}\small\item\em delete occlusion data for self and children \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a78fe4950ee37b183fe863d2d6dc419e1}\label{class_component_a78fe4950ee37b183fe863d2d6dc419e1}} 
+virtual void \mbox{\hyperlink{class_component_a78fe4950ee37b183fe863d2d6dc419e1}{update}} ()
+\begin{DoxyCompactList}\small\item\em updates matrices \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_component_a26fe2532e65bfddbc08f7ef0fdac6fa0}{has\+Component}} (\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} type) const
+\item 
+void \mbox{\hyperlink{class_component_a1bcd0926fbbb967b5307c176ee44f709}{shoot\+Laser}} (const glm\+::mat4 \&mat, \mbox{\hyperlink{class_wide_vector}{Wide\+Vector}} \&color, float size, float life)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{class_component_aa75239c215a37e415dff9d5f918172ca}{find\+All\+Components}} (\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}} type, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $\ast$ $>$ \&list) const
+\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{class_component_a94f8a2436e8de63127c47a7cc2e852dd}{find\+Component\+By\+Name}} (const char $\ast$\mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}})
+\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{class_component_a5fd0d6e0e8a67a025929d55a67180401}{find\+Component\+By\+U\+ID}} (const Uint32 \mbox{\hyperlink{class_component_a5f4561eada1880a96194524292fc7e1f}{uid}})
+\item 
+bool \mbox{\hyperlink{class_component_aaa44f8f714cb798e202d5b55a63badb7}{remove\+Component\+By\+Name}} (const char $\ast$\mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}})
+\item 
+bool \mbox{\hyperlink{class_component_a69b5f3a59d55e30df0ebcffdbf19f1cb}{remove\+Component\+By\+U\+ID}} (const Uint32 \mbox{\hyperlink{class_component_a5f4561eada1880a96194524292fc7e1f}{uid}})
+\item 
+\mbox{\Hypertarget{class_component_a54f677632b9ae607c99e3ba2ab138138}\label{class_component_a54f677632b9ae607c99e3ba2ab138138}} 
+void \mbox{\hyperlink{class_component_a54f677632b9ae607c99e3ba2ab138138}{remove}} ()
+\begin{DoxyCompactList}\small\item\em mark the component to be deleted on the next update \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a1de546a753e16bd42fb9efab14032a23}\label{class_component_a1de546a753e16bd42fb9efab14032a23}} 
+\mbox{\hyperlink{class_component}{Component}} $\ast$ {\bfseries add\+Component} (\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}} type)
+\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \mbox{\hyperlink{class_component_a1bfd8ed2fdfc12c08062950069dfb6e1}{add\+Component}} ()
+\item 
+void \mbox{\hyperlink{class_component_aabe5939c9498b1e508ed05b740869a91}{copy}} (\mbox{\hyperlink{class_component}{Component}} $\ast$dest)
+\item 
+void \mbox{\hyperlink{class_component_acd39b0aa66ad4080622d8e0cdc196624}{copy}} (\mbox{\hyperlink{class_entity}{Entity}} $\ast$dest)
+\item 
+void \mbox{\hyperlink{class_component_a893642d496ecff2ee450859b2751a809}{copy\+Components}} (\mbox{\hyperlink{class_component}{Component}} \&dest)
+\item 
+\mbox{\Hypertarget{class_component_a311f535f6b3d8aab3de6c4b5e4a037ec}\label{class_component_a311f535f6b3d8aab3de6c4b5e4a037ec}} 
+void \mbox{\hyperlink{class_component_a311f535f6b3d8aab3de6c4b5e4a037ec}{clear\+Chunk\+Node}} ()
+\begin{DoxyCompactList}\small\item\em clears the node pointing to us in the chunk we are occupying \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a40567f0c19e4b0366f1176ce2c1f42d7}\label{class_component_a40567f0c19e4b0366f1176ce2c1f42d7}} 
+void \mbox{\hyperlink{class_component_a40567f0c19e4b0366f1176ce2c1f42d7}{clear\+All\+Chunk\+Nodes}} ()
+\begin{DoxyCompactList}\small\item\em clears the chunk nodes of all components \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_component_ab1ddbf2ef322928e0ac52775ce1050db}{load}} (F\+I\+LE $\ast$fp)
+\item 
+virtual void \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+void \mbox{\hyperlink{class_component_aa3e92c207b6553a9e491491125eada46}{rotate}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&ang)
+\item 
+void \mbox{\hyperlink{class_component_a95477fb2b1d9339972aeba5e825c1351}{translate}} (const \mbox{\hyperlink{class_vector}{Vector}} \&vec)
+\item 
+void \mbox{\hyperlink{class_component_a05ed4e521af53eba3d1b401de0f74e58}{scale}} (const \mbox{\hyperlink{class_vector}{Vector}} \&vec)
+\item 
+\mbox{\Hypertarget{class_component_aae426a21dec4778da19f4ea41c201062}\label{class_component_aae426a21dec4778da19f4ea41c201062}} 
+void \mbox{\hyperlink{class_component_aae426a21dec4778da19f4ea41c201062}{revert\+Rotation}} ()
+\begin{DoxyCompactList}\small\item\em reverts rotation to 0, 0, 0 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_af646055b7bd5c6da7b35316148229c4a}\label{class_component_af646055b7bd5c6da7b35316148229c4a}} 
+void \mbox{\hyperlink{class_component_af646055b7bd5c6da7b35316148229c4a}{revert\+Translation}} ()
+\begin{DoxyCompactList}\small\item\em reverts translation to 0, 0, 0 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a44c26e86fb6280f05d522080daa0dd42}\label{class_component_a44c26e86fb6280f05d522080daa0dd42}} 
+void \mbox{\hyperlink{class_component_a44c26e86fb6280f05d522080daa0dd42}{revert\+Scale}} ()
+\begin{DoxyCompactList}\small\item\em reverts the scale to 1\+:1\+:1 \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a5c31ff0d0ade87af7ec10c0a8e17e0ff}\label{class_component_a5c31ff0d0ade87af7ec10c0a8e17e0ff}} 
+void \mbox{\hyperlink{class_component_a5c31ff0d0ade87af7ec10c0a8e17e0ff}{revert\+To\+Identity}} ()
+\begin{DoxyCompactList}\small\item\em resets rotation, translation, and scale at once \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_component_ab93f88b360ce357b9eca3a7db2fe728b}{bind\+To\+Bone}} (\mbox{\hyperlink{class_model}{Model}} $\ast$model, const char $\ast$bone, const \mbox{\hyperlink{class_vector}{Vector}} \&translation, const \mbox{\hyperlink{class_rotation}{Rotation}} \&rotation, const \mbox{\hyperlink{class_vector}{Vector}} \&\mbox{\hyperlink{class_component_a05ed4e521af53eba3d1b401de0f74e58}{scale}})
+\item 
+\mbox{\Hypertarget{class_component_ab22f7b21cc3e35dffd5bb6a770632e95}\label{class_component_ab22f7b21cc3e35dffd5bb6a770632e95}} 
+void \mbox{\hyperlink{class_component_ab22f7b21cc3e35dffd5bb6a770632e95}{unbind\+From\+Bone}} ()
+\begin{DoxyCompactList}\small\item\em unbinds the component from any bones it was bound to \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_aae81b961b9ef1ed2ea5a70b7213ed08d}\label{class_component_aae81b961b9ef1ed2ea5a70b7213ed08d}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_component_aae81b961b9ef1ed2ea5a70b7213ed08d}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a947be8c3a2b55d4856bc741967b547f8}\label{class_component_a947be8c3a2b55d4856bc741967b547f8}} 
+const \mbox{\hyperlink{class_entity}{Entity}} $\ast$ {\bfseries get\+Entity} () const
+\item 
+\mbox{\Hypertarget{class_component_a4a22144c6b2280da13fbd6f2d12e4656}\label{class_component_a4a22144c6b2280da13fbd6f2d12e4656}} 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ {\bfseries get\+Entity} ()
+\item 
+\mbox{\Hypertarget{class_component_ab700aa39471d0ce14144ff70bf84f39c}\label{class_component_ab700aa39471d0ce14144ff70bf84f39c}} 
+const \mbox{\hyperlink{class_component}{Component}} $\ast$ {\bfseries get\+Parent} () const
+\item 
+\mbox{\Hypertarget{class_component_a443c5416ac7cebf723f291abaa8857fd}\label{class_component_a443c5416ac7cebf723f291abaa8857fd}} 
+\mbox{\hyperlink{class_component}{Component}} $\ast$ {\bfseries get\+Parent} ()
+\item 
+\mbox{\Hypertarget{class_component_a80b53f774d9b4023f70726ee77ce0ec6}\label{class_component_a80b53f774d9b4023f70726ee77ce0ec6}} 
+bool {\bfseries is\+To\+Be\+Deleted} () const
+\item 
+\mbox{\Hypertarget{class_component_ae6544173caa8ac3bc63bc779a8e49893}\label{class_component_ae6544173caa8ac3bc63bc779a8e49893}} 
+bool {\bfseries is\+Editor\+Only} () const
+\item 
+\mbox{\Hypertarget{class_component_a76e5ceb11abd417375cf855d4c2ce28d}\label{class_component_a76e5ceb11abd417375cf855d4c2ce28d}} 
+bool {\bfseries is\+Update\+Needed} () const
+\item 
+\mbox{\Hypertarget{class_component_ad03f528ed8b4f20824ce4662959cb1fe}\label{class_component_ad03f528ed8b4f20824ce4662959cb1fe}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ \& {\bfseries get\+Components} ()
+\item 
+\mbox{\Hypertarget{class_component_a60c05520bec89ad79db0bdc8953bad94}\label{class_component_a60c05520bec89ad79db0bdc8953bad94}} 
+Uint32 {\bfseries get\+U\+ID} () const
+\item 
+\mbox{\Hypertarget{class_component_aad1617cea8523ab3e635d960909bf806}\label{class_component_aad1617cea8523ab3e635d960909bf806}} 
+const char $\ast$ {\bfseries get\+Name} () const
+\item 
+\mbox{\Hypertarget{class_component_afe4f232384d78516eb741a949c9e85dd}\label{class_component_afe4f232384d78516eb741a949c9e85dd}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Local\+Pos} () const
+\item 
+\mbox{\Hypertarget{class_component_a9443c34e76385a0616791b13eed9c7be}\label{class_component_a9443c34e76385a0616791b13eed9c7be}} 
+const \mbox{\hyperlink{class_quaternion}{Quaternion}} \& {\bfseries get\+Local\+Ang} () const
+\item 
+\mbox{\Hypertarget{class_component_ae141c68ba3841d8d07fbd277f5366776}\label{class_component_ae141c68ba3841d8d07fbd277f5366776}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Local\+Scale} () const
+\item 
+\mbox{\Hypertarget{class_component_a9aba3a120b5730cbdf2ae82bd429008b}\label{class_component_a9aba3a120b5730cbdf2ae82bd429008b}} 
+const glm\+::mat4 \& {\bfseries get\+Local\+Mat} () const
+\item 
+\mbox{\Hypertarget{class_component_a5181df55b1acad9830c47fe33b4b1123}\label{class_component_a5181df55b1acad9830c47fe33b4b1123}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Global\+Pos} () const
+\item 
+\mbox{\Hypertarget{class_component_a98557f0f34a46d7cf8b5064aab45ecc9}\label{class_component_a98557f0f34a46d7cf8b5064aab45ecc9}} 
+const \mbox{\hyperlink{class_quaternion}{Quaternion}} \& {\bfseries get\+Global\+Ang} () const
+\item 
+\mbox{\Hypertarget{class_component_a9393e11bf0153230486242d8ba3c577b}\label{class_component_a9393e11bf0153230486242d8ba3c577b}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Global\+Scale} () const
+\item 
+\mbox{\Hypertarget{class_component_a649af88552186e01058215dc6a141799}\label{class_component_a649af88552186e01058215dc6a141799}} 
+const glm\+::mat4 \& {\bfseries get\+Global\+Mat} () const
+\item 
+\mbox{\Hypertarget{class_component_a8d5a9d103e2c82c43245c53b385eaded}\label{class_component_a8d5a9d103e2c82c43245c53b385eaded}} 
+bool {\bfseries is\+Collapsed} () const
+\item 
+\mbox{\Hypertarget{class_component_a8edbad9a1704bae383d48971239b12e1}\label{class_component_a8edbad9a1704bae383d48971239b12e1}} 
+const bool $\ast$ {\bfseries get\+Tiles\+Visible} () const
+\item 
+\mbox{\Hypertarget{class_component_acc3cfffef917e172484553ab074b328a}\label{class_component_acc3cfffef917e172484553ab074b328a}} 
+const bool $\ast$ {\bfseries get\+Chunks\+Visible} () const
+\item 
+\mbox{\Hypertarget{class_component_a4d6bdc3e4bd403cdd45cacd70c4ec745}\label{class_component_a4d6bdc3e4bd403cdd45cacd70c4ec745}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_chunk}{Chunk}} $\ast$ $>$ \& {\bfseries get\+Visible\+Chunks} () const
+\item 
+\mbox{\Hypertarget{class_component_a2f0ed52afd1fa60e9997b1b6e009a57b}\label{class_component_a2f0ed52afd1fa60e9997b1b6e009a57b}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_component_1_1_attribute}{Attribute}} $\ast$ $>$ \& {\bfseries get\+Attributes} () const
+\item 
+\mbox{\Hypertarget{class_component_adb8158fa3b5a6097080eb1f719d97830}\label{class_component_adb8158fa3b5a6097080eb1f719d97830}} 
+void {\bfseries set\+Editor\+Only} (bool \+\_\+editor\+Only)
+\item 
+\mbox{\Hypertarget{class_component_a656c995059cc6c42e4a5e10374016a7d}\label{class_component_a656c995059cc6c42e4a5e10374016a7d}} 
+void {\bfseries set\+Name} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_component_a4025d38aea8cedac0102320c46237af2}\label{class_component_a4025d38aea8cedac0102320c46237af2}} 
+void {\bfseries set\+Local\+Pos} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+pos)
+\item 
+\mbox{\Hypertarget{class_component_ab4b6730b58bf0aa35dc3190bbdb56a3c}\label{class_component_ab4b6730b58bf0aa35dc3190bbdb56a3c}} 
+void {\bfseries set\+Local\+Ang} (const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&\+\_\+ang)
+\item 
+\mbox{\Hypertarget{class_component_adef2a904f60715c5e5ac9d6ad07cc9dd}\label{class_component_adef2a904f60715c5e5ac9d6ad07cc9dd}} 
+void {\bfseries set\+Local\+Scale} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+scale)
+\item 
+\mbox{\Hypertarget{class_component_ac8f53698633d3dd93e14ddd18ed68bc7}\label{class_component_ac8f53698633d3dd93e14ddd18ed68bc7}} 
+void {\bfseries set\+Local\+Mat} (const glm\+::mat4 \&\+\_\+mat)
+\item 
+\mbox{\Hypertarget{class_component_a4eb8d69069ce4f438e5ee867d5b9f8aa}\label{class_component_a4eb8d69069ce4f438e5ee867d5b9f8aa}} 
+void {\bfseries set\+Collapsed} (bool \+\_\+collapsed)
+\item 
+\mbox{\Hypertarget{class_component_a0c167b9fdaeef23aee36f53442b2aa1a}\label{class_component_a0c167b9fdaeef23aee36f53442b2aa1a}} 
+\mbox{\hyperlink{class_component}{Component}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_component}{Component}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ {\bfseries type\+Str} \mbox{[}C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+M\+AX\mbox{]}
+\item 
+static const char $\ast$ {\bfseries type\+Icon} \mbox{[}C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+M\+AX\mbox{]}
+\item 
+\mbox{\Hypertarget{class_component_abf112d7bffadd39aa0636021999f671b}\label{class_component_abf112d7bffadd39aa0636021999f671b}} 
+static const unsigned int {\bfseries nuid} = U\+I\+N\+T32\+\_\+\+M\+AX
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_component_a3a87bb1ef63571f3f2f1da952f602dd9}{load\+Sub\+Components}} (F\+I\+LE $\ast$fp)
+\item 
+void \mbox{\hyperlink{class_component_aaa773a7acb1c69421115ec332b2fbc03}{serialize\+Components}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+\mbox{\Hypertarget{class_component_a6cb8b52111b3b3cb8206288ae04d0ac8}\label{class_component_a6cb8b52111b3b3cb8206288ae04d0ac8}} 
+void {\bfseries occlusion\+Test\+Tiles} (float range, int accuracy)
+\item 
+\mbox{\Hypertarget{class_component_a22e1733807b655b810ad66ab84f1a5d8}\label{class_component_a22e1733807b655b810ad66ab84f1a5d8}} 
+void {\bfseries occlusion\+Test\+Tiles\+Step} (float range, Sint32 tX, Sint32 tY, int accuracy)
+\item 
+\mbox{\Hypertarget{class_component_ad694af22ef421c07ef338a18690e7677}\label{class_component_ad694af22ef421c07ef338a18690e7677}} 
+bool {\bfseries occlusion\+Test\+Tiles\+Line} (Sint32 sX, Sint32 sY, Sint32 eX, Sint32 eY, bool entities)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_component_a6acb3f00c9d114d961c8763ede390d2c}\label{class_component_a6acb3f00c9d114d961c8763ede390d2c}} 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ {\bfseries entity} = nullptr
+\item 
+\mbox{\Hypertarget{class_component_add189dc18ca4dd121d7dede5a0dbeab8}\label{class_component_add189dc18ca4dd121d7dede5a0dbeab8}} 
+\mbox{\hyperlink{class_component}{Component}} $\ast$ {\bfseries parent} = nullptr
+\item 
+\mbox{\Hypertarget{class_component_a16388322f132cb0d7832e4ff92a42c38}\label{class_component_a16388322f132cb0d7832e4ff92a42c38}} 
+\mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ $\ast$ {\bfseries chunk\+Node} = nullptr
+\item 
+\mbox{\Hypertarget{class_component_accb879e24de4cc319bc62325d7207ed5}\label{class_component_accb879e24de4cc319bc62325d7207ed5}} 
+bool \mbox{\hyperlink{class_component_accb879e24de4cc319bc62325d7207ed5}{to\+Be\+Deleted}} = false
+\begin{DoxyCompactList}\small\item\em pointer to our node in the chunk we are occupying (if any) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a2cebfbaa7f742459da3c35e20e9bb99c}\label{class_component_a2cebfbaa7f742459da3c35e20e9bb99c}} 
+bool {\bfseries editor\+Only} = false
+\item 
+\mbox{\Hypertarget{class_component_a9352acb013a5b983688b69c10649293d}\label{class_component_a9352acb013a5b983688b69c10649293d}} 
+bool {\bfseries update\+Needed} = true
+\item 
+\mbox{\Hypertarget{class_component_a2ae7a9a2a4743dd40f84a6ea46b2b179}\label{class_component_a2ae7a9a2a4743dd40f84a6ea46b2b179}} 
+bool {\bfseries collapsed} = true
+\item 
+\mbox{\Hypertarget{class_component_a6343682434975561a39a8737c1c42270}\label{class_component_a6343682434975561a39a8737c1c42270}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_component}{Component}} $\ast$ $>$ {\bfseries components}
+\item 
+Uint32 \mbox{\hyperlink{class_component_a5f4561eada1880a96194524292fc7e1f}{uid}} = nuid
+\begin{DoxyCompactList}\small\item\em sub-\/component list \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_acf12509f5baeb0096cad073f7d3575d4}\label{class_component_acf12509f5baeb0096cad073f7d3575d4}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_component_acf12509f5baeb0096cad073f7d3575d4}{name}}
+\begin{DoxyCompactList}\small\item\em component name \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_component_a81b4b69b4f91624ecef1c0913d599713}{l\+Pos}}
+\begin{DoxyCompactList}\small\item\em local space \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a4c591fe66a23eed7a0be045d1d0e4dca}\label{class_component_a4c591fe66a23eed7a0be045d1d0e4dca}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} \mbox{\hyperlink{class_component_a4c591fe66a23eed7a0be045d1d0e4dca}{l\+Ang}}
+\begin{DoxyCompactList}\small\item\em angle \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a4cddfd8471c39b9e695f427dc9d7dec6}\label{class_component_a4cddfd8471c39b9e695f427dc9d7dec6}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_component_a4cddfd8471c39b9e695f427dc9d7dec6}{l\+Scale}}
+\begin{DoxyCompactList}\small\item\em scale \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a4d7eb0de0ea210fb51b7ab1c140ae7ca}\label{class_component_a4d7eb0de0ea210fb51b7ab1c140ae7ca}} 
+glm\+::mat4 \mbox{\hyperlink{class_component_a4d7eb0de0ea210fb51b7ab1c140ae7ca}{l\+Mat}}
+\begin{DoxyCompactList}\small\item\em matrix (position $\ast$ angle $\ast$ scale) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_component_ac4e8e638b01398ecebf6ca692cfdad27}{g\+Pos}}
+\begin{DoxyCompactList}\small\item\em global space \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a969589f29aec01998054c00a190c1ff6}\label{class_component_a969589f29aec01998054c00a190c1ff6}} 
+\mbox{\hyperlink{class_quaternion}{Quaternion}} \mbox{\hyperlink{class_component_a969589f29aec01998054c00a190c1ff6}{g\+Ang}}
+\begin{DoxyCompactList}\small\item\em angle \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a51dafcdaaf0afbfa3ca28760a11c9b38}\label{class_component_a51dafcdaaf0afbfa3ca28760a11c9b38}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_component_a51dafcdaaf0afbfa3ca28760a11c9b38}{g\+Scale}}
+\begin{DoxyCompactList}\small\item\em scale \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_abe3000f8fac72f47d0f0430a1fc5b962}\label{class_component_abe3000f8fac72f47d0f0430a1fc5b962}} 
+glm\+::mat4 \mbox{\hyperlink{class_component_abe3000f8fac72f47d0f0430a1fc5b962}{g\+Mat}}
+\begin{DoxyCompactList}\small\item\em matrix (position $\ast$ angle $\ast$ scale) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a820caf605f674cb1d3ee9978fdee2049}\label{class_component_a820caf605f674cb1d3ee9978fdee2049}} 
+Sint32 \mbox{\hyperlink{class_component_a820caf605f674cb1d3ee9978fdee2049}{current\+CX}} = I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em X coord of the chunk we are currently occupying. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a621c19f7f86aaecaa723ffd23b8f1134}\label{class_component_a621c19f7f86aaecaa723ffd23b8f1134}} 
+Sint32 \mbox{\hyperlink{class_component_a621c19f7f86aaecaa723ffd23b8f1134}{current\+CY}} = I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em Y coord of the chunk we are currently occupying. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_aa5d7417336e21c4311b328fd9d0bf180}\label{class_component_aa5d7417336e21c4311b328fd9d0bf180}} 
+Uint32 \mbox{\hyperlink{class_component_aa5d7417336e21c4311b328fd9d0bf180}{tiles\+Width}} = 0
+\begin{DoxyCompactList}\small\item\em occlusion test tile world \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_ada1d68bb75f9c4e5f9ab03976daefc28}\label{class_component_ada1d68bb75f9c4e5f9ab03976daefc28}} 
+Uint32 {\bfseries tiles\+Height} = 0
+\item 
+\mbox{\Hypertarget{class_component_ae24f63479fe8d8a5f0270ec927ebf003}\label{class_component_ae24f63479fe8d8a5f0270ec927ebf003}} 
+bool $\ast$ {\bfseries tiles\+Visible} = nullptr
+\item 
+\mbox{\Hypertarget{class_component_ad55185533b1aaa6d18f52809d64c4460}\label{class_component_ad55185533b1aaa6d18f52809d64c4460}} 
+bool $\ast$ {\bfseries chunks\+Visible} = nullptr
+\item 
+\mbox{\Hypertarget{class_component_a9fb4e78eabad8e439528b51c4995d350}\label{class_component_a9fb4e78eabad8e439528b51c4995d350}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_chunk}{Chunk}} $\ast$ $>$ {\bfseries visible\+Chunks}
+\item 
+\mbox{\Hypertarget{class_component_a8ad9ba3f0bca4fcdc1275b5088680379}\label{class_component_a8ad9ba3f0bca4fcdc1275b5088680379}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_component_1_1_attribute}{Attribute}} $\ast$ $>$ \mbox{\hyperlink{class_component_a8ad9ba3f0bca4fcdc1275b5088680379}{attributes}}
+\begin{DoxyCompactList}\small\item\em attributes available for reflection \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a64fe82c290f01fa39e8130444dee6357}\label{class_component_a64fe82c290f01fa39e8130444dee6357}} 
+bool \mbox{\hyperlink{class_component_a64fe82c290f01fa39e8130444dee6357}{bound\+To\+Bone}} = false
+\begin{DoxyCompactList}\small\item\em bone binding \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_component_a8db1b27485b6a5c035779b66037b0b18}\label{class_component_a8db1b27485b6a5c035779b66037b0b18}} 
+\mbox{\hyperlink{class_model}{Model}} $\ast$ {\bfseries bone\+Model} = nullptr
+\item 
+\mbox{\Hypertarget{class_component_ae9d7f8ec1d0368c3000795eec534e6c7}\label{class_component_ae9d7f8ec1d0368c3000795eec534e6c7}} 
+const char $\ast$ {\bfseries bone\+Name} = nullptr
+\item 
+\mbox{\Hypertarget{class_component_a550f62fe16f7f4ad15a59e9a77d47788}\label{class_component_a550f62fe16f7f4ad15a59e9a77d47788}} 
+Uint32 {\bfseries bone\+Index} = U\+I\+N\+T32\+\_\+\+M\+AX
+\item 
+\mbox{\Hypertarget{class_component_acba81760dfe70da60ba3308557f826bc}\label{class_component_acba81760dfe70da60ba3308557f826bc}} 
+\mbox{\hyperlink{class_vector}{Vector}} {\bfseries bone\+Translate}
+\item 
+\mbox{\Hypertarget{class_component_a9a4370ce8e31d2321438567f620febbc}\label{class_component_a9a4370ce8e31d2321438567f620febbc}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} {\bfseries bone\+Rotate}
+\item 
+\mbox{\Hypertarget{class_component_a568bb275db0efc634c1deff6e11800f8}\label{class_component_a568bb275db0efc634c1deff6e11800f8}} 
+\mbox{\hyperlink{class_vector}{Vector}} {\bfseries bone\+Scale}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Every \mbox{\hyperlink{class_entity}{Entity}} has a tree of Components that act as building blocks for the entity appearance, behavior, etc. There are several types of components, including Basic (no unique properties), \mbox{\hyperlink{class_b_box}{B\+Box}}, \mbox{\hyperlink{class_model}{Model}}, \mbox{\hyperlink{class_light}{Light}}, \mbox{\hyperlink{class_camera}{Camera}}, \mbox{\hyperlink{class_speaker}{Speaker}}, and more. 
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}} 
+\index{Component@{Component}!type\_t@{type\_t}}
+\index{type\_t@{type\_t}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{type\_t}{type\_t}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}}}
+
+
+
+component type 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_BASIC@{COMPONENT\_BASIC}!Component@{Component}}\index{Component@{Component}!COMPONENT\_BASIC@{COMPONENT\_BASIC}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a9cf6032be6dda4178764c33c11c45d49}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a9cf6032be6dda4178764c33c11c45d49}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+B\+A\+S\+IC&@\+Basic \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_BBOX@{COMPONENT\_BBOX}!Component@{Component}}\index{Component@{Component}!COMPONENT\_BBOX@{COMPONENT\_BBOX}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a8b303d1b1bbae4bfb02eb6fa01a5eaff}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a8b303d1b1bbae4bfb02eb6fa01a5eaff}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+B\+B\+OX&@\+B\+Box \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_MODEL@{COMPONENT\_MODEL}!Component@{Component}}\index{Component@{Component}!COMPONENT\_MODEL@{COMPONENT\_MODEL}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a8170d89d1937d62a3f2b92073e79adb7}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a8170d89d1937d62a3f2b92073e79adb7}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+M\+O\+D\+EL&@\+Model \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_LIGHT@{COMPONENT\_LIGHT}!Component@{Component}}\index{Component@{Component}!COMPONENT\_LIGHT@{COMPONENT\_LIGHT}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1adee30b06569a2ef35b922923e57ec8a8}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1adee30b06569a2ef35b922923e57ec8a8}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+L\+I\+G\+HT&@\+Light \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_CAMERA@{COMPONENT\_CAMERA}!Component@{Component}}\index{Component@{Component}!COMPONENT\_CAMERA@{COMPONENT\_CAMERA}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a39a13c8423670322da97908fec3db6e6}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a39a13c8423670322da97908fec3db6e6}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+C\+A\+M\+E\+RA&@\+Camera \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_SPEAKER@{COMPONENT\_SPEAKER}!Component@{Component}}\index{Component@{Component}!COMPONENT\_SPEAKER@{COMPONENT\_SPEAKER}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a6519877130099f414cf9f5bd2bd4c247}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a6519877130099f414cf9f5bd2bd4c247}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+S\+P\+E\+A\+K\+ER&@\+Speaker \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_EMITTER@{COMPONENT\_EMITTER}!Component@{Component}}\index{Component@{Component}!COMPONENT\_EMITTER@{COMPONENT\_EMITTER}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a75f069f4e49d62026e8654e9d7d18149}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a75f069f4e49d62026e8654e9d7d18149}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+E\+M\+I\+T\+T\+ER&@\+Emitter \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_CHARACTER@{COMPONENT\_CHARACTER}!Component@{Component}}\index{Component@{Component}!COMPONENT\_CHARACTER@{COMPONENT\_CHARACTER}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a144fafc8784d075f3dc4b8766509d2ac}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1a144fafc8784d075f3dc4b8766509d2ac}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+C\+H\+A\+R\+A\+C\+T\+ER&@\+Character \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COMPONENT\_MULTIMESH@{COMPONENT\_MULTIMESH}!Component@{Component}}\index{Component@{Component}!COMPONENT\_MULTIMESH@{COMPONENT\_MULTIMESH}}}\mbox{\Hypertarget{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1ade8b057a608b0ea05a1d723889969e80}\label{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1ade8b057a608b0ea05a1d723889969e80}} 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+M\+U\+L\+T\+I\+M\+E\+SH&@\+Multimesh \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_component_a1bfd8ed2fdfc12c08062950069dfb6e1}\label{class_component_a1bfd8ed2fdfc12c08062950069dfb6e1}} 
+\index{Component@{Component}!addComponent@{addComponent}}
+\index{addComponent@{addComponent}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{addComponent()}{addComponent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T$\ast$ Component\+::add\+Component (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+adds a new component to our list of components \begin{DoxyReturn}{Returns}
+a pointer to our new component 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_component_a85730d7d101e68fca099361dc9ddb676}\label{class_component_a85730d7d101e68fca099361dc9ddb676}} 
+\index{Component@{Component}!afterWorldInsertion@{afterWorldInsertion}}
+\index{afterWorldInsertion@{afterWorldInsertion}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{afterWorldInsertion()}{afterWorldInsertion()}}
+{\footnotesize\ttfamily void Component\+::after\+World\+Insertion (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_world}{World}} $\ast$}]{world }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+called just after the parent is inserted into a new world 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world we have been placed into, if any \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_b_box_ae96ae8ca7f3ea50c29e9f7535e6dac3e}{B\+Box}}, and \mbox{\hyperlink{class_multimesh_a9fdc0a75f97c52a135a9e5d880878c7b}{Multimesh}}.
+
+\mbox{\Hypertarget{class_component_a5ed87a96c775a3c067a14fadca5b6250}\label{class_component_a5ed87a96c775a3c067a14fadca5b6250}} 
+\index{Component@{Component}!beforeWorldInsertion@{beforeWorldInsertion}}
+\index{beforeWorldInsertion@{beforeWorldInsertion}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{beforeWorldInsertion()}{beforeWorldInsertion()}}
+{\footnotesize\ttfamily void Component\+::before\+World\+Insertion (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_world}{World}} $\ast$}]{world }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+called just before the parent is inserted into a new world 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world we will be placed into, if any \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_b_box_a9192086833bbe8aab7509b85e4910f1f}{B\+Box}}.
+
+\mbox{\Hypertarget{class_component_ab93f88b360ce357b9eca3a7db2fe728b}\label{class_component_ab93f88b360ce357b9eca3a7db2fe728b}} 
+\index{Component@{Component}!bindToBone@{bindToBone}}
+\index{bindToBone@{bindToBone}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{bindToBone()}{bindToBone()}}
+{\footnotesize\ttfamily void Component\+::bind\+To\+Bone (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_model}{Model}} $\ast$}]{model,  }\item[{const char $\ast$}]{bone,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{translation,  }\item[{const \mbox{\hyperlink{class_rotation}{Rotation}} \&}]{rotation,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{scale }\end{DoxyParamCaption})}
+
+binds the component to a bone on a model 
+\begin{DoxyParams}{Parameters}
+{\em model} & the model to bind to \\
+\hline
+{\em bone} & the name of the bone to bind to \\
+\hline
+{\em translation} & positional offset from the bone \\
+\hline
+{\em rotation} & rotational offset from the bone \\
+\hline
+{\em scale} & scaling offset from the bone \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_aa3f40842a274a6a9aa55c7a36de94cef}\label{class_component_aa3f40842a274a6a9aa55c7a36de94cef}} 
+\index{Component@{Component}!checkCollision@{checkCollision}}
+\index{checkCollision@{checkCollision}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{checkCollision()}{checkCollision()}}
+{\footnotesize\ttfamily bool Component\+::check\+Collision (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+check whether the component collides with anything at the current location \begin{DoxyReturn}{Returns}
+true if we collide, false if we do not 
+\end{DoxyReturn}
+
+
+Reimplemented in \mbox{\hyperlink{class_b_box_aaee44f9e94a658bf8bad2adf5d714b95}{B\+Box}}.
+
+\mbox{\Hypertarget{class_component_aabe5939c9498b1e508ed05b740869a91}\label{class_component_aabe5939c9498b1e508ed05b740869a91}} 
+\index{Component@{Component}!copy@{copy}}
+\index{copy@{copy}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Component\+::copy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_component}{Component}} $\ast$}]{dest }\end{DoxyParamCaption})}
+
+copy this component and all sub-\/components into another component 
+\begin{DoxyParams}{Parameters}
+{\em dest} & the component which will contain our copies \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_acd39b0aa66ad4080622d8e0cdc196624}\label{class_component_acd39b0aa66ad4080622d8e0cdc196624}} 
+\index{Component@{Component}!copy@{copy}}
+\index{copy@{copy}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Component\+::copy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_entity}{Entity}} $\ast$}]{dest }\end{DoxyParamCaption})}
+
+copy this component and all sub-\/components into another entity 
+\begin{DoxyParams}{Parameters}
+{\em dest} & the entity which will contain our copies \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_a893642d496ecff2ee450859b2751a809}\label{class_component_a893642d496ecff2ee450859b2751a809}} 
+\index{Component@{Component}!copyComponents@{copyComponents}}
+\index{copyComponents@{copyComponents}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{copyComponents()}{copyComponents()}}
+{\footnotesize\ttfamily void Component\+::copy\+Components (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_component}{Component}} \&}]{dest }\end{DoxyParamCaption})}
+
+copy sub-\/components into another component 
+\begin{DoxyParams}{Parameters}
+{\em dest} & the component which will contain our copies \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}\label{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}} 
+\index{Component@{Component}!draw@{draw}}
+\index{draw@{draw}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Component\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+draws the component 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the component \\
+\hline
+{\em light} & the light by which the component should be illuminated (or nullptr for no illumination) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_camera_aa5ed4b6ae7326a5a959f9ac6a2470532}{Camera}}, \mbox{\hyperlink{class_b_box_ad59ea4b61403cf801c722cfd0604f1f9}{B\+Box}}, \mbox{\hyperlink{class_light_a9cdd9a47f6bb40aa991ce5b18d4b7760}{Light}}, \mbox{\hyperlink{class_model_add1a055b64372d89aff6ed40e7f21e52}{Model}}, \mbox{\hyperlink{class_speaker_a6579d83e44b7a728f866e31bab9bf40a}{Speaker}}, and \mbox{\hyperlink{class_multimesh_ad0296c2ac56e645593f51985c1220799}{Multimesh}}.
+
+\mbox{\Hypertarget{class_component_aa75239c215a37e415dff9d5f918172ca}\label{class_component_aa75239c215a37e415dff9d5f918172ca}} 
+\index{Component@{Component}!findAllComponents@{findAllComponents}}
+\index{findAllComponents@{findAllComponents}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{findAllComponents()}{findAllComponents()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Component\+::find\+All\+Components (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{Component\+::type\+\_\+t}}}]{type,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $\ast$ $>$ \&}]{list }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+find all components of a given type 
+\begin{DoxyParams}{Parameters}
+{\em type} & the type of component to search for \\
+\hline
+{\em list} & list to populate \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_a94f8a2436e8de63127c47a7cc2e852dd}\label{class_component_a94f8a2436e8de63127c47a7cc2e852dd}} 
+\index{Component@{Component}!findComponentByName@{findComponentByName}}
+\index{findComponentByName@{findComponentByName}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{findComponentByName()}{findComponentByName()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T$\ast$ Component\+::find\+Component\+By\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+find the component with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the component, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_component_a5fd0d6e0e8a67a025929d55a67180401}\label{class_component_a5fd0d6e0e8a67a025929d55a67180401}} 
+\index{Component@{Component}!findComponentByUID@{findComponentByUID}}
+\index{findComponentByUID@{findComponentByUID}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{findComponentByUID()}{findComponentByUID()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T$\ast$ Component\+::find\+Component\+By\+U\+ID (\begin{DoxyParamCaption}\item[{const Uint32}]{uid }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+find the component with the given uid 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the component, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_component_a26fe2532e65bfddbc08f7ef0fdac6fa0}\label{class_component_a26fe2532e65bfddbc08f7ef0fdac6fa0}} 
+\index{Component@{Component}!hasComponent@{hasComponent}}
+\index{hasComponent@{hasComponent}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{hasComponent()}{hasComponent()}}
+{\footnotesize\ttfamily bool Component\+::has\+Component (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}}}]{type }\end{DoxyParamCaption}) const}
+
+checks the component for any components with the given type 
+\begin{DoxyParams}{Parameters}
+{\em type} & the type to look for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the component was found, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_component_ab1ddbf2ef322928e0ac52775ce1050db}\label{class_component_ab1ddbf2ef322928e0ac52775ce1050db}} 
+\index{Component@{Component}!load@{load}}
+\index{load@{load}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Component\+::load (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+load the component from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_camera_a8e6c0d9d35bf77be015e89972f5c500a}{Camera}}, \mbox{\hyperlink{class_b_box_a7cbb8aeb5a51ebb2961a82370b13b9f5}{B\+Box}}, \mbox{\hyperlink{class_light_a8af26db3286e5c1a13bb02467ee01096}{Light}}, \mbox{\hyperlink{class_model_a6187dbde04e0e031468eb02724dd1c9b}{Model}}, \mbox{\hyperlink{class_speaker_a4374760987a17a03e0d71deb2bfa9e8c}{Speaker}}, and \mbox{\hyperlink{class_character_abdf937459ce20d26942b1576eaf710e7}{Character}}.
+
+\mbox{\Hypertarget{class_component_a3a87bb1ef63571f3f2f1da952f602dd9}\label{class_component_a3a87bb1ef63571f3f2f1da952f602dd9}} 
+\index{Component@{Component}!loadSubComponents@{loadSubComponents}}
+\index{loadSubComponents@{loadSubComponents}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{loadSubComponents()}{loadSubComponents()}}
+{\footnotesize\ttfamily void Component\+::load\+Sub\+Components (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+load sub-\/components from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_a8e63ae6acc4ab3dd5718200c8eb69e69}\label{class_component_a8e63ae6acc4ab3dd5718200c8eb69e69}} 
+\index{Component@{Component}!occlusionTest@{occlusionTest}}
+\index{occlusionTest@{occlusionTest}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{occlusionTest()}{occlusionTest()}}
+{\footnotesize\ttfamily void Component\+::occlusion\+Test (\begin{DoxyParamCaption}\item[{float}]{range,  }\item[{int}]{accuracy }\end{DoxyParamCaption})}
+
+marks tiles, chunks, and sectors that are visible to the component 
+\begin{DoxyParams}{Parameters}
+{\em range} & maximum range to test occlusion with \\
+\hline
+{\em accuracy} & resolution for the occlusion test \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_aaa44f8f714cb798e202d5b55a63badb7}\label{class_component_aaa44f8f714cb798e202d5b55a63badb7}} 
+\index{Component@{Component}!removeComponentByName@{removeComponentByName}}
+\index{removeComponentByName@{removeComponentByName}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{removeComponentByName()}{removeComponentByName()}}
+{\footnotesize\ttfamily bool Component\+::remove\+Component\+By\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find the component with the given name and remove it 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the name of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the component was removed, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_component_a69b5f3a59d55e30df0ebcffdbf19f1cb}\label{class_component_a69b5f3a59d55e30df0ebcffdbf19f1cb}} 
+\index{Component@{Component}!removeComponentByUID@{removeComponentByUID}}
+\index{removeComponentByUID@{removeComponentByUID}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{removeComponentByUID()}{removeComponentByUID()}}
+{\footnotesize\ttfamily bool Component\+::remove\+Component\+By\+U\+ID (\begin{DoxyParamCaption}\item[{const Uint32}]{uid }\end{DoxyParamCaption})}
+
+find the component with the given uid and remove it 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the component was removed, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_component_aa3e92c207b6553a9e491491125eada46}\label{class_component_aa3e92c207b6553a9e491491125eada46}} 
+\index{Component@{Component}!rotate@{rotate}}
+\index{rotate@{rotate}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{rotate()}{rotate()}}
+{\footnotesize\ttfamily void Component\+::rotate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_rotation}{Rotation}} \&}]{ang }\end{DoxyParamCaption})}
+
+rotate the component by a given amount 
+\begin{DoxyParams}{Parameters}
+{\em ang} & the amount to rotate \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_a05ed4e521af53eba3d1b401de0f74e58}\label{class_component_a05ed4e521af53eba3d1b401de0f74e58}} 
+\index{Component@{Component}!scale@{scale}}
+\index{scale@{scale}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{scale()}{scale()}}
+{\footnotesize\ttfamily void Component\+::scale (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{vec }\end{DoxyParamCaption})}
+
+scale the component by a given amount 
+\begin{DoxyParams}{Parameters}
+{\em vec} & the amount to scale \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_af303b6892c307ee8bf273ac4b765daad}\label{class_component_af303b6892c307ee8bf273ac4b765daad}} 
+\index{Component@{Component}!seesEntity@{seesEntity}}
+\index{seesEntity@{seesEntity}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{seesEntity()}{seesEntity()}}
+{\footnotesize\ttfamily bool Component\+::sees\+Entity (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_entity}{Entity}} \&}]{entity,  }\item[{float}]{range,  }\item[{int}]{accuracy }\end{DoxyParamCaption})}
+
+determine if the component has culled the given entity from L\+OS 
+\begin{DoxyParams}{Parameters}
+{\em entity} & the entity to test visibility of \\
+\hline
+{\em accuracy} & bitfield\+:\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the entity might pass a line-\/of-\/sight test 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_component_a08bf5735d97aa676dfc2ba16da32b997}\label{class_component_a08bf5735d97aa676dfc2ba16da32b997}} 
+\index{Component@{Component}!serialize@{serialize}}
+\index{serialize@{serialize}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Component\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_camera_ac77ff2f4cf17543f4fec069c76af33fa}{Camera}}, \mbox{\hyperlink{class_b_box_af2b65e781246a4c7f3d3de592233b835}{B\+Box}}, \mbox{\hyperlink{class_light_a44370437c38729354ddb1d2e897ed803}{Light}}, \mbox{\hyperlink{class_model_ae6ee10b29ec4a9449435e164ec2c034a}{Model}}, \mbox{\hyperlink{class_speaker_afda5ca9a2a2f762e1134e9a22896c334}{Speaker}}, \mbox{\hyperlink{class_character_ab1f30632f6856d0d8e4514624371de73}{Character}}, and \mbox{\hyperlink{class_multimesh_aa23f83f71347e09b7cf791ac580078a9}{Multimesh}}.
+
+\mbox{\Hypertarget{class_component_aaa773a7acb1c69421115ec332b2fbc03}\label{class_component_aaa773a7acb1c69421115ec332b2fbc03}} 
+\index{Component@{Component}!serializeComponents@{serializeComponents}}
+\index{serializeComponents@{serializeComponents}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{serializeComponents()}{serializeComponents()}}
+{\footnotesize\ttfamily void Component\+::serialize\+Components (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_a1bcd0926fbbb967b5307c176ee44f709}\label{class_component_a1bcd0926fbbb967b5307c176ee44f709}} 
+\index{Component@{Component}!shootLaser@{shootLaser}}
+\index{shootLaser@{shootLaser}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{shootLaser()}{shootLaser()}}
+{\footnotesize\ttfamily void Component\+::shoot\+Laser (\begin{DoxyParamCaption}\item[{const glm\+::mat4 \&}]{mat,  }\item[{\mbox{\hyperlink{class_wide_vector}{Wide\+Vector}} \&}]{color,  }\item[{float}]{size,  }\item[{float}]{life }\end{DoxyParamCaption})}
+
+shoots a laser forward from the component origin until an obstacle is hit 
+\begin{DoxyParams}{Parameters}
+{\em mat} & The start location of the laser \\
+\hline
+{\em color} & The laser\textquotesingle{}s color \\
+\hline
+{\em size} & The laser\textquotesingle{}s size \\
+\hline
+{\em life} & The laser\textquotesingle{}s lifespan (in ticks, 60 ticks = 1 sec) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_component_a95477fb2b1d9339972aeba5e825c1351}\label{class_component_a95477fb2b1d9339972aeba5e825c1351}} 
+\index{Component@{Component}!translate@{translate}}
+\index{translate@{translate}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{translate()}{translate()}}
+{\footnotesize\ttfamily void Component\+::translate (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{vec }\end{DoxyParamCaption})}
+
+translate the component by a given amount 
+\begin{DoxyParams}{Parameters}
+{\em vec} & the amount to translate \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_component_ac4e8e638b01398ecebf6ca692cfdad27}\label{class_component_ac4e8e638b01398ecebf6ca692cfdad27}} 
+\index{Component@{Component}!gPos@{gPos}}
+\index{gPos@{gPos}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{gPos}{gPos}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector}{Vector}} Component\+::g\+Pos\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+global space 
+
+position \mbox{\Hypertarget{class_component_a81b4b69b4f91624ecef1c0913d599713}\label{class_component_a81b4b69b4f91624ecef1c0913d599713}} 
+\index{Component@{Component}!lPos@{lPos}}
+\index{lPos@{lPos}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{lPos}{lPos}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector}{Vector}} Component\+::l\+Pos\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+local space 
+
+position \mbox{\Hypertarget{class_component_af8b2a0a528148ef6dc7c5182d8f12ae0}\label{class_component_af8b2a0a528148ef6dc7c5182d8f12ae0}} 
+\index{Component@{Component}!typeIcon@{typeIcon}}
+\index{typeIcon@{typeIcon}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{typeIcon}{typeIcon}}
+{\footnotesize\ttfamily const char $\ast$ Component\+::type\+Icon\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/component.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/bbox.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/mesh.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/light.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/camera.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/speaker.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/emitter.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/character.png"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"images/gui/mesh.png"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{class_component_a3033ba869a75a4c29053395fb9cdea3a}\label{class_component_a3033ba869a75a4c29053395fb9cdea3a}} 
+\index{Component@{Component}!typeStr@{typeStr}}
+\index{typeStr@{typeStr}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{typeStr}{typeStr}}
+{\footnotesize\ttfamily const char $\ast$ Component\+::type\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"basic"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"bbox"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"model"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"light"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"camera"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"speaker"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"emitter"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"character"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"multimesh"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{class_component_a5f4561eada1880a96194524292fc7e1f}\label{class_component_a5f4561eada1880a96194524292fc7e1f}} 
+\index{Component@{Component}!uid@{uid}}
+\index{uid@{uid}!Component@{Component}}
+\doxysubsubsection{\texorpdfstring{uid}{uid}}
+{\footnotesize\ttfamily Uint32 Component\+::uid = nuid\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+sub-\/component list 
+
+component uid 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_component_8hpp}{Component.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Component.\+cpp\end{DoxyCompactItemize}

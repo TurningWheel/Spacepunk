@@ -1,0 +1,209 @@
+\hypertarget{class_packet}{}\doxysection{Packet Class Reference}
+\label{class_packet}\index{Packet@{Packet}}
+
+
+A \mbox{\hyperlink{class_packet}{Packet}} is essentially a data buffer designed to be sent over the net.  
+
+
+
+
+{\ttfamily \#include $<$Packet.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_packet_ae31330a0dede693e2cecaf899e7d33f4}\label{class_packet_ae31330a0dede693e2cecaf899e7d33f4}} 
+{\bfseries Packet} (const \mbox{\hyperlink{class_packet}{Packet}} \&src)
+\item 
+\mbox{\Hypertarget{class_packet_a433cb07a13c22a49637d937d761c3153}\label{class_packet_a433cb07a13c22a49637d937d761c3153}} 
+void \mbox{\hyperlink{class_packet_a433cb07a13c22a49637d937d761c3153}{clear}} ()
+\begin{DoxyCompactList}\small\item\em clears the contents of the packet buffer \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_packet_a5e08d57acab5029701a1dfc87a7e2952}\label{class_packet_a5e08d57acab5029701a1dfc87a7e2952}} 
+void \mbox{\hyperlink{class_packet_a5e08d57acab5029701a1dfc87a7e2952}{copy}} (const \mbox{\hyperlink{class_packet}{Packet}} \&src)
+\begin{DoxyCompactList}\small\item\em copies the contents of another packet into this packet \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_packet_aee607b478218fb2224623408f63e5a02}{sign}} (Uint32 timestamp, Uint32 id)
+\item 
+bool \mbox{\hyperlink{class_packet_aad2bee3666964f413dc9d5f9d8078436}{write8}} (Uint8 value)
+\item 
+bool \mbox{\hyperlink{class_packet_a96c3ff5230f7d3bab704c470fbc2a742}{write16}} (Uint16 value)
+\item 
+bool \mbox{\hyperlink{class_packet_a5670bf105f386b906d6ad240b3f1e534}{write32}} (Uint32 value)
+\item 
+bool \mbox{\hyperlink{class_packet_a4e70f645697af430b6225c3a7f64d021}{write}} (const char $\ast$data, unsigned int len)
+\item 
+bool \mbox{\hyperlink{class_packet_a504e01c99a53f0b9a206dd6f4bd95611}{write}} (const char $\ast$str)
+\item 
+bool \mbox{\hyperlink{class_packet_a84d1662175341bbdebac1d7942ffd98f}{read8}} (Uint8 \&data)
+\item 
+bool \mbox{\hyperlink{class_packet_a4bd898efe6dcfdeab87dec357a7ff3a3}{read16}} (Uint16 \&data)
+\item 
+bool \mbox{\hyperlink{class_packet_a8e5d26c1d01571c453bab0e62a7911ea}{read32}} (Uint32 \&data)
+\item 
+bool \mbox{\hyperlink{class_packet_af4903aa6e683b66057690b8219e0a07e}{read}} (char $\ast$data, unsigned int len)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_packet_aaf2bfada140f5d4de50a767b7d67b12e}\label{class_packet_aaf2bfada140f5d4de50a767b7d67b12e}} 
+char {\bfseries data} \mbox{[}\mbox{\hyperlink{class_packet_a32489cb714f9b97501c04c311e89363d}{max\+Len}}\mbox{]} = \{ 0 \}
+\item 
+\mbox{\Hypertarget{class_packet_a3012e8942078c7d4c7f692df652ff4c8}\label{class_packet_a3012e8942078c7d4c7f692df652ff4c8}} 
+Uint32 {\bfseries offset} = 0
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_packet_a32489cb714f9b97501c04c311e89363d}\label{class_packet_a32489cb714f9b97501c04c311e89363d}} 
+static const Uint32 \mbox{\hyperlink{class_packet_a32489cb714f9b97501c04c311e89363d}{max\+Len}} = 1024
+\begin{DoxyCompactList}\small\item\em max size of the data buffer \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_packet}{Packet}} is essentially a data buffer designed to be sent over the net. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_packet_af4903aa6e683b66057690b8219e0a07e}\label{class_packet_af4903aa6e683b66057690b8219e0a07e}} 
+\index{Packet@{Packet}!read@{read}}
+\index{read@{read}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{read()}{read()}}
+{\footnotesize\ttfamily bool Packet\+::read (\begin{DoxyParamCaption}\item[{char $\ast$}]{data,  }\item[{unsigned int}]{len }\end{DoxyParamCaption})}
+
+reads the specified number of bytes from the data buffer into the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em data} & the data buffer to copy the data to \\
+\hline
+{\em len} & the length of the data in bytes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the read succeeded, false if it failed 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_a4bd898efe6dcfdeab87dec357a7ff3a3}\label{class_packet_a4bd898efe6dcfdeab87dec357a7ff3a3}} 
+\index{Packet@{Packet}!read16@{read16}}
+\index{read16@{read16}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{read16()}{read16()}}
+{\footnotesize\ttfamily bool Packet\+::read16 (\begin{DoxyParamCaption}\item[{Uint16 \&}]{data }\end{DoxyParamCaption})}
+
+reads 16 bits from the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em data} & the data buffer to fill with the read data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the read succeeded, or false if it failed 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_a8e5d26c1d01571c453bab0e62a7911ea}\label{class_packet_a8e5d26c1d01571c453bab0e62a7911ea}} 
+\index{Packet@{Packet}!read32@{read32}}
+\index{read32@{read32}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{read32()}{read32()}}
+{\footnotesize\ttfamily bool Packet\+::read32 (\begin{DoxyParamCaption}\item[{Uint32 \&}]{data }\end{DoxyParamCaption})}
+
+reads 32 bits from the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em data} & the data buffer to fill with the read data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the read succeeded, or false if it failed 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_a84d1662175341bbdebac1d7942ffd98f}\label{class_packet_a84d1662175341bbdebac1d7942ffd98f}} 
+\index{Packet@{Packet}!read8@{read8}}
+\index{read8@{read8}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{read8()}{read8()}}
+{\footnotesize\ttfamily bool Packet\+::read8 (\begin{DoxyParamCaption}\item[{Uint8 \&}]{data }\end{DoxyParamCaption})}
+
+reads 8 bits from the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em data} & the data buffer to fill with the read data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the read succeeded, or false if it failed 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_aee607b478218fb2224623408f63e5a02}\label{class_packet_aee607b478218fb2224623408f63e5a02}} 
+\index{Packet@{Packet}!sign@{sign}}
+\index{sign@{sign}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{sign()}{sign()}}
+{\footnotesize\ttfamily bool Packet\+::sign (\begin{DoxyParamCaption}\item[{Uint32}]{timestamp,  }\item[{Uint32}]{id }\end{DoxyParamCaption})}
+
+writes standard boilerplate stuff to the packet this function should be called L\+A\+ST, as it will be read back F\+I\+R\+S\+T! \begin{DoxyReturn}{Returns}
+true if the write succeeded, false if it failed (eg the packet buffer is full) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_a4e70f645697af430b6225c3a7f64d021}\label{class_packet_a4e70f645697af430b6225c3a7f64d021}} 
+\index{Packet@{Packet}!write@{write}}
+\index{write@{write}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool Packet\+::write (\begin{DoxyParamCaption}\item[{const char $\ast$}]{data,  }\item[{unsigned int}]{len }\end{DoxyParamCaption})}
+
+writes the specified number of bytes from the data buffer into the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em data} & the data to write to the buffer \\
+\hline
+{\em len} & the length of the data in bytes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the write succeeded, false if it failed (eg the packet buffer is full) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_a504e01c99a53f0b9a206dd6f4bd95611}\label{class_packet_a504e01c99a53f0b9a206dd6f4bd95611}} 
+\index{Packet@{Packet}!write@{write}}
+\index{write@{write}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool Packet\+::write (\begin{DoxyParamCaption}\item[{const char $\ast$}]{str }\end{DoxyParamCaption})}
+
+writes the given string contents out to the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em str} & the string to write \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the write succeeded, false if it failed (eg the packet buffer is full) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_a96c3ff5230f7d3bab704c470fbc2a742}\label{class_packet_a96c3ff5230f7d3bab704c470fbc2a742}} 
+\index{Packet@{Packet}!write16@{write16}}
+\index{write16@{write16}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{write16()}{write16()}}
+{\footnotesize\ttfamily bool Packet\+::write16 (\begin{DoxyParamCaption}\item[{Uint16}]{value }\end{DoxyParamCaption})}
+
+writes 16 bits to the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to write to the buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the write succeeded, false if it failed (eg the packet buffer is full) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_a5670bf105f386b906d6ad240b3f1e534}\label{class_packet_a5670bf105f386b906d6ad240b3f1e534}} 
+\index{Packet@{Packet}!write32@{write32}}
+\index{write32@{write32}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{write32()}{write32()}}
+{\footnotesize\ttfamily bool Packet\+::write32 (\begin{DoxyParamCaption}\item[{Uint32}]{value }\end{DoxyParamCaption})}
+
+writes 32 bits to the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to write to the buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the write succeeded, false if it failed (eg the packet buffer is full) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_packet_aad2bee3666964f413dc9d5f9d8078436}\label{class_packet_aad2bee3666964f413dc9d5f9d8078436}} 
+\index{Packet@{Packet}!write8@{write8}}
+\index{write8@{write8}!Packet@{Packet}}
+\doxysubsubsection{\texorpdfstring{write8()}{write8()}}
+{\footnotesize\ttfamily bool Packet\+::write8 (\begin{DoxyParamCaption}\item[{Uint8}]{value }\end{DoxyParamCaption})}
+
+writes 8 bits to the packet buffer 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to write to the buffer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the write succeeded, false if it failed (eg the packet buffer is full) 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_packet_8hpp}{Packet.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Packet.\+cpp\end{DoxyCompactItemize}

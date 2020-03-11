@@ -1,0 +1,94 @@
+\hypertarget{class_dictionary}{}\doxysection{Dictionary Class Reference}
+\label{class_dictionary}\index{Dictionary@{Dictionary}}
+
+
+A \mbox{\hyperlink{class_dictionary}{Dictionary}} is a data structure that enables very fast lookup of a large volume of words, each mapped to a unique integer.  
+
+
+
+
+{\ttfamily \#include $<$Dictionary.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_dictionary_a3d73640dcb76ec90cae6290ca9b2bc63}\label{class_dictionary_a3d73640dcb76ec90cae6290ca9b2bc63}} 
+Uint32 \mbox{\hyperlink{class_dictionary_a3d73640dcb76ec90cae6290ca9b2bc63}{get\+Depth}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_dictionary_aa14cfae2eb1e5734154d9e36c104ea63}\label{class_dictionary_aa14cfae2eb1e5734154d9e36c104ea63}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ \& {\bfseries get\+Words} () const
+\item 
+void \mbox{\hyperlink{class_dictionary_ac883b440863848c33ce5ef5c05ac9ed4}{insert}} (const char $\ast$word)
+\item 
+bool \mbox{\hyperlink{class_dictionary_a48e90689bec2725c6edbd57eac16c38f}{is\+Leaf}} () const
+\item 
+Uint32 \mbox{\hyperlink{class_dictionary_ace9ae265fd435d07fb9689ba62474ca6}{find}} (const char $\ast$word) const
+\item 
+Uint32 \mbox{\hyperlink{class_dictionary_a514f8844c3302a8437aabc3c2db96dae}{find\+Or\+Insert}} (const char $\ast$word)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_dictionary_aeebbb7d453aa5f5e5d27919ae84267fe}\label{class_dictionary_aeebbb7d453aa5f5e5d27919ae84267fe}} 
+static const Uint32 \mbox{\hyperlink{class_dictionary_aeebbb7d453aa5f5e5d27919ae84267fe}{nindex}} = U\+I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em not a valid index \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_dictionary}{Dictionary}} is a data structure that enables very fast lookup of a large volume of words, each mapped to a unique integer. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_dictionary_ace9ae265fd435d07fb9689ba62474ca6}\label{class_dictionary_ace9ae265fd435d07fb9689ba62474ca6}} 
+\index{Dictionary@{Dictionary}!find@{find}}
+\index{find@{find}!Dictionary@{Dictionary}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}}
+{\footnotesize\ttfamily Uint32 Dictionary\+::find (\begin{DoxyParamCaption}\item[{const char $\ast$}]{word }\end{DoxyParamCaption}) const}
+
+find the given word in the dictionary tree 
+\begin{DoxyParams}{Parameters}
+{\em word} & the word to locate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the word in the dictionary, or nindex if it was not found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_dictionary_a514f8844c3302a8437aabc3c2db96dae}\label{class_dictionary_a514f8844c3302a8437aabc3c2db96dae}} 
+\index{Dictionary@{Dictionary}!findOrInsert@{findOrInsert}}
+\index{findOrInsert@{findOrInsert}!Dictionary@{Dictionary}}
+\doxysubsubsection{\texorpdfstring{findOrInsert()}{findOrInsert()}}
+{\footnotesize\ttfamily Uint32 Dictionary\+::find\+Or\+Insert (\begin{DoxyParamCaption}\item[{const char $\ast$}]{word }\end{DoxyParamCaption})}
+
+find the given word in the dictionary tree or add it if it doesn\textquotesingle{}t exist 
+\begin{DoxyParams}{Parameters}
+{\em word} & the word to locate or insert \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the word 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_dictionary_ac883b440863848c33ce5ef5c05ac9ed4}\label{class_dictionary_ac883b440863848c33ce5ef5c05ac9ed4}} 
+\index{Dictionary@{Dictionary}!insert@{insert}}
+\index{insert@{insert}!Dictionary@{Dictionary}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily void Dictionary\+::insert (\begin{DoxyParamCaption}\item[{const char $\ast$}]{word }\end{DoxyParamCaption})}
+
+insert a word into the tree 
+\begin{DoxyParams}{Parameters}
+{\em word} & the word to insert \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_dictionary_a48e90689bec2725c6edbd57eac16c38f}\label{class_dictionary_a48e90689bec2725c6edbd57eac16c38f}} 
+\index{Dictionary@{Dictionary}!isLeaf@{isLeaf}}
+\index{isLeaf@{isLeaf}!Dictionary@{Dictionary}}
+\doxysubsubsection{\texorpdfstring{isLeaf()}{isLeaf()}}
+{\footnotesize\ttfamily bool Dictionary\+::is\+Leaf (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+true if this tree node is a leaf 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_dictionary_8hpp}{Dictionary.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Dictionary.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,66 @@
+\hypertarget{class_line3_d}{}\doxysection{Line3D Class Reference}
+\label{class_line3_d}\index{Line3D@{Line3D}}
+
+
+Contains drawing functions for 3D lines.  
+
+
+
+
+{\ttfamily \#include $<$Line3\+D.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_line3_d_ac4ba04bf431e48c3a1b37ba6cdce223d}{draw\+Line}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const float width, const glm\+::vec3 \&src, const glm\+::vec3 \&dest, const glm\+::vec4 \&color)
+\item 
+void \mbox{\hyperlink{class_line3_d_aa3ef44e43e7c97511b7cdf0158104e79}{draw\+Laser}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const float width, const glm\+::vec3 \&src, const glm\+::vec3 \&dest, const glm\+::vec4 \&color)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains drawing functions for 3D lines. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_line3_d_aa3ef44e43e7c97511b7cdf0158104e79}\label{class_line3_d_aa3ef44e43e7c97511b7cdf0158104e79}} 
+\index{Line3D@{Line3D}!drawLaser@{drawLaser}}
+\index{drawLaser@{drawLaser}!Line3D@{Line3D}}
+\doxysubsubsection{\texorpdfstring{drawLaser()}{drawLaser()}}
+{\footnotesize\ttfamily void Line3\+D\+::draw\+Laser (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const float}]{width,  }\item[{const glm\+::vec3 \&}]{src,  }\item[{const glm\+::vec3 \&}]{dest,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+draws a laser, which is similar, but uses textured triangles 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera to project the laser with \\
+\hline
+{\em src} & the starting point of the laser in world space \\
+\hline
+{\em dest} & the ending point of the laser in world space \\
+\hline
+{\em color} & the laser\textquotesingle{}s color \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_line3_d_ac4ba04bf431e48c3a1b37ba6cdce223d}\label{class_line3_d_ac4ba04bf431e48c3a1b37ba6cdce223d}} 
+\index{Line3D@{Line3D}!drawLine@{drawLine}}
+\index{drawLine@{drawLine}!Line3D@{Line3D}}
+\doxysubsubsection{\texorpdfstring{drawLine()}{drawLine()}}
+{\footnotesize\ttfamily void Line3\+D\+::draw\+Line (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const float}]{width,  }\item[{const glm\+::vec3 \&}]{src,  }\item[{const glm\+::vec3 \&}]{dest,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+draws the line 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera to project the line with \\
+\hline
+{\em width} & the width of the line to draw, in pixels \\
+\hline
+{\em src} & the starting point of the line in world space \\
+\hline
+{\em dest} & the ending point of the line in world space \\
+\hline
+{\em color} & the line\textquotesingle{}s color \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_line3_d_8hpp}{Line3\+D.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Line3\+D.\+cpp\end{DoxyCompactItemize}

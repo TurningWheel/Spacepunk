@@ -1,0 +1,210 @@
+\hypertarget{class_binary_file_writer}{}\doxysection{Binary\+File\+Writer Class Reference}
+\label{class_binary_file_writer}\index{BinaryFileWriter@{BinaryFileWriter}}
+Inheritance diagram for Binary\+File\+Writer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_binary_file_writer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_binary_file_writer_a965c642363e0653c9db1533824c8e900}\label{class_binary_file_writer_a965c642363e0653c9db1533824c8e900}} 
+{\bfseries Binary\+File\+Writer} (F\+I\+LE $\ast$file)
+\item 
+virtual bool \mbox{\hyperlink{class_binary_file_writer_a5b6938d6f71bf9b09779e26a721f6ffe}{is\+Reading}} () const override
+\item 
+\mbox{\Hypertarget{class_binary_file_writer_ac0383677be35ceab74de9871e69220e1}\label{class_binary_file_writer_ac0383677be35ceab74de9871e69220e1}} 
+virtual void \mbox{\hyperlink{class_binary_file_writer_ac0383677be35ceab74de9871e69220e1}{begin\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the beginning of an object in the file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_binary_file_writer_aef660c7559de51196fa8595b9a6192a4}\label{class_binary_file_writer_aef660c7559de51196fa8595b9a6192a4}} 
+virtual void \mbox{\hyperlink{class_binary_file_writer_aef660c7559de51196fa8595b9a6192a4}{end\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an object in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_a4be6328691ad3101a14f9d2be50dfc6f}{begin\+Array}} (Uint32 \&size) override
+\item 
+\mbox{\Hypertarget{class_binary_file_writer_a81ad33da8e17089d7c426c40ceaeb016}\label{class_binary_file_writer_a81ad33da8e17089d7c426c40ceaeb016}} 
+virtual void \mbox{\hyperlink{class_binary_file_writer_a81ad33da8e17089d7c426c40ceaeb016}{end\+Array}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an array in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_a1b9d9d14035cb9d1a170c793f849d270}{property\+Name}} (const char $\ast$name) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_a79f90fb8c867fecd22780eb3d615483e}{value}} (Uint32 \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_ada7c3fd315b6dbd3df9ed3c44587da74}{value}} (Sint32 \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_abb73b29522ae0633d3e2af0cbb32928d}{value}} (float \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_afb77de446ed84214fdadeea3d91e20a9}{value}} (double \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_a96204a291acdd89d5b041a74755402d3}{value}} (bool \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_a5ce092efc8d717894b339b9bf0f43550}{value}} (\mbox{\hyperlink{class_string}{String}} \&v, Uint32 max\+Length) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_writer_a94837a7ce9b56c6c9659461ced9418d9}{value}} (Uint32 \&v, \mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$lookup) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_binary_file_writer_aa055a3ec1340c07a1f58d1578577fc20}\label{class_binary_file_writer_aa055a3ec1340c07a1f58d1578577fc20}} 
+static bool {\bfseries write\+Object} (F\+I\+LE $\ast$fp, const File\+Helper\+::\+Serialization\+Func \&serialize)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_binary_file_writer_a4be6328691ad3101a14f9d2be50dfc6f}\label{class_binary_file_writer_a4be6328691ad3101a14f9d2be50dfc6f}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!beginArray@{beginArray}}
+\index{beginArray@{beginArray}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{beginArray()}{beginArray()}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::begin\+Array (\begin{DoxyParamCaption}\item[{Uint32 \&}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Signals the beginning of an array in the file 
+\begin{DoxyParams}{Parameters}
+{\em size} & number of items in the array \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac2592d28bcfb9197e06af8b02706a936}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_a5b6938d6f71bf9b09779e26a721f6ffe}\label{class_binary_file_writer_a5b6938d6f71bf9b09779e26a721f6ffe}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!isReading@{isReading}}
+\index{isReading@{isReading}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{isReading()}{isReading()}}
+{\footnotesize\ttfamily virtual bool Binary\+File\+Writer\+::is\+Reading (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+true if this interface is reading data from a file, false if it is writing 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ad61705edebf54359260990e04328dd30}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_a1b9d9d14035cb9d1a170c793f849d270}\label{class_binary_file_writer_a1b9d9d14035cb9d1a170c793f849d270}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!propertyName@{propertyName}}
+\index{propertyName@{propertyName}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{propertyName()}{propertyName()}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::property\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Serializes the name of a property 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the property ~\newline
+ \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac1a94367435eb8596352591bdf0309fc}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_a96204a291acdd89d5b041a74755402d3}\label{class_binary_file_writer_a96204a291acdd89d5b041a74755402d3}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!value@{value}}
+\index{value@{value}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{bool \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a182e8548d9ec1ff1a678cfdd81c916a5}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_afb77de446ed84214fdadeea3d91e20a9}\label{class_binary_file_writer_afb77de446ed84214fdadeea3d91e20a9}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!value@{value}}
+\index{value@{value}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{double \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a1dbcb186f5edfe415764dd1571d18453}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_abb73b29522ae0633d3e2af0cbb32928d}\label{class_binary_file_writer_abb73b29522ae0633d3e2af0cbb32928d}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!value@{value}}
+\index{value@{value}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [3/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{float \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_af05569388f2ff0b7ba05dd8d4a5c6b80}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_ada7c3fd315b6dbd3df9ed3c44587da74}\label{class_binary_file_writer_ada7c3fd315b6dbd3df9ed3c44587da74}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!value@{value}}
+\index{value@{value}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [4/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{Sint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a8cf6bb65a6a0368931bad5819075e8a6}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_a5ce092efc8d717894b339b9bf0f43550}\label{class_binary_file_writer_a5ce092efc8d717894b339b9bf0f43550}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!value@{value}}
+\index{value@{value}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [5/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_string}{String}} \&}]{v,  }\item[{Uint32}]{max\+Length }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+{\em max\+Length} & maximum length of the string allowed, 0 is no limit \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ab4c1463bd34577a972a20a8ac3442fdf}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_a79f90fb8c867fecd22780eb3d615483e}\label{class_binary_file_writer_a79f90fb8c867fecd22780eb3d615483e}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!value@{value}}
+\index{value@{value}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [6/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a446679019f93342e10194317ee1f9aa0}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_writer_a94837a7ce9b56c6c9659461ced9418d9}\label{class_binary_file_writer_a94837a7ce9b56c6c9659461ced9418d9}} 
+\index{BinaryFileWriter@{BinaryFileWriter}!value@{value}}
+\index{value@{value}!BinaryFileWriter@{BinaryFileWriter}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [7/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Writer\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v,  }\item[{\mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$}]{lookup }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Given an int, serialize it as the corresponding string value from the dict 
+\begin{DoxyParams}{Parameters}
+{\em v} & value to look up \\
+\hline
+{\em lookup} & dictionary to lookup the string in \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_aaf3331d0f87fb8277d20c5ebc3ea4f31}{File\+Interface}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/File.\+cpp\end{DoxyCompactItemize}

@@ -1,5 +1,4 @@
-// Light.hpp
-// Class for a dynamic, shadow-casting point light inside of a World
+//! @file Light.hpp
 
 #pragma once
 
@@ -19,9 +18,10 @@ class Chunk;
 
 extern Cvar cvar_shadowsEnabled;
 
+//! An Entity Component that adds a dynamic, shadow-casting light inside of a World.
 class Light : public Component {
 public:
-	// light volume shape
+	//! light volume shape
 	enum shape_t {
 		SHAPE_SPHERE = 0,
 		SHAPE_BOX = 1,
@@ -36,11 +36,11 @@ public:
 	Light(Entity& _entity, Component* _parent);
 	virtual ~Light();
 
-	// light model
+	//! light model
 	static const char* meshStr;
 	static const char* materialStr;
 
-	// getters & setters
+	//! getters & setters
 	virtual type_t		getType() const override { return COMPONENT_LIGHT; }
 	const Vector& 		getColor() const { return color; }
 	const float&		getIntensity() const { return intensity; }
@@ -61,26 +61,26 @@ public:
 	void	setArc(const float _arc) { arc = _arc; }
 	void	setShadow(const bool _shadow) { shadow = _shadow; }
 
-	// updates matrices
+	//! updates matrices
 	virtual void update() override;
 
-	// draws the light as a bounded cube (generally for editing purposes)
-	// @param camera the camera to draw the light from
-	// @param light the light to light the light with (whew) (unused)
+	//! draws the light as a bounded cube (generally for editing purposes)
+	//! @param camera the camera to draw the light from
+	//! @param light the light to light the light with (whew) (unused)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
-	// creates a shadow map from the light source
+	//! creates a shadow map from the light source
 	void createShadowMap();
 
-	// deletes the shadow map
+	//! deletes the shadow map
 	void deleteShadowMap();
 
-	// load the component from a file
-	// @param fp the file to read from
+	//! load the component from a file
+	//! @param fp the file to read from
 	virtual void load(FILE* fp) override;
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
 	Light& operator=(const Light& src) {

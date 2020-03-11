@@ -1,0 +1,511 @@
+\hypertarget{class_array_list}{}\doxysection{Array\+List$<$ T $>$ Class Template Reference}
+\label{class_array_list}\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+
+
+{\ttfamily \#include $<$Array\+List.\+hpp$>$}
+
+Inheritance diagram for Array\+List$<$ T $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_array_list}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_array_list_1_1_const_iterator}{Const\+Iterator}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_array_list_1_1_const_iterator}{Const\+Iterator}}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_array_list_1_1_iterator}{Iterator}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_array_list_1_1_iterator}{Iterator}}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}}
+\begin{DoxyCompactList}\small\item\em abstract class to define sort function \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_array_list_a3b091ff7e5293cf528c5120e55d16d8a}\label{class_array_list_a3b091ff7e5293cf528c5120e55d16d8a}} 
+{\bfseries Array\+List} (const \mbox{\hyperlink{class_array_list}{Array\+List}} \&src)
+\item 
+\mbox{\Hypertarget{class_array_list_a2f00366ba5870db0d8eb8bae13846312}\label{class_array_list_a2f00366ba5870db0d8eb8bae13846312}} 
+{\bfseries Array\+List} (const std\+::initializer\+\_\+list$<$ T $>$ \&src)
+\item 
+\mbox{\Hypertarget{class_array_list_a6b10dff4a570afb793439ea662d07a25}\label{class_array_list_a6b10dff4a570afb793439ea662d07a25}} 
+const T $\ast$ \mbox{\hyperlink{class_array_list_a6b10dff4a570afb793439ea662d07a25}{get\+Array}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_array_list_a758d17ac56476674fbe0e531e64c10eb}\label{class_array_list_a758d17ac56476674fbe0e531e64c10eb}} 
+T $\ast$ {\bfseries get\+Array} ()
+\item 
+\mbox{\Hypertarget{class_array_list_ad7fd2a4bc53b9da0c4b755ec89a5935f}\label{class_array_list_ad7fd2a4bc53b9da0c4b755ec89a5935f}} 
+Uint32 {\bfseries get\+Size} () const
+\item 
+\mbox{\Hypertarget{class_array_list_a96469ee984ff5d37af9c5615bf56c167}\label{class_array_list_a96469ee984ff5d37af9c5615bf56c167}} 
+Uint32 {\bfseries get\+Max\+Size} () const
+\item 
+bool \mbox{\hyperlink{class_array_list_a3da2b90afa063750438ddc77e178ce24}{empty}} () const
+\item 
+\mbox{\Hypertarget{class_array_list_a84ba8a9abea08da2881fb9579cca564c}\label{class_array_list_a84ba8a9abea08da2881fb9579cca564c}} 
+\mbox{\hyperlink{class_array_list_1_1_iterator}{Iterator}} \mbox{\hyperlink{class_array_list_a84ba8a9abea08da2881fb9579cca564c}{begin}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_array_list_a84ba8a9abea08da2881fb9579cca564c}{begin()}} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_array_list_a31a5c2191774a6f1b70b46d5fdf58095}\label{class_array_list_a31a5c2191774a6f1b70b46d5fdf58095}} 
+const \mbox{\hyperlink{class_array_list_1_1_const_iterator}{Const\+Iterator}} {\bfseries begin} () const
+\item 
+\mbox{\Hypertarget{class_array_list_a96a59f10de8e4b55ee9d77b3dbf812d6}\label{class_array_list_a96a59f10de8e4b55ee9d77b3dbf812d6}} 
+\mbox{\hyperlink{class_array_list_1_1_iterator}{Iterator}} \mbox{\hyperlink{class_array_list_a96a59f10de8e4b55ee9d77b3dbf812d6}{end}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_array_list_a96a59f10de8e4b55ee9d77b3dbf812d6}{end()}} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_array_list_ae8ea7ff342f496a3e8c33fdf63896bb7}\label{class_array_list_ae8ea7ff342f496a3e8c33fdf63896bb7}} 
+const \mbox{\hyperlink{class_array_list_1_1_const_iterator}{Const\+Iterator}} {\bfseries end} () const
+\item 
+virtual \mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_array_list_a421bba34c152411045bc1f790c1bf9e5}{alloc}} (Uint32 len)
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_array_list_aed41a2252ef58682b7cae78946d602cb}{resize}} (Uint32 len)
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_array_list_a0cb0c73262744db43fbcc915e10aeee4}{clear}} ()
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_array_list_ab73468c3f910f144c88e0a5b8f4f43a5}{copy}} (const \mbox{\hyperlink{class_array_list}{Array\+List}} \&src)
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_array_list_a4214ead49898ebf33f5d922e04dc5a98}{copy}} (const std\+::initializer\+\_\+list$<$ T $>$ \&src)
+\item 
+void \mbox{\hyperlink{class_array_list_ad4539af164fac3cb8ac9d7ea03336905}{swap}} (\mbox{\hyperlink{class_array_list}{Array\+List}} \&src)
+\item 
+void \mbox{\hyperlink{class_array_list_aa75962b3c400d4b84b0677571dce7439}{push}} (const T \&val)
+\item 
+void \mbox{\hyperlink{class_array_list_adce0ab40ccdc074bef42dd1262c7036f}{insert}} (const T \&val, Uint32 pos)
+\item 
+void \mbox{\hyperlink{class_array_list_aab8986e8ac8a5c8f83cc12e6fdcf7ef5}{insert\+And\+Rearrange}} (const T \&val, Uint32 pos)
+\item 
+T \mbox{\hyperlink{class_array_list_a8436394e9d35e31948011c651c4a93e7}{pop}} ()
+\item 
+const T \& \mbox{\hyperlink{class_array_list_a37ea4bf14fe7edba6d5b79705c7d4bad}{peek}} () const
+\item 
+T \& \mbox{\hyperlink{class_array_list_a9dc800327f7ba41403e0e32659b0c657}{peek}} ()
+\item 
+T \mbox{\hyperlink{class_array_list_a589caba393644ab2181f5b1261736ed0}{remove}} (Uint32 pos)
+\item 
+T \mbox{\hyperlink{class_array_list_af4b9831705366016b0611fb3877c478d}{remove\+And\+Rearrange}} (Uint32 pos)
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_array_list_a0d32daf81add4056b3c403cdc0d6f01a}{operator=}} (const \mbox{\hyperlink{class_array_list}{Array\+List}} \&src)
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_array_list_a6c04588a43479f89214517a7d8f08f15}{operator=}} (const std\+::initializer\+\_\+list$<$ T $>$ \&src)
+\item 
+const T \mbox{\hyperlink{class_array_list_a4bbadc764b1e4d31f30277c53d3b662f}{get}} (int pos) const
+\item 
+T \mbox{\hyperlink{class_array_list_ade31d7f8f3d0de1ea4ad97952b8193dd}{get}} (int pos)
+\item 
+const T \& \mbox{\hyperlink{class_array_list_a28753d6643251ac43060744c1b5b929d}{operator\mbox{[}$\,$\mbox{]}}} (Uint32 pos) const
+\item 
+T \& \mbox{\hyperlink{class_array_list_ad6cdc410d120f49defb89257862d11c3}{operator\mbox{[}$\,$\mbox{]}}} (Uint32 pos)
+\item 
+void \mbox{\hyperlink{class_array_list_ae83afe472804bbf2c61d63894031379a}{sort}} (const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&fn)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_array_list_a99ce2b84b38bcefadf929182cc088f94}{expose\+To\+Script}} (lua\+\_\+\+State $\ast$lua, const char $\ast$name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_array_list_ad45f1f90cbf0092c86226f523dee8bdf}{merge}} (const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&fn, Uint32 l, Uint32 m, Uint32 r)
+\begin{DoxyCompactList}\small\item\em maximum array capacity \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_array_list_aaa65534328cb301b757d80818250d0fd}{merge\+Sort\+Imp}} (const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&fn, Uint32 l, Uint32 r)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_array_list_a0bde1b80735b8730db10070f6d3999cc}\label{class_array_list_a0bde1b80735b8730db10070f6d3999cc}} 
+T $\ast$ {\bfseries arr} = nullptr
+\item 
+\mbox{\Hypertarget{class_array_list_a1d44737b8f35a849590047ead253acb8}\label{class_array_list_a1d44737b8f35a849590047ead253acb8}} 
+Uint32 \mbox{\hyperlink{class_array_list_a1d44737b8f35a849590047ead253acb8}{size}} = 0
+\begin{DoxyCompactList}\small\item\em array data \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_array_list_a268939c957d57f3ac1367b681f24b4d5}\label{class_array_list_a268939c957d57f3ac1367b681f24b4d5}} 
+Uint32 \mbox{\hyperlink{class_array_list_a268939c957d57f3ac1367b681f24b4d5}{max\+Size}} = 0
+\begin{DoxyCompactList}\small\item\em current array capacity \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class Array\+List$<$ T $>$}
+
+templated \mbox{\hyperlink{class_array_list}{Array\+List}} (similar to std\+::vector) adding or removing elements can unsort the list. 
+\begin{DoxyParams}{Parameters}
+{\em T} & generic type that the list will contain \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_array_list_a421bba34c152411045bc1f790c1bf9e5}\label{class_array_list_a421bba34c152411045bc1f790c1bf9e5}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!alloc@{alloc}}
+\index{alloc@{alloc}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+virtual \mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::alloc (\begin{DoxyParamCaption}\item[{Uint32}]{len }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+resize the internal list 
+\begin{DoxyParams}{Parameters}
+{\em len} & number of elements to size the list for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+
+
+Reimplemented in \mbox{\hyperlink{class_static_array_list_afedb7937cf34b3312f11aad56665d624}{Static\+Array\+List$<$ T, default\+Size $>$}}.
+
+\mbox{\Hypertarget{class_array_list_a0cb0c73262744db43fbcc915e10aeee4}\label{class_array_list_a0cb0c73262744db43fbcc915e10aeee4}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!clear@{clear}}
+\index{clear@{clear}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+empty the list \begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_ab73468c3f910f144c88e0a5b8f4f43a5}\label{class_array_list_ab73468c3f910f144c88e0a5b8f4f43a5}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!copy@{copy}}
+\index{copy@{copy}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::copy (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$ \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+replace list contents with those of another list 
+\begin{DoxyParams}{Parameters}
+{\em src} & the list to copy into our list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this; 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a4214ead49898ebf33f5d922e04dc5a98}\label{class_array_list_a4214ead49898ebf33f5d922e04dc5a98}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!copy@{copy}}
+\index{copy@{copy}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::copy (\begin{DoxyParamCaption}\item[{const std\+::initializer\+\_\+list$<$ T $>$ \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+replace list contents with those of an array 
+\begin{DoxyParams}{Parameters}
+{\em src} & the array to copy into our list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this; 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a3da2b90afa063750438ddc77e178ce24}\label{class_array_list_a3da2b90afa063750438ddc77e178ce24}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!empty@{empty}}
+\index{empty@{empty}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+true if list is empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a99ce2b84b38bcefadf929182cc088f94}\label{class_array_list_a99ce2b84b38bcefadf929182cc088f94}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!exposeToScript@{exposeToScript}}
+\index{exposeToScript@{exposeToScript}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{exposeToScript()}{exposeToScript()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::expose\+To\+Script (\begin{DoxyParamCaption}\item[{lua\+\_\+\+State $\ast$}]{lua,  }\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+exposes this list type to a script 
+\begin{DoxyParams}{Parameters}
+{\em lua} & The script engine to expose to \\
+\hline
+{\em name} & The type name in lua \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_array_list_ade31d7f8f3d0de1ea4ad97952b8193dd}\label{class_array_list_ade31d7f8f3d0de1ea4ad97952b8193dd}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!get@{get}}
+\index{get@{get}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::get (\begin{DoxyParamCaption}\item[{int}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+get list contents at specified index 
+\begin{DoxyParams}{Parameters}
+{\em pos} & index value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a reference to the list at this index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a4bbadc764b1e4d31f30277c53d3b662f}\label{class_array_list_a4bbadc764b1e4d31f30277c53d3b662f}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!get@{get}}
+\index{get@{get}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const T \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::get (\begin{DoxyParamCaption}\item[{int}]{pos }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+get list contents at specified index 
+\begin{DoxyParams}{Parameters}
+{\em pos} & index value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a reference to the list at this index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_adce0ab40ccdc074bef42dd1262c7036f}\label{class_array_list_adce0ab40ccdc074bef42dd1262c7036f}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!insert@{insert}}
+\index{insert@{insert}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{insert()}{insert()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::insert (\begin{DoxyParamCaption}\item[{const T \&}]{val,  }\item[{Uint32}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+insert a value into the list 
+\begin{DoxyParams}{Parameters}
+{\em val} & the value to insert \\
+\hline
+{\em pos} & the index to displace (move to the end of the list) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_array_list_aab8986e8ac8a5c8f83cc12e6fdcf7ef5}\label{class_array_list_aab8986e8ac8a5c8f83cc12e6fdcf7ef5}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!insertAndRearrange@{insertAndRearrange}}
+\index{insertAndRearrange@{insertAndRearrange}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{insertAndRearrange()}{insertAndRearrange()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::insert\+And\+Rearrange (\begin{DoxyParamCaption}\item[{const T \&}]{val,  }\item[{Uint32}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+insert a value into the list, rearranging all elements after it 
+\begin{DoxyParams}{Parameters}
+{\em val} & the value to insert \\
+\hline
+{\em pos} & the index to displace (move all elements starting here 1 index forward) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_array_list_ad45f1f90cbf0092c86226f523dee8bdf}\label{class_array_list_ad45f1f90cbf0092c86226f523dee8bdf}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!merge@{merge}}
+\index{merge@{merge}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{merge()}{merge()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::merge (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&}]{fn,  }\item[{Uint32}]{l,  }\item[{Uint32}]{m,  }\item[{Uint32}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+maximum array capacity 
+
+merge two subarrays within the array 
+\begin{DoxyParams}{Parameters}
+{\em fn} & the sort function to test with \\
+\hline
+{\em l} & the start of the first subarray \\
+\hline
+{\em m} & the midpoint \\
+\hline
+{\em r} & the end of the right subarray \\
+\hline
+\end{DoxyParams}
+length of first subarray
+
+length of second subarray
+
+create temp vectors
+
+copy data to temp vectors L and R
+
+merge the temp vectors back into arr\mbox{[}l..r\mbox{]}
+
+initial index of first subarray
+
+initial index of second subarray
+
+initial index of merged subarray
+
+copy the remaining elements of L, if there are any
+
+copy the remaining elements of R, if there are any\mbox{\Hypertarget{class_array_list_aaa65534328cb301b757d80818250d0fd}\label{class_array_list_aaa65534328cb301b757d80818250d0fd}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!mergeSortImp@{mergeSortImp}}
+\index{mergeSortImp@{mergeSortImp}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{mergeSortImp()}{mergeSortImp()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::merge\+Sort\+Imp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&}]{fn,  }\item[{Uint32}]{l,  }\item[{Uint32}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+recursive merge sort algorithm 
+\begin{DoxyParams}{Parameters}
+{\em fn} & the sort function to test with \\
+\hline
+{\em l} & the left index of the subarray to sort \\
+\hline
+{\em r} & the right index of the subarray to sort \\
+\hline
+\end{DoxyParams}
+same as (l+r) / 2, but avoids overflow for large l and r
+
+Sort first and second halves\mbox{\Hypertarget{class_array_list_a0d32daf81add4056b3c403cdc0d6f01a}\label{class_array_list_a0d32daf81add4056b3c403cdc0d6f01a}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$ \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+replace list contents with those of another list 
+\begin{DoxyParams}{Parameters}
+{\em src} & the list to copy into our list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this; 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a6c04588a43479f89214517a7d8f08f15}\label{class_array_list_a6c04588a43479f89214517a7d8f08f15}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{const std\+::initializer\+\_\+list$<$ T $>$ \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+replace list contents with those of an array 
+\begin{DoxyParams}{Parameters}
+{\em src} & the array to copy into our list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this; 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_ad6cdc410d120f49defb89257862d11c3}\label{class_array_list_ad6cdc410d120f49defb89257862d11c3}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{Uint32}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+get list contents at specified index 
+\begin{DoxyParams}{Parameters}
+{\em pos} & index value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a reference to the list at this index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a28753d6643251ac43060744c1b5b929d}\label{class_array_list_a28753d6643251ac43060744c1b5b929d}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const T\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{Uint32}]{pos }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+get list contents at specified index 
+\begin{DoxyParams}{Parameters}
+{\em pos} & index value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a reference to the list at this index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a9dc800327f7ba41403e0e32659b0c657}\label{class_array_list_a9dc800327f7ba41403e0e32659b0c657}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!peek@{peek}}
+\index{peek@{peek}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{peek()}{peek()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::peek (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+returns the last element in the list without removing it \begin{DoxyReturn}{Returns}
+the element 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a37ea4bf14fe7edba6d5b79705c7d4bad}\label{class_array_list_a37ea4bf14fe7edba6d5b79705c7d4bad}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!peek@{peek}}
+\index{peek@{peek}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{peek()}{peek()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+const T\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::peek (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+returns the last element in the list without removing it \begin{DoxyReturn}{Returns}
+the element 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_a8436394e9d35e31948011c651c4a93e7}\label{class_array_list_a8436394e9d35e31948011c651c4a93e7}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!pop@{pop}}
+\index{pop@{pop}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::pop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+removes and returns the last element from the list \begin{DoxyReturn}{Returns}
+the element 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_aa75962b3c400d4b84b0677571dce7439}\label{class_array_list_aa75962b3c400d4b84b0677571dce7439}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!push@{push}}
+\index{push@{push}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::push (\begin{DoxyParamCaption}\item[{const T \&}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+push a value onto the list 
+\begin{DoxyParams}{Parameters}
+{\em val} & the value to push \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_array_list_a589caba393644ab2181f5b1261736ed0}\label{class_array_list_a589caba393644ab2181f5b1261736ed0}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!remove@{remove}}
+\index{remove@{remove}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{remove()}{remove()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::remove (\begin{DoxyParamCaption}\item[{Uint32}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+removes and returns an element from the list without moving the rest of the list 
+\begin{DoxyParams}{Parameters}
+{\em pos} & the index of the element to remove \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value at the given index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_af4b9831705366016b0611fb3877c478d}\label{class_array_list_af4b9831705366016b0611fb3877c478d}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!removeAndRearrange@{removeAndRearrange}}
+\index{removeAndRearrange@{removeAndRearrange}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{removeAndRearrange()}{removeAndRearrange()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::remove\+And\+Rearrange (\begin{DoxyParamCaption}\item[{Uint32}]{pos }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+removes and returns an element from the list, rearranging all elements after it 
+\begin{DoxyParams}{Parameters}
+{\em pos} & the index of the element to remove \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the value at the given index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_aed41a2252ef58682b7cae78946d602cb}\label{class_array_list_aed41a2252ef58682b7cae78946d602cb}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!resize@{resize}}
+\index{resize@{resize}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::resize (\begin{DoxyParamCaption}\item[{Uint32}]{len }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+fill the internal list, resizing if necessary 
+\begin{DoxyParams}{Parameters}
+{\em len} & number of elements to size the list for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_array_list_ae83afe472804bbf2c61d63894031379a}\label{class_array_list_ae83afe472804bbf2c61d63894031379a}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!sort@{sort}}
+\index{sort@{sort}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{sort()}{sort()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::sort (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&}]{fn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+sort the array list using the given function 
+\begin{DoxyParams}{Parameters}
+{\em fn} & The sort function to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_array_list_ad4539af164fac3cb8ac9d7ea03336905}\label{class_array_list_ad4539af164fac3cb8ac9d7ea03336905}} 
+\index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!swap@{swap}}
+\index{swap@{swap}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{swap()}{swap()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::swap (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$ \&}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+quickly swap the internal array of this list with that of another list 
+\begin{DoxyParams}{Parameters}
+{\em src} & the list to swap with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_array_list_8hpp}{Array\+List.\+hpp}}\end{DoxyCompactItemize}

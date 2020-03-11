@@ -1,0 +1,291 @@
+\hypertarget{class_file_interface}{}\doxysection{File\+Interface Class Reference}
+\label{class_file_interface}\index{FileInterface@{FileInterface}}
+Inheritance diagram for File\+Interface\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_file_interface}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{class_file_interface_ad61705edebf54359260990e04328dd30}{is\+Reading}} () const =0
+\item 
+\mbox{\Hypertarget{class_file_interface_a8d2751462f5d351611bb963dbee5b509}\label{class_file_interface_a8d2751462f5d351611bb963dbee5b509}} 
+virtual void \mbox{\hyperlink{class_file_interface_a8d2751462f5d351611bb963dbee5b509}{begin\+Object}} ()=0
+\begin{DoxyCompactList}\small\item\em Signals the beginning of an object in the file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_file_interface_af3f4586ff6bed3f2e656dbb58d231586}\label{class_file_interface_af3f4586ff6bed3f2e656dbb58d231586}} 
+virtual void \mbox{\hyperlink{class_file_interface_af3f4586ff6bed3f2e656dbb58d231586}{end\+Object}} ()=0
+\begin{DoxyCompactList}\small\item\em Signals the end of an object in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_file_interface_ac2592d28bcfb9197e06af8b02706a936}{begin\+Array}} (Uint32 \&size)=0
+\item 
+\mbox{\Hypertarget{class_file_interface_a45f25f88ff7958aa2f4f11e2cedf5a25}\label{class_file_interface_a45f25f88ff7958aa2f4f11e2cedf5a25}} 
+virtual void \mbox{\hyperlink{class_file_interface_a45f25f88ff7958aa2f4f11e2cedf5a25}{end\+Array}} ()=0
+\begin{DoxyCompactList}\small\item\em Signals the end of an array in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_file_interface_ac1a94367435eb8596352591bdf0309fc}{property\+Name}} (const char $\ast$name)=0
+\item 
+virtual void \mbox{\hyperlink{class_file_interface_a446679019f93342e10194317ee1f9aa0}{value}} (Uint32 \&v)=0
+\item 
+virtual void \mbox{\hyperlink{class_file_interface_a8cf6bb65a6a0368931bad5819075e8a6}{value}} (Sint32 \&v)=0
+\item 
+virtual void \mbox{\hyperlink{class_file_interface_af05569388f2ff0b7ba05dd8d4a5c6b80}{value}} (float \&v)=0
+\item 
+virtual void \mbox{\hyperlink{class_file_interface_a1dbcb186f5edfe415764dd1571d18453}{value}} (double \&v)=0
+\item 
+virtual void \mbox{\hyperlink{class_file_interface_a182e8548d9ec1ff1a678cfdd81c916a5}{value}} (bool \&v)=0
+\item 
+virtual void \mbox{\hyperlink{class_file_interface_ab4c1463bd34577a972a20a8ac3442fdf}{value}} (\mbox{\hyperlink{class_string}{String}} \&v, Uint32 max\+Length=0)=0
+\item 
+virtual void \mbox{\hyperlink{class_file_interface_aaf3331d0f87fb8277d20c5ebc3ea4f31}{value}} (Uint32 \&v, \mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$lookup)=0
+\item 
+{\footnotesize template$<$typename T , typename... Args$>$ }\\void \mbox{\hyperlink{class_file_interface_adda74a8721429c9bcfa1a80cb7e14678}{value}} (\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$ \&v, Uint32 max\+Length=0, Args ... args)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{class_file_interface_aa12f928f059a5ffcf058c6f6ab5d772e}{value}} (T $\ast$\&v)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+enum$<$ T $>$\+::value, void $>$\+::type \mbox{\hyperlink{class_file_interface_ab058fcbb1a7e755b82c08747ee4d40a0}{value}} (T \&v)
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::enable\+\_\+if$<$ std\+::is\+\_\+class$<$ T $>$\+::value, void $>$\+::type \mbox{\hyperlink{class_file_interface_a44eb3a8a1432122ca13b6c7e9334b030}{value}} (T \&v)
+\item 
+{\footnotesize template$<$typename T , Uint32 Size, typename... Args$>$ }\\void \mbox{\hyperlink{class_file_interface_a7fa13c2ae30332d197172f964ca18733}{value}} (T(\&v)\mbox{[}Size\mbox{]}, Args ... args)
+\item 
+{\footnotesize template$<$typename T , typename... Args$>$ }\\void \mbox{\hyperlink{class_file_interface_ab19836377ea5dcb41a9a06e2f153e68a}{property}} (const char $\ast$name, T \&v, Args ... args)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_file_interface_ac2592d28bcfb9197e06af8b02706a936}\label{class_file_interface_ac2592d28bcfb9197e06af8b02706a936}} 
+\index{FileInterface@{FileInterface}!beginArray@{beginArray}}
+\index{beginArray@{beginArray}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{beginArray()}{beginArray()}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::begin\+Array (\begin{DoxyParamCaption}\item[{Uint32 \&}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Signals the beginning of an array in the file 
+\begin{DoxyParams}{Parameters}
+{\em size} & number of items in the array \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_binary_file_reader_abbdb88a6633199fee0fb382add80b696}{Binary\+File\+Reader}}, \mbox{\hyperlink{class_binary_file_writer_a4be6328691ad3101a14f9d2be50dfc6f}{Binary\+File\+Writer}}, \mbox{\hyperlink{class_json_file_reader_aed003bdb3c3440572139e7900fac4717}{Json\+File\+Reader}}, and \mbox{\hyperlink{class_json_file_writer_af6d2e6827e03509e3adaecc4d3f42155}{Json\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_ad61705edebf54359260990e04328dd30}\label{class_file_interface_ad61705edebf54359260990e04328dd30}} 
+\index{FileInterface@{FileInterface}!isReading@{isReading}}
+\index{isReading@{isReading}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{isReading()}{isReading()}}
+{\footnotesize\ttfamily virtual bool File\+Interface\+::is\+Reading (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+\begin{DoxyReturn}{Returns}
+true if this interface is reading data from a file, false if it is writing 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_binary_file_reader_a99e80f1acae3fb58baca70d9338064ac}{Binary\+File\+Reader}}, \mbox{\hyperlink{class_binary_file_writer_a5b6938d6f71bf9b09779e26a721f6ffe}{Binary\+File\+Writer}}, \mbox{\hyperlink{class_json_file_reader_a7c1cd878746c5a50ab7869bd3972febe}{Json\+File\+Reader}}, and \mbox{\hyperlink{class_json_file_writer_a15bfaab800c0ef8a084cb6abbaa563a8}{Json\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_ab19836377ea5dcb41a9a06e2f153e68a}\label{class_file_interface_ab19836377ea5dcb41a9a06e2f153e68a}} 
+\index{FileInterface@{FileInterface}!property@{property}}
+\index{property@{property}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{property()}{property()}}
+{\footnotesize\ttfamily template$<$typename T , typename... Args$>$ \\
+void File\+Interface\+::property (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{T \&}]{v,  }\item[{Args ...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Helper function to serialize a property name and value at the same time 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the property \\
+\hline
+{\em v} & value to serialize \\
+\hline
+{\em args} & additional args to pass into the \mbox{\hyperlink{class_file_interface_a446679019f93342e10194317ee1f9aa0}{value()}} function \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_interface_ac1a94367435eb8596352591bdf0309fc}\label{class_file_interface_ac1a94367435eb8596352591bdf0309fc}} 
+\index{FileInterface@{FileInterface}!propertyName@{propertyName}}
+\index{propertyName@{propertyName}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{propertyName()}{propertyName()}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::property\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Serializes the name of a property 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the property ~\newline
+ \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_binary_file_reader_ad67f0f9d30864850b62d38cf86e002e4}{Binary\+File\+Reader}}, \mbox{\hyperlink{class_binary_file_writer_a1b9d9d14035cb9d1a170c793f849d270}{Binary\+File\+Writer}}, \mbox{\hyperlink{class_json_file_reader_ab84f0c97823bdec49c3f5e42ff60e62c}{Json\+File\+Reader}}, and \mbox{\hyperlink{class_json_file_writer_a9c82c95a3c6a9f71443cd6a000cae2fa}{Json\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_adda74a8721429c9bcfa1a80cb7e14678}\label{class_file_interface_adda74a8721429c9bcfa1a80cb7e14678}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/12]}}
+{\footnotesize\ttfamily template$<$typename T , typename... Args$>$ \\
+void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$ \&}]{v,  }\item[{Uint32}]{max\+Length = {\ttfamily 0},  }\item[{Args ...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Serialize an \mbox{\hyperlink{class_array_list}{Array\+List}} with a max length 
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+{\em max\+Length} & maximum number of items, 0 is no limit \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_interface_a182e8548d9ec1ff1a678cfdd81c916a5}\label{class_file_interface_a182e8548d9ec1ff1a678cfdd81c916a5}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/12]}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{bool \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_json_file_reader_ad72216e171169cb1e52ba5ef8f096a04}{Json\+File\+Reader}}, \mbox{\hyperlink{class_json_file_writer_a5ad691b27e1f674ed9d0e30d5c79a753}{Json\+File\+Writer}}, \mbox{\hyperlink{class_binary_file_reader_a31639129439f67ddbc7614b8f12e2e8f}{Binary\+File\+Reader}}, and \mbox{\hyperlink{class_binary_file_writer_a96204a291acdd89d5b041a74755402d3}{Binary\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_a1dbcb186f5edfe415764dd1571d18453}\label{class_file_interface_a1dbcb186f5edfe415764dd1571d18453}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [3/12]}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{double \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_json_file_reader_a2a72f71b75acedd845362e7db768b2b5}{Json\+File\+Reader}}, \mbox{\hyperlink{class_json_file_writer_aef1cdebe4144073cd2964b967a872af0}{Json\+File\+Writer}}, \mbox{\hyperlink{class_binary_file_reader_a208f0bc4bad2a8db5092d59bb5c7eba7}{Binary\+File\+Reader}}, and \mbox{\hyperlink{class_binary_file_writer_afb77de446ed84214fdadeea3d91e20a9}{Binary\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_af05569388f2ff0b7ba05dd8d4a5c6b80}\label{class_file_interface_af05569388f2ff0b7ba05dd8d4a5c6b80}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [4/12]}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{float \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_json_file_reader_a7aa5bfa284aaec3d0092c1a043fcff39}{Json\+File\+Reader}}, \mbox{\hyperlink{class_json_file_writer_a87db8109671d35d129b33ece34c9bd16}{Json\+File\+Writer}}, \mbox{\hyperlink{class_binary_file_reader_aaf202913fdb6dc3d2bb0cd76ce6fb676}{Binary\+File\+Reader}}, and \mbox{\hyperlink{class_binary_file_writer_abb73b29522ae0633d3e2af0cbb32928d}{Binary\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_a8cf6bb65a6a0368931bad5819075e8a6}\label{class_file_interface_a8cf6bb65a6a0368931bad5819075e8a6}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [5/12]}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{Sint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_json_file_reader_a34a2a5cc07932e063ccf2e553b84a834}{Json\+File\+Reader}}, \mbox{\hyperlink{class_json_file_writer_a83052bcf33c336644f7804a5e0f1debf}{Json\+File\+Writer}}, \mbox{\hyperlink{class_binary_file_reader_a1ba27e1027f397fd40b8445e4de2d917}{Binary\+File\+Reader}}, and \mbox{\hyperlink{class_binary_file_writer_ada7c3fd315b6dbd3df9ed3c44587da74}{Binary\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_ab4c1463bd34577a972a20a8ac3442fdf}\label{class_file_interface_ab4c1463bd34577a972a20a8ac3442fdf}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [6/12]}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_string}{String}} \&}]{v,  }\item[{Uint32}]{max\+Length = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+{\em max\+Length} & maximum length of the string allowed, 0 is no limit \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_json_file_reader_a9d6b6b36b9f78a77258452548dd9ef66}{Json\+File\+Reader}}, \mbox{\hyperlink{class_json_file_writer_a454faa02a1b63632178b21ba4f835a23}{Json\+File\+Writer}}, \mbox{\hyperlink{class_binary_file_reader_ade8e0135d542b6750e07f0beb8cc2e73}{Binary\+File\+Reader}}, and \mbox{\hyperlink{class_binary_file_writer_a5ce092efc8d717894b339b9bf0f43550}{Binary\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_ab058fcbb1a7e755b82c08747ee4d40a0}\label{class_file_interface_ab058fcbb1a7e755b82c08747ee4d40a0}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [7/12]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$std\+::is\+\_\+enum$<$T$>$\+::value, void$>$\+::type File\+Interface\+::value (\begin{DoxyParamCaption}\item[{T \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Serializes an enum value as its underlying type to the file 
+\begin{DoxyParams}{Parameters}
+{\em t} & the enum value to serialize \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_interface_a44eb3a8a1432122ca13b6c7e9334b030}\label{class_file_interface_a44eb3a8a1432122ca13b6c7e9334b030}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [8/12]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::enable\+\_\+if$<$std\+::is\+\_\+class$<$T$>$\+::value, void$>$\+::type File\+Interface\+::value (\begin{DoxyParamCaption}\item[{T \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Serializes a class or struct to the file using it\textquotesingle{}s \+::serialize(\+File\+Interface$\ast$) function 
+\begin{DoxyParams}{Parameters}
+{\em v} & the object to serialize \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_interface_aa12f928f059a5ffcf058c6f6ab5d772e}\label{class_file_interface_aa12f928f059a5ffcf058c6f6ab5d772e}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [9/12]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{T $\ast$\&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Serialize a pointer by dereferencing it 
+\begin{DoxyParams}{Parameters}
+{\em v} & the pointer to dereference and serialize \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_interface_a7fa13c2ae30332d197172f964ca18733}\label{class_file_interface_a7fa13c2ae30332d197172f964ca18733}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [10/12]}}
+{\footnotesize\ttfamily template$<$typename T , Uint32 Size, typename... Args$>$ \\
+void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{T(\&)}]{v\mbox{[}\+Size\mbox{]},  }\item[{Args ...}]{args }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Serializes a fixed-\/size native array 
+\begin{DoxyParams}{Parameters}
+{\em v} & array to serialize \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_interface_a446679019f93342e10194317ee1f9aa0}\label{class_file_interface_a446679019f93342e10194317ee1f9aa0}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [11/12]}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_json_file_reader_a23277d8afc7ffa31c786847f68061930}{Json\+File\+Reader}}, \mbox{\hyperlink{class_json_file_writer_ab4945b7345bf970115bc47ffb52dbe2b}{Json\+File\+Writer}}, \mbox{\hyperlink{class_binary_file_reader_ac03acf31d80d643c2913efb8b740e392}{Binary\+File\+Reader}}, and \mbox{\hyperlink{class_binary_file_writer_a79f90fb8c867fecd22780eb3d615483e}{Binary\+File\+Writer}}.
+
+\mbox{\Hypertarget{class_file_interface_aaf3331d0f87fb8277d20c5ebc3ea4f31}\label{class_file_interface_aaf3331d0f87fb8277d20c5ebc3ea4f31}} 
+\index{FileInterface@{FileInterface}!value@{value}}
+\index{value@{value}!FileInterface@{FileInterface}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [12/12]}}
+{\footnotesize\ttfamily virtual void File\+Interface\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v,  }\item[{\mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$}]{lookup }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Given an int, serialize it as the corresponding string value from the dict 
+\begin{DoxyParams}{Parameters}
+{\em v} & value to look up \\
+\hline
+{\em lookup} & dictionary to lookup the string in \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_binary_file_reader_a43444706edb84b7ca2bd3400756abb70}{Binary\+File\+Reader}}, \mbox{\hyperlink{class_binary_file_writer_a94837a7ce9b56c6c9659461ced9418d9}{Binary\+File\+Writer}}, \mbox{\hyperlink{class_json_file_reader_a1dcdd279a5cc9bc7a3208cd3de2069e0}{Json\+File\+Reader}}, and \mbox{\hyperlink{class_json_file_writer_ad5a6429c76192c4018fdc0cc23617479}{Json\+File\+Writer}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_file_8hpp}{File.\+hpp}}\end{DoxyCompactItemize}

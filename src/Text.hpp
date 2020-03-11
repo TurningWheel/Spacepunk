@@ -1,4 +1,4 @@
-// Text.hpp
+//! @file Text.hpp
 
 #pragma once
 
@@ -6,43 +6,44 @@
 #include "Main.hpp"
 #include "Rect.hpp"
 
+//! Contains some text that was rendered to a texture with a ttf font.
 class Text : public Asset {
 public:
 	Text() {}
 	Text(const char* _name);
 	virtual ~Text();
 
-	// size of the black text outline
+	//! size of the black text outline
 	static const int outlineSize = 1;
 
-	// getters & setters
+	//! getters & setters
 	virtual const type_t	getType() const { return ASSET_TEXT; }
 	const GLuint			getTexID() const { return texid; }
 	const SDL_Surface*		getSurf() const { return surf; }
 	const unsigned int		getWidth() const { return width; }
 	const unsigned int		getHeight()	const { return height; }
 
-	// draws the text
-	// @param src defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
-	// @param dest the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
+	//! draws the text
+	//! @param src defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
+	//! @param dest the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
 	void draw(Rect<int> src, Rect<int> dest) const;
 
-	// draws the text with the given color
-	// @param src defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
-	// @param dest the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
+	//! draws the text with the given color
+	//! @param src defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image)
+	//! @param dest the position and size of the image on-screen (width 0 and height 0 defaults to 1:1 scale)
 	void drawColor(Rect<int> src, Rect<int> dest, const glm::vec4& color) const;
 
-	// create static geometry data for rendering images
+	//! create static geometry data for rendering images
 	static void createStaticData();
 
-	// delete static geometry data for rendering images
+	//! delete static geometry data for rendering images
 	static void deleteStaticData();
 
 private:
 	GLuint texid = 0;
 	SDL_Surface* surf = nullptr;
 
-	// static geometry data for rendering the image to a quad
+	//! static geometry data for rendering the image to a quad
 	static const GLuint indices[6];
 	static const GLfloat positions[8];
 	static const GLfloat texcoords[8];

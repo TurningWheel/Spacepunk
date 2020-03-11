@@ -1,4 +1,4 @@
-// Console.hpp
+//! @file Console.hpp
 
 #pragma once
 
@@ -6,7 +6,7 @@
 #include "String.hpp"
 #include "Map.hpp"
 
-// console variable
+//! console variable
 struct Cvar {
 public:
 	Cvar(const char* _name, const char* _desc, const char* _value);
@@ -14,8 +14,8 @@ public:
 
 	static Map<String, Cvar*>& getMap();
 
-	// get the str representation of the cvar
-	// @return The value as a str
+	//! get the str representation of the cvar
+	//! @return The value as a str
 	const char* toStr() {
 		if (!(cached & 1 << 0)) {
 			str = value.get();
@@ -24,8 +24,8 @@ public:
 		return str;
 	}
 
-	// get the int representation of the cvar
-	// @return The value as an int
+	//! get the int representation of the cvar
+	//! @return The value as an int
 	int toInt() {
 		if (!(cached & 1 << 1)) {
 			d = strtol(value.get(), nullptr, 10);
@@ -34,8 +34,8 @@ public:
 		return d;
 	}
 
-	// get the float representation of the cvar
-	// @return The value as a float
+	//! get the float representation of the cvar
+	//! @return The value as a float
 	float toFloat() {
 		if (!(cached & 1 << 2)) {
 			f = strtof(value.get(), nullptr);
@@ -44,14 +44,14 @@ public:
 		return f;
 	}
 
-	// set the value of the cvar
-	// @param _value The new value
+	//! set the value of the cvar
+	//! @param _value The new value
 	void set(const char* _value) {
 		value = _value;
 		cached = 0U;
 	}
 
-	// getters & setters
+	//! getters & setters
 	const char*		getName() const { return name; }
 	const char*		getDesc() const { return desc; }
 
@@ -66,7 +66,7 @@ private:
 	float f;
 };
 
-// console command
+//! console command
 struct Ccmd {
 public:
 	Ccmd(const char* _name, const char* _desc, int(*_func)(int, const char**));

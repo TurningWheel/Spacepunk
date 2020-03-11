@@ -1,7 +1,7 @@
 #ifndef SDL_SAVEPNG_H
 #define SDL_SAVEPNG_H
 
-/*
+/*!
  * SDL_SavePNG -- libpng-based SDL_Surface writer.
  *
  * This code is free software, available under zlib/libpng license.
@@ -9,7 +9,7 @@
  */
 
 #include <SDL2/SDL_video.h>
- /*
+ /*!
   * Save an SDL_Surface as a PNG file.
   *
   * Returns 0 success or -1 on failure, the error message is then retrievable
@@ -18,7 +18,7 @@
 #define SDL_SavePNG(surface, file) \
 	SDL_SavePNG_RW(surface, SDL_RWFromFile(file, "wb"), 1)
 
-  /*
+  /*!
    * Save an SDL_Surface as a PNG file, using writable RWops.
    *
    * surface - the SDL_Surface structure containing the image to be saved
@@ -30,7 +30,7 @@
    */
 extern int SDL_SavePNG_RW(SDL_Surface *surface, SDL_RWops *rw, int freedst);
 
-/*
+/*!
  * Return new SDL_Surface with a format suitable for PNG output.
  */
 extern SDL_Surface *SDL_PNGFormatAlpha(SDL_Surface *src);

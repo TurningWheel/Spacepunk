@@ -1,4 +1,4 @@
-// Shadow.hpp
+//! @file Shadow.hpp
 
 #include "Main.hpp"
 #include "Rotation.hpp"
@@ -6,15 +6,16 @@
 
 #pragma once
 
+//! Contains all the data associated with a shadow map created from a Light
 class Shadow {
 public:
 	Shadow();
 	~Shadow();
 
-	// shadow map resolution
+	//! shadow map resolution
 	static const int resolution;
 
-	// camera info
+	//! camera info
 	struct camerainfo_t {
 		GLenum face;
 		Rotation dir;
@@ -26,22 +27,22 @@ public:
 	static const int directions = 6;
 	static const camerainfo_t cameraInfo[directions];
 
-	// create gl data for shadowmap
+	//! create gl data for shadowmap
 	void init();
 
-	// delete gl data for shadowmap
+	//! delete gl data for shadowmap
 	void term();
 
-	// binds the shadow map for writing
-	// @param face The face to bind for writing
+	//! binds the shadow map for writing
+	//! @param face The face to bind for writing
 	void bindForWriting(GLenum face);
 
-	// binds the shadow map for reading
-	// @param textureUnit The texture unit to bind for reading
-	// @param attachment The texture we wish to sample (GL_COLOR_ATTACHMENT0 or GL_DEPTH_ATTACHMENT or GL_STENCIL_ATTACHMENT)
+	//! binds the shadow map for reading
+	//! @param textureUnit The texture unit to bind for reading
+	//! @param attachment The texture we wish to sample (GL_COLOR_ATTACHMENT0 or GL_DEPTH_ATTACHMENT or GL_STENCIL_ATTACHMENT)
 	void bindForReading(GLenum textureUnit, GLenum attachment) const;
 
-	// getters & setters
+	//! getters & setters
 	const GLuint	getFBO() const { return fbo; }
 	bool			isInitialized() const { return fbo != 0; }
 

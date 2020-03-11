@@ -1,0 +1,868 @@
+\hypertarget{class_engine}{}\doxysection{Engine Class Reference}
+\label{class_engine}\index{Engine@{Engine}}
+
+
+{\ttfamily \#include $<$Engine.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_engine_1_1logmsg__t}{logmsg\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em a console message \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_engine_1_1mod__t}{mod\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em a mod \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185}{msg\+\_\+t}} \{ \newline
+{\bfseries M\+S\+G\+\_\+\+D\+E\+B\+UG} = 0, 
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185a6adaa4895ee96dd89c1b05b6c3bac2d5}{M\+S\+G\+\_\+\+I\+N\+FO}}, 
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185a7eafb8412001c484a2a6239df6c655c1}{M\+S\+G\+\_\+\+W\+A\+RN}}, 
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185a449512104317e55691c8f295060d8602}{M\+S\+G\+\_\+\+E\+R\+R\+OR}}, 
+\newline
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185a928ffedc61c5cbde9d0647ebe55dbbb1}{M\+S\+G\+\_\+\+C\+R\+I\+T\+I\+C\+AL}}, 
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185a10d909c55d6d9b5e371c59e5d284e094}{M\+S\+G\+\_\+\+F\+A\+T\+AL}}, 
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185ac2bab015a616a0457363acddf96e735e}{M\+S\+G\+\_\+\+N\+O\+TE}}, 
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185a21d7f8d1d71d3b8f62f5c1a73747b494}{M\+S\+G\+\_\+\+C\+H\+AT}}, 
+\newline
+\mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185ad27820f4bd1762ceddc9cf75bd6e921b}{M\+S\+G\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}}
+ \}
+\begin{DoxyCompactList}\small\item\em log message codes \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_engine_acb76f868b899f3117b1f58085122c83c}\label{class_engine_acb76f868b899f3117b1f58085122c83c}} 
+{\bfseries Engine} (int argc, char $\ast$$\ast$argv)
+\item 
+\mbox{\Hypertarget{class_engine_a34ef124a14227df8ba438480dcd94dd0}\label{class_engine_a34ef124a14227df8ba438480dcd94dd0}} 
+const bool {\bfseries is\+Initialized} () const
+\item 
+\mbox{\Hypertarget{class_engine_a85d49e41f06aab6bcc38debea6d7c122}\label{class_engine_a85d49e41f06aab6bcc38debea6d7c122}} 
+const bool {\bfseries is\+Running} () const
+\item 
+\mbox{\Hypertarget{class_engine_a7e938dac92fc2eaeddd779d956e6b06f}\label{class_engine_a7e938dac92fc2eaeddd779d956e6b06f}} 
+const bool {\bfseries is\+Paused} () const
+\item 
+\mbox{\Hypertarget{class_engine_a2b2b70f333220938103fef3a5afd0de1}\label{class_engine_a2b2b70f333220938103fef3a5afd0de1}} 
+const bool {\bfseries is\+Fullscreen} () const
+\item 
+\mbox{\Hypertarget{class_engine_a1bc608aa3861813477f6157ed8d542a0}\label{class_engine_a1bc608aa3861813477f6157ed8d542a0}} 
+const bool {\bfseries is\+Running\+Client} () const
+\item 
+\mbox{\Hypertarget{class_engine_a5da2c7f457d3d96571cf8f4fd19f6ce5}\label{class_engine_a5da2c7f457d3d96571cf8f4fd19f6ce5}} 
+const bool {\bfseries is\+Running\+Server} () const
+\item 
+\mbox{\Hypertarget{class_engine_ae32d5e0a827bced7095f632f03676c99}\label{class_engine_ae32d5e0a827bced7095f632f03676c99}} 
+const char $\ast$ {\bfseries get\+Game\+Title} () const
+\item 
+\mbox{\Hypertarget{class_engine_a06126cce7c41758ea1dec39652fec122}\label{class_engine_a06126cce7c41758ea1dec39652fec122}} 
+\mbox{\hyperlink{class_client}{Client}} $\ast$\& {\bfseries get\+Local\+Client} ()
+\item 
+\mbox{\Hypertarget{class_engine_a88cb72e61da3bfe19765ae0504e8643f}\label{class_engine_a88cb72e61da3bfe19765ae0504e8643f}} 
+\mbox{\hyperlink{class_server}{Server}} $\ast$\& {\bfseries get\+Local\+Server} ()
+\item 
+\mbox{\Hypertarget{class_engine_a48a7317c5cc8f16009e63e4ce55239a8}\label{class_engine_a48a7317c5cc8f16009e63e4ce55239a8}} 
+const Sint32 {\bfseries get\+Xres} () const
+\item 
+\mbox{\Hypertarget{class_engine_ae1b60958ebb8b66c9d1bb1c90f657205}\label{class_engine_ae1b60958ebb8b66c9d1bb1c90f657205}} 
+const Sint32 {\bfseries get\+Yres} () const
+\item 
+\mbox{\Hypertarget{class_engine_a0f9947782b39fdbf17e66e59f6e2ab82}\label{class_engine_a0f9947782b39fdbf17e66e59f6e2ab82}} 
+const bool {\bfseries get\+Key\+Status} (const int index) const
+\item 
+\mbox{\Hypertarget{class_engine_aa48e759d0f611ba832a86d5ba2b65796}\label{class_engine_aa48e759d0f611ba832a86d5ba2b65796}} 
+const bool {\bfseries get\+Any\+Key\+Status} () const
+\item 
+\mbox{\Hypertarget{class_engine_a3138f67616bda5045905e54fd71cede5}\label{class_engine_a3138f67616bda5045905e54fd71cede5}} 
+const char $\ast$ {\bfseries get\+Last\+Key\+Pressed} () const
+\item 
+\mbox{\Hypertarget{class_engine_a596cc6d4b3b37eb4ca57b1d9844054e8}\label{class_engine_a596cc6d4b3b37eb4ca57b1d9844054e8}} 
+const bool {\bfseries get\+Mouse\+Status} (const int index) const
+\item 
+\mbox{\Hypertarget{class_engine_a2af8a1199a019d0cff975a387ca353df}\label{class_engine_a2af8a1199a019d0cff975a387ca353df}} 
+const bool {\bfseries get\+D\+B\+C\+Mouse\+Status} (const int index) const
+\item 
+\mbox{\Hypertarget{class_engine_a7d3920e03f3d9b377bd142f2770353f2}\label{class_engine_a7d3920e03f3d9b377bd142f2770353f2}} 
+const Sint32 {\bfseries get\+MouseX} () const
+\item 
+\mbox{\Hypertarget{class_engine_a12b367fb8732fa152e7c98ef7ed516ea}\label{class_engine_a12b367fb8732fa152e7c98ef7ed516ea}} 
+const Sint32 {\bfseries get\+MouseY} () const
+\item 
+\mbox{\Hypertarget{class_engine_a038478256f26c3105e591b42f9197161}\label{class_engine_a038478256f26c3105e591b42f9197161}} 
+const Sint32 {\bfseries get\+Old\+MouseX} () const
+\item 
+\mbox{\Hypertarget{class_engine_a8be39ceb98df43f4db7c6348daf2dee8}\label{class_engine_a8be39ceb98df43f4db7c6348daf2dee8}} 
+const Sint32 {\bfseries get\+Old\+MouseY} () const
+\item 
+\mbox{\Hypertarget{class_engine_ad316eaeba407f04375f054eb8eb3809f}\label{class_engine_ad316eaeba407f04375f054eb8eb3809f}} 
+const Sint32 {\bfseries get\+Mouse\+WheelX} () const
+\item 
+\mbox{\Hypertarget{class_engine_af65f91b9744e951cb43d1a5097f5efd0}\label{class_engine_af65f91b9744e951cb43d1a5097f5efd0}} 
+const Sint32 {\bfseries get\+Mouse\+WheelY} () const
+\item 
+\mbox{\Hypertarget{class_engine_a0cdf3829ed2061709ff4327b5aa89c09}\label{class_engine_a0cdf3829ed2061709ff4327b5aa89c09}} 
+const Sint32 {\bfseries get\+Mouse\+MoveX} () const
+\item 
+\mbox{\Hypertarget{class_engine_a8d71321878a2511f45c37dbcffe340b9}\label{class_engine_a8d71321878a2511f45c37dbcffe340b9}} 
+const Sint32 {\bfseries get\+Mouse\+MoveY} () const
+\item 
+\mbox{\Hypertarget{class_engine_a451dbc08cdc8f17684b2b20d9509e72b}\label{class_engine_a451dbc08cdc8f17684b2b20d9509e72b}} 
+const double {\bfseries get\+F\+PS} () const
+\item 
+\mbox{\Hypertarget{class_engine_a8e1ba7cd0e961407021c8ffb2036b86a}\label{class_engine_a8e1ba7cd0e961407021c8ffb2036b86a}} 
+const double {\bfseries get\+Time\+Sync} () const
+\item 
+\mbox{\Hypertarget{class_engine_af14187a0dc0c23fb8d0b1ba6ab06109f}\label{class_engine_af14187a0dc0c23fb8d0b1ba6ab06109f}} 
+const Uint32 {\bfseries get\+Ticks} () const
+\item 
+\mbox{\Hypertarget{class_engine_aed112b2866f755992624cf71f284ea25}\label{class_engine_aed112b2866f755992624cf71f284ea25}} 
+const unsigned int {\bfseries get\+Ticks\+Per\+Second} () const
+\item 
+\mbox{\Hypertarget{class_engine_a4de804d8f606bca694895198c7535bbb}\label{class_engine_a4de804d8f606bca694895198c7535bbb}} 
+auto \& {\bfseries get\+Mesh\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_a1026a8a9ad4c39b940c9d0a2a4a76517}\label{class_engine_a1026a8a9ad4c39b940c9d0a2a4a76517}} 
+auto \& {\bfseries get\+Image\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_ae1c8f1fd4df4c9637f2c25f4fc0ff79d}\label{class_engine_ae1c8f1fd4df4c9637f2c25f4fc0ff79d}} 
+auto \& {\bfseries get\+Material\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_ad10a89e844d52ebe20a297397477ce50}\label{class_engine_ad10a89e844d52ebe20a297397477ce50}} 
+auto \& {\bfseries get\+Texture\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_accf1b5b29d226afd26774db00cf42fb3}\label{class_engine_accf1b5b29d226afd26774db00cf42fb3}} 
+auto \& {\bfseries get\+Text\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_a94ac0194ec7e4fc8da808f668787077e}\label{class_engine_a94ac0194ec7e4fc8da808f668787077e}} 
+auto \& {\bfseries get\+Sound\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_a0656de3fdf62f85caea0014f8dd1210a}\label{class_engine_a0656de3fdf62f85caea0014f8dd1210a}} 
+auto \& {\bfseries get\+Animation\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_a9df5eb38c8e3e2995f5a70f703505bab}\label{class_engine_a9df5eb38c8e3e2995f5a70f703505bab}} 
+auto \& {\bfseries get\+Cubemap\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_engine_a4c4eca77d0f71958a043dbac888f8c26}\label{class_engine_a4c4eca77d0f71958a043dbac888f8c26}} 
+\mbox{\hyperlink{class_dictionary}{Dictionary}} \& {\bfseries get\+Texture\+Dictionary} ()
+\item 
+\mbox{\Hypertarget{class_engine_ada5f55fe41dbc56d40c18350f9321ac0}\label{class_engine_ada5f55fe41dbc56d40c18350f9321ac0}} 
+const \mbox{\hyperlink{class_atlas}{Atlas}} \& {\bfseries get\+Tile\+Diffuse\+Textures} ()
+\item 
+\mbox{\Hypertarget{class_engine_a9600c04ac4ef5a1288d2752f135ae79d}\label{class_engine_a9600c04ac4ef5a1288d2752f135ae79d}} 
+const \mbox{\hyperlink{class_atlas}{Atlas}} \& {\bfseries get\+Tile\+Normal\+Textures} ()
+\item 
+\mbox{\Hypertarget{class_engine_a50e9cf7847b86207727f4bafbce1a7de}\label{class_engine_a50e9cf7847b86207727f4bafbce1a7de}} 
+const \mbox{\hyperlink{class_atlas}{Atlas}} \& {\bfseries get\+Tile\+Effects\+Textures} ()
+\item 
+\mbox{\Hypertarget{class_engine_abac514a71d4c246b57141a945c30ec11}\label{class_engine_abac514a71d4c246b57141a945c30ec11}} 
+const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_entity_1_1def__t}{Entity\+::def\+\_\+t}} $\ast$ $>$ \& {\bfseries get\+Entity\+Defs} ()
+\item 
+\mbox{\Hypertarget{class_engine_a0d105496b0508e0cea9db4cd15cc8a73}\label{class_engine_a0d105496b0508e0cea9db4cd15cc8a73}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ \& {\bfseries get\+Command\+History} ()
+\item 
+\mbox{\Hypertarget{class_engine_a05781dd413a8e89fb938fedd04dffe1b}\label{class_engine_a05781dd413a8e89fb938fedd04dffe1b}} 
+const char $\ast$ {\bfseries get\+Input\+Str} ()
+\item 
+\mbox{\Hypertarget{class_engine_a6d95efc4d64a63a51a7af89efaf4383c}\label{class_engine_a6d95efc4d64a63a51a7af89efaf4383c}} 
+const bool {\bfseries is\+Cursor\+Visible} () const
+\item 
+\mbox{\Hypertarget{class_engine_a396c8dea6281adff9fedab813fb1859e}\label{class_engine_a396c8dea6281adff9fedab813fb1859e}} 
+const bool {\bfseries is\+Mouse\+Relative} () const
+\item 
+\mbox{\Hypertarget{class_engine_afb5418407fc03bc7e6905f8d74880968}\label{class_engine_afb5418407fc03bc7e6905f8d74880968}} 
+const bool {\bfseries is\+Kill\+Signal} () const
+\item 
+\mbox{\Hypertarget{class_engine_ac0e876c7f419ca6cb16d2906b10ab2d8}\label{class_engine_ac0e876c7f419ca6cb16d2906b10ab2d8}} 
+\mbox{\hyperlink{class_random}{Random}} \& {\bfseries get\+Random} ()
+\item 
+\mbox{\Hypertarget{class_engine_adb824ca7dc955e6e548f67be4e056b2f}\label{class_engine_adb824ca7dc955e6e548f67be4e056b2f}} 
+const char $\ast$ {\bfseries get\+Last\+Input} () const
+\item 
+\mbox{\Hypertarget{class_engine_adf4901d165a314b767cae8925e2c3d0d}\label{class_engine_adf4901d165a314b767cae8925e2c3d0d}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ S\+D\+L\+\_\+\+Game\+Controller $\ast$ $>$ \& {\bfseries get\+Controllers} ()
+\item 
+\mbox{\Hypertarget{class_engine_afd9745b28a717f52dc92bd7a6afa4f72}\label{class_engine_afd9745b28a717f52dc92bd7a6afa4f72}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ S\+D\+L\+\_\+\+Joystick $\ast$ $>$ \& {\bfseries get\+Joysticks} ()
+\item 
+\mbox{\Hypertarget{class_engine_a3c1cf073802e8034a94b6b2b10b00a33}\label{class_engine_a3c1cf073802e8034a94b6b2b10b00a33}} 
+\mbox{\hyperlink{class_input}{Input}} \& {\bfseries get\+Input} (int index)
+\item 
+\mbox{\Hypertarget{class_engine_adddb9ebade3f568f4256b9f3f01c529d}\label{class_engine_adddb9ebade3f568f4256b9f3f01c529d}} 
+const bool {\bfseries is\+Play\+Test} () const
+\item 
+\mbox{\Hypertarget{class_engine_a03976527475be0ec50a0fc6ca5125b4c}\label{class_engine_a03976527475be0ec50a0fc6ca5125b4c}} 
+void {\bfseries set\+Paused} (const bool \+\_\+paused)
+\item 
+\mbox{\Hypertarget{class_engine_a3b2ef688507e3085b76eb48abaaa8db2}\label{class_engine_a3b2ef688507e3085b76eb48abaaa8db2}} 
+void {\bfseries set\+Input\+Str} (char $\ast$const \+\_\+inputstr)
+\item 
+\mbox{\Hypertarget{class_engine_ac29cbd2c017aa0e83f13ff8b87634e12}\label{class_engine_ac29cbd2c017aa0e83f13ff8b87634e12}} 
+void {\bfseries set\+Input\+Len} (const int \+\_\+inputlen)
+\item 
+\mbox{\Hypertarget{class_engine_a3402584414f9878ffe51bcf5ae6a135c}\label{class_engine_a3402584414f9878ffe51bcf5ae6a135c}} 
+void {\bfseries set\+Input\+Numbers\+Only} (const bool \+\_\+inputnum)
+\item 
+\mbox{\Hypertarget{class_engine_ac3333f9f922ee52267899176639c2237}\label{class_engine_ac3333f9f922ee52267899176639c2237}} 
+void {\bfseries set\+Mouse\+Relative} (const bool \+\_\+mouse\+Relative)
+\item 
+\mbox{\Hypertarget{class_engine_adb18cdce727143bb442430f184699427}\label{class_engine_adb18cdce727143bb442430f184699427}} 
+void {\bfseries set\+Kill\+Signal} (const bool \+\_\+kill\+Signal)
+\item 
+\mbox{\Hypertarget{class_engine_a2e81acf9e74c25bb50bc9c2b04535d14}\label{class_engine_a2e81acf9e74c25bb50bc9c2b04535d14}} 
+void {\bfseries set\+Fullscreen} (const bool \+\_\+b)
+\item 
+\mbox{\Hypertarget{class_engine_a11405a88a855978dc1688296e9f36b0c}\label{class_engine_a11405a88a855978dc1688296e9f36b0c}} 
+void {\bfseries set\+Xres} (const Sint32 i)
+\item 
+\mbox{\Hypertarget{class_engine_acf4c5a0abe341bade9000b37dc0f8099}\label{class_engine_acf4c5a0abe341bade9000b37dc0f8099}} 
+void {\bfseries set\+Yres} (const Sint32 i)
+\item 
+\mbox{\Hypertarget{class_engine_a1591fc21e6cd30a03bc0d1f5e0a63d63}\label{class_engine_a1591fc21e6cd30a03bc0d1f5e0a63d63}} 
+void {\bfseries set\+Play\+Test} (const bool b)
+\item 
+\mbox{\Hypertarget{class_engine_ab5f693c2ce5aee64f9f7ad7ac6c87195}\label{class_engine_ab5f693c2ce5aee64f9f7ad7ac6c87195}} 
+void {\bfseries set\+Console\+Sleep} (Uint32 i)
+\item 
+\mbox{\Hypertarget{class_engine_a8f5987599cf4811fe6459ee7b64ef9b7}\label{class_engine_a8f5987599cf4811fe6459ee7b64ef9b7}} 
+const char $\ast$ \mbox{\hyperlink{class_engine_a8f5987599cf4811fe6459ee7b64ef9b7}{get\+Running\+Dir}} ()
+\begin{DoxyCompactList}\small\item\em get the directory the game is running in \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_ab44d76e2ff6057e73d6210cf9af0d89e}\label{class_engine_ab44d76e2ff6057e73d6210cf9af0d89e}} 
+void \mbox{\hyperlink{class_engine_ab44d76e2ff6057e73d6210cf9af0d89e}{init}} ()
+\begin{DoxyCompactList}\small\item\em initialize the engine \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_a98e647a369d7962f5d2af61b553b0758}\label{class_engine_a98e647a369d7962f5d2af61b553b0758}} 
+void \mbox{\hyperlink{class_engine_a98e647a369d7962f5d2af61b553b0758}{load\+All\+Resources}} ()
+\begin{DoxyCompactList}\small\item\em loads all game resources \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_a29cc38094b87be840f25b8c37822545e}\label{class_engine_a29cc38094b87be840f25b8c37822545e}} 
+void \mbox{\hyperlink{class_engine_a29cc38094b87be840f25b8c37822545e}{load\+Resources}} (const char $\ast$folder)
+\begin{DoxyCompactList}\small\item\em loads resources from a particular mod / game folder \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_a2eeec543725684137dff6c770b15004c}\label{class_engine_a2eeec543725684137dff6c770b15004c}} 
+void \mbox{\hyperlink{class_engine_a2eeec543725684137dff6c770b15004c}{load\+All\+Defs}} ()
+\begin{DoxyCompactList}\small\item\em load entity defs \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_a3ee2efe454fc4ec3796d370d1b904ee4}\label{class_engine_a3ee2efe454fc4ec3796d370d1b904ee4}} 
+void \mbox{\hyperlink{class_engine_a3ee2efe454fc4ec3796d370d1b904ee4}{load\+Defs}} (const char $\ast$folder)
+\begin{DoxyCompactList}\small\item\em load entity defs from a particular mod / game folder \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_engine_ab286f59abb8e497046840083a839822d}{dump\+Resources}} (const char $\ast$type)
+\item 
+void \mbox{\hyperlink{class_engine_acaac4d1a02efe0d8d909553403c66ad2}{start\+Editor}} (const char $\ast$path=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{class_engine_a726744a7ce65f2747b0cba7a7e9b4dce}\label{class_engine_a726744a7ce65f2747b0cba7a7e9b4dce}} 
+void \mbox{\hyperlink{class_engine_a726744a7ce65f2747b0cba7a7e9b4dce}{editor\+Playtest}} ()
+\begin{DoxyCompactList}\small\item\em start a new process to playtest the current level \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_a1a75595100121f9b62a80620f19a8a2a}\label{class_engine_a1a75595100121f9b62a80620f19a8a2a}} 
+void \mbox{\hyperlink{class_engine_a1a75595100121f9b62a80620f19a8a2a}{start\+Server}} ()
+\begin{DoxyCompactList}\small\item\em shuts down the active server and starts a new one \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_engine_a815ce23efcecb5f69b298ba8f3af3620}{join\+Server}} (const char $\ast$address)
+\item 
+void \mbox{\hyperlink{class_engine_a858f2648f50be8f2ca6c0837617724a4}{chat}} (const char $\ast$\mbox{\hyperlink{class_engine_a540ef6a8d6d4951806bae98fd6d57084}{msg}})
+\item 
+bool \mbox{\hyperlink{class_engine_a413dd084ab5a8fc52f05712630a897cd}{is\+Editor\+Running}} ()
+\item 
+void \mbox{\hyperlink{class_engine_ae42a864b1b327254581b73c3be42f4a7}{play\+Sound}} (const char $\ast$name)
+\item 
+\mbox{\Hypertarget{class_engine_abd75b60b64d65101a05b1dd6ffa2fba1}\label{class_engine_abd75b60b64d65101a05b1dd6ffa2fba1}} 
+const char $\ast$ \mbox{\hyperlink{class_engine_abd75b60b64d65101a05b1dd6ffa2fba1}{version}} ()
+\begin{DoxyCompactList}\small\item\em game version string \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_engine_ae3e17688b4825a9d4956d06d00658420}{command\+Line}} (const int argc, const char $\ast$$\ast$argv)
+\item 
+void \mbox{\hyperlink{class_engine_a1b794046fd4e8c0c0eca6a2fc427fcab}{do\+Command}} (const char $\ast$arg)
+\item 
+int \mbox{\hyperlink{class_engine_a8d67c5c45b9a0e4618f796c7080c2049}{load\+Config}} (const char $\ast$filename)
+\item 
+int \mbox{\hyperlink{class_engine_a75b66394782b15fb00f13dc56387b544}{save\+Config}} (const char $\ast$filename)
+\item 
+bool \mbox{\hyperlink{class_engine_a28004de473236413ae943687df6dc827}{copy\+Log}} (\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_engine_1_1logmsg__t}{Engine\+::logmsg\+\_\+t}} $>$ \&dest)
+\item 
+\mbox{\Hypertarget{class_engine_adbca34f4de79727e332ceef98152bea6}\label{class_engine_adbca34f4de79727e332ceef98152bea6}} 
+void \mbox{\hyperlink{class_engine_adbca34f4de79727e332ceef98152bea6}{clear\+Log}} ()
+\begin{DoxyCompactList}\small\item\em clears the log \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_a4bbccf668c46064559c99a999f7b9932}\label{class_engine_a4bbccf668c46064559c99a999f7b9932}} 
+void \mbox{\hyperlink{class_engine_a4bbccf668c46064559c99a999f7b9932}{shutdown}} ()
+\begin{DoxyCompactList}\small\item\em shutdown the engine safely (perhaps from another class) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_engine_ae04b454f1bc1188fdf86f7a789dfb8cf}{fmsg}} (const Uint32 msg\+Type, const char $\ast$fmt,...)
+\item 
+void \mbox{\hyperlink{class_engine_aaea75f7af95bfc4a30d69aaf1721d69d}{smsg}} (const Uint32 msg\+Type, const \mbox{\hyperlink{class_string}{String}} \&str)
+\item 
+void \mbox{\hyperlink{class_engine_a540ef6a8d6d4951806bae98fd6d57084}{msg}} (const Uint32 msg\+Type, const char $\ast$str)
+\item 
+Uint32 \mbox{\hyperlink{class_engine_a86d918692853bc610d330b7c6b767db3}{find\+Entity\+Def\+Index\+By\+Name}} (const char $\ast$name)
+\item 
+\mbox{\Hypertarget{class_engine_aeb83ea11ca6ec0b2893b4e9c954d0ffb}\label{class_engine_aeb83ea11ca6ec0b2893b4e9c954d0ffb}} 
+void \mbox{\hyperlink{class_engine_aeb83ea11ca6ec0b2893b4e9c954d0ffb}{pre\+Process}} ()
+\begin{DoxyCompactList}\small\item\em perform pre-\/processing on the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_af6cd854f6bd50beb92d81c5206b26da0}\label{class_engine_af6cd854f6bd50beb92d81c5206b26da0}} 
+void \mbox{\hyperlink{class_engine_af6cd854f6bd50beb92d81c5206b26da0}{process}} ()
+\begin{DoxyCompactList}\small\item\em process the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_a64f014296b9e224498cfe352a78b0c6b}\label{class_engine_a64f014296b9e224498cfe352a78b0c6b}} 
+void \mbox{\hyperlink{class_engine_a64f014296b9e224498cfe352a78b0c6b}{post\+Process}} ()
+\begin{DoxyCompactList}\small\item\em perform post-\/processing on the current frame \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string_buf}{String\+Buf}}$<$ Engine\+::stack\+Trace\+Str\+Size $>$ $>$ \mbox{\hyperlink{class_engine_ab66e9426ed9043f554a80dcd27a6ab0b}{stack\+Trace}} () const
+\item 
+const bool \mbox{\hyperlink{class_engine_a8cc8a728d8138c2f51eaa388d43a375c}{press\+Key}} (const int index)
+\item 
+const bool \mbox{\hyperlink{class_engine_a785587583c76b816ad9546b5fac8874c}{press\+Mouse}} (const int index)
+\item 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_engine_aa5059324e52489f2a85d764f28c5e8f9}{shorten\+Path}} (const char $\ast$path) const
+\item 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_engine_ae3f27801d5141e9d20fdaeb254b1eabd}{build\+Path}} (const char $\ast$path) const
+\item 
+bool \mbox{\hyperlink{class_engine_af11c558c7df15264a2fb04e7f405f099}{add\+Mod}} (const char $\ast$name)
+\item 
+bool \mbox{\hyperlink{class_engine_ac22149b770c99e10ea654eefa6e09a6d}{remove\+Mod}} (const char $\ast$name)
+\item 
+Uint32 \mbox{\hyperlink{class_engine_a1a04abf97b392c626ff66dd273667f57}{random}} ()
+\item 
+\mbox{\Hypertarget{class_engine_aa6bd3c97e7c018996b95ef8dfc26e9fd}\label{class_engine_aa6bd3c97e7c018996b95ef8dfc26e9fd}} 
+void \mbox{\hyperlink{class_engine_aa6bd3c97e7c018996b95ef8dfc26e9fd}{print\+Cache\+Size}} () const
+\begin{DoxyCompactList}\small\item\em print cache sizes to show memory consumption \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_engine_a328c1d56812c3a13258c3058a3564840}{freadl}} (void $\ast$ptr, Uint32 size, Uint32 count, F\+I\+LE $\ast$stream, const char $\ast$filename, const char $\ast$func\+Name)
+\item 
+static int \mbox{\hyperlink{class_engine_a4d4de8c36bef392791d4a71a5de6c913}{read\+Int}} (const char $\ast$str, int $\ast$arr, int num\+To\+Read)
+\item 
+static int \mbox{\hyperlink{class_engine_a327f3c3fa61f08a3cf406933d793943b}{read\+Float}} (const char $\ast$str, float $\ast$arr, int num\+To\+Read)
+\item 
+static bool \mbox{\hyperlink{class_engine_a8bef4f068349ddb0d8ffda7b561558b8}{chars\+Have\+Letters}} (const char $\ast$arr, Uint32 len)
+\item 
+static int \mbox{\hyperlink{class_engine_a1c8d2deba6f10d27be67a8b167389f7a}{str\+Compare}} (const char $\ast$a, const char $\ast$b)
+\item 
+static bool \mbox{\hyperlink{class_engine_ac689246dadf9e46703559423dcfc6e27}{line\+Intersect\+Plane}} (const \mbox{\hyperlink{class_vector}{Vector}} \&line\+Start, const \mbox{\hyperlink{class_vector}{Vector}} \&line\+End, const \mbox{\hyperlink{class_vector}{Vector}} \&plane\+Origin, const \mbox{\hyperlink{class_vector}{Vector}} \&plane\+Normal, \mbox{\hyperlink{class_vector}{Vector}} \&out\+Intersection)
+\item 
+static \mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_engine_a6dccb14e106d9f5fab2fda1e560e1737}{triangle\+Coords}} (const \mbox{\hyperlink{class_vector}{Vector}} \&a, const \mbox{\hyperlink{class_vector}{Vector}} \&b, const \mbox{\hyperlink{class_vector}{Vector}} \&c, const \mbox{\hyperlink{class_vector}{Vector}} \&p)
+\item 
+static bool \mbox{\hyperlink{class_engine_a73e8e35c8db08ac6a7d0c642b8456725}{point\+In\+Triangle}} (const \mbox{\hyperlink{class_vector}{Vector}} \&a, const \mbox{\hyperlink{class_vector}{Vector}} \&b, const \mbox{\hyperlink{class_vector}{Vector}} \&c, const \mbox{\hyperlink{class_vector}{Vector}} \&p)
+\item 
+static bool \mbox{\hyperlink{class_engine_ae8ea73d9e3a4c4bfe47383af02c815a2}{triangle\+Overlaps\+Triangle}} (const \mbox{\hyperlink{class_vector}{Vector}} \&a0, const \mbox{\hyperlink{class_vector}{Vector}} \&b0, const \mbox{\hyperlink{class_vector}{Vector}} \&c0, const \mbox{\hyperlink{class_vector}{Vector}} \&a1, const \mbox{\hyperlink{class_vector}{Vector}} \&b1, const \mbox{\hyperlink{class_vector}{Vector}} \&c1)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_engine_a421840ad0fa2752b963a910b911bac92}\label{class_engine_a421840ad0fa2752b963a910b911bac92}} 
+static const int {\bfseries stack\+Trace\+Size} = 100
+\item 
+\mbox{\Hypertarget{class_engine_a69f3234753c7a82f422b7ea73592e19c}\label{class_engine_a69f3234753c7a82f422b7ea73592e19c}} 
+static const int {\bfseries stack\+Trace\+Str\+Size} = 256
+\item 
+\mbox{\Hypertarget{class_engine_a919613100898900e22f33eb481c28173}\label{class_engine_a919613100898900e22f33eb481c28173}} 
+static const unsigned int \mbox{\hyperlink{class_engine_a919613100898900e22f33eb481c28173}{default\+Tick\+Rate}} = 60
+\begin{DoxyCompactList}\small\item\em default ticks per second \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_engine_aa5d673693d061986279ffab48edf16e5}\label{class_engine_aa5d673693d061986279ffab48edf16e5}} 
+static const unsigned int \mbox{\hyperlink{class_engine_aa5d673693d061986279ffab48edf16e5}{double\+Click\+Time}} = 30
+\begin{DoxyCompactList}\small\item\em amount of ticks within which two clicks register as a \char`\"{}double-\/click\char`\"{} \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_engine}{Engine}} object is the root of the entire engine. Here lives top level data about the current engine state\+: the local \mbox{\hyperlink{class_client}{Client}} and \mbox{\hyperlink{class_server}{Server}} (if they are running), functions to step everything forward, update devices, etc. 
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185}\label{class_engine_a624a0233d039b14827c4589437530185}} 
+\index{Engine@{Engine}!msg\_t@{msg\_t}}
+\index{msg\_t@{msg\_t}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{msg\_t}{msg\_t}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_engine_a624a0233d039b14827c4589437530185}{Engine\+::msg\+\_\+t}}}
+
+
+
+log message codes 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_INFO@{MSG\_INFO}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_INFO@{MSG\_INFO}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185a6adaa4895ee96dd89c1b05b6c3bac2d5}\label{class_engine_a624a0233d039b14827c4589437530185a6adaa4895ee96dd89c1b05b6c3bac2d5}} 
+M\+S\+G\+\_\+\+I\+N\+FO&only printed when N\+D\+E\+B\+UG is undefined \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_WARN@{MSG\_WARN}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_WARN@{MSG\_WARN}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185a7eafb8412001c484a2a6239df6c655c1}\label{class_engine_a624a0233d039b14827c4589437530185a7eafb8412001c484a2a6239df6c655c1}} 
+M\+S\+G\+\_\+\+W\+A\+RN&for when you have an unimportant message to report \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_ERROR@{MSG\_ERROR}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_ERROR@{MSG\_ERROR}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185a449512104317e55691c8f295060d8602}\label{class_engine_a624a0233d039b14827c4589437530185a449512104317e55691c8f295060d8602}} 
+M\+S\+G\+\_\+\+E\+R\+R\+OR&for when the game has encountered a small problem \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_CRITICAL@{MSG\_CRITICAL}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_CRITICAL@{MSG\_CRITICAL}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185a928ffedc61c5cbde9d0647ebe55dbbb1}\label{class_engine_a624a0233d039b14827c4589437530185a928ffedc61c5cbde9d0647ebe55dbbb1}} 
+M\+S\+G\+\_\+\+C\+R\+I\+T\+I\+C\+AL&for when the game has encountered a definite problem \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_FATAL@{MSG\_FATAL}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_FATAL@{MSG\_FATAL}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185a10d909c55d6d9b5e371c59e5d284e094}\label{class_engine_a624a0233d039b14827c4589437530185a10d909c55d6d9b5e371c59e5d284e094}} 
+M\+S\+G\+\_\+\+F\+A\+T\+AL&for when the game likely will not continue past this point \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_NOTE@{MSG\_NOTE}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_NOTE@{MSG\_NOTE}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185ac2bab015a616a0457363acddf96e735e}\label{class_engine_a624a0233d039b14827c4589437530185ac2bab015a616a0457363acddf96e735e}} 
+M\+S\+G\+\_\+\+N\+O\+TE&for when you have to exit() immediately \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_CHAT@{MSG\_CHAT}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_CHAT@{MSG\_CHAT}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185a21d7f8d1d71d3b8f62f5c1a73747b494}\label{class_engine_a624a0233d039b14827c4589437530185a21d7f8d1d71d3b8f62f5c1a73747b494}} 
+M\+S\+G\+\_\+\+C\+H\+AT&like info, but more important (not for errors!) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MSG\_TYPE\_LENGTH@{MSG\_TYPE\_LENGTH}!Engine@{Engine}}\index{Engine@{Engine}!MSG\_TYPE\_LENGTH@{MSG\_TYPE\_LENGTH}}}\mbox{\Hypertarget{class_engine_a624a0233d039b14827c4589437530185ad27820f4bd1762ceddc9cf75bd6e921b}\label{class_engine_a624a0233d039b14827c4589437530185ad27820f4bd1762ceddc9cf75bd6e921b}} 
+M\+S\+G\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH&for when a chat message was received over the net \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_engine_af11c558c7df15264a2fb04e7f405f099}\label{class_engine_af11c558c7df15264a2fb04e7f405f099}} 
+\index{Engine@{Engine}!addMod@{addMod}}
+\index{addMod@{addMod}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{addMod()}{addMod()}}
+{\footnotesize\ttfamily bool Engine\+::add\+Mod (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+add a mod to the game 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the mod folder to add \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the mod was added, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_ae3f27801d5141e9d20fdaeb254b1eabd}\label{class_engine_ae3f27801d5141e9d20fdaeb254b1eabd}} 
+\index{Engine@{Engine}!buildPath@{buildPath}}
+\index{buildPath@{buildPath}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{buildPath()}{buildPath()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_string}{String}} Engine\+::build\+Path (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption}) const}
+
+gets the virtual file path to an asset and returns its full path as a string 
+\begin{DoxyParams}{Parameters}
+{\em path} & the path to the asset without mod or base folders \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the complete path string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a8bef4f068349ddb0d8ffda7b561558b8}\label{class_engine_a8bef4f068349ddb0d8ffda7b561558b8}} 
+\index{Engine@{Engine}!charsHaveLetters@{charsHaveLetters}}
+\index{charsHaveLetters@{charsHaveLetters}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{charsHaveLetters()}{charsHaveLetters()}}
+{\footnotesize\ttfamily bool Engine\+::chars\+Have\+Letters (\begin{DoxyParamCaption}\item[{const char $\ast$}]{arr,  }\item[{Uint32}]{len }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+determines if some text is anything but a number 
+\begin{DoxyParams}{Parameters}
+{\em arr} & the array of characters to check for letters \\
+\hline
+{\em len} & the length of the array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the character array has non-\/numeral characters, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a858f2648f50be8f2ca6c0837617724a4}\label{class_engine_a858f2648f50be8f2ca6c0837617724a4}} 
+\index{Engine@{Engine}!chat@{chat}}
+\index{chat@{chat}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{chat()}{chat()}}
+{\footnotesize\ttfamily void Engine\+::chat (\begin{DoxyParamCaption}\item[{const char $\ast$}]{msg }\end{DoxyParamCaption})}
+
+sends a chat message 
+\begin{DoxyParams}{Parameters}
+{\em msg} & the message to relay \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_ae3e17688b4825a9d4956d06d00658420}\label{class_engine_ae3e17688b4825a9d4956d06d00658420}} 
+\index{Engine@{Engine}!commandLine@{commandLine}}
+\index{commandLine@{commandLine}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{commandLine()}{commandLine()}}
+{\footnotesize\ttfamily void Engine\+::command\+Line (\begin{DoxyParamCaption}\item[{const int}]{argc,  }\item[{const char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+parse command line arguments 
+\begin{DoxyParams}{Parameters}
+{\em argc} & the number of arguments to execute \\
+\hline
+{\em argv} & array of char arrays (args) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_a28004de473236413ae943687df6dc827}\label{class_engine_a28004de473236413ae943687df6dc827}} 
+\index{Engine@{Engine}!copyLog@{copyLog}}
+\index{copyLog@{copyLog}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{copyLog()}{copyLog()}}
+{\footnotesize\ttfamily bool Engine\+::copy\+Log (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_engine_1_1logmsg__t}{Engine\+::logmsg\+\_\+t}} $>$ \&}]{dest }\end{DoxyParamCaption})}
+
+copy the contents of the engine log to another one 
+\begin{DoxyParams}{Parameters}
+{\em dest} & the destination log to copy to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the dest was cleared in the process 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a1b794046fd4e8c0c0eca6a2fc427fcab}\label{class_engine_a1b794046fd4e8c0c0eca6a2fc427fcab}} 
+\index{Engine@{Engine}!doCommand@{doCommand}}
+\index{doCommand@{doCommand}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{doCommand()}{doCommand()}}
+{\footnotesize\ttfamily void Engine\+::do\+Command (\begin{DoxyParamCaption}\item[{const char $\ast$}]{arg }\end{DoxyParamCaption})}
+
+parse a single console command 
+\begin{DoxyParams}{Parameters}
+{\em arg} & the command to process \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_ab286f59abb8e497046840083a839822d}\label{class_engine_ab286f59abb8e497046840083a839822d}} 
+\index{Engine@{Engine}!dumpResources@{dumpResources}}
+\index{dumpResources@{dumpResources}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{dumpResources()}{dumpResources()}}
+{\footnotesize\ttfamily void Engine\+::dump\+Resources (\begin{DoxyParamCaption}\item[{const char $\ast$}]{type }\end{DoxyParamCaption})}
+
+clears all resource caches, effectively starting the engine \char`\"{}fresh\char`\"{} this does N\+OT unmount mods! It simply causes the engine to recache any loaded resources 
+\begin{DoxyParams}{Parameters}
+{\em type} & if not nullptr, tries to clear a specific resource cache by name \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_a86d918692853bc610d330b7c6b767db3}\label{class_engine_a86d918692853bc610d330b7c6b767db3}} 
+\index{Engine@{Engine}!findEntityDefIndexByName@{findEntityDefIndexByName}}
+\index{findEntityDefIndexByName@{findEntityDefIndexByName}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{findEntityDefIndexByName()}{findEntityDefIndexByName()}}
+{\footnotesize\ttfamily Uint32 Engine\+::find\+Entity\+Def\+Index\+By\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find the index of the entity def with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the entity def to look for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the entity with the given name, or U\+I\+N\+T32\+\_\+\+M\+AX if not found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_ae04b454f1bc1188fdf86f7a789dfb8cf}\label{class_engine_ae04b454f1bc1188fdf86f7a789dfb8cf}} 
+\index{Engine@{Engine}!fmsg@{fmsg}}
+\index{fmsg@{fmsg}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{fmsg()}{fmsg()}}
+{\footnotesize\ttfamily void Engine\+::fmsg (\begin{DoxyParamCaption}\item[{const Uint32}]{msg\+Type,  }\item[{const char $\ast$}]{fmt,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+logs a formatted char string to the console 
+\begin{DoxyParams}{Parameters}
+{\em msg\+Type} & the type of message to send to the console \\
+\hline
+{\em fmt} & a formatted string to print to the console \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_a328c1d56812c3a13258c3058a3564840}\label{class_engine_a328c1d56812c3a13258c3058a3564840}} 
+\index{Engine@{Engine}!freadl@{freadl}}
+\index{freadl@{freadl}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{freadl()}{freadl()}}
+{\footnotesize\ttfamily void Engine\+::freadl (\begin{DoxyParamCaption}\item[{void $\ast$}]{ptr,  }\item[{Uint32}]{size,  }\item[{Uint32}]{count,  }\item[{F\+I\+LE $\ast$}]{stream,  }\item[{const char $\ast$}]{filename,  }\item[{const char $\ast$}]{func\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+reads data from a file stream and outputs errors to the log 
+\begin{DoxyParams}{Parameters}
+{\em ptr} & a pointer to the variable in which to store the data read \\
+\hline
+{\em size} & the size of each data element to read \\
+\hline
+{\em count} & the number of data elements to read \\
+\hline
+{\em stream} & the file stream to read the data from \\
+\hline
+{\em filename} & the filename of the file that is being read from \\
+\hline
+{\em func\+Name} & the name of the function wherein the file is being read \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_a413dd084ab5a8fc52f05712630a897cd}\label{class_engine_a413dd084ab5a8fc52f05712630a897cd}} 
+\index{Engine@{Engine}!isEditorRunning@{isEditorRunning}}
+\index{isEditorRunning@{isEditorRunning}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{isEditorRunning()}{isEditorRunning()}}
+{\footnotesize\ttfamily bool Engine\+::is\+Editor\+Running (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+true if the editor is currently running 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a815ce23efcecb5f69b298ba8f3af3620}\label{class_engine_a815ce23efcecb5f69b298ba8f3af3620}} 
+\index{Engine@{Engine}!joinServer@{joinServer}}
+\index{joinServer@{joinServer}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{joinServer()}{joinServer()}}
+{\footnotesize\ttfamily void Engine\+::join\+Server (\begin{DoxyParamCaption}\item[{const char $\ast$}]{address }\end{DoxyParamCaption})}
+
+joins the given server 
+\begin{DoxyParams}{Parameters}
+{\em address} & the ip address (and port) of the server \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_ac689246dadf9e46703559423dcfc6e27}\label{class_engine_ac689246dadf9e46703559423dcfc6e27}} 
+\index{Engine@{Engine}!lineIntersectPlane@{lineIntersectPlane}}
+\index{lineIntersectPlane@{lineIntersectPlane}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{lineIntersectPlane()}{lineIntersectPlane()}}
+{\footnotesize\ttfamily bool Engine\+::line\+Intersect\+Plane (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{line\+Start,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{line\+End,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{plane\+Origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{plane\+Normal,  }\item[{\mbox{\hyperlink{class_vector}{Vector}} \&}]{out\+Intersection }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+finds the intersection between a point and a plane in 3D 
+\begin{DoxyParams}{Parameters}
+{\em line\+Start} & the start of the line segment \\
+\hline
+{\em line\+End} & the end of the line segment \\
+\hline
+{\em plane\+Origin} & where the plane is \char`\"{}centered\char`\"{} in 3D \\
+\hline
+{\em plane\+Normal} & the surface normal of the plane \\
+\hline
+{\em out\+Intersection} & the point of intersection between the line and the plane \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the line intersects with the plane, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a8d67c5c45b9a0e4618f796c7080c2049}\label{class_engine_a8d67c5c45b9a0e4618f796c7080c2049}} 
+\index{Engine@{Engine}!loadConfig@{loadConfig}}
+\index{loadConfig@{loadConfig}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{loadConfig()}{loadConfig()}}
+{\footnotesize\ttfamily int Engine\+::load\+Config (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+load and execute a config file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & filename of the config file to load (auto-\/prepends active game folder) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, non-\/zero on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a540ef6a8d6d4951806bae98fd6d57084}\label{class_engine_a540ef6a8d6d4951806bae98fd6d57084}} 
+\index{Engine@{Engine}!msg@{msg}}
+\index{msg@{msg}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{msg()}{msg()}}
+{\footnotesize\ttfamily void Engine\+::msg (\begin{DoxyParamCaption}\item[{const Uint32}]{msg\+Type,  }\item[{const char $\ast$}]{str }\end{DoxyParamCaption})}
+
+logs a char string to the console 
+\begin{DoxyParams}{Parameters}
+{\em msg\+Type} & the type of message to send to the console \\
+\hline
+{\em str} & a char string to print to the console \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_ae42a864b1b327254581b73c3be42f4a7}\label{class_engine_ae42a864b1b327254581b73c3be42f4a7}} 
+\index{Engine@{Engine}!playSound@{playSound}}
+\index{playSound@{playSound}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{playSound()}{playSound()}}
+{\footnotesize\ttfamily void Engine\+::play\+Sound (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+plays a sound file 
+\begin{DoxyParams}{Parameters}
+{\em name} & the filename of the sound to play \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_a73e8e35c8db08ac6a7d0c642b8456725}\label{class_engine_a73e8e35c8db08ac6a7d0c642b8456725}} 
+\index{Engine@{Engine}!pointInTriangle@{pointInTriangle}}
+\index{pointInTriangle@{pointInTriangle}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{pointInTriangle()}{pointInTriangle()}}
+{\footnotesize\ttfamily bool Engine\+::point\+In\+Triangle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{a,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{b,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{c,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+determines if the given point p lies in the triangle defined by a, b, c (does not use Z coord) 
+\begin{DoxyParams}{Parameters}
+{\em a} & point A on the triangle \\
+\hline
+{\em b} & point B on the triangle \\
+\hline
+{\em c} & point C on the triangle \\
+\hline
+{\em p} & the point to test \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the point is in the triangle, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a8cc8a728d8138c2f51eaa388d43a375c}\label{class_engine_a8cc8a728d8138c2f51eaa388d43a375c}} 
+\index{Engine@{Engine}!pressKey@{pressKey}}
+\index{pressKey@{pressKey}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{pressKey()}{pressKey()}}
+{\footnotesize\ttfamily const bool Engine\+::press\+Key (\begin{DoxyParamCaption}\item[{const int}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+return the value of a key and reset it if it\textquotesingle{}s been pressed !\+I\+M\+P\+O\+R\+T\+A\+N\+T! should generally N\+OT be used, as it \char`\"{}locks\char`\"{} the key for the rest of the frame after being pressed use a local variable to record the press for your object instead! 
+\begin{DoxyParams}{Parameters}
+{\em index} & the key scancode \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the key has been pressed, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a785587583c76b816ad9546b5fac8874c}\label{class_engine_a785587583c76b816ad9546b5fac8874c}} 
+\index{Engine@{Engine}!pressMouse@{pressMouse}}
+\index{pressMouse@{pressMouse}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{pressMouse()}{pressMouse()}}
+{\footnotesize\ttfamily const bool Engine\+::press\+Mouse (\begin{DoxyParamCaption}\item[{const int}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+return the value of a mouse button and reset it if it\textquotesingle{}s been clicked !\+I\+M\+P\+O\+R\+T\+A\+N\+T! should generally N\+OT be used, as it \char`\"{}locks\char`\"{} the button for the rest of the frame after being pressed use a local variable to record the press for your object instead! 
+\begin{DoxyParams}{Parameters}
+{\em index} & the button number \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the button has been clicked, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a1a04abf97b392c626ff66dd273667f57}\label{class_engine_a1a04abf97b392c626ff66dd273667f57}} 
+\index{Engine@{Engine}!random@{random}}
+\index{random@{random}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{random()}{random()}}
+{\footnotesize\ttfamily Uint32 Engine\+::random (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+generate a random number \begin{DoxyReturn}{Returns}
+a random 32-\/bit number 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a327f3c3fa61f08a3cf406933d793943b}\label{class_engine_a327f3c3fa61f08a3cf406933d793943b}} 
+\index{Engine@{Engine}!readFloat@{readFloat}}
+\index{readFloat@{readFloat}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{readFloat()}{readFloat()}}
+{\footnotesize\ttfamily int Engine\+::read\+Float (\begin{DoxyParamCaption}\item[{const char $\ast$}]{str,  }\item[{float $\ast$}]{arr,  }\item[{int}]{num\+To\+Read }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+reads multiple floats from a character string 
+\begin{DoxyParams}{Parameters}
+{\em str} & the string to read the space-\/separated character-\/encoded floats from \\
+\hline
+{\em arr} & an array to store each of the floats in \\
+\hline
+{\em num\+To\+Read} & the number of floats to read from str \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the number of floats that were successfully read from str 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a4d4de8c36bef392791d4a71a5de6c913}\label{class_engine_a4d4de8c36bef392791d4a71a5de6c913}} 
+\index{Engine@{Engine}!readInt@{readInt}}
+\index{readInt@{readInt}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{readInt()}{readInt()}}
+{\footnotesize\ttfamily int Engine\+::read\+Int (\begin{DoxyParamCaption}\item[{const char $\ast$}]{str,  }\item[{int $\ast$}]{arr,  }\item[{int}]{num\+To\+Read }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+reads multiple ints from a character string 
+\begin{DoxyParams}{Parameters}
+{\em str} & the string to read the space-\/separated character-\/encoded ints from \\
+\hline
+{\em arr} & an array to store each of the ints in \\
+\hline
+{\em num\+To\+Read} & the number of ints to read from str \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the number of ints that were successfully read from str 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_ac22149b770c99e10ea654eefa6e09a6d}\label{class_engine_ac22149b770c99e10ea654eefa6e09a6d}} 
+\index{Engine@{Engine}!removeMod@{removeMod}}
+\index{removeMod@{removeMod}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{removeMod()}{removeMod()}}
+{\footnotesize\ttfamily bool Engine\+::remove\+Mod (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+remove a mod from the game 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the mod folder to remove \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the mod was removed, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a75b66394782b15fb00f13dc56387b544}\label{class_engine_a75b66394782b15fb00f13dc56387b544}} 
+\index{Engine@{Engine}!saveConfig@{saveConfig}}
+\index{saveConfig@{saveConfig}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{saveConfig()}{saveConfig()}}
+{\footnotesize\ttfamily int Engine\+::save\+Config (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+write a config file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & filename of the config file to write (auto-\/prepends active game folder) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, non-\/zero on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_aa5059324e52489f2a85d764f28c5e8f9}\label{class_engine_aa5059324e52489f2a85d764f28c5e8f9}} 
+\index{Engine@{Engine}!shortenPath@{shortenPath}}
+\index{shortenPath@{shortenPath}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{shortenPath()}{shortenPath()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_string}{String}} Engine\+::shorten\+Path (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption}) const}
+
+takes a full system path to a local asset and attempts to cut it down to a virtual path 
+\begin{DoxyParams}{Parameters}
+{\em path} & the full filename \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_aaea75f7af95bfc4a30d69aaf1721d69d}\label{class_engine_aaea75f7af95bfc4a30d69aaf1721d69d}} 
+\index{Engine@{Engine}!smsg@{smsg}}
+\index{smsg@{smsg}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{smsg()}{smsg()}}
+{\footnotesize\ttfamily void Engine\+::smsg (\begin{DoxyParamCaption}\item[{const Uint32}]{msg\+Type,  }\item[{const \mbox{\hyperlink{class_string}{String}} \&}]{str }\end{DoxyParamCaption})}
+
+logs a \mbox{\hyperlink{class_string}{String}} to the console 
+\begin{DoxyParams}{Parameters}
+{\em msg\+Type} & the type of message to send to the console \\
+\hline
+{\em str} & a \mbox{\hyperlink{class_string}{String}} to print to the console \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_ab66e9426ed9043f554a80dcd27a6ab0b}\label{class_engine_ab66e9426ed9043f554a80dcd27a6ab0b}} 
+\index{Engine@{Engine}!stackTrace@{stackTrace}}
+\index{stackTrace@{stackTrace}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{stackTrace()}{stackTrace()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string_buf}{String\+Buf}}$<$ Engine\+::stack\+Trace\+Str\+Size $>$ $>$ Engine\+::stack\+Trace (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+generate a stack trace \begin{DoxyReturn}{Returns}
+a list of strings representing stack frames 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_acaac4d1a02efe0d8d909553403c66ad2}\label{class_engine_acaac4d1a02efe0d8d909553403c66ad2}} 
+\index{Engine@{Engine}!startEditor@{startEditor}}
+\index{startEditor@{startEditor}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{startEditor()}{startEditor()}}
+{\footnotesize\ttfamily void Engine\+::start\+Editor (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+
+shuts down any active games and starts the editor 
+\begin{DoxyParams}{Parameters}
+{\em path} & optional path to a level to startup \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_engine_a1c8d2deba6f10d27be67a8b167389f7a}\label{class_engine_a1c8d2deba6f10d27be67a8b167389f7a}} 
+\index{Engine@{Engine}!strCompare@{strCompare}}
+\index{strCompare@{strCompare}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{strCompare()}{strCompare()}}
+{\footnotesize\ttfamily int Engine\+::str\+Compare (\begin{DoxyParamCaption}\item[{const char $\ast$}]{a,  }\item[{const char $\ast$}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+does string comparison (helper function for lua) 
+\begin{DoxyParams}{Parameters}
+{\em a} & the first string \\
+\hline
+{\em b} & the second string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the result of the string comparison 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_a6dccb14e106d9f5fab2fda1e560e1737}\label{class_engine_a6dccb14e106d9f5fab2fda1e560e1737}} 
+\index{Engine@{Engine}!triangleCoords@{triangleCoords}}
+\index{triangleCoords@{triangleCoords}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{triangleCoords()}{triangleCoords()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector}{Vector}} Engine\+::triangle\+Coords (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{a,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{b,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{c,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+determines where in the triangle defined by a, b, c, that the point p lies (does not use Z coord) 
+\begin{DoxyParams}{Parameters}
+{\em a} & point A on the triangle \\
+\hline
+{\em b} & point B on the triangle \\
+\hline
+{\em c} & point C on the triangle \\
+\hline
+{\em p} & the point to test \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pair of coordinates that define where the point is in the triangle 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_engine_ae8ea73d9e3a4c4bfe47383af02c815a2}\label{class_engine_ae8ea73d9e3a4c4bfe47383af02c815a2}} 
+\index{Engine@{Engine}!triangleOverlapsTriangle@{triangleOverlapsTriangle}}
+\index{triangleOverlapsTriangle@{triangleOverlapsTriangle}!Engine@{Engine}}
+\doxysubsubsection{\texorpdfstring{triangleOverlapsTriangle()}{triangleOverlapsTriangle()}}
+{\footnotesize\ttfamily bool Engine\+::triangle\+Overlaps\+Triangle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{a0,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{b0,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{c0,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{a1,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{b1,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{c1 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+determines if one triangle lies inside of another (two-\/dimensional) 
+\begin{DoxyParams}{Parameters}
+{\em a0} & point A on first triangle (container) \\
+\hline
+{\em b0} & point B on first triangle (container) \\
+\hline
+{\em c0} & point C on first triangle (container) \\
+\hline
+{\em a1} & point A on second triangle \\
+\hline
+{\em b1} & point B on second triangle \\
+\hline
+{\em c1} & point C on second triangle \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the second triangle is in the first one, otherwise false 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_engine_8hpp}{Engine.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Engine.\+cpp\end{DoxyCompactItemize}

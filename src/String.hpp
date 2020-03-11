@@ -1,4 +1,4 @@
-// String.hpp
+//! @file String.hpp
 
 #pragma once
 
@@ -14,6 +14,7 @@ inline char* strncpy_s(char *strDest, Uint32 numberOfElements, const char *strSo
 }
 #endif
 
+//! Performs data and methods to operate a string buffer
 class String {
 public:
 	String() {
@@ -32,16 +33,16 @@ public:
 		}
 	}
 
-	// represents an invalid position in the string
+	//! represents an invalid position in the string
 	static const Uint32 npos = UINT32_MAX;
 
-	// getters & setters
+	//! getters & setters
 	const char*				get() const { return str ? str : ""; }
 	const Uint32			getSize() const { return size; }
 
-	// allocs / reallocs the string (erases data!)
-	// @param newSize the size (in chars) of the string to alloc
-	// @return the alloc'd string
+	//! allocs / reallocs the string (erases data!)
+	//! @param newSize the size (in chars) of the string to alloc
+	//! @return the alloc'd string
 	virtual const char* alloc(const Uint32 newSize) {
 		size = newSize;
 		if (str) {
@@ -57,8 +58,8 @@ public:
 		return str;
 	}
 
-	// determine if the string is empty
-	// @return true if empty, otherwise false
+	//! determine if the string is empty
+	//! @return true if empty, otherwise false
 	bool empty() const {
 		if (str) {
 			return str[0] == '\0';
@@ -67,8 +68,8 @@ public:
 		}
 	}
 
-	// get the length of the string
-	// @return the number of chars in the string
+	//! get the length of the string
+	//! @return the number of chars in the string
 	Uint32 length() const {
 		if (str == nullptr || size == 0) {
 			return 0;
@@ -78,8 +79,8 @@ public:
 		return c;
 	}
 
-	// copies src into string. string will always be null-terminated
-	// @param src the string to copy into our string
+	//! copies src into string. string will always be null-terminated
+	//! @param src the string to copy into our string
 	const char* assign(const char* src) {
 		if (src == nullptr) {
 			if (str) {
@@ -103,8 +104,8 @@ public:
 		}
 	}
 
-	// copies formatted src string into our string. string will always be null-terminated
-	// @param src the formatted string to copy
+	//! copies formatted src string into our string. string will always be null-terminated
+	//! @param src the formatted string to copy
 	const char* format(const char* src, ...) {
 		if (str == nullptr || size == 0) {
 			return "";
@@ -122,9 +123,9 @@ public:
 		return str;
 	}
 
-	// append formatted string into our string. string will always be null-terminated
-	// @param src the formatted string to append
-	// @return this string
+	//! append formatted string into our string. string will always be null-terminated
+	//! @param src the formatted string to append
+	//! @return this string
 	const char* append(const char* src) {
 		if (str == nullptr) {
 			return "";
@@ -143,9 +144,9 @@ public:
 		return str;
 	}
 
-	// append formatted string into our string. string will always be null-terminated
-	// @param src the formatted string to append
-	// @return this string
+	//! append formatted string into our string. string will always be null-terminated
+	//! @param src the formatted string to append
+	//! @return this string
 	const char* appendf(const char* src, ...) {
 		if (str == nullptr) {
 			return "";
@@ -175,10 +176,10 @@ public:
 		return str;
 	}
 
-	// build a new string using part of this string
-	// @param start the index to start at
-	// @param end the index to end at
-	// @return the resulting substr
+	//! build a new string using part of this string
+	//! @param start the index to start at
+	//! @param end the index to end at
+	//! @return the resulting substr
 	String substr(const Uint32 start, Uint32 end = 0) const {
 		if (end == 0) {
 			end = size;
@@ -203,10 +204,10 @@ public:
 		return result;
 	}
 
-	// locates the first instance of the key string in our string and returns its location
-	// @param key the string to locate
-	// @param offset the index to start looking in our string
-	// @return the index of the key if it was found, or npos if it could not be found
+	//! locates the first instance of the key string in our string and returns its location
+	//! @param key the string to locate
+	//! @param offset the index to start looking in our string
+	//! @return the index of the key if it was found, or npos if it could not be found
 	Uint32 find(const char* key, Uint32 offset = 0) const {
 		if (key == nullptr || str == nullptr) {
 			return npos;
@@ -227,10 +228,10 @@ public:
 		return npos;
 	}
 
-	// locates the first instance of the key char in our string and returns its location
-	// @param key the char to locate
-	// @param offset the index to start looking in our string
-	// @return the index of the key if it was found, or npos if it could not be found
+	//! locates the first instance of the key char in our string and returns its location
+	//! @param key the char to locate
+	//! @param offset the index to start looking in our string
+	//! @return the index of the key if it was found, or npos if it could not be found
 	Uint32 find(const char key, Uint32 offset = 0) const {
 		if (str == nullptr) {
 			return npos;
@@ -244,8 +245,8 @@ public:
 		return npos;
 	}
 
-	// converts the string to an integer number
-	// @return the int value
+	//! converts the string to an integer number
+	//! @return the int value
 	int toInt() const {
 		int result = 0;
 		if (str != nullptr) {
@@ -254,8 +255,8 @@ public:
 		return result;
 	}
 
-	// converts the string to a floating point number
-	// @return the float value
+	//! converts the string to a floating point number
+	//! @return the float value
 	float toFloat() const {
 		float result = 0.f;
 		if (str != nullptr) {
@@ -264,8 +265,8 @@ public:
 		return result;
 	}
 
-	// hash the string
-	// @return a number representation of the string
+	//! hash the string
+	//! @return a number representation of the string
 	unsigned long hash() const {
 		if (str == nullptr) {
 			return 0;
@@ -274,13 +275,13 @@ public:
 		int c;
 		const char* data = str;
 		while ((c = *data++) != 0) {
-			value = ((value << 5) + value) + c; // hash * 33 + c
+			value = ((value << 5) + value) + c; //! hash * 33 + c
 		}
 		return value;
 	}
 
-	// access char data
-	// @return the char at the given index
+	//! access char data
+	//! @return the char at the given index
 	char& operator[](const Uint32 index) {
 		assert(index >= 0 && index < size);
 		return str[index];
@@ -290,7 +291,7 @@ public:
 		return str[index];
 	}
 
-	// compare strings
+	//! compare strings
 	bool operator<(const char* src) const {
 		if (str && src) {
 			return strcmp(str, src) < 0;
@@ -346,7 +347,7 @@ public:
 		}
 	}
 
-	// assign operator
+	//! assign operator
 	const char* operator=(const char* src) {
 		return assign(src);
 	}
@@ -354,7 +355,7 @@ public:
 		return assign(src.get());
 	}
 
-	// conversion to const char*
+	//! conversion to const char*
 	operator const char*() const {
 		return get();
 	}
@@ -364,6 +365,7 @@ protected:
 	Uint32 size = 0;
 };
 
+//! Like a normal string, but is allocated on the stack instead of the heap.
 template<Uint32 defaultSize>
 class StringBuf : public String {
 public:
@@ -405,9 +407,9 @@ public:
 		}
 	}
 
-	// allocs / reallocs the string (erases data!)
-	// @param newSize the size (in chars) of the string to alloc
-	// @return the alloc'd string
+	//! allocs / reallocs the string (erases data!)
+	//! @param newSize the size (in chars) of the string to alloc
+	//! @return the alloc'd string
 	virtual const char* alloc(const Uint32 newSize) override {
 		size = newSize;
 		if (str == defaultStr) {
@@ -426,7 +428,7 @@ public:
 		return str;
 	}
 
-	// getters & setters
+	//! getters & setters
 	static Uint32 getDefaultSize() { return defaultSize; }
 
 protected:

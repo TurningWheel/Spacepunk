@@ -1,4 +1,4 @@
-// Field.hpp
+//! @file Field.hpp
 
 #pragma once
 
@@ -12,6 +12,7 @@
 class Renderer;
 class Frame;
 
+//! A Field is a text field that lives in a Frame. It can be edited, or locked for editing to just have some static text in a window.
 class Field {
 public:
 	Field();
@@ -22,10 +23,10 @@ public:
 	Field(Frame& _parent, const char* _text);
 	~Field();
 
-	// no fields or frames should ever have this name!
+	//! no fields or frames should ever have this name!
 	static const char* invalidName;
 
-	// text justification
+	//! text justification
 	enum justify_t {
 		LEFT,
 		CENTER,
@@ -33,32 +34,32 @@ public:
 		JUSTIFY_TYPE_LENGTH
 	};
 
-	// the result of the field process
+	//! the result of the field process
 	struct result_t {
 		bool highlighted;
 		bool entered;
 	};
 
-	// selects the field for text editing
+	//! selects the field for text editing
 	void select();
 
-	// deselects the field
+	//! deselects the field
 	void deselect();
 
-	// draws the field
-	// @param renderer the renderer object used to draw the field
-	// @param _size size and position of field's parent frame
-	// @param _actualSize offset into the parent frame space (scroll)
+	//! draws the field
+	//! @param renderer the renderer object used to draw the field
+	//! @param _size size and position of field's parent frame
+	//! @param _actualSize offset into the parent frame space (scroll)
 	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
 
-	// handles clicks, etc.
-	// @param _size size and position of field's parent frame
-	// @param _actualSize offset into the parent frame space (scroll)
-	// @param usable true if another object doesn't have the mouse's attention, false otherwise
-	// @return resultant state of the field after processing
+	//! handles clicks, etc.
+	//! @param _size size and position of field's parent frame
+	//! @param _actualSize offset into the parent frame space (scroll)
+	//! @param usable true if another object doesn't have the mouse's attention, false otherwise
+	//! @return resultant state of the field after processing
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
-	// getters & setters
+	//! getters & setters
 	const char*					getName() const { return name.get(); }
 	const char*					getText() const { return text; }
 	const Uint32				getTextLen() const { return textLen; }
@@ -87,7 +88,7 @@ public:
 	void	setCallback(const Script::Function* fn) { callback = fn; }
 
 private:
-	Frame* parent = nullptr;	// parent frame
+	Frame* parent = nullptr;	//! parent frame
 
 	String name;
 	Script::Args params;

@@ -1,4 +1,4 @@
-// Client.hpp
+//! @file Client.hpp
 
 #pragma once
 
@@ -13,6 +13,10 @@ class Script;
 class Frame;
 class Editor;
 
+//! A Client implements the Game interface and lives in the Engine.
+//! In order to play a singleplayer or listening game, the engine instantiates a Client and a Server, meaning there are two Game states running at once.
+//! A Server will dictate game updates to a client, but in other respects they are mostly identical.
+//! The Client does own a Renderer however.
 class Client : public Game {
 public:
 	Client();
@@ -20,44 +24,43 @@ public:
 
 	typedef LinkedList<Engine::logmsg_t> LogList;
 
-	// getters & setters
 	virtual bool	isServer() const override { return false; }
 	virtual bool	isClient() const override { return true; }
 
-	// starts up the client
+	//! starts up the client
 	virtual void init() override;
 
-	// read messages from the net interface
+	//! read messages from the net interface
 	void handleNetMessages();
 
-	// perform pre-processing on the current frame
+	//! perform pre-processing on the current frame
 	virtual void preProcess() override;
 
-	// process the current frame
+	//! process the current frame
 	virtual void process() override;
 
-	// perform post-processing on the current frame
+	//! perform post-processing on the current frame
 	virtual void postProcess() override;
 
-	// called when we connect to a server
+	//! called when we connect to a server
 	virtual void onEstablishConnection(Uint32 remoteID) override;
 
-	// called when we disconnect from a server
-	// @param remoteID always zero, since the server is our only remote host
+	//! called when we disconnect from a server
+	//! @param remoteID always zero, since the server is our only remote host
 	virtual void onDisconnect(Uint32 remoteID) override;
 
-	// spawns a player on the server
-	// @param localID the local number of player to spawn
+	//! spawns a player on the server
+	//! @param localID the local number of player to spawn
 	void spawn(Uint32 localID);
 
-	// starts up the level editor
-	// @param path optional path to a level to startup
+	//! starts up the level editor
+	//! @param path optional path to a level to startup
 	void startEditor(const char* path = "");
 
-	// closes the editor without terminating the client
+	//! closes the editor without terminating the client
 	void closeEditor();
 
-	// getters & setters
+	//! getters & setters
 	Renderer*&						getRenderer() { return renderer; }
 	Mixer*&							getMixer() { return mixer; }
 	Frame*&							getGUI() { return gui; }
@@ -71,13 +74,13 @@ public:
 	void	setLogStart(Node<Engine::logmsg_t>* const node) { logStart = node; }
 
 private:
-	Script*     script = nullptr; // script engine
-	Renderer*   renderer = nullptr; // renderer
-	Mixer*		mixer = nullptr; // audio mixer
-	Frame*		gui = nullptr; // active gui
-	Editor*		editor = nullptr; // level editor
+	Script*     script = nullptr; //! script engine
+	Renderer*   renderer = nullptr; //! renderer
+	Mixer*		mixer = nullptr; //! audio mixer
+	Frame*		gui = nullptr; //! active gui
+	Editor*		editor = nullptr; //! level editor
 
-	// console variables
+	//! console variables
 	static const int consoleLen = 80;
 	bool consoleAllowed = true;
 	bool consoleActive = false;
@@ -88,7 +91,7 @@ private:
 	Node<String>* cuCommand = nullptr;
 	Node<Engine::logmsg_t>* logStart = nullptr;
 
-	// process console input
+	//! process console input
 	void runConsole();
 };
 

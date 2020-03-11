@@ -1,0 +1,147 @@
+\hypertarget{class_button}{}\doxysection{Button Class Reference}
+\label{class_button}\index{Button@{Button}}
+
+
+A \mbox{\hyperlink{class_button}{Button}} lives in a \mbox{\hyperlink{class_frame}{Frame}} and can have scripted actions or a native callback.  
+
+
+
+
+{\ttfamily \#include $<$Button.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_button_1_1result__t}{result\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em the result of the button process \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_button_aa2c3c1b02db4dc1c432fe5fdc716708d}\label{class_button_aa2c3c1b02db4dc1c432fe5fdc716708d}} 
+enum \mbox{\hyperlink{class_button_aa2c3c1b02db4dc1c432fe5fdc716708d}{style\+\_\+t}} \{ {\bfseries S\+T\+Y\+L\+E\+\_\+\+N\+O\+R\+M\+AL}, 
+{\bfseries S\+T\+Y\+L\+E\+\_\+\+T\+O\+G\+G\+LE}, 
+{\bfseries S\+T\+Y\+L\+E\+\_\+\+C\+H\+E\+C\+K\+B\+OX}, 
+{\bfseries S\+T\+Y\+L\+E\+\_\+\+M\+AX}
+ \}
+\begin{DoxyCompactList}\small\item\em button style \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_button_a1c62ff06d2d3621ccc2e663df8f6ea08}\label{class_button_a1c62ff06d2d3621ccc2e663df8f6ea08}} 
+{\bfseries Button} (\mbox{\hyperlink{class_frame}{Frame}} \&\+\_\+parent)
+\item 
+void \mbox{\hyperlink{class_button_ad94f63e854526e206e8ce808181c0ca4}{draw}} (\mbox{\hyperlink{class_renderer}{Renderer}} \&renderer, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+size, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+actual\+Size)
+\item 
+\mbox{\hyperlink{struct_button_1_1result__t}{result\+\_\+t}} \mbox{\hyperlink{class_button_a7937fa20a193d59a0486d9f99ff33729}{process}} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+size, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+actual\+Size, const bool usable)
+\item 
+\mbox{\Hypertarget{class_button_a38296642d9243eab7a3b32f9996ce0c1}\label{class_button_a38296642d9243eab7a3b32f9996ce0c1}} 
+const char $\ast$ \mbox{\hyperlink{class_button_a38296642d9243eab7a3b32f9996ce0c1}{get\+Name}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_button_a4d419796b0a42be11dcb80722e76375d}\label{class_button_a4d419796b0a42be11dcb80722e76375d}} 
+const int {\bfseries get\+Border} () const
+\item 
+\mbox{\Hypertarget{class_button_a992d3b2dda5f88f5f8d5733750194d19}\label{class_button_a992d3b2dda5f88f5f8d5733750194d19}} 
+const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \& {\bfseries get\+Size} () const
+\item 
+\mbox{\Hypertarget{class_button_a0b4af36b349ee2d8154624760dc1fe32}\label{class_button_a0b4af36b349ee2d8154624760dc1fe32}} 
+const bool {\bfseries is\+Pressed} () const
+\item 
+\mbox{\Hypertarget{class_button_ab1917044e31982aa195482466504bc3b}\label{class_button_ab1917044e31982aa195482466504bc3b}} 
+const bool {\bfseries is\+Highlighted} () const
+\item 
+\mbox{\Hypertarget{class_button_ad6bae59797ee6abd3d7cd7fd3369847b}\label{class_button_ad6bae59797ee6abd3d7cd7fd3369847b}} 
+const bool {\bfseries is\+Disabled} () const
+\item 
+\mbox{\Hypertarget{class_button_a9a303308139d2bc82c624fc1d971c8ad}\label{class_button_a9a303308139d2bc82c624fc1d971c8ad}} 
+const \mbox{\hyperlink{class_button_aa2c3c1b02db4dc1c432fe5fdc716708d}{style\+\_\+t}} {\bfseries get\+Style} () const
+\item 
+\mbox{\Hypertarget{class_button_ad33d51ada8962e9163a0a127f365aaac}\label{class_button_ad33d51ada8962e9163a0a127f365aaac}} 
+\mbox{\hyperlink{class_script_1_1_args}{Script\+::\+Args}} \& {\bfseries get\+Params} ()
+\item 
+\mbox{\Hypertarget{class_button_a0173bd7ba5cebd6399f5cb08fc6d69c6}\label{class_button_a0173bd7ba5cebd6399f5cb08fc6d69c6}} 
+const \mbox{\hyperlink{class_script_1_1_function}{Script\+::\+Function}} $\ast$ {\bfseries get\+Callback} () const
+\item 
+\mbox{\Hypertarget{class_button_a8cd23a603ce8b0fa5ba3364d96166a5e}\label{class_button_a8cd23a603ce8b0fa5ba3364d96166a5e}} 
+void {\bfseries set\+Border} (const int \+\_\+border)
+\item 
+\mbox{\Hypertarget{class_button_a4c8260eedfc1c6eb8f5923f59282b424}\label{class_button_a4c8260eedfc1c6eb8f5923f59282b424}} 
+void {\bfseries set\+Pos} (const int x, const int y)
+\item 
+\mbox{\Hypertarget{class_button_aa970a3a923b1fa6b9ae8ec2c0ae091fe}\label{class_button_aa970a3a923b1fa6b9ae8ec2c0ae091fe}} 
+void {\bfseries set\+Size} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&\+\_\+size)
+\item 
+\mbox{\Hypertarget{class_button_a698fb50028a77c1b05040a3aea8c8ebb}\label{class_button_a698fb50028a77c1b05040a3aea8c8ebb}} 
+void {\bfseries set\+Color} (const glm\+::vec4 \&\+\_\+color)
+\item 
+\mbox{\Hypertarget{class_button_a43ddd41d82950c85c29339a4c6e6b490}\label{class_button_a43ddd41d82950c85c29339a4c6e6b490}} 
+void {\bfseries set\+Text\+Color} (const glm\+::vec4 \&\+\_\+color)
+\item 
+\mbox{\Hypertarget{class_button_ac881cdeaff94988cd9c1aef416229311}\label{class_button_ac881cdeaff94988cd9c1aef416229311}} 
+void {\bfseries set\+Name} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_button_ae2a8bda0f916bc3a3c2a896ee84aac1a}\label{class_button_ae2a8bda0f916bc3a3c2a896ee84aac1a}} 
+void {\bfseries set\+Text} (const char $\ast$\+\_\+text)
+\item 
+\mbox{\Hypertarget{class_button_a8a10cf485e6f4acd14961da757b22162}\label{class_button_a8a10cf485e6f4acd14961da757b22162}} 
+void {\bfseries set\+Icon} (const char $\ast$\+\_\+icon)
+\item 
+\mbox{\Hypertarget{class_button_a838907660c34ebddb921623da63e662b}\label{class_button_a838907660c34ebddb921623da63e662b}} 
+void {\bfseries set\+Tooltip} (const char $\ast$\+\_\+tooltip)
+\item 
+\mbox{\Hypertarget{class_button_a48b155e467d42e25b6c0ca919a39f8d9}\label{class_button_a48b155e467d42e25b6c0ca919a39f8d9}} 
+void {\bfseries set\+Disabled} (const bool \+\_\+disabled)
+\item 
+\mbox{\Hypertarget{class_button_a51ea7b9ee40350be18b9f14f03ff84c1}\label{class_button_a51ea7b9ee40350be18b9f14f03ff84c1}} 
+void {\bfseries set\+Style} (const \mbox{\hyperlink{class_button_aa2c3c1b02db4dc1c432fe5fdc716708d}{style\+\_\+t}} \+\_\+style)
+\item 
+\mbox{\Hypertarget{class_button_a3a963907e38415bcf6effddede95fcbd}\label{class_button_a3a963907e38415bcf6effddede95fcbd}} 
+void {\bfseries set\+Pressed} (const bool \+\_\+pressed)
+\item 
+\mbox{\Hypertarget{class_button_aa4406f9d24297b8af10ec50ba9af9b74}\label{class_button_aa4406f9d24297b8af10ec50ba9af9b74}} 
+void {\bfseries set\+Callback} (const \mbox{\hyperlink{class_script_1_1_function}{Script\+::\+Function}} $\ast$fn)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_button}{Button}} lives in a \mbox{\hyperlink{class_frame}{Frame}} and can have scripted actions or a native callback. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_button_ad94f63e854526e206e8ce808181c0ca4}\label{class_button_ad94f63e854526e206e8ce808181c0ca4}} 
+\index{Button@{Button}!draw@{draw}}
+\index{draw@{draw}!Button@{Button}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Button\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_renderer}{Renderer}} \&}]{renderer,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+size,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+actual\+Size }\end{DoxyParamCaption})}
+
+draws the button 
+\begin{DoxyParams}{Parameters}
+{\em renderer} & the renderer object used to draw the button \\
+\hline
+{\em \+\_\+size} & size and position of button\textquotesingle{}s parent frame \\
+\hline
+{\em \+\_\+actual\+Size} & offset into the parent frame space (scroll) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_button_a7937fa20a193d59a0486d9f99ff33729}\label{class_button_a7937fa20a193d59a0486d9f99ff33729}} 
+\index{Button@{Button}!process@{process}}
+\index{process@{process}!Button@{Button}}
+\doxysubsubsection{\texorpdfstring{process()}{process()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_button_1_1result__t}{Button\+::result\+\_\+t}} Button\+::process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+size,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+actual\+Size,  }\item[{const bool}]{usable }\end{DoxyParamCaption})}
+
+handles button clicks, etc. 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+size} & size and position of button\textquotesingle{}s parent frame \\
+\hline
+{\em \+\_\+actual\+Size} & offset into the parent frame space (scroll) \\
+\hline
+{\em usable} & true if another object doesn\textquotesingle{}t have the mouse\textquotesingle{}s attention, false otherwise \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+resultant state of the button after processing 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_button_8hpp}{Button.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Button.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,299 @@
+\hypertarget{class_b_box}{}\doxysection{B\+Box Class Reference}
+\label{class_b_box}\index{BBox@{BBox}}
+
+
+{\ttfamily \#include $<$B\+Box.\+hpp$>$}
+
+Inheritance diagram for B\+Box\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_b_box}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_b_box_ad8d096f50ef9edd4231ff0de3b6bbba9}\label{class_b_box_ad8d096f50ef9edd4231ff0de3b6bbba9}} 
+enum \mbox{\hyperlink{class_b_box_ad8d096f50ef9edd4231ff0de3b6bbba9}{shape\+\_\+t}} \{ \newline
+{\bfseries S\+H\+A\+P\+E\+\_\+\+B\+OX}, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+S\+P\+H\+E\+RE}, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+C\+A\+P\+S\+U\+LE}, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+C\+Y\+L\+I\+N\+D\+ER}, 
+\newline
+{\bfseries S\+H\+A\+P\+E\+\_\+\+C\+O\+NE}, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+M\+E\+SH}, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+M\+AX}
+ \}
+\begin{DoxyCompactList}\small\item\em collision shapes \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_b_box_aa82d26a695ab73b899d81131567930c7}\label{class_b_box_aa82d26a695ab73b899d81131567930c7}} 
+{\bfseries B\+Box} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity, \mbox{\hyperlink{class_component}{Component}} $\ast$\+\_\+parent)
+\item 
+\mbox{\Hypertarget{class_b_box_a08681386eb5bf8b6faa294a85e844f29}\label{class_b_box_a08681386eb5bf8b6faa294a85e844f29}} 
+void \mbox{\hyperlink{class_b_box_a08681386eb5bf8b6faa294a85e844f29}{create\+Rigid\+Body}} ()
+\begin{DoxyCompactList}\small\item\em create the physics body \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_b_box_a29742f5e6178e802b946521e094a5b88}\label{class_b_box_a29742f5e6178e802b946521e094a5b88}} 
+void \mbox{\hyperlink{class_b_box_a29742f5e6178e802b946521e094a5b88}{delete\+Rigid\+Body}} ()
+\begin{DoxyCompactList}\small\item\em removes the physics object from the simulation \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_b_box_a9f26e8d6a9dd6b82f6d551e5ad3d0c7c}{update\+Rigid\+Body}} (const \mbox{\hyperlink{class_vector}{Vector}} \&old\+G\+Scale)
+\item 
+bt\+Transform \mbox{\hyperlink{class_b_box_ae69f127716c50ff0d17e9ef429e6cc3e}{get\+Physics\+Transform}} () const
+\item 
+void \mbox{\hyperlink{class_b_box_a06d9b108f4ffc2680078ce8c59424e1d}{set\+Physics\+Transform}} (const \mbox{\hyperlink{class_vector}{Vector}} \&v, const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&a)
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \mbox{\hyperlink{class_b_box_a403bdde3014141d9a938bfc3b0e91ddd}{find\+All\+Overlapping\+Entities}} () const
+\item 
+virtual bool \mbox{\hyperlink{class_b_box_aaee44f9e94a658bf8bad2adf5d714b95}{check\+Collision}} () const override
+\item 
+\mbox{\Hypertarget{class_b_box_a8fb74b6d1186087c78580264b14e920f}\label{class_b_box_a8fb74b6d1186087c78580264b14e920f}} 
+void \mbox{\hyperlink{class_b_box_a8fb74b6d1186087c78580264b14e920f}{apply\+Move\+Forces}} (const \mbox{\hyperlink{class_vector}{Vector}} \&vel, const \mbox{\hyperlink{class_rotation}{Rotation}} \&rot)
+\begin{DoxyCompactList}\small\item\em apply movement forces (velocity and rotation) to bbox\textquotesingle{}s physics component \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_b_box_a452b6801d58e675596ba8a3f6a9a1729}{apply\+Force}} (const \mbox{\hyperlink{class_vector}{Vector}} \&force, const \mbox{\hyperlink{class_vector}{Vector}} \&origin)
+\item 
+virtual void \mbox{\hyperlink{class_b_box_a9192086833bbe8aab7509b85e4910f1f}{before\+World\+Insertion}} (const \mbox{\hyperlink{class_world}{World}} $\ast$world) override
+\item 
+virtual void \mbox{\hyperlink{class_b_box_ae96ae8ca7f3ea50c29e9f7535e6dac3e}{after\+World\+Insertion}} (const \mbox{\hyperlink{class_world}{World}} $\ast$world) override
+\item 
+\mbox{\Hypertarget{class_b_box_adb78683b2f5b5debad648666fdbd6ea3}\label{class_b_box_adb78683b2f5b5debad648666fdbd6ea3}} 
+virtual void \mbox{\hyperlink{class_b_box_adb78683b2f5b5debad648666fdbd6ea3}{update}} () override
+\begin{DoxyCompactList}\small\item\em updates matrices and rigid body \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_b_box_ad59ea4b61403cf801c722cfd0604f1f9}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights) override
+\item 
+virtual void \mbox{\hyperlink{class_b_box_a7cbb8aeb5a51ebb2961a82370b13b9f5}{load}} (F\+I\+LE $\ast$fp) override
+\item 
+virtual void \mbox{\hyperlink{class_b_box_af2b65e781246a4c7f3d3de592233b835}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_b_box_ad08cef572fe2665717706d9b7f223edb}\label{class_b_box_ad08cef572fe2665717706d9b7f223edb}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_b_box_ad08cef572fe2665717706d9b7f223edb}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_b_box_ad5cb05a77893785721ef3b97651142da}\label{class_b_box_ad5cb05a77893785721ef3b97651142da}} 
+\mbox{\hyperlink{class_b_box_ad8d096f50ef9edd4231ff0de3b6bbba9}{shape\+\_\+t}} {\bfseries get\+Shape} () const
+\item 
+\mbox{\Hypertarget{class_b_box_a14b17334927e5eca71c9d4ced3a070ad}\label{class_b_box_a14b17334927e5eca71c9d4ced3a070ad}} 
+bool {\bfseries is\+Enabled} () const
+\item 
+\mbox{\Hypertarget{class_b_box_a283bb2f630ea13d43491b9b818b82f29}\label{class_b_box_a283bb2f630ea13d43491b9b818b82f29}} 
+float {\bfseries get\+Mass} () const
+\item 
+\mbox{\Hypertarget{class_b_box_a3603478eddcd0efa2fc92a1c1b4744cb}\label{class_b_box_a3603478eddcd0efa2fc92a1c1b4744cb}} 
+const bt\+Collision\+Shape $\ast$ {\bfseries get\+Collision\+Shape\+Ptr} () const
+\item 
+\mbox{\Hypertarget{class_b_box_ae07204a8e79081beba703e1e44d084b5}\label{class_b_box_ae07204a8e79081beba703e1e44d084b5}} 
+void {\bfseries set\+Shape} (Uint32 \+\_\+shape)
+\item 
+\mbox{\Hypertarget{class_b_box_a665c7e7350745ef6288519198decd2c8}\label{class_b_box_a665c7e7350745ef6288519198decd2c8}} 
+void {\bfseries set\+Enabled} (bool \+\_\+enabled)
+\item 
+\mbox{\Hypertarget{class_b_box_a5a70a7be936f55ef6fb6f221a8c55fd2}\label{class_b_box_a5a70a7be936f55ef6fb6f221a8c55fd2}} 
+void {\bfseries set\+Mass} (float \+\_\+mass)
+\item 
+\mbox{\Hypertarget{class_b_box_ab1f4ffbb5aff23eb4811f69ca94fa299}\label{class_b_box_ab1f4ffbb5aff23eb4811f69ca94fa299}} 
+\mbox{\hyperlink{class_b_box}{B\+Box}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_b_box}{B\+Box}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ {\bfseries shape\+Str} \mbox{[}S\+H\+A\+P\+E\+\_\+\+M\+AX\mbox{]}
+\item 
+\mbox{\Hypertarget{class_b_box_abafce248c2c8c2d46561c966bf721fad}\label{class_b_box_abafce248c2c8c2d46561c966bf721fad}} 
+static const char $\ast$ \mbox{\hyperlink{class_b_box_abafce248c2c8c2d46561c966bf721fad}{mesh\+Capsule\+Cylinder\+Str}} = \char`\"{}assets/editor/bbox/Capsule\+Cylinder.\+F\+BX\char`\"{}
+\begin{DoxyCompactList}\small\item\em bbox models \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_b_box_a105eadd1c208ad88fdc7432e86e9ed58}\label{class_b_box_a105eadd1c208ad88fdc7432e86e9ed58}} 
+static const char $\ast$ {\bfseries mesh\+Capsule\+Half\+Sphere\+Str} = \char`\"{}assets/editor/bbox/Capsule\+Half\+Sphere.\+F\+BX\char`\"{}
+\item 
+\mbox{\Hypertarget{class_b_box_a0a7af0a0bddfb3ce6facf3fb00655c68}\label{class_b_box_a0a7af0a0bddfb3ce6facf3fb00655c68}} 
+static const char $\ast$ {\bfseries mesh\+Cone\+Str} = \char`\"{}assets/editor/bbox/Cone.\+F\+BX\char`\"{}
+\item 
+\mbox{\Hypertarget{class_b_box_a08975d304a34a21b97751eb8bfee4657}\label{class_b_box_a08975d304a34a21b97751eb8bfee4657}} 
+static const char $\ast$ {\bfseries mesh\+Cylinder\+Str} = \char`\"{}assets/editor/bbox/Cylinder.\+F\+BX\char`\"{}
+\item 
+\mbox{\Hypertarget{class_b_box_aa9891569ba09999676d141396492d75e}\label{class_b_box_aa9891569ba09999676d141396492d75e}} 
+static const char $\ast$ {\bfseries mesh\+Sphere\+Str} = \char`\"{}assets/editor/bbox/Sphere.\+nff\char`\"{}
+\item 
+\mbox{\Hypertarget{class_b_box_a67772ad1f900ae3b07e19bbb5f61915c}\label{class_b_box_a67772ad1f900ae3b07e19bbb5f61915c}} 
+static const char $\ast$ {\bfseries mesh\+Box\+Str} = \char`\"{}assets/editor/bbox/Cube.\+obj\char`\"{}
+\item 
+\mbox{\Hypertarget{class_b_box_a736ab6261f21184d85aed0a09ae0cdc3}\label{class_b_box_a736ab6261f21184d85aed0a09ae0cdc3}} 
+static const char $\ast$ {\bfseries material\+Str} = \char`\"{}assets/editor/bbox/material.\+json\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_b_box}{B\+Box}} (short for bounding box) is an entity \mbox{\hyperlink{class_component}{Component}} that adds collision to an entity. A \mbox{\hyperlink{class_b_box}{B\+Box}} at the root of an entity that is named \char`\"{}physics\char`\"{} will become a driver for the entity A \mbox{\hyperlink{class_b_box}{B\+Box}} with mass 0 is static and should not be moved. A \mbox{\hyperlink{class_b_box}{B\+Box}} with negative mass becomes kinematic and moves with \char`\"{}game-\/style\char`\"{} physics, but will still stop when encountering other bboxes. A \mbox{\hyperlink{class_b_box}{B\+Box}} with positive mass becomes a rigid body and will be automatically affected by gravity. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_b_box_ae96ae8ca7f3ea50c29e9f7535e6dac3e}\label{class_b_box_ae96ae8ca7f3ea50c29e9f7535e6dac3e}} 
+\index{BBox@{BBox}!afterWorldInsertion@{afterWorldInsertion}}
+\index{afterWorldInsertion@{afterWorldInsertion}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{afterWorldInsertion()}{afterWorldInsertion()}}
+{\footnotesize\ttfamily void B\+Box\+::after\+World\+Insertion (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_world}{World}} $\ast$}]{world }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+called just after the parent is inserted into a new world 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world we have been placed into, if any \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a85730d7d101e68fca099361dc9ddb676}{Component}}.
+
+\mbox{\Hypertarget{class_b_box_a452b6801d58e675596ba8a3f6a9a1729}\label{class_b_box_a452b6801d58e675596ba8a3f6a9a1729}} 
+\index{BBox@{BBox}!applyForce@{applyForce}}
+\index{applyForce@{applyForce}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{applyForce()}{applyForce()}}
+{\footnotesize\ttfamily void B\+Box\+::apply\+Force (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{force,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin }\end{DoxyParamCaption})}
+
+apply a force to the bbox\textquotesingle{}s physics component 
+\begin{DoxyParams}{Parameters}
+{\em force} & the force to apply in world coordinates \\
+\hline
+{\em origin} & point of origin for the force in world space \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_b_box_a9192086833bbe8aab7509b85e4910f1f}\label{class_b_box_a9192086833bbe8aab7509b85e4910f1f}} 
+\index{BBox@{BBox}!beforeWorldInsertion@{beforeWorldInsertion}}
+\index{beforeWorldInsertion@{beforeWorldInsertion}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{beforeWorldInsertion()}{beforeWorldInsertion()}}
+{\footnotesize\ttfamily void B\+Box\+::before\+World\+Insertion (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_world}{World}} $\ast$}]{world }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+called just before the parent is inserted into a new world 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world we will be placed into, if any \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a5ed87a96c775a3c067a14fadca5b6250}{Component}}.
+
+\mbox{\Hypertarget{class_b_box_aaee44f9e94a658bf8bad2adf5d714b95}\label{class_b_box_aaee44f9e94a658bf8bad2adf5d714b95}} 
+\index{BBox@{BBox}!checkCollision@{checkCollision}}
+\index{checkCollision@{checkCollision}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{checkCollision()}{checkCollision()}}
+{\footnotesize\ttfamily bool B\+Box\+::check\+Collision (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+check whether the component collides with anything at the current location \begin{DoxyReturn}{Returns}
+true if we collide, false if we do not 
+\end{DoxyReturn}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_aa3f40842a274a6a9aa55c7a36de94cef}{Component}}.
+
+\mbox{\Hypertarget{class_b_box_ad59ea4b61403cf801c722cfd0604f1f9}\label{class_b_box_ad59ea4b61403cf801c722cfd0604f1f9}} 
+\index{BBox@{BBox}!draw@{draw}}
+\index{draw@{draw}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void B\+Box\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+draws the component 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the component \\
+\hline
+{\em light} & the light by which the component should be illuminated (or nullptr for no illumination) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}{Component}}.
+
+\mbox{\Hypertarget{class_b_box_a403bdde3014141d9a938bfc3b0e91ddd}\label{class_b_box_a403bdde3014141d9a938bfc3b0e91ddd}} 
+\index{BBox@{BBox}!findAllOverlappingEntities@{findAllOverlappingEntities}}
+\index{findAllOverlappingEntities@{findAllOverlappingEntities}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{findAllOverlappingEntities()}{findAllOverlappingEntities()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ B\+Box\+::find\+All\+Overlapping\+Entities (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+generate list of all entities whose bboxes overlap this bbox \begin{DoxyReturn}{Returns}
+list of entities overlapping this one 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_b_box_ae69f127716c50ff0d17e9ef429e6cc3e}\label{class_b_box_ae69f127716c50ff0d17e9ef429e6cc3e}} 
+\index{BBox@{BBox}!getPhysicsTransform@{getPhysicsTransform}}
+\index{getPhysicsTransform@{getPhysicsTransform}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{getPhysicsTransform()}{getPhysicsTransform()}}
+{\footnotesize\ttfamily bt\+Transform B\+Box\+::get\+Physics\+Transform (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+get the current transform of this bbox in the physics sim \begin{DoxyReturn}{Returns}
+The transform from the physics sim 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_b_box_a7cbb8aeb5a51ebb2961a82370b13b9f5}\label{class_b_box_a7cbb8aeb5a51ebb2961a82370b13b9f5}} 
+\index{BBox@{BBox}!load@{load}}
+\index{load@{load}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void B\+Box\+::load (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+load the component from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ab1ddbf2ef322928e0ac52775ce1050db}{Component}}.
+
+\mbox{\Hypertarget{class_b_box_af2b65e781246a4c7f3d3de592233b835}\label{class_b_box_af2b65e781246a4c7f3d3de592233b835}} 
+\index{BBox@{BBox}!serialize@{serialize}}
+\index{serialize@{serialize}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void B\+Box\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{Component}}.
+
+\mbox{\Hypertarget{class_b_box_a06d9b108f4ffc2680078ce8c59424e1d}\label{class_b_box_a06d9b108f4ffc2680078ce8c59424e1d}} 
+\index{BBox@{BBox}!setPhysicsTransform@{setPhysicsTransform}}
+\index{setPhysicsTransform@{setPhysicsTransform}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{setPhysicsTransform()}{setPhysicsTransform()}}
+{\footnotesize\ttfamily void B\+Box\+::set\+Physics\+Transform (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{v,  }\item[{const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&}]{a }\end{DoxyParamCaption})}
+
+move the bbox to the given location 
+\begin{DoxyParams}{Parameters}
+{\em v} & The new position \\
+\hline
+{\em a} & The new orientation \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_b_box_a9f26e8d6a9dd6b82f6d551e5ad3d0c7c}\label{class_b_box_a9f26e8d6a9dd6b82f6d551e5ad3d0c7c}} 
+\index{BBox@{BBox}!updateRigidBody@{updateRigidBody}}
+\index{updateRigidBody@{updateRigidBody}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{updateRigidBody()}{updateRigidBody()}}
+{\footnotesize\ttfamily void B\+Box\+::update\+Rigid\+Body (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{old\+G\+Scale }\end{DoxyParamCaption})}
+
+update the location, shape, and all other properties of the rigid body 
+\begin{DoxyParams}{Parameters}
+{\em old\+G\+Scale} & the old scale; if this changed, any triangle mesh is invalid \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_b_box_ad890229e01289030f316a75e3c77673e}\label{class_b_box_ad890229e01289030f316a75e3c77673e}} 
+\index{BBox@{BBox}!shapeStr@{shapeStr}}
+\index{shapeStr@{shapeStr}!BBox@{BBox}}
+\doxysubsubsection{\texorpdfstring{shapeStr}{shapeStr}}
+{\footnotesize\ttfamily const char $\ast$ B\+Box\+::shape\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"box"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"sphere"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"capsule"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"cylinder"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"cone"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"mesh"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_b_box_8hpp}{B\+Box.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/B\+Box.\+cpp\end{DoxyCompactItemize}

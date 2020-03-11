@@ -1,0 +1,286 @@
+\hypertarget{class_string}{}\doxysection{String Class Reference}
+\label{class_string}\index{String@{String}}
+
+
+Performs data and methods to operate a string buffer.  
+
+
+
+
+{\ttfamily \#include $<$String.\+hpp$>$}
+
+Inheritance diagram for String\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.772152cm]{class_string}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_string_a291dc8139b99cdf2967f5f0da48a0617}\label{class_string_a291dc8139b99cdf2967f5f0da48a0617}} 
+{\bfseries String} (const \mbox{\hyperlink{class_string}{String}} \&src)
+\item 
+\mbox{\Hypertarget{class_string_a7527443019a66509145f59e818a51b26}\label{class_string_a7527443019a66509145f59e818a51b26}} 
+{\bfseries String} (const char $\ast$src)
+\item 
+\mbox{\Hypertarget{class_string_af97d2a9cec86bf39e090ddff2481cca5}\label{class_string_af97d2a9cec86bf39e090ddff2481cca5}} 
+const char $\ast$ \mbox{\hyperlink{class_string_af97d2a9cec86bf39e090ddff2481cca5}{get}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_string_af9a3cb799f0b031f1c8d9a50bf93b25e}\label{class_string_af9a3cb799f0b031f1c8d9a50bf93b25e}} 
+const Uint32 {\bfseries get\+Size} () const
+\item 
+virtual const char $\ast$ \mbox{\hyperlink{class_string_a3ae53ecf8fcc258b4d744e92764aaad4}{alloc}} (const Uint32 new\+Size)
+\item 
+bool \mbox{\hyperlink{class_string_acf604fddaddc57ee1575b34ec1c1589d}{empty}} () const
+\item 
+Uint32 \mbox{\hyperlink{class_string_a63d2992061ec18beffe41e47cbdbd8fd}{length}} () const
+\item 
+const char $\ast$ \mbox{\hyperlink{class_string_ad0aec139b7be9d86e02c51121e682105}{assign}} (const char $\ast$src)
+\item 
+const char $\ast$ \mbox{\hyperlink{class_string_a1a49d0adf55296279cb364a8690d1758}{format}} (const char $\ast$src,...)
+\item 
+const char $\ast$ \mbox{\hyperlink{class_string_a8d9c9930d853ce5dbcaf3f82d7a63ae8}{append}} (const char $\ast$src)
+\item 
+const char $\ast$ \mbox{\hyperlink{class_string_a9317261e969dd1ed8b9f19e5720fd186}{appendf}} (const char $\ast$src,...)
+\item 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_string_a853a1b36bb3577cc765f4a0e1b620030}{substr}} (const Uint32 start, Uint32 end=0) const
+\item 
+Uint32 \mbox{\hyperlink{class_string_a01ce54d7e820ede4b010a5f0c34a2555}{find}} (const char $\ast$key, Uint32 offset=0) const
+\item 
+Uint32 \mbox{\hyperlink{class_string_ad59ac3eedffa522ed04eee16d4245ece}{find}} (const char key, Uint32 offset=0) const
+\item 
+int \mbox{\hyperlink{class_string_afa31ce3d779a6467c116255d6603d85d}{to\+Int}} () const
+\item 
+float \mbox{\hyperlink{class_string_a8e44f2bf77e993af4a1b256bda7ec086}{to\+Float}} () const
+\item 
+unsigned long \mbox{\hyperlink{class_string_a1be8a85080de31a1b3c579357b8f52d2}{hash}} () const
+\item 
+char \& \mbox{\hyperlink{class_string_ab79794d45d063bdd71ad9e31739c538f}{operator\mbox{[}$\,$\mbox{]}}} (const Uint32 index)
+\item 
+\mbox{\Hypertarget{class_string_ac173b0899f642dc6d7a64e0caccff834}\label{class_string_ac173b0899f642dc6d7a64e0caccff834}} 
+const char \& {\bfseries operator\mbox{[}$\,$\mbox{]}} (const Uint32 index) const
+\item 
+\mbox{\Hypertarget{class_string_ac9c63f6e39a2c088ac9078c893f75823}\label{class_string_ac9c63f6e39a2c088ac9078c893f75823}} 
+bool \mbox{\hyperlink{class_string_ac9c63f6e39a2c088ac9078c893f75823}{operator$<$}} (const char $\ast$src) const
+\begin{DoxyCompactList}\small\item\em compare strings \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_string_a8daa372154f63d290e357c4edced10de}\label{class_string_a8daa372154f63d290e357c4edced10de}} 
+bool {\bfseries operator$<$=} (const char $\ast$src) const
+\item 
+\mbox{\Hypertarget{class_string_a631b78fb5317e526845df1d8399baa3b}\label{class_string_a631b78fb5317e526845df1d8399baa3b}} 
+bool {\bfseries operator==} (const char $\ast$src) const
+\item 
+\mbox{\Hypertarget{class_string_a326386cbdd294909830cde9ff18c1cc8}\label{class_string_a326386cbdd294909830cde9ff18c1cc8}} 
+bool {\bfseries operator$>$=} (const char $\ast$src) const
+\item 
+\mbox{\Hypertarget{class_string_a44fb7b0fc3d89b3bb0327fd144e15439}\label{class_string_a44fb7b0fc3d89b3bb0327fd144e15439}} 
+bool {\bfseries operator$>$} (const char $\ast$src) const
+\item 
+\mbox{\Hypertarget{class_string_aa94ca8537b6cf1add770f0c46d77c02b}\label{class_string_aa94ca8537b6cf1add770f0c46d77c02b}} 
+bool {\bfseries operator!=} (const char $\ast$src) const
+\item 
+\mbox{\Hypertarget{class_string_a2bf74fa5a1fe2d7813efcbac946cf55f}\label{class_string_a2bf74fa5a1fe2d7813efcbac946cf55f}} 
+const char $\ast$ \mbox{\hyperlink{class_string_a2bf74fa5a1fe2d7813efcbac946cf55f}{operator=}} (const char $\ast$src)
+\begin{DoxyCompactList}\small\item\em assign operator \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_string_a4479f004d81a24fee72b58321c49b9ed}\label{class_string_a4479f004d81a24fee72b58321c49b9ed}} 
+const char $\ast$ {\bfseries operator=} (const \mbox{\hyperlink{class_string}{String}} \&src)
+\item 
+\mbox{\Hypertarget{class_string_a9a12caedc885ac44c86d104a8cb60f82}\label{class_string_a9a12caedc885ac44c86d104a8cb60f82}} 
+\mbox{\hyperlink{class_string_a9a12caedc885ac44c86d104a8cb60f82}{operator const char $\ast$}} () const
+\begin{DoxyCompactList}\small\item\em conversion to const char$\ast$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_string_a3c1c15169c84293c56add31e99d1c729}\label{class_string_a3c1c15169c84293c56add31e99d1c729}} 
+static const Uint32 \mbox{\hyperlink{class_string_a3c1c15169c84293c56add31e99d1c729}{npos}} = U\+I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em represents an invalid position in the string \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_string_a7028cb0053f3138200b398a23ad2f2b8}\label{class_string_a7028cb0053f3138200b398a23ad2f2b8}} 
+char $\ast$ {\bfseries str} = nullptr
+\item 
+\mbox{\Hypertarget{class_string_ab5fbda80b5d213422a6143ad72f83bfb}\label{class_string_ab5fbda80b5d213422a6143ad72f83bfb}} 
+Uint32 {\bfseries size} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Performs data and methods to operate a string buffer. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_string_a3ae53ecf8fcc258b4d744e92764aaad4}\label{class_string_a3ae53ecf8fcc258b4d744e92764aaad4}} 
+\index{String@{String}!alloc@{alloc}}
+\index{alloc@{alloc}!String@{String}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily virtual const char$\ast$ String\+::alloc (\begin{DoxyParamCaption}\item[{const Uint32}]{new\+Size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+allocs / reallocs the string (erases data!) 
+\begin{DoxyParams}{Parameters}
+{\em new\+Size} & the size (in chars) of the string to alloc \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the alloc\textquotesingle{}d string 
+\end{DoxyReturn}
+
+
+Reimplemented in \mbox{\hyperlink{class_string_buf_a72ad2f3d56712506bb77aab5e8466a6f}{String\+Buf$<$ default\+Size $>$}}, \mbox{\hyperlink{class_string_buf_a72ad2f3d56712506bb77aab5e8466a6f}{String\+Buf$<$ 64 $>$}}, \mbox{\hyperlink{class_string_buf_a72ad2f3d56712506bb77aab5e8466a6f}{String\+Buf$<$ 32 $>$}}, and \mbox{\hyperlink{class_string_buf_a72ad2f3d56712506bb77aab5e8466a6f}{String\+Buf$<$ 256 $>$}}.
+
+\mbox{\Hypertarget{class_string_a8d9c9930d853ce5dbcaf3f82d7a63ae8}\label{class_string_a8d9c9930d853ce5dbcaf3f82d7a63ae8}} 
+\index{String@{String}!append@{append}}
+\index{append@{append}!String@{String}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}}
+{\footnotesize\ttfamily const char$\ast$ String\+::append (\begin{DoxyParamCaption}\item[{const char $\ast$}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+append formatted string into our string. string will always be null-\/terminated 
+\begin{DoxyParams}{Parameters}
+{\em src} & the formatted string to append \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+this string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_a9317261e969dd1ed8b9f19e5720fd186}\label{class_string_a9317261e969dd1ed8b9f19e5720fd186}} 
+\index{String@{String}!appendf@{appendf}}
+\index{appendf@{appendf}!String@{String}}
+\doxysubsubsection{\texorpdfstring{appendf()}{appendf()}}
+{\footnotesize\ttfamily const char$\ast$ String\+::appendf (\begin{DoxyParamCaption}\item[{const char $\ast$}]{src,  }\item[{}]{... }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+append formatted string into our string. string will always be null-\/terminated 
+\begin{DoxyParams}{Parameters}
+{\em src} & the formatted string to append \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+this string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_ad0aec139b7be9d86e02c51121e682105}\label{class_string_ad0aec139b7be9d86e02c51121e682105}} 
+\index{String@{String}!assign@{assign}}
+\index{assign@{assign}!String@{String}}
+\doxysubsubsection{\texorpdfstring{assign()}{assign()}}
+{\footnotesize\ttfamily const char$\ast$ String\+::assign (\begin{DoxyParamCaption}\item[{const char $\ast$}]{src }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+copies src into string. string will always be null-\/terminated 
+\begin{DoxyParams}{Parameters}
+{\em src} & the string to copy into our string \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_string_acf604fddaddc57ee1575b34ec1c1589d}\label{class_string_acf604fddaddc57ee1575b34ec1c1589d}} 
+\index{String@{String}!empty@{empty}}
+\index{empty@{empty}!String@{String}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily bool String\+::empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+determine if the string is empty \begin{DoxyReturn}{Returns}
+true if empty, otherwise false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_a01ce54d7e820ede4b010a5f0c34a2555}\label{class_string_a01ce54d7e820ede4b010a5f0c34a2555}} 
+\index{String@{String}!find@{find}}
+\index{find@{find}!String@{String}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Uint32 String\+::find (\begin{DoxyParamCaption}\item[{const char $\ast$}]{key,  }\item[{Uint32}]{offset = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+locates the first instance of the key string in our string and returns its location 
+\begin{DoxyParams}{Parameters}
+{\em key} & the string to locate \\
+\hline
+{\em offset} & the index to start looking in our string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the key if it was found, or npos if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_ad59ac3eedffa522ed04eee16d4245ece}\label{class_string_ad59ac3eedffa522ed04eee16d4245ece}} 
+\index{String@{String}!find@{find}}
+\index{find@{find}!String@{String}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Uint32 String\+::find (\begin{DoxyParamCaption}\item[{const char}]{key,  }\item[{Uint32}]{offset = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+locates the first instance of the key char in our string and returns its location 
+\begin{DoxyParams}{Parameters}
+{\em key} & the char to locate \\
+\hline
+{\em offset} & the index to start looking in our string \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the key if it was found, or npos if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_a1a49d0adf55296279cb364a8690d1758}\label{class_string_a1a49d0adf55296279cb364a8690d1758}} 
+\index{String@{String}!format@{format}}
+\index{format@{format}!String@{String}}
+\doxysubsubsection{\texorpdfstring{format()}{format()}}
+{\footnotesize\ttfamily const char$\ast$ String\+::format (\begin{DoxyParamCaption}\item[{const char $\ast$}]{src,  }\item[{}]{... }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+copies formatted src string into our string. string will always be null-\/terminated 
+\begin{DoxyParams}{Parameters}
+{\em src} & the formatted string to copy \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_string_a1be8a85080de31a1b3c579357b8f52d2}\label{class_string_a1be8a85080de31a1b3c579357b8f52d2}} 
+\index{String@{String}!hash@{hash}}
+\index{hash@{hash}!String@{String}}
+\doxysubsubsection{\texorpdfstring{hash()}{hash()}}
+{\footnotesize\ttfamily unsigned long String\+::hash (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+hash the string \begin{DoxyReturn}{Returns}
+a number representation of the string 
+\end{DoxyReturn}
+hash $\ast$ 33 + c\mbox{\Hypertarget{class_string_a63d2992061ec18beffe41e47cbdbd8fd}\label{class_string_a63d2992061ec18beffe41e47cbdbd8fd}} 
+\index{String@{String}!length@{length}}
+\index{length@{length}!String@{String}}
+\doxysubsubsection{\texorpdfstring{length()}{length()}}
+{\footnotesize\ttfamily Uint32 String\+::length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+get the length of the string \begin{DoxyReturn}{Returns}
+the number of chars in the string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_ab79794d45d063bdd71ad9e31739c538f}\label{class_string_ab79794d45d063bdd71ad9e31739c538f}} 
+\index{String@{String}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!String@{String}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily char\& String\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{const Uint32}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+access char data \begin{DoxyReturn}{Returns}
+the char at the given index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_a853a1b36bb3577cc765f4a0e1b620030}\label{class_string_a853a1b36bb3577cc765f4a0e1b620030}} 
+\index{String@{String}!substr@{substr}}
+\index{substr@{substr}!String@{String}}
+\doxysubsubsection{\texorpdfstring{substr()}{substr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_string}{String}} String\+::substr (\begin{DoxyParamCaption}\item[{const Uint32}]{start,  }\item[{Uint32}]{end = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+build a new string using part of this string 
+\begin{DoxyParams}{Parameters}
+{\em start} & the index to start at \\
+\hline
+{\em end} & the index to end at \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the resulting substr 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_a8e44f2bf77e993af4a1b256bda7ec086}\label{class_string_a8e44f2bf77e993af4a1b256bda7ec086}} 
+\index{String@{String}!toFloat@{toFloat}}
+\index{toFloat@{toFloat}!String@{String}}
+\doxysubsubsection{\texorpdfstring{toFloat()}{toFloat()}}
+{\footnotesize\ttfamily float String\+::to\+Float (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+converts the string to a floating point number \begin{DoxyReturn}{Returns}
+the float value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_string_afa31ce3d779a6467c116255d6603d85d}\label{class_string_afa31ce3d779a6467c116255d6603d85d}} 
+\index{String@{String}!toInt@{toInt}}
+\index{toInt@{toInt}!String@{String}}
+\doxysubsubsection{\texorpdfstring{toInt()}{toInt()}}
+{\footnotesize\ttfamily int String\+::to\+Int (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+converts the string to an integer number \begin{DoxyReturn}{Returns}
+the int value 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_string_8hpp}{String.\+hpp}}\end{DoxyCompactItemize}

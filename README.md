@@ -1,5 +1,7 @@
 An original 3D engine by Sheridan Rathbun. Intended to be used by Spacepunk. This is the open-source engine release.
 
+See the docs directory for an in-depth manual of the engine. Most of the functions described in there are directly accessible to Lua scripts.
+
 Hit the blue "Play" button at the top of the editor to run the demo level.
 
 ![Man on the beach](https://raw.githubusercontent.com/TurningWheel/Spacepunk/master/Screenshot.png)

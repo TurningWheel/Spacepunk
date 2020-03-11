@@ -1,0 +1,77 @@
+\hypertarget{class_string_buf}{}\doxysection{String\+Buf$<$ default\+Size $>$ Class Template Reference}
+\label{class_string_buf}\index{StringBuf$<$ defaultSize $>$@{StringBuf$<$ defaultSize $>$}}
+
+
+Like a normal string, but is allocated on the stack instead of the heap.  
+
+
+
+
+{\ttfamily \#include $<$String.\+hpp$>$}
+
+Inheritance diagram for String\+Buf$<$ default\+Size $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_string_buf}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_string_buf_ab933def5aa1961efe149040b7dd30634}\label{class_string_buf_ab933def5aa1961efe149040b7dd30634}} 
+{\bfseries String\+Buf} (const \mbox{\hyperlink{class_string}{String}} \&src)
+\item 
+\mbox{\Hypertarget{class_string_buf_ab1c15d8b170b73df8638c14cb00f700c}\label{class_string_buf_ab1c15d8b170b73df8638c14cb00f700c}} 
+{\bfseries String\+Buf} (const char $\ast$src)
+\item 
+\mbox{\Hypertarget{class_string_buf_a2b00bb44a35c4add5ae0ca5b68620190}\label{class_string_buf_a2b00bb44a35c4add5ae0ca5b68620190}} 
+{\bfseries String\+Buf} (const char $\ast$src, int num\+Args,...)
+\item 
+virtual const char $\ast$ \mbox{\hyperlink{class_string_buf_a72ad2f3d56712506bb77aab5e8466a6f}{alloc}} (const Uint32 new\+Size) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_string_buf_a2acf8a06d575d4908452933d1572d781}\label{class_string_buf_a2acf8a06d575d4908452933d1572d781}} 
+static Uint32 \mbox{\hyperlink{class_string_buf_a2acf8a06d575d4908452933d1572d781}{get\+Default\+Size}} ()
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_string_buf_a8c176aa34c213919d9e1812e0d645a8b}\label{class_string_buf_a8c176aa34c213919d9e1812e0d645a8b}} 
+char {\bfseries default\+Str} \mbox{[}default\+Size\mbox{]} = \char`\"{}\textbackslash{}0\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$Uint32 default\+Size$>$\newline
+class String\+Buf$<$ default\+Size $>$}
+
+Like a normal string, but is allocated on the stack instead of the heap. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_string_buf_a72ad2f3d56712506bb77aab5e8466a6f}\label{class_string_buf_a72ad2f3d56712506bb77aab5e8466a6f}} 
+\index{StringBuf$<$ defaultSize $>$@{StringBuf$<$ defaultSize $>$}!alloc@{alloc}}
+\index{alloc@{alloc}!StringBuf$<$ defaultSize $>$@{StringBuf$<$ defaultSize $>$}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily template$<$Uint32 default\+Size$>$ \\
+virtual const char$\ast$ \mbox{\hyperlink{class_string_buf}{String\+Buf}}$<$ default\+Size $>$\+::alloc (\begin{DoxyParamCaption}\item[{const Uint32}]{new\+Size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+allocs / reallocs the string (erases data!) 
+\begin{DoxyParams}{Parameters}
+{\em new\+Size} & the size (in chars) of the string to alloc \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the alloc\textquotesingle{}d string 
+\end{DoxyReturn}
+
+
+Reimplemented from \mbox{\hyperlink{class_string_a3ae53ecf8fcc258b4d744e92764aaad4}{String}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_string_8hpp}{String.\+hpp}}\end{DoxyCompactItemize}

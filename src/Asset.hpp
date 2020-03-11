@@ -1,5 +1,4 @@
-// Asset.hpp
-// Interface that defines an object stored in a Resource hash
+//! @file Asset.hpp
 
 #pragma once
 
@@ -7,17 +6,18 @@
 
 class FileInterface;
 
+//! Abstract interface that defines an object stored in a Resource hash
 class Asset {
 public:
 	Asset();
 	Asset(const char* _name);
 	virtual ~Asset();
 
-	// optional function for streamable types
-	// @return true if the asset was successfully loaded, otherwise false
+	//! optional function for streamable types
+	//! @return true if the asset was successfully loaded, otherwise false
 	virtual bool finalize();
 
-	// asset type
+	//! asset type
 	enum type_t {
 		ASSET_INVALID,
 		ASSET_ANIMATION,
@@ -36,8 +36,8 @@ public:
 	};
 	static const char* typeStr[ASSET_NUM];
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file);
 
 	virtual const type_t	getType() const { return ASSET_INVALID; }

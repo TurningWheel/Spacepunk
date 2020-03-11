@@ -1,5 +1,4 @@
-// Camera.hpp
-// Contains 3D drawing functions and viewport data
+//! @file Camera.hpp
 
 #pragma once
 
@@ -16,18 +15,20 @@
 class Renderer;
 class World;
 
+//! A Camera is an entity Component that provides a viewport into its World.
+//! It also contains some 3D drawing functions and other data
 class Camera : public Component {
 public:
-	// drawing mode type
+	//! drawing mode type
 	enum drawmode_t {
 		DRAW_DEPTH,
 
-		// these two for each light in a scene
+		//! these two for each light in a scene
 		DRAW_STENCIL,
 		DRAW_SHADOW,
 		DRAW_STANDARD,
 
-		// additional fx passes
+		//! additional fx passes
 		DRAW_GLOW,
 		DRAW_TRIANGLES,
 		DRAW_DEPTHFAIL,
@@ -36,14 +37,14 @@ public:
 		DRAW_TYPE_LENGTH
 	};
 
-	// point type
+	//! point type
 	struct point_t {
 		unsigned int x;
 		unsigned int y;
 		glm::vec4 color;
 	};
 
-	// line type
+	//! line type
 	struct line_t {
 		Vector start;
 		Vector end;
@@ -53,12 +54,12 @@ public:
 	Camera(Entity& _entity, Component* _parent);
 	virtual ~Camera();
 
-	// camera model
+	//! camera model
 	static const char* meshStr;
 	static const char* materialStr;
 	const Mesh::shadervars_t shaderVars;
 
-	// getters & setters
+	//! getters & setters
 	virtual type_t		getType() const override { return COMPONENT_CAMERA; }
 	Renderer*&			getRenderer() { return renderer; }
 	const float&		getClipNear() const { return clipNear; }
@@ -81,92 +82,92 @@ public:
 	void	setOrtho(const bool _ortho) { ortho = _ortho; }
 	void	setEnabled(const bool _enabled) { enabled = _enabled; }
 
-	// make a reversed-Z projection matrix with infinite range
-	// @param radians The vertical fov
-	// @param aspect The aspect ratio (w/h)
-	// @param zNear The near clip plane
-	// @return projection matrix
+	//! make a reversed-Z projection matrix with infinite range
+	//! @param radians The vertical fov
+	//! @param aspect The aspect ratio (w/h)
+	//! @param zNear The near clip plane
+	//! @return projection matrix
 	static glm::mat4 makeInfReversedZProj(float radians, float aspect, float zNear);
 
-	// make an orthographic projection
-	// @param width the width of the view in pixels
-	// @param height the height of the view in pixels
-	// @param depth the depth of the view in pixels
-	// @return projection matrix
+	//! make an orthographic projection
+	//! @param width the width of the view in pixels
+	//! @param height the height of the view in pixels
+	//! @param depth the depth of the view in pixels
+	//! @return projection matrix
 	static glm::mat4 makeOrthoProj(float width, float height, float depth);
 
-	// sets up the 3D projection for drawing
-	// @param scissor True if you want scissoring
+	//! sets up the 3D projection for drawing
+	//! @param scissor True if you want scissoring
 	void setupProjection(bool scissor);
 
-	// resets the drawing matrices
+	//! resets the drawing matrices
 	void resetMatrices();
 
-	// projects the given world position onto the screen
-	// @param original the world position to be projected
-	// return the screen position to be returned
+	//! projects the given world position onto the screen
+	//! @param original the world position to be projected
+	//! return the screen position to be returned
 	Vector worldPosToScreenPos(const Vector& original) const;
 
-	// determines origin and direction vectors for a ray that extends through a given point on the screen
-	// @param x the X position on the screen to peer through
-	// @param y the Y position on the screen to peer through
-	// @param out_origin the origin point of the ray to be returned
-	// @param out_direction the direction vector of the ray in world space to be returned
+	//! determines origin and direction vectors for a ray that extends through a given point on the screen
+	//! @param x the X position on the screen to peer through
+	//! @param y the Y position on the screen to peer through
+	//! @param out_origin the origin point of the ray to be returned
+	//! @param out_direction the direction vector of the ray in world space to be returned
 	void screenPosToWorldRay(int x, int y, Vector& out_origin, Vector& out_direction) const;
 
-	// draws a cube in the current camera view
-	// @param transform the transformation to apply to the cube
-	// @param color the color of the cube to draw
+	//! draws a cube in the current camera view
+	//! @param transform the transformation to apply to the cube
+	//! @param color the color of the cube to draw
 	void drawCube(const glm::mat4& transform, const glm::vec4& color);
 
-	// draws a 3d line in the current camera view
-	// @param width the width of the line in pixels
-	// @param src the starting point of the line in world space
-	// @param dest the ending point of the line in world space
-	// @param color the color of the line to draw
+	//! draws a 3d line in the current camera view
+	//! @param width the width of the line in pixels
+	//! @param src the starting point of the line in world space
+	//! @param dest the ending point of the line in world space
+	//! @param color the color of the line to draw
 	void drawLine3D(const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color);
 
-	// draws a laser in the current camera view
-	// @param width the width of the laser in pixels
-	// @param src the starting point of the laser in world space
-	// @param dest the ending point of the laser in world space
-	// @param color the color of the laser to draw
+	//! draws a laser in the current camera view
+	//! @param width the width of the laser in pixels
+	//! @param src the starting point of the laser in world space
+	//! @param dest the ending point of the laser in world space
+	//! @param color the color of the laser to draw
 	void drawLaser(const float width, const glm::vec3& src, const glm::vec3& dest, const glm::vec4& color);
 
-	// marks a spot on the screen to draw a point
-	// @param x the x-coord of the point
-	// @param y the y-coord of the point
-	// @param color the color of the point
+	//! marks a spot on the screen to draw a point
+	//! @param x the x-coord of the point
+	//! @param y the y-coord of the point
+	//! @param color the color of the point
 	void markPoint(unsigned int x, unsigned int y, const glm::vec4& color);
 
-	// marks a spot on the screen to draw a point
-	// @param pos the 3d coordinates of the point
-	// @param color the color of the point
+	//! marks a spot on the screen to draw a point
+	//! @param pos the 3d coordinates of the point
+	//! @param color the color of the point
 	void markPoint(const Vector& pos, const glm::vec4& color);
 
-	// marks a spot on the screen to draw a line
-	// @param start the 3d coordinates of the line start
-	// @param end the 3d coordinates of the line end
-	// @param color the color of the point
+	//! marks a spot on the screen to draw a line
+	//! @param start the 3d coordinates of the line start
+	//! @param end the 3d coordinates of the line end
+	//! @param color the color of the point
 	void markLine(const Vector& start, const Vector& end, const glm::vec4& color);
 
-	// draws the camera
-	// @param camera the camera through which to draw the camera
-	// @param light the light by which the camera should be illuminated (or nullptr for no illumination)
+	//! draws the camera
+	//! @param camera the camera through which to draw the camera
+	//! @param light the light by which the camera should be illuminated (or nullptr for no illumination)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
-	// draws all marked points, lines, etc.
+	//! draws all marked points, lines, etc.
 	void drawDebug();
 
-	// load the component from a file
-	// @param fp the file to read from
+	//! load the component from a file
+	//! @param fp the file to read from
 	virtual void load(FILE* fp) override;
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface* file) override;
 
-	// called when a frame is finished drawing from the camera
+	//! called when a frame is finished drawing from the camera
 	void onFrameDrawn();
 
 	Camera& operator=(const Camera& src) {
@@ -185,15 +186,15 @@ public:
 protected:
 	Renderer* renderer = nullptr;
 
-	// drawing mode
+	//! drawing mode
 	drawmode_t drawMode = DRAW_STANDARD;
 
-	// view and projection matrices
+	//! view and projection matrices
 	glm::mat4 projMatrix;
 	glm::mat4 viewMatrix;
 	glm::mat4 projViewMatrix;
 
-	// viewport and projection variables
+	//! viewport and projection variables
 	float clipNear = 8.f;
 	float clipFar = 1024.f;
 	Rect<Sint32> win;
@@ -201,12 +202,12 @@ protected:
 	bool ortho = false;
 	bool enabled = true;
 
-	// built-in basic objects
+	//! built-in basic objects
 	Cube cube;
 	Line3D line3D;
 	LinkedList<point_t> points;
 	LinkedList<line_t> lines;
 
-	// frame draw counter
+	//! frame draw counter
 	Uint32 framesDrawn = 0;
 };

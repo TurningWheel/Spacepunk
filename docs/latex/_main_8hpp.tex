@@ -1,0 +1,88 @@
+\hypertarget{_main_8hpp}{}\doxysection{E\+:/\+Projects/\+Spacepunk/src/\+Main.hpp File Reference}
+\label{_main_8hpp}\index{E:/Projects/Spacepunk/src/Main.hpp@{E:/Projects/Spacepunk/src/Main.hpp}}
+{\ttfamily \#include \char`\"{}C\+Make\+Config.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$cstdlib$>$}\newline
+{\ttfamily \#include $<$cstring$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$csignal$>$}\newline
+{\ttfamily \#include $<$G\+L/glew.\+h$>$}\newline
+{\ttfamily \#include $<$G\+L/gl.\+h$>$}\newline
+{\ttfamily \#include $<$G\+L/glu.\+h$>$}\newline
+{\ttfamily \#include $<$G\+L/glext.\+h$>$}\newline
+{\ttfamily \#include $<$A\+L/al.\+h$>$}\newline
+{\ttfamily \#include $<$A\+L/alc.\+h$>$}\newline
+{\ttfamily \#include $<$A\+L/alext.\+h$>$}\newline
+{\ttfamily \#include $<$A\+L/efx.\+h$>$}\newline
+{\ttfamily \#include $<$A\+L/efx-\/creative.\+h$>$}\newline
+{\ttfamily \#include $<$A\+L/efx-\/presets.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+thread.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+net.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+ttf.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+image.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+mixer.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+opengl.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+joystick.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L2/\+S\+D\+L\+\_\+gamecontroller.\+h$>$}\newline
+{\ttfamily \#include $<$glm/fwd.\+hpp$>$}\newline
+{\ttfamily \#include $<$nfd/nfd.\+h$>$}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_main_8hpp_a120fb070bddb21f0bd899f50252c4cb5}\label{_main_8hpp_a120fb070bddb21f0bd899f50252c4cb5}} 
+\#define {\bfseries G\+L\+\_\+\+G\+L\+E\+X\+T\+\_\+\+P\+R\+O\+T\+O\+T\+Y\+P\+ES}
+\item 
+\#define \mbox{\hyperlink{_main_8hpp_aacd195bb53fa75ae6a89eabcca21c4a8}{A\+L\+\_\+\+A\+L\+E\+X\+T\+\_\+\+P\+R\+O\+T\+O\+T\+Y\+P\+ES}}
+\begin{DoxyCompactList}\small\item\em C\+Make Config. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{_main_8hpp_a816ab7d5c2ce1f0a01216042837beb93}{G\+L\+M\+\_\+\+F\+O\+R\+C\+E\+\_\+\+R\+A\+D\+I\+A\+NS}}
+\begin{DoxyCompactList}\small\item\em Open\+AL headers. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_main_8hpp_a1ab31b90bc584c635ec159468ceed9b2}\label{_main_8hpp_a1ab31b90bc584c635ec159468ceed9b2}} 
+{\footnotesize template$<$typename T $>$ }\\int \mbox{\hyperlink{_main_8hpp_a1ab31b90bc584c635ec159468ceed9b2}{sgn}} (T val)
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{_main_8hpp_a1ab31b90bc584c635ec159468ceed9b2}{sgn()}} function \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_main_8hpp_aa08a577393243b86dfd2a97e61443673}\label{_main_8hpp_aa08a577393243b86dfd2a97e61443673}} 
+const float \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}}
+\begin{DoxyCompactList}\small\item\em native file dialog \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{_main_8hpp_a939872c7d19add0e4b330e7d8e1552c0}\label{_main_8hpp_a939872c7d19add0e4b330e7d8e1552c0}} 
+const float {\bfseries S\+Q\+R\+T2}
+\item 
+\mbox{\Hypertarget{_main_8hpp_af0a9442fa2f5f49f0603a35ef58d5615}\label{_main_8hpp_af0a9442fa2f5f49f0603a35ef58d5615}} 
+const char $\ast$ {\bfseries version\+Str}
+\item 
+\mbox{\Hypertarget{_main_8hpp_ada4a75b856d07dbc4a461fddfafc9ca4}\label{_main_8hpp_ada4a75b856d07dbc4a461fddfafc9ca4}} 
+class \mbox{\hyperlink{class_engine}{Engine}} $\ast$ {\bfseries main\+Engine}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_main_8hpp_aacd195bb53fa75ae6a89eabcca21c4a8}\label{_main_8hpp_aacd195bb53fa75ae6a89eabcca21c4a8}} 
+\index{Main.hpp@{Main.hpp}!AL\_ALEXT\_PROTOTYPES@{AL\_ALEXT\_PROTOTYPES}}
+\index{AL\_ALEXT\_PROTOTYPES@{AL\_ALEXT\_PROTOTYPES}!Main.hpp@{Main.hpp}}
+\doxysubsubsection{\texorpdfstring{AL\_ALEXT\_PROTOTYPES}{AL\_ALEXT\_PROTOTYPES}}
+{\footnotesize\ttfamily \#define A\+L\+\_\+\+A\+L\+E\+X\+T\+\_\+\+P\+R\+O\+T\+O\+T\+Y\+P\+ES}
+
+
+
+C\+Make Config. 
+
+windows headers C++ headers C headers Open\+GL headers \mbox{\Hypertarget{_main_8hpp_a816ab7d5c2ce1f0a01216042837beb93}\label{_main_8hpp_a816ab7d5c2ce1f0a01216042837beb93}} 
+\index{Main.hpp@{Main.hpp}!GLM\_FORCE\_RADIANS@{GLM\_FORCE\_RADIANS}}
+\index{GLM\_FORCE\_RADIANS@{GLM\_FORCE\_RADIANS}!Main.hpp@{Main.hpp}}
+\doxysubsubsection{\texorpdfstring{GLM\_FORCE\_RADIANS}{GLM\_FORCE\_RADIANS}}
+{\footnotesize\ttfamily \#define G\+L\+M\+\_\+\+F\+O\+R\+C\+E\+\_\+\+R\+A\+D\+I\+A\+NS}
+
+
+
+Open\+AL headers. 
+
+S\+D\+L2 headers G\+LM forward-\/decl header 

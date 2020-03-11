@@ -1,0 +1,332 @@
+\hypertarget{class_renderer}{}\doxysection{Renderer Class Reference}
+\label{class_renderer}\index{Renderer@{Renderer}}
+
+
+Contains basic video and rendering context data as well as 2D drawing functions.  
+
+
+
+
+{\ttfamily \#include $<$Renderer.\+hpp$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_renderer_ac1b99ab2b8894c88d2ed5c16edcb5ec7}\label{class_renderer_ac1b99ab2b8894c88d2ed5c16edcb5ec7}} 
+enum \mbox{\hyperlink{class_renderer_ac1b99ab2b8894c88d2ed5c16edcb5ec7}{Blit\+Type}} \{ \newline
+{\bfseries B\+A\+S\+IC}, 
+{\bfseries H\+DR}, 
+{\bfseries B\+L\+U\+R\+\_\+\+H\+O\+R\+I\+Z\+O\+N\+T\+AL}, 
+{\bfseries B\+L\+U\+R\+\_\+\+V\+E\+R\+T\+I\+C\+AL}, 
+\newline
+{\bfseries M\+AX}
+ \}
+\begin{DoxyCompactList}\small\item\em fbo blit types \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_renderer_a30c9f53efde747af761a9d9f718ba9d2}\label{class_renderer_a30c9f53efde747af761a9d9f718ba9d2}} 
+const bool \mbox{\hyperlink{class_renderer_a30c9f53efde747af761a9d9f718ba9d2}{is\+Initialized}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_renderer_ae99b968a04ef9d6471ea5d652019ce9b}\label{class_renderer_ae99b968a04ef9d6471ea5d652019ce9b}} 
+const bool {\bfseries is\+Fullscreen} () const
+\item 
+\mbox{\Hypertarget{class_renderer_ae72b18abada2633ae3e25f7f2e6a4bba}\label{class_renderer_ae72b18abada2633ae3e25f7f2e6a4bba}} 
+const Sint32 {\bfseries get\+Xres} () const
+\item 
+\mbox{\Hypertarget{class_renderer_af28e2149742f1ad0f8c5f137c2e5330b}\label{class_renderer_af28e2149742f1ad0f8c5f137c2e5330b}} 
+const Sint32 {\bfseries get\+Yres} () const
+\item 
+\mbox{\Hypertarget{class_renderer_ae55e07e8e6fc52112921a87ab48bf119}\label{class_renderer_ae55e07e8e6fc52112921a87ab48bf119}} 
+const \mbox{\hyperlink{class_image}{Image}} $\ast$ {\bfseries get\+Null\+Image} () const
+\item 
+\mbox{\Hypertarget{class_renderer_acad73ef7f74b68c8b134d702ecb79f52}\label{class_renderer_acad73ef7f74b68c8b134d702ecb79f52}} 
+T\+T\+F\+\_\+\+Font $\ast$ {\bfseries get\+Mono\+Font} () const
+\item 
+\mbox{\Hypertarget{class_renderer_ada732b24f46f1d5af15b1a7eb8049b10}\label{class_renderer_ada732b24f46f1d5af15b1a7eb8049b10}} 
+double {\bfseries get\+Aspect\+Ratio} () const
+\item 
+\mbox{\Hypertarget{class_renderer_a79ec450b7df8f1de382dff69e568db35}\label{class_renderer_a79ec450b7df8f1de382dff69e568db35}} 
+\mbox{\hyperlink{class_resource}{Resource}}$<$ \mbox{\hyperlink{class_framebuffer}{Framebuffer}} $>$ \& {\bfseries get\+Framebuffer\+Resource} ()
+\item 
+\mbox{\Hypertarget{class_renderer_aa2535ede4cd49b604c659ed3aba0a203}\label{class_renderer_aa2535ede4cd49b604c659ed3aba0a203}} 
+const char $\ast$ {\bfseries get\+Current\+Framebuffer} () const
+\item 
+\mbox{\Hypertarget{class_renderer_a87a47e480d5505923e71352f9e0fb7c1}\label{class_renderer_a87a47e480d5505923e71352f9e0fb7c1}} 
+void {\bfseries set\+Fullscreen} (bool \+\_\+fullscreen)
+\item 
+\mbox{\Hypertarget{class_renderer_a9879a0de10e681194a2f350226c60f9c}\label{class_renderer_a9879a0de10e681194a2f350226c60f9c}} 
+void {\bfseries set\+Xres} (const Sint32 \+\_\+xres)
+\item 
+\mbox{\Hypertarget{class_renderer_afe9a2e0f480f1921fa4d80d307a6b35e}\label{class_renderer_afe9a2e0f480f1921fa4d80d307a6b35e}} 
+void {\bfseries set\+Yres} (const Sint32 \+\_\+yres)
+\item 
+\mbox{\Hypertarget{class_renderer_aef677f6b35abbe83916b92c39314e93d}\label{class_renderer_aef677f6b35abbe83916b92c39314e93d}} 
+void {\bfseries set\+Current\+Framebuffer} (const char $\ast$str)
+\item 
+\mbox{\Hypertarget{class_renderer_a26abbb3bdc9dae7fe089a8ea7d1b9a30}\label{class_renderer_a26abbb3bdc9dae7fe089a8ea7d1b9a30}} 
+void \mbox{\hyperlink{class_renderer_a26abbb3bdc9dae7fe089a8ea7d1b9a30}{init}} ()
+\begin{DoxyCompactList}\small\item\em sets up the renderer \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_renderer_a14893b3513b4faabb7f172d788ac2dd7}\label{class_renderer_a14893b3513b4faabb7f172d788ac2dd7}} 
+void \mbox{\hyperlink{class_renderer_a14893b3513b4faabb7f172d788ac2dd7}{take\+Screenshot}} ()
+\begin{DoxyCompactList}\small\item\em takes a screenshot of the current window and saves it as a timestamped .png \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_renderer_ac76f13ec8c2f7b050f4844be7bf22548}\label{class_renderer_ac76f13ec8c2f7b050f4844be7bf22548}} 
+void \mbox{\hyperlink{class_renderer_ac76f13ec8c2f7b050f4844be7bf22548}{draw\+Console}} (const Sint32 height, const char $\ast$input, const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_engine_1_1logmsg__t}{Engine\+::logmsg\+\_\+t}} $>$ \&log, const \mbox{\hyperlink{class_node}{Node}}$<$ \mbox{\hyperlink{struct_engine_1_1logmsg__t}{Engine\+::logmsg\+\_\+t}} $>$ $\ast$log\+Start)
+\begin{DoxyCompactList}\small\item\em draws the command console at the given screenheight (0=top) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_renderer_ad2b5c503a91c37727081e24086abb524}{draw\+High\+Frame}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&src, const int frame\+Size, const glm\+::vec4 \&color, const bool hollow=false)
+\item 
+void \mbox{\hyperlink{class_renderer_a24aacc1ef02eb13b77d184a1fff72f69}{draw\+Low\+Frame}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&src, const int frame\+Size, const glm\+::vec4 \&color, const bool hollow=false)
+\item 
+void \mbox{\hyperlink{class_renderer_aca9c6d58a672e8d9755cd390495f3fd2}{draw\+Rect}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$src, const glm\+::vec4 \&color)
+\item 
+void \mbox{\hyperlink{class_renderer_a7fd8b4006758cf56f348db5e3c2fd78a}{print\+Text}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&rect, const char $\ast$str)
+\item 
+void \mbox{\hyperlink{class_renderer_a919f151dc712d8caf3db2863cf1b082d}{print\+Text\+Color}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&rect, const glm\+::vec4 \&color, const char $\ast$str)
+\item 
+\mbox{\Hypertarget{class_renderer_ab035ca34349637ac31cc857e9b54b05c}\label{class_renderer_ab035ca34349637ac31cc857e9b54b05c}} 
+void \mbox{\hyperlink{class_renderer_ab035ca34349637ac31cc857e9b54b05c}{clear\+Buffers}} ()
+\begin{DoxyCompactList}\small\item\em clears the screen and the z-\/buffer \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_renderer_a19ab61916061e85a148169314c14fdce}{blit\+Framebuffer}} (\mbox{\hyperlink{class_framebuffer}{Framebuffer}} \&fbo, G\+Lenum attachment, \mbox{\hyperlink{class_renderer_ac1b99ab2b8894c88d2ed5c16edcb5ec7}{Blit\+Type}} type)
+\item 
+void \mbox{\hyperlink{class_renderer_a58a0872ecf7f0cbb2becd62d9d2aa407}{blend\+Framebuffer}} (\mbox{\hyperlink{class_framebuffer}{Framebuffer}} \&fbo0, G\+Lenum attachment0, \mbox{\hyperlink{class_framebuffer}{Framebuffer}} \&fbo1, G\+Lenum attachment1)
+\item 
+\mbox{\Hypertarget{class_renderer_a77629d59e2db57ed9c92e3f81aa55e10}\label{class_renderer_a77629d59e2db57ed9c92e3f81aa55e10}} 
+void \mbox{\hyperlink{class_renderer_a77629d59e2db57ed9c92e3f81aa55e10}{swap\+Window}} ()
+\begin{DoxyCompactList}\small\item\em refreshes the game window with the latest drawings. Called at the end of the frame \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_renderer_ac0d1b6dfbb2d96edf368fda594fc6e88}{change\+Video\+Mode}} ()
+\item 
+\mbox{\hyperlink{class_framebuffer}{Framebuffer}} $\ast$ \mbox{\hyperlink{class_renderer_af8cf39062303e13395dbc731cc7624df}{bind\+F\+BO}} (const char $\ast$name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static const Uint32 \mbox{\hyperlink{class_renderer_a74bdad45e5d4b3c41ddd7b2c3368d0c7}{get\+Pixel}} (const S\+D\+L\+\_\+\+Surface $\ast$surface, const Uint32 x, const Uint32 y)
+\item 
+static void \mbox{\hyperlink{class_renderer_ae1de7a14893861d6f93ad5390b0e9c5b}{set\+Pixel}} (S\+D\+L\+\_\+\+Surface $\ast$surface, const Uint32 x, const Uint32 y, const Uint32 pixel)
+\item 
+static S\+D\+L\+\_\+\+Surface $\ast$ \mbox{\hyperlink{class_renderer_a702d51d51e53b989c890bc16d4c508d5}{flip\+Surface}} (S\+D\+L\+\_\+\+Surface $\ast$surface, int flags)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_renderer_af9a09bfe03f2e9c2a40cb1b2a052b64d}\label{class_renderer_af9a09bfe03f2e9c2a40cb1b2a052b64d}} 
+static const unsigned int \mbox{\hyperlink{class_renderer_af9a09bfe03f2e9c2a40cb1b2a052b64d}{color\+Black}} = 0x\+F\+F000000
+\begin{DoxyCompactList}\small\item\em color constants \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_renderer_a1d9753829f121110451c791bbb43bfdd}\label{class_renderer_a1d9753829f121110451c791bbb43bfdd}} 
+static const unsigned int {\bfseries color\+Red} = 0x\+F\+F\+F\+F0000
+\item 
+\mbox{\Hypertarget{class_renderer_add802e2fcabeee06bb4b709202f1c69a}\label{class_renderer_add802e2fcabeee06bb4b709202f1c69a}} 
+static const unsigned int {\bfseries color\+Green} = 0x\+F\+F00\+F\+F00
+\item 
+\mbox{\Hypertarget{class_renderer_a109df50e7d4900fb77a22ec76db091f4}\label{class_renderer_a109df50e7d4900fb77a22ec76db091f4}} 
+static const unsigned int {\bfseries color\+Blue} = 0x\+F\+F0000\+FF
+\item 
+\mbox{\Hypertarget{class_renderer_a02bcaf708895170a25c0268e40fe506b}\label{class_renderer_a02bcaf708895170a25c0268e40fe506b}} 
+static const unsigned int {\bfseries color\+Yellow} = 0x\+F\+F\+F\+F\+F\+F00
+\item 
+\mbox{\Hypertarget{class_renderer_a788ec7ce737565e2138aecc7ba7545fd}\label{class_renderer_a788ec7ce737565e2138aecc7ba7545fd}} 
+static const unsigned int {\bfseries color\+Magenta} = 0x\+F\+F\+F\+F00\+FF
+\item 
+\mbox{\Hypertarget{class_renderer_a6cbe36954ff66c6dc069899a381d9548}\label{class_renderer_a6cbe36954ff66c6dc069899a381d9548}} 
+static const unsigned int {\bfseries color\+Cyan} = 0x\+F\+F00\+F\+F\+FF
+\item 
+\mbox{\Hypertarget{class_renderer_a1cb855d186d723cc939e69bb074d9d6e}\label{class_renderer_a1cb855d186d723cc939e69bb074d9d6e}} 
+static const unsigned int {\bfseries color\+White} = 0x\+F\+F\+F\+F\+F\+F\+FF
+\item 
+\mbox{\Hypertarget{class_renderer_a34b58f6d15f49193c5e05205100795a8}\label{class_renderer_a34b58f6d15f49193c5e05205100795a8}} 
+static const int {\bfseries flip\+Horizontal} = 1
+\item 
+\mbox{\Hypertarget{class_renderer_a24c6472701155f3aecd53873f103d651}\label{class_renderer_a24c6472701155f3aecd53873f103d651}} 
+static const int {\bfseries flip\+Vertical} = 2
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains basic video and rendering context data as well as 2D drawing functions. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_renderer_af8cf39062303e13395dbc731cc7624df}\label{class_renderer_af8cf39062303e13395dbc731cc7624df}} 
+\index{Renderer@{Renderer}!bindFBO@{bindFBO}}
+\index{bindFBO@{bindFBO}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{bindFBO()}{bindFBO()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_framebuffer}{Framebuffer}} $\ast$ Renderer\+::bind\+F\+BO (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+bind the fbo with the given name, creating a new one if it doesn\textquotesingle{}t exist 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the fbo to retrieve \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the fbo 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_renderer_a58a0872ecf7f0cbb2becd62d9d2aa407}\label{class_renderer_a58a0872ecf7f0cbb2becd62d9d2aa407}} 
+\index{Renderer@{Renderer}!blendFramebuffer@{blendFramebuffer}}
+\index{blendFramebuffer@{blendFramebuffer}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{blendFramebuffer()}{blendFramebuffer()}}
+{\footnotesize\ttfamily void Renderer\+::blend\+Framebuffer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_framebuffer}{Framebuffer}} \&}]{fbo0,  }\item[{G\+Lenum}]{attachment0,  }\item[{\mbox{\hyperlink{class_framebuffer}{Framebuffer}} \&}]{fbo1,  }\item[{G\+Lenum}]{attachment1 }\end{DoxyParamCaption})}
+
+combine two fbos together 
+\begin{DoxyParams}{Parameters}
+{\em fbo0} & first fbo to blend \\
+\hline
+{\em attachment0} & buffer from first fbo to blend \\
+\hline
+{\em fbo1} & second fbo to blend \\
+\hline
+{\em attachment1} & buffer from second fbo to blend \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_renderer_a19ab61916061e85a148169314c14fdce}\label{class_renderer_a19ab61916061e85a148169314c14fdce}} 
+\index{Renderer@{Renderer}!blitFramebuffer@{blitFramebuffer}}
+\index{blitFramebuffer@{blitFramebuffer}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{blitFramebuffer()}{blitFramebuffer()}}
+{\footnotesize\ttfamily void Renderer\+::blit\+Framebuffer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_framebuffer}{Framebuffer}} \&}]{fbo,  }\item[{G\+Lenum}]{attachment,  }\item[{\mbox{\hyperlink{class_renderer_ac1b99ab2b8894c88d2ed5c16edcb5ec7}{Blit\+Type}}}]{type }\end{DoxyParamCaption})}
+
+blits a framebuffer onto the window 
+\begin{DoxyParams}{Parameters}
+{\em fbo} & the framebuffer to put on screen \\
+\hline
+{\em type} & what kind of technique to apply \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_renderer_ac0d1b6dfbb2d96edf368fda594fc6e88}\label{class_renderer_ac0d1b6dfbb2d96edf368fda594fc6e88}} 
+\index{Renderer@{Renderer}!changeVideoMode@{changeVideoMode}}
+\index{changeVideoMode@{changeVideoMode}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{changeVideoMode()}{changeVideoMode()}}
+{\footnotesize\ttfamily bool Renderer\+::change\+Video\+Mode (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+update the engine window to use the new render settings (resolution, etc.) \begin{DoxyReturn}{Returns}
+true if video mode was successfully changed, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_renderer_ad2b5c503a91c37727081e24086abb524}\label{class_renderer_ad2b5c503a91c37727081e24086abb524}} 
+\index{Renderer@{Renderer}!drawHighFrame@{drawHighFrame}}
+\index{drawHighFrame@{drawHighFrame}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{drawHighFrame()}{drawHighFrame()}}
+{\footnotesize\ttfamily void Renderer\+::draw\+High\+Frame (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&}]{src,  }\item[{const int}]{frame\+Size,  }\item[{const glm\+::vec4 \&}]{color,  }\item[{const bool}]{hollow = {\ttfamily false} }\end{DoxyParamCaption})}
+
+draw a raised frame for windows or buttons, etc. 
+\begin{DoxyParams}{Parameters}
+{\em src} & the size and coordinates of the frame \\
+\hline
+{\em frame\+Size} & the size of the frame border in pixels \\
+\hline
+{\em color} & the frame\textquotesingle{}s color \\
+\hline
+{\em hollow} & if true, the center of the frame will not be drawn \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_renderer_a24aacc1ef02eb13b77d184a1fff72f69}\label{class_renderer_a24aacc1ef02eb13b77d184a1fff72f69}} 
+\index{Renderer@{Renderer}!drawLowFrame@{drawLowFrame}}
+\index{drawLowFrame@{drawLowFrame}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{drawLowFrame()}{drawLowFrame()}}
+{\footnotesize\ttfamily void Renderer\+::draw\+Low\+Frame (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&}]{src,  }\item[{const int}]{frame\+Size,  }\item[{const glm\+::vec4 \&}]{color,  }\item[{const bool}]{hollow = {\ttfamily false} }\end{DoxyParamCaption})}
+
+draw a lowered frame for windows or buttons, etc. 
+\begin{DoxyParams}{Parameters}
+{\em src} & the size and coordinates of the frame \\
+\hline
+{\em frame\+Size} & the size of the frame border in pixels \\
+\hline
+{\em color} & the frame\textquotesingle{}s color \\
+\hline
+{\em hollow} & if true, the center of the frame will not be drawn \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_renderer_aca9c6d58a672e8d9755cd390495f3fd2}\label{class_renderer_aca9c6d58a672e8d9755cd390495f3fd2}} 
+\index{Renderer@{Renderer}!drawRect@{drawRect}}
+\index{drawRect@{drawRect}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{drawRect()}{drawRect()}}
+{\footnotesize\ttfamily void Renderer\+::draw\+Rect (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$}]{src,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+draw a filled rectangle in screen space 
+\begin{DoxyParams}{Parameters}
+{\em src} & the size and coordinates of the rectangle \\
+\hline
+{\em color} & the 32-\/bit color of the rectangle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_renderer_a702d51d51e53b989c890bc16d4c508d5}\label{class_renderer_a702d51d51e53b989c890bc16d4c508d5}} 
+\index{Renderer@{Renderer}!flipSurface@{flipSurface}}
+\index{flipSurface@{flipSurface}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{flipSurface()}{flipSurface()}}
+{\footnotesize\ttfamily S\+D\+L\+\_\+\+Surface $\ast$ Renderer\+::flip\+Surface (\begin{DoxyParamCaption}\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{surface,  }\item[{int}]{flags }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+flip a surface 
+\begin{DoxyParams}{Parameters}
+{\em surface} & the S\+D\+L\+\_\+\+Surface to be flipped \\
+\hline
+{\em flags} & the directions to flip the surface in \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a flipped copy of the given S\+D\+L\+\_\+\+Surface 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_renderer_a74bdad45e5d4b3c41ddd7b2c3368d0c7}\label{class_renderer_a74bdad45e5d4b3c41ddd7b2c3368d0c7}} 
+\index{Renderer@{Renderer}!getPixel@{getPixel}}
+\index{getPixel@{getPixel}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{getPixel()}{getPixel()}}
+{\footnotesize\ttfamily const Uint32 Renderer\+::get\+Pixel (\begin{DoxyParamCaption}\item[{const S\+D\+L\+\_\+\+Surface $\ast$}]{surface,  }\item[{const Uint32}]{x,  }\item[{const Uint32}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+gets the pixel at the given coordinates in the given S\+D\+L\+\_\+\+Surface 
+\begin{DoxyParams}{Parameters}
+{\em surface} & the S\+D\+L\+\_\+\+Surface to inspect \\
+\hline
+{\em x} & the x coordinate of the pixel to get \\
+\hline
+{\em y} & the y coordinate of the pixel to get \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the 32-\/bit color value of the pixel 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_renderer_a7fd8b4006758cf56f348db5e3c2fd78a}\label{class_renderer_a7fd8b4006758cf56f348db5e3c2fd78a}} 
+\index{Renderer@{Renderer}!printText@{printText}}
+\index{printText@{printText}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{printText()}{printText()}}
+{\footnotesize\ttfamily void Renderer\+::print\+Text (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&}]{rect,  }\item[{const char $\ast$}]{str }\end{DoxyParamCaption})}
+
+writes utf-\/8 text using a ttf font at the given screen coordinates 
+\begin{DoxyParams}{Parameters}
+{\em rect} & the position and size of the text image to use \\
+\hline
+{\em str} & the str to print \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_renderer_a919f151dc712d8caf3db2863cf1b082d}\label{class_renderer_a919f151dc712d8caf3db2863cf1b082d}} 
+\index{Renderer@{Renderer}!printTextColor@{printTextColor}}
+\index{printTextColor@{printTextColor}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{printTextColor()}{printTextColor()}}
+{\footnotesize\ttfamily void Renderer\+::print\+Text\+Color (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&}]{rect,  }\item[{const glm\+::vec4 \&}]{color,  }\item[{const char $\ast$}]{str }\end{DoxyParamCaption})}
+
+writes utf-\/8 text using a ttf font at the given screen coordinates 
+\begin{DoxyParams}{Parameters}
+{\em rect} & the position and size of the text image to use \\
+\hline
+{\em color} & the color to blend the text with \\
+\hline
+{\em str} & the str to print \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_renderer_ae1de7a14893861d6f93ad5390b0e9c5b}\label{class_renderer_ae1de7a14893861d6f93ad5390b0e9c5b}} 
+\index{Renderer@{Renderer}!setPixel@{setPixel}}
+\index{setPixel@{setPixel}!Renderer@{Renderer}}
+\doxysubsubsection{\texorpdfstring{setPixel()}{setPixel()}}
+{\footnotesize\ttfamily void Renderer\+::set\+Pixel (\begin{DoxyParamCaption}\item[{S\+D\+L\+\_\+\+Surface $\ast$}]{surface,  }\item[{const Uint32}]{x,  }\item[{const Uint32}]{y,  }\item[{const Uint32}]{pixel }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+sets a pixel in the given S\+D\+L\+\_\+\+Surface 
+\begin{DoxyParams}{Parameters}
+{\em surface} & the S\+D\+L\+\_\+\+Surface to modify \\
+\hline
+{\em x} & the x coordinate of the pixel to set \\
+\hline
+{\em y} & the y coordinate of the pixel to set \\
+\hline
+{\em pixel} & the 32-\/bit color value to set the pixel to \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_renderer_8hpp}{Renderer.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Renderer.\+cpp\end{DoxyCompactItemize}

@@ -1,4 +1,4 @@
-// Engine.hpp
+//! @file Engine.hpp
 
 #pragma once
 
@@ -24,6 +24,8 @@ class Server;
 class Client;
 class FileInterface;
 
+//! The Engine object is the root of the entire engine. Here lives top level data about the current engine state:
+//! the local Client and Server (if they are running), functions to step everything forward, update devices, etc.
 class Engine {
 public:
 	Engine(int argc, char **argv);
@@ -32,23 +34,23 @@ public:
 	static const int stackTraceSize = 100;
 	static const int stackTraceStrSize = 256;
 
-	// log message codes
+	//! log message codes
 	enum msg_t {
-		MSG_DEBUG = 0,		// only printed when NDEBUG is undefined
+		MSG_DEBUG = 0,		//! only printed when NDEBUG is undefined
 
-		MSG_INFO,			// for when you have an unimportant message to report
-		MSG_WARN,			// for when the game has encountered a small problem
-		MSG_ERROR,			// for when the game has encountered a definite problem
-		MSG_CRITICAL,		// for when the game likely will not continue past this point
-		MSG_FATAL,			// for when you have to exit() immediately
+		MSG_INFO,			//! for when you have an unimportant message to report
+		MSG_WARN,			//! for when the game has encountered a small problem
+		MSG_ERROR,			//! for when the game has encountered a definite problem
+		MSG_CRITICAL,		//! for when the game likely will not continue past this point
+		MSG_FATAL,			//! for when you have to exit() immediately
 
-		MSG_NOTE,			// like info, but more important (not for errors!)
-		MSG_CHAT,			// for when a chat message was received over the net
+		MSG_NOTE,			//! like info, but more important (not for errors!)
+		MSG_CHAT,			//! for when a chat message was received over the net
 
 		MSG_TYPE_LENGTH
 	};
 
-	// a console message
+	//! a console message
 	struct logmsg_t {
 		unsigned int uid = 0;
 		String text;
@@ -56,7 +58,7 @@ public:
 		msg_t kind = MSG_INFO;
 	};
 
-	// a mod
+	//! a mod
 	struct mod_t {
 		mod_t(const char* _path);
 
@@ -68,13 +70,12 @@ public:
 		void serialize(FileInterface * file);
 	};
 
-	// default ticks per second
+	//! default ticks per second
 	static const unsigned int defaultTickRate = 60;
 
-	// amount of ticks within which two clicks register as a "double-click"
+	//! amount of ticks within which two clicks register as a "double-click"
 	static const unsigned int doubleClickTime = 30;
 
-	// getters & setters
 	const bool							isInitialized() const { return initialized; }
 	const bool							isRunning() const { return running; }
 	const bool							isPaused() const { return paused; }
@@ -140,240 +141,240 @@ public:
 	void								setPlayTest(const bool b) { playTest = b; }
 	void								setConsoleSleep(Uint32 i) { consoleSleep = i; }
 
-	// get the directory the game is running in
+	//! get the directory the game is running in
 	const char* getRunningDir();
 
-	// initialize the engine
+	//! initialize the engine
 	void init();
 
-	// loads all game resources
+	//! loads all game resources
 	void loadAllResources();
 
-	// loads resources from a particular mod / game folder
+	//! loads resources from a particular mod / game folder
 	void loadResources(const char* folder);
 
-	// load entity defs
+	//! load entity defs
 	void loadAllDefs();
 
-	// load entity defs from a particular mod / game folder
+	//! load entity defs from a particular mod / game folder
 	void loadDefs(const char* folder);
 
-	// clears all resource caches, effectively starting the engine "fresh"
-	// this does NOT unmount mods! It simply causes the engine to recache any loaded resources
-	// @param type if not nullptr, tries to clear a specific resource cache by name
+	//! clears all resource caches, effectively starting the engine "fresh"
+	//! this does NOT unmount mods! It simply causes the engine to recache any loaded resources
+	//! @param type if not nullptr, tries to clear a specific resource cache by name
 	void dumpResources(const char* type);
 
-	// shuts down any active games and starts the editor
-	// @param path optional path to a level to startup
+	//! shuts down any active games and starts the editor
+	//! @param path optional path to a level to startup
 	void startEditor(const char* path = "");
 
-	// start a new process to playtest the current level
+	//! start a new process to playtest the current level
 	void editorPlaytest();
 
-	// shuts down the active server and starts a new one
+	//! shuts down the active server and starts a new one
 	void startServer();
 
-	// joins the given server
-	// @param address the ip address (and port) of the server
+	//! joins the given server
+	//! @param address the ip address (and port) of the server
 	void joinServer(const char* address);
 
-	// sends a chat message
-	// @param msg the message to relay
+	//! sends a chat message
+	//! @param msg the message to relay
 	void chat(const char* msg);
 
-	// @return true if the editor is currently running
+	//! @return true if the editor is currently running
 	bool isEditorRunning();
 
-	// plays a sound file
-	// @param name the filename of the sound to play
+	//! plays a sound file
+	//! @param name the filename of the sound to play
 	void playSound(const char* name);
 
-	// game version string
+	//! game version string
 	const char* version();
 
-	// parse command line arguments
-	// @param argc the number of arguments to execute
-	// @param argv array of char arrays (args)
+	//! parse command line arguments
+	//! @param argc the number of arguments to execute
+	//! @param argv array of char arrays (args)
 	void commandLine(const int argc, const char **argv);
 
-	// parse a single console command
-	// @param arg the command to process
+	//! parse a single console command
+	//! @param arg the command to process
 	void doCommand(const char* arg);
 
-	// load and execute a config file
-	// @param filename filename of the config file to load (auto-prepends active game folder)
-	// @return 0 on success, non-zero on error
+	//! load and execute a config file
+	//! @param filename filename of the config file to load (auto-prepends active game folder)
+	//! @return 0 on success, non-zero on error
 	int loadConfig(const char* filename);
 
-	// write a config file
-	// @param filename filename of the config file to write (auto-prepends active game folder)
-	// @return 0 on success, non-zero on error
+	//! write a config file
+	//! @param filename filename of the config file to write (auto-prepends active game folder)
+	//! @return 0 on success, non-zero on error
 	int saveConfig(const char* filename);
 
-	// copy the contents of the engine log to another one
-	// @param dest the destination log to copy to
-	// @return true if the dest was cleared in the process
+	//! copy the contents of the engine log to another one
+	//! @param dest the destination log to copy to
+	//! @return true if the dest was cleared in the process
 	bool copyLog(LinkedList<Engine::logmsg_t>& dest);
 
-	// clears the log
+	//! clears the log
 	void clearLog();
 
-	// shutdown the engine safely (perhaps from another class)
+	//! shutdown the engine safely (perhaps from another class)
 	void shutdown();
 
-	// logs a formatted char string to the console
-	// @param msgType the type of message to send to the console
-	// @param fmt a formatted string to print to the console
+	//! logs a formatted char string to the console
+	//! @param msgType the type of message to send to the console
+	//! @param fmt a formatted string to print to the console
 	void fmsg(const Uint32 msgType, const char* fmt, ...);
 
-	// logs a String to the console
-	// @param msgType the type of message to send to the console
-	// @param str a String to print to the console
+	//! logs a String to the console
+	//! @param msgType the type of message to send to the console
+	//! @param str a String to print to the console
 	void smsg(const Uint32 msgType, const String& str);
 
-	// logs a char string to the console
-	// @param msgType the type of message to send to the console
-	// @param str a char string to print to the console
+	//! logs a char string to the console
+	//! @param msgType the type of message to send to the console
+	//! @param str a char string to print to the console
 	void msg(const Uint32 msgType, const char* str);
 
-	// find the index of the entity def with the given name
-	// @param name the name of the entity def to look for
-	// @return the index of the entity with the given name, or UINT32_MAX if not found
+	//! find the index of the entity def with the given name
+	//! @param name the name of the entity def to look for
+	//! @return the index of the entity with the given name, or UINT32_MAX if not found
 	Uint32 findEntityDefIndexByName(const char* name);
 
-	// reads data from a file stream and outputs errors to the log
-	// @param ptr a pointer to the variable in which to store the data read
-	// @param size the size of each data element to read
-	// @param count the number of data elements to read
-	// @param stream the file stream to read the data from
-	// @param filename the filename of the file that is being read from
-	// @param funcName the name of the function wherein the file is being read
+	//! reads data from a file stream and outputs errors to the log
+	//! @param ptr a pointer to the variable in which to store the data read
+	//! @param size the size of each data element to read
+	//! @param count the number of data elements to read
+	//! @param stream the file stream to read the data from
+	//! @param filename the filename of the file that is being read from
+	//! @param funcName the name of the function wherein the file is being read
 	static void freadl(void* ptr, Uint32 size, Uint32 count, FILE* stream, const char* filename, const char* funcName);
 
-	// reads multiple ints from a character string
-	// @param str the string to read the space-separated character-encoded ints from
-	// @param arr an array to store each of the ints in
-	// @param numToRead the number of ints to read from str
-	// @return the number of ints that were successfully read from str
+	//! reads multiple ints from a character string
+	//! @param str the string to read the space-separated character-encoded ints from
+	//! @param arr an array to store each of the ints in
+	//! @param numToRead the number of ints to read from str
+	//! @return the number of ints that were successfully read from str
 	static int readInt(const char* str, int* arr, int numToRead);
 
-	// reads multiple floats from a character string
-	// @param str the string to read the space-separated character-encoded floats from
-	// @param arr an array to store each of the floats in
-	// @param numToRead the number of floats to read from str
-	// @return the number of floats that were successfully read from str
+	//! reads multiple floats from a character string
+	//! @param str the string to read the space-separated character-encoded floats from
+	//! @param arr an array to store each of the floats in
+	//! @param numToRead the number of floats to read from str
+	//! @return the number of floats that were successfully read from str
 	static int readFloat(const char* str, float* arr, int numToRead);
 
-	// determines if some text is anything but a number
-	// @param arr the array of characters to check for letters
-	// @param len the length of the array
-	// @return true if the character array has non-numeral characters, false otherwise
+	//! determines if some text is anything but a number
+	//! @param arr the array of characters to check for letters
+	//! @param len the length of the array
+	//! @return true if the character array has non-numeral characters, false otherwise
 	static bool charsHaveLetters(const char* arr, Uint32 len);
 
-	// does string comparison (helper function for lua)
-	// @param a the first string
-	// @param b the second string
-	// @return the result of the string comparison
+	//! does string comparison (helper function for lua)
+	//! @param a the first string
+	//! @param b the second string
+	//! @return the result of the string comparison
 	static int strCompare(const char* a, const char* b);
 
-	// finds the intersection between a point and a plane in 3D
-	// @param lineStart the start of the line segment
-	// @param lineEnd the end of the line segment
-	// @param planeOrigin where the plane is "centered" in 3D
-	// @param planeNormal the surface normal of the plane
-	// @param outIntersection the point of intersection between the line and the plane
-	// @return true if the line intersects with the plane, false otherwise
+	//! finds the intersection between a point and a plane in 3D
+	//! @param lineStart the start of the line segment
+	//! @param lineEnd the end of the line segment
+	//! @param planeOrigin where the plane is "centered" in 3D
+	//! @param planeNormal the surface normal of the plane
+	//! @param outIntersection the point of intersection between the line and the plane
+	//! @return true if the line intersects with the plane, false otherwise
 	static bool lineIntersectPlane(const Vector& lineStart, const Vector& lineEnd, const Vector& planeOrigin, const Vector& planeNormal, Vector& outIntersection);
 
-	// determines where in the triangle defined by a, b, c, that the point p lies (does not use Z coord)
-	// @param a point A on the triangle
-	// @param b point B on the triangle
-	// @param c point C on the triangle
-	// @param p the point to test
-	// @return a pair of coordinates that define where the point is in the triangle
+	//! determines where in the triangle defined by a, b, c, that the point p lies (does not use Z coord)
+	//! @param a point A on the triangle
+	//! @param b point B on the triangle
+	//! @param c point C on the triangle
+	//! @param p the point to test
+	//! @return a pair of coordinates that define where the point is in the triangle
 	static Vector triangleCoords(const Vector& a, const Vector& b, const Vector& c, const Vector& p);
 
-	// determines if the given point p lies in the triangle defined by a, b, c (does not use Z coord)
-	// @param a point A on the triangle
-	// @param b point B on the triangle
-	// @param c point C on the triangle
-	// @param p the point to test
-	// @return true if the point is in the triangle, otherwise false
+	//! determines if the given point p lies in the triangle defined by a, b, c (does not use Z coord)
+	//! @param a point A on the triangle
+	//! @param b point B on the triangle
+	//! @param c point C on the triangle
+	//! @param p the point to test
+	//! @return true if the point is in the triangle, otherwise false
 	static bool pointInTriangle(const Vector& a, const Vector& b, const Vector& c, const Vector& p);
 
-	// determines if one triangle lies inside of another (two-dimensional)
-	// @param a0: point A on first triangle (container)
-	// @param b0: point B on first triangle (container)
-	// @param c0: point C on first triangle (container)
-	// @param a1: point A on second triangle
-	// @param b1: point B on second triangle
-	// @param c1: point C on second triangle
-	// @return true if the second triangle is in the first one, otherwise false
+	//! determines if one triangle lies inside of another (two-dimensional)
+	//! @param a0: point A on first triangle (container)
+	//! @param b0: point B on first triangle (container)
+	//! @param c0: point C on first triangle (container)
+	//! @param a1: point A on second triangle
+	//! @param b1: point B on second triangle
+	//! @param c1: point C on second triangle
+	//! @return true if the second triangle is in the first one, otherwise false
 	static bool triangleOverlapsTriangle(const Vector& a0, const Vector& b0, const Vector& c0, const Vector& a1, const Vector& b1, const Vector& c1);
 
-	// perform pre-processing on the current frame
+	//! perform pre-processing on the current frame
 	void preProcess();
 
-	// process the current frame
+	//! process the current frame
 	void process();
 
-	// perform post-processing on the current frame
+	//! perform post-processing on the current frame
 	void postProcess();
 
-	// generate a stack trace
-	// @return a list of strings representing stack frames
+	//! generate a stack trace
+	//! @return a list of strings representing stack frames
 	ArrayList<StringBuf<Engine::stackTraceStrSize>> stackTrace() const;
 
-	// return the value of a key and reset it if it's been pressed
-	// !IMPORTANT! should generally NOT be used, as it "locks" the key for the rest of the frame after being pressed
-	// use a local variable to record the press for your object instead!
-	// @param index the key scancode
-	// @return true if the key has been pressed, false otherwise
+	//! return the value of a key and reset it if it's been pressed
+	//! !IMPORTANT! should generally NOT be used, as it "locks" the key for the rest of the frame after being pressed
+	//! use a local variable to record the press for your object instead!
+	//! @param index the key scancode
+	//! @return true if the key has been pressed, false otherwise
 	const bool pressKey(const int index) { if (keystatus[index]) { keystatus[index] = false; return true; } else { return false; } }
 
-	// return the value of a mouse button and reset it if it's been clicked
-	// !IMPORTANT! should generally NOT be used, as it "locks" the button for the rest of the frame after being pressed
-	// use a local variable to record the press for your object instead!
-	// @param index the button number
-	// @return true if the button has been clicked, false otherwise
+	//! return the value of a mouse button and reset it if it's been clicked
+	//! !IMPORTANT! should generally NOT be used, as it "locks" the button for the rest of the frame after being pressed
+	//! use a local variable to record the press for your object instead!
+	//! @param index the button number
+	//! @return true if the button has been clicked, false otherwise
 	const bool pressMouse(const int index) { if (mousestatus[index]) { mousestatus[index] = false; return true; } else { return false; } }
 
-	// takes a full system path to a local asset and attempts to cut it down to a virtual path
-	// @param path the full filename
+	//! takes a full system path to a local asset and attempts to cut it down to a virtual path
+	//! @param path the full filename
 	String shortenPath(const char* path) const;
 
-	// gets the virtual file path to an asset and returns its full path as a string
-	// @param path the path to the asset without mod or base folders
-	// @return the complete path string
+	//! gets the virtual file path to an asset and returns its full path as a string
+	//! @param path the path to the asset without mod or base folders
+	//! @return the complete path string
 	String buildPath(const char* path) const;
 
-	// add a mod to the game
-	// @param name the name of the mod folder to add
-	// @return true if the mod was added, false otherwise
+	//! add a mod to the game
+	//! @param name the name of the mod folder to add
+	//! @return true if the mod was added, false otherwise
 	bool addMod(const char* name);
 
-	// remove a mod from the game
-	// @param name the name of the mod folder to remove
-	// @return true if the mod was removed, false otherwise
+	//! remove a mod from the game
+	//! @param name the name of the mod folder to remove
+	//! @return true if the mod was removed, false otherwise
 	bool removeMod(const char* name);
 
-	// generate a random number
-	// @return a random 32-bit number
+	//! generate a random number
+	//! @return a random 32-bit number
 	Uint32 random();
 
-	// print cache sizes to show memory consumption
+	//! print cache sizes to show memory consumption
 	void printCacheSize() const;
 
 private:
 	static const char* msgTypeStr[MSG_TYPE_LENGTH];
 
-	// shuts down the engine
+	//! shuts down the engine
 	void term();
 
-	// handles segfault
+	//! handles segfault
 	static void handleSIGSEGV(int input);
 
-	// general data
+	//! general data
 	bool playTest = false;
 	String combinedVersion;
 	bool initialized = false;
@@ -383,11 +384,11 @@ private:
 	unsigned int ticksPerSecond = defaultTickRate;
 	String runDir;
 
-	// mod data
+	//! mod data
 	mod_t game;
 	LinkedList<mod_t> mods;
 
-	// log data
+	//! log data
 	FILE *logFile = nullptr;
 	LinkedList<logmsg_t> logList;
 	LinkedList<String> commandHistory;
@@ -395,33 +396,33 @@ private:
 	SDL_mutex* logLock = nullptr;
 	bool logging = false;
 
-	// local client and server data
+	//! local client and server data
 	bool runningClient = true;
 	bool runningServer = false;
 	Client* localClient = nullptr;
 	Server* localServer = nullptr;
 
-	// resource caches
+	//! resource caches
 	Map<StringBuf<32>, ResourceBase*> resources;
 
-	// tile texture data
+	//! tile texture data
 	Atlas tileDiffuseTextures;
 	Atlas tileNormalTextures;
 	Atlas tileEffectsTextures;
 	Dictionary textureDictionary;
 
-	// entity definitions
+	//! entity definitions
 	LinkedList<Entity::def_t*> entityDefs;
 
-	// random number generator
+	//! random number generator
 	Random rand;
 
-	// video data (startup settings)
+	//! video data (startup settings)
 	bool fullscreen = false;
 	Sint32 xres = 1280;
 	Sint32 yres = 720;
 
-	// timing data
+	//! timing data
 	double fps = 0, timesync = 0, t = 0, ot = 0;
 	static const int fpsAverage = 32;
 	double frameval[fpsAverage];
@@ -429,11 +430,11 @@ private:
 	bool executedFrames = false;
 	std::chrono::time_point<std::chrono::steady_clock> lastTick;
 
-	// console data
+	//! console data
 	Uint32 consoleSleep = 0;
 	LinkedList<String> ccmdsToRun;
 
-	// input data
+	//! input data
 	bool inputAllowed = true;
 	const char* lastkeypressed = nullptr;
 	char lastInput[SDL_TEXTINPUTEVENT_TEXT_SIZE] = { 0 };
@@ -448,26 +449,26 @@ private:
 	Sint32 omousex = 0, omousey = 0;
 	Sint32 mousexrel = 0, mouseyrel = 0;
 	Sint32 mousewheelx = 0, mousewheely = 0;
-	char *inputstr = nullptr; // text input buffer
-	int inputlen = 0; // length of the text input buffer
-	bool inputnum = false; // if true, the text input is for numbers only
+	char *inputstr = nullptr; //!< text input buffer
+	int inputlen = 0; //!< length of the text input buffer
+	bool inputnum = false; //!< if true, the text input is for numbers only
 	Uint32 cursorflash = 0;
-	bool killSignal = false; // if true, engine received a quit signal from the OS
+	bool killSignal = false; //!< if true, engine received a quit signal from the OS
 	LinkedList<SDL_GameController*> controllers;
 	LinkedList<SDL_Joystick*> joysticks;
 	Input inputs[4];
 
-	// sound data
+	//! sound data
 	int audio_rate = 44100;
 	Uint16 audio_format = AUDIO_S16;
 	int audio_channels = 1;
 	int audio_buffers = 512;
 
-	// load a map on the server
-	// @param path the pathname of the world to load
+	//! load a map on the server
+	//! @param path the pathname of the world to load
 	void loadMapServer(const char* path);
 
-	// load a map on the client
-	// @param path the pathname of the world to load
+	//! load a map on the client
+	//! @param path the pathname of the world to load
 	void loadMapClient(const char* path);
 };

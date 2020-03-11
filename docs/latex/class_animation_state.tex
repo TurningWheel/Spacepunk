@@ -1,0 +1,150 @@
+\hypertarget{class_animation_state}{}\doxysection{Animation\+State Class Reference}
+\label{class_animation_state}\index{AnimationState@{AnimationState}}
+
+
+{\ttfamily \#include $<$Animation\+State.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_animation_state_1_1sound__t}{sound\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em sound trigger \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_animation_state_1_1state__t}{state\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em a state pair \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_animation_state_af29b9b0df70346cf8f72d384000ea7c4}\label{class_animation_state_af29b9b0df70346cf8f72d384000ea7c4}} 
+{\bfseries Animation\+State} (const \mbox{\hyperlink{struct_animation_1_1entry__t}{Animation\+::entry\+\_\+t}} \&entry, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_animation_1_1sound__t}{Animation\+::sound\+\_\+t}} $>$ \&sounds)
+\item 
+bool \mbox{\hyperlink{class_animation_state_a6c218a6070c3d49a34ef53a8c47511ab}{update}} (\mbox{\hyperlink{class_speaker}{Speaker}} $\ast$speaker)
+\item 
+void \mbox{\hyperlink{class_animation_state_a3b7ed57b94bb6582f8328af15e371288}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+void \mbox{\hyperlink{class_animation_state_a4cf386a8d6003e804173df458a5d73dc}{set\+Weights}} (const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ \&bones, float weight)
+\item 
+void \mbox{\hyperlink{class_animation_state_a2e025734656420a8bdd578529aa3606a}{set\+Weight\+Rates}} (const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ \&bones, float rate)
+\item 
+\mbox{\Hypertarget{class_animation_state_a54e8b0615a615f8eb6232443d433a730}\label{class_animation_state_a54e8b0615a615f8eb6232443d433a730}} 
+void \mbox{\hyperlink{class_animation_state_a54e8b0615a615f8eb6232443d433a730}{clear\+Weights}} ()
+\begin{DoxyCompactList}\small\item\em clears all weights associated with this animation \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_animation_state_a28f4009b568469e678111c294422bc0b}\label{class_animation_state_a28f4009b568469e678111c294422bc0b}} 
+const char $\ast$ \mbox{\hyperlink{class_animation_state_a28f4009b568469e678111c294422bc0b}{get\+Name}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_animation_state_a0a6bcac52c5bdae3baeef6ae86b06d32}\label{class_animation_state_a0a6bcac52c5bdae3baeef6ae86b06d32}} 
+float {\bfseries get\+Ticks} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_a740ee6cd188d5b6d87939f7fe0981108}\label{class_animation_state_a740ee6cd188d5b6d87939f7fe0981108}} 
+float {\bfseries get\+Ticks\+Rate} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_a96f57a140b7d9d936da1b23c530d2725}\label{class_animation_state_a96f57a140b7d9d936da1b23c530d2725}} 
+float {\bfseries get\+Begin} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_ad4c157c2a3964ebaa688cad9382bc82a}\label{class_animation_state_ad4c157c2a3964ebaa688cad9382bc82a}} 
+float {\bfseries get\+End} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_abd9b1c64d2d9b71312022b663e82a05c}\label{class_animation_state_abd9b1c64d2d9b71312022b663e82a05c}} 
+float {\bfseries get\+Length} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_a4950dce91e15c3d65720a028e454451d}\label{class_animation_state_a4950dce91e15c3d65720a028e454451d}} 
+float {\bfseries get\+Weight} (const char $\ast$bone) const
+\item 
+\mbox{\Hypertarget{class_animation_state_adaf4ce703184ef42d2b36ca6d8102313}\label{class_animation_state_adaf4ce703184ef42d2b36ca6d8102313}} 
+float {\bfseries get\+Weight\+Rate} (const char $\ast$bone) const
+\item 
+\mbox{\Hypertarget{class_animation_state_a4609d69acfda1fed72f1abd7b1d84e18}\label{class_animation_state_a4609d69acfda1fed72f1abd7b1d84e18}} 
+bool {\bfseries is\+Loop} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_adb3d596c920328d065b16815581bd97a}\label{class_animation_state_adb3d596c920328d065b16815581bd97a}} 
+unsigned int {\bfseries get\+Begin\+Last\+Sound\+Frame} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_af5d689734a322aaaa45f8c71a64f988a}\label{class_animation_state_af5d689734a322aaaa45f8c71a64f988a}} 
+unsigned int {\bfseries get\+End\+Last\+Sound\+Frame} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_ac941423cd4b1ef8e65ca279cbc80d062}\label{class_animation_state_ac941423cd4b1ef8e65ca279cbc80d062}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_animation_state_1_1sound__t}{sound\+\_\+t}} $>$ \& {\bfseries get\+Sounds} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_a201cfa75763915308374f103022d0236}\label{class_animation_state_a201cfa75763915308374f103022d0236}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_animation_state_1_1sound__t}{sound\+\_\+t}} $>$ \& {\bfseries get\+Sounds} ()
+\item 
+\mbox{\Hypertarget{class_animation_state_a31d5c2de6687276d5a6115a490fa145f}\label{class_animation_state_a31d5c2de6687276d5a6115a490fa145f}} 
+bool {\bfseries is\+Finished} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_a3f01f40027953caefbfc97b025dc037f}\label{class_animation_state_a3f01f40027953caefbfc97b025dc037f}} 
+const \mbox{\hyperlink{class_map}{Map}}$<$ \mbox{\hyperlink{class_string}{String}}, \mbox{\hyperlink{struct_animation_state_1_1state__t}{state\+\_\+t}} $>$ \& {\bfseries get\+Weights} () const
+\item 
+\mbox{\Hypertarget{class_animation_state_a4448b05c01bcc05a900ff107f8cef2ec}\label{class_animation_state_a4448b05c01bcc05a900ff107f8cef2ec}} 
+void {\bfseries set\+Ticks} (float \+\_\+ticks)
+\item 
+\mbox{\Hypertarget{class_animation_state_aa9b3c1e235bd04fca7ed2b874d4f008e}\label{class_animation_state_aa9b3c1e235bd04fca7ed2b874d4f008e}} 
+void {\bfseries set\+Ticks\+Rate} (float \+\_\+ticks\+Rate)
+\item 
+\mbox{\Hypertarget{class_animation_state_aaa9042b9158f67c7f32e3278ff83fd68}\label{class_animation_state_aaa9042b9158f67c7f32e3278ff83fd68}} 
+void {\bfseries set\+Weight} (const char $\ast$bone, float \+\_\+weight)
+\item 
+\mbox{\Hypertarget{class_animation_state_a0590927ee07f9e089b5ea6729a10241a}\label{class_animation_state_a0590927ee07f9e089b5ea6729a10241a}} 
+void {\bfseries set\+Weight\+Rate} (const char $\ast$bone, float \+\_\+weight\+Rate)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+One \mbox{\hyperlink{class_animation_state}{Animation\+State}} exists for every animation available to a model for playing. It contains information about which bones an animation affects, the weights on those bones, and more. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_animation_state_a3b7ed57b94bb6582f8328af15e371288}\label{class_animation_state_a3b7ed57b94bb6582f8328af15e371288}} 
+\index{AnimationState@{AnimationState}!serialize@{serialize}}
+\index{serialize@{serialize}!AnimationState@{AnimationState}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Animation\+State\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_animation_state_a2e025734656420a8bdd578529aa3606a}\label{class_animation_state_a2e025734656420a8bdd578529aa3606a}} 
+\index{AnimationState@{AnimationState}!setWeightRates@{setWeightRates}}
+\index{setWeightRates@{setWeightRates}!AnimationState@{AnimationState}}
+\doxysubsubsection{\texorpdfstring{setWeightRates()}{setWeightRates()}}
+{\footnotesize\ttfamily void Animation\+State\+::set\+Weight\+Rates (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ \&}]{bones,  }\item[{float}]{rate }\end{DoxyParamCaption})}
+
+set weight rates on several bones at once 
+\begin{DoxyParams}{Parameters}
+{\em bones} & A list of bones to affect \\
+\hline
+{\em rate} & The rate to set on the bones \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_animation_state_a4cf386a8d6003e804173df458a5d73dc}\label{class_animation_state_a4cf386a8d6003e804173df458a5d73dc}} 
+\index{AnimationState@{AnimationState}!setWeights@{setWeights}}
+\index{setWeights@{setWeights}!AnimationState@{AnimationState}}
+\doxysubsubsection{\texorpdfstring{setWeights()}{setWeights()}}
+{\footnotesize\ttfamily void Animation\+State\+::set\+Weights (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ \&}]{bones,  }\item[{float}]{weight }\end{DoxyParamCaption})}
+
+set weight on several bones at once 
+\begin{DoxyParams}{Parameters}
+{\em bones} & A list of bones to affect \\
+\hline
+{\em weight} & The weight to set on the bones \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_animation_state_a6c218a6070c3d49a34ef53a8c47511ab}\label{class_animation_state_a6c218a6070c3d49a34ef53a8c47511ab}} 
+\index{AnimationState@{AnimationState}!update@{update}}
+\index{update@{update}!AnimationState@{AnimationState}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily bool Animation\+State\+::update (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_speaker}{Speaker}} $\ast$}]{speaker }\end{DoxyParamCaption})}
+
+advance the animation and play sounds 
+\begin{DoxyParams}{Parameters}
+{\em speaker} & pointer to the speaker used to play animation sounds (if any) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the animation changed, otherwise false 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_animation_state_8hpp}{Animation\+State.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Animation\+State.\+cpp\end{DoxyCompactItemize}

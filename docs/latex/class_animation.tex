@@ -1,0 +1,96 @@
+\hypertarget{class_animation}{}\doxysection{Animation Class Reference}
+\label{class_animation}\index{Animation@{Animation}}
+
+
+{\ttfamily \#include $<$Animation.\+hpp$>$}
+
+Inheritance diagram for Animation\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_animation}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_animation_1_1entry__t}{entry\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em animation entry \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_animation_1_1sound__t}{sound\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em sound trigger \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_animation_a7f4744093d57765ae1127a9ddf598651}\label{class_animation_a7f4744093d57765ae1127a9ddf598651}} 
+{\bfseries Animation} (const char $\ast$\+\_\+name)
+\item 
+const \mbox{\hyperlink{struct_animation_1_1entry__t}{entry\+\_\+t}} $\ast$ \mbox{\hyperlink{class_animation_a885a8b4bd2e9742caaafc2f0e489ad1f}{find\+Entry}} (const char $\ast$name) const
+\item 
+const \mbox{\hyperlink{struct_animation_1_1sound__t}{sound\+\_\+t}} $\ast$ \mbox{\hyperlink{class_animation_af2dd7df1be4ca94defbf6c1f9812c66e}{find\+Sound}} (unsigned int frame) const
+\item 
+virtual void \mbox{\hyperlink{class_animation_a7d4057dfb0b3eb7246b6a4157534aec9}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_animation_ae5052d7eac6ef6591d57c00d41c4d04c}\label{class_animation_ae5052d7eac6ef6591d57c00d41c4d04c}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{Asset\+::type\+\_\+t}} {\bfseries get\+Type} () const
+\item 
+\mbox{\Hypertarget{class_animation_a81ca6de17c92af073f66747f8bea8903}\label{class_animation_a81ca6de17c92af073f66747f8bea8903}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_animation_1_1entry__t}{entry\+\_\+t}} $>$ \& {\bfseries get\+Entries} () const
+\item 
+\mbox{\Hypertarget{class_animation_a7510de421ea64f4f3baee274547f5fb3}\label{class_animation_a7510de421ea64f4f3baee274547f5fb3}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_animation_1_1sound__t}{sound\+\_\+t}} $>$ \& {\bfseries get\+Sounds} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+An \mbox{\hyperlink{class_animation}{Animation}} is actually a data manifest containing all the animations available to a single model for playing. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_animation_a885a8b4bd2e9742caaafc2f0e489ad1f}\label{class_animation_a885a8b4bd2e9742caaafc2f0e489ad1f}} 
+\index{Animation@{Animation}!findEntry@{findEntry}}
+\index{findEntry@{findEntry}!Animation@{Animation}}
+\doxysubsubsection{\texorpdfstring{findEntry()}{findEntry()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_animation_1_1entry__t}{Animation\+::entry\+\_\+t}} $\ast$ Animation\+::find\+Entry (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption}) const}
+
+find the animation with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the animation we are looking for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the animation, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_animation_af2dd7df1be4ca94defbf6c1f9812c66e}\label{class_animation_af2dd7df1be4ca94defbf6c1f9812c66e}} 
+\index{Animation@{Animation}!findSound@{findSound}}
+\index{findSound@{findSound}!Animation@{Animation}}
+\doxysubsubsection{\texorpdfstring{findSound()}{findSound()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_animation_1_1sound__t}{Animation\+::sound\+\_\+t}} $\ast$ Animation\+::find\+Sound (\begin{DoxyParamCaption}\item[{unsigned int}]{frame }\end{DoxyParamCaption}) const}
+
+find the sound trigger for the given frame number 
+\begin{DoxyParams}{Parameters}
+{\em frame} & the frame \# associated with the sound trigger \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the trigger, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_animation_a7d4057dfb0b3eb7246b6a4157534aec9}\label{class_animation_a7d4057dfb0b3eb7246b6a4157534aec9}} 
+\index{Animation@{Animation}!serialize@{serialize}}
+\index{serialize@{serialize}!Animation@{Animation}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Animation\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a957199c8b4a4a912d9020bb0ba605251}{Asset}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_animation_8hpp}{Animation.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Animation.\+cpp\end{DoxyCompactItemize}

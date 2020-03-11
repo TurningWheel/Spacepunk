@@ -1,0 +1,89 @@
+\hypertarget{class_node}{}\doxysection{Node$<$ T $>$ Class Template Reference}
+\label{class_node}\index{Node$<$ T $>$@{Node$<$ T $>$}}
+
+
+A node lives in a \mbox{\hyperlink{class_linked_list}{Linked\+List}}.  
+
+
+
+
+{\ttfamily \#include $<$Node.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_node_a42df3e42f7d45d98e00e956c39613d73}\label{class_node_a42df3e42f7d45d98e00e956c39613d73}} 
+\mbox{\hyperlink{class_node_a42df3e42f7d45d98e00e956c39613d73}{Node}} (\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$ \&\+\_\+list, \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$next, const T \&\+\_\+data)
+\begin{DoxyCompactList}\small\item\em insert node with given data anywhere in list \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_node_ae923d0417581dd19784d55b901f0f7f0}\label{class_node_ae923d0417581dd19784d55b901f0f7f0}} 
+\mbox{\hyperlink{class_node_ae923d0417581dd19784d55b901f0f7f0}{$\sim$\+Node}} ()
+\begin{DoxyCompactList}\small\item\em will N\+OT remove node from list \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_node_afd985b504e37f4f8d7342f58e6035238}\label{class_node_afd985b504e37f4f8d7342f58e6035238}} 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_node_afd985b504e37f4f8d7342f58e6035238}{get\+Next}} ()
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_node_aab8224dbd6cf2c4b6df7b2920c802b8b}\label{class_node_aab8224dbd6cf2c4b6df7b2920c802b8b}} 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries get\+Prev} ()
+\item 
+\mbox{\Hypertarget{class_node_a2092dca79008590942171f4d5d70c434}\label{class_node_a2092dca79008590942171f4d5d70c434}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$ $\ast$ {\bfseries get\+List} ()
+\item 
+\mbox{\Hypertarget{class_node_aadb11c8a45c32f0d23a3ff8062668319}\label{class_node_aadb11c8a45c32f0d23a3ff8062668319}} 
+T \& {\bfseries get\+Data} ()
+\item 
+\mbox{\Hypertarget{class_node_a2316de73128efc43e7829dd25e07791b}\label{class_node_a2316de73128efc43e7829dd25e07791b}} 
+const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries get\+Next} () const
+\item 
+\mbox{\Hypertarget{class_node_acd2f9becf3282431f43e28a42bf5d5e9}\label{class_node_acd2f9becf3282431f43e28a42bf5d5e9}} 
+const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries get\+Prev} () const
+\item 
+\mbox{\Hypertarget{class_node_a2a33df90253e48d598823cd7b8ea7c22}\label{class_node_a2a33df90253e48d598823cd7b8ea7c22}} 
+const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$ $\ast$ {\bfseries get\+List} () const
+\item 
+\mbox{\Hypertarget{class_node_abbbb83717921f5fff3e50db16dcb8e28}\label{class_node_abbbb83717921f5fff3e50db16dcb8e28}} 
+const T \& {\bfseries get\+Data} () const
+\item 
+\mbox{\Hypertarget{class_node_aa04871795feec2a6cd8c0f0d75f34de0}\label{class_node_aa04871795feec2a6cd8c0f0d75f34de0}} 
+const Uint32 {\bfseries get\+Size\+Of\+Data} () const
+\item 
+\mbox{\Hypertarget{class_node_a9fd66b8ecbfe401ae60de4ee6636f097}\label{class_node_a9fd66b8ecbfe401ae60de4ee6636f097}} 
+void {\bfseries set\+Next} (\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$node)
+\item 
+\mbox{\Hypertarget{class_node_ab4b10ba84c81f5e7f8d7dcae900f4232}\label{class_node_ab4b10ba84c81f5e7f8d7dcae900f4232}} 
+void {\bfseries set\+Prev} (\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$node)
+\item 
+\mbox{\Hypertarget{class_node_a249ea59ed632198b8b7d35d237977ae3}\label{class_node_a249ea59ed632198b8b7d35d237977ae3}} 
+void {\bfseries set\+Data} (T \&\+\_\+data)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_node_a53347ea253ce25e7bd7b7a75d7281c34}{expose\+To\+Script}} (lua\+\_\+\+State $\ast$lua, const char $\ast$name)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class Node$<$ T $>$}
+
+A node lives in a \mbox{\hyperlink{class_linked_list}{Linked\+List}}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_node_a53347ea253ce25e7bd7b7a75d7281c34}\label{class_node_a53347ea253ce25e7bd7b7a75d7281c34}} 
+\index{Node$<$ T $>$@{Node$<$ T $>$}!exposeToScript@{exposeToScript}}
+\index{exposeToScript@{exposeToScript}!Node$<$ T $>$@{Node$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{exposeToScript()}{exposeToScript()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static void \mbox{\hyperlink{class_node}{Node}}$<$ T $>$\+::expose\+To\+Script (\begin{DoxyParamCaption}\item[{lua\+\_\+\+State $\ast$}]{lua,  }\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+exposes this node type to a script 
+\begin{DoxyParams}{Parameters}
+{\em lua} & The script engine to expose to \\
+\hline
+{\em name} & The type name in lua \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_node_8hpp}{Node.\+hpp}}\end{DoxyCompactItemize}

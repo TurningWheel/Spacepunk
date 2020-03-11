@@ -1,0 +1,415 @@
+\hypertarget{class_frame}{}\doxysection{Frame Class Reference}
+\label{class_frame}\index{Frame@{Frame}}
+
+
+{\ttfamily \#include $<$Frame.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_frame_1_1entry__t}{entry\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em frame list entry \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_frame_1_1image__t}{image\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em frame image \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_frame_1_1listener__t}{listener\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{struct_frame_1_1result__t}{result\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em frame processing result structure \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_frame_a2956809fef719f32c6690ce2479598b7}\label{class_frame_a2956809fef719f32c6690ce2479598b7}} 
+{\bfseries Frame} (const char $\ast$\+\_\+name=\char`\"{}\char`\"{}, const char $\ast$\+\_\+script=\char`\"{}\char`\"{})
+\item 
+\mbox{\Hypertarget{class_frame_ae5c5f345f3775af2a37564cf8080588e}\label{class_frame_ae5c5f345f3775af2a37564cf8080588e}} 
+{\bfseries Frame} (\mbox{\hyperlink{class_frame}{Frame}} \&parent, const char $\ast$\+\_\+name=\char`\"{}\char`\"{}, const char $\ast$\+\_\+script=\char`\"{}\char`\"{})
+\item 
+void \mbox{\hyperlink{class_frame_a5395193827fd907cb8200d26fe419651}{draw}} (\mbox{\hyperlink{class_renderer}{Renderer}} \&renderer)
+\item 
+void \mbox{\hyperlink{class_frame_ab00f446aae735ca43af5af2e837f27dc}{draw}} (\mbox{\hyperlink{class_renderer}{Renderer}} \&renderer, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+size, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+actual\+Size)
+\item 
+\mbox{\hyperlink{struct_frame_1_1result__t}{result\+\_\+t}} \mbox{\hyperlink{class_frame_a71541567e6438802bcacabd3f3bdd58d}{process}} ()
+\item 
+\mbox{\hyperlink{struct_frame_1_1result__t}{result\+\_\+t}} \mbox{\hyperlink{class_frame_aa31a6947d821d18dc7b23df7e821f219}{process}} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+size, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ actual\+Size, const bool usable)
+\item 
+\mbox{\hyperlink{class_frame}{Frame}} $\ast$ \mbox{\hyperlink{class_frame_a54730354f50e629eb438b48130851e47}{add\+Frame}} (const char $\ast$name=\char`\"{}\char`\"{}, const char $\ast$script=\char`\"{}\char`\"{})
+\item 
+\mbox{\hyperlink{class_button}{Button}} $\ast$ \mbox{\hyperlink{class_frame_a200c9297cdfe5ead08a6ed090147e119}{add\+Button}} (const char $\ast$name)
+\item 
+\mbox{\hyperlink{class_field}{Field}} $\ast$ \mbox{\hyperlink{class_frame_a6589c8c4b114312ab6510ca99ed9fe8b}{add\+Field}} (const char $\ast$name, const int len)
+\item 
+\mbox{\hyperlink{struct_frame_1_1image__t}{image\+\_\+t}} $\ast$ \mbox{\hyperlink{class_frame_aafc662f83c90a46d078b682d023eab04}{add\+Image}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \&pos, const glm\+::vec4 \&color, \mbox{\hyperlink{class_string}{String}} image, const char $\ast$name=\char`\"{}\char`\"{})
+\item 
+\mbox{\hyperlink{struct_frame_1_1entry__t}{entry\+\_\+t}} $\ast$ \mbox{\hyperlink{class_frame_a2b03af79d0384df4fbe39a0c6b03e085}{add\+Entry}} (const char $\ast$name, bool resize\+Frame)
+\item 
+\mbox{\Hypertarget{class_frame_a5262e9b3dab1dd34777b19cfe7db6196}\label{class_frame_a5262e9b3dab1dd34777b19cfe7db6196}} 
+void \mbox{\hyperlink{class_frame_a5262e9b3dab1dd34777b19cfe7db6196}{clear}} ()
+\begin{DoxyCompactList}\small\item\em removes all frames, buttons, fields, images, and list entries from the frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_abf2b0ddf391157427a18ab91ca556589}\label{class_frame_abf2b0ddf391157427a18ab91ca556589}} 
+void \mbox{\hyperlink{class_frame_abf2b0ddf391157427a18ab91ca556589}{remove\+Self}} ()
+\begin{DoxyCompactList}\small\item\em removes the frame itself, as well as all contained objects \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_frame_af1ee022f64ba833d7ca5807244b725d5}{remove}} (const char $\ast$name)
+\item 
+bool \mbox{\hyperlink{class_frame_a6ec8b9a0cfd325b5d40507145cb72f30}{remove\+Entry}} (const char $\ast$name, bool resize\+Frame)
+\item 
+\mbox{\hyperlink{class_frame}{Frame}} $\ast$ \mbox{\hyperlink{class_frame_aca2b3b769e5e52c789ec789c2e2e4441}{find\+Frame}} (const char $\ast$name)
+\item 
+\mbox{\hyperlink{class_button}{Button}} $\ast$ \mbox{\hyperlink{class_frame_a606861a607ec2a5e65c2012f9da02e5f}{find\+Button}} (const char $\ast$name)
+\item 
+\mbox{\hyperlink{class_field}{Field}} $\ast$ \mbox{\hyperlink{class_frame_a548c76785708ea2010b9567431d18c98}{find\+Field}} (const char $\ast$name)
+\item 
+\mbox{\hyperlink{struct_frame_1_1image__t}{image\+\_\+t}} $\ast$ \mbox{\hyperlink{class_frame_a7b0c8449d02218e9922d99e4e1fdc75b}{find\+Image}} (const char $\ast$name)
+\item 
+\mbox{\hyperlink{struct_frame_1_1entry__t}{entry\+\_\+t}} $\ast$ \mbox{\hyperlink{class_frame_a30ef845c664fdc8b7f81ad161ffac2b9}{find\+Entry}} (const char $\ast$name)
+\item 
+\mbox{\Hypertarget{class_frame_a6a0928cf5cd9414f9691d3339ce83251}\label{class_frame_a6a0928cf5cd9414f9691d3339ce83251}} 
+void \mbox{\hyperlink{class_frame_a6a0928cf5cd9414f9691d3339ce83251}{resize\+For\+Entries}} ()
+\begin{DoxyCompactList}\small\item\em resizes the frame to accomodate all list entries \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_frame_a11e8f0a8b4ce0b5e7b2fa59de5389c66}{captures\+Mouse}} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$cur\+Size=nullptr, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$cur\+Actual\+Size=nullptr)
+\item 
+\mbox{\hyperlink{class_frame}{Frame}} $\ast$ \mbox{\hyperlink{class_frame_a64e0de32bada914e023f1970fd0c739f}{find\+Head}} ()
+\item 
+\mbox{\Hypertarget{class_frame_ada367a432d016da0dff6b8b059a990c9}\label{class_frame_ada367a432d016da0dff6b8b059a990c9}} 
+\mbox{\hyperlink{class_frame}{Frame}} $\ast$ \mbox{\hyperlink{class_frame_ada367a432d016da0dff6b8b059a990c9}{get\+Parent}} ()
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_a93aaba36e93cc5fdde8958c2154e0317}\label{class_frame_a93aaba36e93cc5fdde8958c2154e0317}} 
+const char $\ast$ {\bfseries get\+Name} () const
+\item 
+\mbox{\Hypertarget{class_frame_a116b03b847cb5c8bd0f0d325edbf5cd8}\label{class_frame_a116b03b847cb5c8bd0f0d325edbf5cd8}} 
+const int {\bfseries get\+Border} () const
+\item 
+\mbox{\Hypertarget{class_frame_a24596cc0a1d373259b83ed3ae40972b1}\label{class_frame_a24596cc0a1d373259b83ed3ae40972b1}} 
+const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \& {\bfseries get\+Size} () const
+\item 
+\mbox{\Hypertarget{class_frame_ac4f9b8713049d937caef9f0990da45e2}\label{class_frame_ac4f9b8713049d937caef9f0990da45e2}} 
+const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \& {\bfseries get\+Actual\+Size} () const
+\item 
+\mbox{\Hypertarget{class_frame_a4a27fb413bfba248ed35ca22ea5cbb5e}\label{class_frame_a4a27fb413bfba248ed35ca22ea5cbb5e}} 
+const bool {\bfseries is\+High} () const
+\item 
+\mbox{\Hypertarget{class_frame_a4f926dc4255a5443995667994cb6126d}\label{class_frame_a4f926dc4255a5443995667994cb6126d}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_frame}{Frame}} $\ast$ $>$ \& {\bfseries get\+Frames} ()
+\item 
+\mbox{\Hypertarget{class_frame_aa12937a6fdca8128d7640c958ec3d1f4}\label{class_frame_aa12937a6fdca8128d7640c958ec3d1f4}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_field}{Field}} $\ast$ $>$ \& {\bfseries get\+Fields} ()
+\item 
+\mbox{\Hypertarget{class_frame_a18873f580c29d9e1c75643861aa7244c}\label{class_frame_a18873f580c29d9e1c75643861aa7244c}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_button}{Button}} $\ast$ $>$ \& {\bfseries get\+Buttons} ()
+\item 
+\mbox{\Hypertarget{class_frame_a6c46f3ec537f48eb66bd6ae01ef3930e}\label{class_frame_a6c46f3ec537f48eb66bd6ae01ef3930e}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_frame_1_1entry__t}{entry\+\_\+t}} $\ast$ $>$ \& {\bfseries get\+Entries} ()
+\item 
+\mbox{\Hypertarget{class_frame_a2d6df8dc0b4111e528e73328d9e519fc}\label{class_frame_a2d6df8dc0b4111e528e73328d9e519fc}} 
+const bool {\bfseries is\+Disabled} () const
+\item 
+\mbox{\Hypertarget{class_frame_a425d2773d38e5fe28b757f25d931e124}\label{class_frame_a425d2773d38e5fe28b757f25d931e124}} 
+const bool {\bfseries is\+Hollow} () const
+\item 
+\mbox{\Hypertarget{class_frame_a69abc204ca62a15b0ed1e93a734569da}\label{class_frame_a69abc204ca62a15b0ed1e93a734569da}} 
+void {\bfseries set\+Border} (const int \+\_\+border)
+\item 
+\mbox{\Hypertarget{class_frame_aeca7256a075f8980598af7671852b364}\label{class_frame_aeca7256a075f8980598af7671852b364}} 
+void {\bfseries set\+Pos} (const int x, const int y)
+\item 
+\mbox{\Hypertarget{class_frame_a62bc8a658541c48b546c09c3c8172553}\label{class_frame_a62bc8a658541c48b546c09c3c8172553}} 
+void {\bfseries set\+Size} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&\+\_\+size)
+\item 
+\mbox{\Hypertarget{class_frame_ad6c7dc4a19393027cb73f8e20c74ea7c}\label{class_frame_ad6c7dc4a19393027cb73f8e20c74ea7c}} 
+void {\bfseries set\+Actual\+Size} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&\+\_\+actual\+Size)
+\item 
+\mbox{\Hypertarget{class_frame_a8ecaef521cfcb5f3a695968fa9a096f1}\label{class_frame_a8ecaef521cfcb5f3a695968fa9a096f1}} 
+void {\bfseries set\+High} (const bool \+\_\+high)
+\item 
+\mbox{\Hypertarget{class_frame_a49af11ed8feb661de1edc8ba48140e59}\label{class_frame_a49af11ed8feb661de1edc8ba48140e59}} 
+void {\bfseries set\+Color} (const glm\+::vec4 \&\+\_\+color)
+\item 
+\mbox{\Hypertarget{class_frame_af071dc8a78b1a7535c7700728a934cc3}\label{class_frame_af071dc8a78b1a7535c7700728a934cc3}} 
+void {\bfseries set\+Disabled} (const bool \+\_\+disabled)
+\item 
+\mbox{\Hypertarget{class_frame_a94eacfca77f77535414cf280e4d96b97}\label{class_frame_a94eacfca77f77535414cf280e4d96b97}} 
+void {\bfseries set\+Hollow} (const bool \+\_\+hollow)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_frame_a8edc55caf236b5345086b28834f49299}\label{class_frame_a8edc55caf236b5345086b28834f49299}} 
+static const Uint32 \mbox{\hyperlink{class_frame_a8edc55caf236b5345086b28834f49299}{tooltip\+Time}} = 500
+\begin{DoxyCompactList}\small\item\em amount of time (ms) it takes for a highlighted object to display a tooltip \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_abf275f13b6fff1e8089758b560184231}\label{class_frame_abf275f13b6fff1e8089758b560184231}} 
+static const Sint32 \mbox{\hyperlink{class_frame_abf275f13b6fff1e8089758b560184231}{slider\+Size}} = 15
+\begin{DoxyCompactList}\small\item\em width/height of the slider(s) that appear when actual\+Size $>$ size (in pixels) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_frame_afb2d19ef55ecd19e470c48be5322f9f9}\label{class_frame_afb2d19ef55ecd19e470c48be5322f9f9}} 
+static const int \mbox{\hyperlink{class_frame_afb2d19ef55ecd19e470c48be5322f9f9}{entry\+Size}} = 20
+\begin{DoxyCompactList}\small\item\em vertical size of a list entry \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A container for a gui (ie, a window) When a frame\textquotesingle{}s size is smaller than its actual size, sliders will automatically be placed in the frame. \mbox{\hyperlink{class_frame}{Frame}} objects can be populated with \mbox{\hyperlink{class_field}{Field}} objects, \mbox{\hyperlink{class_button}{Button}} objects, other \mbox{\hyperlink{class_frame}{Frame}} objects, and more. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_frame_a200c9297cdfe5ead08a6ed090147e119}\label{class_frame_a200c9297cdfe5ead08a6ed090147e119}} 
+\index{Frame@{Frame}!addButton@{addButton}}
+\index{addButton@{addButton}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{addButton()}{addButton()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_button}{Button}} $\ast$ Frame\+::add\+Button (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+adds a new button to the current frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & internal name of the new button \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created button 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a2b03af79d0384df4fbe39a0c6b03e085}\label{class_frame_a2b03af79d0384df4fbe39a0c6b03e085}} 
+\index{Frame@{Frame}!addEntry@{addEntry}}
+\index{addEntry@{addEntry}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{addEntry()}{addEntry()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1entry__t}{Frame\+::entry\+\_\+t}} $\ast$ Frame\+::add\+Entry (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{bool}]{resize\+Frame }\end{DoxyParamCaption})}
+
+adds a new entry to the frame\textquotesingle{}s list 
+\begin{DoxyParams}{Parameters}
+{\em name} & internal name of the new entry \\
+\hline
+{\em resize\+Frame} & if true, the size of the frame will be reduced after removing the entry \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created entry object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a6589c8c4b114312ab6510ca99ed9fe8b}\label{class_frame_a6589c8c4b114312ab6510ca99ed9fe8b}} 
+\index{Frame@{Frame}!addField@{addField}}
+\index{addField@{addField}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{addField()}{addField()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_field}{Field}} $\ast$ Frame\+::add\+Field (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{const int}]{len }\end{DoxyParamCaption})}
+
+adds a new field to the current frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & internal name of the new field \\
+\hline
+{\em len} & the length of the field in characters \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created field 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a54730354f50e629eb438b48130851e47}\label{class_frame_a54730354f50e629eb438b48130851e47}} 
+\index{Frame@{Frame}!addFrame@{addFrame}}
+\index{addFrame@{addFrame}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{addFrame()}{addFrame()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_frame}{Frame}} $\ast$ Frame\+::add\+Frame (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name = {\ttfamily \char`\"{}\char`\"{}},  }\item[{const char $\ast$}]{script = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+
+adds a new frame to the current frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & internal name of the new frame \\
+\hline
+{\em script} & script name of the new frame (sans extension + path) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created frame 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_aafc662f83c90a46d078b682d023eab04}\label{class_frame_aafc662f83c90a46d078b682d023eab04}} 
+\index{Frame@{Frame}!addImage@{addImage}}
+\index{addImage@{addImage}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{addImage()}{addImage()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1image__t}{Frame\+::image\+\_\+t}} $\ast$ Frame\+::add\+Image (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \&}]{pos,  }\item[{const glm\+::vec4 \&}]{color,  }\item[{\mbox{\hyperlink{class_string}{String}}}]{image,  }\item[{const char $\ast$}]{name = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+
+adds a new image object to the current frame 
+\begin{DoxyParams}{Parameters}
+{\em pos} & position of the image in the frame \\
+\hline
+{\em color} & the color of the image \\
+\hline
+{\em image} & the image to draw \\
+\hline
+{\em name} & the name of the image (unique id) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created image object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a11e8f0a8b4ce0b5e7b2fa59de5389c66}\label{class_frame_a11e8f0a8b4ce0b5e7b2fa59de5389c66}} 
+\index{Frame@{Frame}!capturesMouse@{capturesMouse}}
+\index{capturesMouse@{capturesMouse}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{capturesMouse()}{capturesMouse()}}
+{\footnotesize\ttfamily bool Frame\+::captures\+Mouse (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$}]{cur\+Size = {\ttfamily nullptr},  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$}]{cur\+Actual\+Size = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+determines if the mouse is currently within the frame or not 
+\begin{DoxyParams}{Parameters}
+{\em cur\+Size} & used by the recursion algorithm, ignore or always pass nullptr \\
+\hline
+{\em cur\+Actual\+Size} & used by the recursion algorithm, ignore or always pass nullptr \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if it is, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a5395193827fd907cb8200d26fe419651}\label{class_frame_a5395193827fd907cb8200d26fe419651}} 
+\index{Frame@{Frame}!draw@{draw}}
+\index{draw@{draw}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Frame\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_renderer}{Renderer}} \&}]{renderer }\end{DoxyParamCaption})}
+
+draws the frame and all of its subelements 
+\begin{DoxyParams}{Parameters}
+{\em renderer} & the renderer object used to draw the frame \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_ab00f446aae735ca43af5af2e837f27dc}\label{class_frame_ab00f446aae735ca43af5af2e837f27dc}} 
+\index{Frame@{Frame}!draw@{draw}}
+\index{draw@{draw}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Frame\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_renderer}{Renderer}} \&}]{renderer,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+size,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+actual\+Size }\end{DoxyParamCaption})}
+
+draws the frame and all of its subelements 
+\begin{DoxyParams}{Parameters}
+{\em renderer} & the renderer object used to draw the frame \\
+\hline
+{\em \+\_\+size} & real position of the frame onscreen \\
+\hline
+{\em \+\_\+actual\+Size} & offset into the frame space (scroll) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_frame_a606861a607ec2a5e65c2012f9da02e5f}\label{class_frame_a606861a607ec2a5e65c2012f9da02e5f}} 
+\index{Frame@{Frame}!findButton@{findButton}}
+\index{findButton@{findButton}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{findButton()}{findButton()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_button}{Button}} $\ast$ Frame\+::find\+Button (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find a button in this frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the button to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the button, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a30ef845c664fdc8b7f81ad161ffac2b9}\label{class_frame_a30ef845c664fdc8b7f81ad161ffac2b9}} 
+\index{Frame@{Frame}!findEntry@{findEntry}}
+\index{findEntry@{findEntry}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{findEntry()}{findEntry()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1entry__t}{Frame\+::entry\+\_\+t}} $\ast$ Frame\+::find\+Entry (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find an entry in this frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the entry to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the entry, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a548c76785708ea2010b9567431d18c98}\label{class_frame_a548c76785708ea2010b9567431d18c98}} 
+\index{Frame@{Frame}!findField@{findField}}
+\index{findField@{findField}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{findField()}{findField()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_field}{Field}} $\ast$ Frame\+::find\+Field (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find a field in this frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the field to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the field, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_aca2b3b769e5e52c789ec789c2e2e4441}\label{class_frame_aca2b3b769e5e52c789ec789c2e2e4441}} 
+\index{Frame@{Frame}!findFrame@{findFrame}}
+\index{findFrame@{findFrame}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{findFrame()}{findFrame()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_frame}{Frame}} $\ast$ Frame\+::find\+Frame (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+recursively searches all embedded frames for a specific frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the frame to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the frame with the given name, or nullptr if the frame could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a64e0de32bada914e023f1970fd0c739f}\label{class_frame_a64e0de32bada914e023f1970fd0c739f}} 
+\index{Frame@{Frame}!findHead@{findHead}}
+\index{findHead@{findHead}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{findHead()}{findHead()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_frame}{Frame}} $\ast$ Frame\+::find\+Head (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+recursively locates the head frame (ie root gui) for this frame \begin{DoxyReturn}{Returns}
+the head frame, which may be the current frame if we have no parent 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a7b0c8449d02218e9922d99e4e1fdc75b}\label{class_frame_a7b0c8449d02218e9922d99e4e1fdc75b}} 
+\index{Frame@{Frame}!findImage@{findImage}}
+\index{findImage@{findImage}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{findImage()}{findImage()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1image__t}{Frame\+::image\+\_\+t}} $\ast$ Frame\+::find\+Image (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+find an image in this frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the image to find \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the image, or nullptr if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a71541567e6438802bcacabd3f3bdd58d}\label{class_frame_a71541567e6438802bcacabd3f3bdd58d}} 
+\index{Frame@{Frame}!process@{process}}
+\index{process@{process}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{process()}{process()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1result__t}{Frame\+::result\+\_\+t}} Frame\+::process (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+handle clicks and other events \begin{DoxyReturn}{Returns}
+compiled results of frame processing 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_aa31a6947d821d18dc7b23df7e821f219}\label{class_frame_aa31a6947d821d18dc7b23df7e821f219}} 
+\index{Frame@{Frame}!process@{process}}
+\index{process@{process}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{process()}{process()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1result__t}{Frame\+::result\+\_\+t}} Frame\+::process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+size,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{actual\+Size,  }\item[{const bool}]{usable }\end{DoxyParamCaption})}
+
+handle clicks and other events 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+size} & real position of the frame onscreen \\
+\hline
+{\em \+\_\+actual\+Size} & offset into the frame space (scroll) \\
+\hline
+{\em usable} & true if another object doesn\textquotesingle{}t have the mouse\textquotesingle{}s attention, false otherwise \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+compiled results of frame processing 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_af1ee022f64ba833d7ca5807244b725d5}\label{class_frame_af1ee022f64ba833d7ca5807244b725d5}} 
+\index{Frame@{Frame}!remove@{remove}}
+\index{remove@{remove}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{remove()}{remove()}}
+{\footnotesize\ttfamily bool Frame\+::remove (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+remove an object from the frame 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the object to remove \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the object was successfully removed, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_frame_a6ec8b9a0cfd325b5d40507145cb72f30}\label{class_frame_a6ec8b9a0cfd325b5d40507145cb72f30}} 
+\index{Frame@{Frame}!removeEntry@{removeEntry}}
+\index{removeEntry@{removeEntry}!Frame@{Frame}}
+\doxysubsubsection{\texorpdfstring{removeEntry()}{removeEntry()}}
+{\footnotesize\ttfamily bool Frame\+::remove\+Entry (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{bool}]{resize\+Frame }\end{DoxyParamCaption})}
+
+remove an entry from the frame list 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the object to remove \\
+\hline
+{\em resize\+Frame} & if true, the size of the frame will be reduced after removing the entry \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the entry was successfully removed, false otherwise 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_frame_8hpp}{Frame.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Frame.\+cpp\end{DoxyCompactItemize}

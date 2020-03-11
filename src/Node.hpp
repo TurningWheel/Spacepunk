@@ -1,4 +1,4 @@
-// Node.hpp
+//! @file Node.hpp
 
 #pragma once
 
@@ -10,10 +10,11 @@
 template <typename T>
 class LinkedList;
 
+//! A node lives in a LinkedList
 template <typename T>
 class Node {
 public:
-	// insert node with given data anywhere in list
+	//! insert node with given data anywhere in list
 	Node(LinkedList<T>& _list, Node<T>* next, const T& _data) :
 		list(&_list),
 		data(_data)
@@ -40,11 +41,11 @@ public:
 		}
 	}
 
-	// will NOT remove node from list
+	//! will NOT remove node from list
 	~Node() {
 	}
 
-	// getters & setters
+	//! getters & setters
 	Node<T>*				getNext() { return next; }
 	Node<T>*				getPrev() { return prev; }
 	LinkedList<T>*			getList() { return list; }
@@ -60,9 +61,9 @@ public:
 	void	setPrev(Node<T>* node) { prev = node; }
 	void	setData(T& _data) { data = _data; }
 
-	// exposes this node type to a script
-	// @param lua The script engine to expose to
-	// @param name The type name in lua
+	//! exposes this node type to a script
+	//! @param lua The script engine to expose to
+	//! @param name The type name in lua
 	static void exposeToScript(lua_State* lua, const char* name) {
 		typedef Node<T>* (Node<T>::*NodeFn)();
 		NodeFn getNext = static_cast<NodeFn>(&Node<T>::getNext);

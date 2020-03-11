@@ -1,0 +1,240 @@
+\hypertarget{class_linked_list}{}\doxysection{Linked\+List$<$ T $>$ Class Template Reference}
+\label{class_linked_list}\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+
+
+{\ttfamily \#include $<$Linked\+List.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_linked_list_1_1_const_iterator}{Const\+Iterator}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_linked_list_1_1_const_iterator}{Const\+Iterator}}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_linked_list_1_1_iterator}{Iterator}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_linked_list_1_1_iterator}{Iterator}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_linked_list_af13e3d829bbb9820b80935b657c8a46c}\label{class_linked_list_af13e3d829bbb9820b80935b657c8a46c}} 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_af13e3d829bbb9820b80935b657c8a46c}{get\+First}} ()
+\begin{DoxyCompactList}\small\item\em parameter functions \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_linked_list_a3249e9e822a4aaa9039cb423f1292fa3}\label{class_linked_list_a3249e9e822a4aaa9039cb423f1292fa3}} 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries get\+Last} ()
+\item 
+\mbox{\Hypertarget{class_linked_list_a39c43bf412c076f69479d4139b25a5a0}\label{class_linked_list_a39c43bf412c076f69479d4139b25a5a0}} 
+const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries get\+First} () const
+\item 
+\mbox{\Hypertarget{class_linked_list_a3bb51833cc60ce2a1a603a16d1804124}\label{class_linked_list_a3bb51833cc60ce2a1a603a16d1804124}} 
+const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries get\+Last} () const
+\item 
+\mbox{\Hypertarget{class_linked_list_afeda99f1275e5b9290d84f3d171e2f63}\label{class_linked_list_afeda99f1275e5b9290d84f3d171e2f63}} 
+Uint32 {\bfseries get\+Size} () const
+\item 
+\mbox{\Hypertarget{class_linked_list_a8cd9701796f08f22f98483b2aeef3c79}\label{class_linked_list_a8cd9701796f08f22f98483b2aeef3c79}} 
+void {\bfseries set\+First} (\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$node)
+\item 
+\mbox{\Hypertarget{class_linked_list_a830289e30948d6620874f4b9d668b417}\label{class_linked_list_a830289e30948d6620874f4b9d668b417}} 
+void {\bfseries set\+Last} (\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$node)
+\item 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_ae06e167c80ab21cc79148488bfb2f798}{node\+For\+Index}} (const Uint32 index)
+\item 
+\mbox{\Hypertarget{class_linked_list_a3fc44e20a3d275690db3887e7dab7cb1}\label{class_linked_list_a3fc44e20a3d275690db3887e7dab7cb1}} 
+const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries node\+For\+Index} (const Uint32 index) const
+\item 
+Uint32 \mbox{\hyperlink{class_linked_list_a39eac2716dfc33853a08e001e6a4c4f4}{index\+For\+Node}} (const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$node) const
+\item 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_aebf176aa6ef82f1406c1808d0f8830b0}{add\+Node}} (const Uint32 index, const T \&data)
+\item 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_a499bf69a6acd28145f386ce8cd525456}{add\+Node\+First}} (const T \&data)
+\item 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_a38564e6b704f2a01f26ef45e640adfd5}{add\+Node\+Last}} (const T \&data)
+\item 
+void \mbox{\hyperlink{class_linked_list_a118a169c7c08c447a0dde63f290ff3e7}{remove\+Node}} (\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$node)
+\item 
+void \mbox{\hyperlink{class_linked_list_a70cc4dc93cd3036acf5ecef69810e8bc}{remove\+Node}} (const Uint32 index)
+\item 
+\mbox{\Hypertarget{class_linked_list_a22123e522d93a813cc6bc456adf40bbf}\label{class_linked_list_a22123e522d93a813cc6bc456adf40bbf}} 
+void \mbox{\hyperlink{class_linked_list_a22123e522d93a813cc6bc456adf40bbf}{remove\+All}} ()
+\begin{DoxyCompactList}\small\item\em remove all nodes from the list \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_linked_list_aa3abbe1614d01418436824ac66fa6f1a}\label{class_linked_list_aa3abbe1614d01418436824ac66fa6f1a}} 
+void \mbox{\hyperlink{class_linked_list_aa3abbe1614d01418436824ac66fa6f1a}{copy}} (const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$ \&src)
+\begin{DoxyCompactList}\small\item\em copy one list to another (also copies data) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$ \& \mbox{\hyperlink{class_linked_list_a323d2e734f7d110eafc3fde324c179f6}{sort}} ()
+\item 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_a2cdd801434d43830a9baf4f7c8567fae}{operator\mbox{[}$\,$\mbox{]}}} (const Uint32 index)
+\item 
+\mbox{\Hypertarget{class_linked_list_aaff449e4a60186f896e285e693bd9f0a}\label{class_linked_list_aaff449e4a60186f896e285e693bd9f0a}} 
+const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ {\bfseries operator\mbox{[}$\,$\mbox{]}} (const Uint32 index) const
+\item 
+\mbox{\Hypertarget{class_linked_list_a5113bc802622f17b54d719b806ce2a62}\label{class_linked_list_a5113bc802622f17b54d719b806ce2a62}} 
+\mbox{\hyperlink{class_linked_list_1_1_iterator}{Iterator}} \mbox{\hyperlink{class_linked_list_a5113bc802622f17b54d719b806ce2a62}{begin}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_linked_list_a5113bc802622f17b54d719b806ce2a62}{begin()}} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_linked_list_a27ff7387bee2d05de7b9beb22a4f59c6}\label{class_linked_list_a27ff7387bee2d05de7b9beb22a4f59c6}} 
+const \mbox{\hyperlink{class_linked_list_1_1_const_iterator}{Const\+Iterator}} {\bfseries begin} () const
+\item 
+\mbox{\Hypertarget{class_linked_list_a86de720eaa32b69ff0b57207dc4e8ae2}\label{class_linked_list_a86de720eaa32b69ff0b57207dc4e8ae2}} 
+\mbox{\hyperlink{class_linked_list_1_1_iterator}{Iterator}} \mbox{\hyperlink{class_linked_list_a86de720eaa32b69ff0b57207dc4e8ae2}{end}} ()
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_linked_list_a86de720eaa32b69ff0b57207dc4e8ae2}{end()}} \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_linked_list_a75b17e0092695e4dba6459502b60ecab}\label{class_linked_list_a75b17e0092695e4dba6459502b60ecab}} 
+const \mbox{\hyperlink{class_linked_list_1_1_const_iterator}{Const\+Iterator}} {\bfseries end} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_linked_list_af8cc5d1a0b53f5143e9a6e94deb6b1aa}{expose\+To\+Script}} (lua\+\_\+\+State $\ast$lua, const char $\ast$list\+Name, const char $\ast$node\+Name)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class Linked\+List$<$ T $>$}
+
+A \mbox{\hyperlink{class_linked_list}{Linked\+List}} is a type of list that can add and remove nodes anywhere in the list efficiently, and create loops on itself (though this can be dangerous!) Linked lists do not have fast lookup times unlike Array\+Lists, but they are better suited to be queues and other things. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_linked_list_aebf176aa6ef82f1406c1808d0f8830b0}\label{class_linked_list_aebf176aa6ef82f1406c1808d0f8830b0}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!addNode@{addNode}}
+\index{addNode@{addNode}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{addNode()}{addNode()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_node}{Node}}$<$T$>$$\ast$ \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::add\+Node (\begin{DoxyParamCaption}\item[{const Uint32}]{index,  }\item[{const T \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+adds a node to the list 
+\begin{DoxyParams}{Parameters}
+{\em index} & the position within the list to insert the node \\
+\hline
+{\em data} & the data to be assigned to the node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created \mbox{\hyperlink{class_node}{Node}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_linked_list_a499bf69a6acd28145f386ce8cd525456}\label{class_linked_list_a499bf69a6acd28145f386ce8cd525456}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!addNodeFirst@{addNodeFirst}}
+\index{addNodeFirst@{addNodeFirst}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{addNodeFirst()}{addNodeFirst()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_node}{Node}}$<$T$>$$\ast$ \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::add\+Node\+First (\begin{DoxyParamCaption}\item[{const T \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+adds a node to the beginning of the list 
+\begin{DoxyParams}{Parameters}
+{\em data} & the data to be assigned to the node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created \mbox{\hyperlink{class_node}{Node}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_linked_list_a38564e6b704f2a01f26ef45e640adfd5}\label{class_linked_list_a38564e6b704f2a01f26ef45e640adfd5}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!addNodeLast@{addNodeLast}}
+\index{addNodeLast@{addNodeLast}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{addNodeLast()}{addNodeLast()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_node}{Node}}$<$T$>$$\ast$ \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::add\+Node\+Last (\begin{DoxyParamCaption}\item[{const T \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+adds a node to the end of the list 
+\begin{DoxyParams}{Parameters}
+{\em data} & the data to be assigned to the node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created \mbox{\hyperlink{class_node}{Node}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_linked_list_af8cc5d1a0b53f5143e9a6e94deb6b1aa}\label{class_linked_list_af8cc5d1a0b53f5143e9a6e94deb6b1aa}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!exposeToScript@{exposeToScript}}
+\index{exposeToScript@{exposeToScript}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{exposeToScript()}{exposeToScript()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static void \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::expose\+To\+Script (\begin{DoxyParamCaption}\item[{lua\+\_\+\+State $\ast$}]{lua,  }\item[{const char $\ast$}]{list\+Name,  }\item[{const char $\ast$}]{node\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+exposes this list type to a script 
+\begin{DoxyParams}{Parameters}
+{\em lua} & The script engine to expose to \\
+\hline
+{\em list\+Name} & The type name for the list in lua \\
+\hline
+{\em node\+Name} & The type name for the node in lua \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_linked_list_a39eac2716dfc33853a08e001e6a4c4f4}\label{class_linked_list_a39eac2716dfc33853a08e001e6a4c4f4}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!indexForNode@{indexForNode}}
+\index{indexForNode@{indexForNode}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{indexForNode()}{indexForNode()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+Uint32 \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::index\+For\+Node (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$}]{node }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+returns the index of the given node in the list 
+\begin{DoxyParams}{Parameters}
+{\em node} & the node for whom you wish to retrieve the index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index for the given node, or -\/1 if the node does not exist in the list 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_linked_list_ae06e167c80ab21cc79148488bfb2f798}\label{class_linked_list_ae06e167c80ab21cc79148488bfb2f798}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!nodeForIndex@{nodeForIndex}}
+\index{nodeForIndex@{nodeForIndex}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{nodeForIndex()}{nodeForIndex()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_node}{Node}}$<$T$>$$\ast$ \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::node\+For\+Index (\begin{DoxyParamCaption}\item[{const Uint32}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+returns the node at the given index 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the node to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the \mbox{\hyperlink{class_node}{Node}} at the given index, or nullptr if the \mbox{\hyperlink{class_node}{Node}} does not exist 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_linked_list_a2cdd801434d43830a9baf4f7c8567fae}\label{class_linked_list_a2cdd801434d43830a9baf4f7c8567fae}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_node}{Node}}$<$T$>$$\ast$ \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{const Uint32}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+linear search for the node with the given index 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the node to be returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the \mbox{\hyperlink{class_node}{Node}} at the given index, or nullptr if the \mbox{\hyperlink{class_node}{Node}} does not exist 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_linked_list_a70cc4dc93cd3036acf5ecef69810e8bc}\label{class_linked_list_a70cc4dc93cd3036acf5ecef69810e8bc}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!removeNode@{removeNode}}
+\index{removeNode@{removeNode}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{removeNode()}{removeNode()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::remove\+Node (\begin{DoxyParamCaption}\item[{const Uint32}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+removes a node from the list 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the node to be removed from the list \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_linked_list_a118a169c7c08c447a0dde63f290ff3e7}\label{class_linked_list_a118a169c7c08c447a0dde63f290ff3e7}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!removeNode@{removeNode}}
+\index{removeNode@{removeNode}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{removeNode()}{removeNode()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::remove\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$}]{node }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+removes a node from the list 
+\begin{DoxyParams}{Parameters}
+{\em node} & the node to remove from the list \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_linked_list_a323d2e734f7d110eafc3fde324c179f6}\label{class_linked_list_a323d2e734f7d110eafc3fde324c179f6}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!sort@{sort}}
+\index{sort@{sort}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{sort()}{sort()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$T$>$\& \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::sort (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+sort the list from least significant elements to most significant elements \begin{DoxyReturn}{Returns}
+a reference to the sorted list 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_linked_list_8hpp}{Linked\+List.\+hpp}}\end{DoxyCompactItemize}

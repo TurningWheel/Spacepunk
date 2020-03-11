@@ -1,0 +1,283 @@
+\hypertarget{class_tile_world}{}\doxysection{Tile\+World Class Reference}
+\label{class_tile_world}\index{TileWorld@{TileWorld}}
+
+
+A world type that defines a grid of \mbox{\hyperlink{class_tile}{Tile}} objects, rendered through \mbox{\hyperlink{class_chunk}{Chunk}} objects.  
+
+
+
+
+{\ttfamily \#include $<$Tile\+World.\+hpp$>$}
+
+Inheritance diagram for Tile\+World\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_tile_world}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_tile_world_1_1candidate__t}{candidate\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em candidate room structure \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_tile_world_1_1exit__t}{exit\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em exit structure \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_tile_world_a3324c63d54cdf321cd471ef8b4cc1beb}\label{class_tile_world_a3324c63d54cdf321cd471ef8b4cc1beb}} 
+{\bfseries Tile\+World} (\mbox{\hyperlink{class_game}{Game}} $\ast$\+\_\+game, Uint32 \+\_\+id, const char $\ast$\+\_\+zone, Uint32 \+\_\+seed, Uint32 \+\_\+width, Uint32 \+\_\+height, const char $\ast$\+\_\+name\+Str)
+\item 
+\mbox{\Hypertarget{class_tile_world_afac5886ea0396d70867f42bed6045baa}\label{class_tile_world_afac5886ea0396d70867f42bed6045baa}} 
+{\bfseries Tile\+World} (\mbox{\hyperlink{class_game}{Game}} $\ast$\+\_\+game, bool \+\_\+silent, Uint32 \+\_\+id, \mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{Tile\+::side\+\_\+t}} orientation, const char $\ast$\+\_\+filename, Uint32 \+\_\+width=32, Uint32 \+\_\+height=32, const char $\ast$\+\_\+name\+Str=\char`\"{}Untitled \mbox{\hyperlink{class_world}{World}}\char`\"{})
+\item 
+\mbox{\Hypertarget{class_tile_world_a50c5e339b0a588783e8f63dbe6450453}\label{class_tile_world_a50c5e339b0a588783e8f63dbe6450453}} 
+{\bfseries Tile\+World} (\mbox{\hyperlink{class_game}{Game}} $\ast$\+\_\+game, Uint32 \+\_\+id, const char $\ast$\+\_\+zone, const \mbox{\hyperlink{class_generator}{Generator}} \&gen)
+\item 
+virtual void \mbox{\hyperlink{class_tile_world_ac44d4fd9d09f9d091e2bfee8e8472ca3}{initialize}} (bool empty) override
+\item 
+void \mbox{\hyperlink{class_tile_world_a660a1214a7116528307a8778ad59de59}{rotate}} (\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{Tile\+::side\+\_\+t}} orientation)
+\item 
+\mbox{\Hypertarget{class_tile_world_aaf03cb6beb14e6e25e017869cc7b0356}\label{class_tile_world_aaf03cb6beb14e6e25e017869cc7b0356}} 
+int \mbox{\hyperlink{class_tile_world_aaf03cb6beb14e6e25e017869cc7b0356}{calc\+Chunks\+Width}} () const
+\begin{DoxyCompactList}\small\item\em calculate the width (columns) in the chunks array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_world_ad2dcee01ec70b5a9847303b299540b7f}\label{class_tile_world_ad2dcee01ec70b5a9847303b299540b7f}} 
+int \mbox{\hyperlink{class_tile_world_ad2dcee01ec70b5a9847303b299540b7f}{calc\+Chunks\+Height}} () const
+\begin{DoxyCompactList}\small\item\em calculate the height (rows) in the chunks array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_world_a086a4c8541701470fd1dedf53837226b}\label{class_tile_world_a086a4c8541701470fd1dedf53837226b}} 
+virtual void \mbox{\hyperlink{class_tile_world_a086a4c8541701470fd1dedf53837226b}{deselect\+Geometry}} ()
+\begin{DoxyCompactList}\small\item\em clears all geometry selection \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_tile_world_a8b0e5372ed18dbd2faac44527c6234f1}{find\+Entities\+In\+Radius}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, float radius, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&out\+List, bool flat=false)
+\item 
+\mbox{\Hypertarget{class_tile_world_a272da24b47c95409372bca431dfee880}\label{class_tile_world_a272da24b47c95409372bca431dfee880}} 
+void \mbox{\hyperlink{class_tile_world_a272da24b47c95409372bca431dfee880}{optimize\+Chunks}} ()
+\begin{DoxyCompactList}\small\item\em optimizes all the chunks in the world \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_world_a5fbc84e28ec1c1eee7a6bbee1deba988}\label{class_tile_world_a5fbc84e28ec1c1eee7a6bbee1deba988}} 
+void \mbox{\hyperlink{class_tile_world_a5fbc84e28ec1c1eee7a6bbee1deba988}{rebuild\+Chunks}} ()
+\begin{DoxyCompactList}\small\item\em completely rebuilds all the chunks in the world \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_world_a5555b0ae9e657e75d283687dc2ba68e9}\label{class_tile_world_a5555b0ae9e657e75d283687dc2ba68e9}} 
+virtual void \mbox{\hyperlink{class_tile_world_a5555b0ae9e657e75d283687dc2ba68e9}{draw}} ()
+\begin{DoxyCompactList}\small\item\em draws the world and its contents \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_tile_world_a8d95bec6caf354a162da783840ffcd3c}{save\+File}} (const char $\ast$\+\_\+filename=\char`\"{}\char`\"{}, bool update\+Filename=false)
+\item 
+virtual void \mbox{\hyperlink{class_tile_world_a516b9d4908cd6328eb889ea1dd382112}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+void \mbox{\hyperlink{class_tile_world_ab1079328d3c5594c9fa6187945bf80a6}{resize}} (int left, int right, int up, int down)
+\item 
+void \mbox{\hyperlink{class_tile_world_a63eec6d1d7ee4e165f9c6b8ee315e256}{place\+Room}} (const \mbox{\hyperlink{class_tile_world}{Tile\+World}} \&world, Uint32 picked\+Exit\+Index, Uint32 x, Uint32 y, Sint32 floor\+Diff=0)
+\item 
+void \mbox{\hyperlink{class_tile_world_a7d2738fd93887ba93d8eed445613bf0f}{draw\+Scene\+Objects}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_chunk}{Chunk}} $\ast$ $>$ \&chunk\+Draw\+List)
+\item 
+void \mbox{\hyperlink{class_tile_world_a128fb1adf1bb5aa763071731c1de1be2}{find\+Random\+Tile}} (float height, int \&outX, int \&outY)
+\item 
+\mbox{\Hypertarget{class_tile_world_af22d3df113adb5fb010b866640dfa6fa}\label{class_tile_world_af22d3df113adb5fb010b866640dfa6fa}} 
+virtual const \mbox{\hyperlink{class_world_a057932947935db98a3c29fb9175251a5}{type\+\_\+t}} \mbox{\hyperlink{class_tile_world_af22d3df113adb5fb010b866640dfa6fa}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_world_a18fc4ff9f108602f490a1e5188ffe9d6}\label{class_tile_world_a18fc4ff9f108602f490a1e5188ffe9d6}} 
+const Uint32 {\bfseries get\+Width} () const
+\item 
+\mbox{\Hypertarget{class_tile_world_af18d1b58d12b10fbe3418e991f79db30}\label{class_tile_world_af18d1b58d12b10fbe3418e991f79db30}} 
+const Uint32 {\bfseries get\+Height} () const
+\item 
+\mbox{\Hypertarget{class_tile_world_a547f771f253c3714dfa7f2fc1b89208a}\label{class_tile_world_a547f771f253c3714dfa7f2fc1b89208a}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_tile}{Tile}} $>$ \& {\bfseries get\+Tiles} ()
+\item 
+\mbox{\Hypertarget{class_tile_world_ac22695909fca412849aa3579ce44593f}\label{class_tile_world_ac22695909fca412849aa3579ce44593f}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_tile}{Tile}} $>$ \& {\bfseries get\+Tiles} () const
+\item 
+\mbox{\Hypertarget{class_tile_world_a40b1efd6c11994e5a71c01c492709b89}\label{class_tile_world_a40b1efd6c11994e5a71c01c492709b89}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_chunk}{Chunk}} $>$ \& {\bfseries get\+Chunks} ()
+\item 
+\mbox{\Hypertarget{class_tile_world_ac72cadebd7922da5bbac827ad72667aa}\label{class_tile_world_ac72cadebd7922da5bbac827ad72667aa}} 
+const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_tile_world_1_1exit__t}{exit\+\_\+t}} $>$ \& {\bfseries get\+Exits} () const
+\item 
+\mbox{\Hypertarget{class_tile_world_ad609871b6a74e1de5d2aea860a219310}\label{class_tile_world_ad609871b6a74e1de5d2aea860a219310}} 
+bool \mbox{\hyperlink{class_tile_world_ad609871b6a74e1de5d2aea860a219310}{is\+Selecting}} () const
+\begin{DoxyCompactList}\small\item\em editing properties \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_world_aa41eabcb1b3ec5db5c08a8dfd8402325}\label{class_tile_world_aa41eabcb1b3ec5db5c08a8dfd8402325}} 
+const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \& {\bfseries get\+Selected\+Rect} () const
+\item 
+\mbox{\Hypertarget{class_tile_world_a45a6a858ac9705879d7b7f37832251b0}\label{class_tile_world_a45a6a858ac9705879d7b7f37832251b0}} 
+void {\bfseries set\+Selected\+Rect} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+selected\+Rect)
+\item 
+\mbox{\Hypertarget{class_tile_world_ad1ba2264e909f9ae8331e0a062cc2672}\label{class_tile_world_ad1ba2264e909f9ae8331e0a062cc2672}} 
+void {\bfseries set\+Selecting} (const bool \+\_\+selecting)
+\item 
+\mbox{\Hypertarget{class_tile_world_a0deffb628ceb2b097e33fe27dd990270}\label{class_tile_world_a0deffb628ceb2b097e33fe27dd990270}} 
+virtual std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ $>$ {\bfseries find\+A\+Path} (int startX, int startY, int endX, int endY) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_tile_world_a6ae0a0bb54b3bc1418d39d331b8b111e}\label{class_tile_world_a6ae0a0bb54b3bc1418d39d331b8b111e}} 
+static const int \mbox{\hyperlink{class_tile_world_a6ae0a0bb54b3bc1418d39d331b8b111e}{file\+Magic\+Number\+Len}} = 16
+\begin{DoxyCompactList}\small\item\em const variables \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_tile_world_a9d4d493f5a0d85d8b418deda63202ba4}\label{class_tile_world_a9d4d493f5a0d85d8b418deda63202ba4}} 
+static const char $\ast$ {\bfseries file\+Magic\+Number} = \char`\"{}S\+P\+A\+C\+E\+P\+U\+N\+K\+\_\+\+W\+L\+D\+\_\+12\char`\"{}
+\item 
+\mbox{\Hypertarget{class_tile_world_a37d58f6dc5beed630afba40a74f2eab0}\label{class_tile_world_a37d58f6dc5beed630afba40a74f2eab0}} 
+static const char $\ast$ {\bfseries file\+Magic\+Number\+Save\+Out} = \char`\"{}S\+P\+A\+C\+E\+P\+U\+N\+K\+\_\+\+W\+L\+D\+\_\+12\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_tile_world_a5e9eb8d18d42595266d70eb9640c37db}\label{class_tile_world_a5e9eb8d18d42595266d70eb9640c37db}} 
+virtual void \mbox{\hyperlink{class_tile_world_a5e9eb8d18d42595266d70eb9640c37db}{generate\+Obstacle\+Cache}} ()
+\begin{DoxyCompactList}\small\item\em when a new world is spawned, it generates an obstacle map/cache of all static obstacles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A world type that defines a grid of \mbox{\hyperlink{class_tile}{Tile}} objects, rendered through \mbox{\hyperlink{class_chunk}{Chunk}} objects. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_tile_world_a7d2738fd93887ba93d8eed445613bf0f}\label{class_tile_world_a7d2738fd93887ba93d8eed445613bf0f}} 
+\index{TileWorld@{TileWorld}!drawSceneObjects@{drawSceneObjects}}
+\index{drawSceneObjects@{drawSceneObjects}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{drawSceneObjects()}{drawSceneObjects()}}
+{\footnotesize\ttfamily void Tile\+World\+::draw\+Scene\+Objects (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_chunk}{Chunk}} $\ast$ $>$ \&}]{chunk\+Draw\+List }\end{DoxyParamCaption})}
+
+draws all tiles and entities in the world 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the scene \\
+\hline
+{\em light} & the light by which the scene should be illuminated (or nullptr for no illumination) \\
+\hline
+{\em chunk\+Draw\+List} & a list of chunks to draw \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_world_a8b0e5372ed18dbd2faac44527c6234f1}\label{class_tile_world_a8b0e5372ed18dbd2faac44527c6234f1}} 
+\index{TileWorld@{TileWorld}!findEntitiesInRadius@{findEntitiesInRadius}}
+\index{findEntitiesInRadius@{findEntitiesInRadius}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{findEntitiesInRadius()}{findEntitiesInRadius()}}
+{\footnotesize\ttfamily void Tile\+World\+::find\+Entities\+In\+Radius (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{float}]{radius,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&}]{out\+List,  }\item[{bool}]{flat = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+finds all entities within a given radius of the provided point 
+\begin{DoxyParams}{Parameters}
+{\em origin} & position to search from \\
+\hline
+{\em radius} & the radius to search in \\
+\hline
+{\em out\+List} & the list to populate \\
+\hline
+{\em flat} & if true, the search radius is 2-\/dimensional \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_world_aecb9f8f920ffa9b5fef23cb88f8fba90}{World}}.
+
+\mbox{\Hypertarget{class_tile_world_a128fb1adf1bb5aa763071731c1de1be2}\label{class_tile_world_a128fb1adf1bb5aa763071731c1de1be2}} 
+\index{TileWorld@{TileWorld}!findRandomTile@{findRandomTile}}
+\index{findRandomTile@{findRandomTile}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{findRandomTile()}{findRandomTile()}}
+{\footnotesize\ttfamily void Tile\+World\+::find\+Random\+Tile (\begin{DoxyParamCaption}\item[{float}]{height,  }\item[{int \&}]{outX,  }\item[{int \&}]{outY }\end{DoxyParamCaption})}
+
+find a random traversible tile. if none are found, outX and outY remain unchanged 
+\begin{DoxyParams}{Parameters}
+{\em outX} & x coordinate of random tile (in tiles) \\
+\hline
+{\em outY} & y coordinate of random tile (in tiles) \\
+\hline
+{\em height} & the minimum height of a traversible tile (floor to ceiling) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_world_ac44d4fd9d09f9d091e2bfee8e8472ca3}\label{class_tile_world_ac44d4fd9d09f9d091e2bfee8e8472ca3}} 
+\index{TileWorld@{TileWorld}!initialize@{initialize}}
+\index{initialize@{initialize}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily void Tile\+World\+::initialize (\begin{DoxyParamCaption}\item[{bool}]{empty }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+post-\/load world initialization 
+\begin{DoxyParams}{Parameters}
+{\em empty} & if the world is empty \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_world_a31da58665957f271689fed2819246cae}{World}}.
+
+\mbox{\Hypertarget{class_tile_world_a63eec6d1d7ee4e165f9c6b8ee315e256}\label{class_tile_world_a63eec6d1d7ee4e165f9c6b8ee315e256}} 
+\index{TileWorld@{TileWorld}!placeRoom@{placeRoom}}
+\index{placeRoom@{placeRoom}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{placeRoom()}{placeRoom()}}
+{\footnotesize\ttfamily void Tile\+World\+::place\+Room (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_tile_world}{Tile\+World}} \&}]{world,  }\item[{Uint32}]{picked\+Exit\+Index,  }\item[{Uint32}]{x,  }\item[{Uint32}]{y,  }\item[{Sint32}]{floor\+Diff = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+copies a room (world) into this world 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world to copy \\
+\hline
+{\em picked\+Exit\+Index} & index of the exit we\textquotesingle{}re joining \\
+\hline
+{\em x} & x-\/coord to place the room \\
+\hline
+{\em y} & y-\/coord to place the room \\
+\hline
+{\em floor\+Diff} & the floor height difference between the two rooms, if any \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_world_ab1079328d3c5594c9fa6187945bf80a6}\label{class_tile_world_ab1079328d3c5594c9fa6187945bf80a6}} 
+\index{TileWorld@{TileWorld}!resize@{resize}}
+\index{resize@{resize}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}}
+{\footnotesize\ttfamily void Tile\+World\+::resize (\begin{DoxyParamCaption}\item[{int}]{left,  }\item[{int}]{right,  }\item[{int}]{up,  }\item[{int}]{down }\end{DoxyParamCaption})}
+
+change the map\textquotesingle{}s dimensions 
+\begin{DoxyParams}{Parameters}
+{\em left} & amount of tiles to increase (+) or decrease (-\/) to the west/left \\
+\hline
+{\em right} & amount of tiles to increase (+) or decrease (-\/) to the east/right \\
+\hline
+{\em up} & amount of tiles to increase (+) or decrease (-\/) to the north/up \\
+\hline
+{\em down} & amount of tiles to increase (+) or decrease (-\/) to the south/down \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_world_a660a1214a7116528307a8778ad59de59}\label{class_tile_world_a660a1214a7116528307a8778ad59de59}} 
+\index{TileWorld@{TileWorld}!rotate@{rotate}}
+\index{rotate@{rotate}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{rotate()}{rotate()}}
+{\footnotesize\ttfamily void Tile\+World\+::rotate (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_tile_a0d86f65ca63d7df9fbd5d7e1073eb831}{Tile\+::side\+\_\+t}}}]{orientation }\end{DoxyParamCaption})}
+
+rotate the whole world. orientation is always assumed to be S\+I\+D\+E\+\_\+\+E\+A\+ST 
+\begin{DoxyParams}{Parameters}
+{\em orientation} & the direction to rotate it to \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_tile_world_a8d95bec6caf354a162da783840ffcd3c}\label{class_tile_world_a8d95bec6caf354a162da783840ffcd3c}} 
+\index{TileWorld@{TileWorld}!saveFile@{saveFile}}
+\index{saveFile@{saveFile}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{saveFile()}{saveFile()}}
+{\footnotesize\ttfamily bool Tile\+World\+::save\+File (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+filename = {\ttfamily \char`\"{}\char`\"{}},  }\item[{bool}]{update\+Filename = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+writes the world contents to a file 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+filename} & the filename to write to, or blank to use our last filename \\
+\hline
+{\em update\+Filename} & if true, our current filename is changed, otherwise, it is not \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false on failure 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_world_a5684fb5aa9fb4cda9a700c610376faeb}{World}}.
+
+\mbox{\Hypertarget{class_tile_world_a516b9d4908cd6328eb889ea1dd382112}\label{class_tile_world_a516b9d4908cd6328eb889ea1dd382112}} 
+\index{TileWorld@{TileWorld}!serialize@{serialize}}
+\index{serialize@{serialize}!TileWorld@{TileWorld}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Tile\+World\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_tile_world_8hpp}{Tile\+World.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Tile\+World.\+cpp\end{DoxyCompactItemize}

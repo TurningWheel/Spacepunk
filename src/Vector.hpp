@@ -1,5 +1,4 @@
-// Vector.hpp
-// Records (w, x, y, z) vector with float accuracy
+//! @file Vector.hpp
 
 #pragma once
 
@@ -9,11 +8,12 @@
 
 #include "File.hpp"
 
+//! Records (x, y, z) vector with float accuracy
 class Vector {
 public:
 	float x = 0.f, y = 0.f, z = 0.f;
 
-	// constructors
+	//! constructors
 	Vector() {}
 	Vector(const Vector& src) {
 		x = src.x;
@@ -37,8 +37,8 @@ public:
 	}
 	~Vector() {}
 
-	// determines whether the vector represents a true volume
-	// @return true if all elements are nonzero, false otherwise
+	//! determines whether the vector represents a true volume
+	//! @return true if all elements are nonzero, false otherwise
 	bool hasVolume() const {
 		if (x == 0.f || y == 0.f || z == 0.f) {
 			return false;
@@ -46,14 +46,14 @@ public:
 		return true;
 	}
 
-	// calculate dot product of this vector and another
-	// @return the dot product of the two vectors
+	//! calculate dot product of this vector and another
+	//! @return the dot product of the two vectors
 	float dot(const Vector& other) const {
 		return x * other.x + y * other.y + z * other.z;
 	}
 
-	// calculate cross product of this vector and another
-	// @return the cross product of the two vectors
+	//! calculate cross product of this vector and another
+	//! @return the cross product of the two vectors
 	Vector cross(const Vector& other) const {
 		Vector result;
 		result.x = y * other.z - z * other.y;
@@ -62,32 +62,32 @@ public:
 		return result;
 	}
 
-	// calculate the length of the vector (uses sqrt)
-	// @return the length
+	//! calculate the length of the vector (uses sqrt)
+	//! @return the length
 	float length() const {
 		return sqrtf(x*x + y * y + z * z);
 	}
 
-	// calculate the length of the vector, sans sqrt
-	// @return the length squared
+	//! calculate the length of the vector, sans sqrt
+	//! @return the length squared
 	float lengthSquared() const {
 		return x * x + y * y + z * z;
 	}
 
-	// create an absoluted copy of this vector
-	// @return an absoluted copy of this vector
+	//! create an absoluted copy of this vector
+	//! @return an absoluted copy of this vector
 	Vector absolute() const {
 		return Vector(fabs(x), fabs(y), fabs(z));
 	}
 
-	// create a normalized copy of this vector
-	// @return a normalized version of this vector
+	//! create a normalized copy of this vector
+	//! @return a normalized version of this vector
 	Vector normal() const {
 		float l = length();
 		return Vector(x / l, y / l, z / l);
 	}
 
-	// normalize this vector
+	//! normalize this vector
 	void normalize() {
 		float l = length();
 		x /= l;
@@ -95,25 +95,25 @@ public:
 		z /= l;
 	}
 
-	// determines if this vector is "close" to another
-	// @param v the other vector to compare with
-	// @return true if their values are close, otherwise false
+	//! determines if this vector is "close" to another
+	//! @param v the other vector to compare with
+	//! @return true if their values are close, otherwise false
 	bool close(const Vector& v) {
 		Vector c = *this - v;
 		return c.lengthSquared() < .001f;
 	}
 
-	// conversion to glm::vec3
+	//! conversion to glm::vec3
 	operator glm::vec3() const {
 		return glm::vec3(x, y, z);
 	}
 
-	// conversion to btVector3
+	//! conversion to btVector3
 	operator btVector3() const {
 		return btVector3(x, y, z);
 	}
 
-	// operator =
+	//! operator =
 	Vector& operator=(const Vector& src) {
 		x = src.x;
 		y = src.y;
@@ -121,7 +121,7 @@ public:
 		return *this;
 	}
 
-	// operator +
+	//! operator +
 	Vector operator+(const Vector& src) const {
 		Vector result;
 		result.x = x + src.x;
@@ -130,7 +130,7 @@ public:
 		return result;
 	}
 
-	// operator +=
+	//! operator +=
 	Vector& operator+=(const Vector& src) {
 		x += src.x;
 		y += src.y;
@@ -138,7 +138,7 @@ public:
 		return *this;
 	}
 
-	// operator -
+	//! operator -
 	Vector operator-(const Vector& src) const {
 		Vector result;
 		result.x = x - src.x;
@@ -147,7 +147,7 @@ public:
 		return result;
 	}
 
-	// operator -=
+	//! operator -=
 	Vector& operator-=(const Vector& src) {
 		x -= src.x;
 		y -= src.y;
@@ -155,7 +155,7 @@ public:
 		return *this;
 	}
 
-	// operator *
+	//! operator *
 	Vector operator*(const Vector& src) const {
 		Vector result;
 		result.x = x * src.x;
@@ -171,7 +171,7 @@ public:
 		return result;
 	}
 
-	// operator *=
+	//! operator *=
 	Vector& operator*=(const Vector& src) {
 		x *= src.x;
 		y *= src.y;
@@ -185,7 +185,7 @@ public:
 		return *this;
 	}
 
-	// operator /
+	//! operator /
 	Vector operator/(const Vector& src) const {
 		Vector result;
 		result.x = x / src.x;
@@ -201,7 +201,7 @@ public:
 		return result;
 	}
 
-	// operator /=
+	//! operator /=
 	Vector& operator/=(const Vector& src) {
 		x /= src.x;
 		y /= src.y;
@@ -215,9 +215,9 @@ public:
 		return *this;
 	}
 
-	// CONDITIONAL OPERATORS
+	//! CONDITIONAL OPERATORS
 
-	// operator >
+	//! operator >
 	bool operator>(const Vector& other) const {
 		if (lengthSquared() > other.lengthSquared()) {
 			return true;
@@ -226,7 +226,7 @@ public:
 		}
 	}
 
-	// operator >=
+	//! operator >=
 	bool operator>=(const Vector& other) const {
 		if (lengthSquared() >= other.lengthSquared()) {
 			return true;
@@ -235,7 +235,7 @@ public:
 		}
 	}
 
-	// operator ==
+	//! operator ==
 	bool operator==(const Vector& other) const {
 		if (x == other.x && y == other.y && z == other.z) {
 			return true;
@@ -244,7 +244,7 @@ public:
 		}
 	}
 
-	// operator <=
+	//! operator <=
 	bool operator<=(const Vector& other) const {
 		if (lengthSquared() <= other.lengthSquared()) {
 			return true;
@@ -253,7 +253,7 @@ public:
 		}
 	}
 
-	// operator <
+	//! operator <
 	bool operator<(const Vector& other) const {
 		if (lengthSquared() < other.lengthSquared()) {
 			return true;
@@ -262,7 +262,7 @@ public:
 		}
 	}
 
-	// operator !=
+	//! operator !=
 	bool operator!=(const Vector& other) const {
 		if (x != other.x || y != other.y || z != other.z) {
 			return true;
@@ -271,8 +271,8 @@ public:
 		}
 	}
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	void serialize(FileInterface * file) {
 		file->property("x", x);
 		file->property("y", y);

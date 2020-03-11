@@ -1,4 +1,4 @@
-// Chunk.hpp
+//! @file Chunk.hpp
 
 #pragma once
 
@@ -15,37 +15,38 @@
 
 class Component;
 
+//! A Chunk combines lots of internal data for multiple Tile objects
 class Chunk {
 public:
 	Chunk();
 	~Chunk();
 
-	// the size of a chunk in tiles
+	//! the size of a chunk in tiles
 	static const unsigned int size = 2;
 
-	// builds vertex buffers
+	//! builds vertex buffers
 	void buildBuffers();
 
-	// consolidates vertex data among the tiles
+	//! consolidates vertex data among the tiles
 	void optimizeBuffers();
 
-	// draws the chunk
-	// @param camera the camera to render the chunk with
+	//! draws the chunk
+	//! @param camera the camera to render the chunk with
 	void draw(Camera& camera, ShaderProgram& shader) const;
 
-	// calculates the number of vertices in the chunk
-	// @return the number of vertices for all surfaces in the chunk
+	//! calculates the number of vertices in the chunk
+	//! @return the number of vertices for all surfaces in the chunk
 	Uint32 calculateVertices() const;
 
-	// adds an entity component to our population list
-	// @param component the entity component to add to our list
+	//! adds an entity component to our population list
+	//! @param component the entity component to add to our list
 	Node<Component*>* addCPopulation(Component* component);
 
-	// adds an entity to our population list
-	// @param entity the entity to add to our list
+	//! adds an entity to our population list
+	//! @param entity the entity to add to our list
 	Node<Entity*>* addEPopulation(Entity* entity);
 
-	// getters & setters
+	//! getters & setters
 	bool							isChanged() const { return changed; }
 	Tile*							getTile(int index) { return tiles[index]; }
 	const LinkedList<Entity*>&		getEPopulation() const { return ePopulation; }
@@ -101,9 +102,9 @@ private:
 	ArrayList<glm::vec3> effectsMapBuffer;
 	ArrayList<GLuint> indexBuffer;
 
-	// build tangent buffers
+	//! build tangent buffers
 	void buildTangents();
 
-	// uploads vertex data to gpu
+	//! uploads vertex data to gpu
 	void uploadBuffers();
 };

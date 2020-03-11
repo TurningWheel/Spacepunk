@@ -1,0 +1,81 @@
+\hypertarget{class_path_finder}{}\doxysection{Path\+Finder Class Reference}
+\label{class_path_finder}\index{PathFinder@{PathFinder}}
+
+
+{\ttfamily \#include $<$Path.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_path_finder_1_1_a_star_task}{A\+Star\+Task}}
+\begin{DoxyCompactList}\small\item\em A$\ast$ Path \mbox{\hyperlink{class_path_finder_1_1_task}{Task}} (derived from above) \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_path_finder_1_1_path_node}{Path\+Node}}
+\begin{DoxyCompactList}\small\item\em Path node. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_path_finder_1_1_path_waypoint}{Path\+Waypoint}}
+\begin{DoxyCompactList}\small\item\em Path Waypoint. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_path_finder_1_1_task}{Task}}
+\begin{DoxyCompactList}\small\item\em Asynchronous Path \mbox{\hyperlink{class_path_finder_1_1_task}{Task}} (Path process) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_path_finder_a7ec801d9d3ed8d0e96a3b4f801af1d90}\label{class_path_finder_a7ec801d9d3ed8d0e96a3b4f801af1d90}} 
+using {\bfseries Path} = \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_path_finder_1_1_path_waypoint}{Path\+Waypoint}} $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_path_finder_ada82de35fe6e749339751e9c338f9ab8}\label{class_path_finder_ada82de35fe6e749339751e9c338f9ab8}} 
+{\bfseries Path\+Finder} (\mbox{\hyperlink{class_tile_world}{Tile\+World}} \&world)
+\item 
+std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path}} $\ast$ $>$ \mbox{\hyperlink{class_path_finder_ac3f9f0b2ea7ac46bff7acf0e575e76b7}{generate\+A\+Star\+Path}} (Sint32 startX, Sint32 startY, Sint32 endX, Sint32 endY)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_path_finder_ac130b279f781c052ef8ab4d71897c16a}\label{class_path_finder_ac130b279f781c052ef8ab4d71897c16a}} 
+void {\bfseries generate\+Simple\+Map} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_path_finder_ae124c108ed139933b6786cd8f6433ed0}\label{class_path_finder_ae124c108ed139933b6786cd8f6433ed0}} 
+\mbox{\hyperlink{class_tile_world}{Tile\+World}} \& {\bfseries world}
+\item 
+\mbox{\Hypertarget{class_path_finder_a6b88ae7abaec2d38092053520aa48d80}\label{class_path_finder_a6b88ae7abaec2d38092053520aa48d80}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ $>$ $>$ {\bfseries tasks}
+\item 
+\mbox{\Hypertarget{class_path_finder_aef66a3e0c62f5ec64d6ad74fe63bdae6}\label{class_path_finder_aef66a3e0c62f5ec64d6ad74fe63bdae6}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ Uint32 $>$ {\bfseries map}
+\item 
+\mbox{\Hypertarget{class_path_finder_ad82d12fda95bb831bad3d4232a19173f}\label{class_path_finder_ad82d12fda95bb831bad3d4232a19173f}} 
+Uint32 {\bfseries map\+Width} = 0
+\item 
+\mbox{\Hypertarget{class_path_finder_a88b0d67b0d73aa335ba8c4280f916e02}\label{class_path_finder_a88b0d67b0d73aa335ba8c4280f916e02}} 
+Uint32 {\bfseries map\+Height} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Pathfinder usage flow (after constructing with a valid world)\+:
+\begin{DoxyItemize}
+\item pathfinder.\+generate\+Simple\+Map(); //\+This updates the pathfinder\textquotesingle{}s copy. This only needs to be done after world generation, and if the terrain ever changes.
+\item std\+::future path\+Task = pathfinder.\+generate\+A\+Star\+Path(x1, y1, x2, y2); Then you just keep querying the path\+Task via wait\+\_\+for with 0 duration
+\end{DoxyItemize}
+
+There is one pathfinder per world. It provides asynchronous pathfinding. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_path_finder_ac3f9f0b2ea7ac46bff7acf0e575e76b7}\label{class_path_finder_ac3f9f0b2ea7ac46bff7acf0e575e76b7}} 
+\index{PathFinder@{PathFinder}!generateAStarPath@{generateAStarPath}}
+\index{generateAStarPath@{generateAStarPath}!PathFinder@{PathFinder}}
+\doxysubsubsection{\texorpdfstring{generateAStarPath()}{generateAStarPath()}}
+{\footnotesize\ttfamily std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ $>$ Path\+Finder\+::generate\+A\+Star\+Path (\begin{DoxyParamCaption}\item[{Sint32}]{startX,  }\item[{Sint32}]{startY,  }\item[{Sint32}]{endX,  }\item[{Sint32}]{endY }\end{DoxyParamCaption})}
+
+Creates a Path\+Task object. Asynchronous pathfinding.
+
+(You can use wait\+\_\+for with 0 duration \+:) ) 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_path_8hpp}{Path.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Path.\+cpp\end{DoxyCompactItemize}

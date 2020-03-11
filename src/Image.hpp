@@ -1,4 +1,4 @@
-// Image.hpp
+//! @file Image.hpp
 
 #pragma once
 
@@ -6,6 +6,7 @@
 #include "Asset.hpp"
 #include "Rect.hpp"
 
+//! An Image is a type of asset that contains all the raw data for a unique 2D image
 class Image : public Asset {
 public:
 	Image() {}
@@ -14,24 +15,23 @@ public:
 
 	virtual bool finalize() override;
 
-	// draws the image
-	// @param src the section of the image to be used for drawing, or nullptr for the whole image
-	// @param dest the location and size by which the image should be drawn
+	//! draws the image
+	//! @param src the section of the image to be used for drawing, or nullptr for the whole image
+	//! @param dest the location and size by which the image should be drawn
 	void draw(const Rect<int>* src, const Rect<int>& dest) const;
 
-	// draws the image with the given color
-	// @param src the section of the image to be used for drawing, or nullptr for the whole image
-	// @param dest the location and size by which the image should be drawn
-	// @param color a 32-bit color to mix with the image
+	//! draws the image with the given color
+	//! @param src the section of the image to be used for drawing, or nullptr for the whole image
+	//! @param dest the location and size by which the image should be drawn
+	//! @param color a 32-bit color to mix with the image
 	void drawColor(const Rect<int>* src, const Rect<int>& dest, const glm::vec4& color) const;
 
-	// create static geometry data for rendering images
+	//! create static geometry data for rendering images
 	static void createStaticData();
 
-	// delete static geometry data for rendering images
+	//! delete static geometry data for rendering images
 	static void deleteStaticData();
 
-	// getters & setters
 	virtual const type_t	getType() const { return ASSET_IMAGE; }
 	virtual const bool		isStreamable() const { return true; }
 	const GLuint			getTexID() const { return texid; }
@@ -46,7 +46,7 @@ private:
 	bool clamp = false;
 	bool point = false;
 
-	// static geometry data for rendering the image to a quad
+	// static geometry data for rendering the image to a quad:
 	static const GLuint indices[6];
 	static const GLfloat positions[8];
 	static const GLfloat texcoords[8];

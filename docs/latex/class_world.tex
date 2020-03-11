@@ -1,0 +1,628 @@
+\hypertarget{class_world}{}\doxysection{World Class Reference}
+\label{class_world}\index{World@{World}}
+
+
+{\ttfamily \#include $<$World.\+hpp$>$}
+
+Inheritance diagram for World\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_world}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em hit structure (for collisions) \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_world_1_1laser__t}{laser\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em laser type \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_world_1_1physics__manifest__t}{physics\+\_\+manifest\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em data owned by every physics object in a world \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_world_a057932947935db98a3c29fb9175251a5}\label{class_world_a057932947935db98a3c29fb9175251a5}} 
+enum \mbox{\hyperlink{class_world_a057932947935db98a3c29fb9175251a5}{type\+\_\+t}} \{ {\bfseries W\+O\+R\+L\+D\+\_\+\+I\+N\+V\+A\+L\+ID}, 
+{\bfseries W\+O\+R\+L\+D\+\_\+\+T\+I\+L\+ES}, 
+{\bfseries W\+O\+R\+L\+D\+\_\+\+S\+E\+C\+T\+O\+RS}, 
+{\bfseries W\+O\+R\+L\+D\+\_\+\+B\+A\+S\+IC}
+ \}
+\begin{DoxyCompactList}\small\item\em world type \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{class_world_a15392f452110dd7d8506881c026d6443}{filetype\+\_\+t}} \{ {\bfseries F\+I\+L\+E\+\_\+\+B\+I\+N\+A\+RY}, 
+{\bfseries F\+I\+L\+E\+\_\+\+J\+S\+ON}, 
+{\bfseries F\+I\+L\+E\+\_\+\+W\+LD}, 
+\mbox{\hyperlink{class_world_a15392f452110dd7d8506881c026d6443a4e2a46d4ae836ddefc66d89477a1c1bf}{F\+I\+L\+E\+\_\+\+M\+AX}}
+ \}
+\begin{DoxyCompactList}\small\item\em file type \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_world_af911e0e2b0b25e687d34c282d513b5e4}\label{class_world_af911e0e2b0b25e687d34c282d513b5e4}} 
+{\bfseries World} (\mbox{\hyperlink{class_game}{Game}} $\ast$\+\_\+game)
+\item 
+virtual void \mbox{\hyperlink{class_world_a31da58665957f271689fed2819246cae}{initialize}} (bool empty)
+\item 
+\mbox{\Hypertarget{class_world_a72b95cd14c885246c20268ee2de7badf}\label{class_world_a72b95cd14c885246c20268ee2de7badf}} 
+void \mbox{\hyperlink{class_world_a72b95cd14c885246c20268ee2de7badf}{get\+Selected\+Entities}} (\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&out\+Result)
+\begin{DoxyCompactList}\small\item\em produces a list of all selected entities in the world \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ \mbox{\hyperlink{class_world_ad1e06c6c8803c297d572ea9b248641d0}{uid\+To\+Entity}} (const Uint32 uid)
+\item 
+const bool \mbox{\hyperlink{class_world_a905f9abdb5fec84a0e16d50689422884}{select\+Entity}} (const Uint32 uid, const bool b)
+\item 
+\mbox{\Hypertarget{class_world_a5b676ba8ead3b6a932912cd6ad81168e}\label{class_world_a5b676ba8ead3b6a932912cd6ad81168e}} 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ \mbox{\hyperlink{class_world_a5b676ba8ead3b6a932912cd6ad81168e}{spawn\+Entity}} (const char $\ast$name, const \mbox{\hyperlink{class_vector}{Vector}} \&pos, const \mbox{\hyperlink{class_rotation}{Rotation}} \&ang)
+\begin{DoxyCompactList}\small\item\em spawn an entity at the given location/orientation \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_world_afe7309d80e20a976df3eccc2fef2503b}{select\+Entities}} (const bool b)
+\item 
+\mbox{\Hypertarget{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}\label{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}} 
+virtual void \mbox{\hyperlink{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}{deselect\+Geometry}} ()=0
+\begin{DoxyCompactList}\small\item\em clears all geometry selection \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} \mbox{\hyperlink{class_world_a5f00b6e4249eda2e2fd343e37ace4f90}{line\+Trace}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest)
+\item 
+void \mbox{\hyperlink{class_world_a9c52871b0d388646653c72f41b55f0d7}{line\+Trace\+List}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} $>$ \&out\+Result)
+\item 
+const \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} \mbox{\hyperlink{class_world_a0164139222f2af35f059cf72e33d550e}{line\+Trace\+No\+Entities}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest)
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \mbox{\hyperlink{class_world_a75b5ca2f562c4bad02777ccd24797e17}{get\+Entities\+By\+Name}} (const char $\ast$name)
+\item 
+const \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} \mbox{\hyperlink{class_world_ad9c996be29274a0cd7bb6f2e76184489}{convex\+Sweep}} (const bt\+Convex\+Shape $\ast$shape, const \mbox{\hyperlink{class_vector}{Vector}} \&origin\+Pos, const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&origin\+Ang, const \mbox{\hyperlink{class_vector}{Vector}} \&dest\+Pos, const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&dest\+Ang)
+\item 
+void \mbox{\hyperlink{class_world_ad672dc0818bdc8c5e3b2e9c9e37c1100}{convex\+Sweep\+List}} (const bt\+Convex\+Shape $\ast$shape, const \mbox{\hyperlink{class_vector}{Vector}} \&origin\+Pos, const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&origin\+Ang, const \mbox{\hyperlink{class_vector}{Vector}} \&dest\+Pos, const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&dest\+Ang, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} $>$ \&out\+Result)
+\item 
+virtual void \mbox{\hyperlink{class_world_aecb9f8f920ffa9b5fef23cb88f8fba90}{find\+Entities\+In\+Radius}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, float radius, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&out\+List, bool flat=false)=0
+\item 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ int $>$ \mbox{\hyperlink{class_world_a5fe3ba11bed79fd51d7143ca123a7031}{generate\+Dungeon}} (const char $\ast$\mbox{\hyperlink{class_world_a01949f23f4d4ff723aafdc14a3e0bb46}{filename}}) const
+\item 
+Uint32 \mbox{\hyperlink{class_world_a29d3f3797505a8b17218c74e8832ae66}{get\+New\+U\+ID}} ()
+\item 
+\mbox{\Hypertarget{class_world_a34520c750c4d480f86e992bd6c7f02f3}\label{class_world_a34520c750c4d480f86e992bd6c7f02f3}} 
+virtual void \mbox{\hyperlink{class_world_a34520c750c4d480f86e992bd6c7f02f3}{draw}} ()=0
+\begin{DoxyCompactList}\small\item\em draws the world and its contents \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a42e5042ffc9b6a8e80ac57ead0cd0f9a}\label{class_world_a42e5042ffc9b6a8e80ac57ead0cd0f9a}} 
+virtual void \mbox{\hyperlink{class_world_a42e5042ffc9b6a8e80ac57ead0cd0f9a}{pre\+Process}} ()
+\begin{DoxyCompactList}\small\item\em preprocess world events \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a14363b9901068fbea4cfd8a92f8e29a4}\label{class_world_a14363b9901068fbea4cfd8a92f8e29a4}} 
+virtual void \mbox{\hyperlink{class_world_a14363b9901068fbea4cfd8a92f8e29a4}{process}} ()
+\begin{DoxyCompactList}\small\item\em process world events \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a3249d899fb3c31fb0ef8385876f38345}\label{class_world_a3249d899fb3c31fb0ef8385876f38345}} 
+virtual void \mbox{\hyperlink{class_world_a3249d899fb3c31fb0ef8385876f38345}{post\+Process}} ()
+\begin{DoxyCompactList}\small\item\em postprocess world events \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_world_a5684fb5aa9fb4cda9a700c610376faeb}{save\+File}} (const char $\ast$\+\_\+filename=\char`\"{}\char`\"{}, bool update\+Filename=false)=0
+\item 
+void \mbox{\hyperlink{class_world_aef32a7f18ac6f1d4c97a1e7f9eff7433}{change\+Filename}} (const char $\ast$\+\_\+filename)
+\item 
+void \mbox{\hyperlink{class_world_a49040e216bf5e237da8538a305a79540}{find\+Selected\+Entities}} (\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&out\+List)
+\item 
+\mbox{\hyperlink{struct_world_1_1laser__t}{laser\+\_\+t}} \& \mbox{\hyperlink{class_world_a549d160f16e85f36dcf19c00c523d5dc}{add\+Laser}} (const \mbox{\hyperlink{class_vector}{Vector}} \&start, const \mbox{\hyperlink{class_vector}{Vector}} \&end, const glm\+::vec4 \&color, float size, float life)
+\item 
+\mbox{\Hypertarget{class_world_a88593abf7297cca90a34cca385ad9066}\label{class_world_a88593abf7297cca90a34cca385ad9066}} 
+virtual const \mbox{\hyperlink{class_world_a057932947935db98a3c29fb9175251a5}{type\+\_\+t}} {\bfseries get\+Type} () const =0
+\item 
+\mbox{\Hypertarget{class_world_a6cef6087a3c6e1daba90f14dce216ec1}\label{class_world_a6cef6087a3c6e1daba90f14dce216ec1}} 
+\mbox{\hyperlink{class_game}{Game}} $\ast$ {\bfseries get\+Game} ()
+\item 
+\mbox{\Hypertarget{class_world_a1a4c2819c8b5040cbfb858176f6463ec}\label{class_world_a1a4c2819c8b5040cbfb858176f6463ec}} 
+const Uint32 {\bfseries get\+Ticks} () const
+\item 
+\mbox{\Hypertarget{class_world_a4641a28f1904459e336485b8e1c10bb0}\label{class_world_a4641a28f1904459e336485b8e1c10bb0}} 
+const \mbox{\hyperlink{class_string}{String}} \& {\bfseries get\+Filename} () const
+\item 
+\mbox{\Hypertarget{class_world_a0b9226d08130580699ac753354f1c676}\label{class_world_a0b9226d08130580699ac753354f1c676}} 
+const \mbox{\hyperlink{class_string}{String}} \& {\bfseries get\+Shortname} () const
+\item 
+\mbox{\Hypertarget{class_world_ab1d39004715ccdf094718a2c21bd3182}\label{class_world_ab1d39004715ccdf094718a2c21bd3182}} 
+const \mbox{\hyperlink{class_string}{String}} \& {\bfseries get\+Name\+Str} () const
+\item 
+\mbox{\Hypertarget{class_world_a1e2a01179b6052baae134a4333628115}\label{class_world_a1e2a01179b6052baae134a4333628115}} 
+\mbox{\hyperlink{class_map}{Map}}$<$ Uint32, \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \& {\bfseries get\+Entities} ()
+\item 
+\mbox{\Hypertarget{class_world_ac172d8aa124fc620e8206c796711c33e}\label{class_world_ac172d8aa124fc620e8206c796711c33e}} 
+const \mbox{\hyperlink{class_map}{Map}}$<$ Uint32, \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \& {\bfseries get\+Entities} () const
+\item 
+\mbox{\Hypertarget{class_world_a45f168375d3d59b90d96500482567e59}\label{class_world_a45f168375d3d59b90d96500482567e59}} 
+bt\+Discrete\+Dynamics\+World $\ast$\& {\bfseries get\+Bullet\+Dynamics\+World} ()
+\item 
+\mbox{\Hypertarget{class_world_a98a8a1613d59f298fc65fe0dd3d45c48}\label{class_world_a98a8a1613d59f298fc65fe0dd3d45c48}} 
+const bool {\bfseries is\+Client\+Obj} () const
+\item 
+\mbox{\Hypertarget{class_world_a9d159849554ad8c44d97930b0ec29ca8}\label{class_world_a9d159849554ad8c44d97930b0ec29ca8}} 
+const bool {\bfseries is\+Server\+Obj} () const
+\item 
+\mbox{\Hypertarget{class_world_a169b9200eabc1be874cefa85015486cd}\label{class_world_a169b9200eabc1be874cefa85015486cd}} 
+const \mbox{\hyperlink{class_string}{String}} \& {\bfseries get\+Zone} () const
+\item 
+\mbox{\Hypertarget{class_world_a78da8b5986e00d39025d8a0440322410}\label{class_world_a78da8b5986e00d39025d8a0440322410}} 
+Uint32 {\bfseries get\+ID} () const
+\item 
+\mbox{\Hypertarget{class_world_ac9d75eae54199b08b0675c7516c24352}\label{class_world_ac9d75eae54199b08b0675c7516c24352}} 
+const \mbox{\hyperlink{class_world_a15392f452110dd7d8506881c026d6443}{filetype\+\_\+t}} {\bfseries get\+Filetype} () const
+\item 
+\mbox{\Hypertarget{class_world_a1bf291cbd3c5253d4c101e7f1cafe291}\label{class_world_a1bf291cbd3c5253d4c101e7f1cafe291}} 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ {\bfseries get\+Shadow\+Camera} ()
+\item 
+\mbox{\Hypertarget{class_world_a147fcea0260ce429c15a6f659a71ea45}\label{class_world_a147fcea0260ce429c15a6f659a71ea45}} 
+\mbox{\hyperlink{class_shadow}{Shadow}} \& {\bfseries get\+Default\+Shadow} ()
+\item 
+\mbox{\Hypertarget{class_world_af38a0ef4961a3ac803baae57da1075b1}\label{class_world_af38a0ef4961a3ac803baae57da1075b1}} 
+const \mbox{\hyperlink{class_shadow}{Shadow}} \& {\bfseries get\+Default\+Shadow} () const
+\item 
+\mbox{\Hypertarget{class_world_a9698f89c43d03edcd594eae29af007ba}\label{class_world_a9698f89c43d03edcd594eae29af007ba}} 
+void {\bfseries set\+Max\+U\+ID} (Uint32 uid)
+\item 
+\mbox{\Hypertarget{class_world_a2ce72462f0cfb6e51ac542d3a02bb870}\label{class_world_a2ce72462f0cfb6e51ac542d3a02bb870}} 
+bool {\bfseries is\+Pointer\+Active} () const
+\item 
+\mbox{\Hypertarget{class_world_ac2ba689583686656d0cf9535f6fd9b93}\label{class_world_ac2ba689583686656d0cf9535f6fd9b93}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Pointer\+Pos} () const
+\item 
+\mbox{\Hypertarget{class_world_a53d15ef359f2a13cf440fb70aedf1b70}\label{class_world_a53d15ef359f2a13cf440fb70aedf1b70}} 
+bool {\bfseries is\+Generated} () const
+\item 
+\mbox{\Hypertarget{class_world_a36584e32fd95e43dd9da4b472cda57dd}\label{class_world_a36584e32fd95e43dd9da4b472cda57dd}} 
+Uint32 {\bfseries get\+Seed} () const
+\item 
+\mbox{\Hypertarget{class_world_a49832d32cb45815a3983b519af94f258}\label{class_world_a49832d32cb45815a3983b519af94f258}} 
+bool {\bfseries is\+Loaded} () const
+\item 
+\mbox{\Hypertarget{class_world_a6c17f451593c74517b5b5048b83203f3}\label{class_world_a6c17f451593c74517b5b5048b83203f3}} 
+bool {\bfseries is\+Grid\+Visible} () const
+\item 
+\mbox{\Hypertarget{class_world_a7329c8d3e6f3c39ee59425baf0f61906}\label{class_world_a7329c8d3e6f3c39ee59425baf0f61906}} 
+bool {\bfseries is\+Show\+Tools} () const
+\item 
+\mbox{\Hypertarget{class_world_aca837b9e0504bd8543c1411faa01b1b2}\label{class_world_aca837b9e0504bd8543c1411faa01b1b2}} 
+void {\bfseries set\+Pointer\+Active} (bool \+\_\+pointer\+Active)
+\item 
+\mbox{\Hypertarget{class_world_a0b8ecf00e5b526e939384314508e47f9}\label{class_world_a0b8ecf00e5b526e939384314508e47f9}} 
+void {\bfseries set\+Pointer\+Pos} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+pointer\+Pos)
+\item 
+\mbox{\Hypertarget{class_world_a264d969e66757a1a52f1bfe6c82b7e9b}\label{class_world_a264d969e66757a1a52f1bfe6c82b7e9b}} 
+void {\bfseries set\+Show\+Tools} (const bool \+\_\+show\+Tools)
+\item 
+\mbox{\Hypertarget{class_world_a27c1328998897d35fd77b5560ff39fb6}\label{class_world_a27c1328998897d35fd77b5560ff39fb6}} 
+void {\bfseries set\+Name\+Str} (const char $\ast$\+\_\+name\+Str)
+\item 
+\mbox{\Hypertarget{class_world_a4df8a23a1a68bd62548fb390f969dfcb}\label{class_world_a4df8a23a1a68bd62548fb390f969dfcb}} 
+void {\bfseries set\+Grid\+Visible} (const bool \+\_\+grid\+Visible)
+\item 
+\mbox{\Hypertarget{class_world_ad2459539ca5909cceab3f43d9afb19f9}\label{class_world_ad2459539ca5909cceab3f43d9afb19f9}} 
+virtual std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ $>$ {\bfseries find\+A\+Path} (int startX, int startY, int endX, int endY)=0
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ \mbox{\hyperlink{class_world_abc2a766885df88ad51bf8bd59edd175c}{file\+Extensions}} \mbox{[}\mbox{\hyperlink{class_world_a15392f452110dd7d8506881c026d6443a4e2a46d4ae836ddefc66d89477a1c1bf}{F\+I\+L\+E\+\_\+\+M\+AX}}\mbox{]}
+\begin{DoxyCompactList}\small\item\em const variables \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_ab9e595951a11d3713b39b647fbae2e0c}\label{class_world_ab9e595951a11d3713b39b647fbae2e0c}} 
+static const Uint32 \mbox{\hyperlink{class_world_ab9e595951a11d3713b39b647fbae2e0c}{nuid}} = U\+I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em invalid uid for any entity \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_world_a4f677c010fdb32de90aabc67e8bfea42}\label{class_world_a4f677c010fdb32de90aabc67e8bfea42}} 
+virtual void \mbox{\hyperlink{class_world_a4f677c010fdb32de90aabc67e8bfea42}{generate\+Obstacle\+Cache}} ()=0
+\begin{DoxyCompactList}\small\item\em when a new world is spawned, it generates an obstacle map/cache of all static obstacles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_world_add0f4092548a4053296f19b16d2dc269}\label{class_world_add0f4092548a4053296f19b16d2dc269}} 
+static void {\bfseries bullet\+Collision\+Callback} (bt\+Broadphase\+Pair \&pair, bt\+Collision\+Dispatcher \&dispatcher, const bt\+Dispatcher\+Info \&info)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_world_a5c691c8bbe6141110051525d3d68b9ca}\label{class_world_a5c691c8bbe6141110051525d3d68b9ca}} 
+\mbox{\hyperlink{class_game}{Game}} $\ast$ \mbox{\hyperlink{class_world_a5c691c8bbe6141110051525d3d68b9ca}{game}} = nullptr
+\begin{DoxyCompactList}\small\item\em the game sim we belong to (if any) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a1fbc6d3e9daa62888a4bab3b834a4a44}\label{class_world_a1fbc6d3e9daa62888a4bab3b834a4a44}} 
+\mbox{\hyperlink{class_script}{Script}} $\ast$ \mbox{\hyperlink{class_world_a1fbc6d3e9daa62888a4bab3b834a4a44}{script}} = nullptr
+\begin{DoxyCompactList}\small\item\em scripting engine \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_aa1cd7aafdde0f57657eca0754d4dfd1e}\label{class_world_aa1cd7aafdde0f57657eca0754d4dfd1e}} 
+bool \mbox{\hyperlink{class_world_aa1cd7aafdde0f57657eca0754d4dfd1e}{silent}} = false
+\begin{DoxyCompactList}\small\item\em if true, disables some logging \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_afbfc5edd88a7a221475586613e62c2a5}\label{class_world_afbfc5edd88a7a221475586613e62c2a5}} 
+bool \mbox{\hyperlink{class_world_afbfc5edd88a7a221475586613e62c2a5}{client\+Obj}} = false
+\begin{DoxyCompactList}\small\item\em if true, this world exists on the client, otherwise, it exists on the server \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a2546a65ea8905ff81c73c32f27f5e3ed}\label{class_world_a2546a65ea8905ff81c73c32f27f5e3ed}} 
+bool \mbox{\hyperlink{class_world_a2546a65ea8905ff81c73c32f27f5e3ed}{generated}} = false
+\begin{DoxyCompactList}\small\item\em has seeded elements \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_aca740e4fefd904b32f591b2ab65d3e5a}\label{class_world_aca740e4fefd904b32f591b2ab65d3e5a}} 
+Uint32 \mbox{\hyperlink{class_world_aca740e4fefd904b32f591b2ab65d3e5a}{id}} = 0
+\begin{DoxyCompactList}\small\item\em non-\/unique identifier \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_aec229d598a00745d175fcad7c1d9828c}\label{class_world_aec229d598a00745d175fcad7c1d9828c}} 
+Uint32 \mbox{\hyperlink{class_world_aec229d598a00745d175fcad7c1d9828c}{seed}} = 0
+\begin{DoxyCompactList}\small\item\em prng seed \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a9ae77177da0657539b996f21b4166152}\label{class_world_a9ae77177da0657539b996f21b4166152}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_world_a9ae77177da0657539b996f21b4166152}{zone}}
+\begin{DoxyCompactList}\small\item\em room family \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a01949f23f4d4ff723aafdc14a3e0bb46}\label{class_world_a01949f23f4d4ff723aafdc14a3e0bb46}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_world_a01949f23f4d4ff723aafdc14a3e0bb46}{filename}}
+\begin{DoxyCompactList}\small\item\em full path \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_abe197b60c1531d78d76946a95f3a3ae2}\label{class_world_abe197b60c1531d78d76946a95f3a3ae2}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_world_abe197b60c1531d78d76946a95f3a3ae2}{shortname}}
+\begin{DoxyCompactList}\small\item\em shortened filename (without folder path) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_aa3e6a8196c381d3be5fcf0a2ec8d59a0}\label{class_world_aa3e6a8196c381d3be5fcf0a2ec8d59a0}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{class_world_aa3e6a8196c381d3be5fcf0a2ec8d59a0}{name\+Str}}
+\begin{DoxyCompactList}\small\item\em descriptive name (eg \textquotesingle{}Hub \mbox{\hyperlink{class_world}{World}}\textquotesingle{}) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_ae00a630c6e38b4850f01e865ee31fc51}\label{class_world_ae00a630c6e38b4850f01e865ee31fc51}} 
+\mbox{\hyperlink{class_world_a15392f452110dd7d8506881c026d6443}{filetype\+\_\+t}} \mbox{\hyperlink{class_world_ae00a630c6e38b4850f01e865ee31fc51}{filetype}} = F\+I\+L\+E\+\_\+\+B\+I\+N\+A\+RY
+\begin{DoxyCompactList}\small\item\em filetype (binary vs json vs wld) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_af00c6e9ad57042848b8a30b47169f479}\label{class_world_af00c6e9ad57042848b8a30b47169f479}} 
+Uint32 \mbox{\hyperlink{class_world_af00c6e9ad57042848b8a30b47169f479}{ticks}} = 0
+\begin{DoxyCompactList}\small\item\em lifespan of the world \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a2fb152170d8677f450c79e34666b0dc1}\label{class_world_a2fb152170d8677f450c79e34666b0dc1}} 
+Uint32 \mbox{\hyperlink{class_world_a2fb152170d8677f450c79e34666b0dc1}{uids}} = 0
+\begin{DoxyCompactList}\small\item\em entities \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a81782892c0ea95f37c0505225e052035}\label{class_world_a81782892c0ea95f37c0505225e052035}} 
+\mbox{\hyperlink{class_map}{Map}}$<$ Uint32, \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ {\bfseries entities}
+\item 
+\mbox{\Hypertarget{class_world_a10472aa43768d7fef4e5ac8000c844a8}\label{class_world_a10472aa43768d7fef4e5ac8000c844a8}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_world_1_1laser__t}{laser\+\_\+t}} $>$ \mbox{\hyperlink{class_world_a10472aa43768d7fef4e5ac8000c844a8}{lasers}}
+\begin{DoxyCompactList}\small\item\em lasers \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a7406401020034212697a2e858633550d}\label{class_world_a7406401020034212697a2e858633550d}} 
+bt\+Broadphase\+Interface $\ast$ \mbox{\hyperlink{class_world_a7406401020034212697a2e858633550d}{bullet\+Broadphase}} = nullptr
+\begin{DoxyCompactList}\small\item\em bullet physics handlers \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_aef110f326df63b1762551e2b8e48757e}\label{class_world_aef110f326df63b1762551e2b8e48757e}} 
+bt\+Default\+Collision\+Configuration $\ast$ {\bfseries bullet\+Collision\+Configuration} = nullptr
+\item 
+\mbox{\Hypertarget{class_world_ae7722c1b6602d2c67d1e6679e02ba9d1}\label{class_world_ae7722c1b6602d2c67d1e6679e02ba9d1}} 
+bt\+Collision\+Dispatcher $\ast$ {\bfseries bullet\+Dispatcher} = nullptr
+\item 
+\mbox{\Hypertarget{class_world_a9b84360c8915556804978f051c8beae7}\label{class_world_a9b84360c8915556804978f051c8beae7}} 
+bt\+Sequential\+Impulse\+Constraint\+Solver $\ast$ {\bfseries bullet\+Solver} = nullptr
+\item 
+\mbox{\Hypertarget{class_world_a05e67363cf7cd87075b5b48ab02cce1b}\label{class_world_a05e67363cf7cd87075b5b48ab02cce1b}} 
+bt\+Discrete\+Dynamics\+World $\ast$ {\bfseries bullet\+Dynamics\+World} = nullptr
+\item 
+bool \mbox{\hyperlink{class_world_a0ed6bbfcb67aedd0ccc67ad0b9abeb86}{loaded}} = false
+\begin{DoxyCompactList}\small\item\em editing variables \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_acc7e9aa17f07261c58b298b8c2ff0e16}\label{class_world_acc7e9aa17f07261c58b298b8c2ff0e16}} 
+bool \mbox{\hyperlink{class_world_acc7e9aa17f07261c58b298b8c2ff0e16}{show\+Tools}} = true
+\begin{DoxyCompactList}\small\item\em when true, then grid, cursor, lights, etc. are drawn; otherwise, they are not \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a4fcf2a5d0c3ccd28a965bc370a810224}\label{class_world_a4fcf2a5d0c3ccd28a965bc370a810224}} 
+bool \mbox{\hyperlink{class_world_a4fcf2a5d0c3ccd28a965bc370a810224}{pointer\+Active}} = false
+\begin{DoxyCompactList}\small\item\em if true, pointer is visible/usable \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a3a873ddf89ca84599e072c1e18b97b41}\label{class_world_a3a873ddf89ca84599e072c1e18b97b41}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_world_a3a873ddf89ca84599e072c1e18b97b41}{pointer\+Pos}}
+\begin{DoxyCompactList}\small\item\em pointer location \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a598df04b877a836376fd4e4f2107592c}\label{class_world_a598df04b877a836376fd4e4f2107592c}} 
+bool \mbox{\hyperlink{class_world_a598df04b877a836376fd4e4f2107592c}{grid\+Visible}} = true
+\begin{DoxyCompactList}\small\item\em if true, editing grid is visible \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a32850939f13c94c6dc7b70068552fe26}\label{class_world_a32850939f13c94c6dc7b70068552fe26}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ uint32\+\_\+t $>$ {\bfseries path\+Map}
+\item 
+\mbox{\Hypertarget{class_world_a2d44db8cf892f3c6e657e54c53d42a7a}\label{class_world_a2d44db8cf892f3c6e657e54c53d42a7a}} 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ \mbox{\hyperlink{class_world_a2d44db8cf892f3c6e657e54c53d42a7a}{shadow\+Camera}} = nullptr
+\begin{DoxyCompactList}\small\item\em shadow map stuff \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_world_a6f59784908daa8abd6b545eb26373e49}\label{class_world_a6f59784908daa8abd6b545eb26373e49}} 
+\mbox{\hyperlink{class_shadow}{Shadow}} {\bfseries default\+Shadow}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_world}{World}} class basically represents a Level in the game. It is a self-\/contained universe predominantly filled with entities. The \mbox{\hyperlink{class_world}{World}} class itself is abstract and there are multiple world types; the current version of the engine uses \mbox{\hyperlink{class_basic_world}{Basic\+World}} pretty much exclusively. Historically, \mbox{\hyperlink{class_tile_world}{Tile\+World}} was the main world type. 
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_world_a15392f452110dd7d8506881c026d6443}\label{class_world_a15392f452110dd7d8506881c026d6443}} 
+\index{World@{World}!filetype\_t@{filetype\_t}}
+\index{filetype\_t@{filetype\_t}!World@{World}}
+\doxysubsubsection{\texorpdfstring{filetype\_t}{filetype\_t}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_world_a15392f452110dd7d8506881c026d6443}{World\+::filetype\+\_\+t}}}
+
+
+
+file type 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FILE\_MAX@{FILE\_MAX}!World@{World}}\index{World@{World}!FILE\_MAX@{FILE\_MAX}}}\mbox{\Hypertarget{class_world_a15392f452110dd7d8506881c026d6443a4e2a46d4ae836ddefc66d89477a1c1bf}\label{class_world_a15392f452110dd7d8506881c026d6443a4e2a46d4ae836ddefc66d89477a1c1bf}} 
+F\+I\+L\+E\+\_\+\+M\+AX&deprecated \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_world_a549d160f16e85f36dcf19c00c523d5dc}\label{class_world_a549d160f16e85f36dcf19c00c523d5dc}} 
+\index{World@{World}!addLaser@{addLaser}}
+\index{addLaser@{addLaser}!World@{World}}
+\doxysubsubsection{\texorpdfstring{addLaser()}{addLaser()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_world_1_1laser__t}{World\+::laser\+\_\+t}} \& World\+::add\+Laser (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{start,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{end,  }\item[{const glm\+::vec4 \&}]{color,  }\item[{float}]{size,  }\item[{float}]{life }\end{DoxyParamCaption})}
+
+add a laser to this level 
+\begin{DoxyParams}{Parameters}
+{\em start} & The start point of the laser \\
+\hline
+{\em end} & The end point of the laser \\
+\hline
+{\em color} & The laser\textquotesingle{}s color \\
+\hline
+{\em size} & The width of the laser \\
+\hline
+{\em life} & The lifespan of the laser in ticks (60 = 1sec) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_world_aef32a7f18ac6f1d4c97a1e7f9eff7433}\label{class_world_aef32a7f18ac6f1d4c97a1e7f9eff7433}} 
+\index{World@{World}!changeFilename@{changeFilename}}
+\index{changeFilename@{changeFilename}!World@{World}}
+\doxysubsubsection{\texorpdfstring{changeFilename()}{changeFilename()}}
+{\footnotesize\ttfamily void World\+::change\+Filename (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+filename }\end{DoxyParamCaption})}
+
+update filename and shortname members 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+filename} & the new full filename for the world \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_world_ad9c996be29274a0cd7bb6f2e76184489}\label{class_world_ad9c996be29274a0cd7bb6f2e76184489}} 
+\index{World@{World}!convexSweep@{convexSweep}}
+\index{convexSweep@{convexSweep}!World@{World}}
+\doxysubsubsection{\texorpdfstring{convexSweep()}{convexSweep()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} World\+::convex\+Sweep (\begin{DoxyParamCaption}\item[{const bt\+Convex\+Shape $\ast$}]{shape,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin\+Pos,  }\item[{const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&}]{origin\+Ang,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest\+Pos,  }\item[{const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&}]{dest\+Ang }\end{DoxyParamCaption})}
+
+perform a convex sweep test through the world which stops at first hit object 
+\begin{DoxyParams}{Parameters}
+{\em shape} & The convex shape to sweep with \\
+\hline
+{\em origin\+Pos} & The starting position of the shape \\
+\hline
+{\em origin\+Ang} & The starting angle of the shape \\
+\hline
+{\em dest\+Pos} & The ending position of the shape \\
+\hline
+{\em dest\+Ang} & The ending angle of the shape \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} structure containing information on the hit object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_ad672dc0818bdc8c5e3b2e9c9e37c1100}\label{class_world_ad672dc0818bdc8c5e3b2e9c9e37c1100}} 
+\index{World@{World}!convexSweepList@{convexSweepList}}
+\index{convexSweepList@{convexSweepList}!World@{World}}
+\doxysubsubsection{\texorpdfstring{convexSweepList()}{convexSweepList()}}
+{\footnotesize\ttfamily void World\+::convex\+Sweep\+List (\begin{DoxyParamCaption}\item[{const bt\+Convex\+Shape $\ast$}]{shape,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin\+Pos,  }\item[{const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&}]{origin\+Ang,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest\+Pos,  }\item[{const \mbox{\hyperlink{class_quaternion}{Quaternion}} \&}]{dest\+Ang,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} $>$ \&}]{out\+Result }\end{DoxyParamCaption})}
+
+perform a convex sweep test through the world which gets a list of all overlapped objects 
+\begin{DoxyParams}{Parameters}
+{\em shape} & The convex shape to sweep with \\
+\hline
+{\em origin\+Pos} & The starting position of the shape \\
+\hline
+{\em origin\+Ang} & The starting angle of the shape \\
+\hline
+{\em dest\+Pos} & The ending position of the shape \\
+\hline
+{\em dest\+Ang} & The ending angle of the shape \\
+\hline
+{\em out\+Result} & the list which will contain all of the \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} structures (sorted nearest to furthest) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_world_aecb9f8f920ffa9b5fef23cb88f8fba90}\label{class_world_aecb9f8f920ffa9b5fef23cb88f8fba90}} 
+\index{World@{World}!findEntitiesInRadius@{findEntitiesInRadius}}
+\index{findEntitiesInRadius@{findEntitiesInRadius}!World@{World}}
+\doxysubsubsection{\texorpdfstring{findEntitiesInRadius()}{findEntitiesInRadius()}}
+{\footnotesize\ttfamily virtual void World\+::find\+Entities\+In\+Radius (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{float}]{radius,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&}]{out\+List,  }\item[{bool}]{flat = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+finds all entities within a given radius of the provided point 
+\begin{DoxyParams}{Parameters}
+{\em origin} & position to search from \\
+\hline
+{\em radius} & the radius to search in \\
+\hline
+{\em out\+List} & the list to populate \\
+\hline
+{\em flat} & if true, the search radius is 2-\/dimensional \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_tile_world_a8b0e5372ed18dbd2faac44527c6234f1}{Tile\+World}}, \mbox{\hyperlink{class_sector_world_aea9d7f0daf5effc6e78d78732371d49d}{Sector\+World}}, and \mbox{\hyperlink{class_basic_world_ac1b0f55ce4a1b5a07fa1d3f89cc8b2bc}{Basic\+World}}.
+
+\mbox{\Hypertarget{class_world_a49040e216bf5e237da8538a305a79540}\label{class_world_a49040e216bf5e237da8538a305a79540}} 
+\index{World@{World}!findSelectedEntities@{findSelectedEntities}}
+\index{findSelectedEntities@{findSelectedEntities}!World@{World}}
+\doxysubsubsection{\texorpdfstring{findSelectedEntities()}{findSelectedEntities()}}
+{\footnotesize\ttfamily void World\+::find\+Selected\+Entities (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&}]{out\+List }\end{DoxyParamCaption})}
+
+finds all selected entities in the world and places them in a list 
+\begin{DoxyParams}{Parameters}
+{\em out\+List} & the list to populate \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_world_a5fe3ba11bed79fd51d7143ca123a7031}\label{class_world_a5fe3ba11bed79fd51d7143ca123a7031}} 
+\index{World@{World}!generateDungeon@{generateDungeon}}
+\index{generateDungeon@{generateDungeon}!World@{World}}
+\doxysubsubsection{\texorpdfstring{generateDungeon()}{generateDungeon()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ int $>$ World\+::generate\+Dungeon (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption}) const}
+
+generates a tilemap using the dungeon generator 
+\begin{DoxyParams}{Parameters}
+{\em filename} & The filename to the generator options json \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a tilemap 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_a75b5ca2f562c4bad02777ccd24797e17}\label{class_world_a75b5ca2f562c4bad02777ccd24797e17}} 
+\index{World@{World}!getEntitiesByName@{getEntitiesByName}}
+\index{getEntitiesByName@{getEntitiesByName}!World@{World}}
+\doxysubsubsection{\texorpdfstring{getEntitiesByName()}{getEntitiesByName()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ World\+::get\+Entities\+By\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+get a list of all the entities with the given name 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the entities \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a list of entities 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_a29d3f3797505a8b17218c74e8832ae66}\label{class_world_a29d3f3797505a8b17218c74e8832ae66}} 
+\index{World@{World}!getNewUID@{getNewUID}}
+\index{getNewUID@{getNewUID}!World@{World}}
+\doxysubsubsection{\texorpdfstring{getNewUID()}{getNewUID()}}
+{\footnotesize\ttfamily Uint32 World\+::get\+New\+U\+ID (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+generate a new U\+ID for a world object and advance the U\+ID counter \begin{DoxyReturn}{Returns}
+the fresh U\+ID 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_a31da58665957f271689fed2819246cae}\label{class_world_a31da58665957f271689fed2819246cae}} 
+\index{World@{World}!initialize@{initialize}}
+\index{initialize@{initialize}!World@{World}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily void World\+::initialize (\begin{DoxyParamCaption}\item[{bool}]{empty }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+post-\/load world initialization 
+\begin{DoxyParams}{Parameters}
+{\em empty} & if the world is empty \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_tile_world_ac44d4fd9d09f9d091e2bfee8e8472ca3}{Tile\+World}}, \mbox{\hyperlink{class_sector_world_ad3bd09d89fb0690510040740be2a8482}{Sector\+World}}, and \mbox{\hyperlink{class_basic_world_a8f6e379aed44372b0598c408169ca754}{Basic\+World}}.
+
+\mbox{\Hypertarget{class_world_a5f00b6e4249eda2e2fd343e37ace4f90}\label{class_world_a5f00b6e4249eda2e2fd343e37ace4f90}} 
+\index{World@{World}!lineTrace@{lineTrace}}
+\index{lineTrace@{lineTrace}!World@{World}}
+\doxysubsubsection{\texorpdfstring{lineTrace()}{lineTrace()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} World\+::line\+Trace (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest }\end{DoxyParamCaption})}
+
+perform a line test (raytrace) through the world which stops at first hit object 
+\begin{DoxyParams}{Parameters}
+{\em origin} & the starting point of the ray \\
+\hline
+{\em dest} & the ending point of the ray \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} structure containing information on the hit object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_a9c52871b0d388646653c72f41b55f0d7}\label{class_world_a9c52871b0d388646653c72f41b55f0d7}} 
+\index{World@{World}!lineTraceList@{lineTraceList}}
+\index{lineTraceList@{lineTraceList}!World@{World}}
+\doxysubsubsection{\texorpdfstring{lineTraceList()}{lineTraceList()}}
+{\footnotesize\ttfamily void World\+::line\+Trace\+List (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} $>$ \&}]{out\+Result }\end{DoxyParamCaption})}
+
+perform a line test (raytrace) through the world and gets a list of all objects in the ray\textquotesingle{}s path 
+\begin{DoxyParams}{Parameters}
+{\em origin} & the starting point of the ray \\
+\hline
+{\em dest} & the ending point of the ray \\
+\hline
+{\em out\+Result} & the list which will contain all of the \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} structures (sorted nearest to furthest) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_world_a0164139222f2af35f059cf72e33d550e}\label{class_world_a0164139222f2af35f059cf72e33d550e}} 
+\index{World@{World}!lineTraceNoEntities@{lineTraceNoEntities}}
+\index{lineTraceNoEntities@{lineTraceNoEntities}!World@{World}}
+\doxysubsubsection{\texorpdfstring{lineTraceNoEntities()}{lineTraceNoEntities()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} World\+::line\+Trace\+No\+Entities (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest }\end{DoxyParamCaption})}
+
+perform a line test (raytrace) through the world, skipping entities 
+\begin{DoxyParams}{Parameters}
+{\em origin} & the starting point of the ray \\
+\hline
+{\em dest} & the ending point of the ray \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} structure containing information on the hit object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_a5684fb5aa9fb4cda9a700c610376faeb}\label{class_world_a5684fb5aa9fb4cda9a700c610376faeb}} 
+\index{World@{World}!saveFile@{saveFile}}
+\index{saveFile@{saveFile}!World@{World}}
+\doxysubsubsection{\texorpdfstring{saveFile()}{saveFile()}}
+{\footnotesize\ttfamily virtual bool World\+::save\+File (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+filename = {\ttfamily \char`\"{}\char`\"{}},  }\item[{bool}]{update\+Filename = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+writes the world contents to a file 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+filename} & the filename to write to, or blank to use our last filename \\
+\hline
+{\em update\+Filename} & if true, our current filename is changed, otherwise, it is not \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false on failure 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_tile_world_a8d95bec6caf354a162da783840ffcd3c}{Tile\+World}}, \mbox{\hyperlink{class_basic_world_ab358b91a29bf6fc6b0c2955ff76b8b1a}{Basic\+World}}, and \mbox{\hyperlink{class_sector_world_a841bd50c3465d55fce7b0483c6a4222b}{Sector\+World}}.
+
+\mbox{\Hypertarget{class_world_afe7309d80e20a976df3eccc2fef2503b}\label{class_world_afe7309d80e20a976df3eccc2fef2503b}} 
+\index{World@{World}!selectEntities@{selectEntities}}
+\index{selectEntities@{selectEntities}!World@{World}}
+\doxysubsubsection{\texorpdfstring{selectEntities()}{selectEntities()}}
+{\footnotesize\ttfamily void World\+::select\+Entities (\begin{DoxyParamCaption}\item[{const bool}]{b }\end{DoxyParamCaption})}
+
+selects or deselects all entities in the world 
+\begin{DoxyParams}{Parameters}
+{\em b} & if true, all entities are selected; if false, they are deselected \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_world_a905f9abdb5fec84a0e16d50689422884}\label{class_world_a905f9abdb5fec84a0e16d50689422884}} 
+\index{World@{World}!selectEntity@{selectEntity}}
+\index{selectEntity@{selectEntity}!World@{World}}
+\doxysubsubsection{\texorpdfstring{selectEntity()}{selectEntity()}}
+{\footnotesize\ttfamily const bool World\+::select\+Entity (\begin{DoxyParamCaption}\item[{const Uint32}]{uid,  }\item[{const bool}]{b }\end{DoxyParamCaption})}
+
+selects or deselects the entity with the given uid 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the entity to select \\
+\hline
+{\em b} & if true, the entity is selected; if false, it is deselected \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the entity could be found, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_ad1e06c6c8803c297d572ea9b248641d0}\label{class_world_ad1e06c6c8803c297d572ea9b248641d0}} 
+\index{World@{World}!uidToEntity@{uidToEntity}}
+\index{uidToEntity@{uidToEntity}!World@{World}}
+\doxysubsubsection{\texorpdfstring{uidToEntity()}{uidToEntity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_entity}{Entity}} $\ast$ World\+::uid\+To\+Entity (\begin{DoxyParamCaption}\item[{const Uint32}]{uid }\end{DoxyParamCaption})}
+
+finds the entity with the given uid in this world 
+\begin{DoxyParams}{Parameters}
+{\em uid} & The uid of the entity to be found \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the entity, or nullptr if the entity could not be found 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_world_abc2a766885df88ad51bf8bd59edd175c}\label{class_world_abc2a766885df88ad51bf8bd59edd175c}} 
+\index{World@{World}!fileExtensions@{fileExtensions}}
+\index{fileExtensions@{fileExtensions}!World@{World}}
+\doxysubsubsection{\texorpdfstring{fileExtensions}{fileExtensions}}
+{\footnotesize\ttfamily const char $\ast$ World\+::file\+Extensions\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"wlb"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"wlj"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"wld"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+const variables 
+
+\mbox{\Hypertarget{class_world_a0ed6bbfcb67aedd0ccc67ad0b9abeb86}\label{class_world_a0ed6bbfcb67aedd0ccc67ad0b9abeb86}} 
+\index{World@{World}!loaded@{loaded}}
+\index{loaded@{loaded}!World@{World}}
+\doxysubsubsection{\texorpdfstring{loaded}{loaded}}
+{\footnotesize\ttfamily bool World\+::loaded = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+editing variables 
+
+if true, world successfully loaded from a file 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/World.\+hpp\item 
+E\+:/\+Projects/\+Spacepunk/src/World.\+cpp\end{DoxyCompactItemize}

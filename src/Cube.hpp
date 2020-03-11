@@ -1,4 +1,4 @@
-// Cube.hpp
+//! @file Cube.hpp
 
 #pragma once
 
@@ -11,10 +11,10 @@ public:
 	Cube();
 	~Cube();
 
-	// draws the cube
-	// @param camera the camera to project the cube with
-	// @param transform the transformation to apply to the cube
-	// @param color the cube's color
+	//! draws the cube
+	//! @param camera the camera to project the cube with
+	//! @param transform the transformation to apply to the cube
+	//! @param color the cube's color
 	void draw(Camera& camera, const glm::mat4& transform, const glm::vec4& color);
 
 private:

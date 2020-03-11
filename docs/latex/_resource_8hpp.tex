@@ -1,0 +1,46 @@
+\hypertarget{_resource_8hpp}{}\doxysection{E\+:/\+Projects/\+Spacepunk/src/\+Resource.hpp File Reference}
+\label{_resource_8hpp}\index{E:/Projects/Spacepunk/src/Resource.hpp@{E:/Projects/Spacepunk/src/Resource.hpp}}
+{\ttfamily \#include $<$future$>$}\newline
+{\ttfamily \#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include \char`\"{}Asset.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Map.\+hpp\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_resource_base}{Resource\+Base}}
+\item 
+class \mbox{\hyperlink{class_resource}{Resource$<$ T, stream $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0de}{resource\+\_\+error\+\_\+t}} \{ {\bfseries E\+R\+R\+O\+R\+\_\+\+N\+O\+NE}, 
+\mbox{\hyperlink{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0dea250fa447f46dc1ee3b59461676cbde0f}{E\+R\+R\+O\+R\+\_\+\+N\+O\+T\+C\+A\+C\+H\+ED}}, 
+\mbox{\hyperlink{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0dea28f7cc0c7253805fe4a892dd4e1a92e7}{E\+R\+R\+O\+R\+\_\+\+C\+A\+C\+H\+E\+F\+A\+I\+L\+ED}}, 
+\mbox{\hyperlink{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0deac0b8cd542e73a224b37bd7de8382cd2b}{E\+R\+R\+O\+R\+\_\+\+C\+A\+C\+H\+E\+I\+N\+P\+R\+O\+G\+R\+E\+SS}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0de}\label{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0de}} 
+\index{Resource.hpp@{Resource.hpp}!resource\_error\_t@{resource\_error\_t}}
+\index{resource\_error\_t@{resource\_error\_t}!Resource.hpp@{Resource.hpp}}
+\doxysubsubsection{\texorpdfstring{resource\_error\_t}{resource\_error\_t}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0de}{resource\+\_\+error\+\_\+t}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ERROR\_NOTCACHED@{ERROR\_NOTCACHED}!Resource.hpp@{Resource.hpp}}\index{Resource.hpp@{Resource.hpp}!ERROR\_NOTCACHED@{ERROR\_NOTCACHED}}}\mbox{\Hypertarget{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0dea250fa447f46dc1ee3b59461676cbde0f}\label{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0dea250fa447f46dc1ee3b59461676cbde0f}} 
+E\+R\+R\+O\+R\+\_\+\+N\+O\+T\+C\+A\+C\+H\+ED&no error \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ERROR\_CACHEFAILED@{ERROR\_CACHEFAILED}!Resource.hpp@{Resource.hpp}}\index{Resource.hpp@{Resource.hpp}!ERROR\_CACHEFAILED@{ERROR\_CACHEFAILED}}}\mbox{\Hypertarget{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0dea28f7cc0c7253805fe4a892dd4e1a92e7}\label{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0dea28f7cc0c7253805fe4a892dd4e1a92e7}} 
+E\+R\+R\+O\+R\+\_\+\+C\+A\+C\+H\+E\+F\+A\+I\+L\+ED&resource had to be cached \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ERROR\_CACHEINPROGRESS@{ERROR\_CACHEINPROGRESS}!Resource.hpp@{Resource.hpp}}\index{Resource.hpp@{Resource.hpp}!ERROR\_CACHEINPROGRESS@{ERROR\_CACHEINPROGRESS}}}\mbox{\Hypertarget{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0deac0b8cd542e73a224b37bd7de8382cd2b}\label{_resource_8hpp_a890ee098a5fab0936b00f3923a3da0deac0b8cd542e73a224b37bd7de8382cd2b}} 
+E\+R\+R\+O\+R\+\_\+\+C\+A\+C\+H\+E\+I\+N\+P\+R\+O\+G\+R\+E\+SS&resource cache failed resource cache is in progress \\
+\hline
+
+\end{DoxyEnumFields}

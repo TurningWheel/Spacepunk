@@ -1,0 +1,115 @@
+\hypertarget{class_script_1_1_args}{}\doxysection{Script\+::Args Class Reference}
+\label{class_script_1_1_args}\index{Script::Args@{Script::Args}}
+
+
+script function arguments  
+
+
+
+
+{\ttfamily \#include $<$Script.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_script_1_1_args_a7c97ba5ec4ee0588f3abb52f5bb93373}\label{class_script_1_1_args_a7c97ba5ec4ee0588f3abb52f5bb93373}} 
+{\bfseries Args} (const \mbox{\hyperlink{class_script_1_1_args}{Args}} \&src)
+\item 
+\mbox{\Hypertarget{class_script_1_1_args_a72e970fc9ef346a4573f18f4f7919eae}\label{class_script_1_1_args_a72e970fc9ef346a4573f18f4f7919eae}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_script_1_1param__t}{param\+\_\+t}} $\ast$ $>$ \& \mbox{\hyperlink{class_script_1_1_args_a72e970fc9ef346a4573f18f4f7919eae}{get\+List}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_script_1_1_args_ae05e0a32d6a6517746eb59083b75cfe2}\label{class_script_1_1_args_ae05e0a32d6a6517746eb59083b75cfe2}} 
+const Uint32 {\bfseries get\+Size} () const
+\item 
+void \mbox{\hyperlink{class_script_1_1_args_ac19a9355e4e65a21236568e5fb33a9bc}{push}} (lua\+\_\+\+State $\ast$lua)
+\item 
+void \mbox{\hyperlink{class_script_1_1_args_aabc84887f3da89fd3b9bac8523f90d6d}{add\+Bool}} (const bool value)
+\item 
+void \mbox{\hyperlink{class_script_1_1_args_ae1c52ac59cd5af0bce76edab2d8eed8c}{add\+Int}} (const int value)
+\item 
+void \mbox{\hyperlink{class_script_1_1_args_a97890b7fae906cb03f34d79e4580b20a}{add\+Float}} (const float value)
+\item 
+void \mbox{\hyperlink{class_script_1_1_args_a8f0ea87e1a1b28f3bd362539596e91f9}{add\+String}} (const \mbox{\hyperlink{class_string}{String}} \&value)
+\item 
+void \mbox{\hyperlink{class_script_1_1_args_a6c0859d5bdc8bfe6549c984046e60e97}{add\+Pointer}} (void $\ast$value)
+\item 
+\mbox{\Hypertarget{class_script_1_1_args_a976988b250e40657fda021af675b03a5}\label{class_script_1_1_args_a976988b250e40657fda021af675b03a5}} 
+void \mbox{\hyperlink{class_script_1_1_args_a976988b250e40657fda021af675b03a5}{add\+Nil}} ()
+\begin{DoxyCompactList}\small\item\em add a nil to the args list \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+script function arguments 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_script_1_1_args_aabc84887f3da89fd3b9bac8523f90d6d}\label{class_script_1_1_args_aabc84887f3da89fd3b9bac8523f90d6d}} 
+\index{Script::Args@{Script::Args}!addBool@{addBool}}
+\index{addBool@{addBool}!Script::Args@{Script::Args}}
+\doxysubsubsection{\texorpdfstring{addBool()}{addBool()}}
+{\footnotesize\ttfamily void Script\+::\+Args\+::add\+Bool (\begin{DoxyParamCaption}\item[{const bool}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+add a bool to the args list 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to init with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_script_1_1_args_a97890b7fae906cb03f34d79e4580b20a}\label{class_script_1_1_args_a97890b7fae906cb03f34d79e4580b20a}} 
+\index{Script::Args@{Script::Args}!addFloat@{addFloat}}
+\index{addFloat@{addFloat}!Script::Args@{Script::Args}}
+\doxysubsubsection{\texorpdfstring{addFloat()}{addFloat()}}
+{\footnotesize\ttfamily void Script\+::\+Args\+::add\+Float (\begin{DoxyParamCaption}\item[{const float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+add a float to the args list 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to init with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_script_1_1_args_ae1c52ac59cd5af0bce76edab2d8eed8c}\label{class_script_1_1_args_ae1c52ac59cd5af0bce76edab2d8eed8c}} 
+\index{Script::Args@{Script::Args}!addInt@{addInt}}
+\index{addInt@{addInt}!Script::Args@{Script::Args}}
+\doxysubsubsection{\texorpdfstring{addInt()}{addInt()}}
+{\footnotesize\ttfamily void Script\+::\+Args\+::add\+Int (\begin{DoxyParamCaption}\item[{const int}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+add an int to the args list 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to init with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_script_1_1_args_a6c0859d5bdc8bfe6549c984046e60e97}\label{class_script_1_1_args_a6c0859d5bdc8bfe6549c984046e60e97}} 
+\index{Script::Args@{Script::Args}!addPointer@{addPointer}}
+\index{addPointer@{addPointer}!Script::Args@{Script::Args}}
+\doxysubsubsection{\texorpdfstring{addPointer()}{addPointer()}}
+{\footnotesize\ttfamily void Script\+::\+Args\+::add\+Pointer (\begin{DoxyParamCaption}\item[{void $\ast$}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+add a pointer to the args list 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to init with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_script_1_1_args_a8f0ea87e1a1b28f3bd362539596e91f9}\label{class_script_1_1_args_a8f0ea87e1a1b28f3bd362539596e91f9}} 
+\index{Script::Args@{Script::Args}!addString@{addString}}
+\index{addString@{addString}!Script::Args@{Script::Args}}
+\doxysubsubsection{\texorpdfstring{addString()}{addString()}}
+{\footnotesize\ttfamily void Script\+::\+Args\+::add\+String (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_string}{String}} \&}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+add a string to the args list 
+\begin{DoxyParams}{Parameters}
+{\em value} & the value to init with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_script_1_1_args_ac19a9355e4e65a21236568e5fb33a9bc}\label{class_script_1_1_args_ac19a9355e4e65a21236568e5fb33a9bc}} 
+\index{Script::Args@{Script::Args}!push@{push}}
+\index{push@{push}!Script::Args@{Script::Args}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily void Script\+::\+Args\+::push (\begin{DoxyParamCaption}\item[{lua\+\_\+\+State $\ast$}]{lua }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+push all args onto the lua stack 
+\begin{DoxyParams}{Parameters}
+{\em lua} & the lua stack to push args into \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_script_8hpp}{Script.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,459 @@
+\hypertarget{class_camera}{}\doxysection{Camera Class Reference}
+\label{class_camera}\index{Camera@{Camera}}
+
+
+{\ttfamily \#include $<$Camera.\+hpp$>$}
+
+Inheritance diagram for Camera\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_camera}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_camera_1_1line__t}{line\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em line type \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_camera_1_1point__t}{point\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em point type \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{class_camera_a32e616eb8467d87681a3eca890408680}{drawmode\+\_\+t}} \{ \newline
+{\bfseries D\+R\+A\+W\+\_\+\+D\+E\+P\+TH}, 
+\mbox{\hyperlink{class_camera_a32e616eb8467d87681a3eca890408680ade9dd60248476532475214c827896bf6}{D\+R\+A\+W\+\_\+\+S\+T\+E\+N\+C\+IL}}, 
+{\bfseries D\+R\+A\+W\+\_\+\+S\+H\+A\+D\+OW}, 
+{\bfseries D\+R\+A\+W\+\_\+\+S\+T\+A\+N\+D\+A\+RD}, 
+\newline
+\mbox{\hyperlink{class_camera_a32e616eb8467d87681a3eca890408680a8d86137152e978f14987804b77921634}{D\+R\+A\+W\+\_\+\+G\+L\+OW}}, 
+{\bfseries D\+R\+A\+W\+\_\+\+T\+R\+I\+A\+N\+G\+L\+ES}, 
+{\bfseries D\+R\+A\+W\+\_\+\+D\+E\+P\+T\+H\+F\+A\+IL}, 
+{\bfseries D\+R\+A\+W\+\_\+\+S\+I\+L\+H\+O\+U\+E\+T\+TE}, 
+\newline
+{\bfseries D\+R\+A\+W\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\begin{DoxyCompactList}\small\item\em drawing mode type \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_camera_adfd4338167772cfeedddd7ec221e34a7}\label{class_camera_adfd4338167772cfeedddd7ec221e34a7}} 
+{\bfseries Camera} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity, \mbox{\hyperlink{class_component}{Component}} $\ast$\+\_\+parent)
+\item 
+\mbox{\Hypertarget{class_camera_a0fd101966e9aead3bfef296652788365}\label{class_camera_a0fd101966e9aead3bfef296652788365}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_camera_a0fd101966e9aead3bfef296652788365}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_camera_afd980006d305702fba0fc4b25799b3af}\label{class_camera_afd980006d305702fba0fc4b25799b3af}} 
+\mbox{\hyperlink{class_renderer}{Renderer}} $\ast$\& {\bfseries get\+Renderer} ()
+\item 
+\mbox{\Hypertarget{class_camera_a761431a0b068b7fe021ac43bdf730486}\label{class_camera_a761431a0b068b7fe021ac43bdf730486}} 
+const float \& {\bfseries get\+Clip\+Near} () const
+\item 
+\mbox{\Hypertarget{class_camera_a70c8e6d00deb6a41307da49735b37fc9}\label{class_camera_a70c8e6d00deb6a41307da49735b37fc9}} 
+const float \& {\bfseries get\+Clip\+Far} () const
+\item 
+\mbox{\Hypertarget{class_camera_af84aa61581f78f8e8f54439cf3e72f08}\label{class_camera_af84aa61581f78f8e8f54439cf3e72f08}} 
+const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \& {\bfseries get\+Win} () const
+\item 
+\mbox{\Hypertarget{class_camera_a0093d29ede5954deee9658d16f3e9f61}\label{class_camera_a0093d29ede5954deee9658d16f3e9f61}} 
+const Sint32 \& {\bfseries get\+Fov} () const
+\item 
+\mbox{\Hypertarget{class_camera_a0f32f94de6640b74788fc921827b1cd6}\label{class_camera_a0f32f94de6640b74788fc921827b1cd6}} 
+const glm\+::mat4 \& {\bfseries get\+Proj\+Matrix} () const
+\item 
+\mbox{\Hypertarget{class_camera_a3229318f735bb743c9314189a0719e36}\label{class_camera_a3229318f735bb743c9314189a0719e36}} 
+const glm\+::mat4 \& {\bfseries get\+View\+Matrix} () const
+\item 
+\mbox{\Hypertarget{class_camera_af27c2f99ef8a4472dbcd569fdac288bb}\label{class_camera_af27c2f99ef8a4472dbcd569fdac288bb}} 
+const glm\+::mat4 \& {\bfseries get\+Proj\+View\+Matrix} () const
+\item 
+\mbox{\Hypertarget{class_camera_afc913681d1d784a739385d8da909f328}\label{class_camera_afc913681d1d784a739385d8da909f328}} 
+const \mbox{\hyperlink{class_camera_a32e616eb8467d87681a3eca890408680}{drawmode\+\_\+t}} {\bfseries get\+Draw\+Mode} () const
+\item 
+\mbox{\Hypertarget{class_camera_a55d7ebf7607276cec53361cfa59fe0b3}\label{class_camera_a55d7ebf7607276cec53361cfa59fe0b3}} 
+const bool \& {\bfseries is\+Ortho} () const
+\item 
+\mbox{\Hypertarget{class_camera_a195a4fb853894386d2d8a1907ad7b4c9}\label{class_camera_a195a4fb853894386d2d8a1907ad7b4c9}} 
+const Uint32 {\bfseries get\+Frames\+Drawn} () const
+\item 
+\mbox{\Hypertarget{class_camera_ae79722c8debc83995d70e580aa782f37}\label{class_camera_ae79722c8debc83995d70e580aa782f37}} 
+const bool \& {\bfseries is\+Enabled} () const
+\item 
+\mbox{\Hypertarget{class_camera_a8d0cfc969de7835804a1d122f92b5f40}\label{class_camera_a8d0cfc969de7835804a1d122f92b5f40}} 
+void {\bfseries set\+Clip\+Near} (float \+\_\+clip\+Near)
+\item 
+\mbox{\Hypertarget{class_camera_ad68dbc1336f014a874e0454840c767df}\label{class_camera_ad68dbc1336f014a874e0454840c767df}} 
+void {\bfseries set\+Clip\+Far} (float \+\_\+clip\+Far)
+\item 
+\mbox{\Hypertarget{class_camera_a5e734540e721641bac5dfe3291b9dde0}\label{class_camera_a5e734540e721641bac5dfe3291b9dde0}} 
+void {\bfseries set\+Win} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \&rect)
+\item 
+\mbox{\Hypertarget{class_camera_ad480cd4c006aac5267bc9f360b4710d4}\label{class_camera_ad480cd4c006aac5267bc9f360b4710d4}} 
+void {\bfseries set\+Fov} (Sint32 \+\_\+fov)
+\item 
+\mbox{\Hypertarget{class_camera_abac9742689e42657433ccce33a12f4ca}\label{class_camera_abac9742689e42657433ccce33a12f4ca}} 
+void {\bfseries set\+Draw\+Mode} (\mbox{\hyperlink{class_camera_a32e616eb8467d87681a3eca890408680}{drawmode\+\_\+t}} \+\_\+draw\+Mode)
+\item 
+\mbox{\Hypertarget{class_camera_a800b749426883bd8e4133f8c57df1500}\label{class_camera_a800b749426883bd8e4133f8c57df1500}} 
+void {\bfseries set\+Ortho} (const bool \+\_\+ortho)
+\item 
+\mbox{\Hypertarget{class_camera_ac98793e989b454ce4f0251966b2a0404}\label{class_camera_ac98793e989b454ce4f0251966b2a0404}} 
+void {\bfseries set\+Enabled} (const bool \+\_\+enabled)
+\item 
+void \mbox{\hyperlink{class_camera_a05115155960ff87c3d7dd452d07b16e8}{setup\+Projection}} (bool scissor)
+\item 
+\mbox{\Hypertarget{class_camera_ab57a65c64e4d8e9e922f91f1f2261148}\label{class_camera_ab57a65c64e4d8e9e922f91f1f2261148}} 
+void \mbox{\hyperlink{class_camera_ab57a65c64e4d8e9e922f91f1f2261148}{reset\+Matrices}} ()
+\begin{DoxyCompactList}\small\item\em resets the drawing matrices \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_camera_a0fc20a3639d4b3d77dd7f6dac012a202}{world\+Pos\+To\+Screen\+Pos}} (const \mbox{\hyperlink{class_vector}{Vector}} \&original) const
+\item 
+void \mbox{\hyperlink{class_camera_aec95595c472ffe45cff14542afd5a5ea}{screen\+Pos\+To\+World\+Ray}} (int x, int y, \mbox{\hyperlink{class_vector}{Vector}} \&out\+\_\+origin, \mbox{\hyperlink{class_vector}{Vector}} \&out\+\_\+direction) const
+\item 
+void \mbox{\hyperlink{class_camera_aec01e79ba446fc20ed7bbb8fb9ca13fc}{draw\+Cube}} (const glm\+::mat4 \&transform, const glm\+::vec4 \&color)
+\item 
+void \mbox{\hyperlink{class_camera_a65c0093e8949baadb71c869f567b3849}{draw\+Line3D}} (const float width, const glm\+::vec3 \&src, const glm\+::vec3 \&dest, const glm\+::vec4 \&color)
+\item 
+void \mbox{\hyperlink{class_camera_a7d215518d89e1e2f2535d8c10d530920}{draw\+Laser}} (const float width, const glm\+::vec3 \&src, const glm\+::vec3 \&dest, const glm\+::vec4 \&color)
+\item 
+void \mbox{\hyperlink{class_camera_a8adca475ba5fdde9b8f4a7fa46ea5da9}{mark\+Point}} (unsigned int x, unsigned int y, const glm\+::vec4 \&color)
+\item 
+void \mbox{\hyperlink{class_camera_ab004a0f7fe23a15c1bf6e5565c714f93}{mark\+Point}} (const \mbox{\hyperlink{class_vector}{Vector}} \&pos, const glm\+::vec4 \&color)
+\item 
+void \mbox{\hyperlink{class_camera_a1c5da4ffd171381c8baaf83fa62d71ae}{mark\+Line}} (const \mbox{\hyperlink{class_vector}{Vector}} \&start, const \mbox{\hyperlink{class_vector}{Vector}} \&end, const glm\+::vec4 \&color)
+\item 
+virtual void \mbox{\hyperlink{class_camera_aa5ed4b6ae7326a5a959f9ac6a2470532}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights) override
+\item 
+\mbox{\Hypertarget{class_camera_a02ba2732c20d1b3acb08e09ffe145b4a}\label{class_camera_a02ba2732c20d1b3acb08e09ffe145b4a}} 
+void \mbox{\hyperlink{class_camera_a02ba2732c20d1b3acb08e09ffe145b4a}{draw\+Debug}} ()
+\begin{DoxyCompactList}\small\item\em draws all marked points, lines, etc. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_camera_a8e6c0d9d35bf77be015e89972f5c500a}{load}} (F\+I\+LE $\ast$fp) override
+\item 
+virtual void \mbox{\hyperlink{class_camera_ac77ff2f4cf17543f4fec069c76af33fa}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_camera_af674e7536fc3461e2da1ef68db0b992a}\label{class_camera_af674e7536fc3461e2da1ef68db0b992a}} 
+void \mbox{\hyperlink{class_camera_af674e7536fc3461e2da1ef68db0b992a}{on\+Frame\+Drawn}} ()
+\begin{DoxyCompactList}\small\item\em called when a frame is finished drawing from the camera \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_camera_a6e5fcba19396f3c9f09cc31561f47cce}\label{class_camera_a6e5fcba19396f3c9f09cc31561f47cce}} 
+\mbox{\hyperlink{class_camera}{Camera}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_camera}{Camera}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static glm\+::mat4 \mbox{\hyperlink{class_camera_a241aac005fbd0db1f2aebc663d090c1f}{make\+Inf\+Reversed\+Z\+Proj}} (float radians, float aspect, float z\+Near)
+\item 
+static glm\+::mat4 \mbox{\hyperlink{class_camera_a50547b1f1ab57c5c15ed9952800fa649}{make\+Ortho\+Proj}} (float width, float height, float depth)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_camera_a4ff5655005870168bf33a75db44f2b72}\label{class_camera_a4ff5655005870168bf33a75db44f2b72}} 
+const \mbox{\hyperlink{struct_mesh_1_1shadervars__t}{Mesh\+::shadervars\+\_\+t}} {\bfseries shader\+Vars}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_camera_a43b24f24be1ffa7e9223446e6e2bd0d2}\label{class_camera_a43b24f24be1ffa7e9223446e6e2bd0d2}} 
+static const char $\ast$ \mbox{\hyperlink{class_camera_a43b24f24be1ffa7e9223446e6e2bd0d2}{mesh\+Str}} = \char`\"{}assets/editor/camera/camera.\+F\+BX\char`\"{}
+\begin{DoxyCompactList}\small\item\em camera model \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_camera_ae1c4649fd84a556009666194412d8432}\label{class_camera_ae1c4649fd84a556009666194412d8432}} 
+static const char $\ast$ {\bfseries material\+Str} = \char`\"{}assets/editor/camera/material.\+json\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_camera_a4e3d586782c40c74cb13c8cdf2775e21}\label{class_camera_a4e3d586782c40c74cb13c8cdf2775e21}} 
+\mbox{\hyperlink{class_renderer}{Renderer}} $\ast$ {\bfseries renderer} = nullptr
+\item 
+\mbox{\Hypertarget{class_camera_a8d952fbc632feca8f137cf99481e4abb}\label{class_camera_a8d952fbc632feca8f137cf99481e4abb}} 
+\mbox{\hyperlink{class_camera_a32e616eb8467d87681a3eca890408680}{drawmode\+\_\+t}} \mbox{\hyperlink{class_camera_a8d952fbc632feca8f137cf99481e4abb}{draw\+Mode}} = D\+R\+A\+W\+\_\+\+S\+T\+A\+N\+D\+A\+RD
+\begin{DoxyCompactList}\small\item\em drawing mode \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_camera_afcf3c63073ca598574dfe6f57a04bb97}\label{class_camera_afcf3c63073ca598574dfe6f57a04bb97}} 
+glm\+::mat4 \mbox{\hyperlink{class_camera_afcf3c63073ca598574dfe6f57a04bb97}{proj\+Matrix}}
+\begin{DoxyCompactList}\small\item\em view and projection matrices \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_camera_a6e088a154066ed6f2bfca373163f21d2}\label{class_camera_a6e088a154066ed6f2bfca373163f21d2}} 
+glm\+::mat4 {\bfseries view\+Matrix}
+\item 
+\mbox{\Hypertarget{class_camera_abfe48d04507ff386268c6cca93b3e4f2}\label{class_camera_abfe48d04507ff386268c6cca93b3e4f2}} 
+glm\+::mat4 {\bfseries proj\+View\+Matrix}
+\item 
+\mbox{\Hypertarget{class_camera_aa0694673cc41d6a15924d0e2388ac15c}\label{class_camera_aa0694673cc41d6a15924d0e2388ac15c}} 
+float \mbox{\hyperlink{class_camera_aa0694673cc41d6a15924d0e2388ac15c}{clip\+Near}} = 8.f
+\begin{DoxyCompactList}\small\item\em viewport and projection variables \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_camera_ad5aab65cd0f9de96eb1e67562078f1a7}\label{class_camera_ad5aab65cd0f9de96eb1e67562078f1a7}} 
+float {\bfseries clip\+Far} = 1024.f
+\item 
+\mbox{\Hypertarget{class_camera_a2e10544d635a95e3c24158e50e5e5c3d}\label{class_camera_a2e10544d635a95e3c24158e50e5e5c3d}} 
+\mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ {\bfseries win}
+\item 
+\mbox{\Hypertarget{class_camera_a755e50008e230251fdeff77425b12c2d}\label{class_camera_a755e50008e230251fdeff77425b12c2d}} 
+Sint32 {\bfseries fov} = 70
+\item 
+\mbox{\Hypertarget{class_camera_ad001bc3e2161a133eb267f9ebd7c1844}\label{class_camera_ad001bc3e2161a133eb267f9ebd7c1844}} 
+bool {\bfseries ortho} = false
+\item 
+\mbox{\Hypertarget{class_camera_a8fa26669e616325b0605165792f4333f}\label{class_camera_a8fa26669e616325b0605165792f4333f}} 
+bool {\bfseries enabled} = true
+\item 
+\mbox{\Hypertarget{class_camera_a05c1320365b792112dea2f8f3efcfa34}\label{class_camera_a05c1320365b792112dea2f8f3efcfa34}} 
+\mbox{\hyperlink{class_cube}{Cube}} \mbox{\hyperlink{class_camera_a05c1320365b792112dea2f8f3efcfa34}{cube}}
+\begin{DoxyCompactList}\small\item\em built-\/in basic objects \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_camera_a9a31f3234de121cc1cf83153aa8eb309}\label{class_camera_a9a31f3234de121cc1cf83153aa8eb309}} 
+\mbox{\hyperlink{class_line3_d}{Line3D}} {\bfseries line3D}
+\item 
+\mbox{\Hypertarget{class_camera_a696e3ddcb3e9f56d76c01b424fb220e3}\label{class_camera_a696e3ddcb3e9f56d76c01b424fb220e3}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_camera_1_1point__t}{point\+\_\+t}} $>$ {\bfseries points}
+\item 
+\mbox{\Hypertarget{class_camera_a18f33e7ccf727d02d050388e9475ec1c}\label{class_camera_a18f33e7ccf727d02d050388e9475ec1c}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_camera_1_1line__t}{line\+\_\+t}} $>$ {\bfseries lines}
+\item 
+\mbox{\Hypertarget{class_camera_a91b8e2b7d686a4115a556f273dbdbe8f}\label{class_camera_a91b8e2b7d686a4115a556f273dbdbe8f}} 
+Uint32 \mbox{\hyperlink{class_camera_a91b8e2b7d686a4115a556f273dbdbe8f}{frames\+Drawn}} = 0
+\begin{DoxyCompactList}\small\item\em frame draw counter \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_camera}{Camera}} is an entity \mbox{\hyperlink{class_component}{Component}} that provides a viewport into its \mbox{\hyperlink{class_world}{World}}. It also contains some 3D drawing functions and other data 
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_camera_a32e616eb8467d87681a3eca890408680}\label{class_camera_a32e616eb8467d87681a3eca890408680}} 
+\index{Camera@{Camera}!drawmode\_t@{drawmode\_t}}
+\index{drawmode\_t@{drawmode\_t}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{drawmode\_t}{drawmode\_t}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_camera_a32e616eb8467d87681a3eca890408680}{Camera\+::drawmode\+\_\+t}}}
+
+
+
+drawing mode type 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DRAW\_STENCIL@{DRAW\_STENCIL}!Camera@{Camera}}\index{Camera@{Camera}!DRAW\_STENCIL@{DRAW\_STENCIL}}}\mbox{\Hypertarget{class_camera_a32e616eb8467d87681a3eca890408680ade9dd60248476532475214c827896bf6}\label{class_camera_a32e616eb8467d87681a3eca890408680ade9dd60248476532475214c827896bf6}} 
+D\+R\+A\+W\+\_\+\+S\+T\+E\+N\+C\+IL&these two for each light in a scene \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DRAW\_GLOW@{DRAW\_GLOW}!Camera@{Camera}}\index{Camera@{Camera}!DRAW\_GLOW@{DRAW\_GLOW}}}\mbox{\Hypertarget{class_camera_a32e616eb8467d87681a3eca890408680a8d86137152e978f14987804b77921634}\label{class_camera_a32e616eb8467d87681a3eca890408680a8d86137152e978f14987804b77921634}} 
+D\+R\+A\+W\+\_\+\+G\+L\+OW&additional fx passes \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_camera_aa5ed4b6ae7326a5a959f9ac6a2470532}\label{class_camera_aa5ed4b6ae7326a5a959f9ac6a2470532}} 
+\index{Camera@{Camera}!draw@{draw}}
+\index{draw@{draw}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Camera\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+draws the camera 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera through which to draw the camera \\
+\hline
+{\em light} & the light by which the camera should be illuminated (or nullptr for no illumination) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}{Component}}.
+
+\mbox{\Hypertarget{class_camera_aec01e79ba446fc20ed7bbb8fb9ca13fc}\label{class_camera_aec01e79ba446fc20ed7bbb8fb9ca13fc}} 
+\index{Camera@{Camera}!drawCube@{drawCube}}
+\index{drawCube@{drawCube}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{drawCube()}{drawCube()}}
+{\footnotesize\ttfamily void Camera\+::draw\+Cube (\begin{DoxyParamCaption}\item[{const glm\+::mat4 \&}]{transform,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+draws a cube in the current camera view 
+\begin{DoxyParams}{Parameters}
+{\em transform} & the transformation to apply to the cube \\
+\hline
+{\em color} & the color of the cube to draw \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_a7d215518d89e1e2f2535d8c10d530920}\label{class_camera_a7d215518d89e1e2f2535d8c10d530920}} 
+\index{Camera@{Camera}!drawLaser@{drawLaser}}
+\index{drawLaser@{drawLaser}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{drawLaser()}{drawLaser()}}
+{\footnotesize\ttfamily void Camera\+::draw\+Laser (\begin{DoxyParamCaption}\item[{const float}]{width,  }\item[{const glm\+::vec3 \&}]{src,  }\item[{const glm\+::vec3 \&}]{dest,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+draws a laser in the current camera view 
+\begin{DoxyParams}{Parameters}
+{\em width} & the width of the laser in pixels \\
+\hline
+{\em src} & the starting point of the laser in world space \\
+\hline
+{\em dest} & the ending point of the laser in world space \\
+\hline
+{\em color} & the color of the laser to draw \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_a65c0093e8949baadb71c869f567b3849}\label{class_camera_a65c0093e8949baadb71c869f567b3849}} 
+\index{Camera@{Camera}!drawLine3D@{drawLine3D}}
+\index{drawLine3D@{drawLine3D}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{drawLine3D()}{drawLine3D()}}
+{\footnotesize\ttfamily void Camera\+::draw\+Line3D (\begin{DoxyParamCaption}\item[{const float}]{width,  }\item[{const glm\+::vec3 \&}]{src,  }\item[{const glm\+::vec3 \&}]{dest,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+draws a 3d line in the current camera view 
+\begin{DoxyParams}{Parameters}
+{\em width} & the width of the line in pixels \\
+\hline
+{\em src} & the starting point of the line in world space \\
+\hline
+{\em dest} & the ending point of the line in world space \\
+\hline
+{\em color} & the color of the line to draw \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_a8e6c0d9d35bf77be015e89972f5c500a}\label{class_camera_a8e6c0d9d35bf77be015e89972f5c500a}} 
+\index{Camera@{Camera}!load@{load}}
+\index{load@{load}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Camera\+::load (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+load the component from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ab1ddbf2ef322928e0ac52775ce1050db}{Component}}.
+
+\mbox{\Hypertarget{class_camera_a241aac005fbd0db1f2aebc663d090c1f}\label{class_camera_a241aac005fbd0db1f2aebc663d090c1f}} 
+\index{Camera@{Camera}!makeInfReversedZProj@{makeInfReversedZProj}}
+\index{makeInfReversedZProj@{makeInfReversedZProj}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{makeInfReversedZProj()}{makeInfReversedZProj()}}
+{\footnotesize\ttfamily glm\+::mat4 Camera\+::make\+Inf\+Reversed\+Z\+Proj (\begin{DoxyParamCaption}\item[{float}]{radians,  }\item[{float}]{aspect,  }\item[{float}]{z\+Near }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+make a reversed-\/Z projection matrix with infinite range 
+\begin{DoxyParams}{Parameters}
+{\em radians} & The vertical fov \\
+\hline
+{\em aspect} & The aspect ratio (w/h) \\
+\hline
+{\em z\+Near} & The near clip plane \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+projection matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_camera_a50547b1f1ab57c5c15ed9952800fa649}\label{class_camera_a50547b1f1ab57c5c15ed9952800fa649}} 
+\index{Camera@{Camera}!makeOrthoProj@{makeOrthoProj}}
+\index{makeOrthoProj@{makeOrthoProj}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{makeOrthoProj()}{makeOrthoProj()}}
+{\footnotesize\ttfamily glm\+::mat4 Camera\+::make\+Ortho\+Proj (\begin{DoxyParamCaption}\item[{float}]{width,  }\item[{float}]{height,  }\item[{float}]{depth }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+make an orthographic projection 
+\begin{DoxyParams}{Parameters}
+{\em width} & the width of the view in pixels \\
+\hline
+{\em height} & the height of the view in pixels \\
+\hline
+{\em depth} & the depth of the view in pixels \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+projection matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_camera_a1c5da4ffd171381c8baaf83fa62d71ae}\label{class_camera_a1c5da4ffd171381c8baaf83fa62d71ae}} 
+\index{Camera@{Camera}!markLine@{markLine}}
+\index{markLine@{markLine}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{markLine()}{markLine()}}
+{\footnotesize\ttfamily void Camera\+::mark\+Line (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{start,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{end,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+marks a spot on the screen to draw a line 
+\begin{DoxyParams}{Parameters}
+{\em start} & the 3d coordinates of the line start \\
+\hline
+{\em end} & the 3d coordinates of the line end \\
+\hline
+{\em color} & the color of the point \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_ab004a0f7fe23a15c1bf6e5565c714f93}\label{class_camera_ab004a0f7fe23a15c1bf6e5565c714f93}} 
+\index{Camera@{Camera}!markPoint@{markPoint}}
+\index{markPoint@{markPoint}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{markPoint()}{markPoint()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Camera\+::mark\+Point (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{pos,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+marks a spot on the screen to draw a point 
+\begin{DoxyParams}{Parameters}
+{\em pos} & the 3d coordinates of the point \\
+\hline
+{\em color} & the color of the point \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_a8adca475ba5fdde9b8f4a7fa46ea5da9}\label{class_camera_a8adca475ba5fdde9b8f4a7fa46ea5da9}} 
+\index{Camera@{Camera}!markPoint@{markPoint}}
+\index{markPoint@{markPoint}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{markPoint()}{markPoint()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Camera\+::mark\+Point (\begin{DoxyParamCaption}\item[{unsigned int}]{x,  }\item[{unsigned int}]{y,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption})}
+
+marks a spot on the screen to draw a point 
+\begin{DoxyParams}{Parameters}
+{\em x} & the x-\/coord of the point \\
+\hline
+{\em y} & the y-\/coord of the point \\
+\hline
+{\em color} & the color of the point \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_aec95595c472ffe45cff14542afd5a5ea}\label{class_camera_aec95595c472ffe45cff14542afd5a5ea}} 
+\index{Camera@{Camera}!screenPosToWorldRay@{screenPosToWorldRay}}
+\index{screenPosToWorldRay@{screenPosToWorldRay}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{screenPosToWorldRay()}{screenPosToWorldRay()}}
+{\footnotesize\ttfamily void Camera\+::screen\+Pos\+To\+World\+Ray (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y,  }\item[{\mbox{\hyperlink{class_vector}{Vector}} \&}]{out\+\_\+origin,  }\item[{\mbox{\hyperlink{class_vector}{Vector}} \&}]{out\+\_\+direction }\end{DoxyParamCaption}) const}
+
+determines origin and direction vectors for a ray that extends through a given point on the screen 
+\begin{DoxyParams}{Parameters}
+{\em x} & the X position on the screen to peer through \\
+\hline
+{\em y} & the Y position on the screen to peer through \\
+\hline
+{\em out\+\_\+origin} & the origin point of the ray to be returned \\
+\hline
+{\em out\+\_\+direction} & the direction vector of the ray in world space to be returned \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_ac77ff2f4cf17543f4fec069c76af33fa}\label{class_camera_ac77ff2f4cf17543f4fec069c76af33fa}} 
+\index{Camera@{Camera}!serialize@{serialize}}
+\index{serialize@{serialize}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Camera\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{Component}}.
+
+\mbox{\Hypertarget{class_camera_a05115155960ff87c3d7dd452d07b16e8}\label{class_camera_a05115155960ff87c3d7dd452d07b16e8}} 
+\index{Camera@{Camera}!setupProjection@{setupProjection}}
+\index{setupProjection@{setupProjection}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{setupProjection()}{setupProjection()}}
+{\footnotesize\ttfamily void Camera\+::setup\+Projection (\begin{DoxyParamCaption}\item[{bool}]{scissor }\end{DoxyParamCaption})}
+
+sets up the 3D projection for drawing 
+\begin{DoxyParams}{Parameters}
+{\em scissor} & True if you want scissoring \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_camera_a0fc20a3639d4b3d77dd7f6dac012a202}\label{class_camera_a0fc20a3639d4b3d77dd7f6dac012a202}} 
+\index{Camera@{Camera}!worldPosToScreenPos@{worldPosToScreenPos}}
+\index{worldPosToScreenPos@{worldPosToScreenPos}!Camera@{Camera}}
+\doxysubsubsection{\texorpdfstring{worldPosToScreenPos()}{worldPosToScreenPos()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector}{Vector}} Camera\+::world\+Pos\+To\+Screen\+Pos (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{original }\end{DoxyParamCaption}) const}
+
+projects the given world position onto the screen 
+\begin{DoxyParams}{Parameters}
+{\em original} & the world position to be projected return the screen position to be returned \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_camera_8hpp}{Camera.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Camera.\+cpp\end{DoxyCompactItemize}

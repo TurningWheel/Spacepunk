@@ -1,0 +1,108 @@
+\hypertarget{class_framebuffer}{}\doxysection{Framebuffer Class Reference}
+\label{class_framebuffer}\index{Framebuffer@{Framebuffer}}
+
+
+A \mbox{\hyperlink{class_framebuffer}{Framebuffer}} is a unique type of object belonging to the \mbox{\hyperlink{class_renderer}{Renderer}} which basically represents a \char`\"{}screen\char`\"{} texture that can be rendered to.  
+
+
+
+
+{\ttfamily \#include $<$Framebuffer.\+hpp$>$}
+
+Inheritance diagram for Framebuffer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_framebuffer}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_framebuffer_a3de95464d5c0b2c4124580615bc30217}\label{class_framebuffer_a3de95464d5c0b2c4124580615bc30217}} 
+enum \mbox{\hyperlink{class_framebuffer_a3de95464d5c0b2c4124580615bc30217}{Color\+Buffer}} \{ {\bfseries C\+O\+L\+OR}, 
+{\bfseries B\+L\+O\+OM}, 
+{\bfseries M\+AX}
+ \}
+\begin{DoxyCompactList}\small\item\em color buffers \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_framebuffer_a5e2516b55bfc0e2ee553e9a974f27355}\label{class_framebuffer_a5e2516b55bfc0e2ee553e9a974f27355}} 
+{\bfseries Framebuffer} (const char $\ast$\+\_\+name)
+\item 
+void \mbox{\hyperlink{class_framebuffer_a22d18bbf2665abff9fc60476b8f1dc4d}{init}} (Uint32 \+\_\+width, Uint32 \+\_\+height)
+\item 
+\mbox{\Hypertarget{class_framebuffer_a4199b539295bfcba356ff5916ffc02df}\label{class_framebuffer_a4199b539295bfcba356ff5916ffc02df}} 
+void \mbox{\hyperlink{class_framebuffer_a4199b539295bfcba356ff5916ffc02df}{term}} ()
+\begin{DoxyCompactList}\small\item\em delete gl data for framebuffer \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_framebuffer_a8798d791503dd6a75f395d51c4e35fa7}\label{class_framebuffer_a8798d791503dd6a75f395d51c4e35fa7}} 
+void \mbox{\hyperlink{class_framebuffer_a8798d791503dd6a75f395d51c4e35fa7}{bind\+For\+Writing}} ()
+\begin{DoxyCompactList}\small\item\em binds the framebuffer for writing \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_framebuffer_aca9a6c00849a2ae7a15363383cf50491}{bind\+For\+Reading}} (G\+Lenum texture\+Unit, G\+Lenum attachment) const
+\item 
+\mbox{\Hypertarget{class_framebuffer_a29f3edfceab261b122f09a8a1b067b41}\label{class_framebuffer_a29f3edfceab261b122f09a8a1b067b41}} 
+void \mbox{\hyperlink{class_framebuffer_a29f3edfceab261b122f09a8a1b067b41}{clear}} ()
+\begin{DoxyCompactList}\small\item\em clear buffers \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_framebuffer_a14716d66bfc937137f8464baaa65f606}\label{class_framebuffer_a14716d66bfc937137f8464baaa65f606}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_framebuffer_a14716d66bfc937137f8464baaa65f606}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_framebuffer_a942e75c6bd26966430ae73cea6649cee}\label{class_framebuffer_a942e75c6bd26966430ae73cea6649cee}} 
+G\+Luint {\bfseries get\+F\+BO} () const
+\item 
+\mbox{\Hypertarget{class_framebuffer_a2f4117cb3aef2bfb6c4a1f04f72cc2c3}\label{class_framebuffer_a2f4117cb3aef2bfb6c4a1f04f72cc2c3}} 
+G\+Luint {\bfseries get\+Color} (int c) const
+\item 
+\mbox{\Hypertarget{class_framebuffer_a19269b44624c61bb0874398d0ab751b9}\label{class_framebuffer_a19269b44624c61bb0874398d0ab751b9}} 
+G\+Luint {\bfseries get\+Depth} () const
+\item 
+\mbox{\Hypertarget{class_framebuffer_a7fba0e5866ff08b731c95355ea52592b}\label{class_framebuffer_a7fba0e5866ff08b731c95355ea52592b}} 
+G\+Luint {\bfseries get\+Stencil} () const
+\item 
+\mbox{\Hypertarget{class_framebuffer_a4bc5d8f07fc67b6e83cc307379635636}\label{class_framebuffer_a4bc5d8f07fc67b6e83cc307379635636}} 
+Uint32 {\bfseries get\+Width} () const
+\item 
+\mbox{\Hypertarget{class_framebuffer_af0cae93389f5d2cd32ff6bb58bdc8f91}\label{class_framebuffer_af0cae93389f5d2cd32ff6bb58bdc8f91}} 
+Uint32 {\bfseries get\+Height} () const
+\item 
+\mbox{\Hypertarget{class_framebuffer_a299c20c8374699a7a168e129cdf9f5f7}\label{class_framebuffer_a299c20c8374699a7a168e129cdf9f5f7}} 
+bool {\bfseries is\+Initialized} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_framebuffer}{Framebuffer}} is a unique type of object belonging to the \mbox{\hyperlink{class_renderer}{Renderer}} which basically represents a \char`\"{}screen\char`\"{} texture that can be rendered to. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_framebuffer_aca9a6c00849a2ae7a15363383cf50491}\label{class_framebuffer_aca9a6c00849a2ae7a15363383cf50491}} 
+\index{Framebuffer@{Framebuffer}!bindForReading@{bindForReading}}
+\index{bindForReading@{bindForReading}!Framebuffer@{Framebuffer}}
+\doxysubsubsection{\texorpdfstring{bindForReading()}{bindForReading()}}
+{\footnotesize\ttfamily void Framebuffer\+::bind\+For\+Reading (\begin{DoxyParamCaption}\item[{G\+Lenum}]{texture\+Unit,  }\item[{G\+Lenum}]{attachment }\end{DoxyParamCaption}) const}
+
+binds the framebuffer for reading 
+\begin{DoxyParams}{Parameters}
+{\em texture\+Unit} & The texture unit to bind for reading \\
+\hline
+{\em attachment} & The texture we wish to sample (G\+L\+\_\+\+C\+O\+L\+O\+R\+\_\+\+A\+T\+T\+A\+C\+H\+M\+E\+N\+T0 or G\+L\+\_\+\+D\+E\+P\+T\+H\+\_\+\+A\+T\+T\+A\+C\+H\+M\+E\+NT or G\+L\+\_\+\+S\+T\+E\+N\+C\+I\+L\+\_\+\+A\+T\+T\+A\+C\+H\+M\+E\+NT) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_framebuffer_a22d18bbf2665abff9fc60476b8f1dc4d}\label{class_framebuffer_a22d18bbf2665abff9fc60476b8f1dc4d}} 
+\index{Framebuffer@{Framebuffer}!init@{init}}
+\index{init@{init}!Framebuffer@{Framebuffer}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Framebuffer\+::init (\begin{DoxyParamCaption}\item[{Uint32}]{\+\_\+width,  }\item[{Uint32}]{\+\_\+height }\end{DoxyParamCaption})}
+
+create gl data for framebuffer 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+width} & the width of the framebuffer \\
+\hline
+{\em \+\_\+height} & the height of the framebuffer \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_framebuffer_8hpp}{Framebuffer.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Framebuffer.\+cpp\end{DoxyCompactItemize}

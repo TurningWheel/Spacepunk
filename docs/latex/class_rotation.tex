@@ -1,0 +1,114 @@
+\hypertarget{class_rotation}{}\doxysection{Rotation Class Reference}
+\label{class_rotation}\index{Rotation@{Rotation}}
+
+
+Records Euler angles in radians (convertible to degrees)  
+
+
+
+
+{\ttfamily \#include $<$Rotation.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_rotation_a13ea1d345ca0a92c0f09b4de544ca460}\label{class_rotation_a13ea1d345ca0a92c0f09b4de544ca460}} 
+\mbox{\hyperlink{class_rotation_a13ea1d345ca0a92c0f09b4de544ca460}{Rotation}} ()
+\begin{DoxyCompactList}\small\item\em constructors \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a2e4eaf62dfc17e2836a002e7fc0dd791}\label{class_rotation_a2e4eaf62dfc17e2836a002e7fc0dd791}} 
+{\bfseries Rotation} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&src)
+\item 
+\mbox{\Hypertarget{class_rotation_a27e64d54d0ddf26676662e249dbb49e3}\label{class_rotation_a27e64d54d0ddf26676662e249dbb49e3}} 
+{\bfseries Rotation} (float \+\_\+yaw, float \+\_\+pitch, float \+\_\+roll)
+\item 
+\mbox{\Hypertarget{class_rotation_a3eac6f26409bd32213d673cd1d5be5ac}\label{class_rotation_a3eac6f26409bd32213d673cd1d5be5ac}} 
+const float \mbox{\hyperlink{class_rotation_a3eac6f26409bd32213d673cd1d5be5ac}{radians\+Yaw}} () const
+\begin{DoxyCompactList}\small\item\em converts the angle attributes to radians (default) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_ad93ff11155ee708613fa0e488ad09078}\label{class_rotation_ad93ff11155ee708613fa0e488ad09078}} 
+const float {\bfseries radians\+Pitch} () const
+\item 
+\mbox{\Hypertarget{class_rotation_a6dabb5f4b964cf5b3a1d8ce2ce2515b7}\label{class_rotation_a6dabb5f4b964cf5b3a1d8ce2ce2515b7}} 
+const float {\bfseries radians\+Roll} () const
+\item 
+\mbox{\Hypertarget{class_rotation_ad23eae0861bf9255e15a18341ab36efd}\label{class_rotation_ad23eae0861bf9255e15a18341ab36efd}} 
+const float \mbox{\hyperlink{class_rotation_ad23eae0861bf9255e15a18341ab36efd}{degrees\+Yaw}} () const
+\begin{DoxyCompactList}\small\item\em converts the angle attributes to degrees \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a73471ef809790b2f583fecce66737436}\label{class_rotation_a73471ef809790b2f583fecce66737436}} 
+const float {\bfseries degrees\+Pitch} () const
+\item 
+\mbox{\Hypertarget{class_rotation_a193e86e01af452e4e60fcee3aa94a865}\label{class_rotation_a193e86e01af452e4e60fcee3aa94a865}} 
+const float {\bfseries degrees\+Roll} () const
+\item 
+\mbox{\Hypertarget{class_rotation_a3129b6eedfafd755ba46a5a7a04155b8}\label{class_rotation_a3129b6eedfafd755ba46a5a7a04155b8}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \& \mbox{\hyperlink{class_rotation_a3129b6eedfafd755ba46a5a7a04155b8}{operator=}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&src)
+\begin{DoxyCompactList}\small\item\em copy the angle to another angle \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a4f97c89bb13d5e6c6c4c00063fd6de81}\label{class_rotation_a4f97c89bb13d5e6c6c4c00063fd6de81}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \mbox{\hyperlink{class_rotation_a4f97c89bb13d5e6c6c4c00063fd6de81}{operator+}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&src) const
+\begin{DoxyCompactList}\small\item\em add one angle to another \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a04a0b4097ea5cfaafde641520a6fdf01}\label{class_rotation_a04a0b4097ea5cfaafde641520a6fdf01}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \& \mbox{\hyperlink{class_rotation_a04a0b4097ea5cfaafde641520a6fdf01}{operator+=}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&src)
+\begin{DoxyCompactList}\small\item\em add one angle to another \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a33d1e17c09fc5e84fb13f5fc0d96089f}\label{class_rotation_a33d1e17c09fc5e84fb13f5fc0d96089f}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \mbox{\hyperlink{class_rotation_a33d1e17c09fc5e84fb13f5fc0d96089f}{operator-\/}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&src) const
+\begin{DoxyCompactList}\small\item\em subtract one angle from another \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_afbe80f05f6f14426eecd23484d12606c}\label{class_rotation_afbe80f05f6f14426eecd23484d12606c}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \& \mbox{\hyperlink{class_rotation_afbe80f05f6f14426eecd23484d12606c}{operator-\/=}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&src)
+\begin{DoxyCompactList}\small\item\em subtract one angle from another \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_ac2e7366e8ada18a1eef242d3503564a7}\label{class_rotation_ac2e7366e8ada18a1eef242d3503564a7}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \mbox{\hyperlink{class_rotation_ac2e7366e8ada18a1eef242d3503564a7}{wrap\+Angles}} ()
+\begin{DoxyCompactList}\small\item\em formats the values of yaw, pitch, and roll so they lie between -\/P\+I$\ast$2 (exclusive) and P\+I$\ast$2 (exclusive) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a77839b408d4530b0d0f8b64f53127dff}\label{class_rotation_a77839b408d4530b0d0f8b64f53127dff}} 
+\mbox{\hyperlink{class_rotation}{Rotation}} \mbox{\hyperlink{class_rotation_a77839b408d4530b0d0f8b64f53127dff}{bind\+Angles}} ()
+\begin{DoxyCompactList}\small\item\em wraps the angles, then binds them to the range 0 (inclusive) and P\+I$\ast$2 (exclusive) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_aca93a861f8c2ceaff17bfb416dcdebd9}\label{class_rotation_aca93a861f8c2ceaff17bfb416dcdebd9}} 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_rotation_aca93a861f8c2ceaff17bfb416dcdebd9}{to\+Vector}} () const
+\begin{DoxyCompactList}\small\item\em converts the euler angle to a direction vector \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a0f9c0ddf4a863d6585977832f4adf384}\label{class_rotation_a0f9c0ddf4a863d6585977832f4adf384}} 
+bool \mbox{\hyperlink{class_rotation_a0f9c0ddf4a863d6585977832f4adf384}{operator==}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&other) const
+\begin{DoxyCompactList}\small\item\em operator == \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rotation_a4d7d7038e808319ddd33be8241366c7a}\label{class_rotation_a4d7d7038e808319ddd33be8241366c7a}} 
+bool \mbox{\hyperlink{class_rotation_a4d7d7038e808319ddd33be8241366c7a}{operator!=}} (const \mbox{\hyperlink{class_rotation}{Rotation}} \&other) const
+\begin{DoxyCompactList}\small\item\em operator != \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_rotation_a47318c31bb4fb2d52ee59668bc8657f9}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_rotation_a0a0e1950360a51c2a2a26df970b9d935}\label{class_rotation_a0a0e1950360a51c2a2a26df970b9d935}} 
+float {\bfseries yaw} = 0
+\item 
+\mbox{\Hypertarget{class_rotation_a5e6e48cc38c5f1aad3c4fb2428e2135e}\label{class_rotation_a5e6e48cc38c5f1aad3c4fb2428e2135e}} 
+float {\bfseries pitch} = 0
+\item 
+\mbox{\Hypertarget{class_rotation_aec5d0a135a1616f281216e46fde5594e}\label{class_rotation_aec5d0a135a1616f281216e46fde5594e}} 
+float {\bfseries roll} = 0
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_rotation_ac0307126ae4361eea26fca15b43011ec}\label{class_rotation_ac0307126ae4361eea26fca15b43011ec}} 
+static const float {\bfseries radians\+To\+Degrees} = 180.f / \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Records Euler angles in radians (convertible to degrees) 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_rotation_a47318c31bb4fb2d52ee59668bc8657f9}\label{class_rotation_a47318c31bb4fb2d52ee59668bc8657f9}} 
+\index{Rotation@{Rotation}!serialize@{serialize}}
+\index{serialize@{serialize}!Rotation@{Rotation}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Rotation\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_rotation_8hpp}{Rotation.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Main.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,162 @@
+\hypertarget{class_shader_program}{}\doxysection{Shader\+Program Class Reference}
+\label{class_shader_program}\index{ShaderProgram@{ShaderProgram}}
+
+
+A \mbox{\hyperlink{class_shader_program}{Shader\+Program}} links multiple \mbox{\hyperlink{class_shader}{Shader}} objects together into a single program that can be used to render an object.  
+
+
+
+
+{\ttfamily \#include $<$Shader\+Program.\+hpp$>$}
+
+Inheritance diagram for Shader\+Program\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_shader_program}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_shader_program_ac7217820fce4dfe6b8ce986df3959917}\label{class_shader_program_ac7217820fce4dfe6b8ce986df3959917}} 
+{\bfseries Shader\+Program} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_shader_program_a68ffcd51b92b6eda61f628ff75a8549c}\label{class_shader_program_a68ffcd51b92b6eda61f628ff75a8549c}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_shader_program_a68ffcd51b92b6eda61f628ff75a8549c}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+G\+Luint \mbox{\hyperlink{class_shader_program_af37c842d9141436f0fcd8817d09b4a22}{get\+Uniform\+Location}} (const char $\ast$name)
+\item 
+void \mbox{\hyperlink{class_shader_program_acae40cbc94626f9993113a7ca85d5f2d}{bind\+Attrib\+Location}} (G\+Luint index, const G\+Lchar $\ast$name)
+\item 
+Uint32 \mbox{\hyperlink{class_shader_program_aa7d94bc57a8a914b985565814e939085}{upload\+Lights}} (const \mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights, Uint32 max\+Lights, Uint32 texture\+Unit)
+\item 
+int \mbox{\hyperlink{class_shader_program_aff6fbab4d5480c58bb2773acbf23fe2d}{link}} ()
+\item 
+\mbox{\hyperlink{class_shader_program}{Shader\+Program}} \& \mbox{\hyperlink{class_shader_program_a51c83912ecb58521288ecf6faf430c83}{mount}} ()
+\item 
+virtual void \mbox{\hyperlink{class_shader_program_ac84a0a4c3c2f77bb28e37812e87f7bd2}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_shader_program_a506a9f5e69178b34d847edacb5a1ef28}\label{class_shader_program_a506a9f5e69178b34d847edacb5a1ef28}} 
+static const \mbox{\hyperlink{class_shader_program}{Shader\+Program}} $\ast$ {\bfseries get\+Current\+Shader} ()
+\item 
+\mbox{\Hypertarget{class_shader_program_a332200f998894c9dc511df74b2993d94}\label{class_shader_program_a332200f998894c9dc511df74b2993d94}} 
+static void \mbox{\hyperlink{class_shader_program_a332200f998894c9dc511df74b2993d94}{unmount}} ()
+\begin{DoxyCompactList}\small\item\em unmounts the current shader program from the gl context \end{DoxyCompactList}\item 
+static const char $\ast$ \mbox{\hyperlink{class_shader_program_a31f6110c37ce3d4c65966420ea5b1413}{uniform\+Array}} (char $\ast$buf, const char $\ast$name, int len, int index)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_shader_program}{Shader\+Program}} links multiple \mbox{\hyperlink{class_shader}{Shader}} objects together into a single program that can be used to render an object. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_shader_program_acae40cbc94626f9993113a7ca85d5f2d}\label{class_shader_program_acae40cbc94626f9993113a7ca85d5f2d}} 
+\index{ShaderProgram@{ShaderProgram}!bindAttribLocation@{bindAttribLocation}}
+\index{bindAttribLocation@{bindAttribLocation}!ShaderProgram@{ShaderProgram}}
+\doxysubsubsection{\texorpdfstring{bindAttribLocation()}{bindAttribLocation()}}
+{\footnotesize\ttfamily void Shader\+Program\+::bind\+Attrib\+Location (\begin{DoxyParamCaption}\item[{G\+Luint}]{index,  }\item[{const G\+Lchar $\ast$}]{name }\end{DoxyParamCaption})}
+
+binds an attribute to a shader variable 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the attribute to assign to the variable \\
+\hline
+{\em name} & the name of the variable to bind the attribute to \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_shader_program_af37c842d9141436f0fcd8817d09b4a22}\label{class_shader_program_af37c842d9141436f0fcd8817d09b4a22}} 
+\index{ShaderProgram@{ShaderProgram}!getUniformLocation@{getUniformLocation}}
+\index{getUniformLocation@{getUniformLocation}!ShaderProgram@{ShaderProgram}}
+\doxysubsubsection{\texorpdfstring{getUniformLocation()}{getUniformLocation()}}
+{\footnotesize\ttfamily G\+Luint Shader\+Program\+::get\+Uniform\+Location (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+gets the location of a uniform variable 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the variable to be retrieved \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the location of the uniform with the given name 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_shader_program_aff6fbab4d5480c58bb2773acbf23fe2d}\label{class_shader_program_aff6fbab4d5480c58bb2773acbf23fe2d}} 
+\index{ShaderProgram@{ShaderProgram}!link@{link}}
+\index{link@{link}!ShaderProgram@{ShaderProgram}}
+\doxysubsubsection{\texorpdfstring{link()}{link()}}
+{\footnotesize\ttfamily int Shader\+Program\+::link (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+links all of the shader objects \begin{DoxyReturn}{Returns}
+0 on success, or non-\/zero on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_shader_program_a51c83912ecb58521288ecf6faf430c83}\label{class_shader_program_a51c83912ecb58521288ecf6faf430c83}} 
+\index{ShaderProgram@{ShaderProgram}!mount@{mount}}
+\index{mount@{mount}!ShaderProgram@{ShaderProgram}}
+\doxysubsubsection{\texorpdfstring{mount()}{mount()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_shader_program}{Shader\+Program}} \& Shader\+Program\+::mount (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+mounts the shader program into the gl context \begin{DoxyReturn}{Returns}
+the shader that was mounted (it might not be this one!) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_shader_program_ac84a0a4c3c2f77bb28e37812e87f7bd2}\label{class_shader_program_ac84a0a4c3c2f77bb28e37812e87f7bd2}} 
+\index{ShaderProgram@{ShaderProgram}!serialize@{serialize}}
+\index{serialize@{serialize}!ShaderProgram@{ShaderProgram}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Shader\+Program\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a957199c8b4a4a912d9020bb0ba605251}{Asset}}.
+
+\mbox{\Hypertarget{class_shader_program_a31f6110c37ce3d4c65966420ea5b1413}\label{class_shader_program_a31f6110c37ce3d4c65966420ea5b1413}} 
+\index{ShaderProgram@{ShaderProgram}!uniformArray@{uniformArray}}
+\index{uniformArray@{uniformArray}!ShaderProgram@{ShaderProgram}}
+\doxysubsubsection{\texorpdfstring{uniformArray()}{uniformArray()}}
+{\footnotesize\ttfamily const char $\ast$ Shader\+Program\+::uniform\+Array (\begin{DoxyParamCaption}\item[{char $\ast$}]{buf,  }\item[{const char $\ast$}]{name,  }\item[{int}]{len,  }\item[{int}]{index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+quickly build a string that references an indexed uniform array 
+\begin{DoxyParams}{Parameters}
+{\em buf} & the buffer to build the string in \\
+\hline
+{\em name} & the name of the uniform \\
+\hline
+{\em len} & number of characters in len (excluding /0) \\
+\hline
+{\em index} & the offset in the uniform array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+buf 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_shader_program_aa7d94bc57a8a914b985565814e939085}\label{class_shader_program_aa7d94bc57a8a914b985565814e939085}} 
+\index{ShaderProgram@{ShaderProgram}!uploadLights@{uploadLights}}
+\index{uploadLights@{uploadLights}!ShaderProgram@{ShaderProgram}}
+\doxysubsubsection{\texorpdfstring{uploadLights()}{uploadLights()}}
+{\footnotesize\ttfamily Uint32 Shader\+Program\+::upload\+Lights (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights,  }\item[{Uint32}]{max\+Lights,  }\item[{Uint32}]{texture\+Unit }\end{DoxyParamCaption})}
+
+uploads light data to the shader, if it hasn\textquotesingle{}t already been uploaded 
+\begin{DoxyParams}{Parameters}
+{\em camera} & The camera that the scene is being drawn from \\
+\hline
+{\em lights} & The lights to upload \\
+\hline
+{\em max\+Lights} & Maximum number of lights that can be uploaded \\
+\hline
+{\em texture\+Unit} & First available texture unit for shadow maps \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The first available texture unit after shadow maps 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_shader_program_8hpp}{Shader\+Program.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Shader\+Program.\+cpp\end{DoxyCompactItemize}

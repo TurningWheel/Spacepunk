@@ -1,4 +1,4 @@
-// Quaternion.hpp
+//! @file Quaternion.hpp
 
 #pragma once
 
@@ -11,6 +11,7 @@
 #include "File.hpp"
 #include "WideVector.hpp"
 
+//! A quaternion describes a rotation in 3D space.
 class Quaternion {
 public:
 	float x = 0.f;
@@ -114,16 +115,16 @@ public:
 		SR = sinf(RollNoWinding / 2.f); CR = cosf(RollNoWinding / 2.f);
 
 		Quaternion q;
-		q.x = CR * SP*SY - SR * CP*CY; // z
-		q.z = -CR * SP*CY - SR * CP*SY; // x
-		q.y = -CR * CP*SY + SR * SP*CY; // y
+		q.x = CR * SP*SY - SR * CP*CY; //! z
+		q.z = -CR * SP*CY - SR * CP*SY; //! x
+		q.y = -CR * CP*SY + SR * SP*CY; //! y
 		q.w = CR * CP*CY + SR * SP*SY;
 		return *this * q;
 	}
 
 	Rotation toRotation() const {
-		// reference:
-		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
+		//! reference:
+		//! http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/
 
 		Rotation result;
 

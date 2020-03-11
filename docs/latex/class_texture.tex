@@ -1,0 +1,72 @@
+\hypertarget{class_texture}{}\doxysection{Texture Class Reference}
+\label{class_texture}\index{Texture@{Texture}}
+
+
+{\ttfamily \#include $<$Texture.\+hpp$>$}
+
+Inheritance diagram for Texture\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_texture}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_texture_a54bda3f44f76474f733c4401bc7afe3f}\label{class_texture_a54bda3f44f76474f733c4401bc7afe3f}} 
+{\bfseries Texture} (const char $\ast$\+\_\+name)
+\item 
+virtual void \mbox{\hyperlink{class_texture_a10e6b63e9f8b53bffb73375f8f5f9ce8}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_texture_a40a1764e919100ebe5ebc227ed401ec2}\label{class_texture_a40a1764e919100ebe5ebc227ed401ec2}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_texture_a40a1764e919100ebe5ebc227ed401ec2}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_texture_a494dc9a7b62c6def6731728e05cf3766}\label{class_texture_a494dc9a7b62c6def6731728e05cf3766}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_image}{Image}} $\ast$ $>$ \& {\bfseries get\+Textures} () const
+\item 
+\mbox{\Hypertarget{class_texture_acbb8364f0e68cebbefbc7bcaa0c45a5d}\label{class_texture_acbb8364f0e68cebbefbc7bcaa0c45a5d}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_image}{Image}} $\ast$ $>$ \& {\bfseries get\+Textures} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_texture_a33e44875f38e20396b0b11a7e9bdcde3}\label{class_texture_a33e44875f38e20396b0b11a7e9bdcde3}} 
+static const char $\ast$ \mbox{\hyperlink{class_texture_a33e44875f38e20396b0b11a7e9bdcde3}{default\+Texture}} = \char`\"{}images/tile/null.\+json\char`\"{}
+\begin{DoxyCompactList}\small\item\em default textures \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_texture_a23c779c3e95e1d1255b01249d4fce729}\label{class_texture_a23c779c3e95e1d1255b01249d4fce729}} 
+static const char $\ast$ {\bfseries default\+Diffuse} = \char`\"{}images/tile/diffuse/null.\+png\char`\"{}
+\item 
+\mbox{\Hypertarget{class_texture_a118977e0077c2285c57630737738351a}\label{class_texture_a118977e0077c2285c57630737738351a}} 
+static const char $\ast$ {\bfseries default\+Normal} = \char`\"{}images/tile/normal/flat.\+png\char`\"{}
+\item 
+\mbox{\Hypertarget{class_texture_a799c11f2998b01dd09f249b955796c67}\label{class_texture_a799c11f2998b01dd09f249b955796c67}} 
+static const char $\ast$ {\bfseries default\+Effects} = \char`\"{}images/tile/effects/empty.\+png\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_texture}{Texture}} class is actually a manifest for \mbox{\hyperlink{class_tile}{Tile}} textures (diffuse, normal, and effects maps) For mesh textures, see the \mbox{\hyperlink{class_material}{Material}} class. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_texture_a10e6b63e9f8b53bffb73375f8f5f9ce8}\label{class_texture_a10e6b63e9f8b53bffb73375f8f5f9ce8}} 
+\index{Texture@{Texture}!serialize@{serialize}}
+\index{serialize@{serialize}!Texture@{Texture}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Texture\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a957199c8b4a4a912d9020bb0ba605251}{Asset}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_texture_8hpp}{Texture.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Texture.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,106 @@
+\hypertarget{class_script}{}\doxysection{Script Class Reference}
+\label{class_script}\index{Script@{Script}}
+
+
+{\ttfamily \#include $<$Script.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_script_1_1_args}{Args}}
+\begin{DoxyCompactList}\small\item\em script function arguments \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_script_1_1_function}{Function}}
+\begin{DoxyCompactList}\small\item\em native callback function for processing script args \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_script_1_1param__bool__t}{param\+\_\+bool\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em boolean parameter \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_script_1_1param__float__t}{param\+\_\+float\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em float parameter \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_script_1_1param__int__t}{param\+\_\+int\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em integer parameter \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_script_1_1param__nil__t}{param\+\_\+nil\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em nil parameter \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_script_1_1param__pointer__t}{param\+\_\+pointer\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em pointer parameter \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_script_1_1param__string__t}{param\+\_\+string\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em string parameter \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_script_1_1param__t}{param\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em script function parameter \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_script_a10bfcfe71192ebfd1d68e57ed5766f18}\label{class_script_a10bfcfe71192ebfd1d68e57ed5766f18}} 
+enum \mbox{\hyperlink{class_script_a10bfcfe71192ebfd1d68e57ed5766f18}{var\+\_\+t}} \{ \newline
+{\bfseries T\+Y\+P\+E\+\_\+\+B\+O\+O\+L\+E\+AN}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+I\+N\+T\+E\+G\+ER}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+F\+L\+O\+AT}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+S\+T\+R\+I\+NG}, 
+\newline
+{\bfseries T\+Y\+P\+E\+\_\+\+P\+O\+I\+N\+T\+ER}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+N\+IL}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+M\+AX}
+ \}
+\begin{DoxyCompactList}\small\item\em script variable types \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_script_a2f0840c942471cab58583d34ba3e13b1}\label{class_script_a2f0840c942471cab58583d34ba3e13b1}} 
+{\bfseries Script} (\mbox{\hyperlink{class_client}{Client}} \&\+\_\+client)
+\item 
+\mbox{\Hypertarget{class_script_a94f4a077e4ef2fcefa957fb52c7710e9}\label{class_script_a94f4a077e4ef2fcefa957fb52c7710e9}} 
+{\bfseries Script} (\mbox{\hyperlink{class_server}{Server}} \&\+\_\+server)
+\item 
+\mbox{\Hypertarget{class_script_a9046e32f1ae8832ca4656e7ca503190c}\label{class_script_a9046e32f1ae8832ca4656e7ca503190c}} 
+{\bfseries Script} (\mbox{\hyperlink{class_world}{World}} \&\+\_\+world)
+\item 
+\mbox{\Hypertarget{class_script_aa541063a154bfe09ab4775fbf03c1365}\label{class_script_aa541063a154bfe09ab4775fbf03c1365}} 
+{\bfseries Script} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity)
+\item 
+\mbox{\Hypertarget{class_script_abf3ec02b34451fa9d90e78662d5d181f}\label{class_script_abf3ec02b34451fa9d90e78662d5d181f}} 
+{\bfseries Script} (\mbox{\hyperlink{class_frame}{Frame}} \&\+\_\+frame)
+\item 
+int \mbox{\hyperlink{class_script_a6ae08c9b8d64bcad0355079804a302a7}{load}} (const char $\ast$filename)
+\item 
+int \mbox{\hyperlink{class_script_a14b66e2d02c4e188178f55c002e2872b}{dispatch}} (const char $\ast$function, \mbox{\hyperlink{class_script_1_1_args}{Args}} $\ast$args=nullptr)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_script}{Script}} class defines a Lua script engine instance. Different functions are exposed to different scripts, depending on the class that owns it. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_script_a14b66e2d02c4e188178f55c002e2872b}\label{class_script_a14b66e2d02c4e188178f55c002e2872b}} 
+\index{Script@{Script}!dispatch@{dispatch}}
+\index{dispatch@{dispatch}!Script@{Script}}
+\doxysubsubsection{\texorpdfstring{dispatch()}{dispatch()}}
+{\footnotesize\ttfamily int Script\+::dispatch (\begin{DoxyParamCaption}\item[{const char $\ast$}]{function,  }\item[{\mbox{\hyperlink{class_script_1_1_args}{Args}} $\ast$}]{args = {\ttfamily nullptr} }\end{DoxyParamCaption})}
+
+evaluate a function. args are discarded after use 
+\begin{DoxyParams}{Parameters}
+{\em function} & name of the function to execute \\
+\hline
+{\em args} & a list of args to pass to the function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, nonzero on failure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_script_a6ae08c9b8d64bcad0355079804a302a7}\label{class_script_a6ae08c9b8d64bcad0355079804a302a7}} 
+\index{Script@{Script}!load@{load}}
+\index{load@{load}!Script@{Script}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily int Script\+::load (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})}
+
+load and evaluate the given script 
+\begin{DoxyParams}{Parameters}
+{\em filename} & filename of the script to run \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, nonzero on failure 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_script_8hpp}{Script.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Script.\+cpp\end{DoxyCompactItemize}

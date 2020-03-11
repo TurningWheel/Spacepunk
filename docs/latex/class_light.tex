@@ -1,0 +1,241 @@
+\hypertarget{class_light}{}\doxysection{Light Class Reference}
+\label{class_light}\index{Light@{Light}}
+
+
+An \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that adds a dynamic, shadow-\/casting light inside of a \mbox{\hyperlink{class_world}{World}}.  
+
+
+
+
+{\ttfamily \#include $<$Light.\+hpp$>$}
+
+Inheritance diagram for Light\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_light}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_light_afc4b5daa2c24d9bede1a693b6a20ba06}\label{class_light_afc4b5daa2c24d9bede1a693b6a20ba06}} 
+enum \mbox{\hyperlink{class_light_afc4b5daa2c24d9bede1a693b6a20ba06}{shape\+\_\+t}} \{ \newline
+{\bfseries S\+H\+A\+P\+E\+\_\+\+S\+P\+H\+E\+RE} = 0, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+B\+OX} = 1, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+C\+A\+P\+S\+U\+LE} = 2, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+C\+Y\+L\+I\+N\+D\+ER} = 3, 
+\newline
+{\bfseries S\+H\+A\+P\+E\+\_\+\+C\+O\+NE} = 4, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+P\+Y\+R\+A\+M\+ID} = 5, 
+{\bfseries S\+H\+A\+P\+E\+\_\+\+N\+UM}
+ \}
+\begin{DoxyCompactList}\small\item\em light volume shape \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_light_a05cc7fc8aa93df586cc6024792616af0}\label{class_light_a05cc7fc8aa93df586cc6024792616af0}} 
+{\bfseries Light} (\mbox{\hyperlink{class_entity}{Entity}} \&\+\_\+entity, \mbox{\hyperlink{class_component}{Component}} $\ast$\+\_\+parent)
+\item 
+\mbox{\Hypertarget{class_light_ae5571e682fe82f56ca8195d5643f51b4}\label{class_light_ae5571e682fe82f56ca8195d5643f51b4}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_light_ae5571e682fe82f56ca8195d5643f51b4}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_light_aaa8d43165f45350e2c522b94b49e4142}\label{class_light_aaa8d43165f45350e2c522b94b49e4142}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Color} () const
+\item 
+\mbox{\Hypertarget{class_light_a6e57341461c9c1778fc15801198533f0}\label{class_light_a6e57341461c9c1778fc15801198533f0}} 
+const float \& {\bfseries get\+Intensity} () const
+\item 
+\mbox{\Hypertarget{class_light_ad6107688215414a300cf17bed326e61f}\label{class_light_ad6107688215414a300cf17bed326e61f}} 
+const float \& {\bfseries get\+Radius} () const
+\item 
+\mbox{\Hypertarget{class_light_a79269b7169ac5c18e426d356066e7385}\label{class_light_a79269b7169ac5c18e426d356066e7385}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_chunk}{Chunk}} $\ast$ $>$ \& {\bfseries get\+Chunks\+Lit} ()
+\item 
+\mbox{\Hypertarget{class_light_a1ef2dd56b226f541626ead49772665b6}\label{class_light_a1ef2dd56b226f541626ead49772665b6}} 
+const \mbox{\hyperlink{class_light_afc4b5daa2c24d9bede1a693b6a20ba06}{shape\+\_\+t}} \& {\bfseries get\+Shape} () const
+\item 
+\mbox{\Hypertarget{class_light_a79b01d4509477a21c68d9f81b23641ef}\label{class_light_a79b01d4509477a21c68d9f81b23641ef}} 
+const bool {\bfseries is\+Chosen} () const
+\item 
+\mbox{\Hypertarget{class_light_aa2e65b93b035c3ac1659c26729911ec8}\label{class_light_aa2e65b93b035c3ac1659c26729911ec8}} 
+const float {\bfseries get\+Arc} () const
+\item 
+\mbox{\Hypertarget{class_light_a31583457fde4226e3b7039d8eb7f4372}\label{class_light_a31583457fde4226e3b7039d8eb7f4372}} 
+const bool {\bfseries is\+Shadow} () const
+\item 
+\mbox{\Hypertarget{class_light_a9751cac8ba9752ff40c304738ae0c4c0}\label{class_light_a9751cac8ba9752ff40c304738ae0c4c0}} 
+Uint32 {\bfseries get\+Shadow\+Ticks} () const
+\item 
+\mbox{\Hypertarget{class_light_a99d8be36c029356b6f78bb628c008a39}\label{class_light_a99d8be36c029356b6f78bb628c008a39}} 
+\mbox{\hyperlink{class_shadow}{Shadow}} \& {\bfseries get\+Shadow\+Map} ()
+\item 
+\mbox{\Hypertarget{class_light_aa79b0af6705427ced00b4547d4933c4f}\label{class_light_aa79b0af6705427ced00b4547d4933c4f}} 
+void {\bfseries set\+Color} (const \mbox{\hyperlink{class_vector}{Vector}} \&\+\_\+color)
+\item 
+\mbox{\Hypertarget{class_light_ac371a0b7f4d2a05ceadae9b8ae7adcd2}\label{class_light_ac371a0b7f4d2a05ceadae9b8ae7adcd2}} 
+void {\bfseries set\+Intensity} (const float \+\_\+intensity)
+\item 
+\mbox{\Hypertarget{class_light_a8dd62b596575a22f357dd6fc30b63721}\label{class_light_a8dd62b596575a22f357dd6fc30b63721}} 
+void {\bfseries set\+Radius} (const float \+\_\+radius)
+\item 
+\mbox{\Hypertarget{class_light_abe69cd37c721bd2699ef12733bbeea37}\label{class_light_abe69cd37c721bd2699ef12733bbeea37}} 
+void {\bfseries set\+Chosen} (const bool \+\_\+chosen)
+\item 
+\mbox{\Hypertarget{class_light_a73f57889fa69bc0565ea2529b1f96f6e}\label{class_light_a73f57889fa69bc0565ea2529b1f96f6e}} 
+void {\bfseries set\+Shape} (const \mbox{\hyperlink{class_light_afc4b5daa2c24d9bede1a693b6a20ba06}{shape\+\_\+t}} \&\+\_\+shape)
+\item 
+\mbox{\Hypertarget{class_light_ae6180ab06020c4a1b2c42f370abf459f}\label{class_light_ae6180ab06020c4a1b2c42f370abf459f}} 
+void {\bfseries set\+Arc} (const float \+\_\+arc)
+\item 
+\mbox{\Hypertarget{class_light_a0440f70b77199c69d487f8a4fe2a14f6}\label{class_light_a0440f70b77199c69d487f8a4fe2a14f6}} 
+void {\bfseries set\+Shadow} (const bool \+\_\+shadow)
+\item 
+\mbox{\Hypertarget{class_light_a923c5625ec556ce1413b31a6ba84c28f}\label{class_light_a923c5625ec556ce1413b31a6ba84c28f}} 
+virtual void \mbox{\hyperlink{class_light_a923c5625ec556ce1413b31a6ba84c28f}{update}} () override
+\begin{DoxyCompactList}\small\item\em updates matrices \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_light_a9cdd9a47f6bb40aa991ce5b18d4b7760}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&lights) override
+\item 
+\mbox{\Hypertarget{class_light_aeda38b96b31ead68db192daa5b66f240}\label{class_light_aeda38b96b31ead68db192daa5b66f240}} 
+void \mbox{\hyperlink{class_light_aeda38b96b31ead68db192daa5b66f240}{create\+Shadow\+Map}} ()
+\begin{DoxyCompactList}\small\item\em creates a shadow map from the light source \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_light_ab82dd736babc587cfc7ad6a5208ccbb2}\label{class_light_ab82dd736babc587cfc7ad6a5208ccbb2}} 
+void \mbox{\hyperlink{class_light_ab82dd736babc587cfc7ad6a5208ccbb2}{delete\+Shadow\+Map}} ()
+\begin{DoxyCompactList}\small\item\em deletes the shadow map \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_light_a8af26db3286e5c1a13bb02467ee01096}{load}} (F\+I\+LE $\ast$fp) override
+\item 
+virtual void \mbox{\hyperlink{class_light_a44370437c38729354ddb1d2e897ed803}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_light_af0463edb9b920f8b793d4db5915070be}\label{class_light_af0463edb9b920f8b793d4db5915070be}} 
+\mbox{\hyperlink{class_light}{Light}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_light}{Light}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ {\bfseries shape\+Str} \mbox{[}static\+\_\+cast$<$ int $>$(shape\+\_\+t\+::\+S\+H\+A\+P\+E\+\_\+\+N\+UM)\mbox{]}
+\item 
+\mbox{\Hypertarget{class_light_a740f995ab97b95fdc454ce054448bb1d}\label{class_light_a740f995ab97b95fdc454ce054448bb1d}} 
+static const char $\ast$ \mbox{\hyperlink{class_light_a740f995ab97b95fdc454ce054448bb1d}{mesh\+Str}} = \char`\"{}assets/editor/light/light.\+F\+BX\char`\"{}
+\begin{DoxyCompactList}\small\item\em light model \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_light_a34250fde96966f1822bf40653a3b5977}\label{class_light_a34250fde96966f1822bf40653a3b5977}} 
+static const char $\ast$ {\bfseries material\+Str} = \char`\"{}assets/editor/light/material.\+json\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_light_a37ec743524f27b27fb5ec31a9c25183e}\label{class_light_a37ec743524f27b27fb5ec31a9c25183e}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_chunk}{Chunk}} $\ast$ $>$ {\bfseries chunks\+Lit}
+\item 
+\mbox{\Hypertarget{class_light_ab97d583a7b2c1bcf725ecf064b6e452d}\label{class_light_ab97d583a7b2c1bcf725ecf064b6e452d}} 
+\mbox{\hyperlink{class_shadow}{Shadow}} {\bfseries shadow\+Map}
+\item 
+\mbox{\Hypertarget{class_light_a11b420ed9806a159f5dd938ca995f739}\label{class_light_a11b420ed9806a159f5dd938ca995f739}} 
+bool {\bfseries shadow\+Map\+Drawn} = false
+\item 
+\mbox{\Hypertarget{class_light_a34f23eab3e8aab8ba0fc883a4d46a46d}\label{class_light_a34f23eab3e8aab8ba0fc883a4d46a46d}} 
+Uint32 {\bfseries shadow\+Ticks} = 0
+\item 
+\mbox{\Hypertarget{class_light_a09386fdcfe6d282176aeee7b4d8ba9d2}\label{class_light_a09386fdcfe6d282176aeee7b4d8ba9d2}} 
+Uint32 {\bfseries last\+Update} = 0
+\item 
+\mbox{\Hypertarget{class_light_aebc313cc18a28f94af2d22636ed514aa}\label{class_light_aebc313cc18a28f94af2d22636ed514aa}} 
+bool {\bfseries chosen} = false
+\item 
+\mbox{\Hypertarget{class_light_a1ea200377d1ce732c1f5bab5ccfde6bb}\label{class_light_a1ea200377d1ce732c1f5bab5ccfde6bb}} 
+\mbox{\hyperlink{class_vector}{Vector}} {\bfseries color} = \mbox{\hyperlink{class_vector}{Vector}}(1.f)
+\item 
+\mbox{\Hypertarget{class_light_a1071eaa556f4bb2a9345fdfba7e6f220}\label{class_light_a1071eaa556f4bb2a9345fdfba7e6f220}} 
+float {\bfseries intensity} = 1.f
+\item 
+\mbox{\Hypertarget{class_light_ab9a87981b02f4612c872c49efa6b6e53}\label{class_light_ab9a87981b02f4612c872c49efa6b6e53}} 
+float {\bfseries radius} = 512.f
+\item 
+\mbox{\Hypertarget{class_light_ac0596542f05153d88a451e3106204022}\label{class_light_ac0596542f05153d88a451e3106204022}} 
+float {\bfseries arc} = 70.f
+\item 
+\mbox{\Hypertarget{class_light_ad2b6cb1ae8c5eaf247ed7d4f85125a85}\label{class_light_ad2b6cb1ae8c5eaf247ed7d4f85125a85}} 
+bool {\bfseries shadow} = true
+\item 
+\mbox{\Hypertarget{class_light_a717bee302774b5f4f34546f7a18880e5}\label{class_light_a717bee302774b5f4f34546f7a18880e5}} 
+\mbox{\hyperlink{class_light_afc4b5daa2c24d9bede1a693b6a20ba06}{shape\+\_\+t}} {\bfseries shape} = S\+H\+A\+P\+E\+\_\+\+S\+P\+H\+E\+RE
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+An \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that adds a dynamic, shadow-\/casting light inside of a \mbox{\hyperlink{class_world}{World}}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_light_a9cdd9a47f6bb40aa991ce5b18d4b7760}\label{class_light_a9cdd9a47f6bb40aa991ce5b18d4b7760}} 
+\index{Light@{Light}!draw@{draw}}
+\index{draw@{draw}!Light@{Light}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Light\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_light}{Light}} $\ast$ $>$ \&}]{lights }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+draws the light as a bounded cube (generally for editing purposes) 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the camera to draw the light from \\
+\hline
+{\em light} & the light to light the light with (whew) (unused) \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ac8b1132defd9de4c0231aff4ad1f41f6}{Component}}.
+
+\mbox{\Hypertarget{class_light_a8af26db3286e5c1a13bb02467ee01096}\label{class_light_a8af26db3286e5c1a13bb02467ee01096}} 
+\index{Light@{Light}!load@{load}}
+\index{load@{load}!Light@{Light}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Light\+::load (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+load the component from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ab1ddbf2ef322928e0ac52775ce1050db}{Component}}.
+
+\mbox{\Hypertarget{class_light_a44370437c38729354ddb1d2e897ed803}\label{class_light_a44370437c38729354ddb1d2e897ed803}} 
+\index{Light@{Light}!serialize@{serialize}}
+\index{serialize@{serialize}!Light@{Light}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Light\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{Component}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_light_ad61d08175efa48052ca91784b72ae78d}\label{class_light_ad61d08175efa48052ca91784b72ae78d}} 
+\index{Light@{Light}!shapeStr@{shapeStr}}
+\index{shapeStr@{shapeStr}!Light@{Light}}
+\doxysubsubsection{\texorpdfstring{shapeStr}{shapeStr}}
+{\footnotesize\ttfamily const char $\ast$ Light\+::shape\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"sphere"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"box"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"capsule"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"cylinder"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"cone"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"pyramid"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_light_8hpp}{Light.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Light.\+cpp\end{DoxyCompactItemize}

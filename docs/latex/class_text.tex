@@ -1,0 +1,96 @@
+\hypertarget{class_text}{}\doxysection{Text Class Reference}
+\label{class_text}\index{Text@{Text}}
+
+
+Contains some text that was rendered to a texture with a ttf font.  
+
+
+
+
+{\ttfamily \#include $<$Text.\+hpp$>$}
+
+Inheritance diagram for Text\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_text}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_text_ac17d11e1ade429058aee69b1755a011f}\label{class_text_ac17d11e1ade429058aee69b1755a011f}} 
+{\bfseries Text} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_text_a2fb62d23b678a952ba02220493867ed4}\label{class_text_a2fb62d23b678a952ba02220493867ed4}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_text_a2fb62d23b678a952ba02220493867ed4}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_text_a5f2ba557dd83f950f3221b4fc822438f}\label{class_text_a5f2ba557dd83f950f3221b4fc822438f}} 
+const G\+Luint {\bfseries get\+Tex\+ID} () const
+\item 
+\mbox{\Hypertarget{class_text_ae089b6186a9867ed7f34c961802f0c8b}\label{class_text_ae089b6186a9867ed7f34c961802f0c8b}} 
+const S\+D\+L\+\_\+\+Surface $\ast$ {\bfseries get\+Surf} () const
+\item 
+\mbox{\Hypertarget{class_text_a6abe8d340ba9cd2ded56b29b862cce36}\label{class_text_a6abe8d340ba9cd2ded56b29b862cce36}} 
+const unsigned int {\bfseries get\+Width} () const
+\item 
+\mbox{\Hypertarget{class_text_a93561aa085c2b8552e1f75fad685495d}\label{class_text_a93561aa085c2b8552e1f75fad685495d}} 
+const unsigned int {\bfseries get\+Height} () const
+\item 
+void \mbox{\hyperlink{class_text_a7259b26d6074fce7bb26da363d6d4d15}{draw}} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ src, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ dest) const
+\item 
+void \mbox{\hyperlink{class_text_a0518a72a627b095d668dd3afc65cd500}{draw\+Color}} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ src, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ dest, const glm\+::vec4 \&color) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_text_aeabc380c60b93484bc4990185d5fae0b}\label{class_text_aeabc380c60b93484bc4990185d5fae0b}} 
+static void \mbox{\hyperlink{class_text_aeabc380c60b93484bc4990185d5fae0b}{create\+Static\+Data}} ()
+\begin{DoxyCompactList}\small\item\em create static geometry data for rendering images \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_text_a8ff73758aa6c351c951c786eb88f92ba}\label{class_text_a8ff73758aa6c351c951c786eb88f92ba}} 
+static void \mbox{\hyperlink{class_text_a8ff73758aa6c351c951c786eb88f92ba}{delete\+Static\+Data}} ()
+\begin{DoxyCompactList}\small\item\em delete static geometry data for rendering images \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_text_aee2d2520114ee27b6769fcdd84550437}\label{class_text_aee2d2520114ee27b6769fcdd84550437}} 
+static const int \mbox{\hyperlink{class_text_aee2d2520114ee27b6769fcdd84550437}{outline\+Size}} = 1
+\begin{DoxyCompactList}\small\item\em size of the black text outline \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Contains some text that was rendered to a texture with a ttf font. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_text_a7259b26d6074fce7bb26da363d6d4d15}\label{class_text_a7259b26d6074fce7bb26da363d6d4d15}} 
+\index{Text@{Text}!draw@{draw}}
+\index{draw@{draw}!Text@{Text}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Text\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{src,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{dest }\end{DoxyParamCaption}) const}
+
+draws the text 
+\begin{DoxyParams}{Parameters}
+{\em src} & defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image) \\
+\hline
+{\em dest} & the position and size of the image on-\/screen (width 0 and height 0 defaults to 1\+:1 scale) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_text_a0518a72a627b095d668dd3afc65cd500}\label{class_text_a0518a72a627b095d668dd3afc65cd500}} 
+\index{Text@{Text}!drawColor@{drawColor}}
+\index{drawColor@{drawColor}!Text@{Text}}
+\doxysubsubsection{\texorpdfstring{drawColor()}{drawColor()}}
+{\footnotesize\ttfamily void Text\+::draw\+Color (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{src,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{dest,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption}) const}
+
+draws the text with the given color 
+\begin{DoxyParams}{Parameters}
+{\em src} & defines a subsection of the text image to actually draw (width 0 and height 0 uses whole image) \\
+\hline
+{\em dest} & the position and size of the image on-\/screen (width 0 and height 0 defaults to 1\+:1 scale) \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_text_8hpp}{Text.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Text.\+cpp\end{DoxyCompactItemize}

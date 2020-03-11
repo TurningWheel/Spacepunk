@@ -1,0 +1,180 @@
+\hypertarget{class_field}{}\doxysection{Field Class Reference}
+\label{class_field}\index{Field@{Field}}
+
+
+A \mbox{\hyperlink{class_field}{Field}} is a text field that lives in a \mbox{\hyperlink{class_frame}{Frame}}. It can be edited, or locked for editing to just have some static text in a window.  
+
+
+
+
+{\ttfamily \#include $<$Field.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_field_1_1result__t}{result\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em the result of the field process \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_field_abf36bf11562da6084b7ba9617d1c6161}\label{class_field_abf36bf11562da6084b7ba9617d1c6161}} 
+enum \mbox{\hyperlink{class_field_abf36bf11562da6084b7ba9617d1c6161}{justify\+\_\+t}} \{ {\bfseries L\+E\+FT}, 
+{\bfseries C\+E\+N\+T\+ER}, 
+{\bfseries R\+I\+G\+HT}, 
+{\bfseries J\+U\+S\+T\+I\+F\+Y\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\begin{DoxyCompactList}\small\item\em text justification \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_field_af9b1fdf077418a43b2a019518e6e98e3}\label{class_field_af9b1fdf077418a43b2a019518e6e98e3}} 
+{\bfseries Field} (const int \+\_\+text\+Len)
+\item 
+\mbox{\Hypertarget{class_field_a28dfd53de9eb6cdb3a07fde74a7e3b11}\label{class_field_a28dfd53de9eb6cdb3a07fde74a7e3b11}} 
+{\bfseries Field} (const char $\ast$\+\_\+text)
+\item 
+\mbox{\Hypertarget{class_field_a58cae4c4d8b199a52514f660dc907af2}\label{class_field_a58cae4c4d8b199a52514f660dc907af2}} 
+{\bfseries Field} (\mbox{\hyperlink{class_frame}{Frame}} \&\+\_\+parent)
+\item 
+\mbox{\Hypertarget{class_field_aaefbded692208d81540cf92878a069d3}\label{class_field_aaefbded692208d81540cf92878a069d3}} 
+{\bfseries Field} (\mbox{\hyperlink{class_frame}{Frame}} \&\+\_\+parent, const int \+\_\+text\+Len)
+\item 
+\mbox{\Hypertarget{class_field_a0e6fd517888690398919b6068763bd53}\label{class_field_a0e6fd517888690398919b6068763bd53}} 
+{\bfseries Field} (\mbox{\hyperlink{class_frame}{Frame}} \&\+\_\+parent, const char $\ast$\+\_\+text)
+\item 
+\mbox{\Hypertarget{class_field_ad37e0841abea709ef8c12deb947f7eeb}\label{class_field_ad37e0841abea709ef8c12deb947f7eeb}} 
+void \mbox{\hyperlink{class_field_ad37e0841abea709ef8c12deb947f7eeb}{select}} ()
+\begin{DoxyCompactList}\small\item\em selects the field for text editing \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_field_a12fb2edc37a78fe07e1a442eb62f899e}\label{class_field_a12fb2edc37a78fe07e1a442eb62f899e}} 
+void \mbox{\hyperlink{class_field_a12fb2edc37a78fe07e1a442eb62f899e}{deselect}} ()
+\begin{DoxyCompactList}\small\item\em deselects the field \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_field_a942ca4100d406a2c9fc9483f7c0c4e2a}{draw}} (\mbox{\hyperlink{class_renderer}{Renderer}} \&renderer, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+size, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+actual\+Size)
+\item 
+\mbox{\hyperlink{struct_field_1_1result__t}{result\+\_\+t}} \mbox{\hyperlink{class_field_a423cec93dadab134b0dcf31ae3c7e0c7}{process}} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+size, \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \+\_\+actual\+Size, const bool usable)
+\item 
+\mbox{\Hypertarget{class_field_a68c127646c26794a81f1cbb118aa6c2b}\label{class_field_a68c127646c26794a81f1cbb118aa6c2b}} 
+const char $\ast$ \mbox{\hyperlink{class_field_a68c127646c26794a81f1cbb118aa6c2b}{get\+Name}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_field_ad462f402b65083c0f798fc4f7eadb4be}\label{class_field_ad462f402b65083c0f798fc4f7eadb4be}} 
+const char $\ast$ {\bfseries get\+Text} () const
+\item 
+\mbox{\Hypertarget{class_field_a57317897b5419ab8b9d3e8b736b6e02e}\label{class_field_a57317897b5419ab8b9d3e8b736b6e02e}} 
+const Uint32 {\bfseries get\+Text\+Len} () const
+\item 
+\mbox{\Hypertarget{class_field_a51cb836d044462a6257fb1064efedb45}\label{class_field_a51cb836d044462a6257fb1064efedb45}} 
+const glm\+::vec4 \& {\bfseries get\+Color} () const
+\item 
+\mbox{\Hypertarget{class_field_a7e6d6c0ac7ddcf47616b943e043e86b5}\label{class_field_a7e6d6c0ac7ddcf47616b943e043e86b5}} 
+const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ {\bfseries get\+Size} () const
+\item 
+\mbox{\Hypertarget{class_field_a126fccee1b916114b449344f0450eb5e}\label{class_field_a126fccee1b916114b449344f0450eb5e}} 
+const \mbox{\hyperlink{class_field_abf36bf11562da6084b7ba9617d1c6161}{justify\+\_\+t}} {\bfseries get\+Justify} () const
+\item 
+\mbox{\Hypertarget{class_field_a46d7e3a935c249ed0b0193f68202dcf6}\label{class_field_a46d7e3a935c249ed0b0193f68202dcf6}} 
+const bool {\bfseries is\+Selected} () const
+\item 
+\mbox{\Hypertarget{class_field_a020c5f37c1740c33a40ef2ff315b3c35}\label{class_field_a020c5f37c1740c33a40ef2ff315b3c35}} 
+const bool {\bfseries is\+Editable} () const
+\item 
+\mbox{\Hypertarget{class_field_acf963015cf6d5389bc935d1e8215091e}\label{class_field_acf963015cf6d5389bc935d1e8215091e}} 
+const bool {\bfseries is\+Numbers\+Only} () const
+\item 
+\mbox{\Hypertarget{class_field_aeb67c36fa57aac2211725deed519ac46}\label{class_field_aeb67c36fa57aac2211725deed519ac46}} 
+const char $\ast$ {\bfseries get\+Tab\+Dest\+Field} () const
+\item 
+\mbox{\Hypertarget{class_field_a3cbd8d6bc22b45e4a5b5f0af0676e873}\label{class_field_a3cbd8d6bc22b45e4a5b5f0af0676e873}} 
+const char $\ast$ {\bfseries get\+Tab\+Dest\+Frame} () const
+\item 
+\mbox{\Hypertarget{class_field_aa86b444db84e87494554c70851d2a1d6}\label{class_field_aa86b444db84e87494554c70851d2a1d6}} 
+\mbox{\hyperlink{class_script_1_1_args}{Script\+::\+Args}} \& {\bfseries get\+Params} ()
+\item 
+\mbox{\Hypertarget{class_field_a3413893f2f8cdfb53e889728477da319}\label{class_field_a3413893f2f8cdfb53e889728477da319}} 
+const \mbox{\hyperlink{class_script_1_1_function}{Script\+::\+Function}} $\ast$ {\bfseries get\+Callback} () const
+\item 
+\mbox{\Hypertarget{class_field_a629e9751546758aa624c5cb9dd3aa452}\label{class_field_a629e9751546758aa624c5cb9dd3aa452}} 
+void {\bfseries set\+Name} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_field_ae057289eaca464f213d6b437802c8e0d}\label{class_field_ae057289eaca464f213d6b437802c8e0d}} 
+void {\bfseries set\+Text} (const char $\ast$\+\_\+text)
+\item 
+\mbox{\Hypertarget{class_field_aa6de86c9935f3d5a9a9183945caf986b}\label{class_field_aa6de86c9935f3d5a9a9183945caf986b}} 
+void {\bfseries set\+Pos} (const int x, const int y)
+\item 
+\mbox{\Hypertarget{class_field_a14e981ab7a3bf6e3a1ad68047204da4e}\label{class_field_a14e981ab7a3bf6e3a1ad68047204da4e}} 
+void {\bfseries set\+Size} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&\+\_\+size)
+\item 
+\mbox{\Hypertarget{class_field_a9f272ad3d44d3dc06ca2fe90a493fdc9}\label{class_field_a9f272ad3d44d3dc06ca2fe90a493fdc9}} 
+void {\bfseries set\+Color} (const glm\+::vec4 \&\+\_\+color)
+\item 
+\mbox{\Hypertarget{class_field_a8535194fce02d56324d6f5cd13c67d61}\label{class_field_a8535194fce02d56324d6f5cd13c67d61}} 
+void {\bfseries set\+Editable} (const bool \+\_\+editable)
+\item 
+\mbox{\Hypertarget{class_field_a540998edb1a5d833dd7897f749040afa}\label{class_field_a540998edb1a5d833dd7897f749040afa}} 
+void {\bfseries set\+Numbers\+Only} (const bool \+\_\+numbers\+Only)
+\item 
+\mbox{\Hypertarget{class_field_a23db5128b1abda0ae2a5e1e55ba68cbc}\label{class_field_a23db5128b1abda0ae2a5e1e55ba68cbc}} 
+void {\bfseries set\+Justify} (const \mbox{\hyperlink{class_field_abf36bf11562da6084b7ba9617d1c6161}{justify\+\_\+t}} \+\_\+justify)
+\item 
+\mbox{\Hypertarget{class_field_a16d73149d51064a310a18d5cf74d5bf3}\label{class_field_a16d73149d51064a310a18d5cf74d5bf3}} 
+void {\bfseries set\+Scroll} (const bool \+\_\+scroll)
+\item 
+\mbox{\Hypertarget{class_field_a4cea01b6bf8fe325cf559d55c4abe59b}\label{class_field_a4cea01b6bf8fe325cf559d55c4abe59b}} 
+void {\bfseries set\+Tab\+Dest\+Field} (const char $\ast$\+\_\+tab\+Dest)
+\item 
+\mbox{\Hypertarget{class_field_aafa4092e240a3106f09b036e7c8af560}\label{class_field_aafa4092e240a3106f09b036e7c8af560}} 
+void {\bfseries set\+Tab\+Dest\+Frame} (const char $\ast$\+\_\+tab\+Dest)
+\item 
+\mbox{\Hypertarget{class_field_a782ac6e7c0e2275e99aac65a332d0b26}\label{class_field_a782ac6e7c0e2275e99aac65a332d0b26}} 
+void {\bfseries set\+Callback} (const \mbox{\hyperlink{class_script_1_1_function}{Script\+::\+Function}} $\ast$fn)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_field_aaf26bf3b692eb1258c8b6e946e3c00d4}\label{class_field_aaf26bf3b692eb1258c8b6e946e3c00d4}} 
+static const char $\ast$ \mbox{\hyperlink{class_field_aaf26bf3b692eb1258c8b6e946e3c00d4}{invalid\+Name}} = \char`\"{}W\+A\+C\+K\+A\+W\+A\+C\+KA\char`\"{}
+\begin{DoxyCompactList}\small\item\em no fields or frames should ever have this name! \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_field}{Field}} is a text field that lives in a \mbox{\hyperlink{class_frame}{Frame}}. It can be edited, or locked for editing to just have some static text in a window. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_field_a942ca4100d406a2c9fc9483f7c0c4e2a}\label{class_field_a942ca4100d406a2c9fc9483f7c0c4e2a}} 
+\index{Field@{Field}!draw@{draw}}
+\index{draw@{draw}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Field\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_renderer}{Renderer}} \&}]{renderer,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+size,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+actual\+Size }\end{DoxyParamCaption})}
+
+draws the field 
+\begin{DoxyParams}{Parameters}
+{\em renderer} & the renderer object used to draw the field \\
+\hline
+{\em \+\_\+size} & size and position of field\textquotesingle{}s parent frame \\
+\hline
+{\em \+\_\+actual\+Size} & offset into the parent frame space (scroll) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_field_a423cec93dadab134b0dcf31ae3c7e0c7}\label{class_field_a423cec93dadab134b0dcf31ae3c7e0c7}} 
+\index{Field@{Field}!process@{process}}
+\index{process@{process}!Field@{Field}}
+\doxysubsubsection{\texorpdfstring{process()}{process()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_field_1_1result__t}{Field\+::result\+\_\+t}} Field\+::process (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+size,  }\item[{\mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$}]{\+\_\+actual\+Size,  }\item[{const bool}]{usable }\end{DoxyParamCaption})}
+
+handles clicks, etc. 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+size} & size and position of field\textquotesingle{}s parent frame \\
+\hline
+{\em \+\_\+actual\+Size} & offset into the parent frame space (scroll) \\
+\hline
+{\em usable} & true if another object doesn\textquotesingle{}t have the mouse\textquotesingle{}s attention, false otherwise \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+resultant state of the field after processing 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_field_8hpp}{Field.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Field.\+cpp\end{DoxyCompactItemize}

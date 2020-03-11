@@ -1,4 +1,4 @@
-// Speaker.hpp
+//! @file Speaker.hpp
 
 #pragma once
 
@@ -7,55 +7,56 @@
 #include "String.hpp"
 #include "Mesh.hpp"
 
+//! A Speaker is a type of Entity Component that can play 3D sounds, among other things.
 class Speaker : public Component {
 public:
 	Speaker(Entity& _entity, Component* _parent);
 	virtual ~Speaker();
 
-	// max sounds per component
+	//! max sounds per component
 	static const int maxSources = 8;
 
-	// speaker model
+	//! speaker model
 	static const char* meshStr;
 	static const char* materialStr;
 	const Mesh::shadervars_t shaderVars;
 
-	// draws the component
-	// @param camera the camera through which to draw the component
-	// @param light the light by which the component should be illuminated (or nullptr for no illumination)
+	//! draws the component
+	//! @param camera the camera through which to draw the component
+	//! @param light the light by which the component should be illuminated (or nullptr for no illumination)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
-	// update the component
+	//! update the component
 	virtual void process() override;
 
-	// plays the given sound
-	// @param name the filename of the sound
-	// @param loop if true, the sound will loop when played; otherwise, it will not
-	// @param range max distance the sound will play over
-	// @return the sound source index, or -1 for failure
+	//! plays the given sound
+	//! @param name the filename of the sound
+	//! @param loop if true, the sound will loop when played; otherwise, it will not
+	//! @param range max distance the sound will play over
+	//! @return the sound source index, or -1 for failure
 	int playSound(const char* name, const bool loop, const float range);
 
-	// stops the given sound if it is playing
-	// @return true if the sound was successfully stopped, otherwise return false
+	//! stops the given sound if it is playing
+	//! @return true if the sound was successfully stopped, otherwise return false
 	bool stopSound(const int index);
 
-	// stops all sounds playing on the speaker
-	// @return true if any sound was stopped, otherwise false
+	//! stops all sounds playing on the speaker
+	//! @return true if any sound was stopped, otherwise false
 	bool stopAllSounds();
 
-	// load the component from a file
-	// @param fp the file to read from
+	//! load the component from a file
+	//! @param fp the file to read from
 	virtual void load(FILE* fp) override;
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	// determine if the speaker is playing a sound
-	// @return true if the given sound source index is playing
+	//! determine if the speaker is playing a sound
+	//! @return true if the given sound source index is playing
 	bool isPlaying(const int index);
 
-	// getters & setters
+	//! getters & setters
 	virtual type_t		getType() const override { return COMPONENT_SPEAKER; }
 	const char*			getDefaultSound() const { return defaultSound.get(); }
 	bool				isDefaultLoop() const { return defaultLoop; }

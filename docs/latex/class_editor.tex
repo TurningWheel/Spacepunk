@@ -1,0 +1,659 @@
+\hypertarget{class_editor}{}\doxysection{Editor Class Reference}
+\label{class_editor}\index{Editor@{Editor}}
+
+
+Contains all the code for the editor.  
+
+
+
+
+{\ttfamily \#include $<$Editor.\+hpp$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_editor_a4c15363665dd810b6fa4bb698163e4ba}\label{class_editor_a4c15363665dd810b6fa4bb698163e4ba}} 
+enum \mbox{\hyperlink{class_editor_a4c15363665dd810b6fa4bb698163e4ba}{editingmode\+\_\+t}} \{ \newline
+{\bfseries T\+I\+L\+ES} = 0, 
+{\bfseries T\+E\+X\+T\+U\+R\+ES} = 1, 
+{\bfseries E\+N\+T\+I\+T\+I\+ES} = 2, 
+{\bfseries S\+E\+C\+T\+O\+RS} = 3, 
+\newline
+{\bfseries E\+D\+I\+T\+I\+N\+G\+M\+O\+D\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\begin{DoxyCompactList}\small\item\em editing mode \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_acf19d156365b2e7a1fb1f7d097e2d403}\label{class_editor_acf19d156365b2e7a1fb1f7d097e2d403}} 
+enum \mbox{\hyperlink{class_editor_acf19d156365b2e7a1fb1f7d097e2d403}{widgetmode\+\_\+t}} \{ \newline
+{\bfseries N\+O\+NE} = 0, 
+{\bfseries T\+R\+A\+N\+S\+L\+A\+TE} = 1, 
+{\bfseries R\+O\+T\+A\+TE} = 2, 
+{\bfseries S\+C\+A\+LE} = 3, 
+\newline
+{\bfseries W\+I\+D\+G\+E\+T\+M\+O\+D\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\begin{DoxyCompactList}\small\item\em widget mode \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_editor_ad25f4c21428560ef2083248b17edb095}{init}} (\mbox{\hyperlink{class_client}{Client}} \&\+\_\+client)
+\item 
+void \mbox{\hyperlink{class_editor_ab8a8f6bc4647e3884e258bff295c1420}{init}} (\mbox{\hyperlink{class_client}{Client}} \&\+\_\+client, const char $\ast$name, bool tiles, int w, int h)
+\item 
+void \mbox{\hyperlink{class_editor_aeef3e8d0505ddd92e95c5ac0c7593f2f}{init}} (\mbox{\hyperlink{class_client}{Client}} \&\+\_\+client, const char $\ast$path)
+\item 
+\mbox{\Hypertarget{class_editor_a59f97e0ec8b46cb5975d14b9f05f19c3}\label{class_editor_a59f97e0ec8b46cb5975d14b9f05f19c3}} 
+void \mbox{\hyperlink{class_editor_a59f97e0ec8b46cb5975d14b9f05f19c3}{button\+Entity\+Properties}} ()
+\begin{DoxyCompactList}\small\item\em toggles the entity properties window \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_editor_acfe763c7502dd5c71d546322917e2e58}{button\+Entity\+Add\+Component}} (unsigned int uid)
+\item 
+\mbox{\Hypertarget{class_editor_a09fa65fbf3afb6486d95aef235e83772}\label{class_editor_a09fa65fbf3afb6486d95aef235e83772}} 
+void \mbox{\hyperlink{class_editor_a09fa65fbf3afb6486d95aef235e83772}{button\+New\+Confirm}} ()
+\begin{DoxyCompactList}\small\item\em confirms creation of a new world \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_aacc232f14faff3693fbef005042d3885}\label{class_editor_aacc232f14faff3693fbef005042d3885}} 
+void \mbox{\hyperlink{class_editor_aacc232f14faff3693fbef005042d3885}{button\+New}} ()
+\begin{DoxyCompactList}\small\item\em opens a new world dialog \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a671988d26f792ca0277df7ffde9b9a21}\label{class_editor_a671988d26f792ca0277df7ffde9b9a21}} 
+void \mbox{\hyperlink{class_editor_a671988d26f792ca0277df7ffde9b9a21}{button\+Save}} ()
+\begin{DoxyCompactList}\small\item\em opens a save dialog \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_aca223d6d18317e76b59fadb7eda8a84d}\label{class_editor_aca223d6d18317e76b59fadb7eda8a84d}} 
+void \mbox{\hyperlink{class_editor_aca223d6d18317e76b59fadb7eda8a84d}{button\+Load}} ()
+\begin{DoxyCompactList}\small\item\em opens a load dialog \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a15e7f8288a2d6f2164c0682af7249567}\label{class_editor_a15e7f8288a2d6f2164c0682af7249567}} 
+void \mbox{\hyperlink{class_editor_a15e7f8288a2d6f2164c0682af7249567}{button\+Editor\+Settings}} ()
+\begin{DoxyCompactList}\small\item\em open the editor settings window \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a80cdd899b9b5d864d274813ee25de621}\label{class_editor_a80cdd899b9b5d864d274813ee25de621}} 
+void \mbox{\hyperlink{class_editor_a80cdd899b9b5d864d274813ee25de621}{button\+Editor\+Settings\+Apply}} ()
+\begin{DoxyCompactList}\small\item\em applies properties written in the editor settings window \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a4bd79dad83aaa8da05f14e2d566797c1}\label{class_editor_a4bd79dad83aaa8da05f14e2d566797c1}} 
+void \mbox{\hyperlink{class_editor_a4bd79dad83aaa8da05f14e2d566797c1}{button\+Map\+Settings}} ()
+\begin{DoxyCompactList}\small\item\em open the map settings window \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a710703df151fdf6230509a3d99532ac6}\label{class_editor_a710703df151fdf6230509a3d99532ac6}} 
+void \mbox{\hyperlink{class_editor_a710703df151fdf6230509a3d99532ac6}{button\+Map\+Settings\+Apply}} ()
+\begin{DoxyCompactList}\small\item\em applies properties written in the map settings window \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a8b696f4864fe05eff2b2272080508157}\label{class_editor_a8b696f4864fe05eff2b2272080508157}} 
+void \mbox{\hyperlink{class_editor_a8b696f4864fe05eff2b2272080508157}{button\+Help}} ()
+\begin{DoxyCompactList}\small\item\em opens the help window \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_ae111dee5639fb0b8cb3407743e9f701d}\label{class_editor_ae111dee5639fb0b8cb3407743e9f701d}} 
+void \mbox{\hyperlink{class_editor_ae111dee5639fb0b8cb3407743e9f701d}{button\+World\+Rotate}} (int rotate)
+\begin{DoxyCompactList}\small\item\em rotate the world by the specified amount \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_editor_a40ffd7c0dcf68f588bb7918944d41e51}{play\+Sound}} (const char $\ast$path)
+\item 
+void \mbox{\hyperlink{class_editor_ac98ba2cc3cec21efd64da2a6ccab77e9}{select\+Entity}} (const Uint32 uid, const bool selected)
+\item 
+void \mbox{\hyperlink{class_editor_a0fc0a28f42e3d8da22a22c0f0e106f28}{toggle\+Select\+Entity}} (const Uint32 uid)
+\item 
+void \mbox{\hyperlink{class_editor_afbe32f8c820b5ee0765300f41a088888}{select\+All\+Entities}} (const bool selected)
+\item 
+void \mbox{\hyperlink{class_editor_a8b01bde6c2f078ab1421c6687f4b842f}{select\+Entity\+For\+Spawn}} (const char $\ast$name)
+\item 
+void \mbox{\hyperlink{class_editor_a3504d0f4ba7a18a221652ef798353be0}{entities\+Name}} (const char $\ast$name)
+\item 
+void \mbox{\hyperlink{class_editor_aefd2cb815c1449507c1cf28ab17e8bf8}{entities\+Script}} (const char $\ast$script)
+\item 
+void \mbox{\hyperlink{class_editor_a1d686081e668c48b2c00e04e782b9dec}{entities\+Flag}} (const Uint32 flag)
+\item 
+\mbox{\Hypertarget{class_editor_a0a2faa78a8aba9db143a3ba892e1d9b9}\label{class_editor_a0a2faa78a8aba9db143a3ba892e1d9b9}} 
+void \mbox{\hyperlink{class_editor_a0a2faa78a8aba9db143a3ba892e1d9b9}{entities\+Save}} ()
+\begin{DoxyCompactList}\small\item\em exports each selected entity to a separate json file \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_editor_a89c22c016d6290c3593888ba0285cb59}{entity\+Key\+Value\+Enter}} (const char $\ast$pair)
+\item 
+void \mbox{\hyperlink{class_editor_a700cf7d573018cc3ff7cea8766274d86}{entity\+Key\+Value\+Remove}} (const char $\ast$pair)
+\item 
+void \mbox{\hyperlink{class_editor_a36ceaebfbd81962ed85fa275b69e9a12}{entity\+Key\+Value\+Select}} (const char $\ast$pair)
+\item 
+void \mbox{\hyperlink{class_editor_a5874104ff907f64927560c6ef1282266}{entity\+Component\+Expand}} (unsigned int uid)
+\item 
+void \mbox{\hyperlink{class_editor_abe95275cda487e06bd29ad4436a47b4d}{entity\+Component\+Collapse}} (unsigned int uid)
+\item 
+void \mbox{\hyperlink{class_editor_a7870449a9a70b415662f29142fd63779}{entity\+Add\+Component}} (unsigned int uid, Uint32 type)
+\item 
+void \mbox{\hyperlink{class_editor_aca5bf037595168b10a16fe772dfcd96d}{entity\+Copy\+Component}} (unsigned int uid)
+\item 
+void \mbox{\hyperlink{class_editor_ad07aa04c28fe875b1f8f07e68e3ace13}{entity\+Remove\+Component}} (unsigned int uid)
+\item 
+void \mbox{\hyperlink{class_editor_ad043b7ff69364c73cfe206bd6b069964}{entity\+Component\+Name}} (unsigned int uid, const char $\ast$name)
+\item 
+void \mbox{\hyperlink{class_editor_a757b0b46f372436011384fdeb4c743b6}{entity\+Component\+Translate}} (unsigned int uid, int dimension, float value)
+\item 
+void \mbox{\hyperlink{class_editor_a88ecb298f6218ffa09542dde5768cdb3}{entity\+Component\+Rotate}} (unsigned int uid, int dimension, float value)
+\item 
+void \mbox{\hyperlink{class_editor_a07a24a2276c18364768c598f9453043e}{entity\+Component\+Scale}} (unsigned int uid, int dimension, float value)
+\item 
+void \mbox{\hyperlink{class_editor_a87370c4d57849f0c546772c73444feb6}{widget\+TranslateX}} (float x)
+\item 
+void \mbox{\hyperlink{class_editor_a63f841a0946ad8659a2bc862861a2f1a}{widget\+TranslateY}} (float y)
+\item 
+void \mbox{\hyperlink{class_editor_ac93d8a528b2b39d96bf89604e0179adf}{widget\+TranslateZ}} (float z)
+\item 
+void \mbox{\hyperlink{class_editor_a72f5f8cb79b4af7dba8a1e586689b37c}{widget\+Rotate\+Yaw}} (float yaw)
+\item 
+void \mbox{\hyperlink{class_editor_a99a7543131892daf1c357fa4f1947450}{widget\+Rotate\+Pitch}} (float pitch)
+\item 
+void \mbox{\hyperlink{class_editor_a50341210ec1d3abd0aaae09bbbdf33f5}{widget\+Rotate\+Roll}} (float roll)
+\item 
+void \mbox{\hyperlink{class_editor_ace6b65f8b33dc7aa9c43ca96b8937c06}{widget\+ScaleX}} (float x)
+\item 
+void \mbox{\hyperlink{class_editor_a3f4dea99530a4c22aa573a3f4c11a629}{widget\+ScaleY}} (float y)
+\item 
+void \mbox{\hyperlink{class_editor_ab28fbfc2bebdbb1259db7e529b452f52}{widget\+ScaleZ}} (float z)
+\item 
+\mbox{\Hypertarget{class_editor_acb31ceda95da313587af92d743df008e}\label{class_editor_acb31ceda95da313587af92d743df008e}} 
+void \mbox{\hyperlink{class_editor_acb31ceda95da313587af92d743df008e}{optimize\+Chunks}} ()
+\begin{DoxyCompactList}\small\item\em optimizes the chunks of a tile world \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a5f8978e85761ab1a95ee375f7a5cc975}\label{class_editor_a5f8978e85761ab1a95ee375f7a5cc975}} 
+void \mbox{\hyperlink{class_editor_a5f8978e85761ab1a95ee375f7a5cc975}{pre\+Process}} ()
+\begin{DoxyCompactList}\small\item\em setup a frame in the editor \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_editor_a52d9d6c022806a912b176f5e44b32b4c}{process}} (const bool usable)
+\item 
+\mbox{\Hypertarget{class_editor_a556a4c166c38398f7b9eded347ef26af}\label{class_editor_a556a4c166c38398f7b9eded347ef26af}} 
+void \mbox{\hyperlink{class_editor_a556a4c166c38398f7b9eded347ef26af}{post\+Process}} ()
+\begin{DoxyCompactList}\small\item\em end-\/frame actions \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_editor_a1b1e8ce45194c9aa9b562588b6339379}{draw}} (\mbox{\hyperlink{class_renderer}{Renderer}} \&renderer)
+\item 
+\mbox{\Hypertarget{class_editor_ae9b3f22873ba0aa9935f1747ae956c21}\label{class_editor_ae9b3f22873ba0aa9935f1747ae956c21}} 
+const bool \mbox{\hyperlink{class_editor_ae9b3f22873ba0aa9935f1747ae956c21}{is\+Initialized}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_editor_a369a4069ded24ee73a23ac03c4d061aa}\label{class_editor_a369a4069ded24ee73a23ac03c4d061aa}} 
+const bool {\bfseries is\+Ceiling\+Mode} () const
+\item 
+\mbox{\Hypertarget{class_editor_af26d5d309ee67185180430b3eb7b6ca7}\label{class_editor_af26d5d309ee67185180430b3eb7b6ca7}} 
+Sint32 {\bfseries get\+Editing\+Mode} () const
+\item 
+\mbox{\Hypertarget{class_editor_ad0afe9ba916fb1ceb1f052ed0fd80449}\label{class_editor_ad0afe9ba916fb1ceb1f052ed0fd80449}} 
+const Uint32 {\bfseries get\+Highlighted\+Obj} () const
+\item 
+\mbox{\Hypertarget{class_editor_a88401828d4c1e9d6e4140d08a2a03d11}\label{class_editor_a88401828d4c1e9d6e4140d08a2a03d11}} 
+Sint32 {\bfseries get\+Widget\+Mode} () const
+\item 
+\mbox{\Hypertarget{class_editor_ae0a02095f6a40e6e36422f63756caa1c}\label{class_editor_ae0a02095f6a40e6e36422f63756caa1c}} 
+const int {\bfseries get\+Texture\+Side} () const
+\item 
+\mbox{\Hypertarget{class_editor_a99030ce2687c4741b8971f88c973ddbe}\label{class_editor_a99030ce2687c4741b8971f88c973ddbe}} 
+const \mbox{\hyperlink{class_camera}{Camera}} $\ast$ {\bfseries get\+Editing\+Camera} () const
+\item 
+\mbox{\Hypertarget{class_editor_aa100bd72ecb0ff6817dbd1e09e4c4aa9}\label{class_editor_aa100bd72ecb0ff6817dbd1e09e4c4aa9}} 
+const \mbox{\hyperlink{class_camera}{Camera}} $\ast$ {\bfseries get\+Minimap\+Camera} () const
+\item 
+\mbox{\Hypertarget{class_editor_a57904d456b5bc507cfd83017ba5bb65e}\label{class_editor_a57904d456b5bc507cfd83017ba5bb65e}} 
+const char $\ast$ {\bfseries get\+Texture\+Under\+Mouse} () const
+\item 
+\mbox{\Hypertarget{class_editor_a0531b17110bfd1802f673b8560096b8f}\label{class_editor_a0531b17110bfd1802f673b8560096b8f}} 
+const bool {\bfseries is\+Texture\+Selector\+Active} () const
+\item 
+\mbox{\Hypertarget{class_editor_aaa57432fd1983821b5b0b699620c17a0}\label{class_editor_aaa57432fd1983821b5b0b699620c17a0}} 
+const bool {\bfseries is\+Fullscreen} () const
+\item 
+\mbox{\Hypertarget{class_editor_a9007a4e1433af8da747a3cd0473842a8}\label{class_editor_a9007a4e1433af8da747a3cd0473842a8}} 
+void {\bfseries set\+Highlighted\+Obj} (const Uint32 obj)
+\item 
+\mbox{\Hypertarget{class_editor_aae4e1741759bf534c82dba430e6ed914}\label{class_editor_aae4e1741759bf534c82dba430e6ed914}} 
+void {\bfseries set\+Widget\+Mode} (const Uint32 \+\_\+widget\+Mode)
+\item 
+\mbox{\Hypertarget{class_editor_a134d45cf0d2b56437737cc92ac9fd785}\label{class_editor_a134d45cf0d2b56437737cc92ac9fd785}} 
+void {\bfseries set\+Ceiling\+Mode} (const bool \+\_\+ceiling\+Mode)
+\item 
+\mbox{\Hypertarget{class_editor_af56937e9b02fda08d603acc2fcc149d0}\label{class_editor_af56937e9b02fda08d603acc2fcc149d0}} 
+void {\bfseries set\+Editing\+Mode} (const Uint32 \+\_\+editing\+Mode)
+\item 
+\mbox{\Hypertarget{class_editor_aa9e8ea446bbb9e4b93e33a341a0872a4}\label{class_editor_aa9e8ea446bbb9e4b93e33a341a0872a4}} 
+void {\bfseries set\+Texture\+Side} (const int \+\_\+texture\+Side)
+\item 
+\mbox{\Hypertarget{class_editor_ad4cd181ec631030fccdbad1294db5a57}\label{class_editor_ad4cd181ec631030fccdbad1294db5a57}} 
+void {\bfseries set\+Texture\+Selector\+Active} (const bool \+\_\+b)
+\item 
+\mbox{\Hypertarget{class_editor_ac71b2e7cb7ee8aa33a95a96ea251bab8}\label{class_editor_ac71b2e7cb7ee8aa33a95a96ea251bab8}} 
+void {\bfseries set\+Fullscreen} (const bool \+\_\+b)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ \mbox{\hyperlink{class_editor_affa65e120dd0784993426dd5cc4dd78e}{editing\+Mode\+Str}} \mbox{[}E\+D\+I\+T\+I\+N\+G\+M\+O\+D\+E\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH\mbox{]}
+\begin{DoxyCompactList}\small\item\em string labels for the editing modes \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all the code for the editor. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_editor_acfe763c7502dd5c71d546322917e2e58}\label{class_editor_acfe763c7502dd5c71d546322917e2e58}} 
+\index{Editor@{Editor}!buttonEntityAddComponent@{buttonEntityAddComponent}}
+\index{buttonEntityAddComponent@{buttonEntityAddComponent}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{buttonEntityAddComponent()}{buttonEntityAddComponent()}}
+{\footnotesize\ttfamily void Editor\+::button\+Entity\+Add\+Component (\begin{DoxyParamCaption}\item[{unsigned int}]{uid }\end{DoxyParamCaption})}
+
+opens the entity add component window 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component which will get the new component \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a1b1e8ce45194c9aa9b562588b6339379}\label{class_editor_a1b1e8ce45194c9aa9b562588b6339379}} 
+\index{Editor@{Editor}!draw@{draw}}
+\index{draw@{draw}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Editor\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_renderer}{Renderer}} \&}]{renderer }\end{DoxyParamCaption})}
+
+draw hud elements in the 3D view 
+\begin{DoxyParams}{Parameters}
+{\em renderer} & the renderer to draw with \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a1d686081e668c48b2c00e04e782b9dec}\label{class_editor_a1d686081e668c48b2c00e04e782b9dec}} 
+\index{Editor@{Editor}!entitiesFlag@{entitiesFlag}}
+\index{entitiesFlag@{entitiesFlag}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entitiesFlag()}{entitiesFlag()}}
+{\footnotesize\ttfamily void Editor\+::entities\+Flag (\begin{DoxyParamCaption}\item[{const Uint32}]{flag }\end{DoxyParamCaption})}
+
+toggles the given flag on all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em flag} & the flag to toggle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a3504d0f4ba7a18a221652ef798353be0}\label{class_editor_a3504d0f4ba7a18a221652ef798353be0}} 
+\index{Editor@{Editor}!entitiesName@{entitiesName}}
+\index{entitiesName@{entitiesName}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entitiesName()}{entitiesName()}}
+{\footnotesize\ttfamily void Editor\+::entities\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+rename all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name to give to the entities \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_aefd2cb815c1449507c1cf28ab17e8bf8}\label{class_editor_aefd2cb815c1449507c1cf28ab17e8bf8}} 
+\index{Editor@{Editor}!entitiesScript@{entitiesScript}}
+\index{entitiesScript@{entitiesScript}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entitiesScript()}{entitiesScript()}}
+{\footnotesize\ttfamily void Editor\+::entities\+Script (\begin{DoxyParamCaption}\item[{const char $\ast$}]{script }\end{DoxyParamCaption})}
+
+set the script for all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em script} & the script to give to the entities \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a7870449a9a70b415662f29142fd63779}\label{class_editor_a7870449a9a70b415662f29142fd63779}} 
+\index{Editor@{Editor}!entityAddComponent@{entityAddComponent}}
+\index{entityAddComponent@{entityAddComponent}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityAddComponent()}{entityAddComponent()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Add\+Component (\begin{DoxyParamCaption}\item[{unsigned int}]{uid,  }\item[{Uint32}]{type }\end{DoxyParamCaption})}
+
+add a new component to an entity 
+\begin{DoxyParams}{Parameters}
+{\em uid} & uid of the new component\textquotesingle{}s parent (0 = entity root) \\
+\hline
+{\em type} & the type of component to add \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_abe95275cda487e06bd29ad4436a47b4d}\label{class_editor_abe95275cda487e06bd29ad4436a47b4d}} 
+\index{Editor@{Editor}!entityComponentCollapse@{entityComponentCollapse}}
+\index{entityComponentCollapse@{entityComponentCollapse}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityComponentCollapse()}{entityComponentCollapse()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Component\+Collapse (\begin{DoxyParamCaption}\item[{unsigned int}]{uid }\end{DoxyParamCaption})}
+
+collapses a given component on selected entities 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component to expand \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a5874104ff907f64927560c6ef1282266}\label{class_editor_a5874104ff907f64927560c6ef1282266}} 
+\index{Editor@{Editor}!entityComponentExpand@{entityComponentExpand}}
+\index{entityComponentExpand@{entityComponentExpand}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityComponentExpand()}{entityComponentExpand()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Component\+Expand (\begin{DoxyParamCaption}\item[{unsigned int}]{uid }\end{DoxyParamCaption})}
+
+expands a given component on selected entities 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component to expand \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ad043b7ff69364c73cfe206bd6b069964}\label{class_editor_ad043b7ff69364c73cfe206bd6b069964}} 
+\index{Editor@{Editor}!entityComponentName@{entityComponentName}}
+\index{entityComponentName@{entityComponentName}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityComponentName()}{entityComponentName()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Component\+Name (\begin{DoxyParamCaption}\item[{unsigned int}]{uid,  }\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+renames a given component on selected entities 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+{\em name} & the new name \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a88ecb298f6218ffa09542dde5768cdb3}\label{class_editor_a88ecb298f6218ffa09542dde5768cdb3}} 
+\index{Editor@{Editor}!entityComponentRotate@{entityComponentRotate}}
+\index{entityComponentRotate@{entityComponentRotate}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityComponentRotate()}{entityComponentRotate()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Component\+Rotate (\begin{DoxyParamCaption}\item[{unsigned int}]{uid,  }\item[{int}]{dimension,  }\item[{float}]{value }\end{DoxyParamCaption})}
+
+rotates a given component on selected entities 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+{\em dimension} & the dimension to rotate \\
+\hline
+{\em value} & the value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a07a24a2276c18364768c598f9453043e}\label{class_editor_a07a24a2276c18364768c598f9453043e}} 
+\index{Editor@{Editor}!entityComponentScale@{entityComponentScale}}
+\index{entityComponentScale@{entityComponentScale}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityComponentScale()}{entityComponentScale()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Component\+Scale (\begin{DoxyParamCaption}\item[{unsigned int}]{uid,  }\item[{int}]{dimension,  }\item[{float}]{value }\end{DoxyParamCaption})}
+
+scales a given component on selected entities 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+{\em dimension} & the dimension to scale \\
+\hline
+{\em value} & the value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a757b0b46f372436011384fdeb4c743b6}\label{class_editor_a757b0b46f372436011384fdeb4c743b6}} 
+\index{Editor@{Editor}!entityComponentTranslate@{entityComponentTranslate}}
+\index{entityComponentTranslate@{entityComponentTranslate}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityComponentTranslate()}{entityComponentTranslate()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Component\+Translate (\begin{DoxyParamCaption}\item[{unsigned int}]{uid,  }\item[{int}]{dimension,  }\item[{float}]{value }\end{DoxyParamCaption})}
+
+translates a given component on selected entities 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component \\
+\hline
+{\em dimension} & the dimension to translate \\
+\hline
+{\em value} & the value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_aca5bf037595168b10a16fe772dfcd96d}\label{class_editor_aca5bf037595168b10a16fe772dfcd96d}} 
+\index{Editor@{Editor}!entityCopyComponent@{entityCopyComponent}}
+\index{entityCopyComponent@{entityCopyComponent}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityCopyComponent()}{entityCopyComponent()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Copy\+Component (\begin{DoxyParamCaption}\item[{unsigned int}]{uid }\end{DoxyParamCaption})}
+
+duplicate a component in the entity 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component to duplicate \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a89c22c016d6290c3593888ba0285cb59}\label{class_editor_a89c22c016d6290c3593888ba0285cb59}} 
+\index{Editor@{Editor}!entityKeyValueEnter@{entityKeyValueEnter}}
+\index{entityKeyValueEnter@{entityKeyValueEnter}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityKeyValueEnter()}{entityKeyValueEnter()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Key\+Value\+Enter (\begin{DoxyParamCaption}\item[{const char $\ast$}]{pair }\end{DoxyParamCaption})}
+
+set a key value pair on an entity 
+\begin{DoxyParams}{Parameters}
+{\em pair} & the encoded pair \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a700cf7d573018cc3ff7cea8766274d86}\label{class_editor_a700cf7d573018cc3ff7cea8766274d86}} 
+\index{Editor@{Editor}!entityKeyValueRemove@{entityKeyValueRemove}}
+\index{entityKeyValueRemove@{entityKeyValueRemove}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityKeyValueRemove()}{entityKeyValueRemove()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Key\+Value\+Remove (\begin{DoxyParamCaption}\item[{const char $\ast$}]{pair }\end{DoxyParamCaption})}
+
+remove a key value pair on an entity 
+\begin{DoxyParams}{Parameters}
+{\em key} & the key to search for and remove \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a36ceaebfbd81962ed85fa275b69e9a12}\label{class_editor_a36ceaebfbd81962ed85fa275b69e9a12}} 
+\index{Editor@{Editor}!entityKeyValueSelect@{entityKeyValueSelect}}
+\index{entityKeyValueSelect@{entityKeyValueSelect}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityKeyValueSelect()}{entityKeyValueSelect()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Key\+Value\+Select (\begin{DoxyParamCaption}\item[{const char $\ast$}]{pair }\end{DoxyParamCaption})}
+
+update the editor field with the given pair 
+\begin{DoxyParams}{Parameters}
+{\em pair} & the encoded pair \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ad07aa04c28fe875b1f8f07e68e3ace13}\label{class_editor_ad07aa04c28fe875b1f8f07e68e3ace13}} 
+\index{Editor@{Editor}!entityRemoveComponent@{entityRemoveComponent}}
+\index{entityRemoveComponent@{entityRemoveComponent}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{entityRemoveComponent()}{entityRemoveComponent()}}
+{\footnotesize\ttfamily void Editor\+::entity\+Remove\+Component (\begin{DoxyParamCaption}\item[{unsigned int}]{uid }\end{DoxyParamCaption})}
+
+removes a component from an entity 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the component to remove \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ad25f4c21428560ef2083248b17edb095}\label{class_editor_ad25f4c21428560ef2083248b17edb095}} 
+\index{Editor@{Editor}!init@{init}}
+\index{init@{init}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily void Editor\+::init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_client}{Client}} \&}]{\+\_\+client }\end{DoxyParamCaption})}
+
+sets up the editor 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+client} & the client that the editor is attached to \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ab8a8f6bc4647e3884e258bff295c1420}\label{class_editor_ab8a8f6bc4647e3884e258bff295c1420}} 
+\index{Editor@{Editor}!init@{init}}
+\index{init@{init}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily void Editor\+::init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_client}{Client}} \&}]{\+\_\+client,  }\item[{const char $\ast$}]{name,  }\item[{bool}]{tiles,  }\item[{int}]{w,  }\item[{int}]{h }\end{DoxyParamCaption})}
+
+sets up the editor 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+client} & the client that the editor is attached to \\
+\hline
+{\em name} & the name of the new world to create and edit \\
+\hline
+{\em tiles} & if true, the world is tile-\/based \\
+\hline
+{\em w} & the width of the new world, in tiles (unused for sector worlds) \\
+\hline
+{\em h} & the height of the new world, in (unused for sector worlds) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_aeef3e8d0505ddd92e95c5ac0c7593f2f}\label{class_editor_aeef3e8d0505ddd92e95c5ac0c7593f2f}} 
+\index{Editor@{Editor}!init@{init}}
+\index{init@{init}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily void Editor\+::init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_client}{Client}} \&}]{\+\_\+client,  }\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+sets up the editor 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+client} & the client that the editor is attached to \\
+\hline
+{\em path} & file path to the world to load \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a40ffd7c0dcf68f588bb7918944d41e51}\label{class_editor_a40ffd7c0dcf68f588bb7918944d41e51}} 
+\index{Editor@{Editor}!playSound@{playSound}}
+\index{playSound@{playSound}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{playSound()}{playSound()}}
+{\footnotesize\ttfamily void Editor\+::play\+Sound (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+play a sound effect, if they are enabled 
+\begin{DoxyParams}{Parameters}
+{\em path} & path to the sound to play \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a52d9d6c022806a912b176f5e44b32b4c}\label{class_editor_a52d9d6c022806a912b176f5e44b32b4c}} 
+\index{Editor@{Editor}!process@{process}}
+\index{process@{process}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{process()}{process()}}
+{\footnotesize\ttfamily void Editor\+::process (\begin{DoxyParamCaption}\item[{const bool}]{usable }\end{DoxyParamCaption})}
+
+run a frame in the editor 
+\begin{DoxyParams}{Parameters}
+{\em usable} & if true, pointer is usable; if false, pointer is not usable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_afbe32f8c820b5ee0765300f41a088888}\label{class_editor_afbe32f8c820b5ee0765300f41a088888}} 
+\index{Editor@{Editor}!selectAllEntities@{selectAllEntities}}
+\index{selectAllEntities@{selectAllEntities}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{selectAllEntities()}{selectAllEntities()}}
+{\footnotesize\ttfamily void Editor\+::select\+All\+Entities (\begin{DoxyParamCaption}\item[{const bool}]{selected }\end{DoxyParamCaption})}
+
+selects all entities in the editor 
+\begin{DoxyParams}{Parameters}
+{\em selected} & if true, the entities will be selected, otherwise they will be deselected \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ac98ba2cc3cec21efd64da2a6ccab77e9}\label{class_editor_ac98ba2cc3cec21efd64da2a6ccab77e9}} 
+\index{Editor@{Editor}!selectEntity@{selectEntity}}
+\index{selectEntity@{selectEntity}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{selectEntity()}{selectEntity()}}
+{\footnotesize\ttfamily void Editor\+::select\+Entity (\begin{DoxyParamCaption}\item[{const Uint32}]{uid,  }\item[{const bool}]{selected }\end{DoxyParamCaption})}
+
+selects an entity in the editor 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the entity to select \\
+\hline
+{\em selected} & if true, the entity will be selected, otherwise it will be deselected \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a8b01bde6c2f078ab1421c6687f4b842f}\label{class_editor_a8b01bde6c2f078ab1421c6687f4b842f}} 
+\index{Editor@{Editor}!selectEntityForSpawn@{selectEntityForSpawn}}
+\index{selectEntityForSpawn@{selectEntityForSpawn}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{selectEntityForSpawn()}{selectEntityForSpawn()}}
+{\footnotesize\ttfamily void Editor\+::select\+Entity\+For\+Spawn (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+selects an entity def to spawn (assigns pointer) 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the entity to spawn \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a0fc0a28f42e3d8da22a22c0f0e106f28}\label{class_editor_a0fc0a28f42e3d8da22a22c0f0e106f28}} 
+\index{Editor@{Editor}!toggleSelectEntity@{toggleSelectEntity}}
+\index{toggleSelectEntity@{toggleSelectEntity}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{toggleSelectEntity()}{toggleSelectEntity()}}
+{\footnotesize\ttfamily void Editor\+::toggle\+Select\+Entity (\begin{DoxyParamCaption}\item[{const Uint32}]{uid }\end{DoxyParamCaption})}
+
+toggles the selection of an entity in the editor 
+\begin{DoxyParams}{Parameters}
+{\em uid} & the uid of the entity to select \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a99a7543131892daf1c357fa4f1947450}\label{class_editor_a99a7543131892daf1c357fa4f1947450}} 
+\index{Editor@{Editor}!widgetRotatePitch@{widgetRotatePitch}}
+\index{widgetRotatePitch@{widgetRotatePitch}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetRotatePitch()}{widgetRotatePitch()}}
+{\footnotesize\ttfamily void Editor\+::widget\+Rotate\+Pitch (\begin{DoxyParamCaption}\item[{float}]{pitch }\end{DoxyParamCaption})}
+
+sets the yaw of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em pitch} & the rotation value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a50341210ec1d3abd0aaae09bbbdf33f5}\label{class_editor_a50341210ec1d3abd0aaae09bbbdf33f5}} 
+\index{Editor@{Editor}!widgetRotateRoll@{widgetRotateRoll}}
+\index{widgetRotateRoll@{widgetRotateRoll}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetRotateRoll()}{widgetRotateRoll()}}
+{\footnotesize\ttfamily void Editor\+::widget\+Rotate\+Roll (\begin{DoxyParamCaption}\item[{float}]{roll }\end{DoxyParamCaption})}
+
+sets the yaw of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em roll} & the rotation value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a72f5f8cb79b4af7dba8a1e586689b37c}\label{class_editor_a72f5f8cb79b4af7dba8a1e586689b37c}} 
+\index{Editor@{Editor}!widgetRotateYaw@{widgetRotateYaw}}
+\index{widgetRotateYaw@{widgetRotateYaw}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetRotateYaw()}{widgetRotateYaw()}}
+{\footnotesize\ttfamily void Editor\+::widget\+Rotate\+Yaw (\begin{DoxyParamCaption}\item[{float}]{yaw }\end{DoxyParamCaption})}
+
+sets the yaw of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em yaw} & the rotation value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ace6b65f8b33dc7aa9c43ca96b8937c06}\label{class_editor_ace6b65f8b33dc7aa9c43ca96b8937c06}} 
+\index{Editor@{Editor}!widgetScaleX@{widgetScaleX}}
+\index{widgetScaleX@{widgetScaleX}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetScaleX()}{widgetScaleX()}}
+{\footnotesize\ttfamily void Editor\+::widget\+ScaleX (\begin{DoxyParamCaption}\item[{float}]{x }\end{DoxyParamCaption})}
+
+sets the x scale of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em x} & the scale value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a3f4dea99530a4c22aa573a3f4c11a629}\label{class_editor_a3f4dea99530a4c22aa573a3f4c11a629}} 
+\index{Editor@{Editor}!widgetScaleY@{widgetScaleY}}
+\index{widgetScaleY@{widgetScaleY}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetScaleY()}{widgetScaleY()}}
+{\footnotesize\ttfamily void Editor\+::widget\+ScaleY (\begin{DoxyParamCaption}\item[{float}]{y }\end{DoxyParamCaption})}
+
+sets the y scale of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em y} & the scale value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ab28fbfc2bebdbb1259db7e529b452f52}\label{class_editor_ab28fbfc2bebdbb1259db7e529b452f52}} 
+\index{Editor@{Editor}!widgetScaleZ@{widgetScaleZ}}
+\index{widgetScaleZ@{widgetScaleZ}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetScaleZ()}{widgetScaleZ()}}
+{\footnotesize\ttfamily void Editor\+::widget\+ScaleZ (\begin{DoxyParamCaption}\item[{float}]{z }\end{DoxyParamCaption})}
+
+sets the z scale of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em z} & the scale value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a87370c4d57849f0c546772c73444feb6}\label{class_editor_a87370c4d57849f0c546772c73444feb6}} 
+\index{Editor@{Editor}!widgetTranslateX@{widgetTranslateX}}
+\index{widgetTranslateX@{widgetTranslateX}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetTranslateX()}{widgetTranslateX()}}
+{\footnotesize\ttfamily void Editor\+::widget\+TranslateX (\begin{DoxyParamCaption}\item[{float}]{x }\end{DoxyParamCaption})}
+
+sets the x position of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em x} & the position value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_a63f841a0946ad8659a2bc862861a2f1a}\label{class_editor_a63f841a0946ad8659a2bc862861a2f1a}} 
+\index{Editor@{Editor}!widgetTranslateY@{widgetTranslateY}}
+\index{widgetTranslateY@{widgetTranslateY}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetTranslateY()}{widgetTranslateY()}}
+{\footnotesize\ttfamily void Editor\+::widget\+TranslateY (\begin{DoxyParamCaption}\item[{float}]{y }\end{DoxyParamCaption})}
+
+sets the y position of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em y} & the position value to use \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_editor_ac93d8a528b2b39d96bf89604e0179adf}\label{class_editor_ac93d8a528b2b39d96bf89604e0179adf}} 
+\index{Editor@{Editor}!widgetTranslateZ@{widgetTranslateZ}}
+\index{widgetTranslateZ@{widgetTranslateZ}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{widgetTranslateZ()}{widgetTranslateZ()}}
+{\footnotesize\ttfamily void Editor\+::widget\+TranslateZ (\begin{DoxyParamCaption}\item[{float}]{z }\end{DoxyParamCaption})}
+
+sets the z position of all selected entities 
+\begin{DoxyParams}{Parameters}
+{\em z} & the position value to use \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_editor_affa65e120dd0784993426dd5cc4dd78e}\label{class_editor_affa65e120dd0784993426dd5cc4dd78e}} 
+\index{Editor@{Editor}!editingModeStr@{editingModeStr}}
+\index{editingModeStr@{editingModeStr}!Editor@{Editor}}
+\doxysubsubsection{\texorpdfstring{editingModeStr}{editingModeStr}}
+{\footnotesize\ttfamily const char $\ast$ Editor\+::editing\+Mode\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Tile Mode"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Tile Texture Mode"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Entity Mode"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"Sector Mode"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+string labels for the editing modes 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_editor_8hpp}{Editor.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Editor.\+cpp\end{DoxyCompactItemize}

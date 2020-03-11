@@ -1,0 +1,104 @@
+\hypertarget{struct_rect}{}\doxysection{Rect$<$ T $>$ Struct Template Reference}
+\label{struct_rect}\index{Rect$<$ T $>$@{Rect$<$ T $>$}}
+
+
+Defines a two-\/dimensional rectangle.  
+
+
+
+
+{\ttfamily \#include $<$Rect.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_rect_a1a1c6ce0f211b2134220b3541e06c6d4}\label{struct_rect_a1a1c6ce0f211b2134220b3541e06c6d4}} 
+{\bfseries Rect} (T \+\_\+x, T \+\_\+y, T \+\_\+w, T \+\_\+h)
+\item 
+\mbox{\Hypertarget{struct_rect_a99893d3bd6fc98d6a672d32bd1146645}\label{struct_rect_a99893d3bd6fc98d6a672d32bd1146645}} 
+{\bfseries Rect} (T $\ast$arr)
+\item 
+\mbox{\Hypertarget{struct_rect_a9b864b9e7ced85afb5c89937c36ba0e6}\label{struct_rect_a9b864b9e7ced85afb5c89937c36ba0e6}} 
+{\bfseries Rect} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ T $>$ \&rect)
+\item 
+bool \mbox{\hyperlink{struct_rect_a3d5cd12bbc01b50ac6aa29b16a57354e}{contains\+Point}} (T pointX, T pointY) const
+\item 
+void \mbox{\hyperlink{struct_rect_a9496ed1e57ce9e4ce9715bba312decf1}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{struct_rect_a38893d814daaef850fa6fdfa2172d122}{expose\+To\+Script}} (lua\+\_\+\+State $\ast$lua, const char $\ast$name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_rect_a949da433f41943caf8dda3d201549005}\label{struct_rect_a949da433f41943caf8dda3d201549005}} 
+T {\bfseries x} = 0
+\item 
+\mbox{\Hypertarget{struct_rect_a7e0ff649198de494128c61479ed6713f}\label{struct_rect_a7e0ff649198de494128c61479ed6713f}} 
+T {\bfseries y} = 0
+\item 
+\mbox{\Hypertarget{struct_rect_a5a34762b006a1d65d4c6ad58bf3120d0}\label{struct_rect_a5a34762b006a1d65d4c6ad58bf3120d0}} 
+T {\bfseries w} = 0
+\item 
+\mbox{\Hypertarget{struct_rect_a78ae244d7142df714716f083db77533f}\label{struct_rect_a78ae244d7142df714716f083db77533f}} 
+T {\bfseries h} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+struct Rect$<$ T $>$}
+
+Defines a two-\/dimensional rectangle. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_rect_a3d5cd12bbc01b50ac6aa29b16a57354e}\label{struct_rect_a3d5cd12bbc01b50ac6aa29b16a57354e}} 
+\index{Rect$<$ T $>$@{Rect$<$ T $>$}!containsPoint@{containsPoint}}
+\index{containsPoint@{containsPoint}!Rect$<$ T $>$@{Rect$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{containsPoint()}{containsPoint()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{struct_rect}{Rect}}$<$ T $>$\+::contains\+Point (\begin{DoxyParamCaption}\item[{T}]{pointX,  }\item[{T}]{pointY }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+determines if the given point lies within the bounds of the rectangle 
+\begin{DoxyParams}{Parameters}
+{\em pointX} & the x coordinate of the point to test \\
+\hline
+{\em pointY} & the y coordinate of the point to test \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the point is within the rectangle, and false if it is not 
+\end{DoxyReturn}
+\mbox{\Hypertarget{struct_rect_a38893d814daaef850fa6fdfa2172d122}\label{struct_rect_a38893d814daaef850fa6fdfa2172d122}} 
+\index{Rect$<$ T $>$@{Rect$<$ T $>$}!exposeToScript@{exposeToScript}}
+\index{exposeToScript@{exposeToScript}!Rect$<$ T $>$@{Rect$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{exposeToScript()}{exposeToScript()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static void \mbox{\hyperlink{struct_rect}{Rect}}$<$ T $>$\+::expose\+To\+Script (\begin{DoxyParamCaption}\item[{lua\+\_\+\+State $\ast$}]{lua,  }\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+exposes this rect type to a script 
+\begin{DoxyParams}{Parameters}
+{\em lua} & The script engine to expose to \\
+\hline
+{\em name} & The type name in lua \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{struct_rect_a9496ed1e57ce9e4ce9715bba312decf1}\label{struct_rect_a9496ed1e57ce9e4ce9715bba312decf1}} 
+\index{Rect$<$ T $>$@{Rect$<$ T $>$}!serialize@{serialize}}
+\index{serialize@{serialize}!Rect$<$ T $>$@{Rect$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{struct_rect}{Rect}}$<$ T $>$\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_rect_8hpp}{Rect.\+hpp}}\end{DoxyCompactItemize}

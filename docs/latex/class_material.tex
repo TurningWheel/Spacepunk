@@ -1,0 +1,102 @@
+\hypertarget{class_material}{}\doxysection{Material Class Reference}
+\label{class_material}\index{Material@{Material}}
+
+
+Materials combine \mbox{\hyperlink{class_image}{Image}} objects, a @\+Shader\+Program, and other meta-\/data into a single class.  
+
+
+
+
+{\ttfamily \#include $<$Material.\+hpp$>$}
+
+Inheritance diagram for Material\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_material}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_material_a61768e56c75bb11f6c735a432c35a0b6}\label{class_material_a61768e56c75bb11f6c735a432c35a0b6}} 
+enum {\bfseries texturekind\+\_\+t} \{ {\bfseries S\+T\+A\+N\+D\+A\+RD}, 
+{\bfseries G\+L\+OW}, 
+{\bfseries T\+E\+X\+T\+U\+R\+E\+K\+I\+N\+D\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_material_a8c186c968155922d5625e813705ec6ce}\label{class_material_a8c186c968155922d5625e813705ec6ce}} 
+{\bfseries Material} (const char $\ast$\+\_\+name)
+\item 
+unsigned int \mbox{\hyperlink{class_material_a255b97717d2f40b782ff0b7f7d574cb7}{bind\+Textures}} (texturekind\+\_\+t texture\+Kind)
+\item 
+virtual void \mbox{\hyperlink{class_material_ac9e816c9d2c82f062c2d58526ea1f462}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_material_a7bd60963c21fa11b55ee52a24d88b8c8}\label{class_material_a7bd60963c21fa11b55ee52a24d88b8c8}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_material_a7bd60963c21fa11b55ee52a24d88b8c8}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_material_a5776bdc74aea44058ed077e3cc61c069}\label{class_material_a5776bdc74aea44058ed077e3cc61c069}} 
+const \mbox{\hyperlink{class_shader_program}{Shader\+Program}} \& {\bfseries get\+Shader} () const
+\item 
+\mbox{\Hypertarget{class_material_a5ab900ee3f5cbb54e1b3b71b81c59a25}\label{class_material_a5ab900ee3f5cbb54e1b3b71b81c59a25}} 
+\mbox{\hyperlink{class_shader_program}{Shader\+Program}} \& {\bfseries get\+Shader} ()
+\item 
+\mbox{\Hypertarget{class_material_a69a132aa19b4e12ebd764a3888eb00f2}\label{class_material_a69a132aa19b4e12ebd764a3888eb00f2}} 
+const bool {\bfseries is\+Glowing} () const
+\item 
+\mbox{\Hypertarget{class_material_a93ab262c5e8fa828e5f669dd409b94b8}\label{class_material_a93ab262c5e8fa828e5f669dd409b94b8}} 
+const bool {\bfseries is\+Transparent} ()
+\item 
+\mbox{\Hypertarget{class_material_a0dabd9c9b75d0afaece92ead7bdf3188}\label{class_material_a0dabd9c9b75d0afaece92ead7bdf3188}} 
+const bool {\bfseries is\+Shadowing} ()
+\item 
+\mbox{\Hypertarget{class_material_a1ca6cf8431b4acf5803fec0e0a97e46f}\label{class_material_a1ca6cf8431b4acf5803fec0e0a97e46f}} 
+void {\bfseries set\+Transparent} (bool \+\_\+transparent)
+\item 
+\mbox{\Hypertarget{class_material_acd632036b60c5335a02118dd67264edb}\label{class_material_acd632036b60c5335a02118dd67264edb}} 
+void {\bfseries set\+Shadowing} (bool \+\_\+shadow)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Materials combine \mbox{\hyperlink{class_image}{Image}} objects, a @\+Shader\+Program, and other meta-\/data into a single class. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_material_a255b97717d2f40b782ff0b7f7d574cb7}\label{class_material_a255b97717d2f40b782ff0b7f7d574cb7}} 
+\index{Material@{Material}!bindTextures@{bindTextures}}
+\index{bindTextures@{bindTextures}!Material@{Material}}
+\doxysubsubsection{\texorpdfstring{bindTextures()}{bindTextures()}}
+{\footnotesize\ttfamily unsigned int Material\+::bind\+Textures (\begin{DoxyParamCaption}\item[{texturekind\+\_\+t}]{texture\+Kind }\end{DoxyParamCaption})}
+
+binds all the material textures (should be called after the shader is mounted) 
+\begin{DoxyParams}{Parameters}
+{\em texture\+Kind} & the kind of textures you wish to load \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the next unused texture unit 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_material_ac9e816c9d2c82f062c2d58526ea1f462}\label{class_material_ac9e816c9d2c82f062c2d58526ea1f462}} 
+\index{Material@{Material}!serialize@{serialize}}
+\index{serialize@{serialize}!Material@{Material}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Material\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a957199c8b4a4a912d9020bb0ba605251}{Asset}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_material_8hpp}{Material.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Material.\+cpp\end{DoxyCompactItemize}

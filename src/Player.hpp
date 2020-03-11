@@ -1,6 +1,4 @@
-// Player.hpp
-
-// Multiple players can exist per client. This way we can do splitscreen multiplayer
+//! @file Player.hpp
 
 #pragma once
 
@@ -12,6 +10,9 @@ class Model;
 class BBox;
 class Camera;
 
+//! A Player is an object that contains all the info to describe a Player.
+//! A Player may be linked to an entity to provide the player direct controls to it.
+//! Multiple players can exist per client. This way you can do splitscreen multiplayer
 class Player {
 public:
 	struct colors_t {
@@ -34,53 +35,53 @@ public:
 	Player(const char* _name, colors_t _colors);
 	~Player();
 
-	// static properties
+	//! static properties
 	static const Uint32 invalidID = UINT32_MAX;
 	static const char* defaultName;
 
-	// spawns the player if they have not already been spawned
-	// @param _world the world to spawn in
-	// @param pos the location to spawn at
-	// @param ang the orientation to spawn with
-	// @param _uid the uid that our entity will have
-	// @return true if successfully spawned the player, false otherwise
+	//! spawns the player if they have not already been spawned
+	//! @param _world the world to spawn in
+	//! @param pos the location to spawn at
+	//! @param ang the orientation to spawn with
+	//! @param _uid the uid that our entity will have
+	//! @return true if successfully spawned the player, false otherwise
 	bool spawn(World& _world, const Vector& pos, const Rotation& ang);
 
-	// despawns the player, removing their presence from the world
-	// @return true if successfully despawned, false otherwise
+	//! despawns the player, removing their presence from the world
+	//! @return true if successfully despawned, false otherwise
 	bool despawn();
 
-	// control the player (preprocess)
+	//! control the player (preprocess)
 	void control();
 
-	// update the player (process)
+	//! update the player (process)
 	void process();
 
-	// move the camera (postprocess)
+	//! move the camera (postprocess)
 	void updateCamera();
 
-	// when one of my entities is deleted, this gets called so I can clear the pointer
-	// @param entity the entity that was deleted
+	//! when one of my entities is deleted, this gets called so I can clear the pointer
+	//! @param entity the entity that was deleted
 	void onEntityDeleted(Entity* entity);
 
-	// puts the player in a crouch or standing position
-	// @param crouch if true, player will crouch, otherwise player will stand
+	//! puts the player in a crouch or standing position
+	//! @param crouch if true, player will crouch, otherwise player will stand
 	void putInCrouch(bool crouch);
 
-	// updates the player's colors
-	// @param _colors the colors to use
+	//! updates the player's colors
+	//! @param _colors the colors to use
 	void updateColors(const colors_t& _colors);
 
-	// used by other clients to set the entity for this player
+	//! used by other clients to set the entity for this player
 	void setEntity(Entity* _entity);
 
-	// setup player gui
+	//! setup player gui
 	void setupGUI();
 
-	// update player gui
+	//! update player gui
 	void updateGUI();
 
-	// getters & setters
+	//! getters & setters
 	const char*				getName() const { return name.get(); }
 	const Uint32			getServerID() const { return serverID; }
 	const Uint32			getLocalID() const { return localID; }
@@ -101,13 +102,13 @@ public:
 	void	setJumped(bool b) { jumped = b; }
 
 private:
-	StringBuf<64> name = defaultName;	// the player's name
-	Uint32 serverID = invalidID;		// canonical player number. this is 0 for player 1, 1 for player 2, etc.
-	Uint32 localID = invalidID;			// local player number. for the first player on a client, this is 0, regardless of serverID
-	Uint32 clientID = invalidID;		// id number of the client associated with this player
-	colors_t colors;					// cosmetic
+	StringBuf<64> name = defaultName;	//! the player's name
+	Uint32 serverID = invalidID;		//! canonical player number. this is 0 for player 1, 1 for player 2, etc.
+	Uint32 localID = invalidID;			//! local player number. for the first player on a client, this is 0, regardless of serverID
+	Uint32 clientID = invalidID;		//! id number of the client associated with this player
+	colors_t colors;					//! cosmetic
 
-	// when despawned, this is null
+	//! when despawned, this is null
 	Entity* entity = nullptr;
 	Component* models = nullptr;
 	Model* head = nullptr;
@@ -120,7 +121,7 @@ private:
 	Model* rTool = nullptr;
 	Light* lamp = nullptr;
 
-	// input vars
+	//! input vars
 	float buttonRight = 0.f;
 	float buttonLeft = 0.f;
 	float buttonForward = 0.f;
@@ -130,14 +131,14 @@ private:
 	float buttonLeanLeft = 0.f;
 	float buttonLeanRight = 0.f;
 
-	// inventory vars
+	//! inventory vars
 	bool inventoryVisible = false;
 	bool holdingInteract = false;
 	float interactHoldTime = 0;
 	const float HOLD_TO_PICKUP_TIME = 0;
 	Entity* previousInteractedEntity = nullptr;
 
-	// controller vars
+	//! controller vars
 	bool moving = false;
 	bool crouching = false;
 	bool jumped = false;

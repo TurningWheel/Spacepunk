@@ -1,0 +1,71 @@
+\hypertarget{class_mixer}{}\doxysection{Mixer Class Reference}
+\label{class_mixer}\index{Mixer@{Mixer}}
+
+
+{\ttfamily \#include $<$Mixer.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mixer_a8df9ff215512f8670e437b283bd76a16}\label{class_mixer_a8df9ff215512f8670e437b283bd76a16}} 
+void \mbox{\hyperlink{class_mixer_a8df9ff215512f8670e437b283bd76a16}{init}} ()
+\begin{DoxyCompactList}\small\item\em opens the mixer \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mixer_abc36895971356388e2b0d3b4e70db53a}\label{class_mixer_abc36895971356388e2b0d3b4e70db53a}} 
+void \mbox{\hyperlink{class_mixer_abc36895971356388e2b0d3b4e70db53a}{list\+Devices}} ()
+\begin{DoxyCompactList}\small\item\em prints a list of all audio devices available to the mixer \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_mixer_a353523299396d383c0a7546bb2160890}{set\+Listener}} (\mbox{\hyperlink{class_camera}{Camera}} $\ast$camera)
+\item 
+int \mbox{\hyperlink{class_mixer_af9eb04445bb2f971f0824dbffec20366}{play\+Sound}} (const char $\ast$name, const bool loop)
+\item 
+\mbox{\Hypertarget{class_mixer_a59004badf201a7c8506513eb925eef97}\label{class_mixer_a59004badf201a7c8506513eb925eef97}} 
+const A\+L\+Cdevice $\ast$ \mbox{\hyperlink{class_mixer_a59004badf201a7c8506513eb925eef97}{get\+Device}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mixer_a58d7caa247ecbbd089981c7637a4af05}\label{class_mixer_a58d7caa247ecbbd089981c7637a4af05}} 
+const A\+L\+Ccontext $\ast$ {\bfseries get\+Context} () const
+\item 
+\mbox{\Hypertarget{class_mixer_a9d4371a4d2bc49979194bd073d3b0105}\label{class_mixer_a9d4371a4d2bc49979194bd073d3b0105}} 
+bool {\bfseries is\+Initialized} () const
+\item 
+\mbox{\Hypertarget{class_mixer_a5de7e537f8504050feda098d249340d6}\label{class_mixer_a5de7e537f8504050feda098d249340d6}} 
+\mbox{\hyperlink{class_camera}{Camera}} $\ast$ {\bfseries get\+Listener} ()
+\item 
+\mbox{\Hypertarget{class_mixer_ac08f6f3c50ea3edf6dc1271682627665}\label{class_mixer_ac08f6f3c50ea3edf6dc1271682627665}} 
+A\+Luint {\bfseries get\+Lowpass\+Filter} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_mixer}{Mixer}} class contains all the state about 3D listeners in the world and the audio engine, and provides methods for playing 2D sounds, among other things. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_mixer_af9eb04445bb2f971f0824dbffec20366}\label{class_mixer_af9eb04445bb2f971f0824dbffec20366}} 
+\index{Mixer@{Mixer}!playSound@{playSound}}
+\index{playSound@{playSound}!Mixer@{Mixer}}
+\doxysubsubsection{\texorpdfstring{playSound()}{playSound()}}
+{\footnotesize\ttfamily int Mixer\+::play\+Sound (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{const bool}]{loop }\end{DoxyParamCaption})}
+
+play the given sound effect 
+\begin{DoxyParams}{Parameters}
+{\em loop} & if true, the sound will loop indefinitely; otherwise, it will only play once \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the Mix\+\_\+\+Channel the sound is playing on, or -\/1 for errors 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_mixer_a353523299396d383c0a7546bb2160890}\label{class_mixer_a353523299396d383c0a7546bb2160890}} 
+\index{Mixer@{Mixer}!setListener@{setListener}}
+\index{setListener@{setListener}!Mixer@{Mixer}}
+\doxysubsubsection{\texorpdfstring{setListener()}{setListener()}}
+{\footnotesize\ttfamily void Mixer\+::set\+Listener (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} $\ast$}]{camera }\end{DoxyParamCaption})}
+
+set the 3D listener properties for the mixer 
+\begin{DoxyParams}{Parameters}
+{\em camera} & the viewpoint to set the listener properties to \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_mixer_8hpp}{Mixer.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Mixer.\+cpp\end{DoxyCompactItemize}

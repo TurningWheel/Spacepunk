@@ -1,5 +1,4 @@
-// WideVector.hpp
-// Records (x, y, z, w) vector with float accuracy
+//! @file WideVector.hpp
 
 #pragma once
 
@@ -8,11 +7,13 @@
 
 #include "Vector.hpp"
 
+//! Records (x, y, z, w) vector with float accuracy
+//! A WideVector is a Vector with 4 members instead of 3.
 class WideVector : public Vector {
 public:
 	float w = 0.f;
 
-	// constructors
+	//! constructors
 	WideVector() {}
 	WideVector(const WideVector& src) {
 		x = src.x;
@@ -40,8 +41,8 @@ public:
 	}
 	~WideVector() {}
 
-	// determines whether the vector represents a true volume
-	// @return true if all elements are nonzero, false otherwise
+	//! determines whether the vector represents a true volume
+	//! @return true if all elements are nonzero, false otherwise
 	bool hasVolume() const {
 		if (x == 0.f || y == 0.f || z == 0.f || w == 0.f) {
 			return false;
@@ -49,14 +50,14 @@ public:
 		return true;
 	}
 
-	// calculate dot product of this vector and another
-	// @return the dot product of the two vectors
+	//! calculate dot product of this vector and another
+	//! @return the dot product of the two vectors
 	float dot(const WideVector& other) const {
 		return x * other.x + y * other.y + z * other.z + w * other.w;
 	}
 
-	// calculate cross product of this vector and another
-	// @return the cross product of the two vectors
+	//! calculate cross product of this vector and another
+	//! @return the cross product of the two vectors
 	WideVector cross(const WideVector& other) const {
 		WideVector result;
 		result.x = y * other.z - z * other.y;
@@ -66,26 +67,26 @@ public:
 		return result;
 	}
 
-	// calculate the length of the vector (uses sqrt)
-	// @return the length
+	//! calculate the length of the vector (uses sqrt)
+	//! @return the length
 	float length() const {
 		return sqrtf(x*x + y * y + z * z + w * w);
 	}
 
-	// calculate the length of the vector, sans sqrt
-	// @return the length squared
+	//! calculate the length of the vector, sans sqrt
+	//! @return the length squared
 	float lengthSquared() const {
 		return x * x + y * y + z * z + w * w;
 	}
 
-	// create a normalized copy of this vector
-	// @return a normalized version of this vector
+	//! create a normalized copy of this vector
+	//! @return a normalized version of this vector
 	WideVector normal() const {
 		float l = length();
 		return WideVector(x / l, y / l, z / l, w / l);
 	}
 
-	// normalize this vector
+	//! normalize this vector
 	void normalize() {
 		float l = length();
 		x /= l;
@@ -94,17 +95,17 @@ public:
 		w /= l;
 	}
 
-	// conversion to glm::vec4
+	//! conversion to glm::vec4
 	operator glm::vec4() const {
 		return glm::vec4(x, y, z, w);
 	}
 
-	// conversion to btVector4
+	//! conversion to btVector4
 	operator btVector4() const {
 		return btVector4(x, y, z, w);
 	}
 
-	// operator =
+	//! operator =
 	WideVector& operator=(const WideVector& src) {
 		x = src.x;
 		y = src.y;
@@ -113,7 +114,7 @@ public:
 		return *this;
 	}
 
-	// operator +
+	//! operator +
 	WideVector operator+(const WideVector& src) const {
 		WideVector result;
 		result.x = x + src.x;
@@ -123,7 +124,7 @@ public:
 		return result;
 	}
 
-	// operator +=
+	//! operator +=
 	WideVector& operator+=(const WideVector& src) {
 		x += src.x;
 		y += src.y;
@@ -132,7 +133,7 @@ public:
 		return *this;
 	}
 
-	// operator -
+	//! operator -
 	WideVector operator-(const WideVector& src) const {
 		WideVector result;
 		result.x = x - src.x;
@@ -142,7 +143,7 @@ public:
 		return result;
 	}
 
-	// operator -=
+	//! operator -=
 	WideVector& operator-=(const WideVector& src) {
 		x -= src.x;
 		y -= src.y;
@@ -151,7 +152,7 @@ public:
 		return *this;
 	}
 
-	// operator *
+	//! operator *
 	WideVector operator*(const WideVector& src) const {
 		WideVector result;
 		result.x = x * src.x;
@@ -169,7 +170,7 @@ public:
 		return result;
 	}
 
-	// operator *=
+	//! operator *=
 	WideVector& operator*=(const WideVector& src) {
 		x *= src.x;
 		y *= src.y;
@@ -185,7 +186,7 @@ public:
 		return *this;
 	}
 
-	// operator /
+	//! operator /
 	WideVector operator/(const WideVector& src) const {
 		WideVector result;
 		result.x = x / src.x;
@@ -203,7 +204,7 @@ public:
 		return result;
 	}
 
-	// operator /=
+	//! operator /=
 	WideVector& operator/=(const WideVector& src) {
 		x /= src.x;
 		y /= src.y;
@@ -219,9 +220,9 @@ public:
 		return *this;
 	}
 
-	// CONDITIONAL OPERATORS
+	//! CONDITIONAL OPERATORS
 
-	// operator >
+	//! operator >
 	bool operator>(const WideVector& other) const {
 		if (lengthSquared() > other.lengthSquared()) {
 			return true;
@@ -230,7 +231,7 @@ public:
 		}
 	}
 
-	// operator >=
+	//! operator >=
 	bool operator>=(const WideVector& other) const {
 		if (lengthSquared() >= other.lengthSquared()) {
 			return true;
@@ -239,7 +240,7 @@ public:
 		}
 	}
 
-	// operator ==
+	//! operator ==
 	bool operator==(const WideVector& other) const {
 		if (x == other.x && y == other.y && z == other.z && w == other.w) {
 			return true;
@@ -248,7 +249,7 @@ public:
 		}
 	}
 
-	// operator <=
+	//! operator <=
 	bool operator<=(const WideVector& other) const {
 		if (lengthSquared() <= other.lengthSquared()) {
 			return true;
@@ -257,7 +258,7 @@ public:
 		}
 	}
 
-	// operator <
+	//! operator <
 	bool operator<(const WideVector& other) const {
 		if (lengthSquared() < other.lengthSquared()) {
 			return true;
@@ -266,7 +267,7 @@ public:
 		}
 	}
 
-	// operator !=
+	//! operator !=
 	bool operator!=(const WideVector& other) const {
 		if (x != other.x || y != other.y || z != other.z || w != other.w) {
 			return true;

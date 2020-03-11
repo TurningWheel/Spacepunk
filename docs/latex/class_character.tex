@@ -1,0 +1,262 @@
+\hypertarget{class_character}{}\doxysection{Character Class Reference}
+\label{class_character}\index{Character@{Character}}
+
+
+A \mbox{\hyperlink{class_character}{Character}} is an \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that essentially contains all the data for an R\+PG character.  
+
+
+
+
+{\ttfamily \#include $<$Character.\+hpp$>$}
+
+Inheritance diagram for Character\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_character}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_character_aaac283808c30813fcf4839600b6b1bfd}\label{class_character_aaac283808c30813fcf4839600b6b1bfd}} 
+enum {\bfseries sex\+\_\+t} \{ {\bfseries S\+E\+X\+\_\+\+M\+A\+LE}, 
+{\bfseries S\+E\+X\+\_\+\+F\+E\+M\+A\+LE}, 
+{\bfseries S\+E\+X\+\_\+\+N\+O\+NE}, 
+{\bfseries S\+E\+X\+\_\+\+M\+AX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_character_a2dac2c4df6fc57a67cac2f524de521df}\label{class_character_a2dac2c4df6fc57a67cac2f524de521df}} 
+{\bfseries Character} (\mbox{\hyperlink{class_entity}{Entity}} \&entity, \mbox{\hyperlink{class_component}{Component}} $\ast$parent)
+\item 
+virtual void \mbox{\hyperlink{class_character_abdf937459ce20d26942b1576eaf710e7}{load}} (F\+I\+LE $\ast$fp)
+\item 
+virtual void \mbox{\hyperlink{class_character_ab1f30632f6856d0d8e4514624371de73}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_character_adf972fd5cf0921f889ceed3767fe9c8a}\label{class_character_adf972fd5cf0921f889ceed3767fe9c8a}} 
+virtual \mbox{\hyperlink{class_component_a6bf589d0ff9a71f325c2e8bbc0013ed1}{type\+\_\+t}} \mbox{\hyperlink{class_character_adf972fd5cf0921f889ceed3767fe9c8a}{get\+Type}} () const override
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_character_a1a14bfb46180c2ea8f8e0735bfad3402}\label{class_character_a1a14bfb46180c2ea8f8e0735bfad3402}} 
+Sint32 {\bfseries get\+Hp} () const
+\item 
+\mbox{\Hypertarget{class_character_a3d5ff1f55eed33337392b3128eefa00e}\label{class_character_a3d5ff1f55eed33337392b3128eefa00e}} 
+Sint32 {\bfseries get\+Mp} () const
+\item 
+\mbox{\Hypertarget{class_character_a5c69df90293b0e7a8f2a6496bf02b8b1}\label{class_character_a5c69df90293b0e7a8f2a6496bf02b8b1}} 
+sex\+\_\+t {\bfseries get\+Sex} () const
+\item 
+\mbox{\Hypertarget{class_character_adc3b0370ce607e263fe2c2f524615d17}\label{class_character_adc3b0370ce607e263fe2c2f524615d17}} 
+Sint32 {\bfseries get\+Level} () const
+\item 
+\mbox{\Hypertarget{class_character_ae7f2447b321c2018aef7f481b7afb51e}\label{class_character_ae7f2447b321c2018aef7f481b7afb51e}} 
+Sint32 {\bfseries get\+Xp} () const
+\item 
+\mbox{\Hypertarget{class_character_a8c1821f8074f201bb87e556f1b1dbcbe}\label{class_character_a8c1821f8074f201bb87e556f1b1dbcbe}} 
+Sint32 {\bfseries get\+Hunger} () const
+\item 
+\mbox{\Hypertarget{class_character_a9f30bc0feca3da72e362357c0bd06b22}\label{class_character_a9f30bc0feca3da72e362357c0bd06b22}} 
+Sint32 {\bfseries get\+Nano\+Matter} () const
+\item 
+\mbox{\Hypertarget{class_character_a13e27cd0219d84b4f1fc0574e3a83381}\label{class_character_a13e27cd0219d84b4f1fc0574e3a83381}} 
+Sint32 {\bfseries get\+Bio\+Matter} () const
+\item 
+\mbox{\Hypertarget{class_character_a087dc6a9a0f33958f038cfcb65259b57}\label{class_character_a087dc6a9a0f33958f038cfcb65259b57}} 
+Sint32 {\bfseries get\+Neuro\+Thread} () const
+\item 
+\mbox{\Hypertarget{class_character_ad16358b226ae67c683f467c11ed7ca25}\label{class_character_ad16358b226ae67c683f467c11ed7ca25}} 
+Sint32 {\bfseries get\+Gold} () const
+\item 
+\mbox{\Hypertarget{class_character_a2b3b41fcaaf84a6f0ed585803833bda5}\label{class_character_a2b3b41fcaaf84a6f0ed585803833bda5}} 
+Sint32 {\bfseries get\+Strength} () const
+\item 
+\mbox{\Hypertarget{class_character_aba7e1848f77a9b9ea0e8034bb589f498}\label{class_character_aba7e1848f77a9b9ea0e8034bb589f498}} 
+Sint32 {\bfseries get\+Dexterity} () const
+\item 
+\mbox{\Hypertarget{class_character_aa51b0a895a76303e5b9d3656003f4fb5}\label{class_character_aa51b0a895a76303e5b9d3656003f4fb5}} 
+Sint32 {\bfseries get\+Intelligence} () const
+\item 
+\mbox{\Hypertarget{class_character_a4135a6818380da48a438dfa52f5ce236}\label{class_character_a4135a6818380da48a438dfa52f5ce236}} 
+Sint32 {\bfseries get\+Constitution} () const
+\item 
+\mbox{\Hypertarget{class_character_a9c60fc38d0e059d060f72cba5fa9106a}\label{class_character_a9c60fc38d0e059d060f72cba5fa9106a}} 
+Sint32 {\bfseries get\+Perception} () const
+\item 
+\mbox{\Hypertarget{class_character_ab61d1ac9fbe708dcbf26c55caa1e3fdf}\label{class_character_ab61d1ac9fbe708dcbf26c55caa1e3fdf}} 
+Sint32 {\bfseries get\+Charisma} () const
+\item 
+\mbox{\Hypertarget{class_character_abf7f78ec242b5f8ce9cc2ae0a4663659}\label{class_character_abf7f78ec242b5f8ce9cc2ae0a4663659}} 
+Sint32 {\bfseries get\+Luck} () const
+\item 
+\mbox{\Hypertarget{class_character_a49b1f98789093012bd6fec3a6d084828}\label{class_character_a49b1f98789093012bd6fec3a6d084828}} 
+void {\bfseries set\+Hp} (Sint32 hp)
+\item 
+\mbox{\Hypertarget{class_character_a0ec05579e8d648c1a5d1db6ac27a6d62}\label{class_character_a0ec05579e8d648c1a5d1db6ac27a6d62}} 
+void {\bfseries set\+Mp} (Sint32 mp)
+\item 
+\mbox{\Hypertarget{class_character_aabacdb817a06326243bffabd34a7eb3e}\label{class_character_aabacdb817a06326243bffabd34a7eb3e}} 
+void {\bfseries set\+Sex} (sex\+\_\+t sex)
+\item 
+\mbox{\Hypertarget{class_character_a8d8dd178295c1170d39f83d3632b24d9}\label{class_character_a8d8dd178295c1170d39f83d3632b24d9}} 
+void {\bfseries set\+Level} (Sint32 level)
+\item 
+\mbox{\Hypertarget{class_character_aee5d77960155d4076c2765dc36c89515}\label{class_character_aee5d77960155d4076c2765dc36c89515}} 
+void {\bfseries set\+Xp} (Sint32 xp)
+\item 
+\mbox{\Hypertarget{class_character_a1472016e4a3173e0107350da73e45f23}\label{class_character_a1472016e4a3173e0107350da73e45f23}} 
+void {\bfseries set\+Hunger} (Sint32 hunger)
+\item 
+\mbox{\Hypertarget{class_character_a1bd7fd5d819c2903a23cad7d52947615}\label{class_character_a1bd7fd5d819c2903a23cad7d52947615}} 
+void {\bfseries set\+Nano\+Matter} (Sint32 nano\+Matter)
+\item 
+\mbox{\Hypertarget{class_character_a285194609c0522a0590671c85f20c694}\label{class_character_a285194609c0522a0590671c85f20c694}} 
+void {\bfseries set\+Bio\+Matter} (Sint32 bio\+Matter)
+\item 
+\mbox{\Hypertarget{class_character_a07e6236c02b5519405684721d913ee10}\label{class_character_a07e6236c02b5519405684721d913ee10}} 
+void {\bfseries set\+Neuro\+Thread} (Sint32 neuro\+Thread)
+\item 
+\mbox{\Hypertarget{class_character_a11c6a0353699f22c09be4b8998d5faab}\label{class_character_a11c6a0353699f22c09be4b8998d5faab}} 
+void {\bfseries set\+Gold} (Sint32 gold)
+\item 
+\mbox{\Hypertarget{class_character_acd4486aa5685054aa28698e960e6028a}\label{class_character_acd4486aa5685054aa28698e960e6028a}} 
+void {\bfseries set\+Strength} (Sint32 strength)
+\item 
+\mbox{\Hypertarget{class_character_a4cde84cf9b3879546cbf4defc71a59ac}\label{class_character_a4cde84cf9b3879546cbf4defc71a59ac}} 
+void {\bfseries set\+Dexterity} (Sint32 dexterity)
+\item 
+\mbox{\Hypertarget{class_character_a03e1f56b9e4c197be528488357feb5dc}\label{class_character_a03e1f56b9e4c197be528488357feb5dc}} 
+void {\bfseries set\+Intelligence} (Sint32 intelligence)
+\item 
+\mbox{\Hypertarget{class_character_a8f3b288106db2f13ce21ce05fbbb20be}\label{class_character_a8f3b288106db2f13ce21ce05fbbb20be}} 
+void {\bfseries set\+Constitution} (Sint32 constitution)
+\item 
+\mbox{\Hypertarget{class_character_ad5ea480c2b82aa0c13f0f7ceb78c087c}\label{class_character_ad5ea480c2b82aa0c13f0f7ceb78c087c}} 
+void {\bfseries set\+Perception} (Sint32 perception)
+\item 
+\mbox{\Hypertarget{class_character_a1d0e8be6d9d703ddf5472e23ea78461e}\label{class_character_a1d0e8be6d9d703ddf5472e23ea78461e}} 
+void {\bfseries set\+Charisma} (Sint32 charisma)
+\item 
+\mbox{\Hypertarget{class_character_a0074cdfc3fd622100fbfc635834c090e}\label{class_character_a0074cdfc3fd622100fbfc635834c090e}} 
+void {\bfseries set\+Luck} (Sint32 luck)
+\item 
+\mbox{\Hypertarget{class_character_a4e6b82e8e541485d1b14d27d1ed2624c}\label{class_character_a4e6b82e8e541485d1b14d27d1ed2624c}} 
+\mbox{\hyperlink{class_character}{Character}} \& {\bfseries operator=} (const \mbox{\hyperlink{class_character}{Character}} \&src)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const char $\ast$ {\bfseries sex\+Str} \mbox{[}S\+E\+X\+\_\+\+M\+AX\mbox{]}
+\item 
+\mbox{\Hypertarget{class_character_a5f408c295d93d76ac7c180130940b57d}\label{class_character_a5f408c295d93d76ac7c180130940b57d}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+HP} = 100
+\item 
+\mbox{\Hypertarget{class_character_ac8fbed3178c840ec52f4cdb1bebd06e7}\label{class_character_ac8fbed3178c840ec52f4cdb1bebd06e7}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+MP} = 100
+\item 
+\mbox{\Hypertarget{class_character_a5e05e25698e3ecb12b14dbac82256a75}\label{class_character_a5e05e25698e3ecb12b14dbac82256a75}} 
+static const sex\+\_\+t {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+S\+EX} = S\+E\+X\+\_\+\+N\+O\+NE
+\item 
+\mbox{\Hypertarget{class_character_ac8b94eb334b5fbe1a9106908aa7a003b}\label{class_character_ac8b94eb334b5fbe1a9106908aa7a003b}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+L\+E\+V\+EL} = 0
+\item 
+\mbox{\Hypertarget{class_character_a416c732815c81b08140e1d8d79dd379b}\label{class_character_a416c732815c81b08140e1d8d79dd379b}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+XP} = 0
+\item 
+\mbox{\Hypertarget{class_character_ae129180e9ccf4c117ee3b937e1a57798}\label{class_character_ae129180e9ccf4c117ee3b937e1a57798}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+H\+U\+N\+G\+ER} = 1000
+\item 
+\mbox{\Hypertarget{class_character_a05658c81540ec3af21e709f3c275f8fa}\label{class_character_a05658c81540ec3af21e709f3c275f8fa}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+N\+A\+N\+O\+\_\+\+M\+A\+T\+T\+ER} = 0
+\item 
+\mbox{\Hypertarget{class_character_a5812aa5254fd8aba57f7736901f903e4}\label{class_character_a5812aa5254fd8aba57f7736901f903e4}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+B\+I\+O\+\_\+\+M\+A\+T\+T\+ER} = 0
+\item 
+\mbox{\Hypertarget{class_character_a09075d0d3cb2921e8c72be81abd4317f}\label{class_character_a09075d0d3cb2921e8c72be81abd4317f}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+N\+E\+U\+R\+O\+\_\+\+T\+H\+R\+E\+AD} = 0
+\item 
+\mbox{\Hypertarget{class_character_a138f7f74aaa3877b9c50d46ffd43d97b}\label{class_character_a138f7f74aaa3877b9c50d46ffd43d97b}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+G\+O\+LD} = 0
+\item 
+\mbox{\Hypertarget{class_character_ac830ddce368518e4e6d8bcc9dfe626a2}\label{class_character_ac830ddce368518e4e6d8bcc9dfe626a2}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+S\+T\+R\+E\+N\+G\+TH} = 0
+\item 
+\mbox{\Hypertarget{class_character_a93ecd83161f2f922473a09b20f5dd43f}\label{class_character_a93ecd83161f2f922473a09b20f5dd43f}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+D\+E\+X\+T\+E\+R\+I\+TY} = 0
+\item 
+\mbox{\Hypertarget{class_character_aebb90bdc92fa12053400cc95945f2295}\label{class_character_aebb90bdc92fa12053400cc95945f2295}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+I\+N\+T\+E\+L\+L\+I\+G\+E\+N\+CE} = 0
+\item 
+\mbox{\Hypertarget{class_character_a4c9450513f2bbc183891fe33d64c7a58}\label{class_character_a4c9450513f2bbc183891fe33d64c7a58}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+C\+O\+N\+S\+T\+I\+T\+U\+T\+I\+ON} = 0
+\item 
+\mbox{\Hypertarget{class_character_a6d374625b0292560c0b75e0e0c0a2945}\label{class_character_a6d374625b0292560c0b75e0e0c0a2945}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+P\+E\+R\+C\+E\+P\+T\+I\+ON} = 0
+\item 
+\mbox{\Hypertarget{class_character_ad2f4a77fc43e4f33b114104db004b158}\label{class_character_ad2f4a77fc43e4f33b114104db004b158}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+C\+H\+A\+R\+I\+S\+MA} = 0
+\item 
+\mbox{\Hypertarget{class_character_a4e4771cf9206d04006add6f1a03b53cd}\label{class_character_a4e4771cf9206d04006add6f1a03b53cd}} 
+static const Sint32 {\bfseries D\+E\+F\+A\+U\+L\+T\+\_\+\+L\+U\+CK} = 0
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_character}{Character}} is an \mbox{\hyperlink{class_entity}{Entity}} \mbox{\hyperlink{class_component}{Component}} that essentially contains all the data for an R\+PG character. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_character_abdf937459ce20d26942b1576eaf710e7}\label{class_character_abdf937459ce20d26942b1576eaf710e7}} 
+\index{Character@{Character}!load@{load}}
+\index{load@{load}!Character@{Character}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Character\+::load (\begin{DoxyParamCaption}\item[{F\+I\+LE $\ast$}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+load the component from a file 
+\begin{DoxyParams}{Parameters}
+{\em fp} & the file to read from \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_ab1ddbf2ef322928e0ac52775ce1050db}{Component}}.
+
+\mbox{\Hypertarget{class_character_ab1f30632f6856d0d8e4514624371de73}\label{class_character_ab1f30632f6856d0d8e4514624371de73}} 
+\index{Character@{Character}!serialize@{serialize}}
+\index{serialize@{serialize}!Character@{Character}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Character\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_component_a08bf5735d97aa676dfc2ba16da32b997}{Component}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_character_a115787eb370dddf2bd0fd13111944fef}\label{class_character_a115787eb370dddf2bd0fd13111944fef}} 
+\index{Character@{Character}!sexStr@{sexStr}}
+\index{sexStr@{sexStr}!Character@{Character}}
+\doxysubsubsection{\texorpdfstring{sexStr}{sexStr}}
+{\footnotesize\ttfamily const char $\ast$ Character\+::sex\+Str\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"male"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"female"},}
+\DoxyCodeLine{    \textcolor{stringliteral}{"none"}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_character_8hpp}{Character.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Character.\+cpp\end{DoxyCompactItemize}

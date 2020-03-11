@@ -1,0 +1,26 @@
+var class_rotation =
+[
+    [ "Rotation", "class_rotation.html#a13ea1d345ca0a92c0f09b4de544ca460", null ],
+    [ "Rotation", "class_rotation.html#a2e4eaf62dfc17e2836a002e7fc0dd791", null ],
+    [ "Rotation", "class_rotation.html#a27e64d54d0ddf26676662e249dbb49e3", null ],
+    [ "bindAngles", "class_rotation.html#a77839b408d4530b0d0f8b64f53127dff", null ],
+    [ "degreesPitch", "class_rotation.html#a73471ef809790b2f583fecce66737436", null ],
+    [ "degreesRoll", "class_rotation.html#a193e86e01af452e4e60fcee3aa94a865", null ],
+    [ "degreesYaw", "class_rotation.html#ad23eae0861bf9255e15a18341ab36efd", null ],
+    [ "operator!=", "class_rotation.html#a4d7d7038e808319ddd33be8241366c7a", null ],
+    [ "operator+", "class_rotation.html#a4f97c89bb13d5e6c6c4c00063fd6de81", null ],
+    [ "operator+=", "class_rotation.html#a04a0b4097ea5cfaafde641520a6fdf01", null ],
+    [ "operator-", "class_rotation.html#a33d1e17c09fc5e84fb13f5fc0d96089f", null ],
+    [ "operator-=", "class_rotation.html#afbe80f05f6f14426eecd23484d12606c", null ],
+    [ "operator=", "class_rotation.html#a3129b6eedfafd755ba46a5a7a04155b8", null ],
+    [ "operator==", "class_rotation.html#a0f9c0ddf4a863d6585977832f4adf384", null ],
+    [ "radiansPitch", "class_rotation.html#ad93ff11155ee708613fa0e488ad09078", null ],
+    [ "radiansRoll", "class_rotation.html#a6dabb5f4b964cf5b3a1d8ce2ce2515b7", null ],
+    [ "radiansYaw", "class_rotation.html#a3eac6f26409bd32213d673cd1d5be5ac", null ],
+    [ "serialize", "class_rotation.html#a47318c31bb4fb2d52ee59668bc8657f9", null ],
+    [ "toVector", "class_rotation.html#aca93a861f8c2ceaff17bfb416dcdebd9", null ],
+    [ "wrapAngles", "class_rotation.html#ac2e7366e8ada18a1eef242d3503564a7", null ],
+    [ "pitch", "class_rotation.html#a5e6e48cc38c5f1aad3c4fb2428e2135e", null ],
+    [ "roll", "class_rotation.html#aec5d0a135a1616f281216e46fde5594e", null ],
+    [ "yaw", "class_rotation.html#a0a0e1950360a51c2a2a26df970b9d935", null ]
+];

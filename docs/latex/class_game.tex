@@ -1,0 +1,306 @@
+\hypertarget{class_game}{}\doxysection{Game Class Reference}
+\label{class_game}\index{Game@{Game}}
+
+
+{\ttfamily \#include $<$Game.\+hpp$>$}
+
+Inheritance diagram for Game\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_game}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_game_aed255fe40e3c2a72c398000454c3a449}\label{class_game_aed255fe40e3c2a72c398000454c3a449}} 
+\mbox{\hyperlink{class_world}{World}} $\ast$ \mbox{\hyperlink{class_game_aed255fe40e3c2a72c398000454c3a449}{get\+World}} (const int index)
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_game_a09325a0a18ee6e2491cba01cd04bfbca}\label{class_game_a09325a0a18ee6e2491cba01cd04bfbca}} 
+Uint32 {\bfseries get\+Num\+Worlds} () const
+\item 
+\mbox{\Hypertarget{class_game_a3dfb7d2e418c4d5160bf7ba59485841e}\label{class_game_a3dfb7d2e418c4d5160bf7ba59485841e}} 
+const Uint32 {\bfseries get\+Ticks} () const
+\item 
+\mbox{\Hypertarget{class_game_ab3c7c29c2b9ce3ff9cfc15ab49fd0522}\label{class_game_ab3c7c29c2b9ce3ff9cfc15ab49fd0522}} 
+\mbox{\hyperlink{class_net}{Net}} $\ast$ {\bfseries get\+Net} () const
+\item 
+\mbox{\Hypertarget{class_game_a7af7449a32a774a763a59d2c9524d0cb}\label{class_game_a7af7449a32a774a763a59d2c9524d0cb}} 
+bool {\bfseries is\+Suicide} () const
+\item 
+\mbox{\Hypertarget{class_game_a844ef48c4fe9337f65bfcb4e8a0c9479}\label{class_game_a844ef48c4fe9337f65bfcb4e8a0c9479}} 
+const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_player}{Player}} $>$ {\bfseries get\+Players} () const
+\item 
+\mbox{\Hypertarget{class_game_af9ad43c2c53f0046814adc664efdd1ff}\label{class_game_af9ad43c2c53f0046814adc664efdd1ff}} 
+virtual bool {\bfseries is\+Server} () const =0
+\item 
+\mbox{\Hypertarget{class_game_aaa6daee36b130ef01319d7b524127a41}\label{class_game_aaa6daee36b130ef01319d7b524127a41}} 
+virtual bool {\bfseries is\+Client} () const =0
+\item 
+\mbox{\Hypertarget{class_game_a39bb2fd26b5ea6b164f28f9f6723582e}\label{class_game_a39bb2fd26b5ea6b164f28f9f6723582e}} 
+void \mbox{\hyperlink{class_game_a39bb2fd26b5ea6b164f28f9f6723582e}{reset}} ()
+\begin{DoxyCompactList}\small\item\em marks the sim to be reinitialized \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_game_a78c755ce552e05103b21f7645a4fb600}\label{class_game_a78c755ce552e05103b21f7645a4fb600}} 
+void \mbox{\hyperlink{class_game_a78c755ce552e05103b21f7645a4fb600}{increment\+Frame}} ()
+\begin{DoxyCompactList}\small\item\em causes the game to execute game logic this cycle \end{DoxyCompactList}\item 
+Uint32 \mbox{\hyperlink{class_game_a0b9230451bec57d6eb0ab4c2fff4d3da}{num\+Worlds}} () const
+\item 
+\mbox{\hyperlink{class_world}{World}} $\ast$ \mbox{\hyperlink{class_game_afb6f9fb42d568e7ba77271e1bab29795}{world\+For\+Name}} (const char $\ast$name)
+\item 
+Uint32 \mbox{\hyperlink{class_game_a5d2c37b4067c26617667ff12ec93efd7}{index\+For\+World}} (\mbox{\hyperlink{class_world}{World}} $\ast$world)
+\item 
+\mbox{\hyperlink{class_world}{World}} $\ast$ \mbox{\hyperlink{class_game_ad39e4674872943ca3d7013f4da144eb4}{load\+World}} (const char $\ast$filename, bool build\+Path)
+\item 
+\mbox{\hyperlink{class_basic_world}{Basic\+World}} $\ast$ \mbox{\hyperlink{class_game_a0821e3405d0ba1d69d9dfd2693e7224e}{new\+Basic\+World}} (const char $\ast$name)
+\item 
+\mbox{\hyperlink{class_sector_world}{Sector\+World}} $\ast$ \mbox{\hyperlink{class_game_adaaffb5275b80a9146d61375a104e1ec}{new\+Sector\+World}} (const char $\ast$name)
+\item 
+\mbox{\hyperlink{class_tile_world}{Tile\+World}} $\ast$ \mbox{\hyperlink{class_game_ad4292dfcc583c74751493c47f928f77e}{new\+Tile\+World}} (const char $\ast$name, int width, int height)
+\item 
+\mbox{\hyperlink{class_tile_world}{Tile\+World}} $\ast$ \mbox{\hyperlink{class_game_a3b4a4dc9eea093d0a87f752833b7d157}{gen\+Tile\+World}} (const char $\ast$path)
+\item 
+\mbox{\hyperlink{class_player}{Player}} $\ast$ \mbox{\hyperlink{class_game_af368458b910af179cdf03d4969b1f850}{find\+Player}} (Uint32 client\+ID, Uint32 local\+ID)
+\item 
+\mbox{\hyperlink{class_player}{Player}} $\ast$ \mbox{\hyperlink{class_game_a0fe3fedfb005fc88d09412a4526b90eb}{find\+Player}} (Uint32 server\+ID)
+\item 
+\mbox{\Hypertarget{class_game_afaa9bae641b5e3a2b5cde08053a491f6}\label{class_game_afaa9bae641b5e3a2b5cde08053a491f6}} 
+virtual void \mbox{\hyperlink{class_game_afaa9bae641b5e3a2b5cde08053a491f6}{on\+Establish\+Connection}} (Uint32 remote\+ID)=0
+\begin{DoxyCompactList}\small\item\em when a net connection is setup, this function gets called \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_game_a8d7612edc496607f921cf691bf4a0046}{on\+Disconnect}} (Uint32 remote\+ID)=0
+\item 
+\mbox{\Hypertarget{class_game_a3870e907886477af61ce46a40a0efe46}\label{class_game_a3870e907886477af61ce46a40a0efe46}} 
+void \mbox{\hyperlink{class_game_a3870e907886477af61ce46a40a0efe46}{close\+All\+Worlds}} ()
+\begin{DoxyCompactList}\small\item\em shuts down all world instances \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_game_ab298f386b79b99d5d5b80b1fbc5118a0}{num\+Local\+Players}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_game_a398d37871cd701663f03cb6f60ac531d}\label{class_game_a398d37871cd701663f03cb6f60ac531d}} 
+static const Uint32 \mbox{\hyperlink{class_game_a398d37871cd701663f03cb6f60ac531d}{invalid\+ID}} = U\+I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em invalid world id \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_game_a6f3a33940524b6ba9d83f627ccb14bbf}\label{class_game_a6f3a33940524b6ba9d83f627ccb14bbf}} 
+virtual void \mbox{\hyperlink{class_game_a6f3a33940524b6ba9d83f627ccb14bbf}{init}} ()
+\begin{DoxyCompactList}\small\item\em sets up the game \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_game_a579b81b154bcc78586773274157782a6}\label{class_game_a579b81b154bcc78586773274157782a6}} 
+virtual void \mbox{\hyperlink{class_game_a579b81b154bcc78586773274157782a6}{pre\+Process}} ()
+\begin{DoxyCompactList}\small\item\em perform pre-\/processing on the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_game_aeaa87dabe9d859300293f9b02095de48}\label{class_game_aeaa87dabe9d859300293f9b02095de48}} 
+virtual void \mbox{\hyperlink{class_game_aeaa87dabe9d859300293f9b02095de48}{process}} ()
+\begin{DoxyCompactList}\small\item\em process the current frame \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_game_a098f76880a5a28d87fb5b69731b3490a}\label{class_game_a098f76880a5a28d87fb5b69731b3490a}} 
+virtual void \mbox{\hyperlink{class_game_a098f76880a5a28d87fb5b69731b3490a}{post\+Process}} ()
+\begin{DoxyCompactList}\small\item\em perform post-\/processing on the current frame \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_game_ae71844469c6511eecfc8278048b837a1}\label{class_game_ae71844469c6511eecfc8278048b837a1}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_player}{Player}} $>$ {\bfseries players}
+\item 
+\mbox{\Hypertarget{class_game_a4c06015dc76e7cb35614af4f47d33616}\label{class_game_a4c06015dc76e7cb35614af4f47d33616}} 
+\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_world}{World}} $\ast$ $>$ {\bfseries worlds}
+\item 
+\mbox{\Hypertarget{class_game_af0b44ac671b12fcad98a231d78dfba2e}\label{class_game_af0b44ac671b12fcad98a231d78dfba2e}} 
+Uint32 {\bfseries ticks} = 0
+\item 
+\mbox{\Hypertarget{class_game_accdf7db6a9009683fc53491f66d42587}\label{class_game_accdf7db6a9009683fc53491f66d42587}} 
+Uint32 {\bfseries frames\+To\+Run} = 0
+\item 
+\mbox{\Hypertarget{class_game_ae008b28e2840d8c4396b7d73ee27b949}\label{class_game_ae008b28e2840d8c4396b7d73ee27b949}} 
+bool {\bfseries suicide} = false
+\item 
+\mbox{\hyperlink{class_net}{Net}} $\ast$ \mbox{\hyperlink{class_game_aed4564c824e69a08714d0f4b04f6cb1f}{net}} = nullptr
+\begin{DoxyCompactList}\small\item\em if a game wants to end itself, setting this flag is the way to do it. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Oversees all game state, which is mostly just a list of worlds. Multiple active \mbox{\hyperlink{class_world}{World}} objects can run on a game at once. This is an abstract class, implemented by \mbox{\hyperlink{class_server}{Server}} and \mbox{\hyperlink{class_client}{Client}} 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_game_af368458b910af179cdf03d4969b1f850}\label{class_game_af368458b910af179cdf03d4969b1f850}} 
+\index{Game@{Game}!findPlayer@{findPlayer}}
+\index{findPlayer@{findPlayer}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{findPlayer()}{findPlayer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_player}{Player}} $\ast$ Game\+::find\+Player (\begin{DoxyParamCaption}\item[{Uint32}]{client\+ID,  }\item[{Uint32}]{local\+ID }\end{DoxyParamCaption})}
+
+locate the player with the given id nums 
+\begin{DoxyParams}{Parameters}
+{\em client\+ID} & id of the player\textquotesingle{}s client \\
+\hline
+{\em local\+ID} & id of the player on the client \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the associated \mbox{\hyperlink{class_player}{Player}}, or nullptr if the \mbox{\hyperlink{class_player}{Player}} could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_a0fe3fedfb005fc88d09412a4526b90eb}\label{class_game_a0fe3fedfb005fc88d09412a4526b90eb}} 
+\index{Game@{Game}!findPlayer@{findPlayer}}
+\index{findPlayer@{findPlayer}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{findPlayer()}{findPlayer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_player}{Player}} $\ast$ Game\+::find\+Player (\begin{DoxyParamCaption}\item[{Uint32}]{server\+ID }\end{DoxyParamCaption})}
+
+locate the player with the given server id 
+\begin{DoxyParams}{Parameters}
+{\em server\+ID} & canonical player id \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the associated \mbox{\hyperlink{class_player}{Player}}, or nullptr if the \mbox{\hyperlink{class_player}{Player}} could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_a3b4a4dc9eea093d0a87f752833b7d157}\label{class_game_a3b4a4dc9eea093d0a87f752833b7d157}} 
+\index{Game@{Game}!genTileWorld@{genTileWorld}}
+\index{genTileWorld@{genTileWorld}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{genTileWorld()}{genTileWorld()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_tile_world}{Tile\+World}} $\ast$ Game\+::gen\+Tile\+World (\begin{DoxyParamCaption}\item[{const char $\ast$}]{path }\end{DoxyParamCaption})}
+
+generates a new tile world 
+\begin{DoxyParams}{Parameters}
+{\em path} & the path to the generator .json \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly generated world, or nullptr on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_a5d2c37b4067c26617667ff12ec93efd7}\label{class_game_a5d2c37b4067c26617667ff12ec93efd7}} 
+\index{Game@{Game}!indexForWorld@{indexForWorld}}
+\index{indexForWorld@{indexForWorld}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{indexForWorld()}{indexForWorld()}}
+{\footnotesize\ttfamily Uint32 Game\+::index\+For\+World (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_world}{World}} $\ast$}]{world }\end{DoxyParamCaption})}
+
+finds the index of the given world 
+\begin{DoxyParams}{Parameters}
+{\em world} & the world whose index we are looking for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index associated by that world or invalid\+ID if it could not be found 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_ad39e4674872943ca3d7013f4da144eb4}\label{class_game_ad39e4674872943ca3d7013f4da144eb4}} 
+\index{Game@{Game}!loadWorld@{loadWorld}}
+\index{loadWorld@{loadWorld}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{loadWorld()}{loadWorld()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_world}{World}} $\ast$ Game\+::load\+World (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{bool}]{build\+Path }\end{DoxyParamCaption})}
+
+loads the world with the given filename if the given world is already loaded, it is unloaded and then reloaded 
+\begin{DoxyParams}{Parameters}
+{\em filename} & the filename of the world to load \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the \mbox{\hyperlink{class_world}{World}}, or nullptr on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_a0821e3405d0ba1d69d9dfd2693e7224e}\label{class_game_a0821e3405d0ba1d69d9dfd2693e7224e}} 
+\index{Game@{Game}!newBasicWorld@{newBasicWorld}}
+\index{newBasicWorld@{newBasicWorld}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{newBasicWorld()}{newBasicWorld()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_basic_world}{Basic\+World}} $\ast$ Game\+::new\+Basic\+World (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+creates a new basic world 
+\begin{DoxyParams}{Parameters}
+{\em name} & the world\textquotesingle{}s name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created world, or nullptr on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_adaaffb5275b80a9146d61375a104e1ec}\label{class_game_adaaffb5275b80a9146d61375a104e1ec}} 
+\index{Game@{Game}!newSectorWorld@{newSectorWorld}}
+\index{newSectorWorld@{newSectorWorld}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{newSectorWorld()}{newSectorWorld()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_sector_world}{Sector\+World}} $\ast$ Game\+::new\+Sector\+World (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+creates a new sector world 
+\begin{DoxyParams}{Parameters}
+{\em name} & the world\textquotesingle{}s name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created world, or nullptr on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_ad4292dfcc583c74751493c47f928f77e}\label{class_game_ad4292dfcc583c74751493c47f928f77e}} 
+\index{Game@{Game}!newTileWorld@{newTileWorld}}
+\index{newTileWorld@{newTileWorld}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{newTileWorld()}{newTileWorld()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_tile_world}{Tile\+World}} $\ast$ Game\+::new\+Tile\+World (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{int}]{width,  }\item[{int}]{height }\end{DoxyParamCaption})}
+
+creates a new tile world with the given attributes 
+\begin{DoxyParams}{Parameters}
+{\em name} & the world\textquotesingle{}s name \\
+\hline
+{\em width} & the width of the world, in tiles \\
+\hline
+{\em height} & the height of the world, in tiles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created world, or nullptr on error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_ab298f386b79b99d5d5b80b1fbc5118a0}\label{class_game_ab298f386b79b99d5d5b80b1fbc5118a0}} 
+\index{Game@{Game}!numLocalPlayers@{numLocalPlayers}}
+\index{numLocalPlayers@{numLocalPlayers}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{numLocalPlayers()}{numLocalPlayers()}}
+{\footnotesize\ttfamily int Game\+::num\+Local\+Players (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+calculate the total number of local players \begin{DoxyReturn}{Returns}
+the number of local players 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_a0b9230451bec57d6eb0ab4c2fff4d3da}\label{class_game_a0b9230451bec57d6eb0ab4c2fff4d3da}} 
+\index{Game@{Game}!numWorlds@{numWorlds}}
+\index{numWorlds@{numWorlds}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{numWorlds()}{numWorlds()}}
+{\footnotesize\ttfamily Uint32 Game\+::num\+Worlds (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\begin{DoxyReturn}{Returns}
+the number of worlds in this sim 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_a8d7612edc496607f921cf691bf4a0046}\label{class_game_a8d7612edc496607f921cf691bf4a0046}} 
+\index{Game@{Game}!onDisconnect@{onDisconnect}}
+\index{onDisconnect@{onDisconnect}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{onDisconnect()}{onDisconnect()}}
+{\footnotesize\ttfamily virtual void Game\+::on\+Disconnect (\begin{DoxyParamCaption}\item[{Uint32}]{remote\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+when a net connection is ended, this function gets called 
+\begin{DoxyParams}{Parameters}
+{\em remote\+ID} & index associated with the disconnected host \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_client_a873f97048d1aebb46ac75b844754d3ae}{Client}}, and \mbox{\hyperlink{class_server_a81af08d9ca88b12ad27975983708541a}{Server}}.
+
+\mbox{\Hypertarget{class_game_afb6f9fb42d568e7ba77271e1bab29795}\label{class_game_afb6f9fb42d568e7ba77271e1bab29795}} 
+\index{Game@{Game}!worldForName@{worldForName}}
+\index{worldForName@{worldForName}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{worldForName()}{worldForName()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_world}{World}} $\ast$ Game\+::world\+For\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})}
+
+finds the world with the given name (case sensitive) and returns it 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the world (not the filename, but the title) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the world with the given name or nullptr if the world could not be found 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_game_aed4564c824e69a08714d0f4b04f6cb1f}\label{class_game_aed4564c824e69a08714d0f4b04f6cb1f}} 
+\index{Game@{Game}!net@{net}}
+\index{net@{net}!Game@{Game}}
+\doxysubsubsection{\texorpdfstring{net}{net}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_net}{Net}}$\ast$ Game\+::net = nullptr\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+if a game wants to end itself, setting this flag is the way to do it. 
+
+the net interface 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_game_8hpp}{Game.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Game.\+cpp\end{DoxyCompactItemize}

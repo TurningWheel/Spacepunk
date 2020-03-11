@@ -1,4 +1,4 @@
-// Generator.hpp
+//! @file Generator.hpp
 
 #pragma once
 
@@ -11,9 +11,10 @@
 class TileWorld;
 class FileInterface;
 
+//! The Generator class is used to generate a random 2D maze. It can be used in a script for user purposes.
 class Generator {
 public:
-	// Dungeon layout
+	//! Dungeon layout
 	struct dungeon_layout_t {
 		bool fullLayout[3][3] = {
 			{ 1, 1, 1 },
@@ -69,7 +70,7 @@ public:
 	};
 	static const dungeon_layout_t dungeonLayout;
 
-	// Corridor layout
+	//! Corridor layout
 	struct corridor_layout_t {
 		int labyrinth = 0;
 		int bent = 50;
@@ -93,7 +94,7 @@ public:
 	};
 	static const corridor_layout_t corridorLayout;
 
-	// Map style
+	//! Map style
 	struct map_style_t {
 		String fill = "000000";
 		String open = "FFFFFF";
@@ -101,7 +102,7 @@ public:
 	};
 	static const map_style_t mapStyle;
 
-	// Doorway
+	//! Doorway
 	struct sill_t {
 		bool valid = false;
 		Sint32 sill_r, sill_c;
@@ -110,14 +111,14 @@ public:
 		Sint32 dir;
 	};
 
-	// Door
+	//! Door
 	struct door_t {
 		Sint32 row, col;
 		Sint32 outID;
 		Uint32 key;
 	};
 
-	// Generated room
+	//! Generated room
 	struct room_t {
 		Sint32 id;
 		Sint32 row, col;
@@ -128,7 +129,7 @@ public:
 		ArrayList<door_t> doors[4];
 	};
 
-	// Cleaning
+	//! Cleaning
 	struct closeend_t {
 		Sint32 walled[5][2];
 		Sint32 close[1][2];
@@ -136,7 +137,7 @@ public:
 	};
 	static const closeend_t closeends[4];
 
-	// Room piece
+	//! Room piece
 	struct piece_t {
 		String path;
 		TileWorld* angles[4];
@@ -144,14 +145,14 @@ public:
 		void serialize(FileInterface * file);
 	};
 
-	// Library
+	//! Library
 	struct lib_t {
 		virtual ~lib_t() {}
 		void loadPieces(ArrayList<piece_t>& pieces, bool clientObj);
 		void freePieces(ArrayList<piece_t>& pieces);
 	};
 
-	// Room library
+	//! Room library
 	struct roomlib_t : public lib_t {
 		virtual ~roomlib_t() {}
 		ArrayList<piece_t> corners;
@@ -165,7 +166,7 @@ public:
 		void serialize(FileInterface * file);
 	};
 
-	// Tunnel library
+	//! Tunnel library
 	struct tunnellib_t : public lib_t {
 		virtual ~tunnellib_t() {}
 		ArrayList<piece_t> corners;
@@ -177,7 +178,7 @@ public:
 		void serialize(FileInterface * file);
 	};
 
-	// Cell bits
+	//! Cell bits
 	static const Uint32 NOTHING = 0;
 	static const Uint32 BLOCKED = (1 << 0);
 	static const Uint32 ROOM = (1 << 1);
@@ -204,7 +205,7 @@ public:
 	static const Uint32 BLOCK_CORRIDOR = BLOCKED | PERIMETER | CORRIDOR;
 	static const Uint32 BLOCK_DOOR = BLOCKED | DOOR_SPACE;
 
-	// directions
+	//! directions
 	static const Sint32 EAST = 0;
 	static const Sint32 SOUTH = 1;
 	static const Sint32 WEST = 2;
@@ -212,30 +213,30 @@ public:
 	static const Sint32 OPPOSITE[4];
 	static const Sint32 TUNNELDIRS[4];
 
-	// cos/sin
+	//! cos/sin
 	static const Sint32 cos[4];
 	static const Sint32 sin[4];
 
-	// Options
+	//! Options
 	struct options_t {
-		Uint32 seed = 0;			// random seed
-		Sint32 dungeonWidth = 39;			// must be an odd number
-		Sint32 dungeonHeight = 39;			// must be an odd number
+		Uint32 seed = 0;			//! random seed
+		Sint32 dungeonWidth = 39;			//! must be an odd number
+		Sint32 dungeonHeight = 39;			//! must be an odd number
 		String dungeonLayout = "None";
 		Sint32 roomMin = 3;
 		Sint32 roomMax = 9;
-		String roomLayout = "Scattered";	// Packed or Scattered
+		String roomLayout = "Scattered";	//! Packed or Scattered
 		String corridorLayout = "Bent";
-		Sint32 removeDeadends = 0;			// percentage
-		Sint32 addStairs = 2;			// number of stairs
+		Sint32 removeDeadends = 0;			//! percentage
+		Sint32 addStairs = 2;			//! number of stairs
 		Sint32 subdivisor = 2;
-		bool complex = false;		// whether to create "complex" (non-rectangle) rooms
+		bool complex = false;		//! whether to create "complex" (non-rectangle) rooms
 		bool power = false;
 		bool gravity = false;
 		bool lifeSupport = false;
 
-		// save/load this object to a file
-		// @param file interface to serialize with
+		//! save/load this object to a file
+		//! @param file interface to serialize with
 		void serialize(FileInterface * file);
 	};
 
@@ -243,17 +244,17 @@ public:
 	Generator(bool _clientObj, const options_t& _options);
 	~Generator();
 
-	// Generate the dungeon with the supplied options
+	//! Generate the dungeon with the supplied options
 	void createDungeon();
 
-	// Write the dungeon to a file
+	//! Write the dungeon to a file
 	void writeFile(const char* path);
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	void serialize(FileInterface * file);
 
-	// getters & setters
+	//! getters & setters
 	const char*						getName() const { return name; }
 	const options_t&				getOptions() const { return options; }
 	const ArrayList<Uint32>&		getTiles() const { return tiles; }
@@ -270,12 +271,12 @@ private:
 	ArrayList<room_t> rooms;
 	bool clientObj = false;
 
-	// create blank dungeon
+	//! create blank dungeon
 	void initCells();
 	void maskCells();
 	void roundMask();
 
-	// place rooms
+	//! place rooms
 	void emplaceRooms();
 	void packRooms();
 	void scatterRooms();
@@ -284,7 +285,7 @@ private:
 	Rect<Sint32> setRoom(Sint32 x, Sint32 y);
 	bool soundRoom(Sint32 r1, Sint32 r2, Sint32 c1, Sint32 c2);
 
-	// place exits
+	//! place exits
 	void openRooms();
 	void openRoom(room_t& room);
 	Sint32 allocOpens(room_t& room);
@@ -292,7 +293,7 @@ private:
 	sill_t checkSill(room_t& room, Sint32 sill_r, Sint32 sill_c, Sint32 dir);
 	Uint32 doorType();
 
-	// place corridors
+	//! place corridors
 	void corridors();
 	void tunnel(Sint32 i, Sint32 j, Sint32 dir = -1);
 	ArrayList<Sint32> tunnelDirs(Sint32 lastDir);
@@ -300,11 +301,11 @@ private:
 	bool soundTunnel(Sint32 mid_r, Sint32 mid_c, Sint32 next_r, Sint32 next_c);
 	void delveTunnel(Sint32 this_r, Sint32 this_c, Sint32 next_r, Sint32 next_c);
 
-	// place stairs
+	//! place stairs
 	void emplaceStairs();
 	//void stairEnds();
 
-	// finalize
+	//! finalize
 	void cleanDungeon();
 	void removeDeadends(Sint32 percentage);
 	void collapse(Sint32 r, Sint32 c);
@@ -317,13 +318,13 @@ private:
 	Sint32 roomBase, roomRadix;
 	Sint32 numRooms = 0;
 
-	// raw dungeon data
+	//! raw dungeon data
 	ArrayList<Uint32> tiles;
 
-	// room library
+	//! room library
 	ArrayList<roomlib_t> roomLibs;
 	ArrayList<tunnellib_t> tunnelLibs;
 
-	// level kit
+	//! level kit
 	String levelkit;
 };

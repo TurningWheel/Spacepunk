@@ -1,0 +1,65 @@
+\hypertarget{class_component_1_1_attribute}{}\doxysection{Component\+::Attribute Class Reference}
+\label{class_component_1_1_attribute}\index{Component::Attribute@{Component::Attribute}}
+
+
+An exposed attribute (modifiable in editor)  
+
+
+
+
+{\ttfamily \#include $<$Component.\+hpp$>$}
+
+Inheritance diagram for Component\+::Attribute\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=9.000000cm]{class_component_1_1_attribute}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_component_1_1_attribute_ae542ea2e78357f726c57fe977dce6fbe}\label{class_component_1_1_attribute_ae542ea2e78357f726c57fe977dce6fbe}} 
+enum {\bfseries Type} \{ \newline
+{\bfseries T\+Y\+P\+E\+\_\+\+B\+O\+O\+L\+E\+AN}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+I\+N\+T\+E\+G\+ER}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+F\+L\+O\+AT}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+S\+T\+R\+I\+NG}, 
+\newline
+{\bfseries T\+Y\+P\+E\+\_\+\+V\+E\+C\+T\+OR}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+C\+O\+L\+OR}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+E\+N\+UM}, 
+{\bfseries T\+Y\+P\+E\+\_\+\+F\+I\+LE}, 
+\newline
+{\bfseries T\+Y\+P\+E\+\_\+\+M\+AX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_component_1_1_attribute_a3f8abf4a4fdcb9f37b3ace5e823b579b}\label{class_component_1_1_attribute_a3f8abf4a4fdcb9f37b3ace5e823b579b}} 
+{\bfseries Attribute} (const char $\ast$\+\_\+label)
+\item 
+\mbox{\Hypertarget{class_component_1_1_attribute_a1aeae2c89cd2b9d1ac036341314358f3}\label{class_component_1_1_attribute_a1aeae2c89cd2b9d1ac036341314358f3}} 
+virtual const Type {\bfseries get\+Type} () const =0
+\item 
+\mbox{\Hypertarget{class_component_1_1_attribute_a1dd52bb422fa186f4841fd5bed904ee6}\label{class_component_1_1_attribute_a1dd52bb422fa186f4841fd5bed904ee6}} 
+const char $\ast$ {\bfseries get\+Label} () const
+\item 
+\mbox{\Hypertarget{class_component_1_1_attribute_a6d4a471a718fecbb3f9d23a1bb3355aa}\label{class_component_1_1_attribute_a6d4a471a718fecbb3f9d23a1bb3355aa}} 
+virtual void {\bfseries create\+Attribute\+UI} (\mbox{\hyperlink{class_frame}{Frame}} \&properties, int x, int \&y, int width) const =0
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_component_1_1_attribute_ad9862c9a14bb0e0b80a3b331aae376d7}\label{class_component_1_1_attribute_ad9862c9a14bb0e0b80a3b331aae376d7}} 
+\mbox{\hyperlink{class_string}{String}} {\bfseries label}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An exposed attribute (modifiable in editor) 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_component_8hpp}{Component.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Component.\+cpp\end{DoxyCompactItemize}

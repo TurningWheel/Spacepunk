@@ -1,0 +1,28 @@
+\hypertarget{_file_8hpp}{}\doxysection{E\+:/\+Projects/\+Spacepunk/src/\+File.hpp File Reference}
+\label{_file_8hpp}\index{E:/Projects/Spacepunk/src/File.hpp@{E:/Projects/Spacepunk/src/File.hpp}}
+{\ttfamily \#include \char`\"{}Main.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}String.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Array\+List.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Dictionary.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_file_interface}{File\+Interface}}
+\item 
+class \mbox{\hyperlink{class_file_helper}{File\+Helper}}
+\begin{DoxyCompactList}\small\item\em The main static interface to read and write J\+S\+ON files to disk. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_file_8hpp_ad4b3cb88e065d85d2e225600ecdbed30}\label{_file_8hpp_ad4b3cb88e065d85d2e225600ecdbed30}} 
+enum {\bfseries E\+File\+Format} \{ {\bfseries Json}, 
+{\bfseries Binary}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A simple interface for reading and writing objects to files, has support for both json and binary. Basic types, enums and Array\+Lists are supported by default, other class and struct types need to implement the \char`\"{}void serialize(\+File\+Interface $\ast$ file)\char`\"{} function. The interface is symmetric, meaning that there is only a single function for both saving and loading.
+
+class Example\+Class \{ private\+: Uint32 My\+Number; \mbox{\hyperlink{class_string}{String}} My\+String; public\+: void serialize(\+File\+Interface $\ast$ file) \{ file-\/$>$property(\char`\"{}\+My\+Number\char`\"{}, My\+Number); file-\/$>$property(\char`\"{}\+My\+String\char`\"{}, My\+String); \} \}; 

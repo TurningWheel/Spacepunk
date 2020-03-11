@@ -1,0 +1,173 @@
+\hypertarget{class_random}{}\doxysection{Random Class Reference}
+\label{class_random}\index{Random@{Random}}
+
+
+The \mbox{\hyperlink{class_random}{Random}} class is a random number generator.  
+
+
+
+
+{\ttfamily \#include $<$Random.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_random_a75c55d5a303de4e43d23397fc441bfd4}\label{class_random_a75c55d5a303de4e43d23397fc441bfd4}} 
+void \mbox{\hyperlink{class_random_a75c55d5a303de4e43d23397fc441bfd4}{seed\+Time}} ()
+\begin{DoxyCompactList}\small\item\em seed the rng based on the current time \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_random_aac925948d97475163c36100d37e9c993}{seed\+Value}} (Uint32 seed)
+\item 
+\mbox{\Hypertarget{class_random_a943e2d4aeeb18951f1b853dc4b8e906e}\label{class_random_a943e2d4aeeb18951f1b853dc4b8e906e}} 
+void \mbox{\hyperlink{class_random_a943e2d4aeeb18951f1b853dc4b8e906e}{seed\+Bytes}} (const Uint8 $\ast$seed, Uint32 size)
+\begin{DoxyCompactList}\small\item\em seed the rng based on the given value \end{DoxyCompactList}\item 
+Uint8 \mbox{\hyperlink{class_random_ad93984a0511badba40500b7e44fa4048}{get\+Uint8}} ()
+\item 
+Sint8 \mbox{\hyperlink{class_random_ae9787249249d5e32d61beaf30f553cac}{get\+Sint8}} ()
+\item 
+Uint16 \mbox{\hyperlink{class_random_a52d25e2013212581cec41f44ccfdf204}{get\+Uint16}} ()
+\item 
+Sint16 \mbox{\hyperlink{class_random_a1a784d283b02a41e7a1e80070c47ddc6}{get\+Sint16}} ()
+\item 
+Uint32 \mbox{\hyperlink{class_random_ad7177e39faebcc6e0068b8c21f4bb500}{get\+Uint32}} ()
+\item 
+Sint32 \mbox{\hyperlink{class_random_ab76ec0d6e0a524238d3a2ce057579b2a}{get\+Sint32}} ()
+\item 
+Uint64 \mbox{\hyperlink{class_random_af38c77bdbdc555bd021a859751c04e0a}{get\+Uint64}} ()
+\item 
+Sint64 \mbox{\hyperlink{class_random_a39bcac38cb7ebe0cae754253e931a8d6}{get\+Sint64}} ()
+\item 
+double \mbox{\hyperlink{class_random_a3f0942ed8d8b31dc825f2bec1e9a520b}{get\+Double}} ()
+\item 
+float \mbox{\hyperlink{class_random_a2498fad76196a0ede1cc9ad2c1b843b7}{get\+Float}} ()
+\item 
+void \mbox{\hyperlink{class_random_ae0d3f95224753f08a8538ed21b810cc0}{get\+Bytes}} (Uint8 $\ast$buffer, Uint32 size)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_random}{Random}} class is a random number generator. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_random_ae0d3f95224753f08a8538ed21b810cc0}\label{class_random_ae0d3f95224753f08a8538ed21b810cc0}} 
+\index{Random@{Random}!getBytes@{getBytes}}
+\index{getBytes@{getBytes}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getBytes()}{getBytes()}}
+{\footnotesize\ttfamily void Random\+::get\+Bytes (\begin{DoxyParamCaption}\item[{Uint8 $\ast$}]{buffer,  }\item[{Uint32}]{size }\end{DoxyParamCaption})}
+
+generate a random value of the given size 
+\begin{DoxyParams}{Parameters}
+{\em buffer} & the buffer to place the random value in \\
+\hline
+{\em size} & the size of the buffer in bytes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a random number 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_a3f0942ed8d8b31dc825f2bec1e9a520b}\label{class_random_a3f0942ed8d8b31dc825f2bec1e9a520b}} 
+\index{Random@{Random}!getDouble@{getDouble}}
+\index{getDouble@{getDouble}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getDouble()}{getDouble()}}
+{\footnotesize\ttfamily double Random\+::get\+Double (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+a double (64-\/bit) (range 0-\/1, both inclusive) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_a2498fad76196a0ede1cc9ad2c1b843b7}\label{class_random_a2498fad76196a0ede1cc9ad2c1b843b7}} 
+\index{Random@{Random}!getFloat@{getFloat}}
+\index{getFloat@{getFloat}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getFloat()}{getFloat()}}
+{\footnotesize\ttfamily float Random\+::get\+Float (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+a float (32-\/bit) (range 0-\/1, both inclusive) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_a1a784d283b02a41e7a1e80070c47ddc6}\label{class_random_a1a784d283b02a41e7a1e80070c47ddc6}} 
+\index{Random@{Random}!getSint16@{getSint16}}
+\index{getSint16@{getSint16}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getSint16()}{getSint16()}}
+{\footnotesize\ttfamily Sint16 Random\+::get\+Sint16 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+a signed int (16-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_ab76ec0d6e0a524238d3a2ce057579b2a}\label{class_random_ab76ec0d6e0a524238d3a2ce057579b2a}} 
+\index{Random@{Random}!getSint32@{getSint32}}
+\index{getSint32@{getSint32}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getSint32()}{getSint32()}}
+{\footnotesize\ttfamily Sint32 Random\+::get\+Sint32 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+a signed int (32-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_a39bcac38cb7ebe0cae754253e931a8d6}\label{class_random_a39bcac38cb7ebe0cae754253e931a8d6}} 
+\index{Random@{Random}!getSint64@{getSint64}}
+\index{getSint64@{getSint64}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getSint64()}{getSint64()}}
+{\footnotesize\ttfamily Sint64 Random\+::get\+Sint64 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+a signed long (64-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_ae9787249249d5e32d61beaf30f553cac}\label{class_random_ae9787249249d5e32d61beaf30f553cac}} 
+\index{Random@{Random}!getSint8@{getSint8}}
+\index{getSint8@{getSint8}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getSint8()}{getSint8()}}
+{\footnotesize\ttfamily Sint8 Random\+::get\+Sint8 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+a signed int (8-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_a52d25e2013212581cec41f44ccfdf204}\label{class_random_a52d25e2013212581cec41f44ccfdf204}} 
+\index{Random@{Random}!getUint16@{getUint16}}
+\index{getUint16@{getUint16}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getUint16()}{getUint16()}}
+{\footnotesize\ttfamily Uint16 Random\+::get\+Uint16 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+an unsigned int (16-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_ad7177e39faebcc6e0068b8c21f4bb500}\label{class_random_ad7177e39faebcc6e0068b8c21f4bb500}} 
+\index{Random@{Random}!getUint32@{getUint32}}
+\index{getUint32@{getUint32}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getUint32()}{getUint32()}}
+{\footnotesize\ttfamily Uint32 Random\+::get\+Uint32 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+an unsigned int (32-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_af38c77bdbdc555bd021a859751c04e0a}\label{class_random_af38c77bdbdc555bd021a859751c04e0a}} 
+\index{Random@{Random}!getUint64@{getUint64}}
+\index{getUint64@{getUint64}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getUint64()}{getUint64()}}
+{\footnotesize\ttfamily Uint64 Random\+::get\+Uint64 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+an unsigned long (64-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_ad93984a0511badba40500b7e44fa4048}\label{class_random_ad93984a0511badba40500b7e44fa4048}} 
+\index{Random@{Random}!getUint8@{getUint8}}
+\index{getUint8@{getUint8}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{getUint8()}{getUint8()}}
+{\footnotesize\ttfamily Uint8 Random\+::get\+Uint8 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+an unsigned int (8-\/bit) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_random_aac925948d97475163c36100d37e9c993}\label{class_random_aac925948d97475163c36100d37e9c993}} 
+\index{Random@{Random}!seedValue@{seedValue}}
+\index{seedValue@{seedValue}!Random@{Random}}
+\doxysubsubsection{\texorpdfstring{seedValue()}{seedValue()}}
+{\footnotesize\ttfamily void Random\+::seed\+Value (\begin{DoxyParamCaption}\item[{Uint32}]{seed }\end{DoxyParamCaption})}
+
+seed the rng based on the given 32-\/bit seed 
+\begin{DoxyParams}{Parameters}
+{\em seed} & the seed to use \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_random_8hpp}{Random.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Random.\+cpp\end{DoxyCompactItemize}

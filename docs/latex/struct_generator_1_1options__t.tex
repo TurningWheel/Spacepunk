@@ -1,0 +1,87 @@
+\hypertarget{struct_generator_1_1options__t}{}\doxysection{Generator\+::options\+\_\+t Struct Reference}
+\label{struct_generator_1_1options__t}\index{Generator::options\_t@{Generator::options\_t}}
+
+
+Options.  
+
+
+
+
+{\ttfamily \#include $<$Generator.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{struct_generator_1_1options__t_abfa20d50a9b871497d252855d9676515}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_ac3b6ec4f304a4917bc1293970938ad4b}\label{struct_generator_1_1options__t_ac3b6ec4f304a4917bc1293970938ad4b}} 
+Uint32 {\bfseries seed} = 0
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_a4a7842b9bf458feea10878b30ab8ee9f}\label{struct_generator_1_1options__t_a4a7842b9bf458feea10878b30ab8ee9f}} 
+Sint32 \mbox{\hyperlink{struct_generator_1_1options__t_a4a7842b9bf458feea10878b30ab8ee9f}{dungeon\+Width}} = 39
+\begin{DoxyCompactList}\small\item\em random seed \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_a144dbf3f3da8d4cc59d595738e6460d9}\label{struct_generator_1_1options__t_a144dbf3f3da8d4cc59d595738e6460d9}} 
+Sint32 \mbox{\hyperlink{struct_generator_1_1options__t_a144dbf3f3da8d4cc59d595738e6460d9}{dungeon\+Height}} = 39
+\begin{DoxyCompactList}\small\item\em must be an odd number \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_affbe4dc9c454e82d7834a5177328894f}\label{struct_generator_1_1options__t_affbe4dc9c454e82d7834a5177328894f}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{struct_generator_1_1options__t_affbe4dc9c454e82d7834a5177328894f}{dungeon\+Layout}} = \char`\"{}None\char`\"{}
+\begin{DoxyCompactList}\small\item\em must be an odd number \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_addb20c465c8159a864f5054770ad67ea}\label{struct_generator_1_1options__t_addb20c465c8159a864f5054770ad67ea}} 
+Sint32 {\bfseries room\+Min} = 3
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_af306a4bf23a4250e945f58372fabda3b}\label{struct_generator_1_1options__t_af306a4bf23a4250e945f58372fabda3b}} 
+Sint32 {\bfseries room\+Max} = 9
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_a53dcc28a94700307fd8ed3d920a89143}\label{struct_generator_1_1options__t_a53dcc28a94700307fd8ed3d920a89143}} 
+\mbox{\hyperlink{class_string}{String}} {\bfseries room\+Layout} = \char`\"{}Scattered\char`\"{}
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_ac67602b25bd617e744939da3e828a93b}\label{struct_generator_1_1options__t_ac67602b25bd617e744939da3e828a93b}} 
+\mbox{\hyperlink{class_string}{String}} \mbox{\hyperlink{struct_generator_1_1options__t_ac67602b25bd617e744939da3e828a93b}{corridor\+Layout}} = \char`\"{}Bent\char`\"{}
+\begin{DoxyCompactList}\small\item\em Packed or Scattered. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_a70da9a5d05626766ddf7f7a81286016c}\label{struct_generator_1_1options__t_a70da9a5d05626766ddf7f7a81286016c}} 
+Sint32 {\bfseries remove\+Deadends} = 0
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_a4f37eb48d377e70d390e6be41bb12209}\label{struct_generator_1_1options__t_a4f37eb48d377e70d390e6be41bb12209}} 
+Sint32 \mbox{\hyperlink{struct_generator_1_1options__t_a4f37eb48d377e70d390e6be41bb12209}{add\+Stairs}} = 2
+\begin{DoxyCompactList}\small\item\em percentage \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_aad4553ec6bb7b2e6817e0c97c7d437b9}\label{struct_generator_1_1options__t_aad4553ec6bb7b2e6817e0c97c7d437b9}} 
+Sint32 \mbox{\hyperlink{struct_generator_1_1options__t_aad4553ec6bb7b2e6817e0c97c7d437b9}{subdivisor}} = 2
+\begin{DoxyCompactList}\small\item\em number of stairs \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_a870124f58cb111869642822dcd5f6791}\label{struct_generator_1_1options__t_a870124f58cb111869642822dcd5f6791}} 
+bool {\bfseries complex} = false
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_ad3f4088347d4f0cc7e9433e11b0348cc}\label{struct_generator_1_1options__t_ad3f4088347d4f0cc7e9433e11b0348cc}} 
+bool \mbox{\hyperlink{struct_generator_1_1options__t_ad3f4088347d4f0cc7e9433e11b0348cc}{power}} = false
+\begin{DoxyCompactList}\small\item\em whether to create \char`\"{}complex\char`\"{} (non-\/rectangle) rooms \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_a1f110b0a7b73fbc6bef9e6322d25efac}\label{struct_generator_1_1options__t_a1f110b0a7b73fbc6bef9e6322d25efac}} 
+bool {\bfseries gravity} = false
+\item 
+\mbox{\Hypertarget{struct_generator_1_1options__t_aa83de66b84964ddfa5169ec4ead3ef74}\label{struct_generator_1_1options__t_aa83de66b84964ddfa5169ec4ead3ef74}} 
+bool {\bfseries life\+Support} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Options. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{struct_generator_1_1options__t_abfa20d50a9b871497d252855d9676515}\label{struct_generator_1_1options__t_abfa20d50a9b871497d252855d9676515}} 
+\index{Generator::options\_t@{Generator::options\_t}!serialize@{serialize}}
+\index{serialize@{serialize}!Generator::options\_t@{Generator::options\_t}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Generator\+::options\+\_\+t\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_generator_8hpp}{Generator.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Generator.\+cpp\end{DoxyCompactItemize}

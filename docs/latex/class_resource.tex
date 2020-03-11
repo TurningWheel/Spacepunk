@@ -1,0 +1,124 @@
+\hypertarget{class_resource}{}\doxysection{Resource$<$ T, stream $>$ Class Template Reference}
+\label{class_resource}\index{Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}}
+
+
+{\ttfamily \#include $<$Resource.\+hpp$>$}
+
+Inheritance diagram for Resource$<$ T, stream $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_resource}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_resource_ae6bcd3624c4a05a4e3117e2895a4ae52}\label{class_resource_ae6bcd3624c4a05a4e3117e2895a4ae52}} 
+\mbox{\hyperlink{class_map}{Map}}$<$ \mbox{\hyperlink{class_string}{String}}, T $\ast$ $>$ \& \mbox{\hyperlink{class_resource_ae6bcd3624c4a05a4e3117e2895a4ae52}{get\+Cache}} ()
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+virtual Uint32 \mbox{\hyperlink{class_resource_a8a0fe0d307a2f7e321037199d9b48f44}{size}} () const override
+\item 
+T $\ast$ \mbox{\hyperlink{class_resource_aa7eb4c25cf79073b95ae1fba0f79e417}{data\+For\+String}} (const char $\ast$name)
+\item 
+virtual void \mbox{\hyperlink{class_resource_a7bdbec9805c8265353c6cc542a7464de}{update}} () override
+\begin{DoxyCompactList}\small\item\em finishes jobs \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_resource_a340c5e6bd0c8707851ecaa17d11bed42}\label{class_resource_a340c5e6bd0c8707851ecaa17d11bed42}} 
+virtual void \mbox{\hyperlink{class_resource_a340c5e6bd0c8707851ecaa17d11bed42}{dump\+Cache}} () override
+\begin{DoxyCompactList}\small\item\em completely clears all data elements stored in the cache \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_resource_a70aa00146d9db208063cff4d62137652}\label{class_resource_a70aa00146d9db208063cff4d62137652}} 
+virtual void \mbox{\hyperlink{class_resource_a70aa00146d9db208063cff4d62137652}{delete\+Data}} (const char $\ast$name) override
+\begin{DoxyCompactList}\small\item\em delete some specific data from the cache \end{DoxyCompactList}\item 
+virtual Uint32 \mbox{\hyperlink{class_resource_aa0407beae429ff485fd5a46674b2e6cf}{get\+Size\+In\+Bytes}} () const override
+\begin{DoxyCompactList}\small\item\em calculate the size of this resource cache \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{Asset\+::type\+\_\+t}} \mbox{\hyperlink{class_resource_a86a42ec48bebad65e1919187083f5382}{get\+Type}} () const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T, bool stream = false$>$\newline
+class Resource$<$ T, stream $>$}
+
+The \mbox{\hyperlink{class_resource}{Resource}} class provides a way for the \mbox{\hyperlink{class_engine}{Engine}} to cache assets on an as-\/needed basis, and delete them when too much data is consumed. Use the \mbox{\hyperlink{class_resource_aa7eb4c25cf79073b95ae1fba0f79e417}{data\+For\+String()}} method to get an asset out of the \mbox{\hyperlink{class_resource}{Resource}}. Template type must implement \mbox{\hyperlink{class_asset}{Asset}} 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_resource_aa7eb4c25cf79073b95ae1fba0f79e417}\label{class_resource_aa7eb4c25cf79073b95ae1fba0f79e417}} 
+\index{Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}!dataForString@{dataForString}}
+\index{dataForString@{dataForString}!Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}}
+\doxysubsubsection{\texorpdfstring{dataForString()}{dataForString()}}
+{\footnotesize\ttfamily template$<$typename T , bool stream = false$>$ \\
+T$\ast$ \mbox{\hyperlink{class_resource}{Resource}}$<$ T, stream $>$\+::data\+For\+String (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+finds and returns the data with the given name from the cache if the data already exists in the cache, it is returned and error is set to E\+R\+R\+O\+R\+\_\+\+N\+O\+NE if the data does not exist in the cache, the resource creates it anew and error is set to E\+R\+R\+O\+R\+\_\+\+N\+O\+T\+C\+A\+C\+H\+ED if the data failed to be created then error is set to E\+R\+R\+O\+R\+\_\+\+C\+A\+C\+H\+E\+F\+A\+I\+L\+ED if the data is currently being streamed then error is set to E\+R\+R\+O\+R\+\_\+\+C\+A\+C\+H\+E\+I\+N\+P\+R\+O\+G\+R\+E\+SS 
+\begin{DoxyParams}{Parameters}
+{\em name} & the name of the data to load \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the data, or nullptr if the data could not be loaded 
+\end{DoxyReturn}
+data not found, attempt to load it
+
+enforce \mbox{\hyperlink{class_asset}{Asset}} base class\mbox{\Hypertarget{class_resource_aa0407beae429ff485fd5a46674b2e6cf}\label{class_resource_aa0407beae429ff485fd5a46674b2e6cf}} 
+\index{Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}!getSizeInBytes@{getSizeInBytes}}
+\index{getSizeInBytes@{getSizeInBytes}!Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}}
+\doxysubsubsection{\texorpdfstring{getSizeInBytes()}{getSizeInBytes()}}
+{\footnotesize\ttfamily template$<$typename T , bool stream = false$>$ \\
+virtual Uint32 \mbox{\hyperlink{class_resource}{Resource}}$<$ T, stream $>$\+::get\+Size\+In\+Bytes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+calculate the size of this resource cache 
+
+T\+O\+DO need something better than sizeof
+
+Implements \mbox{\hyperlink{class_resource_base}{Resource\+Base}}.
+
+\mbox{\Hypertarget{class_resource_a86a42ec48bebad65e1919187083f5382}\label{class_resource_a86a42ec48bebad65e1919187083f5382}} 
+\index{Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}!getType@{getType}}
+\index{getType@{getType}!Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}}
+\doxysubsubsection{\texorpdfstring{getType()}{getType()}}
+{\footnotesize\ttfamily template$<$typename T , bool stream = false$>$ \\
+virtual \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{Asset\+::type\+\_\+t}} \mbox{\hyperlink{class_resource}{Resource}}$<$ T, stream $>$\+::get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+get the type of asset we are dealing with \begin{DoxyReturn}{Returns}
+the asset type 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_resource_base}{Resource\+Base}}.
+
+\mbox{\Hypertarget{class_resource_a8a0fe0d307a2f7e321037199d9b48f44}\label{class_resource_a8a0fe0d307a2f7e321037199d9b48f44}} 
+\index{Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}!size@{size}}
+\index{size@{size}!Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily template$<$typename T , bool stream = false$>$ \\
+virtual Uint32 \mbox{\hyperlink{class_resource}{Resource}}$<$ T, stream $>$\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+number of items in the resource \begin{DoxyReturn}{Returns}
+the number of cached items in the resource 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_resource_base}{Resource\+Base}}.
+
+\mbox{\Hypertarget{class_resource_a7bdbec9805c8265353c6cc542a7464de}\label{class_resource_a7bdbec9805c8265353c6cc542a7464de}} 
+\index{Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}!update@{update}}
+\index{update@{update}!Resource$<$ T, stream $>$@{Resource$<$ T, stream $>$}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily template$<$typename T , bool stream = false$>$ \\
+virtual void \mbox{\hyperlink{class_resource}{Resource}}$<$ T, stream $>$\+::update (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+finishes jobs 
+
+enforce \mbox{\hyperlink{class_asset}{Asset}} base class
+
+Implements \mbox{\hyperlink{class_resource_base}{Resource\+Base}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_resource_8hpp}{Resource.\+hpp}}\end{DoxyCompactItemize}

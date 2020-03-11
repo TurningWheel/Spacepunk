@@ -1,10 +1,11 @@
-// Character.hpp
+//! @file Character.hpp
 
 #pragma once
 
 #include "Main.hpp"
 #include "Component.hpp"
 
+//! A Character is an Entity Component that essentially contains all the data for an RPG character.
 class Character : public Component {
 public:
 
@@ -44,8 +45,8 @@ public:
 
 	virtual void load(FILE* fp);
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
 	//General getters

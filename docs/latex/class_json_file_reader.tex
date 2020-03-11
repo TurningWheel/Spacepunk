@@ -1,0 +1,233 @@
+\hypertarget{class_json_file_reader}{}\doxysection{Json\+File\+Reader Class Reference}
+\label{class_json_file_reader}\index{JsonFileReader@{JsonFileReader}}
+Inheritance diagram for Json\+File\+Reader\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_json_file_reader}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_json_file_reader_1_1_doc_iterator}{Doc\+Iterator}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{class_json_file_reader_a7c1cd878746c5a50ab7869bd3972febe}{is\+Reading}} () const override
+\item 
+\mbox{\Hypertarget{class_json_file_reader_abea845615d72fd427080ef31feb5f8ae}\label{class_json_file_reader_abea845615d72fd427080ef31feb5f8ae}} 
+virtual void \mbox{\hyperlink{class_json_file_reader_abea845615d72fd427080ef31feb5f8ae}{begin\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the beginning of an object in the file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_json_file_reader_af0fd29f6483a4366dc72b35eaeca6fbe}\label{class_json_file_reader_af0fd29f6483a4366dc72b35eaeca6fbe}} 
+virtual void \mbox{\hyperlink{class_json_file_reader_af0fd29f6483a4366dc72b35eaeca6fbe}{end\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an object in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_aed003bdb3c3440572139e7900fac4717}{begin\+Array}} (Uint32 \&size) override
+\item 
+\mbox{\Hypertarget{class_json_file_reader_a95cf6ebf602bcbf357c4aa7064d4a6bd}\label{class_json_file_reader_a95cf6ebf602bcbf357c4aa7064d4a6bd}} 
+virtual void \mbox{\hyperlink{class_json_file_reader_a95cf6ebf602bcbf357c4aa7064d4a6bd}{end\+Array}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an array in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_ab84f0c97823bdec49c3f5e42ff60e62c}{property\+Name}} (const char $\ast$field\+Name) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_a23277d8afc7ffa31c786847f68061930}{value}} (Uint32 \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_a34a2a5cc07932e063ccf2e553b84a834}{value}} (Sint32 \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_a7aa5bfa284aaec3d0092c1a043fcff39}{value}} (float \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_a2a72f71b75acedd845362e7db768b2b5}{value}} (double \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_ad72216e171169cb1e52ba5ef8f096a04}{value}} (bool \&value) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_a9d6b6b36b9f78a77258452548dd9ef66}{value}} (\mbox{\hyperlink{class_string}{String}} \&value, Uint32 max\+Length) override
+\item 
+virtual void \mbox{\hyperlink{class_json_file_reader_a1dcdd279a5cc9bc7a3208cd3de2069e0}{value}} (Uint32 \&v, \mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$lookup) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_json_file_reader_a4b1b8d923470043ec691cd8f0b681d3f}\label{class_json_file_reader_a4b1b8d923470043ec691cd8f0b681d3f}} 
+static bool {\bfseries read\+Object} (F\+I\+LE $\ast$fp, const File\+Helper\+::\+Serialization\+Func \&serialize)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_json_file_reader_a314d15d0282e3e051874cde03f24b2c0}\label{class_json_file_reader_a314d15d0282e3e051874cde03f24b2c0}} 
+rapidjson\+::\+Value\+::\+Const\+Value\+Iterator {\bfseries Get\+Current\+Value} ()
+\item 
+\mbox{\Hypertarget{class_json_file_reader_a15b68b08b83667f802c90745ba58e35f}\label{class_json_file_reader_a15b68b08b83667f802c90745ba58e35f}} 
+bool {\bfseries read\+All\+File\+Data} (F\+I\+LE $\ast$fp)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_json_file_reader_adb3b82cc2a73b349b11744526eaf7fed}\label{class_json_file_reader_adb3b82cc2a73b349b11744526eaf7fed}} 
+rapidjson\+::\+Document {\bfseries doc}
+\item 
+\mbox{\Hypertarget{class_json_file_reader_a43ead076fe909325fc0a513e27aa2eaf}\label{class_json_file_reader_a43ead076fe909325fc0a513e27aa2eaf}} 
+const char $\ast$ {\bfseries prop\+Name} = nullptr
+\item 
+\mbox{\Hypertarget{class_json_file_reader_a52eba3d75fd243722128359fe634d1dd}\label{class_json_file_reader_a52eba3d75fd243722128359fe634d1dd}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_json_file_reader_1_1_doc_iterator}{Doc\+Iterator}} $>$ {\bfseries stack}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_json_file_reader_aed003bdb3c3440572139e7900fac4717}\label{class_json_file_reader_aed003bdb3c3440572139e7900fac4717}} 
+\index{JsonFileReader@{JsonFileReader}!beginArray@{beginArray}}
+\index{beginArray@{beginArray}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{beginArray()}{beginArray()}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::begin\+Array (\begin{DoxyParamCaption}\item[{Uint32 \&}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Signals the beginning of an array in the file 
+\begin{DoxyParams}{Parameters}
+{\em size} & number of items in the array \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac2592d28bcfb9197e06af8b02706a936}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_a7c1cd878746c5a50ab7869bd3972febe}\label{class_json_file_reader_a7c1cd878746c5a50ab7869bd3972febe}} 
+\index{JsonFileReader@{JsonFileReader}!isReading@{isReading}}
+\index{isReading@{isReading}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{isReading()}{isReading()}}
+{\footnotesize\ttfamily virtual bool Json\+File\+Reader\+::is\+Reading (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+true if this interface is reading data from a file, false if it is writing 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ad61705edebf54359260990e04328dd30}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_ab84f0c97823bdec49c3f5e42ff60e62c}\label{class_json_file_reader_ab84f0c97823bdec49c3f5e42ff60e62c}} 
+\index{JsonFileReader@{JsonFileReader}!propertyName@{propertyName}}
+\index{propertyName@{propertyName}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{propertyName()}{propertyName()}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::property\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Serializes the name of a property 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the property ~\newline
+ \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac1a94367435eb8596352591bdf0309fc}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_ad72216e171169cb1e52ba5ef8f096a04}\label{class_json_file_reader_ad72216e171169cb1e52ba5ef8f096a04}} 
+\index{JsonFileReader@{JsonFileReader}!value@{value}}
+\index{value@{value}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{bool \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a182e8548d9ec1ff1a678cfdd81c916a5}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_a2a72f71b75acedd845362e7db768b2b5}\label{class_json_file_reader_a2a72f71b75acedd845362e7db768b2b5}} 
+\index{JsonFileReader@{JsonFileReader}!value@{value}}
+\index{value@{value}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{double \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a1dbcb186f5edfe415764dd1571d18453}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_a7aa5bfa284aaec3d0092c1a043fcff39}\label{class_json_file_reader_a7aa5bfa284aaec3d0092c1a043fcff39}} 
+\index{JsonFileReader@{JsonFileReader}!value@{value}}
+\index{value@{value}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [3/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{float \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_af05569388f2ff0b7ba05dd8d4a5c6b80}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_a34a2a5cc07932e063ccf2e553b84a834}\label{class_json_file_reader_a34a2a5cc07932e063ccf2e553b84a834}} 
+\index{JsonFileReader@{JsonFileReader}!value@{value}}
+\index{value@{value}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [4/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{Sint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a8cf6bb65a6a0368931bad5819075e8a6}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_a9d6b6b36b9f78a77258452548dd9ef66}\label{class_json_file_reader_a9d6b6b36b9f78a77258452548dd9ef66}} 
+\index{JsonFileReader@{JsonFileReader}!value@{value}}
+\index{value@{value}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [5/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_string}{String}} \&}]{v,  }\item[{Uint32}]{max\+Length }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+{\em max\+Length} & maximum length of the string allowed, 0 is no limit \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ab4c1463bd34577a972a20a8ac3442fdf}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_a1dcdd279a5cc9bc7a3208cd3de2069e0}\label{class_json_file_reader_a1dcdd279a5cc9bc7a3208cd3de2069e0}} 
+\index{JsonFileReader@{JsonFileReader}!value@{value}}
+\index{value@{value}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [6/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v,  }\item[{\mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$}]{lookup }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Given an int, serialize it as the corresponding string value from the dict 
+\begin{DoxyParams}{Parameters}
+{\em v} & value to look up \\
+\hline
+{\em lookup} & dictionary to lookup the string in \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_aaf3331d0f87fb8277d20c5ebc3ea4f31}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_json_file_reader_a23277d8afc7ffa31c786847f68061930}\label{class_json_file_reader_a23277d8afc7ffa31c786847f68061930}} 
+\index{JsonFileReader@{JsonFileReader}!value@{value}}
+\index{value@{value}!JsonFileReader@{JsonFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [7/7]}}
+{\footnotesize\ttfamily virtual void Json\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a446679019f93342e10194317ee1f9aa0}{File\+Interface}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/File.\+cpp\end{DoxyCompactItemize}

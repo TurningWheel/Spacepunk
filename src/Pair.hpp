@@ -1,4 +1,4 @@
-// Pair.hpp
+//! @file Pair.hpp
 
 #pragma once
 
@@ -29,7 +29,7 @@ struct UnorderedPair {
 		}
 	}
 
-	// @return true if the other pair shares either of our values
+	//! @return true if the other pair shares either of our values
 	bool shares(const UnorderedPair& src) {
 		if (a == src.a || a == src.b ||
 			b == src.a || b == src.b) {

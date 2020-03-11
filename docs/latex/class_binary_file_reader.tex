@@ -1,0 +1,210 @@
+\hypertarget{class_binary_file_reader}{}\doxysection{Binary\+File\+Reader Class Reference}
+\label{class_binary_file_reader}\index{BinaryFileReader@{BinaryFileReader}}
+Inheritance diagram for Binary\+File\+Reader\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_binary_file_reader}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_binary_file_reader_a3966e584ef83c96bba836bf7901ecea4}\label{class_binary_file_reader_a3966e584ef83c96bba836bf7901ecea4}} 
+{\bfseries Binary\+File\+Reader} (F\+I\+LE $\ast$file)
+\item 
+virtual bool \mbox{\hyperlink{class_binary_file_reader_a99e80f1acae3fb58baca70d9338064ac}{is\+Reading}} () const override
+\item 
+\mbox{\Hypertarget{class_binary_file_reader_a5c7263ce0f015d26c3525b7d162bfa09}\label{class_binary_file_reader_a5c7263ce0f015d26c3525b7d162bfa09}} 
+virtual void \mbox{\hyperlink{class_binary_file_reader_a5c7263ce0f015d26c3525b7d162bfa09}{begin\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the beginning of an object in the file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_binary_file_reader_a34155dd5d8f707844917eac0ba9a494d}\label{class_binary_file_reader_a34155dd5d8f707844917eac0ba9a494d}} 
+virtual void \mbox{\hyperlink{class_binary_file_reader_a34155dd5d8f707844917eac0ba9a494d}{end\+Object}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an object in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_abbdb88a6633199fee0fb382add80b696}{begin\+Array}} (Uint32 \&size) override
+\item 
+\mbox{\Hypertarget{class_binary_file_reader_ada233deb7d30bea795399a66a0e365b3}\label{class_binary_file_reader_ada233deb7d30bea795399a66a0e365b3}} 
+virtual void \mbox{\hyperlink{class_binary_file_reader_ada233deb7d30bea795399a66a0e365b3}{end\+Array}} () override
+\begin{DoxyCompactList}\small\item\em Signals the end of an array in the file. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_ad67f0f9d30864850b62d38cf86e002e4}{property\+Name}} (const char $\ast$name) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_ac03acf31d80d643c2913efb8b740e392}{value}} (Uint32 \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_a1ba27e1027f397fd40b8445e4de2d917}{value}} (Sint32 \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_aaf202913fdb6dc3d2bb0cd76ce6fb676}{value}} (float \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_a208f0bc4bad2a8db5092d59bb5c7eba7}{value}} (double \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_a31639129439f67ddbc7614b8f12e2e8f}{value}} (bool \&v) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_ade8e0135d542b6750e07f0beb8cc2e73}{value}} (\mbox{\hyperlink{class_string}{String}} \&v, Uint32 max\+Length) override
+\item 
+virtual void \mbox{\hyperlink{class_binary_file_reader_a43444706edb84b7ca2bd3400756abb70}{value}} (Uint32 \&v, \mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$lookup) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_binary_file_reader_a1a47fa9f108c9ffbe49a3a267efd76fb}\label{class_binary_file_reader_a1a47fa9f108c9ffbe49a3a267efd76fb}} 
+static bool {\bfseries read\+Object} (F\+I\+LE $\ast$fp, const File\+Helper\+::\+Serialization\+Func \&serialize)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_binary_file_reader_abbdb88a6633199fee0fb382add80b696}\label{class_binary_file_reader_abbdb88a6633199fee0fb382add80b696}} 
+\index{BinaryFileReader@{BinaryFileReader}!beginArray@{beginArray}}
+\index{beginArray@{beginArray}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{beginArray()}{beginArray()}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::begin\+Array (\begin{DoxyParamCaption}\item[{Uint32 \&}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Signals the beginning of an array in the file 
+\begin{DoxyParams}{Parameters}
+{\em size} & number of items in the array \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac2592d28bcfb9197e06af8b02706a936}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_a99e80f1acae3fb58baca70d9338064ac}\label{class_binary_file_reader_a99e80f1acae3fb58baca70d9338064ac}} 
+\index{BinaryFileReader@{BinaryFileReader}!isReading@{isReading}}
+\index{isReading@{isReading}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{isReading()}{isReading()}}
+{\footnotesize\ttfamily virtual bool Binary\+File\+Reader\+::is\+Reading (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxyReturn}{Returns}
+true if this interface is reading data from a file, false if it is writing 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ad61705edebf54359260990e04328dd30}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_ad67f0f9d30864850b62d38cf86e002e4}\label{class_binary_file_reader_ad67f0f9d30864850b62d38cf86e002e4}} 
+\index{BinaryFileReader@{BinaryFileReader}!propertyName@{propertyName}}
+\index{propertyName@{propertyName}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{propertyName()}{propertyName()}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::property\+Name (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Serializes the name of a property 
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the property ~\newline
+ \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ac1a94367435eb8596352591bdf0309fc}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_a31639129439f67ddbc7614b8f12e2e8f}\label{class_binary_file_reader_a31639129439f67ddbc7614b8f12e2e8f}} 
+\index{BinaryFileReader@{BinaryFileReader}!value@{value}}
+\index{value@{value}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{bool \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a182e8548d9ec1ff1a678cfdd81c916a5}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_a208f0bc4bad2a8db5092d59bb5c7eba7}\label{class_binary_file_reader_a208f0bc4bad2a8db5092d59bb5c7eba7}} 
+\index{BinaryFileReader@{BinaryFileReader}!value@{value}}
+\index{value@{value}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{double \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a1dbcb186f5edfe415764dd1571d18453}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_aaf202913fdb6dc3d2bb0cd76ce6fb676}\label{class_binary_file_reader_aaf202913fdb6dc3d2bb0cd76ce6fb676}} 
+\index{BinaryFileReader@{BinaryFileReader}!value@{value}}
+\index{value@{value}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [3/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{float \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_af05569388f2ff0b7ba05dd8d4a5c6b80}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_a1ba27e1027f397fd40b8445e4de2d917}\label{class_binary_file_reader_a1ba27e1027f397fd40b8445e4de2d917}} 
+\index{BinaryFileReader@{BinaryFileReader}!value@{value}}
+\index{value@{value}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [4/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{Sint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a8cf6bb65a6a0368931bad5819075e8a6}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_ade8e0135d542b6750e07f0beb8cc2e73}\label{class_binary_file_reader_ade8e0135d542b6750e07f0beb8cc2e73}} 
+\index{BinaryFileReader@{BinaryFileReader}!value@{value}}
+\index{value@{value}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [5/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_string}{String}} \&}]{v,  }\item[{Uint32}]{max\+Length }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+{\em max\+Length} & maximum length of the string allowed, 0 is no limit \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_ab4c1463bd34577a972a20a8ac3442fdf}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_ac03acf31d80d643c2913efb8b740e392}\label{class_binary_file_reader_ac03acf31d80d643c2913efb8b740e392}} 
+\index{BinaryFileReader@{BinaryFileReader}!value@{value}}
+\index{value@{value}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [6/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & the value to serialize \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_a446679019f93342e10194317ee1f9aa0}{File\+Interface}}.
+
+\mbox{\Hypertarget{class_binary_file_reader_a43444706edb84b7ca2bd3400756abb70}\label{class_binary_file_reader_a43444706edb84b7ca2bd3400756abb70}} 
+\index{BinaryFileReader@{BinaryFileReader}!value@{value}}
+\index{value@{value}!BinaryFileReader@{BinaryFileReader}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [7/7]}}
+{\footnotesize\ttfamily virtual void Binary\+File\+Reader\+::value (\begin{DoxyParamCaption}\item[{Uint32 \&}]{v,  }\item[{\mbox{\hyperlink{class_dictionary}{Dictionary}} $\ast$}]{lookup }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Given an int, serialize it as the corresponding string value from the dict 
+\begin{DoxyParams}{Parameters}
+{\em v} & value to look up \\
+\hline
+{\em lookup} & dictionary to lookup the string in \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_file_interface_aaf3331d0f87fb8277d20c5ebc3ea4f31}{File\+Interface}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/File.\+cpp\end{DoxyCompactItemize}

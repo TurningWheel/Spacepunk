@@ -1,0 +1,64 @@
+\hypertarget{class_file_helper}{}\doxysection{File\+Helper Class Reference}
+\label{class_file_helper}\index{FileHelper@{FileHelper}}
+
+
+The main static interface to read and write J\+S\+ON files to disk.  
+
+
+
+
+{\ttfamily \#include $<$File.\+hpp$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_file_helper_a5c532ba3aef5c8a61e9cff6300782a2b}\label{class_file_helper_a5c532ba3aef5c8a61e9cff6300782a2b}} 
+typedef std\+::function$<$ void(\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$)$>$ {\bfseries Serialization\+Func}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\static bool \mbox{\hyperlink{class_file_helper_a36f8a8b4bb3470665edb77b67bde076c}{write\+Object}} (const char $\ast$filename, E\+File\+Format format, T \&v)
+\item 
+{\footnotesize template$<$typename T $>$ }\\static bool \mbox{\hyperlink{class_file_helper_a1f259ccb9eab8ad39777715355c4e524}{read\+Object}} (const char $\ast$filename, T \&v)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The main static interface to read and write J\+S\+ON files to disk. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_file_helper_a1f259ccb9eab8ad39777715355c4e524}\label{class_file_helper_a1f259ccb9eab8ad39777715355c4e524}} 
+\index{FileHelper@{FileHelper}!readObject@{readObject}}
+\index{readObject@{readObject}!FileHelper@{FileHelper}}
+\doxysubsubsection{\texorpdfstring{readObject()}{readObject()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static bool File\+Helper\+::read\+Object (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{T \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Read an object\textquotesingle{}s data from a file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & the name of the file to read \\
+\hline
+{\em v} & the object to populate with data \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_file_helper_a36f8a8b4bb3470665edb77b67bde076c}\label{class_file_helper_a36f8a8b4bb3470665edb77b67bde076c}} 
+\index{FileHelper@{FileHelper}!writeObject@{writeObject}}
+\index{writeObject@{writeObject}!FileHelper@{FileHelper}}
+\doxysubsubsection{\texorpdfstring{writeObject()}{writeObject()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+static bool File\+Helper\+::write\+Object (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename,  }\item[{E\+File\+Format}]{format,  }\item[{T \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+Write an object\textquotesingle{}s data to a file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & the name of the file to write \\
+\hline
+{\em v} & the object to write \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_file_8hpp}{File.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/File.\+cpp\end{DoxyCompactItemize}

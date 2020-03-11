@@ -1,0 +1,182 @@
+\hypertarget{class_player}{}\doxysection{Player Class Reference}
+\label{class_player}\index{Player@{Player}}
+
+
+{\ttfamily \#include $<$Player.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_player_1_1colors__t}{colors\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_player_a9439cff41363230fa1704d14e50e165c}\label{class_player_a9439cff41363230fa1704d14e50e165c}} 
+{\bfseries Player} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_player_aed6a0a21cffdfe426287cc22ff1c693a}\label{class_player_aed6a0a21cffdfe426287cc22ff1c693a}} 
+{\bfseries Player} (const char $\ast$\+\_\+name, \mbox{\hyperlink{struct_player_1_1colors__t}{colors\+\_\+t}} \+\_\+colors)
+\item 
+bool \mbox{\hyperlink{class_player_a41a609b162fd73ca27a69d22c5d1eab8}{spawn}} (\mbox{\hyperlink{class_world}{World}} \&\+\_\+world, const \mbox{\hyperlink{class_vector}{Vector}} \&pos, const \mbox{\hyperlink{class_rotation}{Rotation}} \&ang)
+\item 
+bool \mbox{\hyperlink{class_player_a383fb96cf9465e8c29cc87edbf6a9a24}{despawn}} ()
+\item 
+\mbox{\Hypertarget{class_player_a8ce8d4840e0686b29916df524cdeccff}\label{class_player_a8ce8d4840e0686b29916df524cdeccff}} 
+void \mbox{\hyperlink{class_player_a8ce8d4840e0686b29916df524cdeccff}{control}} ()
+\begin{DoxyCompactList}\small\item\em control the player (preprocess) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_player_a6cd0a9a712dbeadbf42ef97450b85fd5}\label{class_player_a6cd0a9a712dbeadbf42ef97450b85fd5}} 
+void \mbox{\hyperlink{class_player_a6cd0a9a712dbeadbf42ef97450b85fd5}{process}} ()
+\begin{DoxyCompactList}\small\item\em update the player (process) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_player_ada739ffb97dcaac8c6877e9acc0f2d84}\label{class_player_ada739ffb97dcaac8c6877e9acc0f2d84}} 
+void \mbox{\hyperlink{class_player_ada739ffb97dcaac8c6877e9acc0f2d84}{update\+Camera}} ()
+\begin{DoxyCompactList}\small\item\em move the camera (postprocess) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_player_a2b1301dd6c48307a304d8848f19c7567}{on\+Entity\+Deleted}} (\mbox{\hyperlink{class_entity}{Entity}} $\ast$entity)
+\item 
+void \mbox{\hyperlink{class_player_a40b4fd3cc598e127ad29bf3daf0ebdb2}{put\+In\+Crouch}} (bool crouch)
+\item 
+void \mbox{\hyperlink{class_player_aa6f29e2c85493a9ed4551887f6cbf93c}{update\+Colors}} (const \mbox{\hyperlink{struct_player_1_1colors__t}{colors\+\_\+t}} \&\+\_\+colors)
+\item 
+\mbox{\Hypertarget{class_player_a8d7a839388b714a55e8ae9c92842b030}\label{class_player_a8d7a839388b714a55e8ae9c92842b030}} 
+void \mbox{\hyperlink{class_player_a8d7a839388b714a55e8ae9c92842b030}{set\+Entity}} (\mbox{\hyperlink{class_entity}{Entity}} $\ast$\+\_\+entity)
+\begin{DoxyCompactList}\small\item\em used by other clients to set the entity for this player \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_player_aabf89a4460bd1022a41cf099b9a15bd9}\label{class_player_aabf89a4460bd1022a41cf099b9a15bd9}} 
+void \mbox{\hyperlink{class_player_aabf89a4460bd1022a41cf099b9a15bd9}{setup\+G\+UI}} ()
+\begin{DoxyCompactList}\small\item\em setup player gui \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_player_a1ef7450d787919af1b9d839bdee81df5}\label{class_player_a1ef7450d787919af1b9d839bdee81df5}} 
+void \mbox{\hyperlink{class_player_a1ef7450d787919af1b9d839bdee81df5}{update\+G\+UI}} ()
+\begin{DoxyCompactList}\small\item\em update player gui \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_player_a3a0eda38ff62c0a80cbb6b44c8d33822}\label{class_player_a3a0eda38ff62c0a80cbb6b44c8d33822}} 
+const char $\ast$ \mbox{\hyperlink{class_player_a3a0eda38ff62c0a80cbb6b44c8d33822}{get\+Name}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_player_aa4df1820bf9f682bfb1c44ddd2e7735f}\label{class_player_aa4df1820bf9f682bfb1c44ddd2e7735f}} 
+const Uint32 {\bfseries get\+Server\+ID} () const
+\item 
+\mbox{\Hypertarget{class_player_ae3144e667e1a57598ab94f8cb0150b48}\label{class_player_ae3144e667e1a57598ab94f8cb0150b48}} 
+const Uint32 {\bfseries get\+Local\+ID} () const
+\item 
+\mbox{\Hypertarget{class_player_ab98aeb0db35a540e4bded12c3479fc87}\label{class_player_ab98aeb0db35a540e4bded12c3479fc87}} 
+const Uint32 {\bfseries get\+Client\+ID} () const
+\item 
+\mbox{\Hypertarget{class_player_a1fd832715c4eeea90f16a4b2e681d031}\label{class_player_a1fd832715c4eeea90f16a4b2e681d031}} 
+\mbox{\hyperlink{class_entity}{Entity}} $\ast$ {\bfseries get\+Entity} ()
+\item 
+\mbox{\Hypertarget{class_player_a7b9c09575d0c9dd8d47acc81a761cf6c}\label{class_player_a7b9c09575d0c9dd8d47acc81a761cf6c}} 
+const \mbox{\hyperlink{struct_player_1_1colors__t}{colors\+\_\+t}} \& {\bfseries get\+Colors} () const
+\item 
+\mbox{\Hypertarget{class_player_a6dd7cfa7a444b11c726b0db89a4eb5d4}\label{class_player_a6dd7cfa7a444b11c726b0db89a4eb5d4}} 
+\mbox{\hyperlink{class_camera}{Camera}} $\ast$ {\bfseries get\+Camera} () const
+\item 
+\mbox{\Hypertarget{class_player_ac37355f10146e9537b272f95b1d11c60}\label{class_player_ac37355f10146e9537b272f95b1d11c60}} 
+bool {\bfseries is\+Crouching} () const
+\item 
+\mbox{\Hypertarget{class_player_a0b43e6080753101fe692d824d7b68df5}\label{class_player_a0b43e6080753101fe692d824d7b68df5}} 
+bool {\bfseries is\+Moving} () const
+\item 
+\mbox{\Hypertarget{class_player_a93c37f3210c13cd324daa165cedbe318}\label{class_player_a93c37f3210c13cd324daa165cedbe318}} 
+bool {\bfseries has\+Jumped} () const
+\item 
+\mbox{\Hypertarget{class_player_ae572e2236cea083284e7b9ec00b4ad38}\label{class_player_ae572e2236cea083284e7b9ec00b4ad38}} 
+bool {\bfseries is\+Inv\+Visible} () const
+\item 
+\mbox{\Hypertarget{class_player_a363a4e9b2bda485f5f5d1ebb85e278d3}\label{class_player_a363a4e9b2bda485f5f5d1ebb85e278d3}} 
+void {\bfseries set\+Name} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_player_ae50ee092f3ef2924b5fb1441e5ca4c4f}\label{class_player_ae50ee092f3ef2924b5fb1441e5ca4c4f}} 
+void {\bfseries set\+Server\+ID} (Uint32 id)
+\item 
+\mbox{\Hypertarget{class_player_a264cf9a7963ae56ed1988f0d9ba9faa5}\label{class_player_a264cf9a7963ae56ed1988f0d9ba9faa5}} 
+void {\bfseries set\+Local\+ID} (Uint32 id)
+\item 
+\mbox{\Hypertarget{class_player_a9bef9da387ad700213db6437751cc19c}\label{class_player_a9bef9da387ad700213db6437751cc19c}} 
+void {\bfseries set\+Client\+ID} (Uint32 id)
+\item 
+\mbox{\Hypertarget{class_player_abb1697741080cf97cb78a45feb64e732}\label{class_player_abb1697741080cf97cb78a45feb64e732}} 
+void {\bfseries set\+Moving} (bool b)
+\item 
+\mbox{\Hypertarget{class_player_a7639749f537b80e7bec079eb199491c1}\label{class_player_a7639749f537b80e7bec079eb199491c1}} 
+void {\bfseries set\+Jumped} (bool b)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_player_aec987d7c4cc9e9bc6593d0683166fc94}\label{class_player_aec987d7c4cc9e9bc6593d0683166fc94}} 
+static const Uint32 \mbox{\hyperlink{class_player_aec987d7c4cc9e9bc6593d0683166fc94}{invalid\+ID}} = U\+I\+N\+T32\+\_\+\+M\+AX
+\begin{DoxyCompactList}\small\item\em static properties \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_player_a96147a1fc14c066a49b69f56b9298c7f}\label{class_player_a96147a1fc14c066a49b69f56b9298c7f}} 
+static const char $\ast$ {\bfseries default\+Name} = \char`\"{}Player\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_player}{Player}} is an object that contains all the info to describe a \mbox{\hyperlink{class_player}{Player}}. A \mbox{\hyperlink{class_player}{Player}} may be linked to an entity to provide the player direct controls to it. Multiple players can exist per client. This way you can do splitscreen multiplayer 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_player_a383fb96cf9465e8c29cc87edbf6a9a24}\label{class_player_a383fb96cf9465e8c29cc87edbf6a9a24}} 
+\index{Player@{Player}!despawn@{despawn}}
+\index{despawn@{despawn}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{despawn()}{despawn()}}
+{\footnotesize\ttfamily bool Player\+::despawn (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+despawns the player, removing their presence from the world \begin{DoxyReturn}{Returns}
+true if successfully despawned, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_player_a2b1301dd6c48307a304d8848f19c7567}\label{class_player_a2b1301dd6c48307a304d8848f19c7567}} 
+\index{Player@{Player}!onEntityDeleted@{onEntityDeleted}}
+\index{onEntityDeleted@{onEntityDeleted}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{onEntityDeleted()}{onEntityDeleted()}}
+{\footnotesize\ttfamily void Player\+::on\+Entity\+Deleted (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_entity}{Entity}} $\ast$}]{entity }\end{DoxyParamCaption})}
+
+when one of my entities is deleted, this gets called so I can clear the pointer 
+\begin{DoxyParams}{Parameters}
+{\em entity} & the entity that was deleted \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_player_a40b4fd3cc598e127ad29bf3daf0ebdb2}\label{class_player_a40b4fd3cc598e127ad29bf3daf0ebdb2}} 
+\index{Player@{Player}!putInCrouch@{putInCrouch}}
+\index{putInCrouch@{putInCrouch}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{putInCrouch()}{putInCrouch()}}
+{\footnotesize\ttfamily void Player\+::put\+In\+Crouch (\begin{DoxyParamCaption}\item[{bool}]{crouch }\end{DoxyParamCaption})}
+
+puts the player in a crouch or standing position 
+\begin{DoxyParams}{Parameters}
+{\em crouch} & if true, player will crouch, otherwise player will stand \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_player_a41a609b162fd73ca27a69d22c5d1eab8}\label{class_player_a41a609b162fd73ca27a69d22c5d1eab8}} 
+\index{Player@{Player}!spawn@{spawn}}
+\index{spawn@{spawn}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{spawn()}{spawn()}}
+{\footnotesize\ttfamily bool Player\+::spawn (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_world}{World}} \&}]{\+\_\+world,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{pos,  }\item[{const \mbox{\hyperlink{class_rotation}{Rotation}} \&}]{ang }\end{DoxyParamCaption})}
+
+spawns the player if they have not already been spawned 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+world} & the world to spawn in \\
+\hline
+{\em pos} & the location to spawn at \\
+\hline
+{\em ang} & the orientation to spawn with \\
+\hline
+{\em \+\_\+uid} & the uid that our entity will have \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if successfully spawned the player, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_player_aa6f29e2c85493a9ed4551887f6cbf93c}\label{class_player_aa6f29e2c85493a9ed4551887f6cbf93c}} 
+\index{Player@{Player}!updateColors@{updateColors}}
+\index{updateColors@{updateColors}!Player@{Player}}
+\doxysubsubsection{\texorpdfstring{updateColors()}{updateColors()}}
+{\footnotesize\ttfamily void Player\+::update\+Colors (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_player_1_1colors__t}{colors\+\_\+t}} \&}]{\+\_\+colors }\end{DoxyParamCaption})}
+
+updates the player\textquotesingle{}s colors 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+colors} & the colors to use \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_player_8hpp}{Player.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Player.\+cpp\end{DoxyCompactItemize}

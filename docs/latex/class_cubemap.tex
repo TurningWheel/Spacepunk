@@ -1,0 +1,59 @@
+\hypertarget{class_cubemap}{}\doxysection{Cubemap Class Reference}
+\label{class_cubemap}\index{Cubemap@{Cubemap}}
+
+
+A \mbox{\hyperlink{class_cubemap}{Cubemap}} is a texture with 6 sides.  
+
+
+
+
+{\ttfamily \#include $<$Cubemap.\+hpp$>$}
+
+Inheritance diagram for Cubemap\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_cubemap}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_cubemap_ab0958d9855bef4f7e8a44925229d7d8c}\label{class_cubemap_ab0958d9855bef4f7e8a44925229d7d8c}} 
+{\bfseries Cubemap} (const char $\ast$\+\_\+name)
+\item 
+virtual void \mbox{\hyperlink{class_cubemap_a0e46dd234c7d82dd031ec5bd9a879077}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_cubemap_ac94ac6c54df781b396d7fd12f508effd}\label{class_cubemap_ac94ac6c54df781b396d7fd12f508effd}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} {\bfseries get\+Type} () const
+\item 
+\mbox{\Hypertarget{class_cubemap_a9b1fcd96a98985dd2ad08a6d578d6c14}\label{class_cubemap_a9b1fcd96a98985dd2ad08a6d578d6c14}} 
+const G\+Luint {\bfseries get\+Tex\+ID} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_cubemap}{Cubemap}} is a texture with 6 sides. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_cubemap_a0e46dd234c7d82dd031ec5bd9a879077}\label{class_cubemap_a0e46dd234c7d82dd031ec5bd9a879077}} 
+\index{Cubemap@{Cubemap}!serialize@{serialize}}
+\index{serialize@{serialize}!Cubemap@{Cubemap}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Cubemap\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a957199c8b4a4a912d9020bb0ba605251}{Asset}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_cubemap_8hpp}{Cubemap.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Cubemap.\+cpp\end{DoxyCompactItemize}

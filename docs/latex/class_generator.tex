@@ -1,0 +1,244 @@
+\hypertarget{class_generator}{}\doxysection{Generator Class Reference}
+\label{class_generator}\index{Generator@{Generator}}
+
+
+The \mbox{\hyperlink{class_generator}{Generator}} class is used to generate a random 2D maze. It can be used in a script for user purposes.  
+
+
+
+
+{\ttfamily \#include $<$Generator.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_generator_1_1closeend__t}{closeend\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Cleaning. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1corridor__layout__t}{corridor\+\_\+layout\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Corridor layout. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1door__t}{door\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Door. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1dungeon__layout__t}{dungeon\+\_\+layout\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Dungeon layout. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1lib__t}{lib\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Library. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1map__style__t}{map\+\_\+style\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_map}{Map}} style. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1options__t}{options\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Options. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1piece__t}{piece\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Room piece. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1room__t}{room\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Generated room. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1roomlib__t}{roomlib\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Room library. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1sill__t}{sill\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Doorway. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_generator_1_1tunnellib__t}{tunnellib\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em Tunnel library. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_generator_a60edf08bd641f7a658bf9d60235adc93}\label{class_generator_a60edf08bd641f7a658bf9d60235adc93}} 
+{\bfseries Generator} (bool \+\_\+client\+Obj)
+\item 
+\mbox{\Hypertarget{class_generator_a5b41fdd60a2cdfb84de4be38612cb4d5}\label{class_generator_a5b41fdd60a2cdfb84de4be38612cb4d5}} 
+{\bfseries Generator} (bool \+\_\+client\+Obj, const \mbox{\hyperlink{struct_generator_1_1options__t}{options\+\_\+t}} \&\+\_\+options)
+\item 
+\mbox{\Hypertarget{class_generator_a3db6f798835af59b2371828a0ffb271b}\label{class_generator_a3db6f798835af59b2371828a0ffb271b}} 
+void \mbox{\hyperlink{class_generator_a3db6f798835af59b2371828a0ffb271b}{create\+Dungeon}} ()
+\begin{DoxyCompactList}\small\item\em Generate the dungeon with the supplied options. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_generator_a9ce6ab65ad64129572e40f077ebd9ba2}\label{class_generator_a9ce6ab65ad64129572e40f077ebd9ba2}} 
+void \mbox{\hyperlink{class_generator_a9ce6ab65ad64129572e40f077ebd9ba2}{write\+File}} (const char $\ast$path)
+\begin{DoxyCompactList}\small\item\em Write the dungeon to a file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_generator_a0e0ccc8f5b4b7b3bea430465a25fec10}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+\mbox{\Hypertarget{class_generator_aaccc95f84e2b9344c6b1f32b683db6e5}\label{class_generator_aaccc95f84e2b9344c6b1f32b683db6e5}} 
+const char $\ast$ \mbox{\hyperlink{class_generator_aaccc95f84e2b9344c6b1f32b683db6e5}{get\+Name}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_generator_a012dff60a506f5f26014df446b567377}\label{class_generator_a012dff60a506f5f26014df446b567377}} 
+const \mbox{\hyperlink{struct_generator_1_1options__t}{options\+\_\+t}} \& {\bfseries get\+Options} () const
+\item 
+\mbox{\Hypertarget{class_generator_adce02549df5bd4a67a3b4bac7448701f}\label{class_generator_adce02549df5bd4a67a3b4bac7448701f}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ Uint32 $>$ \& {\bfseries get\+Tiles} () const
+\item 
+\mbox{\Hypertarget{class_generator_afa66a43ab99c377e3d40d3cca0485b1c}\label{class_generator_afa66a43ab99c377e3d40d3cca0485b1c}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_generator_1_1roomlib__t}{roomlib\+\_\+t}} $>$ \& {\bfseries get\+Room\+Pieces} () const
+\item 
+\mbox{\Hypertarget{class_generator_a00050d7b8e0218f742a42ac7ff9e2a0b}\label{class_generator_a00050d7b8e0218f742a42ac7ff9e2a0b}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_generator_1_1tunnellib__t}{tunnellib\+\_\+t}} $>$ \& {\bfseries get\+Tunnel\+Pieces} () const
+\item 
+\mbox{\Hypertarget{class_generator_ad424729ca6df1fad1d04c1f031f318f1}\label{class_generator_ad424729ca6df1fad1d04c1f031f318f1}} 
+void {\bfseries set\+Name} (const char $\ast$\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_generator_a1fdd1b49aebd539e6714fcfdabae232a}\label{class_generator_a1fdd1b49aebd539e6714fcfdabae232a}} 
+void {\bfseries set\+Options} (const \mbox{\hyperlink{struct_generator_1_1options__t}{options\+\_\+t}} \&\+\_\+options)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_generator_ac6e6feecf58aa23ecefa612e93ac5308}\label{class_generator_ac6e6feecf58aa23ecefa612e93ac5308}} 
+static const \mbox{\hyperlink{struct_generator_1_1dungeon__layout__t}{dungeon\+\_\+layout\+\_\+t}} {\bfseries dungeon\+Layout}
+\item 
+\mbox{\Hypertarget{class_generator_a62ce268823728201561c6988954796a6}\label{class_generator_a62ce268823728201561c6988954796a6}} 
+static const \mbox{\hyperlink{struct_generator_1_1corridor__layout__t}{corridor\+\_\+layout\+\_\+t}} {\bfseries corridor\+Layout}
+\item 
+\mbox{\Hypertarget{class_generator_ac751ccb0605313c85876174d6ab97f63}\label{class_generator_ac751ccb0605313c85876174d6ab97f63}} 
+static const \mbox{\hyperlink{struct_generator_1_1map__style__t}{map\+\_\+style\+\_\+t}} {\bfseries map\+Style}
+\item 
+static const \mbox{\hyperlink{struct_generator_1_1closeend__t}{closeend\+\_\+t}} {\bfseries closeends} \mbox{[}4\mbox{]}
+\item 
+\mbox{\Hypertarget{class_generator_aa76417ff02b4c5057b44be58bd85f370}\label{class_generator_aa76417ff02b4c5057b44be58bd85f370}} 
+static const Uint32 \mbox{\hyperlink{class_generator_aa76417ff02b4c5057b44be58bd85f370}{N\+O\+T\+H\+I\+NG}} = 0
+\begin{DoxyCompactList}\small\item\em Cell bits. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_generator_ab6691aaad8a826f49f200153a0fff985}\label{class_generator_ab6691aaad8a826f49f200153a0fff985}} 
+static const Uint32 {\bfseries B\+L\+O\+C\+K\+ED} = (1 $<$$<$ 0)
+\item 
+\mbox{\Hypertarget{class_generator_ad7bcd4fdf00ec12ce070bbb88c1484e4}\label{class_generator_ad7bcd4fdf00ec12ce070bbb88c1484e4}} 
+static const Uint32 {\bfseries R\+O\+OM} = (1 $<$$<$ 1)
+\item 
+\mbox{\Hypertarget{class_generator_a17f850c25b50320e458d9c48a66d330f}\label{class_generator_a17f850c25b50320e458d9c48a66d330f}} 
+static const Uint32 {\bfseries C\+O\+R\+R\+I\+D\+OR} = (1 $<$$<$ 2)
+\item 
+\mbox{\Hypertarget{class_generator_aa204a0ea6c5a1099ca273b5f307d9420}\label{class_generator_aa204a0ea6c5a1099ca273b5f307d9420}} 
+static const Uint32 {\bfseries P\+E\+R\+I\+M\+E\+T\+ER} = (1 $<$$<$ 3)
+\item 
+\mbox{\Hypertarget{class_generator_a3d0c40b02295c9644a532dbf8c53e065}\label{class_generator_a3d0c40b02295c9644a532dbf8c53e065}} 
+static const Uint32 {\bfseries E\+N\+T\+R\+A\+N\+CE} = (1 $<$$<$ 4)
+\item 
+\mbox{\Hypertarget{class_generator_a60112d0732b2b1129ce0bf217e424574}\label{class_generator_a60112d0732b2b1129ce0bf217e424574}} 
+static const Uint32 {\bfseries R\+O\+O\+M\+\_\+\+ID} = (1 $<$$<$ 5)
+\item 
+\mbox{\Hypertarget{class_generator_ac1a110823fa2c551aca12dcf9da79919}\label{class_generator_ac1a110823fa2c551aca12dcf9da79919}} 
+static const Uint32 {\bfseries A\+R\+CH} = (1 $<$$<$ 6)
+\item 
+\mbox{\Hypertarget{class_generator_a053e3cf15aa59272b40fb86ff0456a5a}\label{class_generator_a053e3cf15aa59272b40fb86ff0456a5a}} 
+static const Uint32 {\bfseries D\+O\+OR} = (1 $<$$<$ 7)
+\item 
+\mbox{\Hypertarget{class_generator_a90e5f96533f8750e1d28b3d96fc4fd2c}\label{class_generator_a90e5f96533f8750e1d28b3d96fc4fd2c}} 
+static const Uint32 {\bfseries L\+O\+C\+K\+ED} = (1 $<$$<$ 8)
+\item 
+\mbox{\Hypertarget{class_generator_a158958e8c3a7dd1b6b7a98814f0c5234}\label{class_generator_a158958e8c3a7dd1b6b7a98814f0c5234}} 
+static const Uint32 {\bfseries T\+R\+A\+P\+P\+ED} = (1 $<$$<$ 9)
+\item 
+\mbox{\Hypertarget{class_generator_ac069d69fef79d22f68d71ff7968ea4e0}\label{class_generator_ac069d69fef79d22f68d71ff7968ea4e0}} 
+static const Uint32 {\bfseries S\+E\+C\+R\+ET} = (1 $<$$<$ 10)
+\item 
+\mbox{\Hypertarget{class_generator_a3b7e73d3a33805bd988abd764f56ff85}\label{class_generator_a3b7e73d3a33805bd988abd764f56ff85}} 
+static const Uint32 {\bfseries P\+O\+R\+T\+C\+U\+L\+L\+IS} = (1 $<$$<$ 11)
+\item 
+\mbox{\Hypertarget{class_generator_a0b85c1e94e66f74b73669214f4a568f6}\label{class_generator_a0b85c1e94e66f74b73669214f4a568f6}} 
+static const Uint32 {\bfseries S\+T\+A\+I\+R\+\_\+\+D\+O\+WN} = (1 $<$$<$ 12)
+\item 
+\mbox{\Hypertarget{class_generator_a0c1784afa2d9b682e035782a1e15935d}\label{class_generator_a0c1784afa2d9b682e035782a1e15935d}} 
+static const Uint32 {\bfseries S\+T\+A\+I\+R\+\_\+\+UP} = (1 $<$$<$ 13)
+\item 
+\mbox{\Hypertarget{class_generator_a2f044f6a7e302d48056ae07df0240eed}\label{class_generator_a2f044f6a7e302d48056ae07df0240eed}} 
+static const Uint32 {\bfseries L\+A\+B\+EL} = (1 $<$$<$ 14)
+\item 
+\mbox{\Hypertarget{class_generator_aa2c5d6b5a35e9638627eda052a6b68c0}\label{class_generator_aa2c5d6b5a35e9638627eda052a6b68c0}} 
+static const Uint32 {\bfseries C\+O\+R\+R\+I\+D\+O\+R\+\_\+\+E\+X\+T\+RA} = (1 $<$$<$ 15)
+\item 
+\mbox{\Hypertarget{class_generator_a1811bb30173ad7664c545830c20cffdc}\label{class_generator_a1811bb30173ad7664c545830c20cffdc}} 
+static const Uint32 {\bfseries O\+P\+E\+N\+\_\+\+S\+P\+A\+CE} = R\+O\+OM $\vert$ C\+O\+R\+R\+I\+D\+OR
+\item 
+\mbox{\Hypertarget{class_generator_aebc7963ae18f4501a789c95de95f4b12}\label{class_generator_aebc7963ae18f4501a789c95de95f4b12}} 
+static const Uint32 {\bfseries D\+O\+O\+R\+\_\+\+S\+P\+A\+CE} = A\+R\+CH $\vert$ D\+O\+OR $\vert$ L\+O\+C\+K\+ED $\vert$ T\+R\+A\+P\+P\+ED $\vert$ S\+E\+C\+R\+ET $\vert$ P\+O\+R\+T\+C\+U\+L\+L\+IS
+\item 
+\mbox{\Hypertarget{class_generator_a1d49ddfeefb4e35d757dfa1694e2c998}\label{class_generator_a1d49ddfeefb4e35d757dfa1694e2c998}} 
+static const Uint32 {\bfseries E\+\_\+\+S\+P\+A\+CE} = E\+N\+T\+R\+A\+N\+CE $\vert$ D\+O\+O\+R\+\_\+\+S\+P\+A\+CE $\vert$ L\+A\+B\+EL
+\item 
+\mbox{\Hypertarget{class_generator_a263cb24719ac0a362e6687697a95abe5}\label{class_generator_a263cb24719ac0a362e6687697a95abe5}} 
+static const Uint32 {\bfseries S\+T\+A\+I\+RS} = S\+T\+A\+I\+R\+\_\+\+UP $\vert$ S\+T\+A\+I\+R\+\_\+\+D\+O\+WN
+\item 
+\mbox{\Hypertarget{class_generator_ae1980252291bad1f968f0d95b1994f52}\label{class_generator_ae1980252291bad1f968f0d95b1994f52}} 
+static const Uint32 {\bfseries B\+L\+O\+C\+K\+\_\+\+R\+O\+OM} = B\+L\+O\+C\+K\+ED $\vert$ R\+O\+OM
+\item 
+\mbox{\Hypertarget{class_generator_a92cf8e2ce41eb757082a1e8bea6ba7aa}\label{class_generator_a92cf8e2ce41eb757082a1e8bea6ba7aa}} 
+static const Uint32 {\bfseries B\+L\+O\+C\+K\+\_\+\+C\+O\+R\+R\+I\+D\+OR} = B\+L\+O\+C\+K\+ED $\vert$ P\+E\+R\+I\+M\+E\+T\+ER $\vert$ C\+O\+R\+R\+I\+D\+OR
+\item 
+\mbox{\Hypertarget{class_generator_aec6dc7973a003fec5e7932dd34d74bed}\label{class_generator_aec6dc7973a003fec5e7932dd34d74bed}} 
+static const Uint32 {\bfseries B\+L\+O\+C\+K\+\_\+\+D\+O\+OR} = B\+L\+O\+C\+K\+ED $\vert$ D\+O\+O\+R\+\_\+\+S\+P\+A\+CE
+\item 
+\mbox{\Hypertarget{class_generator_afee969bf7907d4de350fd81427d868be}\label{class_generator_afee969bf7907d4de350fd81427d868be}} 
+static const Sint32 \mbox{\hyperlink{class_generator_afee969bf7907d4de350fd81427d868be}{E\+A\+ST}} = 0
+\begin{DoxyCompactList}\small\item\em directions \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_generator_a99120e37196487cf31504c9bae9fb1d8}\label{class_generator_a99120e37196487cf31504c9bae9fb1d8}} 
+static const Sint32 {\bfseries S\+O\+U\+TH} = 1
+\item 
+\mbox{\Hypertarget{class_generator_a458466fad15e7c9e9804fcc8839390e6}\label{class_generator_a458466fad15e7c9e9804fcc8839390e6}} 
+static const Sint32 {\bfseries W\+E\+ST} = 2
+\item 
+\mbox{\Hypertarget{class_generator_a4433dd0fdbef47ea8bbd038493c12d67}\label{class_generator_a4433dd0fdbef47ea8bbd038493c12d67}} 
+static const Sint32 {\bfseries N\+O\+R\+TH} = 3
+\item 
+\mbox{\Hypertarget{class_generator_a040b85f4c9b766d0729b32fedf4ba085}\label{class_generator_a040b85f4c9b766d0729b32fedf4ba085}} 
+static const Sint32 {\bfseries O\+P\+P\+O\+S\+I\+TE} \mbox{[}4\mbox{]} = \{ W\+E\+ST, N\+O\+R\+TH, \mbox{\hyperlink{class_generator_afee969bf7907d4de350fd81427d868be}{E\+A\+ST}}, S\+O\+U\+TH \}
+\item 
+\mbox{\Hypertarget{class_generator_a43617698179be5cbef83d1ed69605f73}\label{class_generator_a43617698179be5cbef83d1ed69605f73}} 
+static const Sint32 {\bfseries T\+U\+N\+N\+E\+L\+D\+I\+RS} \mbox{[}4\mbox{]} = \{ W\+E\+ST, N\+O\+R\+TH, S\+O\+U\+TH, \mbox{\hyperlink{class_generator_afee969bf7907d4de350fd81427d868be}{E\+A\+ST}} \}
+\item 
+\mbox{\Hypertarget{class_generator_a3eec4fd7a5f590cfefbb74b485f83719}\label{class_generator_a3eec4fd7a5f590cfefbb74b485f83719}} 
+static const Sint32 \mbox{\hyperlink{class_generator_a3eec4fd7a5f590cfefbb74b485f83719}{cos}} \mbox{[}4\mbox{]} = \{ 1, 0, -\/1, 0 \}
+\begin{DoxyCompactList}\small\item\em cos/sin \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_generator_a657c00c12f619b7681b740a71b7b9e1e}\label{class_generator_a657c00c12f619b7681b740a71b7b9e1e}} 
+static const Sint32 {\bfseries sin} \mbox{[}4\mbox{]} = \{ 0, 1, 0, -\/1 \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The \mbox{\hyperlink{class_generator}{Generator}} class is used to generate a random 2D maze. It can be used in a script for user purposes. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_generator_a0e0ccc8f5b4b7b3bea430465a25fec10}\label{class_generator_a0e0ccc8f5b4b7b3bea430465a25fec10}} 
+\index{Generator@{Generator}!serialize@{serialize}}
+\index{serialize@{serialize}!Generator@{Generator}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Generator\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_generator_ac7d0290ed450df1b70cc1549f01ccb96}\label{class_generator_ac7d0290ed450df1b70cc1549f01ccb96}} 
+\index{Generator@{Generator}!closeends@{closeends}}
+\index{closeends@{closeends}!Generator@{Generator}}
+\doxysubsubsection{\texorpdfstring{closeends}{closeends}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_generator_1_1closeend__t}{Generator\+::closeend\+\_\+t}} Generator\+::closeends\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        \{ \{-\/1, 0\}, \{-\/1, -\/1\}, \{0, -\/1\}, \{1, -\/1\}, \{1, 0\} \},}
+\DoxyCodeLine{        \{ \{ 0, 0 \} \},}
+\DoxyCodeLine{        \{ 0, 1 \}}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        \{ \{0, -\/1\}, \{-\/1, -\/1\}, \{-\/1, 0\}, \{-\/1, 1\}, \{0, 1\} \},}
+\DoxyCodeLine{        \{ \{ 0, 0 \} \},}
+\DoxyCodeLine{        \{ 1, 0 \}}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        \{ \{-\/1, 0\}, \{-\/1, 1\}, \{0, 1\}, \{1, 1\}, \{1, 0\} \},}
+\DoxyCodeLine{        \{ \{ 0, 0 \} \},}
+\DoxyCodeLine{        \{ 0, -\/1 \}}
+\DoxyCodeLine{    \},}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        \{ \{0, -\/1\}, \{1, -\/1\}, \{1, 0\}, \{1, 1\}, \{0, 1\} \},}
+\DoxyCodeLine{        \{ \{ 0, 0 \} \},}
+\DoxyCodeLine{        \{ -\/1, 0 \}}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_generator_8hpp}{Generator.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Generator.\+cpp\end{DoxyCompactItemize}

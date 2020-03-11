@@ -1,0 +1,187 @@
+\hypertarget{class_sector_world}{}\doxysection{Sector\+World Class Reference}
+\label{class_sector_world}\index{SectorWorld@{SectorWorld}}
+
+
+Implements the \mbox{\hyperlink{class_world}{World}} class for a world full of Sectors as well as Entities.  
+
+
+
+
+{\ttfamily \#include $<$Sector\+World.\+hpp$>$}
+
+Inheritance diagram for Sector\+World\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_sector_world}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sector_world_afb0e8407dfbdf1407571f5bc8fcc3141}\label{class_sector_world_afb0e8407dfbdf1407571f5bc8fcc3141}} 
+{\bfseries Sector\+World} (\mbox{\hyperlink{class_game}{Game}} $\ast$\+\_\+game, bool \+\_\+silent, Uint32 \+\_\+id, const char $\ast$\+\_\+name)
+\item 
+virtual void \mbox{\hyperlink{class_sector_world_ad3bd09d89fb0690510040740be2a8482}{initialize}} (bool empty) override
+\item 
+\mbox{\Hypertarget{class_sector_world_a1fec4796a08772cf9c7d1bd440b43ca4}\label{class_sector_world_a1fec4796a08772cf9c7d1bd440b43ca4}} 
+virtual void \mbox{\hyperlink{class_sector_world_a1fec4796a08772cf9c7d1bd440b43ca4}{deselect\+Geometry}} ()
+\begin{DoxyCompactList}\small\item\em clears all geometry selection \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_sector_world_aea9d7f0daf5effc6e78d78732371d49d}{find\+Entities\+In\+Radius}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, float radius, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&out\+List, bool flat=false)
+\item 
+\mbox{\Hypertarget{class_sector_world_a2915788848f87673c6c68d2ee977b5d5}\label{class_sector_world_a2915788848f87673c6c68d2ee977b5d5}} 
+virtual void \mbox{\hyperlink{class_sector_world_a2915788848f87673c6c68d2ee977b5d5}{draw}} ()
+\begin{DoxyCompactList}\small\item\em draws the world and its contents \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_sector_world_a841bd50c3465d55fce7b0483c6a4222b}{save\+File}} (const char $\ast$\+\_\+filename=\char`\"{}\char`\"{}, bool update\+Filename=false)
+\item 
+void \mbox{\hyperlink{class_sector_world_ac92cbeb208d666c61ebcb8934d74eca6}{remove\+Sector}} (Uint32 index)
+\item 
+const bool \mbox{\hyperlink{class_sector_world_a774cc6f18b6c4a235ea8f7e1a85ddbfd}{select\+Vertex}} (const Uint32 index, const bool b)
+\item 
+void \mbox{\hyperlink{class_sector_world_a517f2deb3b0ddc42c577bce176ca4e4a}{select\+Vertices}} (const bool b)
+\item 
+\mbox{\Hypertarget{class_sector_world_a04d535d9a8a30c4d94d332a3ef4678e7}\label{class_sector_world_a04d535d9a8a30c4d94d332a3ef4678e7}} 
+virtual void \mbox{\hyperlink{class_sector_world_a04d535d9a8a30c4d94d332a3ef4678e7}{process}} () override
+\begin{DoxyCompactList}\small\item\em process world events \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sector_world_a4bd41cb95e679a02c66ada8b1693eb1a}\label{class_sector_world_a4bd41cb95e679a02c66ada8b1693eb1a}} 
+virtual const \mbox{\hyperlink{class_world_a057932947935db98a3c29fb9175251a5}{type\+\_\+t}} \mbox{\hyperlink{class_sector_world_a4bd41cb95e679a02c66ada8b1693eb1a}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sector_world_a6fc13b9303ddea5df6195c7b9af25f24}\label{class_sector_world_a6fc13b9303ddea5df6195c7b9af25f24}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_sector}{Sector}} $\ast$ $>$ \& {\bfseries get\+Sectors} () const
+\item 
+\mbox{\Hypertarget{class_sector_world_a0f23a0a4f4ee7392dc94ad2f68eaa0ca}\label{class_sector_world_a0f23a0a4f4ee7392dc94ad2f68eaa0ca}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_sector_vertex}{Sector\+Vertex}} $\ast$ $>$ \& {\bfseries get\+Vertices} () const
+\item 
+\mbox{\Hypertarget{class_sector_world_ab0d2eedf68a74df731f97ef841515812}\label{class_sector_world_ab0d2eedf68a74df731f97ef841515812}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_sector}{Sector}} $\ast$ $>$ \& {\bfseries get\+Sectors} ()
+\item 
+\mbox{\Hypertarget{class_sector_world_a1a12b153b26bcc60663d3772c81fa0e3}\label{class_sector_world_a1a12b153b26bcc60663d3772c81fa0e3}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_sector_vertex}{Sector\+Vertex}} $\ast$ $>$ \& {\bfseries get\+Vertices} ()
+\item 
+\mbox{\Hypertarget{class_sector_world_afbd693a3d95d5184ca1f3535d206681b}\label{class_sector_world_afbd693a3d95d5184ca1f3535d206681b}} 
+virtual std\+::future$<$ \mbox{\hyperlink{class_linked_list}{Path\+Finder\+::\+Path}} $\ast$ $>$ {\bfseries find\+A\+Path} (int startX, int startY, int endX, int endY) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sector_world_ae617dba4e74d2090ab8d0682d4bc2353}\label{class_sector_world_ae617dba4e74d2090ab8d0682d4bc2353}} 
+static const int \mbox{\hyperlink{class_sector_world_ae617dba4e74d2090ab8d0682d4bc2353}{file\+Magic\+Number\+Len}} = 16
+\begin{DoxyCompactList}\small\item\em const variables \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sector_world_a1ca044602057da27e61d34d3e39295c7}\label{class_sector_world_a1ca044602057da27e61d34d3e39295c7}} 
+static const char $\ast$ {\bfseries file\+Magic\+Number} = \char`\"{}S\+P\+A\+C\+E\+P\+U\+N\+K\+\_\+\+S\+W\+D\+\_\+01\char`\"{}
+\item 
+\mbox{\Hypertarget{class_sector_world_acfc38853934c19c9bc59c160e152b247}\label{class_sector_world_acfc38853934c19c9bc59c160e152b247}} 
+static const char $\ast$ {\bfseries file\+Magic\+Number\+Save\+Out} = \char`\"{}S\+P\+A\+C\+E\+P\+U\+N\+K\+\_\+\+S\+W\+D\+\_\+01\char`\"{}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sector_world_ae2f43957e2367ad1ad0a3aba07c30c9c}\label{class_sector_world_ae2f43957e2367ad1ad0a3aba07c30c9c}} 
+virtual void \mbox{\hyperlink{class_sector_world_ae2f43957e2367ad1ad0a3aba07c30c9c}{generate\+Obstacle\+Cache}} ()
+\begin{DoxyCompactList}\small\item\em when a new world is spawned, it generates an obstacle map/cache of all static obstacles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Implements the \mbox{\hyperlink{class_world}{World}} class for a world full of Sectors as well as Entities. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_sector_world_aea9d7f0daf5effc6e78d78732371d49d}\label{class_sector_world_aea9d7f0daf5effc6e78d78732371d49d}} 
+\index{SectorWorld@{SectorWorld}!findEntitiesInRadius@{findEntitiesInRadius}}
+\index{findEntitiesInRadius@{findEntitiesInRadius}!SectorWorld@{SectorWorld}}
+\doxysubsubsection{\texorpdfstring{findEntitiesInRadius()}{findEntitiesInRadius()}}
+{\footnotesize\ttfamily void Sector\+World\+::find\+Entities\+In\+Radius (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{float}]{radius,  }\item[{\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \&}]{out\+List,  }\item[{bool}]{flat = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+finds all entities within a given radius of the provided point 
+\begin{DoxyParams}{Parameters}
+{\em origin} & position to search from \\
+\hline
+{\em radius} & the radius to search in \\
+\hline
+{\em out\+List} & the list to populate \\
+\hline
+{\em flat} & if true, the search radius is 2-\/dimensional \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_world_aecb9f8f920ffa9b5fef23cb88f8fba90}{World}}.
+
+\mbox{\Hypertarget{class_sector_world_ad3bd09d89fb0690510040740be2a8482}\label{class_sector_world_ad3bd09d89fb0690510040740be2a8482}} 
+\index{SectorWorld@{SectorWorld}!initialize@{initialize}}
+\index{initialize@{initialize}!SectorWorld@{SectorWorld}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily void Sector\+World\+::initialize (\begin{DoxyParamCaption}\item[{bool}]{empty }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+post-\/load world initialization 
+\begin{DoxyParams}{Parameters}
+{\em empty} & if the world is empty \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_world_a31da58665957f271689fed2819246cae}{World}}.
+
+\mbox{\Hypertarget{class_sector_world_ac92cbeb208d666c61ebcb8934d74eca6}\label{class_sector_world_ac92cbeb208d666c61ebcb8934d74eca6}} 
+\index{SectorWorld@{SectorWorld}!removeSector@{removeSector}}
+\index{removeSector@{removeSector}!SectorWorld@{SectorWorld}}
+\doxysubsubsection{\texorpdfstring{removeSector()}{removeSector()}}
+{\footnotesize\ttfamily void Sector\+World\+::remove\+Sector (\begin{DoxyParamCaption}\item[{Uint32}]{index }\end{DoxyParamCaption})}
+
+remove a sector from the world 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the sector to remove \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_sector_world_a841bd50c3465d55fce7b0483c6a4222b}\label{class_sector_world_a841bd50c3465d55fce7b0483c6a4222b}} 
+\index{SectorWorld@{SectorWorld}!saveFile@{saveFile}}
+\index{saveFile@{saveFile}!SectorWorld@{SectorWorld}}
+\doxysubsubsection{\texorpdfstring{saveFile()}{saveFile()}}
+{\footnotesize\ttfamily bool Sector\+World\+::save\+File (\begin{DoxyParamCaption}\item[{const char $\ast$}]{\+\_\+filename = {\ttfamily \char`\"{}\char`\"{}},  }\item[{bool}]{update\+Filename = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+writes the world contents to a file 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+filename} & the filename to write to, or blank to use our last filename \\
+\hline
+{\em update\+Filename} & if true, our current filename is changed, otherwise, it is not \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true on success, false on failure 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{class_world_a5684fb5aa9fb4cda9a700c610376faeb}{World}}.
+
+\mbox{\Hypertarget{class_sector_world_a774cc6f18b6c4a235ea8f7e1a85ddbfd}\label{class_sector_world_a774cc6f18b6c4a235ea8f7e1a85ddbfd}} 
+\index{SectorWorld@{SectorWorld}!selectVertex@{selectVertex}}
+\index{selectVertex@{selectVertex}!SectorWorld@{SectorWorld}}
+\doxysubsubsection{\texorpdfstring{selectVertex()}{selectVertex()}}
+{\footnotesize\ttfamily const bool Sector\+World\+::select\+Vertex (\begin{DoxyParamCaption}\item[{const Uint32}]{index,  }\item[{const bool}]{b }\end{DoxyParamCaption})}
+
+selects or deselects the vertex with the given index 
+\begin{DoxyParams}{Parameters}
+{\em index} & the index of the vertex to select \\
+\hline
+{\em b} & if true, the vertex is selected; if false, it is deselected \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the vertex could be found, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_sector_world_a517f2deb3b0ddc42c577bce176ca4e4a}\label{class_sector_world_a517f2deb3b0ddc42c577bce176ca4e4a}} 
+\index{SectorWorld@{SectorWorld}!selectVertices@{selectVertices}}
+\index{selectVertices@{selectVertices}!SectorWorld@{SectorWorld}}
+\doxysubsubsection{\texorpdfstring{selectVertices()}{selectVertices()}}
+{\footnotesize\ttfamily void Sector\+World\+::select\+Vertices (\begin{DoxyParamCaption}\item[{const bool}]{b }\end{DoxyParamCaption})}
+
+selects or deselects all vertices in the world 
+\begin{DoxyParams}{Parameters}
+{\em b} & if true, all vertices are selected; if false, they are deselected \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_sector_world_8hpp}{Sector\+World.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Sector\+World.\+cpp\end{DoxyCompactItemize}

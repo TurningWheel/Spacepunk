@@ -1,0 +1,58 @@
+\hypertarget{class_sound}{}\doxysection{Sound Class Reference}
+\label{class_sound}\index{Sound@{Sound}}
+
+
+A \mbox{\hyperlink{class_sound}{Sound}} is an audio asset loaded from disk. You can play it directly here if you want.  
+
+
+
+
+{\ttfamily \#include $<$Sound.\+hpp$>$}
+
+Inheritance diagram for Sound\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_sound}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sound_aadd01e83da0da8705d78c7071d7f313a}\label{class_sound_aadd01e83da0da8705d78c7071d7f313a}} 
+{\bfseries Sound} (const char $\ast$\+\_\+name)
+\item 
+int \mbox{\hyperlink{class_sound_a8e491cdd32c212fba0197da7f5b31421}{play}} (const bool loop)
+\item 
+\mbox{\Hypertarget{class_sound_aae5c93d4ef7a833b115cc241a30a62d8}\label{class_sound_aae5c93d4ef7a833b115cc241a30a62d8}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_sound_aae5c93d4ef7a833b115cc241a30a62d8}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sound_abaacd64588e780ac196006085d1350b3}\label{class_sound_abaacd64588e780ac196006085d1350b3}} 
+const A\+Luint {\bfseries get\+Buffer} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_sound}{Sound}} is an audio asset loaded from disk. You can play it directly here if you want. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_sound_a8e491cdd32c212fba0197da7f5b31421}\label{class_sound_a8e491cdd32c212fba0197da7f5b31421}} 
+\index{Sound@{Sound}!play@{play}}
+\index{play@{play}!Sound@{Sound}}
+\doxysubsubsection{\texorpdfstring{play()}{play()}}
+{\footnotesize\ttfamily int Sound\+::play (\begin{DoxyParamCaption}\item[{const bool}]{loop }\end{DoxyParamCaption})}
+
+plays the sound without any listener (2D) 
+\begin{DoxyParams}{Parameters}
+{\em loop} & if true, the sound will loop indefinitely; otherwise, it will only play once \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the S\+D\+L\+\_\+mixer channel that the sound is playing on, or -\/1 if there were errors 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_sound_8hpp}{Sound.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Sound.\+cpp\end{DoxyCompactItemize}

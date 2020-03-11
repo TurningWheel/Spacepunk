@@ -1,4 +1,4 @@
-// Shader.hpp
+//! @file Shader.hpp
 
 #pragma once
 
@@ -7,6 +7,8 @@
 #include "Asset.hpp"
 #include "Main.hpp"
 
+//! A Shader contains all the shader code and GL state for a shader (vertex, fragment, whatever)
+//! Multiple Shader objects make up a ShaderProgram
 class Shader : public Asset {
 public:
 	enum shadertype_t {
@@ -20,11 +22,11 @@ public:
 	Shader(const ArrayList<String>& _defines, shadertype_t _shaderType, const char* _name);
 	virtual ~Shader();
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	// getters & setters
+	//! getters & setters
 	virtual const type_t		getType() const { return ASSET_SHADER; }
 	virtual const shadertype_t	getShaderType() const { return shaderType; }
 	const GLuint				getShaderObject() { return shaderObject; }
@@ -36,12 +38,12 @@ private:
 	String shaderSource;
 	GLint len = 0;
 
-	// runs the below functions
+	//! runs the below functions
 	bool init();
 
-	// loads the shader
+	//! loads the shader
 	int load();
 
-	// compile the shader
+	//! compile the shader
 	int compile();
 };

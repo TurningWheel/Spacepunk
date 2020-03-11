@@ -1,0 +1,67 @@
+\hypertarget{class_shader}{}\doxysection{Shader Class Reference}
+\label{class_shader}\index{Shader@{Shader}}
+
+
+{\ttfamily \#include $<$Shader.\+hpp$>$}
+
+Inheritance diagram for Shader\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_shader}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_shader_a6af82a73f5b9b00a82fdc82ae3c32f83}\label{class_shader_a6af82a73f5b9b00a82fdc82ae3c32f83}} 
+enum {\bfseries shadertype\+\_\+t} \{ {\bfseries V\+E\+R\+T\+EX}, 
+{\bfseries G\+E\+O\+M\+E\+T\+RY}, 
+{\bfseries F\+R\+A\+G\+M\+E\+NT}, 
+{\bfseries M\+AX}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_shader_a2aa501bc3e860a1e8d574ebef2c72004}\label{class_shader_a2aa501bc3e860a1e8d574ebef2c72004}} 
+{\bfseries Shader} (const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ \&\+\_\+defines, shadertype\+\_\+t \+\_\+shader\+Type, const char $\ast$\+\_\+name)
+\item 
+virtual void \mbox{\hyperlink{class_shader_a587a065b380dac18431fcbabeae2526d}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file) override
+\item 
+\mbox{\Hypertarget{class_shader_af6dca06f76005b5a5f6ac4662599e2e1}\label{class_shader_af6dca06f76005b5a5f6ac4662599e2e1}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_shader_af6dca06f76005b5a5f6ac4662599e2e1}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_shader_a9d17c92e6a3d8b6fe462c3388fb8e0ef}\label{class_shader_a9d17c92e6a3d8b6fe462c3388fb8e0ef}} 
+virtual const shadertype\+\_\+t {\bfseries get\+Shader\+Type} () const
+\item 
+\mbox{\Hypertarget{class_shader_aae948d5a897a6fdaff83695b2458601a}\label{class_shader_aae948d5a897a6fdaff83695b2458601a}} 
+const G\+Luint {\bfseries get\+Shader\+Object} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_shader}{Shader}} contains all the shader code and GL state for a shader (vertex, fragment, whatever) Multiple \mbox{\hyperlink{class_shader}{Shader}} objects make up a \mbox{\hyperlink{class_shader_program}{Shader\+Program}} 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_shader_a587a065b380dac18431fcbabeae2526d}\label{class_shader_a587a065b380dac18431fcbabeae2526d}} 
+\index{Shader@{Shader}!serialize@{serialize}}
+\index{serialize@{serialize}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Shader\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a957199c8b4a4a912d9020bb0ba605251}{Asset}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_shader_8hpp}{Shader.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Shader.\+cpp\end{DoxyCompactItemize}

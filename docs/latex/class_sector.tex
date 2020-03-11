@@ -1,0 +1,146 @@
+\hypertarget{class_sector}{}\doxysection{Sector Class Reference}
+\label{class_sector}\index{Sector@{Sector}}
+
+
+A \mbox{\hyperlink{class_sector}{Sector}} is a convex polyhedron that defines an open space in a \mbox{\hyperlink{class_sector_world}{Sector\+World}}.  
+
+
+
+
+{\ttfamily \#include $<$Sector.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_sector_1_1face__t}{face\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em triangle \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_sector_1_1vertex__t}{vertex\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em vertex \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sector_aa1bdc64e5d26c8c7f0517246c376d262}\label{class_sector_aa1bdc64e5d26c8c7f0517246c376d262}} 
+{\bfseries Sector} (\mbox{\hyperlink{class_sector_world}{Sector\+World}} \&\+\_\+world)
+\item 
+int \mbox{\hyperlink{class_sector_a0d401b4742ba63a2ab9b2cc2abf97186}{find\+Face\+With\+Normal}} (const \mbox{\hyperlink{class_vector}{Vector}} \&normal)
+\item 
+void \mbox{\hyperlink{class_sector_a1eb0bf2daf21a01ee46b991682ab2206}{split\+Face}} (int face\+Index, const \mbox{\hyperlink{class_vector}{Vector}} \&split\+Point)
+\item 
+\mbox{\hyperlink{class_sector}{Sector}} $\ast$ \mbox{\hyperlink{class_sector_af9e44e09c7e39c3b2e0c5f056f3aad98}{add\+Sector}} (int face\+Index, const \mbox{\hyperlink{class_vector}{Vector}} \&split\+Point)
+\item 
+void \mbox{\hyperlink{class_sector_a6f8515f77263a2821b3f09d44b3057c5}{connect\+Sectors}} (int my\+Face, int their\+Face)
+\item 
+\mbox{\Hypertarget{class_sector_a2faf861ca1452b48577e40eafbb6bbef}\label{class_sector_a2faf861ca1452b48577e40eafbb6bbef}} 
+void \mbox{\hyperlink{class_sector_a2faf861ca1452b48577e40eafbb6bbef}{upload\+Buffers}} ()
+\begin{DoxyCompactList}\small\item\em uploads vertex data to gpu \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sector_a0a95e5f553e1b84b272d3943216e97f0}\label{class_sector_a0a95e5f553e1b84b272d3943216e97f0}} 
+void \mbox{\hyperlink{class_sector_a0a95e5f553e1b84b272d3943216e97f0}{process}} ()
+\begin{DoxyCompactList}\small\item\em one frame update \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_sector_a0217b530fa97bd9a362b7d1f85d8939a}{draw}} (\mbox{\hyperlink{class_camera}{Camera}} \&camera, \mbox{\hyperlink{class_light}{Light}} $\ast$light)
+\item 
+\mbox{\Hypertarget{class_sector_a0cc556e4f5d2325242eb67106161f22d}\label{class_sector_a0cc556e4f5d2325242eb67106161f22d}} 
+const \mbox{\hyperlink{struct_sector_1_1face__t}{face\+\_\+t}} $\ast$ \mbox{\hyperlink{class_sector_a0cc556e4f5d2325242eb67106161f22d}{get\+Face}} (Uint32 index) const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_sector_a77d2a7e633e00593d3def1a0731aa347}\label{class_sector_a77d2a7e633e00593d3def1a0731aa347}} 
+const void $\ast$ {\bfseries get\+Material} () const
+\item 
+\mbox{\Hypertarget{class_sector_aca4e0ff437559bd7102cbef81751f312}\label{class_sector_aca4e0ff437559bd7102cbef81751f312}} 
+const bool {\bfseries is\+Update\+Needed} () const
+\item 
+\mbox{\Hypertarget{class_sector_af0967f744e13425befdd72acc04a589b}\label{class_sector_af0967f744e13425befdd72acc04a589b}} 
+void {\bfseries set\+Update\+Needed} (const bool b)
+\item 
+\mbox{\Hypertarget{class_sector_a04bfeb759c31020dfa342b735f8021dd}\label{class_sector_a04bfeb759c31020dfa342b735f8021dd}} 
+void {\bfseries set\+Material} (const char $\ast$\+\_\+material)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sector_aa9ef244f6dd79a985daac2471b6175ed}\label{class_sector_aa9ef244f6dd79a985daac2471b6175ed}} 
+static const float \mbox{\hyperlink{class_sector_aa9ef244f6dd79a985daac2471b6175ed}{def}} = 512.f
+\begin{DoxyCompactList}\small\item\em default sector size \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_sector_a0cec038d692fd3417fd8c0fd10ce69aa}\label{class_sector_a0cec038d692fd3417fd8c0fd10ce69aa}} 
+class {\bfseries Sector\+World}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_sector}{Sector}} is a convex polyhedron that defines an open space in a \mbox{\hyperlink{class_sector_world}{Sector\+World}}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_sector_af9e44e09c7e39c3b2e0c5f056f3aad98}\label{class_sector_af9e44e09c7e39c3b2e0c5f056f3aad98}} 
+\index{Sector@{Sector}!addSector@{addSector}}
+\index{addSector@{addSector}!Sector@{Sector}}
+\doxysubsubsection{\texorpdfstring{addSector()}{addSector()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_sector}{Sector}} $\ast$ Sector\+::add\+Sector (\begin{DoxyParamCaption}\item[{int}]{face\+Index,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{split\+Point }\end{DoxyParamCaption})}
+
+build a new sector from an existing face 
+\begin{DoxyParams}{Parameters}
+{\em face} & the face to split \\
+\hline
+{\em split\+Point} & where to split the face \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a pointer to the new sector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_sector_a6f8515f77263a2821b3f09d44b3057c5}\label{class_sector_a6f8515f77263a2821b3f09d44b3057c5}} 
+\index{Sector@{Sector}!connectSectors@{connectSectors}}
+\index{connectSectors@{connectSectors}!Sector@{Sector}}
+\doxysubsubsection{\texorpdfstring{connectSectors()}{connectSectors()}}
+{\footnotesize\ttfamily void Sector\+::connect\+Sectors (\begin{DoxyParamCaption}\item[{int}]{my\+Face,  }\item[{int}]{their\+Face }\end{DoxyParamCaption})}
+
+joins two sectors by the given faces 
+\begin{DoxyParams}{Parameters}
+{\em my\+Face} & the face from this sector to join \\
+\hline
+{\em their\+Face} & the face from the other sector to join \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_sector_a0217b530fa97bd9a362b7d1f85d8939a}\label{class_sector_a0217b530fa97bd9a362b7d1f85d8939a}} 
+\index{Sector@{Sector}!draw@{draw}}
+\index{draw@{draw}!Sector@{Sector}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Sector\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} \&}]{camera,  }\item[{\mbox{\hyperlink{class_light}{Light}} $\ast$}]{light }\end{DoxyParamCaption})}
+
+draws the sector 
+\begin{DoxyParams}{Parameters}
+{\em camera} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_sector_a0d401b4742ba63a2ab9b2cc2abf97186}\label{class_sector_a0d401b4742ba63a2ab9b2cc2abf97186}} 
+\index{Sector@{Sector}!findFaceWithNormal@{findFaceWithNormal}}
+\index{findFaceWithNormal@{findFaceWithNormal}!Sector@{Sector}}
+\doxysubsubsection{\texorpdfstring{findFaceWithNormal()}{findFaceWithNormal()}}
+{\footnotesize\ttfamily int Sector\+::find\+Face\+With\+Normal (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{normal }\end{DoxyParamCaption})}
+
+find the face with the given normal 
+\begin{DoxyParams}{Parameters}
+{\em normal} & the normal to look for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the index of the face with the normal or -\/1 if it doesn\textquotesingle{}t exist 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_sector_a1eb0bf2daf21a01ee46b991682ab2206}\label{class_sector_a1eb0bf2daf21a01ee46b991682ab2206}} 
+\index{Sector@{Sector}!splitFace@{splitFace}}
+\index{splitFace@{splitFace}!Sector@{Sector}}
+\doxysubsubsection{\texorpdfstring{splitFace()}{splitFace()}}
+{\footnotesize\ttfamily void Sector\+::split\+Face (\begin{DoxyParamCaption}\item[{int}]{face\+Index,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{split\+Point }\end{DoxyParamCaption})}
+
+subdivide a given face into three faces 
+\begin{DoxyParams}{Parameters}
+{\em face} & the face to split \\
+\hline
+{\em split\+Point} & where to split the face \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_sector_8hpp}{Sector.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Sector.\+cpp\end{DoxyCompactItemize}

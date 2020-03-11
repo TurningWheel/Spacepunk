@@ -1,4 +1,4 @@
-// Path.hpp
+//! @file Path.hpp
 
 #pragma once
 
@@ -9,15 +9,15 @@
 
 class TileWorld;
 
-/*
+/*!
  * Pathfinder usage flow (after constructing with a valid world):
  * * pathfinder.generateSimpleMap(); //This updates the pathfinder's copy. This only needs to be done after world generation, and if the terrain ever changes.
  * * std::future pathTask = pathfinder.generateAStarPath(x1, y1, x2, y2);
  * Then you just keep querying the pathTask via wait_for with 0 duration
  */
 
- /*
-  * Class PathFinder
+ /*!
+  * \class PathFinder
   *
   * There is one pathfinder per world. It provides asynchronous pathfinding.
   */
@@ -28,7 +28,7 @@ public:
 	PathFinder(TileWorld& world);
 	~PathFinder();
 
-	// Path Waypoint
+	//! Path Waypoint
 	class PathWaypoint {
 	public:
 		PathWaypoint(int x, int y) :
@@ -47,7 +47,7 @@ public:
 	};
 	using Path = LinkedList<PathWaypoint>;
 
-	// Asynchronous Path Task (Path process)
+	//! Asynchronous Path Task (Path process)
 	class Task {
 	public:
 		Task(const ArrayList<Uint32>& _map, Uint32 _mapWidth, Uint32 _mapHeight,
@@ -82,7 +82,7 @@ public:
 	// 	std::future<Path> pathFuture;
 	// };
 
-	// A* Path Task (derived from above)
+	//! A* Path Task (derived from above)
 	class AStarTask : public Task {
 	public:
 		static const Uint32 COST_STRAIGHT = 10;
@@ -101,7 +101,7 @@ public:
 		}
 	};
 
-	/*
+	/*!
 	 * Creates a PathTask object. Asynchronous pathfinding.
 	 *
 	 * (You can use wait_for with 0 duration :) )
@@ -113,7 +113,7 @@ protected:
 
 	ArrayList<std::future<PathFinder::Path*>> tasks;
 
-	// Path node
+	//! Path node
 	class PathNode {
 	public:
 		PathNode(LinkedList<PathNode*>* list, int x, int y, PathNode* parent, int pos, int h = 0, int g = 0) {

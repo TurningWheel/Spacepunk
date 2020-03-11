@@ -1,5 +1,4 @@
-// Resource.hpp
-// Template type must implement Asset
+//! @file Resource.hpp
 
 #pragma once
 
@@ -11,10 +10,10 @@
 #include "Map.hpp"
 
 enum resource_error_t {
-	ERROR_NONE,				// no error
-	ERROR_NOTCACHED,		// resource had to be cached
-	ERROR_CACHEFAILED,		// resource cache failed
-	ERROR_CACHEINPROGRESS	// resource cache is in progress
+	ERROR_NONE,				//! no error
+	ERROR_NOTCACHED,		//! resource had to be cached
+	ERROR_CACHEFAILED,		//! resource cache failed
+	ERROR_CACHEINPROGRESS	//! resource cache is in progress
 };
 
 class ResourceBase {
@@ -34,6 +33,9 @@ protected:
 	resource_error_t error = resource_error_t::ERROR_NONE;
 };
 
+//! The Resource class provides a way for the Engine to cache assets on an as-needed basis, and delete them when too much data is consumed.
+//! Use the dataForString() method to get an asset out of the Resource.
+//! Template type must implement Asset
 template <typename T, bool stream = false> class Resource : public ResourceBase {
 public:
 	Resource() {
@@ -44,22 +46,22 @@ public:
 		dumpCache();
 	}
 
-	// getters & setters
+	//! getters & setters
 	Map<String, T*>&			getCache() { return cache; }
 
-	// number of items in the resource
-	// @return the number of cached items in the resource
+	//! number of items in the resource
+	//! @return the number of cached items in the resource
 	virtual Uint32 size() const override {
 		return cache.getSize();
 	}
 
-	// finds and returns the data with the given name from the cache
-	// if the data already exists in the cache, it is returned and error is set to ERROR_NONE
-	// if the data does not exist in the cache, the resource creates it anew and error is set to ERROR_NOTCACHED
-	// if the data failed to be created then error is set to ERROR_CACHEFAILED
-	// if the data is currently being streamed then error is set to ERROR_CACHEINPROGRESS
-	// @param name the name of the data to load
-	// @return the data, or nullptr if the data could not be loaded
+	//! finds and returns the data with the given name from the cache
+	//! if the data already exists in the cache, it is returned and error is set to ERROR_NONE
+	//! if the data does not exist in the cache, the resource creates it anew and error is set to ERROR_NOTCACHED
+	//! if the data failed to be created then error is set to ERROR_CACHEFAILED
+	//! if the data is currently being streamed then error is set to ERROR_CACHEINPROGRESS
+	//! @param name the name of the data to load
+	//! @return the data, or nullptr if the data could not be loaded
 	T* dataForString(const char* name) {
 		if (name == nullptr || name[0] == '\0') {
 			error = resource_error_t::ERROR_CACHEFAILED;
@@ -71,7 +73,7 @@ public:
 			error = resource_error_t::ERROR_NONE;
 			return *data;
 		} else {
-			// data not found, attempt to load it
+			//! data not found, attempt to load it
 			T* data = nullptr;
 			if (stream) {
 				if (cache.getSize()) {
@@ -89,7 +91,7 @@ public:
 				data = load(name);
 				data->finalize();
 			}
-			Asset* base = data; // enforce Asset base class
+			Asset* base = data; //! enforce Asset base class
 			if (base->isLoaded()) {
 				error = resource_error_t::ERROR_NOTCACHED;
 				cache.insertUnique(name, data);
@@ -102,7 +104,7 @@ public:
 		}
 	}
 
-	// finishes jobs
+	//! finishes jobs
 	virtual void update() override {
 		std::vector<std::string> keys;
 		for (auto& pair : jobs) {
@@ -112,7 +114,7 @@ public:
 			if (status == std::future_status::ready) {
 				T* data = job.get();
 				data->finalize();
-				Asset* base = data; // enforce Asset base class
+				Asset* base = data; //! enforce Asset base class
 				if (base->isLoaded()) {
 					cache.insertUnique(name.c_str(), data);
 					keys.push_back(name);
@@ -124,7 +126,7 @@ public:
 		}
 	}
 
-	// completely clears all data elements stored in the cache
+	//! completely clears all data elements stored in the cache
 	virtual void dumpCache() override {
 		for (auto& job : jobs) {
 			job.second.wait();
@@ -135,7 +137,7 @@ public:
 		cache.clear();
 	}
 
-	// delete some specific data from the cache
+	//! delete some specific data from the cache
 	virtual void deleteData(const char* name) override {
 		T** data = cache.find(name);
 		if (data) {
@@ -144,14 +146,14 @@ public:
 		}
 	}
 
-	// calculate the size of this resource cache
+	//! calculate the size of this resource cache
 	virtual Uint32 getSizeInBytes() const override {
-		// TODO need something better than sizeof
+		//! TODO need something better than sizeof
 		return (Uint32)(cache.getSize() * sizeof(T));
 	}
 
-	// get the type of asset we are dealing with
-	// @return the asset type
+	//! get the type of asset we are dealing with
+	//! @return the asset type
 	virtual Asset::type_t getType() const override {
 		return defaultAsset->getType();
 	}

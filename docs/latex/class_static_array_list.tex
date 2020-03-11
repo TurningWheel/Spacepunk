@@ -1,0 +1,74 @@
+\hypertarget{class_static_array_list}{}\doxysection{Static\+Array\+List$<$ T, default\+Size $>$ Class Template Reference}
+\label{class_static_array_list}\index{StaticArrayList$<$ T, defaultSize $>$@{StaticArrayList$<$ T, defaultSize $>$}}
+
+
+A Static array list is allocated on the stack instead of the heap.  
+
+
+
+
+{\ttfamily \#include $<$Array\+List.\+hpp$>$}
+
+Inheritance diagram for Static\+Array\+List$<$ T, default\+Size $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_static_array_list}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_static_array_list_a02df6ef23510103331960a290789faf4}\label{class_static_array_list_a02df6ef23510103331960a290789faf4}} 
+{\bfseries Static\+Array\+List} (const \mbox{\hyperlink{class_static_array_list}{Static\+Array\+List}} \&src)
+\item 
+\mbox{\Hypertarget{class_static_array_list_a7d0aae8b7802bbf34ac2cef928618386}\label{class_static_array_list_a7d0aae8b7802bbf34ac2cef928618386}} 
+{\bfseries Static\+Array\+List} (const std\+::initializer\+\_\+list$<$ T $>$ \&src)
+\item 
+virtual \mbox{\hyperlink{class_array_list}{Array\+List}} \& \mbox{\hyperlink{class_static_array_list_afedb7937cf34b3312f11aad56665d624}{alloc}} (Uint32 len) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_static_array_list_a649c728004f2646cfd67ddcbfb51f1ae}\label{class_static_array_list_a649c728004f2646cfd67ddcbfb51f1ae}} 
+static Uint32 \mbox{\hyperlink{class_static_array_list_a649c728004f2646cfd67ddcbfb51f1ae}{get\+Default\+Size}} ()
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_static_array_list_affe4d5e401016c65495d810e4ac415ed}\label{class_static_array_list_affe4d5e401016c65495d810e4ac415ed}} 
+T {\bfseries default\+Arr} \mbox{[}default\+Size\mbox{]}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T, Uint32 default\+Size$>$\newline
+class Static\+Array\+List$<$ T, default\+Size $>$}
+
+A Static array list is allocated on the stack instead of the heap. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_static_array_list_afedb7937cf34b3312f11aad56665d624}\label{class_static_array_list_afedb7937cf34b3312f11aad56665d624}} 
+\index{StaticArrayList$<$ T, defaultSize $>$@{StaticArrayList$<$ T, defaultSize $>$}!alloc@{alloc}}
+\index{alloc@{alloc}!StaticArrayList$<$ T, defaultSize $>$@{StaticArrayList$<$ T, defaultSize $>$}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily template$<$typename T , Uint32 default\+Size$>$ \\
+virtual \mbox{\hyperlink{class_array_list}{Array\+List}}\& \mbox{\hyperlink{class_static_array_list}{Static\+Array\+List}}$<$ T, default\+Size $>$\+::alloc (\begin{DoxyParamCaption}\item[{Uint32}]{len }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+resize the internal list 
+\begin{DoxyParams}{Parameters}
+{\em len} & number of elements to size the list for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\ast$this 
+\end{DoxyReturn}
+
+
+Reimplemented from \mbox{\hyperlink{class_array_list_a421bba34c152411045bc1f790c1bf9e5}{Array\+List$<$ T $>$}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_array_list_8hpp}{Array\+List.\+hpp}}\end{DoxyCompactItemize}

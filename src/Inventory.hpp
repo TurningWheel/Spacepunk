@@ -1,4 +1,4 @@
-// Inventory.hpp
+//! @file Inventory.hpp
 
 #pragma once
 
@@ -18,7 +18,7 @@ public:
 	class Slot {
 	public:
 
-		bool locked; // if the slot is locked
+		bool locked; //! if the slot is locked
 		class Entity* entity;
 
 		void serialize(FileInterface * file);
@@ -26,8 +26,8 @@ public:
 
 	Map<String, Slot*> items;
 
-	// save/load this object to a file
-	// @param file interface to serialize with
+	//! save/load this object to a file
+	//! @param file interface to serialize with
 	void serialize(FileInterface * file);
 
 	void setVisibility(bool visible);

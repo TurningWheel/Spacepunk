@@ -1,0 +1,56 @@
+\hypertarget{class_item}{}\doxysection{Item Class Reference}
+\label{class_item}\index{Item@{Item}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_item_1_1_action}{Action}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_item_a892aadd78483ed16f1ee7d304bd69ee9}\label{class_item_a892aadd78483ed16f1ee7d304bd69ee9}} 
+typedef \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_string}{String}} $>$ {\bfseries String\+List}
+\item 
+\mbox{\Hypertarget{class_item_a158930f9189590f00f609b41ef2f02c2}\label{class_item_a158930f9189590f00f609b41ef2f02c2}} 
+typedef \mbox{\hyperlink{class_map}{Map}}$<$ \mbox{\hyperlink{class_string}{String}}, \mbox{\hyperlink{class_string}{String}} $>$ {\bfseries String\+Map}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_item_a70a1faed0e7a555dd6744807df9410b2}{serialize}} (\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$file)
+\item 
+\mbox{\Hypertarget{class_item_abe52292227265030fd5626359b46c458}\label{class_item_abe52292227265030fd5626359b46c458}} 
+void \mbox{\hyperlink{class_item_abe52292227265030fd5626359b46c458}{Init\+Inventory}} ()
+\begin{DoxyCompactList}\small\item\em init inventory slots \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_item_af9ca388b53dcf52bd54af9cf1b5f0150}\label{class_item_af9ca388b53dcf52bd54af9cf1b5f0150}} 
+void \mbox{\hyperlink{class_item_af9ca388b53dcf52bd54af9cf1b5f0150}{deposit\+Item}} (\mbox{\hyperlink{class_entity}{Entity}} $\ast$item\+To\+Deposit, \mbox{\hyperlink{class_string}{String}} inv\+Slot)
+\begin{DoxyCompactList}\small\item\em deposit item into inventory slot \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_item_a467581b19dbf2fe80060b931d58a4c5b}\label{class_item_a467581b19dbf2fe80060b931d58a4c5b}} 
+bool \mbox{\hyperlink{class_item_a467581b19dbf2fe80060b931d58a4c5b}{is\+Slot\+Filled}} (\mbox{\hyperlink{class_string}{String}} inv\+Slot)
+\begin{DoxyCompactList}\small\item\em check if a slot is currently filled \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_item_a3cf98a2e05f7aeb06c399b178d883b27}\label{class_item_a3cf98a2e05f7aeb06c399b178d883b27}} 
+class \mbox{\hyperlink{class_entity}{Entity}} $\ast$ {\bfseries get\+Slotted\+Item} (\mbox{\hyperlink{class_string}{String}} inv\+Slot)
+\item 
+\mbox{\Hypertarget{class_item_aaa26e07942512575c9e1ba91471b1312}\label{class_item_aaa26e07942512575c9e1ba91471b1312}} 
+void {\bfseries set\+Inventory\+Visibility} (bool visible)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_item_a70a1faed0e7a555dd6744807df9410b2}\label{class_item_a70a1faed0e7a555dd6744807df9410b2}} 
+\index{Item@{Item}!serialize@{serialize}}
+\index{serialize@{serialize}!Item@{Item}}
+\doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
+{\footnotesize\ttfamily void Item\+::serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_file_interface}{File\+Interface}} $\ast$}]{file }\end{DoxyParamCaption})}
+
+save/load this object to a file 
+\begin{DoxyParams}{Parameters}
+{\em file} & interface to serialize with \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_item_8hpp}{Item.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Item.\+cpp\end{DoxyCompactItemize}

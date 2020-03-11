@@ -1,0 +1,103 @@
+\hypertarget{class_shadow}{}\doxysection{Shadow Class Reference}
+\label{class_shadow}\index{Shadow@{Shadow}}
+
+
+Contains all the data associated with a shadow map created from a \mbox{\hyperlink{class_light}{Light}}.  
+
+
+
+
+{\ttfamily \#include $<$Shadow.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_shadow_1_1camerainfo__t}{camerainfo\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em camera info \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_shadow_a7bc8d582e81ca8b836b5ea50a4c7c631}\label{class_shadow_a7bc8d582e81ca8b836b5ea50a4c7c631}} 
+void \mbox{\hyperlink{class_shadow_a7bc8d582e81ca8b836b5ea50a4c7c631}{init}} ()
+\begin{DoxyCompactList}\small\item\em create gl data for shadowmap \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_shadow_a1fc153cfe733d8e96d6aa9d59a27a947}\label{class_shadow_a1fc153cfe733d8e96d6aa9d59a27a947}} 
+void \mbox{\hyperlink{class_shadow_a1fc153cfe733d8e96d6aa9d59a27a947}{term}} ()
+\begin{DoxyCompactList}\small\item\em delete gl data for shadowmap \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_shadow_af5b33066de99190ccd1b453b49271ecd}{bind\+For\+Writing}} (G\+Lenum face)
+\item 
+void \mbox{\hyperlink{class_shadow_a013d1aeb6d2d3c1c71576df861cba190}{bind\+For\+Reading}} (G\+Lenum texture\+Unit, G\+Lenum attachment) const
+\item 
+\mbox{\Hypertarget{class_shadow_aa7aa809127e4085d53303511607b6bfd}\label{class_shadow_aa7aa809127e4085d53303511607b6bfd}} 
+const G\+Luint \mbox{\hyperlink{class_shadow_aa7aa809127e4085d53303511607b6bfd}{get\+F\+BO}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_shadow_a8a8af493ba34b5470470d6708b55083d}\label{class_shadow_a8a8af493ba34b5470470d6708b55083d}} 
+bool {\bfseries is\+Initialized} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_shadow_a44418d2251b85a661a040018b4199b5e}\label{class_shadow_a44418d2251b85a661a040018b4199b5e}} 
+static const int \mbox{\hyperlink{class_shadow_a44418d2251b85a661a040018b4199b5e}{resolution}} = 2048
+\begin{DoxyCompactList}\small\item\em shadow map resolution \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_shadow_a7a295b069be351869dab5982871e6cc2}\label{class_shadow_a7a295b069be351869dab5982871e6cc2}} 
+static const int {\bfseries directions} = 6
+\item 
+static const \mbox{\hyperlink{struct_shadow_1_1camerainfo__t}{camerainfo\+\_\+t}} {\bfseries camera\+Info} \mbox{[}directions\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains all the data associated with a shadow map created from a \mbox{\hyperlink{class_light}{Light}}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_shadow_a013d1aeb6d2d3c1c71576df861cba190}\label{class_shadow_a013d1aeb6d2d3c1c71576df861cba190}} 
+\index{Shadow@{Shadow}!bindForReading@{bindForReading}}
+\index{bindForReading@{bindForReading}!Shadow@{Shadow}}
+\doxysubsubsection{\texorpdfstring{bindForReading()}{bindForReading()}}
+{\footnotesize\ttfamily void Shadow\+::bind\+For\+Reading (\begin{DoxyParamCaption}\item[{G\+Lenum}]{texture\+Unit,  }\item[{G\+Lenum}]{attachment }\end{DoxyParamCaption}) const}
+
+binds the shadow map for reading 
+\begin{DoxyParams}{Parameters}
+{\em texture\+Unit} & The texture unit to bind for reading \\
+\hline
+{\em attachment} & The texture we wish to sample (G\+L\+\_\+\+C\+O\+L\+O\+R\+\_\+\+A\+T\+T\+A\+C\+H\+M\+E\+N\+T0 or G\+L\+\_\+\+D\+E\+P\+T\+H\+\_\+\+A\+T\+T\+A\+C\+H\+M\+E\+NT or G\+L\+\_\+\+S\+T\+E\+N\+C\+I\+L\+\_\+\+A\+T\+T\+A\+C\+H\+M\+E\+NT) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_shadow_af5b33066de99190ccd1b453b49271ecd}\label{class_shadow_af5b33066de99190ccd1b453b49271ecd}} 
+\index{Shadow@{Shadow}!bindForWriting@{bindForWriting}}
+\index{bindForWriting@{bindForWriting}!Shadow@{Shadow}}
+\doxysubsubsection{\texorpdfstring{bindForWriting()}{bindForWriting()}}
+{\footnotesize\ttfamily void Shadow\+::bind\+For\+Writing (\begin{DoxyParamCaption}\item[{G\+Lenum}]{face }\end{DoxyParamCaption})}
+
+binds the shadow map for writing 
+\begin{DoxyParams}{Parameters}
+{\em face} & The face to bind for writing \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_shadow_a452114b6d3bfadf2df05ce4c429bda3a}\label{class_shadow_a452114b6d3bfadf2df05ce4c429bda3a}} 
+\index{Shadow@{Shadow}!cameraInfo@{cameraInfo}}
+\index{cameraInfo@{cameraInfo}!Shadow@{Shadow}}
+\doxysubsubsection{\texorpdfstring{cameraInfo}{cameraInfo}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{struct_shadow_1_1camerainfo__t}{Shadow\+::camerainfo\+\_\+t}} Shadow\+::camera\+Info\hspace{0.3cm}{\ttfamily [static]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{    \{ GL\_TEXTURE\_CUBE\_MAP\_POSITIVE\_X, \mbox{\hyperlink{class_rotation}{Rotation}}(\mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}}, \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}}, 0.f) \},                  }
+\DoxyCodeLine{    \{ GL\_TEXTURE\_CUBE\_MAP\_NEGATIVE\_X, \mbox{\hyperlink{class_rotation}{Rotation}}(0.f, \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}}, 0.f) \},                   }
+\DoxyCodeLine{    \{ GL\_TEXTURE\_CUBE\_MAP\_POSITIVE\_Y, \mbox{\hyperlink{class_rotation}{Rotation}}(-\/\mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}} / 2.f, -\/\mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}} / 2.f, 0.f) \},    }
+\DoxyCodeLine{    \{ GL\_TEXTURE\_CUBE\_MAP\_NEGATIVE\_Y, \mbox{\hyperlink{class_rotation}{Rotation}}(-\/\mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}} / 2.f, \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}} / 2.f, 0.f) \},     }
+\DoxyCodeLine{    \{ GL\_TEXTURE\_CUBE\_MAP\_POSITIVE\_Z, \mbox{\hyperlink{class_rotation}{Rotation}}(3.f * \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}} / 2.f, \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}}, 0.f) \},      }
+\DoxyCodeLine{    \{ GL\_TEXTURE\_CUBE\_MAP\_NEGATIVE\_Z, \mbox{\hyperlink{class_rotation}{Rotation}}(\mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}} / 2.f, \mbox{\hyperlink{_main_8hpp_aa08a577393243b86dfd2a97e61443673}{PI}}, 0.f) \},            }
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_shadow_8hpp}{Shadow.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Shadow.\+cpp\end{DoxyCompactItemize}

@@ -1,21 +1,20 @@
-// File.hpp
-/**
-	A simple interface for reading and writing objects to files, has support for both json and binary.
-	Basic types, enums and ArrayLists are supported by default, other class and struct types need to
-	implement the "void serialize(FileInterface * file)" function.
-	The interface is symmetric, meaning that there is only a single function for both saving and loading.
-
-	class ExampleClass {
-	private:
-		Uint32 MyNumber;
-		String MyString;
-	public:
-		void serialize(FileInterface * file) {
-			file->property("MyNumber", MyNumber);
-			file->property("MyString", MyString);
-		}
-	};
-*/
+/*! @file File.hpp
+ *	A simple interface for reading and writing objects to files, has support for both json and binary.
+ *	Basic types, enums and ArrayLists are supported by default, other class and struct types need to
+ *	implement the "void serialize(FileInterface * file)" function.
+ *	The interface is symmetric, meaning that there is only a single function for both saving and loading.
+ *
+ *	class ExampleClass {
+ *	private:
+ *		Uint32 MyNumber;
+ *		String MyString;
+ *	public:
+ *		void serialize(FileInterface * file) {
+ *			file->property("MyNumber", MyNumber);
+ *			file->property("MyString", MyString);
+ *		}
+ *	};
+ */
 
 #pragma once
 
@@ -35,46 +34,46 @@ class FileInterface {
 public:
 	virtual ~FileInterface() {}
 
-	// @return true if this interface is reading data from a file, false if it is writing
+	//! @return true if this interface is reading data from a file, false if it is writing
 	virtual bool isReading() const = 0;
 
-	// Signals the beginning of an object in the file
+	//! Signals the beginning of an object in the file
 	virtual void beginObject() = 0;
-	// Signals the end of an object in the file
+	//! Signals the end of an object in the file
 	virtual void endObject() = 0;
 
-	// Signals the beginning of an array in the file
-	// @param size number of items in the array
+	//! Signals the beginning of an array in the file
+	//! @param size number of items in the array
 	virtual void beginArray(Uint32 & size) = 0;
-	// Signals the end of an array in the file
+	//! Signals the end of an array in the file
 	virtual void endArray() = 0;
 
-	// Serializes the name of a property
-	// @param name name of the property 
+	//! Serializes the name of a property
+	//! @param name name of the property 
 	virtual void propertyName(const char * name) = 0;
 
-	// @param v the value to serialize
+	//! @param v the value to serialize
 	virtual void value(Uint32& v) = 0;
-	// @param v the value to serialize
+	//! @param v the value to serialize
 	virtual void value(Sint32& v) = 0;
-	// @param v the value to serialize
+	//! @param v the value to serialize
 	virtual void value(float& v) = 0;
-	// @param v the value to serialize
+	//! @param v the value to serialize
 	virtual void value(double& v) = 0;
-	// @param v the value to serialize
+	//! @param v the value to serialize
 	virtual void value(bool& v) = 0;
-	// @param v the value to serialize
-	// @param maxLength maximum length of the string allowed, 0 is no limit
+	//! @param v the value to serialize
+	//! @param maxLength maximum length of the string allowed, 0 is no limit
 	virtual void value(String& v, Uint32 maxLength = 0) = 0;
 
-	// Given an int, serialize it as the corresponding string value from the dict
-	// @param v value to look up
-	// @param lookup dictionary to lookup the string in
+	//! Given an int, serialize it as the corresponding string value from the dict
+	//! @param v value to look up
+	//! @param lookup dictionary to lookup the string in
 	virtual void value(Uint32& v, Dictionary * lookup) = 0;
 
-	// Serialize an ArrayList with a max length
-	// @param v the value to serialize
-	// @param maxLength maximum number of items, 0 is no limit
+	//! Serialize an ArrayList with a max length
+	//! @param v the value to serialize
+	//! @param maxLength maximum number of items, 0 is no limit
 	template<typename T, typename... Args>
 	void value(ArrayList<T>& v, Uint32 maxLength = 0, Args ... args) {
 		Uint32 size = (Uint32)v.getSize();
@@ -87,8 +86,8 @@ public:
 		endArray();
 	}
 
-	// Serialize a pointer by dereferencing it
-	// @param v the pointer to dereference and serialize
+	//! Serialize a pointer by dereferencing it
+	//! @param v the pointer to dereference and serialize
 	template<typename T>
 	void value(T*& v) {
 		if (isReading()) {
@@ -97,8 +96,8 @@ public:
 		value(*v);
 	}
 
-	// Serializes an enum value as its underlying type to the file
-	// @param t the enum value to serialize
+	//! Serializes an enum value as its underlying type to the file
+	//! @param t the enum value to serialize
 	template<typename T>
 	typename std::enable_if<std::is_enum<T>::value, void>::type
 		value(T& v) {
@@ -107,8 +106,8 @@ public:
 		v = (T)temp;
 	}
 
-	// Serializes a class or struct to the file using it's ::serialize(FileInterface*) function
-	// @param v the object to serialize
+	//! Serializes a class or struct to the file using it's ::serialize(FileInterface*) function
+	//! @param v the object to serialize
 	template<typename T>
 	typename std::enable_if<std::is_class<T>::value, void>::type
 		value(T& v) {
@@ -117,8 +116,8 @@ public:
 		endObject();
 	}
 
-	// Serializes a fixed-size native array
-	// @param v array to serialize
+	//! Serializes a fixed-size native array
+	//! @param v array to serialize
 	template<typename T, Uint32 Size, typename... Args>
 	void value(T(&v)[Size], Args ... args) {
 		Uint32 size = Size;
@@ -130,10 +129,10 @@ public:
 		endArray();
 	}
 
-	// Helper function to serialize a property name and value at the same time 
-	// @param name name of the property
-	// @param v value to serialize
-	// @param args additional args to pass into the value() function
+	//! Helper function to serialize a property name and value at the same time 
+	//! @param name name of the property
+	//! @param v value to serialize
+	//! @param args additional args to pass into the value() function
 	template<typename T, typename... Args>
 	void property(const char * name, T& v, Args ... args) {
 		propertyName(name);
@@ -142,11 +141,12 @@ public:
 
 };
 
+//! The main static interface to read and write JSON files to disk.
 class FileHelper {
 public:
-	// Write an object's data to a file
-	// @param filename the name of the file to write
-	// @param v the object to write
+	//! Write an object's data to a file
+	//! @param filename the name of the file to write
+	//! @param v the object to write
 	template<typename T>
 	static bool writeObject(const char * filename, EFileFormat format, T & v) {
 		using std::placeholders::_1;
@@ -154,9 +154,9 @@ public:
 		return writeObjectInternal(filename, format, serialize);
 	}
 
-	// Read an object's data from a file
-	// @param filename the name of the file to read
-	// @param v the object to populate with data
+	//! Read an object's data from a file
+	//! @param filename the name of the file to read
+	//! @param v the object to populate with data
 	template<typename T>
 	static bool readObject(const char * filename, T & v) {
 		using std::placeholders::_1;

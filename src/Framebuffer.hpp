@@ -1,4 +1,4 @@
-// Framebuffer.hpp
+//! @file Framebuffer.hpp
 
 #pragma once
 
@@ -7,39 +7,40 @@
 
 #pragma once
 
+//! A Framebuffer is a unique type of object belonging to the Renderer which basically represents a "screen" texture that can be rendered to.
 class Framebuffer : public Asset {
 public:
 	Framebuffer() {}
 	Framebuffer(const char* _name);
 	virtual ~Framebuffer();
 
-	// color buffers
+	//! color buffers
 	enum ColorBuffer {
 		COLOR,
 		BLOOM,
 		MAX
 	};
 
-	// create gl data for framebuffer
-	// @param _width the width of the framebuffer
-	// @param _height the height of the framebuffer
+	//! create gl data for framebuffer
+	//! @param _width the width of the framebuffer
+	//! @param _height the height of the framebuffer
 	void init(Uint32 _width, Uint32 _height);
 
-	// delete gl data for framebuffer
+	//! delete gl data for framebuffer
 	void term();
 
-	// binds the framebuffer for writing
+	//! binds the framebuffer for writing
 	void bindForWriting();
 
-	// binds the framebuffer for reading
-	// @param textureUnit The texture unit to bind for reading
-	// @param attachment The texture we wish to sample (GL_COLOR_ATTACHMENT0 or GL_DEPTH_ATTACHMENT or GL_STENCIL_ATTACHMENT)
+	//! binds the framebuffer for reading
+	//! @param textureUnit The texture unit to bind for reading
+	//! @param attachment The texture we wish to sample (GL_COLOR_ATTACHMENT0 or GL_DEPTH_ATTACHMENT or GL_STENCIL_ATTACHMENT)
 	void bindForReading(GLenum textureUnit, GLenum attachment) const;
 
-	// clear buffers
+	//! clear buffers
 	void clear();
 
-	// getters & setters
+	//! getters & setters
 	virtual const type_t	getType() const { return ASSET_FRAMEBUFFER; }
 	GLuint					getFBO() const { return fbo; }
 	GLuint					getColor(int c) const { return color[c]; }

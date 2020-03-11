@@ -1,0 +1,169 @@
+\hypertarget{class_mesh_1_1_sub_mesh}{}\doxysection{Mesh\+::Sub\+Mesh Class Reference}
+\label{class_mesh_1_1_sub_mesh}\index{Mesh::SubMesh@{Mesh::SubMesh}}
+
+
+submesh entry  
+
+
+
+
+{\ttfamily \#include $<$Mesh.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_mesh_1_1_sub_mesh_1_1boneinfo__t}{boneinfo\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em substruct for bone data \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_mesh_1_1_sub_mesh_1_1_vertex_bone_data}{Vertex\+Bone\+Data}}
+\begin{DoxyCompactList}\small\item\em subclass for vertex bones and weights \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a4d4db6522741523a4d0a0001e78e0b0a}\label{class_mesh_1_1_sub_mesh_a4d4db6522741523a4d0a0001e78e0b0a}} 
+enum {\bfseries buffer\+\_\+t} \{ \newline
+{\bfseries V\+E\+R\+T\+E\+X\+\_\+\+B\+U\+F\+F\+ER}, 
+{\bfseries T\+E\+X\+C\+O\+O\+R\+D\+\_\+\+B\+U\+F\+F\+ER}, 
+{\bfseries N\+O\+R\+M\+A\+L\+\_\+\+B\+U\+F\+F\+ER}, 
+{\bfseries C\+O\+L\+O\+R\+\_\+\+B\+U\+F\+F\+ER}, 
+\newline
+{\bfseries B\+O\+N\+E\+\_\+\+B\+U\+F\+F\+ER}, 
+{\bfseries I\+N\+D\+E\+X\+\_\+\+B\+U\+F\+F\+ER}, 
+{\bfseries T\+A\+N\+G\+E\+N\+T\+\_\+\+B\+U\+F\+F\+ER}, 
+{\bfseries B\+U\+F\+F\+E\+R\+\_\+\+T\+Y\+P\+E\+\_\+\+L\+E\+N\+G\+TH}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_aadebff5fbc774c19bdcdb8f07fa23d68}\label{class_mesh_1_1_sub_mesh_aadebff5fbc774c19bdcdb8f07fa23d68}} 
+{\bfseries Sub\+Mesh} (unsigned int \+\_\+num\+Indices, unsigned int \+\_\+num\+Vertices)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a4399a9fc21869afbb74418df576d6cf7}\label{class_mesh_1_1_sub_mesh_a4399a9fc21869afbb74418df576d6cf7}} 
+{\bfseries Sub\+Mesh} (const \mbox{\hyperlink{struct_voxel_mesh_data}{Voxel\+Mesh\+Data}} \&data)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_aff2dd8592567346cec005e0b9ee7c57c}\label{class_mesh_1_1_sub_mesh_aff2dd8592567346cec005e0b9ee7c57c}} 
+{\bfseries Sub\+Mesh} (const ai\+Scene $\ast$\+\_\+scene, ai\+Mesh $\ast$mesh)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a1d61083f09fb38ab2fe2966d5e99f077}\label{class_mesh_1_1_sub_mesh_a1d61083f09fb38ab2fe2966d5e99f077}} 
+{\bfseries Sub\+Mesh} (const \mbox{\hyperlink{class_mesh_1_1_sub_mesh}{Sub\+Mesh}} \&src, const glm\+::mat4 \&transform)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_ab95639906254e0f8fb6af8c6f44e0915}\label{class_mesh_1_1_sub_mesh_ab95639906254e0f8fb6af8c6f44e0915}} 
+void {\bfseries finalize} ()
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_af11d914596abce159508e4fa136b523c}\label{class_mesh_1_1_sub_mesh_af11d914596abce159508e4fa136b523c}} 
+void {\bfseries append} (const \mbox{\hyperlink{class_mesh_1_1_sub_mesh}{Sub\+Mesh}} \&src, const glm\+::mat4 \&transform)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_af03147b5c5345233bea9b06ed2face5f}\label{class_mesh_1_1_sub_mesh_af03147b5c5345233bea9b06ed2face5f}} 
+void {\bfseries draw} (const \mbox{\hyperlink{class_camera}{Camera}} \&camera)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a246be8b9a79c5f6c959c1849d503428b}\label{class_mesh_1_1_sub_mesh_a246be8b9a79c5f6c959c1849d503428b}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Max\+Box} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a81914d051eef5576247eeacf1bfa3557}\label{class_mesh_1_1_sub_mesh_a81914d051eef5576247eeacf1bfa3557}} 
+const \mbox{\hyperlink{class_vector}{Vector}} \& {\bfseries get\+Min\+Box} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a98f2424c2c49b1cac1d9a1eea9369c9e}\label{class_mesh_1_1_sub_mesh_a98f2424c2c49b1cac1d9a1eea9369c9e}} 
+unsigned int {\bfseries bone\+Index\+For\+Name} (const char $\ast$name) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_aa40ceb06985c695e4f70c155ebb3be51}\label{class_mesh_1_1_sub_mesh_aa40ceb06985c695e4f70c155ebb3be51}} 
+G\+Luint {\bfseries find\+Adjacent\+Index} (const ai\+Mesh \&mesh, G\+Luint index1, G\+Luint index2, G\+Luint index3)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a17d367823e06d6dcc4234fa5554ade4a}\label{class_mesh_1_1_sub_mesh_a17d367823e06d6dcc4234fa5554ade4a}} 
+void {\bfseries map\+Bones} (const ai\+Node $\ast$node)
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_aa02acb9aad70ebec7e37191896f554e3}\label{class_mesh_1_1_sub_mesh_aa02acb9aad70ebec7e37191896f554e3}} 
+void {\bfseries bone\+Transform} (const \mbox{\hyperlink{class_map}{Animation\+Map}} \&animations, \mbox{\hyperlink{structskincache__t}{skincache\+\_\+t}} \&\mbox{\hyperlink{class_mesh_a8ff79a17f4dc1a755b908fbaafff43bb}{skin}}) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_ab85b44e2cac731836326ab84c380e7b4}\label{class_mesh_1_1_sub_mesh_ab85b44e2cac731836326ab84c380e7b4}} 
+void {\bfseries read\+Node\+Hierarchy} (const \mbox{\hyperlink{class_map}{Animation\+Map}} $\ast$animations, \mbox{\hyperlink{structskincache__t}{skincache\+\_\+t}} $\ast$\mbox{\hyperlink{class_mesh_a8ff79a17f4dc1a755b908fbaafff43bb}{skin}}, const ai\+Node $\ast$node, const glm\+::mat4 $\ast$root\+Transform) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a2b58ec890d19582ae3898cc956fc6eae}\label{class_mesh_1_1_sub_mesh_a2b58ec890d19582ae3898cc956fc6eae}} 
+const ai\+Node\+Anim $\ast$ {\bfseries find\+Node\+Anim} (const ai\+Animation $\ast$animation, const char $\ast$str) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_acd8a25efc615f15b9ea1f2a248d4f43d}\label{class_mesh_1_1_sub_mesh_acd8a25efc615f15b9ea1f2a248d4f43d}} 
+void {\bfseries calc\+Interpolated\+Position} (ai\+Vector3D \&out, const \mbox{\hyperlink{class_animation_state}{Animation\+State}} \&anim, float weight, const ai\+Node\+Anim $\ast$node\+Anim) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a9c799ac4bdd57ef763cbf5db3842b7a9}\label{class_mesh_1_1_sub_mesh_a9c799ac4bdd57ef763cbf5db3842b7a9}} 
+void {\bfseries calc\+Interpolated\+Rotation} (ai\+Quaternion \&out, const \mbox{\hyperlink{class_animation_state}{Animation\+State}} \&anim, float weight, const ai\+Node\+Anim $\ast$node\+Anim, bool \&first) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a1cfe1d87b4b8fd45338de48484a916aa}\label{class_mesh_1_1_sub_mesh_a1cfe1d87b4b8fd45338de48484a916aa}} 
+void {\bfseries calc\+Interpolated\+Scaling} (ai\+Vector3D \&out, const \mbox{\hyperlink{class_animation_state}{Animation\+State}} \&anim, float weight, const ai\+Node\+Anim $\ast$node\+Anim) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_ae3d561133524d3b7b61d6caccf74ecff}\label{class_mesh_1_1_sub_mesh_ae3d561133524d3b7b61d6caccf74ecff}} 
+unsigned int {\bfseries find\+Position} (float animation\+Time, const ai\+Node\+Anim $\ast$node\+Anim) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a9815c682fe44909aecddf9fa3e58df93}\label{class_mesh_1_1_sub_mesh_a9815c682fe44909aecddf9fa3e58df93}} 
+unsigned int {\bfseries find\+Rotation} (float animation\+Time, const ai\+Node\+Anim $\ast$node\+Anim) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a6fdb8f17e690143c9db2f78eed576c0e}\label{class_mesh_1_1_sub_mesh_a6fdb8f17e690143c9db2f78eed576c0e}} 
+unsigned int {\bfseries find\+Scaling} (float animation\+Time, const ai\+Node\+Anim $\ast$node\+Anim) const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_aa9d68d93ddb70bf1a4d05d1ab8e452ad}\label{class_mesh_1_1_sub_mesh_aa9d68d93ddb70bf1a4d05d1ab8e452ad}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} \mbox{\hyperlink{class_mesh_1_1_sub_mesh_aa9d68d93ddb70bf1a4d05d1ab8e452ad}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em getters \& setters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a235a41ebf36cd1e110192c51b4220208}\label{class_mesh_1_1_sub_mesh_a235a41ebf36cd1e110192c51b4220208}} 
+virtual const bool {\bfseries is\+Streamable} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a9fd33a3abc997491f265eceb306509cc}\label{class_mesh_1_1_sub_mesh_a9fd33a3abc997491f265eceb306509cc}} 
+const unsigned int {\bfseries get\+Num\+Vertices} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a9457b0dd56f6689728d66e39c399fc00}\label{class_mesh_1_1_sub_mesh_a9457b0dd56f6689728d66e39c399fc00}} 
+const unsigned int {\bfseries get\+Num\+Indices} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a80b17edbbbe8d4f47f1c830d03085c3f}\label{class_mesh_1_1_sub_mesh_a80b17edbbbe8d4f47f1c830d03085c3f}} 
+const unsigned int {\bfseries get\+Num\+Bones} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_abee01133b72d144c6097e73b985f18bd}\label{class_mesh_1_1_sub_mesh_abee01133b72d144c6097e73b985f18bd}} 
+const float $\ast$ {\bfseries get\+Vertices} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a0318bd9496df373700afe73465799049}\label{class_mesh_1_1_sub_mesh_a0318bd9496df373700afe73465799049}} 
+const float $\ast$ {\bfseries get\+Tex\+Coords} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a5b58d7a69d31bb579307405c2e5c6371}\label{class_mesh_1_1_sub_mesh_a5b58d7a69d31bb579307405c2e5c6371}} 
+const float $\ast$ {\bfseries get\+Normals} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a44a056a0a4ce932525ac4fd3565a10f4}\label{class_mesh_1_1_sub_mesh_a44a056a0a4ce932525ac4fd3565a10f4}} 
+const float $\ast$ {\bfseries get\+Colors} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a27b0d1dde507c68216ff10e35a7a4e28}\label{class_mesh_1_1_sub_mesh_a27b0d1dde507c68216ff10e35a7a4e28}} 
+const float $\ast$ {\bfseries get\+Tangents} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a2e6ddc540b7df02a0d8f9694c7296a0d}\label{class_mesh_1_1_sub_mesh_a2e6ddc540b7df02a0d8f9694c7296a0d}} 
+const G\+Luint $\ast$ {\bfseries get\+Indices} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a3d3b70a93e26ba27bab1974a21763219}\label{class_mesh_1_1_sub_mesh_a3d3b70a93e26ba27bab1974a21763219}} 
+const \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_mesh_1_1_sub_mesh_1_1boneinfo__t}{boneinfo\+\_\+t}} $>$ \& {\bfseries get\+Bones} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_aee30a2afafa8036d0cd2e3262496603e}\label{class_mesh_1_1_sub_mesh_aee30a2afafa8036d0cd2e3262496603e}} 
+const ai\+Node $\ast$ {\bfseries get\+Root\+Node} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_ae0a0c785c7398433c139dc20a419a025}\label{class_mesh_1_1_sub_mesh_ae0a0c785c7398433c139dc20a419a025}} 
+const unsigned int {\bfseries get\+Last\+Vertex} () const
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_aaa72b602e8078798dcdd6b71f0162fd1}\label{class_mesh_1_1_sub_mesh_aaa72b602e8078798dcdd6b71f0162fd1}} 
+const unsigned int {\bfseries get\+Last\+Index} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a47f105bf529b4d854ba5e6f9c6de186f}\label{class_mesh_1_1_sub_mesh_a47f105bf529b4d854ba5e6f9c6de186f}} 
+unsigned int \mbox{\hyperlink{class_mesh_1_1_sub_mesh_a47f105bf529b4d854ba5e6f9c6de186f}{element\+Count}}
+\begin{DoxyCompactList}\small\item\em the number of elements to be drawn \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_ac85fbbaad4ea09e5e3badbb3b7f090c1}\label{class_mesh_1_1_sub_mesh_ac85fbbaad4ea09e5e3badbb3b7f090c1}} 
+static const int \mbox{\hyperlink{class_mesh_1_1_sub_mesh_ac85fbbaad4ea09e5e3badbb3b7f090c1}{max\+Bones}} = 100
+\begin{DoxyCompactList}\small\item\em max number of bones in a mesh \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mesh_1_1_sub_mesh_a82b5276f6809337a61ad8fb85592f365}\label{class_mesh_1_1_sub_mesh_a82b5276f6809337a61ad8fb85592f365}} 
+static const int \mbox{\hyperlink{class_mesh_1_1_sub_mesh_a82b5276f6809337a61ad8fb85592f365}{num\+Bones\+Per\+Vertex}} = 4
+\begin{DoxyCompactList}\small\item\em max number of bone weight per vertex \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+submesh entry 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_mesh_8hpp}{Mesh.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Mesh.\+cpp\end{DoxyCompactItemize}

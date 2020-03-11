@@ -1,0 +1,110 @@
+\hypertarget{class_image}{}\doxysection{Image Class Reference}
+\label{class_image}\index{Image@{Image}}
+
+
+An \mbox{\hyperlink{class_image}{Image}} is a type of asset that contains all the raw data for a unique 2D image.  
+
+
+
+
+{\ttfamily \#include $<$Image.\+hpp$>$}
+
+Inheritance diagram for Image\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_image}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_image_a20ff923b962444cac951520f666dc520}\label{class_image_a20ff923b962444cac951520f666dc520}} 
+{\bfseries Image} (const char $\ast$\+\_\+name)
+\item 
+virtual bool \mbox{\hyperlink{class_image_ab2dcd5262cee88065ed16b6c86d7e459}{finalize}} () override
+\item 
+void \mbox{\hyperlink{class_image_acef2adbb79de1a145176603f872b225c}{draw}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$src, const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&dest) const
+\item 
+void \mbox{\hyperlink{class_image_abff96636fb985e86c1894269d9e77ee0}{draw\+Color}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$src, const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&dest, const glm\+::vec4 \&color) const
+\item 
+\mbox{\Hypertarget{class_image_a6be7d2a0fc963422554bbaf8c87a78d6}\label{class_image_a6be7d2a0fc963422554bbaf8c87a78d6}} 
+virtual const \mbox{\hyperlink{class_asset_a9659c3eb9169979441df25bad80153f8}{type\+\_\+t}} {\bfseries get\+Type} () const
+\item 
+\mbox{\Hypertarget{class_image_ac49ef017e6e6c4582c1a8c24ba60dc5d}\label{class_image_ac49ef017e6e6c4582c1a8c24ba60dc5d}} 
+virtual const bool {\bfseries is\+Streamable} () const
+\item 
+\mbox{\Hypertarget{class_image_acdae13c9db8fbb24f989fcb01c78a8ca}\label{class_image_acdae13c9db8fbb24f989fcb01c78a8ca}} 
+const G\+Luint {\bfseries get\+Tex\+ID} () const
+\item 
+\mbox{\Hypertarget{class_image_acc1817ca4be4a53fb0c5cd066312fc0d}\label{class_image_acc1817ca4be4a53fb0c5cd066312fc0d}} 
+const S\+D\+L\+\_\+\+Surface $\ast$ {\bfseries get\+Surf} () const
+\item 
+\mbox{\Hypertarget{class_image_a714bd9ad3e8b7e7ce8a05cc404b12983}\label{class_image_a714bd9ad3e8b7e7ce8a05cc404b12983}} 
+const unsigned int {\bfseries get\+Width} () const
+\item 
+\mbox{\Hypertarget{class_image_af7c3e5f3ccfe6563d2df11acbadbd508}\label{class_image_af7c3e5f3ccfe6563d2df11acbadbd508}} 
+const unsigned int {\bfseries get\+Height} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_image_af05adaa2aa6ebcc83546490df368a874}\label{class_image_af05adaa2aa6ebcc83546490df368a874}} 
+static void \mbox{\hyperlink{class_image_af05adaa2aa6ebcc83546490df368a874}{create\+Static\+Data}} ()
+\begin{DoxyCompactList}\small\item\em create static geometry data for rendering images \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_image_a5575a37c667fe367cda252fbea6a94e9}\label{class_image_a5575a37c667fe367cda252fbea6a94e9}} 
+static void \mbox{\hyperlink{class_image_a5575a37c667fe367cda252fbea6a94e9}{delete\+Static\+Data}} ()
+\begin{DoxyCompactList}\small\item\em delete static geometry data for rendering images \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+An \mbox{\hyperlink{class_image}{Image}} is a type of asset that contains all the raw data for a unique 2D image. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_image_acef2adbb79de1a145176603f872b225c}\label{class_image_acef2adbb79de1a145176603f872b225c}} 
+\index{Image@{Image}!draw@{draw}}
+\index{draw@{draw}!Image@{Image}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Image\+::draw (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$}]{src,  }\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&}]{dest }\end{DoxyParamCaption}) const}
+
+draws the image 
+\begin{DoxyParams}{Parameters}
+{\em src} & the section of the image to be used for drawing, or nullptr for the whole image \\
+\hline
+{\em dest} & the location and size by which the image should be drawn \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_image_abff96636fb985e86c1894269d9e77ee0}\label{class_image_abff96636fb985e86c1894269d9e77ee0}} 
+\index{Image@{Image}!drawColor@{drawColor}}
+\index{drawColor@{drawColor}!Image@{Image}}
+\doxysubsubsection{\texorpdfstring{drawColor()}{drawColor()}}
+{\footnotesize\ttfamily void Image\+::draw\+Color (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ $\ast$}]{src,  }\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ int $>$ \&}]{dest,  }\item[{const glm\+::vec4 \&}]{color }\end{DoxyParamCaption}) const}
+
+draws the image with the given color 
+\begin{DoxyParams}{Parameters}
+{\em src} & the section of the image to be used for drawing, or nullptr for the whole image \\
+\hline
+{\em dest} & the location and size by which the image should be drawn \\
+\hline
+{\em color} & a 32-\/bit color to mix with the image \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_image_ab2dcd5262cee88065ed16b6c86d7e459}\label{class_image_ab2dcd5262cee88065ed16b6c86d7e459}} 
+\index{Image@{Image}!finalize@{finalize}}
+\index{finalize@{finalize}!Image@{Image}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily bool Image\+::finalize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+optional function for streamable types \begin{DoxyReturn}{Returns}
+true if the asset was successfully loaded, otherwise false 
+\end{DoxyReturn}
+
+
+Reimplemented from \mbox{\hyperlink{class_asset_a314c70b04a032a2e27283c1fffb8eaf9}{Asset}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Projects/\+Spacepunk/src/\mbox{\hyperlink{_image_8hpp}{Image.\+hpp}}\item 
+E\+:/\+Projects/\+Spacepunk/src/Image.\+cpp\end{DoxyCompactItemize}
