@@ -17,6 +17,11 @@ public:
 	//! @return true if the asset was successfully loaded, otherwise false
 	virtual bool finalize();
 
+	//! check if a file exists or not on disk
+	//! @param name the virtual filename
+	//! @return true if the file exists, false if not
+	static bool valid(const char* name);
+
 	//! asset type
 	enum type_t {
 		ASSET_INVALID,

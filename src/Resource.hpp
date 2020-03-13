@@ -77,12 +77,17 @@ public:
 			T* data = nullptr;
 			if (stream) {
 				if (cache.getSize()) {
-					auto it = jobs.find(name);
-					if (it == jobs.end()) {
-						jobs.emplace(name, std::async(std::launch::async, &Resource::load, this, name));
+					if (Asset::valid(name)) {
+						auto it = jobs.find(name);
+						if (it == jobs.end()) {
+							jobs.emplace(name, std::async(std::launch::async, &Resource::load, this, name));
+						}
+						error = resource_error_t::ERROR_CACHEINPROGRESS;
+						return nullptr;
+					} else {
+						error = resource_error_t::ERROR_CACHEFAILED;
+						return nullptr;
 					}
-					error = resource_error_t::ERROR_CACHEINPROGRESS;
-					return nullptr;
 				} else {
 					data = load(name);
 					data->finalize();
@@ -110,15 +115,21 @@ public:
 		for (auto& pair : jobs) {
 			auto& name = pair.first;
 			auto& job = pair.second;
-			auto status = job.wait_for(std::chrono::milliseconds(0));
-			if (status == std::future_status::ready) {
-				T* data = job.get();
-				data->finalize();
-				Asset* base = data; //! enforce Asset base class
-				if (base->isLoaded()) {
-					cache.insertUnique(name.c_str(), data);
-					keys.push_back(name);
+			if (job.valid()) {
+				auto status = job.wait_for(std::chrono::milliseconds(0));
+				if (status == std::future_status::ready) {
+					T* data = job.get();
+					data->finalize();
+					Asset* base = data; //! enforce Asset base class
+					if (base->isLoaded()) {
+						cache.insertUnique(name.c_str(), data);
+						keys.push_back(name);
+					} else {
+						delete data;
+					}
 				}
+			} else {
+				keys.push_back(name);
 			}
 		}
 		for (auto& key : keys) {

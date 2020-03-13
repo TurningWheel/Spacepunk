@@ -1407,7 +1407,7 @@ void Editor::initWidgets() {
 	entity->setFlags(static_cast<int>(Entity::flag_t::FLAG_PASSABLE) | static_cast<int>(Entity::flag_t::FLAG_VISIBLE));
 	minimap = entity->addComponent<Camera>();
 	Rect<int> mapRect;
-	mapRect.x = camRect.x + camRect.w + 9; mapRect.w = xres - mapRect.x - 9;
+	mapRect.x = 9; mapRect.w = camRect.x - 18;
 	mapRect.y = camRect.y + 9; mapRect.h = mapRect.w;
 	minimap->setWin(mapRect);
 	minimap->setOrtho(true);
@@ -1673,13 +1673,13 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		// ...
 
 		// edit tiles
-		button = topframe->addButton("buttonTiles");
+		/*button = topframe->addButton("buttonTiles");
 		button->setIcon("images/gui/geometry.png");
 		button->setTooltip("Edit tiles");
 		button->setPos(146, 6);
 
 		// edit textures
-		button = topframe->addButton("buttonTextures");
+		/*button = topframe->addButton("buttonTextures");
 		button->setIcon("images/gui/texture.png");
 		button->setTooltip("Edit textures");
 		button->setPos(181, 6);
@@ -1694,7 +1694,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		button = topframe->addButton("buttonSectors");
 		button->setIcon("images/gui/triangle.png");
 		button->setTooltip("Edit sectors");
-		button->setPos(251, 6);
+		button->setPos(251, 6);*/
 
 		// ...
 
@@ -1702,31 +1702,31 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		button = topframe->addButton("buttonPreview");
 		button->setIcon("images/gui/preview.png");
 		button->setTooltip("Preview mode");
-		button->setPos(321, 6);
+		button->setPos(146, 6);
 
 		// optimize geometry
-		button = topframe->addButton("buttonOptimize");
+		/*button = topframe->addButton("buttonOptimize");
 		button->setIcon("images/gui/optimize.png");
 		button->setTooltip("Optimize chunk geometry");
-		button->setPos(356, 6);
+		button->setPos(356, 6);*/
 
 		// editor settings
 		button = topframe->addButton("buttonEditorSettings");
 		button->setIcon("images/gui/wrench.png");
 		button->setTooltip("Change editor settings");
-		button->setPos(391, 6);
+		button->setPos(181, 6);
 
 		// map settings
 		button = topframe->addButton("buttonMapSettings");
 		button->setIcon("images/gui/map.png");
 		button->setTooltip("Change map settings");
-		button->setPos(426, 6);
+		button->setPos(216, 6);
 
 		// play test!
 		button = topframe->addButton("buttonPlay");
 		button->setIcon("images/gui/play.png");
 		button->setTooltip("Playtest current level");
-		button->setPos(461, 6);
+		button->setPos(251, 6);
 
 		// ...
 
@@ -1747,8 +1747,12 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y; frameRect.h = (yres - 44);
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+		topFrame->setHollow(true);
 
 		// tile controls
+		static const bool tileControls = false;
+		static const bool squashLeft = true;
+		if (tileControls)
 		{
 			Frame* midFrame = new Frame(*topFrame, "editor_FrameTileControls");
 			frameRect.x = 0; frameRect.w = camRect.x - 6;
@@ -2061,16 +2065,82 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 				y += 30 + 3;
 			}
+		} else {
+			// minimap window
+			{
+				Frame* frame = new Frame(*topFrame, "editor_Minimap");
+				frameRect.x = 0; frameRect.w = camRect.x - 12;
+				frameRect.y = 0; frameRect.h = camRect.x - 12;
+				frame->setActualSize(frameRect);
+				frameRect.x = 6; frameRect.w = camRect.x - 12;
+				frameRect.y = 6; frameRect.h = camRect.x - 12;
+				frame->setSize(frameRect);
+				frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+				frame->setHigh(false);
+				frame->setHollow(true);
+			}
+
+			// border "frame"
+			{
+				Frame* frame = new Frame(*topFrame);
+				frameRect.x = 0; frameRect.w = camRect.x - 12;
+				frameRect.y = 0; frameRect.h = 3;
+				frame->setActualSize(frameRect);
+				frameRect.x = 6; frameRect.w = camRect.x - 12;
+				frameRect.y = 3; frameRect.h = 3;
+				frame->setSize(frameRect);
+				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setBorder(0);
+			}
+
+			// border "frame"
+			{
+				Frame* frame = new Frame(*topFrame);
+				frameRect.x = 0; frameRect.w = 3;
+				frameRect.y = 0; frameRect.h = camRect.x - 9;
+				frame->setActualSize(frameRect);
+				frameRect.x = 3; frameRect.w = 3;
+				frameRect.y = 3; frameRect.h = camRect.x - 9;
+				frame->setSize(frameRect);
+				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setBorder(0);
+			}
+
+			// border "frame"
+			{
+				Frame* frame = new Frame(*topFrame);
+				frameRect.x = 0; frameRect.w = 3;
+				frameRect.y = 0; frameRect.h = camRect.x - 9;
+				frame->setActualSize(frameRect);
+				frameRect.x = camRect.x - 6; frameRect.w = 3;
+				frameRect.y = 3; frameRect.h = camRect.x - 9;
+				frame->setSize(frameRect);
+				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setBorder(0);
+			}
+
+			// border "frame"
+			{
+				Frame* frame = new Frame(*topFrame);
+				frameRect.x = 0; frameRect.w = camRect.x - 6;
+				frameRect.y = 0; frameRect.h = (yres - 44) - camRect.x + 3;
+				frame->setActualSize(frameRect);
+				frameRect.x = 3; frameRect.w = camRect.x - 6;
+				frameRect.y = camRect.x - 6; frameRect.h = (yres - 44) - camRect.x + 3;
+				frame->setSize(frameRect);
+				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setBorder(0);
+			}
 		}
 
 		// content navigator
 		{
 			Frame* midFrame = new Frame(*topFrame, "editor_FrameLeftInternal");
 			frameRect.x = 0; frameRect.w = camRect.x - 12;
-			frameRect.y = 0; frameRect.h = (yres - 44) - 12 - (camRect.x - 12);
+			frameRect.y = 0; frameRect.h = (yres - 44) - 12 - (squashLeft ? (camRect.x - 12) : 0);
 			midFrame->setActualSize(frameRect);
 			frameRect.x = 6; frameRect.w = camRect.x - 12;
-			frameRect.y = 6 + (camRect.x - 12); frameRect.h = (yres - 44) - 12 - (camRect.x - 12);
+			frameRect.y = 6 + (squashLeft ? (camRect.x - 12) : 0); frameRect.h = (yres - 44) - 12 - (squashLeft ? (camRect.x - 12) : 0);
 			midFrame->setSize(frameRect);
 			midFrame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
 			midFrame->setHigh(false);
@@ -2094,37 +2164,14 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				field->setText("Content Navigator");
 
 				// sorting buttons
-				for (int c = 0; c < 7; ++c) {
+				for (int c = 0; c < Component::type_t::COMPONENT_MAX; ++c) {
 					Rect<int> pos;
 					int size = min(frameRect.w / 7, 36);
 					pos.x = 3 + (size*c); pos.w = size;
 					pos.y = frameRect.h - size - 3; pos.h = size;
 					Button* button = frame->addButton("button" + c);
-					switch (c) {
-					case 0:
-						button->setIcon("images/gui/icon_characters.png");
-						break;
-					case 1:
-						button->setIcon("images/gui/icon_decor.png");
-						break;
-					case 2:
-						button->setIcon("images/gui/icon_interactibles.png");
-						break;
-					case 3:
-						button->setIcon("images/gui/icon_items.png");
-						break;
-					case 4:
-						button->setIcon("images/gui/icon_lights.png");
-						break;
-					case 5:
-						button->setIcon("images/gui/icon_triggers.png");
-						break;
-					case 6:
-						button->setIcon("images/gui/icon_wildcard.png");
-						break;
-					default:
-						break;
-					}
+					button->setIcon(Component::typeIcon[c]);
+					button->setTooltip(Component::typeStr[c]);
 					button->setSize(pos);
 				}
 			}
@@ -2133,10 +2180,10 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			{
 				Frame* frame = new Frame(*midFrame, "editor_FrameContentNavigatorList");
 				frameRect.x = 0; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 0; frameRect.h = (yres - 44) - 68 - 18 - (camRect.x - 12);
+				frameRect.y = 0; frameRect.h = (yres - 44) - 68 - 18 - (tileControls ? (camRect.x - 12) : 0);
 				frame->setActualSize(frameRect);
 				frameRect.x = 3; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 68 + 3; frameRect.h = (yres - 44) - 68 - 18 - (camRect.x - 12);
+				frameRect.y = 68 + 3; frameRect.h = (yres - 44) - 68 - 18 - (tileControls ? (camRect.x - 12) : 0);
 				frame->setSize(frameRect);
 				frame->setBorder(0);
 				frame->setColor(glm::vec4(.1f, .1f, .1f, 1.f));
@@ -2157,6 +2204,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 	}
 
 	// right frame
+	static const bool squashRight = false;
 	{
 		Frame* topFrame = new Frame(*gui, "editor_FrameRight");
 		frameRect.x = 0; frameRect.w = camRect.x;
@@ -2166,82 +2214,15 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.y = camRect.y; frameRect.h = (yres - 44);
 		topFrame->setSize(frameRect);
 		topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-		topFrame->setHollow(true);
-
-		// minimap window
-		{
-			Frame* frame = new Frame(*topFrame, "editor_Minimap");
-			frameRect.x = 0; frameRect.w = camRect.x - 12;
-			frameRect.y = 0; frameRect.h = camRect.x - 12;
-			frame->setActualSize(frameRect);
-			frameRect.x = 6; frameRect.w = camRect.x - 12;
-			frameRect.y = 6; frameRect.h = camRect.x - 12;
-			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
-			frame->setHigh(false);
-			frame->setHollow(true);
-		}
-
-		// border "frame"
-		{
-			Frame* frame = new Frame(*topFrame);
-			frameRect.x = 0; frameRect.w = camRect.x - 12;
-			frameRect.y = 0; frameRect.h = 3;
-			frame->setActualSize(frameRect);
-			frameRect.x = 6; frameRect.w = camRect.x - 12;
-			frameRect.y = 3; frameRect.h = 3;
-			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-			frame->setBorder(0);
-		}
-
-		// border "frame"
-		{
-			Frame* frame = new Frame(*topFrame);
-			frameRect.x = 0; frameRect.w = 3;
-			frameRect.y = 0; frameRect.h = camRect.x - 9;
-			frame->setActualSize(frameRect);
-			frameRect.x = 3; frameRect.w = 3;
-			frameRect.y = 3; frameRect.h = camRect.x - 9;
-			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-			frame->setBorder(0);
-		}
-
-		// border "frame"
-		{
-			Frame* frame = new Frame(*topFrame);
-			frameRect.x = 0; frameRect.w = 3;
-			frameRect.y = 0; frameRect.h = camRect.x - 9;
-			frame->setActualSize(frameRect);
-			frameRect.x = camRect.x - 6; frameRect.w = 3;
-			frameRect.y = 3; frameRect.h = camRect.x - 9;
-			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-			frame->setBorder(0);
-		}
-
-		// border "frame"
-		{
-			Frame* frame = new Frame(*topFrame);
-			frameRect.x = 0; frameRect.w = camRect.x - 6;
-			frameRect.y = 0; frameRect.h = (yres - 44) - camRect.x + 3;
-			frame->setActualSize(frameRect);
-			frameRect.x = 3; frameRect.w = camRect.x - 6;
-			frameRect.y = camRect.x - 6; frameRect.h = (yres - 44) - camRect.x + 3;
-			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-			frame->setBorder(0);
-		}
 
 		// level navigator
 		{
 			Frame* midFrame = new Frame(*topFrame, "editor_FrameLevelNavigator");
 			frameRect.x = 0; frameRect.w = camRect.x - 12;
-			frameRect.y = 0; frameRect.h = (yres - 44) - camRect.x - 3;
+			frameRect.y = 0; frameRect.h = (yres - 44) - (squashRight ? camRect.x : 0) - 12;
 			midFrame->setActualSize(frameRect);
 			frameRect.x = 6; frameRect.w = camRect.x - 12;
-			frameRect.y = camRect.x - 12 - 6 + 15; frameRect.h = (yres - 44) - camRect.x - 3;
+			frameRect.y = (squashRight ? camRect.x - 12 : 0) - 6 + 12; frameRect.h = (yres - 44) - (squashRight ? camRect.x : 0) - 12;
 			midFrame->setSize(frameRect);
 			midFrame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
 			midFrame->setHigh(false);
@@ -2265,37 +2246,14 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				field->setText("Level Navigator");
 
 				// sorting buttons
-				for (int c = 0; c < 7; ++c) {
+				for (int c = 0; c < Component::type_t::COMPONENT_MAX; ++c) {
 					Rect<int> pos;
 					int size = min(frameRect.w / 7, 36);
 					pos.x = 3 + (size*c); pos.w = size;
 					pos.y = frameRect.h - size - 3; pos.h = size;
 					Button* button = frame->addButton("button" + c);
-					switch (c) {
-					case 0:
-						button->setIcon("images/gui/icon_characters.png");
-						break;
-					case 1:
-						button->setIcon("images/gui/icon_decor.png");
-						break;
-					case 2:
-						button->setIcon("images/gui/icon_interactibles.png");
-						break;
-					case 3:
-						button->setIcon("images/gui/icon_items.png");
-						break;
-					case 4:
-						button->setIcon("images/gui/icon_lights.png");
-						break;
-					case 5:
-						button->setIcon("images/gui/icon_triggers.png");
-						break;
-					case 6:
-						button->setIcon("images/gui/icon_wildcard.png");
-						break;
-					default:
-						break;
-					}
+					button->setIcon(Component::typeIcon[c]);
+					button->setTooltip(Component::typeStr[c]);
 					button->setSize(pos);
 				}
 			}
@@ -2304,10 +2262,10 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			{
 				Frame* frame = new Frame(*midFrame, "editor_FrameLevelNavigatorList");
 				frameRect.x = 0; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 0; frameRect.h = (yres - 44) - camRect.x - 3 - 71;
+				frameRect.y = 0; frameRect.h = (yres - 44) - (squashRight ? camRect.x : 0) - 3 - 71;
 				frame->setActualSize(frameRect);
 				frameRect.x = 3; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 65 + 3; frameRect.h = (yres - 44) - camRect.x - 3 - 71;
+				frameRect.y = 65 + 3; frameRect.h = (yres - 44) - (squashRight ? camRect.x : 0) - 3 - 71;
 				frame->setSize(frameRect);
 				frame->setBorder(0);
 				frame->setColor(glm::vec4(.1f, .1f, .1f, 1.f));
@@ -6308,7 +6266,7 @@ void Editor::draw(Renderer& renderer) {
 							, editingCamera->getGlobalAng().roll);*/
 						renderer.printText(pos, matrixChars);
 					} else {
-						renderer.printText(pos, Editor::editingModeStr[editingMode]);
+						//renderer.printText(pos, Editor::editingModeStr[editingMode]);
 					}
 				} else {
 					renderer.printText(pos, "*** PREVIEW ***");

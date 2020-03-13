@@ -36,6 +36,17 @@ bool Asset::finalize() {
 	return loaded = true;
 }
 
+bool Asset::valid(const char* name) {
+	String path = mainEngine->buildPath(name).get();
+	FILE* fp = nullptr;
+	if ((fp = fopen(path.get(), "r")) != nullptr) {
+		fclose(fp);
+		return true;
+	} else {
+		return false;
+	}
+}
+
 void Asset::serialize(FileInterface * file) {
 	mainEngine->fmsg(Engine::MSG_WARN, "serialize() called on unsupported asset '%s'", name.get());
 }

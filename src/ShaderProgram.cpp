@@ -85,7 +85,7 @@ ShaderProgram& ShaderProgram::mount() {
 	if (currentShader == this) {
 		return *this;
 	} else {
-		if (!broken) {
+		if (!broken && loaded && shaders.getSize() > 0) {
 			glUseProgram(programObject);
 			currentShader = this;
 			return *this;

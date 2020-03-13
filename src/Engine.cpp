@@ -168,6 +168,7 @@ static int console_mount(int argc, const char** argv) {
 		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
+		mainEngine->startEditor();
 		return 0;
 	} else {
 		return 1;
@@ -183,6 +184,7 @@ static int console_unmount(int argc, const char** argv) {
 		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
+		mainEngine->startEditor();
 		return 0;
 	} else {
 		return 1;
