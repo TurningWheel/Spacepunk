@@ -85,8 +85,8 @@ public:
 	const char*							getGameTitle() const { return game.name.get(); }
 	Client*&							getLocalClient() { return localClient; }
 	Server*&							getLocalServer() { return localServer; }
-	const Sint32						getXres() const { return xres; }
-	const Sint32						getYres() const { return yres; }
+	int									getXres() const { return xres; }
+	int									getYres() const { return yres; }
 	const bool							getKeyStatus(const int index) const { return keystatus[index]; }
 	const bool							getAnyKeyStatus() const { return anykeystatus; }
 	const char*							getLastKeyPressed() const { return lastkeypressed; }

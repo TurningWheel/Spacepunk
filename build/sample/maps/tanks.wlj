@@ -303,7 +303,7 @@
                 "y": 1.0,
                 "z": 1.0
             },
-            "scriptStr": "",
+            "scriptStr": "Camera",
             "flags": 385,
             "falling": false,
             "sort": 0,
@@ -376,8 +376,8 @@
                         "win": {
                             "x": 0,
                             "y": 0,
-                            "w": 1280,
-                            "h": 720
+                            "w": 0,
+                            "h": 0
                         },
                         "fov": 700,
                         "ortho": true
