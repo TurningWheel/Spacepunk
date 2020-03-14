@@ -154,9 +154,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:ad1e06c6c8803c297d572ea9b248641d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a905f9abdb5fec84a0e16d50689422884"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_world.html#a905f9abdb5fec84a0e16d50689422884">selectEntity</a> (const Uint32 uid, const bool b)</td></tr>
 <tr class="separator:a905f9abdb5fec84a0e16d50689422884"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b676ba8ead3b6a932912cd6ad81168e"><td class="memItemLeft" align="right" valign="top"><a id="a5b676ba8ead3b6a932912cd6ad81168e"></a>
-<a class="el" href="class_entity.html">Entity</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_world.html#a5b676ba8ead3b6a932912cd6ad81168e">spawnEntity</a> (const char *name, const <a class="el" href="class_vector.html">Vector</a> &amp;pos, const <a class="el" href="class_rotation.html">Rotation</a> &amp;ang)</td></tr>
-<tr class="memdesc:a5b676ba8ead3b6a932912cd6ad81168e"><td class="mdescLeft">&#160;</td><td class="mdescRight">spawn an entity at the given location/orientation <br /></td></tr>
+<tr class="memitem:a5b676ba8ead3b6a932912cd6ad81168e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_entity.html">Entity</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_world.html#a5b676ba8ead3b6a932912cd6ad81168e">spawnEntity</a> (const char *name, const <a class="el" href="class_vector.html">Vector</a> &amp;pos, const <a class="el" href="class_rotation.html">Rotation</a> &amp;ang)</td></tr>
 <tr class="separator:a5b676ba8ead3b6a932912cd6ad81168e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe7309d80e20a976df3eccc2fef2503b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_world.html#afe7309d80e20a976df3eccc2fef2503b">selectEntities</a> (const bool b)</td></tr>
 <tr class="separator:afe7309d80e20a976df3eccc2fef2503b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1068,6 +1066,49 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if the entity could be found, false otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a5b676ba8ead3b6a932912cd6ad81168e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b676ba8ead3b6a932912cd6ad81168e">&#9670;&nbsp;</a></span>spawnEntity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_entity.html">Entity</a> * World::spawnEntity </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_vector.html">Vector</a> &amp;&#160;</td>
+          <td class="paramname"><em>pos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="class_rotation.html">Rotation</a> &amp;&#160;</td>
+          <td class="paramname"><em>ang</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>spawn an entity at the given location/orientation </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>The entity's name as given in the editor (not the filename) </td></tr>
+    <tr><td class="paramname">pos</td><td>Position in world space (x, y, z) </td></tr>
+    <tr><td class="paramname">ang</td><td><a class="el" href="class_rotation.html" title="Records Euler angles in radians (convertible to degrees)">Rotation</a> in world space (yaw, pitch, roll) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the newly spawned entity </dd></dl>
 
 </div>
 </div>

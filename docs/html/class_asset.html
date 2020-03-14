@@ -86,6 +86,7 @@ $(document).ready(function(){initNavTree('class_asset.html',''); initResizable()
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_asset-members.html">List of all members</a>  </div>
@@ -109,7 +110,7 @@ Inheritance diagram for Asset:</div>
 <area href="class_directory.html" title="A Directory contains a list of all the files in a computer directory." alt="Directory" shape="rect" coords="111,168,212,192"/>
 <area href="class_framebuffer.html" title="A Framebuffer is a unique type of object belonging to the Renderer which basically represents a &quot;scre..." alt="Framebuffer" shape="rect" coords="111,224,212,248"/>
 <area href="class_image.html" title="An Image is a type of asset that contains all the raw data for a unique 2D image." alt="Image" shape="rect" coords="111,280,212,304"/>
-<area href="class_material.html" title="Materials combine Image objects, a @ShaderProgram, and other meta-data into a single class." alt="Material" shape="rect" coords="111,336,212,360"/>
+<area href="class_material.html" title="Materials combine Image objects, a ShaderProgram, and other meta-data into a single class." alt="Material" shape="rect" coords="111,336,212,360"/>
 <area href="class_mesh.html" alt="Mesh" shape="rect" coords="111,392,212,416"/>
 <area href="class_shader.html" alt="Shader" shape="rect" coords="111,448,212,472"/>
 <area href="class_shader_program.html" title="A ShaderProgram links multiple Shader objects together into a single program that can be used to rend..." alt="ShaderProgram" shape="rect" coords="111,504,212,528"/>
@@ -168,6 +169,11 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>getPath</b> (
 <tr class="memitem:acb2886bb81f3e989ee3d35187e94848c"><td class="memItemLeft" align="right" valign="top"><a id="acb2886bb81f3e989ee3d35187e94848c"></a>
 const bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLoaded</b> () const</td></tr>
 <tr class="separator:acb2886bb81f3e989ee3d35187e94848c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a941d9fddb24f40dcbd3b48be549d3bf9"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_asset.html#a941d9fddb24f40dcbd3b48be549d3bf9">valid</a> (const char *name)</td></tr>
+<tr class="separator:a941d9fddb24f40dcbd3b48be549d3bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -248,6 +254,39 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>loaded</b> = false</t
 </dl>
 
 <p>Reimplemented in <a class="el" href="class_shader_program.html#ac84a0a4c3c2f77bb28e37812e87f7bd2">ShaderProgram</a>, <a class="el" href="class_animation.html#a7d4057dfb0b3eb7246b6a4157534aec9">Animation</a>, <a class="el" href="class_material.html#ac9e816c9d2c82f062c2d58526ea1f462">Material</a>, <a class="el" href="class_shader.html#a587a065b380dac18431fcbabeae2526d">Shader</a>, <a class="el" href="class_texture.html#a10e6b63e9f8b53bffb73375f8f5f9ce8">Texture</a>, and <a class="el" href="class_cubemap.html#a0e46dd234c7d82dd031ec5bd9a879077">Cubemap</a>.</p>
+
+</div>
+</div>
+<a id="a941d9fddb24f40dcbd3b48be549d3bf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a941d9fddb24f40dcbd3b48be549d3bf9">&#9670;&nbsp;</a></span>valid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Asset::valid </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>check if a file exists or not on disk </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>the virtual filename </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the file exists, false if not </dd></dl>
 
 </div>
 </div>

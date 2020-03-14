@@ -124,6 +124,7 @@ var class_entity =
     [ "remove", "class_entity.html#aa84c32a5d1baceccefec62568edc0a4f", null ],
     [ "removeComponentByName", "class_entity.html#a8079de30d0010130520b4dd8cda4595b", null ],
     [ "removeComponentByUID", "class_entity.html#ae4e48b5a05dd0a052c03e7795d5cf2ca", null ],
+    [ "removeListener", "class_entity.html#aa3c5cff13cbc73d1d79230715c2d389a", null ],
     [ "resetFlag", "class_entity.html#adf2ca334f9a048e26dd19e1e871cc32d", null ],
     [ "saveDef", "class_entity.html#a7439705c99a4c8a79462610ab84f4ada", null ],
     [ "serialize", "class_entity.html#a69971f83dae3d918e72f1126cb1021da", null ],

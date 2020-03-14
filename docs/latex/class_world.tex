@@ -50,9 +50,8 @@ void \mbox{\hyperlink{class_world_a72b95cd14c885246c20268ee2de7badf}{get\+Select
 \item 
 const bool \mbox{\hyperlink{class_world_a905f9abdb5fec84a0e16d50689422884}{select\+Entity}} (const Uint32 uid, const bool b)
 \item 
-\mbox{\Hypertarget{class_world_a5b676ba8ead3b6a932912cd6ad81168e}\label{class_world_a5b676ba8ead3b6a932912cd6ad81168e}} 
 \mbox{\hyperlink{class_entity}{Entity}} $\ast$ \mbox{\hyperlink{class_world_a5b676ba8ead3b6a932912cd6ad81168e}{spawn\+Entity}} (const char $\ast$name, const \mbox{\hyperlink{class_vector}{Vector}} \&pos, const \mbox{\hyperlink{class_rotation}{Rotation}} \&ang)
-\begin{DoxyCompactList}\small\item\em spawn an entity at the given location/orientation \end{DoxyCompactList}\item 
+\item 
 void \mbox{\hyperlink{class_world_afe7309d80e20a976df3eccc2fef2503b}{select\+Entities}} (const bool b)
 \item 
 \mbox{\Hypertarget{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}\label{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}} 
@@ -573,6 +572,24 @@ selects or deselects the entity with the given uid
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 true if the entity could be found, false otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_world_a5b676ba8ead3b6a932912cd6ad81168e}\label{class_world_a5b676ba8ead3b6a932912cd6ad81168e}} 
+\index{World@{World}!spawnEntity@{spawnEntity}}
+\index{spawnEntity@{spawnEntity}!World@{World}}
+\doxysubsubsection{\texorpdfstring{spawnEntity()}{spawnEntity()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_entity}{Entity}} $\ast$ World\+::spawn\+Entity (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{pos,  }\item[{const \mbox{\hyperlink{class_rotation}{Rotation}} \&}]{ang }\end{DoxyParamCaption})}
+
+spawn an entity at the given location/orientation 
+\begin{DoxyParams}{Parameters}
+{\em name} & The entity\textquotesingle{}s name as given in the editor (not the filename) \\
+\hline
+{\em pos} & Position in world space (x, y, z) \\
+\hline
+{\em ang} & \mbox{\hyperlink{class_rotation}{Rotation}} in world space (yaw, pitch, roll) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly spawned entity 
 \end{DoxyReturn}
 \mbox{\Hypertarget{class_world_ad1e06c6c8803c297d572ea9b248641d0}\label{class_world_ad1e06c6c8803c297d572ea9b248641d0}} 
 \index{World@{World}!uidToEntity@{uidToEntity}}

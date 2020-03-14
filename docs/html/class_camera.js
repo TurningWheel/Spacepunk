@@ -47,6 +47,7 @@ var class_camera =
     [ "setDrawMode", "class_camera.html#abac9742689e42657433ccce33a12f4ca", null ],
     [ "setEnabled", "class_camera.html#ac98793e989b454ce4f0251966b2a0404", null ],
     [ "setFov", "class_camera.html#ad480cd4c006aac5267bc9f360b4710d4", null ],
+    [ "setListener", "class_camera.html#a80270b5a3c4d747248a8bd2f684cc7e5", null ],
     [ "setOrtho", "class_camera.html#a800b749426883bd8e4133f8c57df1500", null ],
     [ "setupProjection", "class_camera.html#a05115155960ff87c3d7dd452d07b16e8", null ],
     [ "setWin", "class_camera.html#a5e734540e721641bac5dfe3291b9dde0", null ],

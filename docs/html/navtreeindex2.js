@@ -1,9 +1,10 @@
 var NAVTREEINDEX2 =
 {
+"class_camera.html#af27c2f99ef8a4472dbcd569fdac288bb":[1,0,11,16],
 "class_camera.html#af674e7536fc3461e2da1ef68db0b992a":[1,0,11,27],
 "class_camera.html#af84aa61581f78f8e8f54439cf3e72f08":[1,0,11,20],
 "class_camera.html#afc913681d1d784a739385d8da909f328":[1,0,11,12],
-"class_camera.html#afcf3c63073ca598574dfe6f57a04bb97":[1,0,11,52],
+"class_camera.html#afcf3c63073ca598574dfe6f57a04bb97":[1,0,11,53],
 "class_camera.html#afd980006d305702fba0fc4b25799b3af":[1,0,11,17],
 "class_character.html":[1,0,13],
 "class_character.html#a0074cdfc3fd622100fbfc635834c090e":[1,0,13,33],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "class_component_1_1_attribute_color_1_1_callback.html":[1,0,16,2,0],
 "class_component_1_1_attribute_color_1_1_callback.html#a38d4694da883285c64fbb0aee7a442df":[1,0,16,2,0,2],
 "class_component_1_1_attribute_color_1_1_callback.html#a700ea14a5ebf93f29b10b60eea950e54":[1,0,16,2,0,1],
-"class_component_1_1_attribute_color_1_1_callback.html#acb938112861ecef35693100575b1fe92":[1,0,16,2,0,0],
-"class_component_1_1_attribute_enum.html":[1,0,16,3]
+"class_component_1_1_attribute_color_1_1_callback.html#acb938112861ecef35693100575b1fe92":[1,0,16,2,0,0]
 };

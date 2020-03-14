@@ -64,6 +64,11 @@ const char $\ast$ {\bfseries get\+Path} () const
 \mbox{\Hypertarget{class_asset_acb2886bb81f3e989ee3d35187e94848c}\label{class_asset_acb2886bb81f3e989ee3d35187e94848c}} 
 const bool {\bfseries is\+Loaded} () const
 \end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{class_asset_a941d9fddb24f40dcbd3b48be549d3bf9}{valid}} (const char $\ast$name)
+\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -115,6 +120,20 @@ save/load this object to a file
 
 Reimplemented in \mbox{\hyperlink{class_shader_program_ac84a0a4c3c2f77bb28e37812e87f7bd2}{Shader\+Program}}, \mbox{\hyperlink{class_animation_a7d4057dfb0b3eb7246b6a4157534aec9}{Animation}}, \mbox{\hyperlink{class_material_ac9e816c9d2c82f062c2d58526ea1f462}{Material}}, \mbox{\hyperlink{class_shader_a587a065b380dac18431fcbabeae2526d}{Shader}}, \mbox{\hyperlink{class_texture_a10e6b63e9f8b53bffb73375f8f5f9ce8}{Texture}}, and \mbox{\hyperlink{class_cubemap_a0e46dd234c7d82dd031ec5bd9a879077}{Cubemap}}.
 
+\mbox{\Hypertarget{class_asset_a941d9fddb24f40dcbd3b48be549d3bf9}\label{class_asset_a941d9fddb24f40dcbd3b48be549d3bf9}} 
+\index{Asset@{Asset}!valid@{valid}}
+\index{valid@{valid}!Asset@{Asset}}
+\doxysubsubsection{\texorpdfstring{valid()}{valid()}}
+{\footnotesize\ttfamily bool Asset\+::valid (\begin{DoxyParamCaption}\item[{const char $\ast$}]{name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+check if a file exists or not on disk 
+\begin{DoxyParams}{Parameters}
+{\em name} & the virtual filename \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the file exists, false if not 
+\end{DoxyReturn}
 
 
 \doxysubsection{Member Data Documentation}

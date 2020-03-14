@@ -75,6 +75,8 @@ var class_editor =
     [ "setTextureSide", "class_editor.html#aa9e8ea446bbb9e4b93e33a341a0872a4", null ],
     [ "setWidgetMode", "class_editor.html#aae4e1741759bf534c82dba430e6ed914", null ],
     [ "toggleSelectEntity", "class_editor.html#a0fc0a28f42e3d8da22a22c0f0e106f28", null ],
+    [ "updateContentNavigatorFilters", "class_editor.html#a6d43e20417229615522b7cc7fb15a8da", null ],
+    [ "updateLevelNavigatorFilters", "class_editor.html#ade3a4b350175f13a8ba199beb356cebb", null ],
     [ "widgetRotatePitch", "class_editor.html#a99a7543131892daf1c357fa4f1947450", null ],
     [ "widgetRotateRoll", "class_editor.html#a50341210ec1d3abd0aaae09bbbdf33f5", null ],
     [ "widgetRotateYaw", "class_editor.html#a72f5f8cb79b4af7dba8a1e586689b37c", null ],
