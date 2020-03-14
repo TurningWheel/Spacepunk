@@ -227,6 +227,15 @@ void Script::exposeEngine() {
 		.beginClass<World::hit_t>("Hit")
 		.addData("pos", &World::hit_t::pos, true)
 		.addData("normal", &World::hit_t::normal, true)
+		.addData("manifest", &World::hit_t::manifest, true)
+		.endClass()
+		;
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<World::physics_manifest_t>("PhysicsManifest")
+		.addData("bbox", &World::physics_manifest_t::bbox, true)
+		.addData("entity", &World::physics_manifest_t::entity, true)
+		.addData("world", &World::physics_manifest_t::world, true)
 		.endClass()
 		;
 
@@ -370,6 +379,7 @@ void Script::exposeVector() {
 		.addFunction("lengthSquared", &Vector::lengthSquared)
 		.addFunction("normal", &Vector::normal)
 		.addFunction("normalize", &Vector::normalize)
+		.addFunction("reflect", &Vector::reflect)
 		.endClass()
 		;
 
