@@ -316,6 +316,7 @@ private:
 	void exposeEmitter();
 	void exposeMultimesh();
 	void exposeEditor(Editor& _editor);
+	void exposeExtra();
 
 	lua_State* lua = nullptr;
 };

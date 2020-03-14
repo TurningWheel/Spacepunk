@@ -108,6 +108,7 @@ Script::Script(World& _world) {
 	exposeAngle();
 	exposeVector();
 	exposeWorld();
+	exposeExtra();
 }
 
 Script::Script(Entity& _entity) {
@@ -124,6 +125,7 @@ Script::Script(Entity& _entity) {
 	exposeGame();
 	exposeEntity();
 	exposeWorld();
+	exposeExtra();
 }
 
 Script::Script(Frame& _frame) {
@@ -220,22 +222,6 @@ void Script::exposeEngine() {
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<glm::mat4>("matrix4x4")
-		.endClass()
-		;
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<World::hit_t>("Hit")
-		.addData("pos", &World::hit_t::pos, true)
-		.addData("normal", &World::hit_t::normal, true)
-		.addData("manifest", &World::hit_t::manifest, true)
-		.endClass()
-		;
-
-	luabridge::getGlobalNamespace(lua)
-		.beginClass<World::physics_manifest_t>("PhysicsManifest")
-		.addData("bbox", &World::physics_manifest_t::bbox, true)
-		.addData("entity", &World::physics_manifest_t::entity, true)
-		.addData("world", &World::physics_manifest_t::world, true)
 		.endClass()
 		;
 
@@ -934,4 +920,24 @@ void Script::exposeMultimesh() {
 
 	LinkedList<Multimesh*>::exposeToScript(lua, "LinkedListMultimeshPtr", "NodeMultimeshPtr");
 	ArrayList<Multimesh*>::exposeToScript(lua, "ArrayListMultimeshPtr");
+}
+
+void Script::exposeExtra() {
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<World::hit_t>("Hit")
+		.addConstructor<void(*)()>()
+		.addData("pos", &World::hit_t::pos, true)
+		.addData("normal", &World::hit_t::normal, true)
+		.addData("manifest", &World::hit_t::manifest, true)
+		.endClass()
+		;
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<World::physics_manifest_t>("PhysicsManifest")
+		.addConstructor<void(*)()>()
+		.addData("bbox", &World::physics_manifest_t::bbox, true)
+		.addData("entity", &World::physics_manifest_t::entity, true)
+		.addData("world", &World::physics_manifest_t::world, true)
+		.endClass()
+		;
 }
