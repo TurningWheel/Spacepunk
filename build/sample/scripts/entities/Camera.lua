@@ -6,6 +6,7 @@ require "base/scripts/constants"
 function init()
 	camera = entity:findCameraByName("camera")
 	win = RectSint32()
+    camera:setListener()
 end
 
 -- this function executes once per frame before any entities run process() or postprocess()

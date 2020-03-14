@@ -268,8 +268,13 @@ void Entity::finishInsertIntoWorld() {
 	// use anchor
 	if (anchor) {
 		pos = anchor->getPos() + offset;
-		updateNeeded = true;
-		warp();
+	}
+	update();
+	warp();
+
+	// create script engine
+	if (!script && !scriptStr.empty() && world) {
+		script = new Script(*this);
 	}
 
 	newWorld = nullptr;
@@ -929,15 +934,24 @@ Component* Entity::addComponent(Component::type_t type) {
 	}
 }
 
-World::hit_t Entity::lineTrace(const Vector& origin, const Vector& dest)
-{
-	if (!world)
-	{
-		World::hit_t emptyResult;
+World::hit_t Entity::lineTrace(const Vector& origin, const Vector& dest) {
+	World::hit_t emptyResult;
+	if (!world) {
 		return emptyResult;
 	}
 
-	return world->lineTrace(origin, dest);
+	LinkedList<World::hit_t> results;
+	world->lineTraceList(origin, dest, results);
+	for (auto& result : results) {
+		if (result.manifest && result.manifest->entity) {
+			if (result.manifest->entity == this) {
+				continue;
+			} else {
+				return result;
+			}
+		}
+	}
+	return emptyResult;
 }
 
 bool Entity::interact(Entity& user, BBox& bbox)

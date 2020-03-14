@@ -41,7 +41,7 @@ public:
 	//! @param n the normal vector of the surface to reflect against
 	//! @return the result of the reflection
 	Vector reflect(const Vector& n) {
-		Vector r = dot(n) * n * 2.f;
+		Vector r = n * dot(n) * 2.f;
 		return Vector(x - r.x, y - r.y, z - r.z);
 	}
 

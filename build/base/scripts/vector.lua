@@ -1,5 +1,9 @@
 -- Vector operations
 
+function vecPow(num)
+	return Vector(num, num, num)
+end
+
 function vecAdd(vec1, vec2)
 	return Vector(vec1.x + vec2.x, vec1.y + vec2.y, vec1.z + vec2.z)
 end

@@ -279,6 +279,61 @@
                         }
                     ]
                 }
+            },
+            {
+                "type": 0,
+                "data": {
+                    "Component::version": 1,
+                    "name": "Barrel",
+                    "lPos": {
+                        "x": 20.0,
+                        "y": 0.0,
+                        "z": -19.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "lScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [
+                        {
+                            "type": 5,
+                            "data": {
+                                "Component::version": 1,
+                                "name": "speaker",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "Quaternion::version": 0,
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 1.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [],
+                                "Speaker::version": 0,
+                                "defaultSound": "",
+                                "defaultLoop": false,
+                                "defaultRange": 256.0
+                            }
+                        }
+                    ]
+                }
             }
         ]
     }

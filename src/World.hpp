@@ -252,6 +252,7 @@ protected:
 	//! entities
 	Uint32 uids = 0;
 	Map<Uint32, Entity*> entities;
+	ArrayList<Entity*> entitiesToInsert;
 
 	//! lasers
 	ArrayList<laser_t> lasers;

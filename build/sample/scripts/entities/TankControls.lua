@@ -43,6 +43,17 @@ function process()
 	local vel = vecAdd(forwardVec, backwardVec)
 	entity:setVel(vel)
 
+	-- shoot
+    if input:binaryToggle("a") then
+        world = entity:getWorld()
+        barrel = entity:findComponentByName("Barrel")
+        bullet = world:spawnEntity("bullet", barrel:getGlobalPos(), barrel:getGlobalAng():toRotation())
+        bullet:setKeyValue("owner", entity:getName():get())
+        input:consumeBinaryToggle("a")
+        boom = entity:findSpeakerByName("speaker")
+        boom:playSound("fire.wav", false, 1000)
+    end
+
 	-- turn left and right
 	local right = math.pi / step * input:analog("right")
 	local left = math.pi / step * input:analog("left")

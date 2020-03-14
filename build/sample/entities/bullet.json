@@ -1,0 +1,159 @@
+{
+    "Entity::def_t::version": 1,
+    "editor": true,
+    "entity": {
+        "Entity::version": 3,
+        "name": "bullet",
+        "pos": {
+            "x": 92.61756896972656,
+            "y": 161.2931365966797,
+            "z": 179.84169006347657
+        },
+        "ang": {
+            "Quaternion::version": 0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        },
+        "scale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+        },
+        "scriptStr": "Bullet",
+        "flags": 387,
+        "falling": false,
+        "sort": 0,
+        "EntityItem": {
+            "Item::version": 0,
+            "icon": "null.png",
+            "weight": 1.0,
+            "value": 1.0,
+            "throwable": false,
+            "throwLeadInTime": 1.0,
+            "throwRecovery": 1.0,
+            "throwDestroys": false,
+            "takesDamage": false,
+            "health": 0.0,
+            "damageImmunities": [],
+            "detonates": false,
+            "detonationDamageType": "",
+            "detonationRadius": 0.0,
+            "detonationDamage": 0.0,
+            "detonationFalloff": false,
+            "slotEffects": {
+                "data": []
+            },
+            "distance": 0.0,
+            "spread": 0.0,
+            "radius": 0.0,
+            "animLeadSpeed": 0.0,
+            "animRecovSpeed": 0.0,
+            "spendCharges": 0,
+            "currCharges": 0,
+            "maxCharges": 0,
+            "rechargeRate": 0.0,
+            "currCooldown": 0.0,
+            "maxCooldown": 0.0,
+            "slotRestrictions": [],
+            "actions": {
+                "data": []
+            }
+        },
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 1,
+                    "name": "model",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 10.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "lScale": {
+                        "x": 0.30000001192092898,
+                        "y": 0.30000001192092898,
+                        "z": 0.30000001192092898
+                    },
+                    "components": [
+                        {
+                            "type": 5,
+                            "data": {
+                                "Component::version": 1,
+                                "name": "speaker",
+                                "lPos": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "lAng": {
+                                    "Quaternion::version": 0,
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0,
+                                    "w": 1.0
+                                },
+                                "lScale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "components": [],
+                                "Speaker::version": 0,
+                                "defaultSound": "",
+                                "defaultLoop": false,
+                                "defaultRange": 256.0
+                            }
+                        }
+                    ],
+                    "Model::version": 1,
+                    "meshStr": "assets/ball/spaceball_g.FBX",
+                    "materialStr": "assets/materials/Marble.json",
+                    "depthfailStr": "",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": true,
+                        "customColorR": [
+                            0.15000000596046449,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            0.15000000596046449,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            0.20000000298023225,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            }
+        ]
+    }
+}
