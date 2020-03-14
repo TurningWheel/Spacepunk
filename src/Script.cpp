@@ -223,6 +223,13 @@ void Script::exposeEngine() {
 		.endClass()
 		;
 
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<World::hit_t>("Hit")
+		.addData("pos", &World::hit_t::pos, true)
+		.addData("normal", &World::hit_t::normal, true)
+		.endClass()
+		;
+
 	if (engine) {
 		luabridge::push(lua, engine);
 		lua_setglobal(lua, "engine");
