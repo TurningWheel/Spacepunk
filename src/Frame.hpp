@@ -230,9 +230,13 @@ private:
 	bool disabled = false;			//! if true, the frame is invisible and unusable
 	bool focus = false;				//! if true, this frame has window focus
 	const char* tooltip = nullptr;	//! points to the tooltip that should be displayed by the (master) frame, or nullptr if none should be displayed
-	bool hollow = false;				//! if true, the frame is hollow; otherwise it is not
-	bool toBeDeleted = false;			//! if true, the frame will be removed at the end of its process
+	bool hollow = false;			//! if true, the frame is hollow; otherwise it is not
+	bool toBeDeleted = false;		//! if true, the frame will be removed at the end of its process
 	static bool tabbing;			//! used for tabbing between fields
+	bool draggingHSlider = false;	//! if true, we are dragging the horizontal slider
+	bool draggingVSlider = false;	//! if true, we are dragging the vertical slider
+	int oldSliderX = 0;				//! when you start dragging a slider, this is set
+	int oldSliderY = 0;				//! when you start dragging a slider, this is set
 
 	LinkedList<Frame*> frames;
 	LinkedList<Button*> buttons;
