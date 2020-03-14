@@ -109,7 +109,7 @@ public:
 	//! @param origin the starting point of the ray
 	//! @param dest the ending point of the ray
 	//! @return a hit_t structure containing information on the hit object
-	const hit_t lineTrace(const Vector& origin, const Vector& dest);
+	hit_t lineTrace(const Vector& origin, const Vector& dest);
 
 	//! perform a line test (raytrace) through the world and gets a list of all objects in the ray's path
 	//! @param origin the starting point of the ray
@@ -121,7 +121,7 @@ public:
 	//! @param origin the starting point of the ray
 	//! @param dest the ending point of the ray
 	//! @return a hit_t structure containing information on the hit object
-	const hit_t lineTraceNoEntities(const Vector& origin, const Vector& dest);
+	hit_t lineTraceNoEntities(const Vector& origin, const Vector& dest);
 
 	//! get a list of all the entities with the given name
 	//! @param name The name of the entities

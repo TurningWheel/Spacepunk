@@ -390,7 +390,7 @@ void World::convexSweepList(const btConvexShape* shape, const Vector& originPos,
 	}
 }
 
-const World::hit_t World::lineTrace(const Vector& origin, const Vector& dest) {
+World::hit_t World::lineTrace(const Vector& origin, const Vector& dest) {
 	hit_t emptyResult;
 	emptyResult.pos = dest;
 
@@ -453,7 +453,7 @@ void World::lineTraceList(const Vector& origin, const Vector& dest, LinkedList<W
 	}
 }
 
-const World::hit_t World::lineTraceNoEntities(const Vector& origin, const Vector& dest) {
+World::hit_t World::lineTraceNoEntities(const Vector& origin, const Vector& dest) {
 	hit_t emptyResult;
 
 	LinkedList<hit_t> list;

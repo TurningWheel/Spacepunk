@@ -419,7 +419,7 @@ public:
 	//! @param origin the starting point of the ray
 	//! @param dest the ending point of the ray
 	//! @return a hit_t structure containing information on the hit object
-	const World::hit_t lineTrace(const Vector& origin, const Vector& dest);
+	World::hit_t lineTrace(const Vector& origin, const Vector& dest);
 
 	//! dispatches the entity's interaction function in LUA.
 	//! @param user the entity that interacted with this entity

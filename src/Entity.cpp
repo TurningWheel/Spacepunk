@@ -929,7 +929,7 @@ Component* Entity::addComponent(Component::type_t type) {
 	}
 }
 
-const World::hit_t Entity::lineTrace(const Vector& origin, const Vector& dest)
+World::hit_t Entity::lineTrace(const Vector& origin, const Vector& dest)
 {
 	if (!world)
 	{
