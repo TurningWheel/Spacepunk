@@ -2169,7 +2169,17 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					int size = min(frameRect.w / 7, 36);
 					pos.x = 3 + (size*c); pos.w = size;
 					pos.y = frameRect.h - size - 3; pos.h = size;
-					Button* button = frame->addButton("button" + c);
+					Button* button = frame->addButton(Component::typeStr[c]);
+					struct Callback : public Script::Function {
+						Callback(int _c) : c(_c) {}
+						virtual int operator()(Script::Args& args) const override {
+							mainEngine->getLocalClient()->getEditor()->updateContentNavigatorFilters();
+							return 0;
+						}
+						int c;
+					};
+					button->setCallback(new Callback(c));
+					button->setStyle(Button::style_t::STYLE_TOGGLE);
 					button->setIcon(Component::typeIcon[c]);
 					button->setTooltip(Component::typeStr[c]);
 					button->setSize(pos);
@@ -2251,7 +2261,17 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					int size = min(frameRect.w / 7, 36);
 					pos.x = 3 + (size*c); pos.w = size;
 					pos.y = frameRect.h - size - 3; pos.h = size;
-					Button* button = frame->addButton("button" + c);
+					Button* button = frame->addButton(Component::typeStr[c]);
+					struct Callback : public Script::Function {
+						Callback(int _c) : c(_c) {}
+						virtual int operator()(Script::Args& args) const override {
+							mainEngine->getLocalClient()->getEditor()->updateLevelNavigatorFilters();
+							return 0;
+						}
+						int c;
+					};
+					button->setCallback(new Callback(c));
+					button->setStyle(Button::style_t::STYLE_TOGGLE);
 					button->setIcon(Component::typeIcon[c]);
 					button->setTooltip(Component::typeStr[c]);
 					button->setSize(pos);
@@ -2427,6 +2447,100 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		button->setIcon("images/gui/wrench.png");
 		button->setTooltip("Entity properties");
 		button->setStyle(Button::STYLE_TOGGLE);
+	}
+}
+
+void Editor::updateContentNavigatorFilters() {
+	Frame* gui = client->getGUI(); assert(gui);
+
+	// clear existing entries
+	{
+		Frame* frame = gui->findFrame("editor_FrameContentNavigatorList"); assert(frame);
+		auto& entries = frame->getEntries();
+		while (entries.getFirst()) {
+			delete entries.getFirst()->getData();
+			entries.removeNode(entries.getFirst());
+		}
+	}
+
+	// find all active filters
+	ArrayList<Component::type_t> filters;
+	{
+		Frame* frame = gui->findFrame("editor_FrameContentNavigatorTop"); assert(frame);
+		int c = 0;
+		for (auto button : frame->getButtons()) {
+			if (button->isPressed()) {
+				filters.push(static_cast<Component::type_t>(c));
+			}
+			++c;
+		}
+	}
+
+	// repopulate entries
+	{
+		Frame* frame = gui->findFrame("editor_FrameContentNavigatorList"); assert(frame);
+		for (const Node<Entity::def_t*>* node = mainEngine->getEntityDefs().getFirst(); node != nullptr; node = node->getNext()) {
+			const Entity::def_t* def = node->getData();
+			bool matchesFilter = true;
+			for (auto c : filters) {
+				if (!def->entity.hasComponent(c)) {
+					matchesFilter = false;
+					break;
+				}
+			}
+			if (def->exposedInEditor && matchesFilter) {
+				Frame::entry_t* entry = frame->addEntry("spawn", true);
+				entry->text = def->entity.getName();
+				entry->params.addString(def->entity.getName());
+				entry->color = glm::vec4(1.f);
+			}
+		}
+	}
+}
+
+void Editor::updateLevelNavigatorFilters() {
+	Frame* gui = client->getGUI(); assert(gui);
+
+	// clear existing entries
+	{
+		Frame* frame = gui->findFrame("editor_FrameLevelNavigatorList"); assert(frame);
+		auto& entries = frame->getEntries();
+		while (entries.getFirst()) {
+			delete entries.getFirst()->getData();
+			entries.removeNode(entries.getFirst());
+		}
+		for (auto pair : world->getEntities()) {
+			Entity* entity = pair.b;
+			entity->removeListener();
+		}
+	}
+
+	// find all active filters
+	ArrayList<Component::type_t> filters;
+	{
+		Frame* frame = gui->findFrame("editor_FrameLevelNavigatorTop"); assert(frame);
+		int c = 0;
+		for (auto button : frame->getButtons()) {
+			if (button->isPressed()) {
+				filters.push(static_cast<Component::type_t>(c));
+			}
+			++c;
+		}
+	}
+
+	// repopulate entries
+	for (auto pair : world->getEntities()) {
+		Entity* entity = pair.b;
+		bool matchesFilter = true;
+		for (auto c : filters) {
+			if (entity->hasComponent(c)) {
+				matchesFilter = false;
+				break;
+			}
+		}
+		if (matchesFilter) {
+			entity->addToEditorList();
+		}
 	}
 }
 

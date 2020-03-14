@@ -96,6 +96,9 @@ public:
 	//! @return projection matrix
 	static glm::mat4 makeOrthoProj(float width, float height, float depth);
 
+	//! set this camera to be the current 3D listener
+	void setListener();
+
 	//! sets up the 3D projection for drawing
 	//! @param scissor True if you want scissoring
 	void setupProjection(bool scissor);

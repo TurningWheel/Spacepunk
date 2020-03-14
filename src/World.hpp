@@ -92,6 +92,10 @@ public:
 	const bool selectEntity(const Uint32 uid, const bool b);
 
 	//! spawn an entity at the given location/orientation
+	//! @param name The entity's name as given in the editor (not the filename)
+	//! @param pos Position in world space (x, y, z)
+	//! @param ang Rotation in world space (yaw, pitch, roll)
+	//! @return the newly spawned entity
 	Entity* spawnEntity(const char* name, const Vector& pos, const Rotation& ang);
 
 	//! selects or deselects all entities in the world

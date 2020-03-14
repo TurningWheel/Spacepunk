@@ -817,6 +817,7 @@ void Script::exposeLight() {
 void Script::exposeCamera() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Camera, Component>("Camera")
+		.addFunction("setListener", &Camera::setListener)
 		.addFunction("setupProjection", &Camera::setupProjection)
 		.addFunction("worldPosToScreenPos", &Camera::worldPosToScreenPos)
 		.addFunction("screenPosToWorldRay", &Camera::screenPosToWorldRay)

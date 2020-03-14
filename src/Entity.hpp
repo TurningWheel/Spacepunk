@@ -159,6 +159,9 @@ public:
 	//! add to level navigator in editor
 	void addToEditorList();
 
+	//! remove editor listener
+	void removeListener();
+
 	//! send a signal from server/client or vice versa requesting they run a function
 	//! @param funcName the name of the function to remote execute
 	void remoteExecute(const char* funcName, const Script::Args& args);

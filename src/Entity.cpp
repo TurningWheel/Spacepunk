@@ -182,6 +182,10 @@ void Entity::addToEditorList() {
 	}
 }
 
+void Entity::removeListener() {
+	listener = nullptr;
+}
+
 void Entity::insertIntoWorld(World* _world, const Entity* _anchor, const Vector& _offset) {
 	newWorld = _world;
 	anchor = _anchor;

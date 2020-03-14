@@ -70,6 +70,16 @@ Camera::~Camera() {
 	}
 }
 
+void Camera::setListener() {
+	auto client = mainEngine->getLocalClient();
+	if (client) {
+		auto mixer = client->getMixer();
+		if (mixer) {
+			mixer->setListener(this);
+		}
+	}
+}
+
 glm::mat4 Camera::makeInfReversedZProj(float radians, float aspect, float zNear) {
 	float f = 1.f / tanf(radians / 2.f);
 	return glm::mat4(

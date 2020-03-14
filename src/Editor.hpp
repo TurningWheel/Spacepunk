@@ -57,6 +57,12 @@ public:
 	//! @param path file path to the world to load
 	void init(Client& _client, const char* path);
 
+	//! filters level navigator list based on toggled filter buttons
+	void updateContentNavigatorFilters();
+
+	//! filters level navigator list based on toggled filter buttons
+	void updateLevelNavigatorFilters();
+
 	//! toggles the entity properties window
 	void buttonEntityProperties();
 
