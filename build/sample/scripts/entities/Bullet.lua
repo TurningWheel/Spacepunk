@@ -14,6 +14,7 @@ function init()
     bounceNum = 0
 
     tankWhoShotMe = entity:getKeyValueAsString("owner")
+    tankChar = {"RedTank", "BlueTank"}
 end
 
 -- this function executes once per frame before any entities run process() or postprocess()
@@ -57,6 +58,19 @@ function process()
              -- this way, a bullet can STILL hit the tank who shot it once it has bounced off something
             tankWhoShotMe = nil
             bounceNum = bounceNum + 1
+        end
+
+        count = 0
+        while (count <= #tankChar)
+        do
+
+            if hit.manifest.entity:getName():get() == tankChar[count] then
+                explode = entity:findSpeakerByName("speaker")
+                explode:playSound("explosion.wav", false, 1000)
+
+                hit.manifest.entity:remove()
+            end
+            count = count +1
         end
     end
 
