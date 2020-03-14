@@ -436,6 +436,161 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
+	// process sliders
+	if (parent != nullptr && !hollow && usable) {
+		Sint32 mousex = mainEngine->getMouseX();
+		Sint32 mousey = mainEngine->getMouseY();
+		Sint32 omousex = mainEngine->getOldMouseX();
+		Sint32 omousey = mainEngine->getOldMouseY();
+
+		Rect<int> fullSize = _size;
+		fullSize.h += (actualSize.w > size.w) ? sliderSize : 0;
+		fullSize.w += (actualSize.h > size.h) ? sliderSize : 0;
+
+		// main window space
+		if (fullSize.containsPoint(omousex, omousey)) {
+
+			// x scroll with mouse wheel x
+			if (actualSize.w > size.w) {
+				if (mainEngine->getMouseWheelX() < 0) {
+					actualSize.x += min(entrySize * 4, size.w);
+					result.usable = false;
+				} else if (mainEngine->getMouseWheelX() > 0) {
+					actualSize.x -= min(entrySize * 4, size.w);
+					result.usable = false;
+				}
+			}
+
+			if (actualSize.h > size.h) {
+				// y scroll with mouse wheel y
+				if (mainEngine->getMouseWheelY() < 0) {
+					actualSize.y += min(entrySize * 4, size.h);
+					result.usable = false;
+				} else if (mainEngine->getMouseWheelY() > 0) {
+					actualSize.y -= min(entrySize * 4, size.h);
+					result.usable = false;
+				}
+			} else if (actualSize.w > size.w) {
+				// x scroll with mouse wheel y
+				if (mainEngine->getMouseWheelY() < 0) {
+					actualSize.x += min(entrySize * 4, size.w);
+					result.usable = false;
+				} else if (mainEngine->getMouseWheelY() > 0) {
+					actualSize.x -= min(entrySize * 4, size.w);
+					result.usable = false;
+				}
+			}
+
+			// bound
+			actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
+			actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
+		}
+
+		// filler in between sliders
+		if (actualSize.w > size.w && actualSize.h > size.h) {
+			Rect<int> sliderRect;
+			sliderRect.x = _size.x + _size.w; sliderRect.w = sliderSize;
+			sliderRect.y = _size.y + _size.h; sliderRect.h = sliderSize;
+			if (sliderRect.containsPoint(omousex, omousey)) {
+				result.usable = false;
+			}
+		}
+
+		// horizontal slider
+		if (actualSize.w > size.w) {
+			// rail
+			Rect<int> sliderRect;
+			sliderRect.x = _size.x;
+			sliderRect.y = _size.y + _size.h;
+			sliderRect.w = _size.w;
+			sliderRect.h = sliderSize;
+
+			// handle
+			float winFactor = ((float)_size.w / (float)actualSize.w);
+			int handleSize = max((int)(size.w * winFactor), sliderSize);
+			int sliderPos = winFactor * actualSize.x;
+			Rect<int> handleRect;
+			handleRect.x = _size.x + sliderPos;
+			handleRect.y = _size.y + _size.h;
+			handleRect.w = handleSize;
+			handleRect.h = sliderSize;
+
+			// click & drag
+			if (draggingHSlider) {
+				if (!mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+					draggingHSlider = false;
+				} else {
+					float winFactor = ((float)_size.w / (float)actualSize.w);
+					actualSize.x = (mousex - omousex) / winFactor + oldSliderX;
+					actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
+				}
+				usable = result.usable = false;
+			} else {
+				if (handleRect.containsPoint(omousex, omousey)) {
+					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+						draggingHSlider = true;
+						oldSliderX = actualSize.x;
+					}
+					usable = result.usable = false;
+				} else if (sliderRect.containsPoint(omousex, omousey)) {
+					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+						actualSize.x += omousex < handleRect.x ? -min(entrySize * 4, size.w) : min(entrySize * 4, size.w);
+						actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
+						mainEngine->pressMouse(SDL_BUTTON_LEFT);
+					}
+					usable = result.usable = false;
+				}
+			}
+		}
+
+		// vertical slider
+		if (actualSize.h > size.h) {
+			// rail
+			Rect<int> sliderRect;
+			sliderRect.x = _size.x + _size.w;
+			sliderRect.y = _size.y;
+			sliderRect.w = sliderSize;
+			sliderRect.h = _size.h;
+
+			// handle
+			float winFactor = ((float)_size.h / (float)actualSize.h);
+			int handleSize = max((int)(size.h * winFactor), sliderSize);
+			int sliderPos = winFactor * actualSize.y;
+			Rect<int> handleRect;
+			handleRect.x = _size.x + _size.w;
+			handleRect.y = _size.y + sliderPos;
+			handleRect.w = sliderSize;
+			handleRect.h = handleSize;
+
+			// click & drag
+			if (draggingVSlider) {
+				if (!mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+					draggingVSlider = false;
+				} else {
+					float winFactor = ((float)_size.h / (float)actualSize.h);
+					actualSize.y = (mousey - omousey) / winFactor + oldSliderY;
+					actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
+				}
+				usable = result.usable = false;
+			} else {
+				if (handleRect.containsPoint(omousex, omousey)) {
+					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+						draggingVSlider = true;
+						oldSliderY = actualSize.y;
+					}
+					usable = result.usable = false;
+				} else if (sliderRect.containsPoint(omousex, omousey)) {
+					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+						actualSize.y += omousey < handleRect.y ? -min(entrySize * 4, size.h) : min(entrySize * 4, size.h);
+						actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
+						mainEngine->pressMouse(SDL_BUTTON_LEFT);
+					}
+					usable = result.usable = false;
+				}
+			}
+		}
+	}
+
 	// process buttons
 	Node<Button*>* prevButton = nullptr;
 	for (Node<Button*>* node = buttons.getLast(); node != nullptr; node = prevButton) {
@@ -587,112 +742,6 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		if (destField) {
 			field.deselect();
 			destField->select();
-		}
-	}
-
-	// hollow frames don't capture the mouse
-	if (parent != nullptr && !hollow) {
-		Sint32 mousex = mainEngine->getMouseX();
-		Sint32 mousey = mainEngine->getMouseY();
-		Sint32 omousex = mainEngine->getOldMouseX();
-		Sint32 omousey = mainEngine->getOldMouseY();
-
-		// main window space
-		if (_size.containsPoint(omousex, omousey)) {
-			result.usable = false;
-
-			// x scroll with mouse wheel x
-			if (actualSize.w > size.w) {
-				if (mainEngine->getMouseWheelX() < 0) {
-					actualSize.x += min(entrySize * 4, size.w);
-				} else if (mainEngine->getMouseWheelX() > 0) {
-					actualSize.x -= min(entrySize * 4, size.w);
-				}
-			}
-
-			if (actualSize.h > size.h) {
-				// y scroll with mouse wheel y
-				if (mainEngine->getMouseWheelY() < 0) {
-					actualSize.y += min(entrySize * 4, size.h);
-				} else if (mainEngine->getMouseWheelY() > 0) {
-					actualSize.y -= min(entrySize * 4, size.h);
-				}
-			} else if (actualSize.w > size.w) {
-				// x scroll with mouse wheel y
-				if (mainEngine->getMouseWheelY() < 0) {
-					actualSize.x += min(entrySize * 4, size.w);
-				} else if (mainEngine->getMouseWheelY() > 0) {
-					actualSize.x -= min(entrySize * 4, size.w);
-				}
-			}
-
-			// bound
-			actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
-			actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
-		}
-
-		// filler in between sliders
-		if (actualSize.w > size.w && actualSize.h > size.h) {
-			Rect<int> sliderRect;
-			sliderRect.x = _size.x + _size.w; sliderRect.w = sliderSize;
-			sliderRect.y = _size.y + _size.h; sliderRect.h = sliderSize;
-			if (sliderRect.containsPoint(omousex, omousey)) {
-				result.usable = false;
-			}
-		}
-
-		// horizontal slider
-		if (actualSize.w > size.w) {
-			// rail
-			Rect<int> sliderRect;
-			sliderRect.x = _size.x; 
-			sliderRect.y = _size.y + _size.h;
-			sliderRect.w = _size.w;
-			sliderRect.h = sliderSize;
-
-			// handle
-			float winFactor = ((float)_size.w / (float)actualSize.w);
-			int handleSize = max((int)(size.w * winFactor), sliderSize);
-			int sliderPos = winFactor * actualSize.x;
-			Rect<int> handleRect;
-			handleRect.x = _size.x + sliderPos;
-			handleRect.y = _size.y + _size.h;
-			handleRect.w = handleSize;
-			handleRect.h = sliderSize;
-
-			if (handleRect.containsPoint(omousex, omousey)) {
-				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-					float winFactor = ((float)_size.w / (float)actualSize.w);
-					actualSize.x = (mousex - _size.x) / winFactor - _size.w / 2;
-					actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
-				}
-				result.usable = false;
-			} else if (sliderRect.containsPoint(omousex, omousey)) {
-				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-					int power = _size.w - sliderSize;
-					actualSize.x += mousex < handleRect.x ? -power : power;
-					actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
-				}
-				result.usable = false;
-			}
-		}
-
-		// vertical slider
-		if (actualSize.h > size.h) {
-			Rect<int> sliderRect;
-			sliderRect.x = _size.x + _size.w; 
-			sliderRect.y = _size.y;
-			sliderRect.w = sliderSize;
-			sliderRect.h = _size.h;
-
-			if (sliderRect.containsPoint(omousex, omousey)) {
-				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-					float winFactor = ((float)_size.h / (float)actualSize.h);
-					actualSize.y = (mousey - _size.y) / winFactor - _size.h / 2;
-					actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
-				}
-				result.usable = false;
-			}
 		}
 	}
 

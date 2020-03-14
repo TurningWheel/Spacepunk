@@ -69,6 +69,7 @@ function process()
                 explode:playSound("explosion.wav", false, 1000)
 
                 hit.manifest.entity:remove()
+                entity:remove()
             end
             count = count +1
         end

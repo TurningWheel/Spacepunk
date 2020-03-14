@@ -1,0 +1,306 @@
+{
+    "Entity::def_t::version": 1,
+    "editor": true,
+    "entity": {
+        "Entity::version": 3,
+        "name": "New Entity",
+        "pos": {
+            "x": 230.08946228027345,
+            "y": 80.63800048828125,
+            "z": 114.50506591796875
+        },
+        "ang": {
+            "Quaternion::version": 0,
+            "x": 0.031177842989563943,
+            "y": 0.22453294694423676,
+            "z": -0.1339564174413681,
+            "w": -0.9647116661071777
+        },
+        "scale": {
+            "x": 2.0,
+            "y": 2.0,
+            "z": 2.0
+        },
+        "scriptStr": "",
+        "flags": 385,
+        "falling": false,
+        "sort": 0,
+        "EntityItem": {
+            "Item::version": 0,
+            "icon": "null.png",
+            "weight": 1.0,
+            "value": 1.0,
+            "throwable": false,
+            "throwLeadInTime": 1.0,
+            "throwRecovery": 1.0,
+            "throwDestroys": false,
+            "takesDamage": false,
+            "health": 0.0,
+            "damageImmunities": [],
+            "detonates": false,
+            "detonationDamageType": "",
+            "detonationRadius": 0.0,
+            "detonationDamage": 0.0,
+            "detonationFalloff": false,
+            "slotEffects": {
+                "data": []
+            },
+            "distance": 0.0,
+            "spread": 0.0,
+            "radius": 0.0,
+            "animLeadSpeed": 0.0,
+            "animRecovSpeed": 0.0,
+            "spendCharges": 0,
+            "currCharges": 0,
+            "maxCharges": 0,
+            "rechargeRate": 0.0,
+            "currCooldown": 0.0,
+            "maxCooldown": 0.0,
+            "slotRestrictions": [],
+            "actions": {
+                "data": []
+            }
+        },
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 1,
+                    "name": "FireBrand1",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -6.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "lScale": {
+                        "x": 0.699999988079071,
+                        "y": 0.800000011920929,
+                        "z": 0.699999988079071
+                    },
+                    "components": [],
+                    "Model::version": 1,
+                    "meshStr": "assets/block/block.FBX",
+                    "materialStr": "assets/materials/Sand.json",
+                    "depthfailStr": "",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": true,
+                        "customColorR": [
+                            6.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            0.800000011920929,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            },
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 1,
+                    "name": "FireBrand2",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 3.0,
+                        "z": -20.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": -0.30070582032203677,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9537169337272644
+                    },
+                    "lScale": {
+                        "x": 1.5,
+                        "y": 0.699999988079071,
+                        "z": 0.30000001192092898
+                    },
+                    "components": [],
+                    "Model::version": 1,
+                    "meshStr": "assets/block/block.FBX",
+                    "materialStr": "assets/materials/Sand.json",
+                    "depthfailStr": "",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": true,
+                        "customColorR": [
+                            8.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            2.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            },
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 1,
+                    "name": "FireBrand3",
+                    "lPos": {
+                        "x": -15.0,
+                        "y": 0.0,
+                        "z": -15.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": -0.19134171307086945,
+                        "y": -0.19134171307086945,
+                        "z": -0.46193981170654299,
+                        "w": 0.8446232080459595
+                    },
+                    "lScale": {
+                        "x": 0.8999999761581421,
+                        "y": 0.8999999761581421,
+                        "z": 0.5
+                    },
+                    "components": [],
+                    "Model::version": 1,
+                    "meshStr": "assets/block/block.FBX",
+                    "materialStr": "assets/materials/Sand.json",
+                    "depthfailStr": "",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": true,
+                        "customColorR": [
+                            9.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            0.699999988079071,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            },
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 1,
+                    "name": "FireBrand4",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": -10.0,
+                        "z": -15.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.36599814891815188,
+                        "y": -0.7848855257034302,
+                        "z": -0.21130913496017457,
+                        "w": 0.45315393805503847
+                    },
+                    "lScale": {
+                        "x": 0.8999999761581421,
+                        "y": 0.8999999761581421,
+                        "z": 0.5
+                    },
+                    "components": [],
+                    "Model::version": 1,
+                    "meshStr": "assets/block/block.FBX",
+                    "materialStr": "assets/materials/Sand.json",
+                    "depthfailStr": "",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": true,
+                        "customColorR": [
+                            9.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            1.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            }
+        ]
+    }
+}
