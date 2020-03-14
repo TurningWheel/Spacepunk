@@ -11,8 +11,10 @@ function init()
 	entity:setVel(vel)
 
     lifespan = 0
+    bounceNum = 0
 
     tankWhoShotMe = entity:getKeyValueAsString("owner")
+    tankChar = {"RedTank", "BlueTank"}
 end
 
 -- this function executes once per frame before any entities run process() or postprocess()
@@ -23,10 +25,14 @@ end
 function process()
 
 
-    -- lifespan is 5 seconds
+    -- lifespan is 5 seconds or 3 bounces
     seconds = 60
     lifespan = lifespan + 1
     if lifespan > 5 * seconds then
+        entity:remove()
+    end
+
+    if bounceNum > 2 then
         entity:remove()
     end
 
@@ -51,6 +57,20 @@ function process()
 
              -- this way, a bullet can STILL hit the tank who shot it once it has bounced off something
             tankWhoShotMe = nil
+            bounceNum = bounceNum + 1
+        end
+
+        count = 0
+        while (count <= #tankChar)
+        do
+
+            if hit.manifest.entity:getName():get() == tankChar[count] then
+                explode = entity:findSpeakerByName("speaker")
+                explode:playSound("explosion.wav", false, 1000)
+
+                hit.manifest.entity:remove()
+            end
+            count = count +1
         end
     end
 
