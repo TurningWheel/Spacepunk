@@ -906,6 +906,9 @@ void Component::draw(Camera& camera, const ArrayList<Light*>& lights) {
 
 bool Component::hasComponent(type_t type) const {
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->isEditorOnly()) {
+			continue;
+		}
 		if (components[c]->getType() == type) {
 			return true;
 		}

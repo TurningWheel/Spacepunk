@@ -643,13 +643,34 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 
 		// horizontal slider
 		if (actualSize.w > size.w) {
+			// rail
 			Rect<int> sliderRect;
-			sliderRect.x = _size.x; sliderRect.w = _size.w;
-			sliderRect.y = _size.y + _size.h; sliderRect.h = sliderSize;
-			if (sliderRect.containsPoint(omousex, omousey)) {
+			sliderRect.x = _size.x; 
+			sliderRect.y = _size.y + _size.h;
+			sliderRect.w = _size.w;
+			sliderRect.h = sliderSize;
+
+			// handle
+			float winFactor = ((float)_size.w / (float)actualSize.w);
+			int handleSize = max((int)(size.w * winFactor), sliderSize);
+			int sliderPos = winFactor * actualSize.x;
+			Rect<int> handleRect;
+			handleRect.x = _size.x + sliderPos;
+			handleRect.y = _size.y + _size.h;
+			handleRect.w = handleSize;
+			handleRect.h = sliderSize;
+
+			if (handleRect.containsPoint(omousex, omousey)) {
 				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
 					float winFactor = ((float)_size.w / (float)actualSize.w);
 					actualSize.x = (mousex - _size.x) / winFactor - _size.w / 2;
+					actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
+				}
+				result.usable = false;
+			} else if (sliderRect.containsPoint(omousex, omousey)) {
+				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+					int power = _size.w - sliderSize;
+					actualSize.x += mousex < handleRect.x ? -power : power;
 					actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
 				}
 				result.usable = false;
@@ -659,8 +680,11 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		// vertical slider
 		if (actualSize.h > size.h) {
 			Rect<int> sliderRect;
-			sliderRect.x = _size.x + _size.w; sliderRect.w = sliderSize;
-			sliderRect.y = _size.y; sliderRect.h = _size.h;
+			sliderRect.x = _size.x + _size.w; 
+			sliderRect.y = _size.y;
+			sliderRect.w = sliderSize;
+			sliderRect.h = _size.h;
+
 			if (sliderRect.containsPoint(omousex, omousey)) {
 				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
 					float winFactor = ((float)_size.h / (float)actualSize.h);

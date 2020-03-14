@@ -9,6 +9,7 @@
 #include "World.hpp"
 #include "TileWorld.hpp"
 #include "Console.hpp"
+#include "Editor.hpp"
 
 #ifdef PLATFORM_WINDOWS
 #include <DbgHelp.h>
@@ -168,7 +169,13 @@ static int console_mount(int argc, const char** argv) {
 		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
-		mainEngine->startEditor();
+		auto client = mainEngine->getLocalClient();
+		if (client) {
+			Editor* editor = client->getEditor();
+			if (editor) {
+				editor->updateContentNavigatorFilters();
+			}
+		}
 		return 0;
 	} else {
 		return 1;
@@ -184,7 +191,13 @@ static int console_unmount(int argc, const char** argv) {
 		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
-		mainEngine->startEditor();
+		auto client = mainEngine->getLocalClient();
+		if (client) {
+			Editor* editor = client->getEditor();
+			if (editor) {
+				editor->updateContentNavigatorFilters();
+			}
+		}
 		return 0;
 	} else {
 		return 1;
@@ -440,6 +453,7 @@ void Engine::startEditor(const char* path) {
 }
 
 void Engine::editorPlaytest() {
+	mainEngine->loadAllDefs();
 	if (localClient && localClient->isEditorActive()) {
 		World* world = localClient->getWorld(0);
 		StringBuf<64> path("%s/maps/.playtest.wlb", 1, game.path.get());

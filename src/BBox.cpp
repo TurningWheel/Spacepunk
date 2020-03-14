@@ -463,10 +463,16 @@ bool BBox::checkCollision() const {
 		return false;
 	}
 
-	// perform sweep
-	LinkedList<World::hit_t> hits;
-	world->convexSweepList(convexShape, gPos, gAng, gPos, gAng, hits);
-	return hits.getSize() > 0;
+	auto list = findAllOverlappingEntities();
+	for (auto entity : list) {
+		if (entity->isFlag(Entity::FLAG_PASSABLE)) {
+			continue;
+		} else {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 static Cvar cvar_showBBoxes("showbboxes", "Makes bboxes visible", "0");

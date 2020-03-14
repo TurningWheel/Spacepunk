@@ -842,6 +842,9 @@ Entity* Entity::spawnFromDef(World* world, const Entity::def_t& def, const Vecto
 
 bool Entity::hasComponent(Component::type_t type) const {
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (components[c]->isEditorOnly()) {
+			continue;
+		}
 		if (components[c]->getType() == type) {
 			return true;
 		}

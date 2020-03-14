@@ -2148,11 +2148,11 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			// top area of the content navigator window
 			{
 				Frame* frame = new Frame(*midFrame, "editor_FrameContentNavigatorTop");
-				frameRect.x = 0; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 0; frameRect.h = 68;
+				frameRect.x = 0; frameRect.w = std::max(camRect.x - 12 - 6, 3 + 36 * Component::COMPONENT_MAX + 3);
+				frameRect.y = 0; frameRect.h = 90;
 				frame->setActualSize(frameRect);
 				frameRect.x = 3; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 3; frameRect.h = 68;
+				frameRect.y = 3; frameRect.h = 90;
 				frame->setSize(frameRect);
 				frame->setBorder(0);
 				frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
@@ -2166,9 +2166,9 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				// sorting buttons
 				for (int c = 0; c < Component::type_t::COMPONENT_MAX; ++c) {
 					Rect<int> pos;
-					int size = min(frameRect.w / 7, 36);
+					int size = 36;
 					pos.x = 3 + (size*c); pos.w = size;
-					pos.y = frameRect.h - size - 3; pos.h = size;
+					pos.y = frameRect.h - size - 20; pos.h = size;
 					Button* button = frame->addButton(Component::typeStr[c]);
 					struct Callback : public Script::Function {
 						Callback(int _c) : c(_c) {}
@@ -2190,10 +2190,10 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			{
 				Frame* frame = new Frame(*midFrame, "editor_FrameContentNavigatorList");
 				frameRect.x = 0; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 0; frameRect.h = (yres - 44) - 68 - 18 - (tileControls ? (camRect.x - 12) : 0);
+				frameRect.y = 0; frameRect.h = (yres - 44) - 90 - 18 - (tileControls ? (camRect.x - 12) : 0);
 				frame->setActualSize(frameRect);
 				frameRect.x = 3; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 68 + 3; frameRect.h = (yres - 44) - 68 - 18 - (tileControls ? (camRect.x - 12) : 0);
+				frameRect.y = 90 + 3; frameRect.h = (yres - 44) - 90 - 18 - (tileControls ? (camRect.x - 12) : 0);
 				frame->setSize(frameRect);
 				frame->setBorder(0);
 				frame->setColor(glm::vec4(.1f, .1f, .1f, 1.f));
@@ -2240,11 +2240,11 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			// top area of the level navigator window
 			{
 				Frame* frame = new Frame(*midFrame, "editor_FrameLevelNavigatorTop");
-				frameRect.x = 0; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 0; frameRect.h = 65;
+				frameRect.x = 0; frameRect.w = std::max(camRect.x - 12 - 6, 3 + 36 * Component::COMPONENT_MAX + 3);
+				frameRect.y = 0; frameRect.h = 90;
 				frame->setActualSize(frameRect);
 				frameRect.x = 3; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 3; frameRect.h = 65;
+				frameRect.y = 3; frameRect.h = 90;
 				frame->setSize(frameRect);
 				frame->setBorder(0);
 				frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
@@ -2258,9 +2258,9 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				// sorting buttons
 				for (int c = 0; c < Component::type_t::COMPONENT_MAX; ++c) {
 					Rect<int> pos;
-					int size = min(frameRect.w / 7, 36);
+					int size = 36;
 					pos.x = 3 + (size*c); pos.w = size;
-					pos.y = frameRect.h - size - 3; pos.h = size;
+					pos.y = frameRect.h - size - 20; pos.h = size;
 					Button* button = frame->addButton(Component::typeStr[c]);
 					struct Callback : public Script::Function {
 						Callback(int _c) : c(_c) {}
@@ -2282,10 +2282,10 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			{
 				Frame* frame = new Frame(*midFrame, "editor_FrameLevelNavigatorList");
 				frameRect.x = 0; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 0; frameRect.h = (yres - 44) - (squashRight ? camRect.x : 0) - 3 - 71;
+				frameRect.y = 0; frameRect.h = (yres - 44) - 90 - 18 - (squashRight ? camRect.x - 12 : 0);
 				frame->setActualSize(frameRect);
 				frameRect.x = 3; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 65 + 3; frameRect.h = (yres - 44) - (squashRight ? camRect.x : 0) - 3 - 71;
+				frameRect.y = 90 + 3; frameRect.h = (yres - 44) - 90 - 18 - (squashRight ? camRect.x - 12: 0);
 				frame->setSize(frameRect);
 				frame->setBorder(0);
 				frame->setColor(glm::vec4(.1f, .1f, .1f, 1.f));
@@ -2495,6 +2495,7 @@ void Editor::updateContentNavigatorFilters() {
 				entry->color = glm::vec4(1.f);
 			}
 		}
+		frame->resizeForEntries();
 	}
 }
 
@@ -2530,10 +2531,11 @@ void Editor::updateLevelNavigatorFilters() {
 
 	// repopulate entries
 	for (auto pair : world->getEntities()) {
+		Frame* frame = gui->findFrame("editor_FrameLevelNavigatorList"); assert(frame);
 		Entity* entity = pair.b;
 		bool matchesFilter = true;
 		for (auto c : filters) {
-			if (entity->hasComponent(c)) {
+			if (!entity->hasComponent(c)) {
 				matchesFilter = false;
 				break;
 			}
@@ -2541,6 +2543,7 @@ void Editor::updateLevelNavigatorFilters() {
 		if (matchesFilter) {
 			entity->addToEditorList();
 		}
+		frame->resizeForEntries();
 	}
 }
 
@@ -2600,6 +2603,7 @@ void Editor::entitiesSave() {
 
 		entity->saveDef(resultPath);
 	}
+	mainEngine->loadAllDefs();
 	mainEngine->setPaused(false);
 }
 
