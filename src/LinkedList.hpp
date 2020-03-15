@@ -89,6 +89,15 @@ public:
 		return new Node<T>(*this, node, data);
 	}
 
+	//! adds a node to the list
+	//! @param node a pre-existing node in the list to succeed the new node
+	//! @param data the data to be assigned to the new node
+	//! @return the newly created Node
+	Node<T>* addNode(Node<T>* node, const T& data) {
+		++size;
+		return new Node<T>(*this, node, data);
+	}
+
 	//! adds a node to the beginning of the list
 	//! @param data the data to be assigned to the node
 	//! @return the newly created Node
@@ -108,10 +117,7 @@ public:
 	//! removes a node from the list
 	//! @param node the node to remove from the list
 	void removeNode(Node<T>* node) {
-		if (this != node->getList())
-		{
-			return;
-		}
+		assert(this == node->getList());
 
 		if (node == first) {
 			if (node == getLast()) {
@@ -160,29 +166,26 @@ public:
 		}
 	}
 
-	//! sort the list from least significant elements to most significant elements
-	//! @return a reference to the sorted list
-	LinkedList<T>& sort() {
-		Uint32 len = size;
-		if (len <= 1) {
-			return *this;
+	//! abstract class to define sort function
+	class SortFunction {
+	public:
+		SortFunction() {}
+		virtual ~SortFunction() {}
+
+		//! compare a and b
+		//! @param a the first element to compare
+		//! @param b the second element to compare
+		//! @return true if a should be placed before b
+		virtual const bool operator()(const T a, const T b) const = 0;
+	};
+
+	//! sort the list using the given function
+	//! @param fn the sort function to use
+	void sort(const SortFunction& fn) {
+		if (size <= 1u) {
+			return;
 		}
-
-		Uint32 i;
-		Node<T>* node;
-		LinkedList<T> left, right;
-		for (i = 0, node = first; node != nullptr && i < len; ++i, node = node->getNext()) {
-			if (i % 2 == 0) {
-				right.addNodeLast(node->getData());
-			} else {
-				left.addNodeLast(node->getData());
-			}
-		}
-
-		left.sort();
-		right.sort();
-
-		return merge(left, right);
+		mergeSortImp(fn);
 	}
 
 	//! linear search for the node with the given index
@@ -280,6 +283,12 @@ public:
 		typedef void (LinkedList<T>::*NodeRemoveIndexFn)(const Uint32);
 		NodeRemoveIndexFn removeNodeIndex = static_cast<NodeRemoveIndexFn>(&LinkedList<T>::removeNode);
 
+		typedef Node<T>* (LinkedList<T>::*NodeAddBeforeFn)(Node<T>*, const T&);
+		NodeAddBeforeFn addNodeBefore = static_cast<NodeAddBeforeFn>(&LinkedList<T>::addNode);
+
+		typedef Node<T>* (LinkedList<T>::*NodeAddFn)(const Uint32, const T&);
+		NodeAddFn addNode = static_cast<NodeAddFn>(&LinkedList<T>::addNode);
+
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<LinkedList<T>>(listName)
 			.addConstructor<void(*)()>()
@@ -293,7 +302,8 @@ public:
 			.addFunction("nodeForIndex", nodeForIndex)
 			.addFunction("nodeForIndexConst", nodeForIndexConst)
 			.addFunction("indexForNode", &LinkedList<T>::indexForNode)
-			.addFunction("addNode", &LinkedList<T>::addNode)
+			.addFunction("addNode", addNode)
+			.addFunction("addNodeBefore", addNodeBefore)
 			.addFunction("addNodeFirst", &LinkedList<T>::addNodeFirst)
 			.addFunction("addNodeLast", &LinkedList<T>::addNodeLast)
 			.addFunction("removeNode", removeNode)
@@ -311,24 +321,51 @@ private:
 	Node<T>* last = nullptr;
 	Uint32 size = 0;
 
-	LinkedList<T>& merge(LinkedList<T>& left, LinkedList<T>& right) {
-		LinkedList<T> result;
+	//! recursive merge sort algorithm
+	//! @param fn the sort function to test with
+	void mergeSortImp(const SortFunction& fn) {
+		if (size > 1u) {
+			Uint32 mid = size / 2u;
+			LinkedList<T> left, right;
+			for (Uint32 i = 0; first != nullptr; ++i) {
+				if (i < mid) {
+					left.addNodeLast(first->getData());
+				} else {
+					right.addNodeLast(first->getData());
+				}
+				removeNode(first);
+			}
+			left.mergeSortImp(fn);
+			right.mergeSortImp(fn);
+			merge(fn, left, right);
+		}
+	}
 
+	//! merge two lists into this list
+	//! @param fn the sort function to test with
+	//! @param left the left list
+	//! @param right the right list
+	void merge(const SortFunction& fn, LinkedList<T>& left, LinkedList<T>& right) {
 		while (left.getFirst() != nullptr && right.getFirst() != nullptr) {
-			if (left.getFirst()->getData() <= right.getFirst()->getData()) {
-				result.addNodeLast(left.getFirst()->getData());
+			if (fn(left.getFirst()->getData(),right.getFirst()->getData())) {
+				addNodeLast(left.getFirst()->getData());
+				left.removeNode(left.getFirst());
 			} else {
-				result.addNodeLast(right.getFirst()->getData());
+				addNodeLast(right.getFirst()->getData());
+				right.removeNode(right.getFirst());
 			}
 		}
 
+		// copy the remaining elements from the left list
 		while (left.getFirst() != nullptr) {
-			result.addNodeLast(left.getFirst()->getData());
-		}
-		while (right.getFirst() != nullptr) {
-			result.addNodeLast(right.getFirst()->getData());
+			addNodeLast(left.getFirst()->getData());
+			left.removeNode(left.getFirst());
 		}
 
-		return result;
+		// copy the remaining elements from the right list
+		while (right.getFirst() != nullptr) {
+			addNodeLast(right.getFirst()->getData());
+			right.removeNode(right.getFirst());
+		}
 	}
 };

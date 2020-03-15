@@ -177,6 +177,17 @@ void Entity::addToEditorList() {
 
 				listener = std::make_shared<Frame::listener_t>((void*)entry);
 				entry->listener = listener;
+
+				// move the entry somewhere else in the list
+				auto& entries = levelList->getEntries();
+				entries.removeNode(entries.getLast());
+				auto node = entries.getFirst();
+				for (; node != nullptr; node = node->getNext()) {
+					if (strcmp(entry->text.get(), node->getData()->text.get()) < 0) {
+						break;
+					}
+				}
+				entries.addNode(node, entry);
 			}
 		}
 	}

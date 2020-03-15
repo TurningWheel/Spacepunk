@@ -2198,17 +2198,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frame->setBorder(0);
 				frame->setColor(glm::vec4(.1f, .1f, .1f, 1.f));
 				frame->setHigh(false);
-
-				// list of entities
-				for (const Node<Entity::def_t*>* node = mainEngine->getEntityDefs().getFirst(); node != nullptr; node = node->getNext()) {
-					const Entity::def_t* def = node->getData();
-					if (def->exposedInEditor) {
-						Frame::entry_t* entry = frame->addEntry("spawn", true);
-						entry->text = def->entity.getName();
-						entry->params.addString(def->entity.getName());
-						entry->color = glm::vec4(1.f);
-					}
-				}
+				updateContentNavigatorFilters();
 			}
 		}
 	}
@@ -2495,6 +2485,16 @@ void Editor::updateContentNavigatorFilters() {
 				entry->color = glm::vec4(1.f);
 			}
 		}
+
+		// sort entries by name
+		class Sort : public LinkedList<Frame::entry_t*>::SortFunction {
+		public:
+			virtual ~Sort() {}
+			virtual const bool operator()(Frame::entry_t* a, Frame::entry_t* b) const override {
+				return strcmp(a->text.get(), b->text.get()) < 0;
+			}
+		} sortFn;
+		frame->getEntries().sort(sortFn);
 		frame->resizeForEntries();
 	}
 }
@@ -2543,6 +2543,16 @@ void Editor::updateLevelNavigatorFilters() {
 		if (matchesFilter) {
 			entity->addToEditorList();
 		}
+
+		// sort entries by name
+		class Sort : public LinkedList<Frame::entry_t*>::SortFunction {
+		public:
+			virtual ~Sort() {}
+			virtual const bool operator()(Frame::entry_t* a, Frame::entry_t* b) const override {
+				return strcmp(a->text.get(), b->text.get()) < 0;
+			}
+		} sortFn;
+		frame->getEntries().sort(sortFn);
 		frame->resizeForEntries();
 	}
 }
