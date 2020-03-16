@@ -103,6 +103,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list_1_1_iterator.html">Iterator</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_linked_list_1_1_iterator.html" title="Iterator.">Iterator</a>.  <a href="class_linked_list_1_1_iterator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list_1_1_sort_function.html">SortFunction</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">abstract class to define sort function  <a href="class_linked_list_1_1_sort_function.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -137,6 +140,8 @@ const <a class="el" href="class_node.html">Node</a>&lt; T &gt; *&#160;</td><td c
 <tr class="separator:a39eac2716dfc33853a08e001e6a4c4f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebf176aa6ef82f1406c1808d0f8830b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_node.html">Node</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#aebf176aa6ef82f1406c1808d0f8830b0">addNode</a> (const Uint32 index, const T &amp;data)</td></tr>
 <tr class="separator:aebf176aa6ef82f1406c1808d0f8830b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9931cb03047d6c3c89c4331b634c6b95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_node.html">Node</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#a9931cb03047d6c3c89c4331b634c6b95">addNode</a> (<a class="el" href="class_node.html">Node</a>&lt; T &gt; *node, const T &amp;data)</td></tr>
+<tr class="separator:a9931cb03047d6c3c89c4331b634c6b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a499bf69a6acd28145f386ce8cd525456"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_node.html">Node</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#a499bf69a6acd28145f386ce8cd525456">addNodeFirst</a> (const T &amp;data)</td></tr>
 <tr class="separator:a499bf69a6acd28145f386ce8cd525456"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38564e6b704f2a01f26ef45e640adfd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_node.html">Node</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#a38564e6b704f2a01f26ef45e640adfd5">addNodeLast</a> (const T &amp;data)</td></tr>
@@ -153,8 +158,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#aa3abbe1614d01418436824ac66fa6f1a">copy</a> (const <a class="el" href="class_linked_list.html">LinkedList</a>&lt; T &gt; &amp;src)</td></tr>
 <tr class="memdesc:aa3abbe1614d01418436824ac66fa6f1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">copy one list to another (also copies data) <br /></td></tr>
 <tr class="separator:aa3abbe1614d01418436824ac66fa6f1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a323d2e734f7d110eafc3fde324c179f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_linked_list.html">LinkedList</a>&lt; T &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#a323d2e734f7d110eafc3fde324c179f6">sort</a> ()</td></tr>
-<tr class="separator:a323d2e734f7d110eafc3fde324c179f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a933f83624b55ab5a375d436b05e1223c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#a933f83624b55ab5a375d436b05e1223c">sort</a> (const <a class="el" href="class_linked_list_1_1_sort_function.html">SortFunction</a> &amp;fn)</td></tr>
+<tr class="separator:a933f83624b55ab5a375d436b05e1223c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cdd801434d43830a9baf4f7c8567fae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_node.html">Node</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_linked_list.html#a2cdd801434d43830a9baf4f7c8567fae">operator[]</a> (const Uint32 index)</td></tr>
 <tr class="separator:a2cdd801434d43830a9baf4f7c8567fae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaff449e4a60186f896e285e693bd9f0a"><td class="memItemLeft" align="right" valign="top"><a id="aaff449e4a60186f896e285e693bd9f0a"></a>
@@ -187,7 +192,7 @@ class LinkedList&lt; T &gt;</h3>
 <p>A <a class="el" href="class_linked_list.html">LinkedList</a> is a type of list that can add and remove nodes anywhere in the list efficiently, and create loops on itself (though this can be dangerous!) Linked lists do not have fast lookup times unlike ArrayLists, but they are better suited to be queues and other things. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aebf176aa6ef82f1406c1808d0f8830b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aebf176aa6ef82f1406c1808d0f8830b0">&#9670;&nbsp;</a></span>addNode()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aebf176aa6ef82f1406c1808d0f8830b0">&#9670;&nbsp;</a></span>addNode() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,6 +230,52 @@ template&lt;typename T &gt; </div>
   <table class="params">
     <tr><td class="paramname">index</td><td>the position within the list to insert the node </td></tr>
     <tr><td class="paramname">data</td><td>the data to be assigned to the node </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the newly created <a class="el" href="class_node.html" title="A node lives in a LinkedList.">Node</a> </dd></dl>
+
+</div>
+</div>
+<a id="a9931cb03047d6c3c89c4331b634c6b95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9931cb03047d6c3c89c4331b634c6b95">&#9670;&nbsp;</a></span>addNode() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_node.html">Node</a>&lt;T&gt;* <a class="el" href="class_linked_list.html">LinkedList</a>&lt; T &gt;::addNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_node.html">Node</a>&lt; T &gt; *&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>adds a node to the list </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>a pre-existing node in the list to succeed the new node </td></tr>
+    <tr><td class="paramname">data</td><td>the data to be assigned to the new node </td></tr>
   </table>
   </dd>
 </dl>
@@ -527,8 +578,8 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="a323d2e734f7d110eafc3fde324c179f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a323d2e734f7d110eafc3fde324c179f6">&#9670;&nbsp;</a></span>sort()</h2>
+<a id="a933f83624b55ab5a375d436b05e1223c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a933f83624b55ab5a375d436b05e1223c">&#9670;&nbsp;</a></span>sort()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -539,9 +590,10 @@ template&lt;typename T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="class_linked_list.html">LinkedList</a>&lt;T&gt;&amp; <a class="el" href="class_linked_list.html">LinkedList</a>&lt; T &gt;::sort </td>
+          <td class="memname">void <a class="el" href="class_linked_list.html">LinkedList</a>&lt; T &gt;::sort </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="class_linked_list_1_1_sort_function.html">SortFunction</a> &amp;&#160;</td>
+          <td class="paramname"><em>fn</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -551,7 +603,12 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>sort the list from least significant elements to most significant elements </p><dl class="section return"><dt>Returns</dt><dd>a reference to the sorted list </dd></dl>
+<p>sort the list using the given function </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fn</td><td>the sort function to use </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

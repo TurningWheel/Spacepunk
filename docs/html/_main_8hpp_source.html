@@ -162,25 +162,26 @@ $(document).ready(function(){initNavTree('_main_8hpp_source.html',''); initResiz
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">float</span> <a class="code" href="_main_8hpp.html#aa08a577393243b86dfd2a97e61443673">PI</a>;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">float</span> SQRT2;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* versionStr;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">extern</span> <span class="keyword">class </span><a class="code" href="class_engine.html">Engine</a>* mainEngine;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">using</span> std::min;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keyword">using</span> std::max;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="_main_8hpp.html#a1ab31b90bc584c635ec159468ceed9b2">  106</a></span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="keywordtype">int</span> <a class="code" href="_main_8hpp.html#a1ab31b90bc584c635ec159468ceed9b2">sgn</a>(T val) {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">return</span> (T(0) &lt; val) - (val &lt; T(0));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">//Fixes for Windows/Linux incompatibilities</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#ifdef PLATFORM_LINUX</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#define strcmpi strcasecmp</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword">extern</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* configName;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">extern</span> <span class="keyword">class </span><a class="code" href="class_engine.html">Engine</a>* mainEngine;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keyword">using</span> std::min;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword">using</span> std::max;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="_main_8hpp.html#a1ab31b90bc584c635ec159468ceed9b2">  107</a></span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="keywordtype">int</span> <a class="code" href="_main_8hpp.html#a1ab31b90bc584c635ec159468ceed9b2">sgn</a>(T val) {</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">return</span> (T(0) &lt; val) - (val &lt; T(0));</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">//Fixes for Windows/Linux incompatibilities</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#ifdef PLATFORM_LINUX</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">#define strcmpi strcasecmp</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclass_engine_html"><div class="ttname"><a href="class_engine.html">Engine</a></div><div class="ttdef"><b>Definition:</b> Engine.hpp:29</div></div>
-<div class="ttc" id="a_main_8hpp_html_a1ab31b90bc584c635ec159468ceed9b2"><div class="ttname"><a href="_main_8hpp.html#a1ab31b90bc584c635ec159468ceed9b2">sgn</a></div><div class="ttdeci">int sgn(T val)</div><div class="ttdoc">sgn() function</div><div class="ttdef"><b>Definition:</b> Main.hpp:106</div></div>
+<div class="ttc" id="a_main_8hpp_html_a1ab31b90bc584c635ec159468ceed9b2"><div class="ttname"><a href="_main_8hpp.html#a1ab31b90bc584c635ec159468ceed9b2">sgn</a></div><div class="ttdeci">int sgn(T val)</div><div class="ttdoc">sgn() function</div><div class="ttdef"><b>Definition:</b> Main.hpp:107</div></div>
 <div class="ttc" id="a_main_8hpp_html_aa08a577393243b86dfd2a97e61443673"><div class="ttname"><a href="_main_8hpp.html#aa08a577393243b86dfd2a97e61443673">PI</a></div><div class="ttdeci">const float PI</div><div class="ttdoc">native file dialog</div><div class="ttdef"><b>Definition:</b> Main.cpp:12</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

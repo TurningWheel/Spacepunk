@@ -2,7 +2,7 @@ var struct_frame_1_1entry__t =
 [
     [ "~entry_t", "struct_frame_1_1entry__t.html#abe800499c4fea984121b390586e29b0c", null ],
     [ "click", "struct_frame_1_1entry__t.html#ab946ebaa4abf638d6c54bde8a2a4e3c2", null ],
-    [ "color", "struct_frame_1_1entry__t.html#aa2696ffe58574175497691c0957fd9f4", null ],
+    [ "color", "struct_frame_1_1entry__t.html#ab5054a8a6bc2547381aab88902d59bac", null ],
     [ "ctrlClick", "struct_frame_1_1entry__t.html#a5f28d93d7c00b65e07b5a6859cf5dff2", null ],
     [ "highlight", "struct_frame_1_1entry__t.html#a4bdbabeca0614146a71f01b4f59cdff4", null ],
     [ "highlighted", "struct_frame_1_1entry__t.html#a22d831a019f3c199120e2ae5d1c16a6e", null ],

@@ -33,6 +33,8 @@ Inheritance diagram for Vector\+:\begin{figure}[H]
 \mbox{\Hypertarget{class_vector_ace227beff43889126e81831a71c567b9}\label{class_vector_ace227beff43889126e81831a71c567b9}} 
 {\bfseries Vector} (float $\ast$arr)
 \item 
+\mbox{\hyperlink{class_vector}{Vector}} \mbox{\hyperlink{class_vector_a5280c5777079bdbc95cf393711e02e6c}{reflect}} (const \mbox{\hyperlink{class_vector}{Vector}} \&n)
+\item 
 bool \mbox{\hyperlink{class_vector_a318b345b8c892d4bf5a6d0108cf50881}{has\+Volume}} () const
 \item 
 float \mbox{\hyperlink{class_vector_a063406217b81fda4de3badfd5d331041}{dot}} (const \mbox{\hyperlink{class_vector}{Vector}} \&other) const
@@ -221,7 +223,21 @@ a normalized version of this vector
 
 C\+O\+N\+D\+I\+T\+I\+O\+N\+AL O\+P\+E\+R\+A\+T\+O\+RS. 
 
-operator $>$ \mbox{\Hypertarget{class_vector_a9e3d9620557949cb5ff94c0898e702bd}\label{class_vector_a9e3d9620557949cb5ff94c0898e702bd}} 
+operator $>$ \mbox{\Hypertarget{class_vector_a5280c5777079bdbc95cf393711e02e6c}\label{class_vector_a5280c5777079bdbc95cf393711e02e6c}} 
+\index{Vector@{Vector}!reflect@{reflect}}
+\index{reflect@{reflect}!Vector@{Vector}}
+\doxysubsubsection{\texorpdfstring{reflect()}{reflect()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_vector}{Vector}} Vector\+::reflect (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+reflect this vector against a surface 
+\begin{DoxyParams}{Parameters}
+{\em n} & the normal vector of the surface to reflect against \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the result of the reflection 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_vector_a9e3d9620557949cb5ff94c0898e702bd}\label{class_vector_a9e3d9620557949cb5ff94c0898e702bd}} 
 \index{Vector@{Vector}!serialize@{serialize}}
 \index{serialize@{serialize}!Vector@{Vector}}
 \doxysubsubsection{\texorpdfstring{serialize()}{serialize()}}
