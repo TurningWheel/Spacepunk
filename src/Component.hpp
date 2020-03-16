@@ -291,7 +291,7 @@ public:
 				size.x = x + border * 2; size.w = width - border * 4 - x;
 				size.y = y; size.h = 150;
 				frame->setSize(size);
-				frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+				frame->setColor(WideVector(.25, .25, .25, 1.0));
 				frame->setHigh(false);
 				frame->setBorder(0);
 
@@ -302,7 +302,7 @@ public:
 					entry->params.addInt(c);
 					entry->click = new Callback(value);
 					entry->ctrlClick = new Callback(value);
-					entry->color = glm::vec4(1.f);
+					entry->color = WideVector(1.f);
 				}
 
 				y += size.h + border;

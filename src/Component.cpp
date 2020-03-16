@@ -83,7 +83,7 @@ void Component::AttributeInt::createAttributeUI(Frame& properties, int x, int& y
 	size.y = y;
 	size.h = 30;
 	frame->setSize(size);
-	frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+	frame->setColor(WideVector(.25, .25, .25, 1.0));
 	frame->setHigh(false);
 
 	Field* field = frame->addField("field", 9);
@@ -93,7 +93,7 @@ void Component::AttributeInt::createAttributeUI(Frame& properties, int x, int& y
 	field->setEditable(true);
 	field->setNumbersOnly(true);
 	field->setJustify(Field::RIGHT);
-	field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
+	field->setColor(WideVector(1.f, 1.f, 1.f, 1.f));
 	field->setCallback(new Callback(value));
 
 	char i[16];
@@ -137,7 +137,7 @@ void Component::AttributeFloat::createAttributeUI(Frame& properties, int x, int&
 	size.y = y;
 	size.h = 30;
 	frame->setSize(size);
-	frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+	frame->setColor(WideVector(.25, .25, .25, 1.0));
 	frame->setHigh(false);
 
 	Field* field = frame->addField("field", 9);
@@ -147,7 +147,7 @@ void Component::AttributeFloat::createAttributeUI(Frame& properties, int x, int&
 	field->setEditable(true);
 	field->setNumbersOnly(true);
 	field->setJustify(Field::RIGHT);
-	field->setColor(glm::vec4(1.f, 1.f, 1.f, 1.f));
+	field->setColor(WideVector(1.f, 1.f, 1.f, 1.f));
 	field->setCallback(new Callback(value));
 
 	char f[16];
@@ -204,7 +204,7 @@ void Component::AttributeString::createAttributeUI(Frame& properties, int x, int
 		size.x = x + border * 2; size.w = width - border * 4 - x;
 		size.y = y; size.h = 30;
 		frame->setSize(size);
-		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setColor(WideVector(.25, .25, .25, 1.0));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 128);
@@ -260,7 +260,7 @@ void Component::AttributeVector::createAttributeUI(Frame& properties, int x, int
 		size.y = y;
 		size.h = 30;
 		frame->setSize(size);
-		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setColor(WideVector(.25, .25, .25, 1.0));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 9);
@@ -274,15 +274,15 @@ void Component::AttributeVector::createAttributeUI(Frame& properties, int x, int
 		char f[16];
 		switch (dim) {
 		case 0:
-			field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 			snprintf(f, 16, "%.2f", value.x);
 			break;
 		case 1:
-			field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 			snprintf(f, 16, "%.2f", value.y);
 			break;
 		default:
-			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 			snprintf(f, 16, "%.2f", value.z);
 			break;
 		}
@@ -332,7 +332,7 @@ void Component::AttributeColor::createAttributeUI(Frame& properties, int x, int&
 		size.y = y;
 		size.h = 30;
 		frame->setSize(size);
-		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setColor(WideVector(.25, .25, .25, 1.0));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 9);
@@ -345,13 +345,13 @@ void Component::AttributeColor::createAttributeUI(Frame& properties, int x, int&
 
 		switch (color) {
 		case 0:
-			field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 			break;
 		case 1:
-			field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 			break;
 		default:
-			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 			break;
 		}
 		field->setCallback(new Callback(value));
@@ -401,7 +401,7 @@ void Component::AttributeFile::createAttributeUI(Frame& properties, int x, int& 
 		size.x = x + border * 2; size.w = width - border * 4 - x - 30 - border;
 		size.y = y; size.h = 30;
 		frame->setSize(size);
-		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setColor(WideVector(.25, .25, .25, 1.0));
 		frame->setHigh(false);
 
 		field = frame->addField("field", 128);

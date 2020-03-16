@@ -322,6 +322,12 @@ void Engine::commandLine(const int argc, const char **argv) {
 				addMod(modFolder.get());
 				continue;
 			}
+
+			// set config
+			if (!strncmp(arg, "config=", 7)) {
+				configName = (const char *)(arg + 7);
+				continue;
+			}
 		} else { // if( !initialized )
 			// cvars and ccmds only work past game start
 
@@ -379,7 +385,7 @@ int Engine::loadConfig(const char* filename) {
 	char str[1024];
 	FILE *fp;
 
-	StringBuf<64> _filename("%s/%s", 2, game.path.get(), filename);
+	String _filename = buildPath(filename);
 	if (_filename.find(".cfg") == UINT32_MAX) {
 		_filename.append(".cfg");
 	}
@@ -641,6 +647,7 @@ void Engine::init() {
 	tileNormalTextures.init();
 	tileEffectsTextures.init();
 	loadAllResources();
+	loadAllDefs();
 
 	fmsg(Engine::MSG_INFO, "done");
 	initialized = true;

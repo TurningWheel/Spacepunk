@@ -1,0 +1,194 @@
+{
+    "Entity::def_t::version": 1,
+    "editor": true,
+    "entity": {
+        "Entity::version": 3,
+        "name": "Explosion",
+        "pos": {
+            "x": 13.727554321289063,
+            "y": -41.86036682128906,
+            "z": 54.992889404296878
+        },
+        "ang": {
+            "Quaternion::version": 0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 1.0
+        },
+        "scale": {
+            "x": 0.10000000149011612,
+            "y": 0.10000000149011612,
+            "z": 0.10000000149011612
+        },
+        "scriptStr": "Explosion",
+        "flags": 135,
+        "falling": false,
+        "sort": 0,
+        "EntityItem": {
+            "Item::version": 0,
+            "icon": "null.png",
+            "weight": 1.0,
+            "value": 1.0,
+            "throwable": false,
+            "throwLeadInTime": 1.0,
+            "throwRecovery": 1.0,
+            "throwDestroys": false,
+            "takesDamage": false,
+            "health": 0.0,
+            "damageImmunities": [],
+            "detonates": false,
+            "detonationDamageType": "",
+            "detonationRadius": 0.0,
+            "detonationDamage": 0.0,
+            "detonationFalloff": false,
+            "slotEffects": {
+                "data": []
+            },
+            "distance": 0.0,
+            "spread": 0.0,
+            "radius": 0.0,
+            "animLeadSpeed": 0.0,
+            "animRecovSpeed": 0.0,
+            "spendCharges": 0,
+            "currCharges": 0,
+            "maxCharges": 0,
+            "rechargeRate": 0.0,
+            "currCooldown": 0.0,
+            "maxCooldown": 0.0,
+            "slotRestrictions": [],
+            "actions": {
+                "data": []
+            }
+        },
+        "keys": {
+            "data": []
+        },
+        "components": [
+            {
+                "type": 2,
+                "data": {
+                    "Component::version": 1,
+                    "name": "model",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 32.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "lScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [],
+                    "Model::version": 1,
+                    "meshStr": "assets/fire/explode.FBX",
+                    "materialStr": "assets/fire/material.json",
+                    "depthfailStr": "assets/fire/material.json",
+                    "animationStr": "",
+                    "shaderVars": {
+                        "Mesh::version": 0,
+                        "customColorEnabled": false,
+                        "customColorR": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorG": [
+                            0.0,
+                            1.0,
+                            0.0,
+                            1.0
+                        ],
+                        "customColorB": [
+                            0.0,
+                            0.0,
+                            1.0,
+                            1.0
+                        ],
+                        "customColorA": [
+                            1.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ]
+                    },
+                    "genius": false
+                }
+            },
+            {
+                "type": 3,
+                "data": {
+                    "Component::version": 1,
+                    "name": "light",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "lScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [],
+                    "Light::version": 2,
+                    "color": {
+                        "x": 1.0,
+                        "y": 0.5,
+                        "z": 0.0
+                    },
+                    "intensity": 1.0,
+                    "radius": 512.0,
+                    "shape": 0,
+                    "shadow": false,
+                    "arc": 70.0
+                }
+            },
+            {
+                "type": 5,
+                "data": {
+                    "Component::version": 1,
+                    "name": "speaker",
+                    "lPos": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "lAng": {
+                        "Quaternion::version": 0,
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "lScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    },
+                    "components": [],
+                    "Speaker::version": 0,
+                    "defaultSound": "",
+                    "defaultLoop": false,
+                    "defaultRange": 256.0
+                }
+            }
+        ]
+    }
+}

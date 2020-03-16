@@ -96,6 +96,7 @@
 extern const float PI;
 extern const float SQRT2;
 extern const char* versionStr;
+extern const char* configName;
 
 extern class Engine* mainEngine;
 

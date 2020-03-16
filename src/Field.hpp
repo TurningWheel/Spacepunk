@@ -65,7 +65,7 @@ public:
 	const Uint32				getTextLen() const { return textLen; }
 	const glm::vec4&			getColor() const { return color; }
 	const Rect<int>				getSize() const { return size; }
-	const justify_t				getJustify() const { return justify; }
+	const int					getJustify() const { return static_cast<int>(justify); }
 	const bool					isSelected() const { return selected; }
 	const bool					isEditable() const { return editable; }
 	const bool					isNumbersOnly() const { return numbersOnly; }
@@ -81,7 +81,7 @@ public:
 	void	setColor(const glm::vec4& _color) { color = _color; }
 	void	setEditable(const bool _editable) { editable = _editable; }
 	void	setNumbersOnly(const bool _numbersOnly) { numbersOnly = _numbersOnly; }
-	void	setJustify(const justify_t _justify) { justify = _justify; }
+	void	setJustify(const int _justify) { justify = static_cast<justify_t>(_justify); }
 	void	setScroll(const bool _scroll) { scroll = _scroll; }
 	void	setTabDestField(const char* _tabDest) { tabDestField = _tabDest; }
 	void	setTabDestFrame(const char* _tabDest) { tabDestFrame = _tabDest; }

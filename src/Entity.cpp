@@ -168,11 +168,11 @@ void Entity::addToEditorList() {
 				entry->text = name.get();
 				entry->params.addInt(uid);
 				if (selected) {
-					entry->color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+					entry->color = WideVector(1.f, 0.f, 0.f, 1.f);
 				} else if (highlighted) {
-					entry->color = glm::vec4(1.f, 1.f, 0.f, 1.f);
+					entry->color = WideVector(1.f, 1.f, 0.f, 1.f);
 				} else {
-					entry->color = glm::vec4(1.f);
+					entry->color = WideVector(1.f);
 				}
 
 				listener = std::make_shared<Frame::listener_t>((void*)entry);

@@ -59,7 +59,7 @@ void BBox::beforeWorldInsertion(const World* world) {
 
 void BBox::afterWorldInsertion(const World* world) {
 	Component::afterWorldInsertion(world);
-	createRigidBody();
+	updateRigidBody(Vector(FLT_MAX, FLT_MAX, FLT_MAX));
 }
 
 void BBox::deleteRigidBody() {

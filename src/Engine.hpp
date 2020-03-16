@@ -83,8 +83,8 @@ public:
 	const bool							isRunningClient() const { return runningClient; }
 	const bool							isRunningServer() const { return runningServer; }
 	const char*							getGameTitle() const { return game.name.get(); }
-	Client*&							getLocalClient() { return localClient; }
-	Server*&							getLocalServer() { return localServer; }
+	Client*								getLocalClient() { return localClient; }
+	Server*								getLocalServer() { return localServer; }
 	int									getXres() const { return xres; }
 	int									getYres() const { return yres; }
 	const bool							getKeyStatus(const int index) const { return keystatus[index]; }

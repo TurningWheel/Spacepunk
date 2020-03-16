@@ -81,6 +81,7 @@ Script::Script(Client& _client) {
 
 	// expose functions
 	exposeEngine();
+	exposeGame();
 	exposeClient();
 }
 
@@ -93,6 +94,7 @@ Script::Script(Server& _server) {
 
 	// expose functions
 	exposeEngine();
+	exposeGame();
 	exposeServer();
 }
 
@@ -120,10 +122,13 @@ Script::Script(Entity& _entity) {
 
 	// expose functions
 	exposeEngine();
+	exposeGame();
+	exposeClient();
+	exposeServer();
 	exposeAngle();
 	exposeVector();
-	exposeGame();
 	exposeEntity();
+	exposeFrame();
 	exposeWorld();
 	exposeExtra();
 }
@@ -138,6 +143,7 @@ Script::Script(Frame& _frame) {
 
 	// expose functions
 	exposeEngine();
+	exposeGame();
 	exposeClient();
 	if (client->getEditor()) {
 		exposeEditor(*client->getEditor());
@@ -263,6 +269,35 @@ void Script::exposeFrame() {
 		.addFunction("removeEntry", &Frame::removeEntry)
 		.addFunction("findEntry", &Frame::findEntry)
 		.addFunction("findFrame", &Frame::findFrame)
+		.endClass()
+		;
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<Field>("Field")
+		.addFunction("getName", &Field::getName)
+		.addFunction("getText", &Field::getText)
+		.addFunction("getTextLen", &Field::getTextLen)
+		.addFunction("getColor", &Field::getColor)
+		.addFunction("getSize", &Field::getSize)
+		.addFunction("getJustify", &Field::getJustify)
+		.addFunction("isSelected", &Field::isSelected)
+		.addFunction("isEditable", &Field::isEditable)
+		.addFunction("isNumbersOnly", &Field::isNumbersOnly)
+		.addFunction("getTabDestField", &Field::getTabDestField)
+		.addFunction("getTabDestFrame", &Field::getTabDestFrame)
+		.addFunction("getParams", &Field::getParams)
+		.addFunction("getCallback", &Field::getCallback)
+		.addFunction("setName", &Field::setName)
+		.addFunction("setText", &Field::setText)
+		.addFunction("setPos", &Field::setPos)
+		.addFunction("setSize", &Field::setSize)
+		.addFunction("setColor", &Field::setColor)
+		.addFunction("setEditable", &Field::setEditable)
+		.addFunction("setNumbersOnly", &Field::setNumbersOnly)
+		.addFunction("setJustify", &Field::setJustify)
+		.addFunction("setScroll", &Field::setScroll)
+		.addFunction("setTabDestField", &Field::setTabDestField)
+		.addFunction("setTabDestFrame", &Field::setTabDestFrame)
 		.endClass()
 		;
 
@@ -413,8 +448,6 @@ void Script::exposeGame() {
 }
 
 void Script::exposeClient() {
-	exposeGame();
-
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Client, Game>("Client")
 		.addFunction("isConsoleAllowed", &Client::isConsoleAllowed)
@@ -493,8 +526,6 @@ void Script::exposeEditor(Editor& _editor) {
 }
 
 void Script::exposeServer() {
-	exposeGame();
-
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Server, Game>("Server")
 		.endClass()
@@ -851,6 +882,7 @@ void Script::exposeSpeaker() {
 		.addFunction("getDefaultRange", &Speaker::getDefaultRange)
 		.addFunction("isDefaultLoop", &Speaker::isDefaultLoop)
 		.addFunction("isPlaying", &Speaker::isPlaying)
+		.addFunction("isPlayingAnything", &Speaker::isPlayingAnything)
 		.endClass()
 		;
 

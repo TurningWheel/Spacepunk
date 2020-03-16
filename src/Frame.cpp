@@ -28,11 +28,11 @@ void Frame::listener_t::onChangeColor(bool selected, bool highlighted) {
 	}
 	Frame::entry_t* entryCast = (Frame::entry_t *)entry;
 	if (selected) {
-		entryCast->color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+		entryCast->color = WideVector(1.f, 0.f, 0.f, 1.f);
 	} else if (highlighted) {
-		entryCast->color = glm::vec4(1.f, 1.f, 0.f, 1.f);
+		entryCast->color = WideVector(1.f, 1.f, 0.f, 1.f);
 	} else {
-		entryCast->color = glm::vec4(1.f);
+		entryCast->color = WideVector(1.f);
 	}
 }
 
@@ -77,7 +77,7 @@ Frame::Frame(const char* _name, const char* _script) {
 	actualSize.w = 0;
 	actualSize.h = 0;
 
-	color = glm::vec4(0.f);
+	color = WideVector(0.f);
 
 	name = _name;
 	scriptStr = _script;
@@ -155,9 +155,9 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		barRect.w = _size.w;
 		barRect.h = sliderSize;
 		if (border > 0) {
-			renderer.drawLowFrame(barRect, border, color * glm::vec4(.75f, .75f, .75f, 1.f));
+			renderer.drawLowFrame(barRect, border, color * WideVector(.75f, .75f, .75f, 1.f));
 		} else {
-			renderer.drawRect(&barRect, color * glm::vec4(.5f, .5f, .5f, 1.f));
+			renderer.drawRect(&barRect, color * WideVector(.5f, .5f, .5f, 1.f));
 		}
 
 		// handle
@@ -193,9 +193,9 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		barRect.w = sliderSize;
 		barRect.h = _size.h;
 		if (border > 0) {
-			renderer.drawLowFrame(barRect, border, color * glm::vec4(.75f, .75f, .75f, 1.f));
+			renderer.drawLowFrame(barRect, border, color * WideVector(.75f, .75f, .75f, 1.f));
 		} else {
-			renderer.drawRect(&barRect, color * glm::vec4(.75f, .75f, .75f, 1.f));
+			renderer.drawRect(&barRect, color * WideVector(.75f, .75f, .75f, 1.f));
 		}
 
 		// handle
@@ -355,9 +355,9 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			src.y = mainEngine->getMouseY();
 			TTF_SizeUTF8(renderer.getMonoFont(), tooltip, &src.w, nullptr);
 			src.h = text->getHeight();
-			renderer.drawRect(&src, glm::vec4(0.f, 0.f, 1.f, .9f));
+			renderer.drawRect(&src, WideVector(0.f, 0.f, 1.f, .9f));
 			Rect<int> src2(src.x + 3, src.y + 3, src.w - 6, src.h - 6);
-			renderer.drawRect(&src2, glm::vec4(0.f, 0.f, 0.f, .9f));
+			renderer.drawRect(&src2, WideVector(0.f, 0.f, 0.f, .9f));
 			text->draw(Rect<int>(), Rect<int>(src.x, src.y, 0, 0));
 		}
 	}
@@ -484,6 +484,18 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			// bound
 			actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
 			actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
+
+			// figure out if this is the highest frame that could capture us
+			bool highest = true;
+			for (auto up = parent; up != nullptr; up = up->parent) {
+				if (!up->hollow) {
+					highest = false;
+					break;
+				}
+			}
+			if (highest) {
+				result.usable = false;
+			}
 		}
 
 		// filler in between sliders
@@ -769,7 +781,7 @@ Field* Frame::addField(const char* name, const int len) {
 	return field;
 }
 
-Frame::image_t* Frame::addImage(const Rect<Sint32>& pos, const glm::vec4& color, String image, const char* name) {
+Frame::image_t* Frame::addImage(const Rect<Sint32>& pos, const WideVector& color, String image, const char* name) {
 	if (!image || !name) {
 		return nullptr;
 	}
@@ -785,7 +797,7 @@ Frame::image_t* Frame::addImage(const Rect<Sint32>& pos, const glm::vec4& color,
 Frame::entry_t* Frame::addEntry(const char* name, bool resizeFrame) {
 	entry_t* entry = new entry_t();
 	entry->name = name;
-	entry->color = glm::vec4(1.f);
+	entry->color = WideVector(1.f);
 	entry->image = nullptr;
 	list.addNodeLast(entry);
 

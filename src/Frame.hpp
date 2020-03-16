@@ -2,14 +2,12 @@
 
 #pragma once
 
-#define GLM_FORCE_RADIANS
-#include <glm/vec4.hpp>
-
 #include "LinkedList.hpp"
 #include "Rect.hpp"
 #include "Button.hpp"
 #include "Field.hpp"
 #include "Script.hpp"
+#include "WideVector.hpp"
 
 #include <memory>
 
@@ -30,7 +28,7 @@ public:
 	struct image_t {
 		String name;
 		String path;
-		glm::vec4 color;
+		WideVector color;
 		Rect<Sint32> pos;
 	};
 
@@ -53,7 +51,7 @@ public:
 		StringBuf<32> name;
 		String text;
 		Script::Args params;
-		glm::vec4 color;
+		WideVector color;
 		String image;
 		String path;
 		bool pressed = false;
@@ -130,7 +128,7 @@ public:
 	//! @param image the image to draw
 	//! @param name the name of the image (unique id)
 	//! @return the newly created image object
-	image_t* addImage(const Rect<Sint32>& pos, const glm::vec4& color, String image, const char* name = "");
+	image_t* addImage(const Rect<Sint32>& pos, const WideVector& color, String image, const char* name = "");
 
 	//! adds a new entry to the frame's list
 	//! @param name internal name of the new entry
@@ -212,7 +210,7 @@ public:
 	void	setSize(Rect<int>& _size) { size = _size; }
 	void	setActualSize(Rect<int>& _actualSize) { actualSize = _actualSize; }
 	void	setHigh(const bool _high) { high = _high; }
-	void	setColor(const glm::vec4& _color) { color = _color; }
+	void	setColor(const WideVector& _color) { color = _color; }
 	void	setDisabled(const bool _disabled) { disabled = _disabled; }
 	void	setHollow(const bool _hollow) { hollow = _hollow; }
 
@@ -224,7 +222,7 @@ private:
 	Rect<int> size;					//! size and position of the frame in its parent frame
 	Rect<int> actualSize;			//! size of the frame's whole contents. when larger than size, activates sliders
 	bool high = true;				//! use Renderer::drawHighFrame(); else use Renderer::drawLowFrame()
-	glm::vec4 color;				//! the frame's color
+	WideVector color;				//! the frame's color
 	String scriptStr;				//! name of the frame's script (sans path and extension)
 	StringBuf<256> scriptPath;		//! path to the frame's script file
 	bool disabled = false;			//! if true, the frame is invisible and unusable

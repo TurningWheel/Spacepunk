@@ -211,7 +211,7 @@ void Player::setupGUI() {
 
 	// create reticle
 	char name[9] = "reticle"; name[7] = '0' + localID; name[8] = '\0';
-	gui->addImage(Rect<Sint32>(), glm::vec4(1.f), "images/gui/reticle_1.png", name);
+	gui->addImage(Rect<Sint32>(), WideVector(1.f), "images/gui/reticle_1.png", name);
 }
 
 void Player::updateGUI() {
