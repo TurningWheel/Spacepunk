@@ -1334,7 +1334,7 @@ void Editor::playSound(const char* path) {
 		return;
 
 	if (cvar_editorSounds.toInt()) {
-		playSound(path);
+		mainEngine->playSound(path);
 	}
 }
 

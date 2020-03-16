@@ -512,7 +512,7 @@ void Engine::chat(const char* msg) {
 void Engine::playSound(const char* name) {
 	StringBuf<64> path("sounds/");
 	path.append(name);
-	Sound* sound = getSoundResource().dataForString(name);
+	Sound* sound = getSoundResource().dataForString(path.get());
 	if (sound) {
 		sound->play(0);
 	}
