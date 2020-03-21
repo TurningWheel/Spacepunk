@@ -101,7 +101,19 @@ int Speaker::playSound(const char* _name, const bool loop, float range) {
 	}
 }
 
-bool Speaker::isPlaying(const int index) {
+bool Speaker::isPlayingAnything() const {
+	for (int i = 0; i < maxSources; ++i) {
+		if (isPlaying(i)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Speaker::isPlaying(int index) const {
+	if (!sources[index]) {
+		return false;
+	}
 	ALint state = AL_PLAYING;
 	alGetSourcei(sources[index], AL_SOURCE_STATE, &state);
 	if (state == AL_PLAYING) {

@@ -1,8 +1,8 @@
 An original 3D engine by Sheridan Rathbun. Intended to be used by Spacepunk. This is the open-source engine release.
 
-See the docs directory for an in-depth manual of the engine. Most of the functions described in there are directly accessible to Lua scripts.
+See the docs directory for an in-depth manual of the engine. `docs/html/index.html` is the start page. Most of the functions described in there are directly accessible to Lua scripts.
 
-Hit the blue "Play" button at the top of the editor to run the demo level.
+Run any of the Spacepunk_*.exe files to start the editor.
 
 ![Man on the beach](https://raw.githubusercontent.com/TurningWheel/Spacepunk/master/Screenshot.png)
 
@@ -30,6 +30,8 @@ Features:
 	* UI engine (rendering + event callbacks defined in script)
 	* asynchronous pathfinding
 	* multi-world servers
+	* stream assets from disk
+	* sample game based on Atari Combat (1977)
 
 Build/Install:
 

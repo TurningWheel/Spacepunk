@@ -71,7 +71,7 @@ void Inventory::setupInvSlotDisplay(String slotName, Frame* frame, Rect<int> fra
 	Slot* slot = *items.find(slotName);
 	//frame->addField(slotName, 20)->setText(slot-> entity->getName().length() > 0 ? slot->entity->getName() : "");
 	frame->setSize(frameSize);
-	frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+	frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 	frame->setPos(xPos, yPos);
 }
 

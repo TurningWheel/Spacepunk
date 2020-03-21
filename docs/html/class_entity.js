@@ -112,7 +112,7 @@ var class_entity =
     [ "isServerObj", "class_entity.html#ad32a6c1ba100d67576d6cd0f146dab67", null ],
     [ "isShouldSave", "class_entity.html#a20a45f22af6032935cdd45b9c284f9f5", null ],
     [ "isToBeDeleted", "class_entity.html#a8bf9827e534aa456ef55c1312e5bcf5b", null ],
-    [ "lineTrace", "class_entity.html#a0af46f4fa6c6ddef6dcb62b1585b7a05", null ],
+    [ "lineTrace", "class_entity.html#ae46e4a9dbb03606a7c9fc2a782e6edce", null ],
     [ "move", "class_entity.html#aac8c4e13d20f8535521e369ab69d5afc", null ],
     [ "nearestCeiling", "class_entity.html#a4f5aafe2cf216b0b72f9e71bda7fa4c8", null ],
     [ "nearestFloor", "class_entity.html#abc65ab713b3e1dd17170e53235cdc2a7", null ],

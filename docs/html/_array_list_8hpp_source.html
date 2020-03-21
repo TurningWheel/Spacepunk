@@ -356,11 +356,11 @@ $(document).ready(function(){initNavTree('_array_list_8hpp_source.html',''); ini
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <a class="code" href="class_array_list_1_1_sort_function.html">SortFunction</a>() {}</div>
 <div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        <span class="keyword">virtual</span> ~<a class="code" href="class_array_list_1_1_sort_function.html">SortFunction</a>() {}</div>
 <div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="class_array_list_1_1_sort_function.html#afd6b76cd329a4922c0a5748faa448e8a">operator()</a>(<span class="keyword">const</span> T&amp; a, <span class="keyword">const</span> T&amp; b) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code" href="class_array_list_1_1_sort_function.html#aff911b2100c69c0b40b9d2c87627e41f">operator()</a>(<span class="keyword">const</span> T a, <span class="keyword">const</span> T b) <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    };</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
 <div class="line"><a name="l00344"></a><span class="lineno"><a class="line" href="class_array_list.html#ae83afe472804bbf2c61d63894031379a">  344</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_array_list.html#ae83afe472804bbf2c61d63894031379a">sort</a>(<span class="keyword">const</span> SortFunction&amp; fn) {</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="class_array_list.html#a1d44737b8f35a849590047ead253acb8">size</a> &lt;= 1U) {</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="class_array_list.html#a1d44737b8f35a849590047ead253acb8">size</a> &lt;= 1u) {</div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;            <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        }</div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        <a class="code" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">mergeSortImp</a>(fn, 0U, <a class="code" href="class_array_list.html#a1d44737b8f35a849590047ead253acb8">size</a> - 1U);</div>
@@ -418,56 +418,63 @@ $(document).ready(function(){initNavTree('_array_list_8hpp_source.html',''); ini
 <div class="line"><a name="l00403"></a><span class="lineno"><a class="line" href="class_array_list.html#a1d44737b8f35a849590047ead253acb8">  403</a></span>&#160;    Uint32 <a class="code" href="class_array_list.html#a1d44737b8f35a849590047ead253acb8">size</a> = 0;        </div>
 <div class="line"><a name="l00404"></a><span class="lineno"><a class="line" href="class_array_list.html#a268939c957d57f3ac1367b681f24b4d5">  404</a></span>&#160;    Uint32 <a class="code" href="class_array_list.html#a268939c957d57f3ac1367b681f24b4d5">maxSize</a> = 0;     </div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160; </div>
-<div class="line"><a name="l00411"></a><span class="lineno"><a class="line" href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">  411</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">merge</a>(<span class="keyword">const</span> SortFunction&amp; fn, Uint32 l, Uint32 m, Uint32 r) {</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        Uint32 n1 = m - l + 1U; </div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;        Uint32 n2 = r - m;      </div>
+<div class="line"><a name="l00410"></a><span class="lineno"><a class="line" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">  410</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">mergeSortImp</a>(<span class="keyword">const</span> SortFunction&amp; fn, Uint32 l, Uint32 r) {</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;        <span class="keywordflow">if</span> (l &lt; r) {</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;            <span class="comment">// same as (l+r) / 2, but avoids overflow for large l and r</span></div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;            Uint32 m = l + (r - l) / 2U;</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160; </div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        <a class="code" href="class_array_list.html">ArrayList&lt;T&gt;</a> L, R;</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        L.<a class="code" href="class_array_list.html#aed41a2252ef58682b7cae78946d602cb">resize</a>(n1);</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        R.<a class="code" href="class_array_list.html#aed41a2252ef58682b7cae78946d602cb">resize</a>(n2);</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        <span class="keywordflow">for</span> (Uint32 i = 0U; i &lt; n1; ++i) {</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;            L[i] = arr[l + i];</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;        }</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        <span class="keywordflow">for</span> (Uint32 i = 0U; i &lt; n2; ++i) {</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            R[i] = arr[m + 1U + i];</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;        }</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        Uint32 i = 0U;  </div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        Uint32 j = 0U;  </div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        Uint32 k = l;   </div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        <span class="keywordflow">while</span> (i &lt; n1 &amp;&amp; j &lt; n2) {</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;            <span class="keywordflow">if</span> (fn(L[i], R[j])) {</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;                arr[k] = L[i];</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;                ++i;</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;                arr[k] = R[j];</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;                ++j;</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;            }</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;            ++k;</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        }</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160; </div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        <span class="keywordflow">while</span> (i &lt; n1) {</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;            arr[k] = L[i];</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;            ++i;</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;            ++k;</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        }</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;        <span class="keywordflow">while</span> (j &lt; n2) {</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;            arr[k] = R[j];</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;            ++j;</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;            ++k;</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;        }</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    }</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
-<div class="line"><a name="l00462"></a><span class="lineno"><a class="line" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">  462</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">mergeSortImp</a>(<span class="keyword">const</span> SortFunction&amp; fn, Uint32 l, Uint32 r) {</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        <span class="keywordflow">if</span> (l &lt; r) {</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;            Uint32 m = l + (r - l) / 2U;</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;            <span class="comment">// sort first and second halves</span></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <a class="code" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">mergeSortImp</a>(fn, l, m);</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;            <a class="code" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">mergeSortImp</a>(fn, m + 1U, r);</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;            <a class="code" href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">merge</a>(fn, l, m, r);</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        }</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    }</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160; </div>
+<div class="line"><a name="l00428"></a><span class="lineno"><a class="line" href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">  428</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">merge</a>(<span class="keyword">const</span> SortFunction&amp; fn, Uint32 l, Uint32 m, Uint32 r) {</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        Uint32 n1 = m - l + 1U; <span class="comment">// length of first subarray</span></div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        Uint32 n2 = r - m;      <span class="comment">// length of second subarray</span></div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160; </div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        <span class="comment">// create temp vectors</span></div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        <a class="code" href="class_array_list.html">ArrayList&lt;T&gt;</a> L, R;</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        L.<a class="code" href="class_array_list.html#aed41a2252ef58682b7cae78946d602cb">resize</a>(n1);</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        R.<a class="code" href="class_array_list.html#aed41a2252ef58682b7cae78946d602cb">resize</a>(n2);</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160; </div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        <span class="comment">// copy data to temp vectors L and R</span></div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;        <span class="keywordflow">for</span> (Uint32 i = 0U; i &lt; n1; ++i) {</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;            L[i] = arr[l + i];</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        }</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        <span class="keywordflow">for</span> (Uint32 i = 0U; i &lt; n2; ++i) {</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;            R[i] = arr[m + 1U + i];</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;        }</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160; </div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        <span class="comment">// merge the temp vectors back into arr[l..r]</span></div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        Uint32 i = 0U;  <span class="comment">// initial index of first subarray</span></div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;        Uint32 j = 0U;  <span class="comment">// initial index of second subarray</span></div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        Uint32 k = l;   <span class="comment">// initial index of merged subarray</span></div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;        <span class="keywordflow">while</span> (i &lt; n1 &amp;&amp; j &lt; n2) {</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;            <span class="keywordflow">if</span> (fn(L[i], R[j])) {</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;                arr[k] = L[i];</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;                ++i;</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;                arr[k] = R[j];</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;                ++j;</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;            }</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;            ++k;</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        }</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160; </div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        <span class="comment">// copy the remaining elements of L, if there are any</span></div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        <span class="keywordflow">while</span> (i &lt; n1) {</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;            arr[k] = L[i];</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;            ++i;</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;            ++k;</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        }</div>
 <div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160; </div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;            <a class="code" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">mergeSortImp</a>(fn, l, m);</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;            <a class="code" href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">mergeSortImp</a>(fn, m + 1U, r);</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160; </div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;            <a class="code" href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">merge</a>(fn, l, m, r);</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        <span class="comment">// copy the remaining elements of R, if there are any</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="keywordflow">while</span> (j &lt; n2) {</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;            arr[k] = R[j];</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;            ++j;</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;            ++k;</div>
 <div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;        }</div>
 <div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    }</div>
 <div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;};</div>
@@ -528,14 +535,14 @@ $(document).ready(function(){initNavTree('_array_list_8hpp_source.html',''); ini
 <div class="ttc" id="aclass_array_list_1_1_sort_function_html"><div class="ttname"><a href="class_array_list_1_1_sort_function.html">ArrayList::SortFunction</a></div><div class="ttdoc">abstract class to define sort function</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:330</div></div>
 <div class="ttc" id="aclass_array_list_html_a1d44737b8f35a849590047ead253acb8"><div class="ttname"><a href="class_array_list.html#a1d44737b8f35a849590047ead253acb8">ArrayList::size</a></div><div class="ttdeci">Uint32 size</div><div class="ttdoc">array data</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:403</div></div>
 <div class="ttc" id="aclass_array_list_html_a6c04588a43479f89214517a7d8f08f15"><div class="ttname"><a href="class_array_list.html#a6c04588a43479f89214517a7d8f08f15">ArrayList::operator=</a></div><div class="ttdeci">ArrayList &amp; operator=(const std::initializer_list&lt; T &gt; &amp;src)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:293</div></div>
-<div class="ttc" id="aclass_array_list_1_1_sort_function_html_afd6b76cd329a4922c0a5748faa448e8a"><div class="ttname"><a href="class_array_list_1_1_sort_function.html#afd6b76cd329a4922c0a5748faa448e8a">ArrayList::SortFunction::operator()</a></div><div class="ttdeci">virtual const bool operator()(const T &amp;a, const T &amp;b) const =0</div></div>
+<div class="ttc" id="aclass_array_list_1_1_sort_function_html_aff911b2100c69c0b40b9d2c87627e41f"><div class="ttname"><a href="class_array_list_1_1_sort_function.html#aff911b2100c69c0b40b9d2c87627e41f">ArrayList::SortFunction::operator()</a></div><div class="ttdeci">virtual const bool operator()(const T a, const T b) const =0</div></div>
 <div class="ttc" id="aclass_array_list_html_a37ea4bf14fe7edba6d5b79705c7d4bad"><div class="ttname"><a href="class_array_list.html#a37ea4bf14fe7edba6d5b79705c7d4bad">ArrayList::peek</a></div><div class="ttdeci">const T &amp; peek() const</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:244</div></div>
 <div class="ttc" id="aclass_array_list_html_a268939c957d57f3ac1367b681f24b4d5"><div class="ttname"><a href="class_array_list.html#a268939c957d57f3ac1367b681f24b4d5">ArrayList::maxSize</a></div><div class="ttdeci">Uint32 maxSize</div><div class="ttdoc">current array capacity</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:404</div></div>
 <div class="ttc" id="aclass_array_list_html_af4b9831705366016b0611fb3877c478d"><div class="ttname"><a href="class_array_list.html#af4b9831705366016b0611fb3877c478d">ArrayList::removeAndRearrange</a></div><div class="ttdeci">T removeAndRearrange(Uint32 pos)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:270</div></div>
 <div class="ttc" id="aclass_array_list_html_a8436394e9d35e31948011c651c4a93e7"><div class="ttname"><a href="class_array_list.html#a8436394e9d35e31948011c651c4a93e7">ArrayList::pop</a></div><div class="ttdeci">T pop()</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:236</div></div>
 <div class="ttc" id="aclass_array_list_html_aa75962b3c400d4b84b0677571dce7439"><div class="ttname"><a href="class_array_list.html#aa75962b3c400d4b84b0677571dce7439">ArrayList::push</a></div><div class="ttdeci">void push(const T &amp;val)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:198</div></div>
 <div class="ttc" id="aclass_array_list_html_a4214ead49898ebf33f5d922e04dc5a98"><div class="ttname"><a href="class_array_list.html#a4214ead49898ebf33f5d922e04dc5a98">ArrayList::copy</a></div><div class="ttdeci">ArrayList &amp; copy(const std::initializer_list&lt; T &gt; &amp;src)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:169</div></div>
-<div class="ttc" id="aclass_array_list_html_aaa65534328cb301b757d80818250d0fd"><div class="ttname"><a href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">ArrayList::mergeSortImp</a></div><div class="ttdeci">void mergeSortImp(const SortFunction &amp;fn, Uint32 l, Uint32 r)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:462</div></div>
+<div class="ttc" id="aclass_array_list_html_aaa65534328cb301b757d80818250d0fd"><div class="ttname"><a href="class_array_list.html#aaa65534328cb301b757d80818250d0fd">ArrayList::mergeSortImp</a></div><div class="ttdeci">void mergeSortImp(const SortFunction &amp;fn, Uint32 l, Uint32 r)</div><div class="ttdoc">maximum array capacity</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:410</div></div>
 <div class="ttc" id="aclass_array_list_html_a3da2b90afa063750438ddc77e178ce24"><div class="ttname"><a href="class_array_list.html#a3da2b90afa063750438ddc77e178ce24">ArrayList::empty</a></div><div class="ttdeci">bool empty() const</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:41</div></div>
 <div class="ttc" id="aclass_array_list_html_a589caba393644ab2181f5b1261736ed0"><div class="ttname"><a href="class_array_list.html#a589caba393644ab2181f5b1261736ed0">ArrayList::remove</a></div><div class="ttdeci">T remove(Uint32 pos)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:259</div></div>
 <div class="ttc" id="aclass_array_list_html_aab8986e8ac8a5c8f83cc12e6fdcf7ef5"><div class="ttname"><a href="class_array_list.html#aab8986e8ac8a5c8f83cc12e6fdcf7ef5">ArrayList::insertAndRearrange</a></div><div class="ttdeci">void insertAndRearrange(const T &amp;val, Uint32 pos)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:222</div></div>
@@ -549,7 +556,7 @@ $(document).ready(function(){initNavTree('_array_list_8hpp_source.html',''); ini
 <div class="ttc" id="aclass_array_list_html_a84ba8a9abea08da2881fb9579cca564c"><div class="ttname"><a href="class_array_list.html#a84ba8a9abea08da2881fb9579cca564c">ArrayList::begin</a></div><div class="ttdeci">Iterator begin()</div><div class="ttdoc">begin()</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:92</div></div>
 <div class="ttc" id="aclass_array_list_html_ad4539af164fac3cb8ac9d7ea03336905"><div class="ttname"><a href="class_array_list.html#ad4539af164fac3cb8ac9d7ea03336905">ArrayList::swap</a></div><div class="ttdeci">void swap(ArrayList &amp;src)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:182</div></div>
 <div class="ttc" id="aclass_array_list_1_1_iterator_html"><div class="ttname"><a href="class_array_list_1_1_iterator.html">ArrayList::Iterator</a></div><div class="ttdoc">Iterator.</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:46</div></div>
-<div class="ttc" id="aclass_array_list_html_ad45f1f90cbf0092c86226f523dee8bdf"><div class="ttname"><a href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">ArrayList::merge</a></div><div class="ttdeci">void merge(const SortFunction &amp;fn, Uint32 l, Uint32 m, Uint32 r)</div><div class="ttdoc">maximum array capacity</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:411</div></div>
+<div class="ttc" id="aclass_array_list_html_ad45f1f90cbf0092c86226f523dee8bdf"><div class="ttname"><a href="class_array_list.html#ad45f1f90cbf0092c86226f523dee8bdf">ArrayList::merge</a></div><div class="ttdeci">void merge(const SortFunction &amp;fn, Uint32 l, Uint32 m, Uint32 r)</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:428</div></div>
 <div class="ttc" id="a_main_8hpp_html"><div class="ttname"><a href="_main_8hpp.html">Main.hpp</a></div></div>
 <div class="ttc" id="aclass_array_list_html_a0cb0c73262744db43fbcc915e10aeee4"><div class="ttname"><a href="class_array_list.html#a0cb0c73262744db43fbcc915e10aeee4">ArrayList::clear</a></div><div class="ttdeci">ArrayList &amp; clear()</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:149</div></div>
 <div class="ttc" id="aclass_static_array_list_html_a649c728004f2646cfd67ddcbfb51f1ae"><div class="ttname"><a href="class_static_array_list.html#a649c728004f2646cfd67ddcbfb51f1ae">StaticArrayList::getDefaultSize</a></div><div class="ttdeci">static Uint32 getDefaultSize()</div><div class="ttdoc">getters &amp; setters</div><div class="ttdef"><b>Definition:</b> ArrayList.hpp:524</div></div>

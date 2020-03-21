@@ -195,7 +195,7 @@ void Editor::buttonEntityProperties() {
 			rect.x = camRect.x + camRect.w - 400 - 8; rect.w = 400;
 			rect.y = camRect.y + camRect.h - 400 - 48; rect.h = 400;
 			frame->setSize(rect);
-			frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+			frame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 		}
 	}
 }
@@ -219,7 +219,7 @@ void Editor::buttonEntityAddComponent(unsigned int uid) {
 	rect.x = mainEngine->getMouseX() + 8; rect.w = 200 + border * 2;
 	rect.y = mainEngine->getMouseY() + 8; rect.h = 200;
 	frame->setSize(rect);
-	frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+	frame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 	// component buttons
 	for (Uint32 c = 0; c < Component::COMPONENT_MAX; ++c) {
@@ -329,7 +329,7 @@ void Editor::buttonNew() {
 	rect.x = xres / 2 - 300; rect.w = 600;
 	rect.y = yres / 2 - 100; rect.h = 200;
 	topFrame->setSize(rect);
-	topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+	topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 	// close button
 	{
@@ -389,7 +389,7 @@ void Editor::buttonNew() {
 		rect.x = 6; rect.w = 600 - 12;
 		rect.y = 39; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 128);
@@ -413,7 +413,7 @@ void Editor::buttonNew() {
 		rect.x = 6; rect.w = 100;
 		rect.y = 72; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 16);
@@ -450,7 +450,7 @@ void Editor::buttonNew() {
 		rect.x = 6; rect.w = 100;
 		rect.y = 108; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 16);
@@ -526,7 +526,7 @@ void Editor::buttonEditorSettings() {
 	winrect.x = xres / 2 - 250; winrect.w = 500;
 	winrect.y = yres / 2 - 200; winrect.h = 300;
 	topFrame->setSize(winrect);
-	topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+	topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 	topFrame->setBorder(border);
 
 	// close button
@@ -619,7 +619,7 @@ void Editor::buttonEditorSettings() {
 		rect.x = border * 2; rect.w = 150;
 		rect.y = y; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 128);
@@ -662,7 +662,7 @@ void Editor::buttonEditorSettings() {
 		rect.x = border * 2; rect.w = 150;
 		rect.y = y; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 128);
@@ -705,7 +705,7 @@ void Editor::buttonEditorSettings() {
 		rect.x = border * 2; rect.w = 150;
 		rect.y = y; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 128);
@@ -807,7 +807,7 @@ void Editor::buttonMapSettings() {
 	rect.x = xres / 2 - 250; rect.w = 500;
 	rect.y = yres / 2 - 200; rect.h = 400;
 	topFrame->setSize(rect);
-	topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+	topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 	// close button
 	{
@@ -867,7 +867,7 @@ void Editor::buttonMapSettings() {
 		rect.x = 6; rect.w = 500 - 12;
 		rect.y = 39; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 128);
@@ -904,7 +904,7 @@ void Editor::buttonMapSettings() {
 		rect.x = 250 - rect.w / 2; rect.w = 100;
 		rect.y = 125; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 16);
@@ -944,7 +944,7 @@ void Editor::buttonMapSettings() {
 		rect.x = 250 - rect.w / 2 - 106; rect.w = 100;
 		rect.y = 150; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 16);
@@ -984,7 +984,7 @@ void Editor::buttonMapSettings() {
 		rect.x = 250 - rect.w / 2 + 106; rect.w = 100;
 		rect.y = 150; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 16);
@@ -1024,7 +1024,7 @@ void Editor::buttonMapSettings() {
 		rect.x = 250 - rect.w / 2; rect.w = 100;
 		rect.y = 175; rect.h = 30;
 		frame->setSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 16);
@@ -1231,7 +1231,7 @@ void Editor::buttonHelp() {
 	rect.x = xres / 2 - 400; rect.w = 800;
 	rect.y = yres / 2 - 300; rect.h = 600;
 	topFrame->setSize(rect);
-	topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+	topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 	// close button
 	{
@@ -1266,7 +1266,7 @@ void Editor::buttonHelp() {
 		rect.x = 0; rect.w = 900;
 		rect.y = 0; rect.h = 900;
 		frame->setActualSize(rect);
-		frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+		frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 		frame->setHigh(false);
 
 		struct EditorHelp {
@@ -1334,7 +1334,7 @@ void Editor::playSound(const char* path) {
 		return;
 
 	if (cvar_editorSounds.toInt()) {
-		playSound(path);
+		mainEngine->playSound(path);
 	}
 }
 
@@ -1648,7 +1648,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.x = 0; frameRect.w = xres;
 		frameRect.y = 0; frameRect.h = camRect.y;
 		topframe->setSize(frameRect);
-		topframe->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+		topframe->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 		Button* button = nullptr;
 
@@ -1746,7 +1746,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.x = 0; frameRect.w = camRect.x;
 		frameRect.y = camRect.y; frameRect.h = (yres - 44);
 		topFrame->setSize(frameRect);
-		topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+		topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 		topFrame->setHollow(true);
 
 		// tile controls
@@ -1761,7 +1761,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 3; frameRect.w = camRect.x - 6;
 			frameRect.y = 3; frameRect.h = camRect.x - 6 - 6;
 			midFrame->setSize(frameRect);
-			midFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+			midFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 			midFrame->setBorder(0);
 
 			// labels
@@ -1859,7 +1859,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					size.x = (c == 0) ? 6 : frameRect.w - size.w - 6;
 					size.y = y;
 					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+					frame->setColor(WideVector(.25, .25, .25, 1.0));
 					frame->setHigh(false);
 
 					y += size.h + 3;
@@ -1895,7 +1895,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					size.x = (c == 0) ? 6 : frameRect.w - size.w - 6;
 					size.y = y;
 					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+					frame->setColor(WideVector(.25, .25, .25, 1.0));
 					frame->setHigh(false);
 
 					y += size.h + 3;
@@ -1931,7 +1931,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					size.x = (c == 0) ? 6 : frameRect.w - size.w - 6;
 					size.y = y;
 					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+					frame->setColor(WideVector(.25, .25, .25, 1.0));
 					frame->setHigh(false);
 
 					y += size.h + 3;
@@ -2028,7 +2028,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					size.y = y;
 					size.h = 30;
 					frame->setSize(size);
-					frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+					frame->setColor(WideVector(.25, .25, .25, 1.0));
 					frame->setHigh(false);
 
 					Field* field = frame->addField("field", 9);
@@ -2041,13 +2041,13 @@ void Editor::initGUI(const Rect<int>& camRect) {
 
 					switch (color) {
 					case 0:
-						field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 						break;
 					case 1:
-						field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 						break;
 					default:
-						field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 						break;
 					}
 					//field->getParams().addInt(component->getUID());
@@ -2075,7 +2075,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.x = 6; frameRect.w = camRect.x - 12;
 				frameRect.y = 6; frameRect.h = camRect.x - 12;
 				frame->setSize(frameRect);
-				frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+				frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 				frame->setHigh(false);
 				frame->setHollow(true);
 			}
@@ -2089,7 +2089,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.x = 6; frameRect.w = camRect.x - 12;
 				frameRect.y = 3; frameRect.h = 3;
 				frame->setSize(frameRect);
-				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 				frame->setBorder(0);
 			}
 
@@ -2102,7 +2102,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.x = 3; frameRect.w = 3;
 				frameRect.y = 3; frameRect.h = camRect.x - 9;
 				frame->setSize(frameRect);
-				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 				frame->setBorder(0);
 			}
 
@@ -2115,7 +2115,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.x = camRect.x - 6; frameRect.w = 3;
 				frameRect.y = 3; frameRect.h = camRect.x - 9;
 				frame->setSize(frameRect);
-				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 				frame->setBorder(0);
 			}
 
@@ -2128,7 +2128,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.x = 3; frameRect.w = camRect.x - 6;
 				frameRect.y = camRect.x - 6; frameRect.h = (yres - 44) - camRect.x + 3;
 				frame->setSize(frameRect);
-				frame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+				frame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 				frame->setBorder(0);
 			}
 		}
@@ -2142,7 +2142,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 6; frameRect.w = camRect.x - 12;
 			frameRect.y = 6 + (squashLeft ? (camRect.x - 12) : 0); frameRect.h = (yres - 44) - 12 - (squashLeft ? (camRect.x - 12) : 0);
 			midFrame->setSize(frameRect);
-			midFrame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+			midFrame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 			midFrame->setHigh(false);
 
 			// top area of the content navigator window
@@ -2155,7 +2155,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.y = 3; frameRect.h = 90;
 				frame->setSize(frameRect);
 				frame->setBorder(0);
-				frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+				frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 				frame->setHigh(false);
 
 				// title text
@@ -2196,19 +2196,9 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.y = 90 + 3; frameRect.h = (yres - 44) - 90 - 18 - (tileControls ? (camRect.x - 12) : 0);
 				frame->setSize(frameRect);
 				frame->setBorder(0);
-				frame->setColor(glm::vec4(.1f, .1f, .1f, 1.f));
+				frame->setColor(WideVector(.1f, .1f, .1f, 1.f));
 				frame->setHigh(false);
-
-				// list of entities
-				for (const Node<Entity::def_t*>* node = mainEngine->getEntityDefs().getFirst(); node != nullptr; node = node->getNext()) {
-					const Entity::def_t* def = node->getData();
-					if (def->exposedInEditor) {
-						Frame::entry_t* entry = frame->addEntry("spawn", true);
-						entry->text = def->entity.getName();
-						entry->params.addString(def->entity.getName());
-						entry->color = glm::vec4(1.f);
-					}
-				}
+				updateContentNavigatorFilters();
 			}
 		}
 	}
@@ -2223,7 +2213,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.x = camRect.x + camRect.w; frameRect.w = camRect.x;
 		frameRect.y = camRect.y; frameRect.h = (yres - 44);
 		topFrame->setSize(frameRect);
-		topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+		topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 		// level navigator
 		{
@@ -2234,7 +2224,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 6; frameRect.w = camRect.x - 12;
 			frameRect.y = (squashRight ? camRect.x - 12 : 0) - 6 + 12; frameRect.h = (yres - 44) - (squashRight ? camRect.x : 0) - 12;
 			midFrame->setSize(frameRect);
-			midFrame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+			midFrame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 			midFrame->setHigh(false);
 
 			// top area of the level navigator window
@@ -2247,7 +2237,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.y = 3; frameRect.h = 90;
 				frame->setSize(frameRect);
 				frame->setBorder(0);
-				frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+				frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 				frame->setHigh(false);
 
 				// title text
@@ -2288,7 +2278,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				frameRect.y = 90 + 3; frameRect.h = (yres - 44) - 90 - 18 - (squashRight ? camRect.x - 12: 0);
 				frame->setSize(frameRect);
 				frame->setBorder(0);
-				frame->setColor(glm::vec4(.1f, .1f, .1f, 1.f));
+				frame->setColor(WideVector(.1f, .1f, .1f, 1.f));
 				frame->setHigh(false);
 			}
 		}
@@ -2303,7 +2293,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.x = camRect.x; frameRect.w = camRect.w;
 		frameRect.y = yres - 200; frameRect.h = 200;
 		midFrame->setSize(frameRect);
-		midFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+		midFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 		// mini-console
 		{
@@ -2314,7 +2304,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 6; frameRect.w = camRect.w - 12;
 			frameRect.y = 6; frameRect.h = 200 - 12;
 			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+			frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 			frame->setHigh(false);
 
 			frame = new Frame(*frame, "editor_FrameBottomMiniConsole");
@@ -2324,7 +2314,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 3; frameRect.w = camRect.w - 12 - 6;
 			frameRect.y = 3; frameRect.h = 200 - 12 - 6;
 			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+			frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 			frame->setBorder(0);
 			frame->setHigh(false);
 		}
@@ -2339,8 +2329,8 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.x = camRect.x + 3; frameRect.w = 150;
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
-		topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), glm::vec4(1.f), "images/gui/icon_translate-x.png");
+		topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
+		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), WideVector(1.f), "images/gui/icon_translate-x.png");
 
 		{
 			Frame* frame = new Frame(*topFrame, "editor_FramePanelX");
@@ -2350,7 +2340,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 50 - 3; frameRect.w = 100;
 			frameRect.y = 3; frameRect.h = 32;
 			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+			frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("propertyX", 9);
@@ -2374,8 +2364,8 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.x = camRect.x + 3 + 150 + 3; frameRect.w = 150;
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
-		topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), glm::vec4(1.f), "images/gui/icon_translate-y.png");
+		topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
+		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), WideVector(1.f), "images/gui/icon_translate-y.png");
 
 		{
 			Frame* frame = new Frame(*topFrame, "editor_FramePanelY");
@@ -2385,7 +2375,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 50 - 3; frameRect.w = 100;
 			frameRect.y = 3; frameRect.h = 32;
 			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+			frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("propertyY", 9);
@@ -2409,8 +2399,8 @@ void Editor::initGUI(const Rect<int>& camRect) {
 		frameRect.x = camRect.x + 3 + 150 + 3 + 150 + 3; frameRect.w = 150;
 		frameRect.y = camRect.y + camRect.h - 38 - 3; frameRect.h = 38;
 		topFrame->setSize(frameRect);
-		topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
-		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), glm::vec4(1.f), "images/gui/icon_translate-z.png");
+		topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
+		topFrame->addImage(Rect<Sint32>(3, 3, 0, 0), WideVector(1.f), "images/gui/icon_translate-z.png");
 
 		{
 			Frame* frame = new Frame(*topFrame, "editor_FramePanelZ");
@@ -2420,7 +2410,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			frameRect.x = 50 - 3; frameRect.w = 100;
 			frameRect.y = 3; frameRect.h = 32;
 			frame->setSize(frameRect);
-			frame->setColor(glm::vec4(.25f, .25f, .25f, 1.f));
+			frame->setColor(WideVector(.25f, .25f, .25f, 1.f));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("propertyZ", 9);
@@ -2492,9 +2482,19 @@ void Editor::updateContentNavigatorFilters() {
 				Frame::entry_t* entry = frame->addEntry("spawn", true);
 				entry->text = def->entity.getName();
 				entry->params.addString(def->entity.getName());
-				entry->color = glm::vec4(1.f);
+				entry->color = WideVector(1.f);
 			}
 		}
+
+		// sort entries by name
+		class Sort : public LinkedList<Frame::entry_t*>::SortFunction {
+		public:
+			virtual ~Sort() {}
+			virtual const bool operator()(Frame::entry_t* a, Frame::entry_t* b) const override {
+				return strcmp(a->text.get(), b->text.get()) < 0;
+			}
+		} sortFn;
+		frame->getEntries().sort(sortFn);
 		frame->resizeForEntries();
 	}
 }
@@ -2543,6 +2543,16 @@ void Editor::updateLevelNavigatorFilters() {
 		if (matchesFilter) {
 			entity->addToEditorList();
 		}
+
+		// sort entries by name
+		class Sort : public LinkedList<Frame::entry_t*>::SortFunction {
+		public:
+			virtual ~Sort() {}
+			virtual const bool operator()(Frame::entry_t* a, Frame::entry_t* b) const override {
+				return strcmp(a->text.get(), b->text.get()) < 0;
+			}
+		} sortFn;
+		frame->getEntries().sort(sortFn);
 		frame->resizeForEntries();
 	}
 }
@@ -4153,14 +4163,14 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 			int x = image->pos.x;
 			int y = image->pos.y;
 			parent->remove(rotateImg);
-			parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f, 1.f, 1.f, 1.f), translateImg);
+			parent->addImage(Rect<Sint32>(x, y, 0, 0), WideVector(1.f, 1.f, 1.f, 1.f), translateImg);
 		} else {
 			Frame::image_t* image = parent->findImage(scaleImg);
 			if (image) {
 				int x = image->pos.x;
 				int y = image->pos.y;
 				parent->remove(scaleImg);
-				parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f, 1.f, 1.f, 1.f), translateImg);
+				parent->addImage(Rect<Sint32>(x, y, 0, 0), WideVector(1.f, 1.f, 1.f, 1.f), translateImg);
 			}
 		}
 	}
@@ -4172,14 +4182,14 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 			int x = image->pos.x;
 			int y = image->pos.y;
 			parent->remove(translateImg);
-			parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f, 1.f, 1.f, 1.f), rotateImg);
+			parent->addImage(Rect<Sint32>(x, y, 0, 0), WideVector(1.f, 1.f, 1.f, 1.f), rotateImg);
 		} else {
 			Frame::image_t* image = parent->findImage(scaleImg);
 			if (image) {
 				int x = image->pos.x;
 				int y = image->pos.y;
 				parent->remove(scaleImg);
-				parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f, 1.f, 1.f, 1.f), rotateImg);
+				parent->addImage(Rect<Sint32>(x, y, 0, 0), WideVector(1.f, 1.f, 1.f, 1.f), rotateImg);
 			}
 		}
 	}
@@ -4191,14 +4201,14 @@ void Editor::updateWidgetImages(Frame* parent, const char* translateImg, const c
 			int x = image->pos.x;
 			int y = image->pos.y;
 			parent->remove(translateImg);
-			parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f, 1.f, 1.f, 1.f), scaleImg);
+			parent->addImage(Rect<Sint32>(x, y, 0, 0), WideVector(1.f, 1.f, 1.f, 1.f), scaleImg);
 		} else {
 			Frame::image_t* image = parent->findImage(rotateImg);
 			if (image) {
 				int x = image->pos.x;
 				int y = image->pos.y;
 				parent->remove(rotateImg);
-				parent->addImage(Rect<Sint32>(x, y, 0, 0), glm::vec4(1.f, 1.f, 1.f, 1.f), scaleImg);
+				parent->addImage(Rect<Sint32>(x, y, 0, 0), WideVector(1.f, 1.f, 1.f, 1.f), scaleImg);
 			}
 		}
 	}
@@ -4603,7 +4613,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 		size.x = 30 + border + x + border * 2; size.w = width - border * 4 - x - 30 - border;
 		size.y = y; size.h = 30;
 		frame->setSize(size);
-		frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+		frame->setColor(WideVector(.25, .25, .25, 1.0));
 		frame->setHigh(false);
 
 		Field* field = frame->addField("field", 64);
@@ -4682,7 +4692,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.y = y;
 			size.h = 30;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -4692,7 +4702,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -4722,7 +4732,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.y = y;
 			size.h = 30;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -4732,7 +4742,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -4763,7 +4773,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.h = 30;
 			y += size.h + border;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -4773,7 +4783,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -4817,7 +4827,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.y = y;
 			size.h = 30;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -4827,7 +4837,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -4857,7 +4867,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.y = y;
 			size.h = 30;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -4867,7 +4877,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -4898,7 +4908,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.h = 30;
 			y += size.h + border;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -4908,7 +4918,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -4952,7 +4962,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.y = y;
 			size.h = 30;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -4962,7 +4972,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleY%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -4992,7 +5002,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.y = y;
 			size.h = 30;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -5002,7 +5012,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleZ%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -5033,7 +5043,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			size.h = 30;
 			y += size.h + border;
 			frame->setSize(size);
-			frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+			frame->setColor(WideVector(.25, .25, .25, 1.0));
 			frame->setHigh(false);
 
 			Field* field = frame->addField("field", 9);
@@ -5043,7 +5053,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleX%d", 1, component->getUID());
 			field->setTabDestFrame(dest.get());
@@ -5142,7 +5152,7 @@ void Editor::updateGUI(Frame& gui) {
 			size.x = xres / 2 - 200; size.w = 400;
 			size.y = yres / 2 - 75; size.h = 150;
 			topFrame->setSize(size);
-			topFrame->setColor(glm::vec4(.5f, .5f, .5f, 1.f));
+			topFrame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
 			// x button
 			{
@@ -5244,7 +5254,7 @@ void Editor::updateGUI(Frame& gui) {
 					const Engine::logmsg_t& logMsg = node->getData();
 					Frame::entry_t* entry = console->addEntry("", false);
 					entry->text = logMsg.text.get();
-					entry->color = glm::vec4(logMsg.color, 1.f);
+					entry->color = WideVector(logMsg.color.x, logMsg.color.y, logMsg.color.z, 1.f);
 				}
 
 				console->resizeForEntries();
@@ -5332,7 +5342,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.y = y; size.h = 30;
 						y += size.h + border;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 64);
@@ -5377,7 +5387,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.y = y;
 						size.h = 30;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5387,7 +5397,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesTranslateY");
 						field->setTabDestField("field");
 
@@ -5415,7 +5425,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.y = y;
 						size.h = 30;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5425,7 +5435,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesTranslateZ");
 						field->setTabDestField("field");
 
@@ -5454,7 +5464,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.h = 30;
 						y += size.h + border;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5464,7 +5474,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesTranslateX");
 						field->setTabDestField("field");
 
@@ -5506,7 +5516,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.y = y;
 						size.h = 30;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5516,7 +5526,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesPitch");
 						field->setTabDestField("field");
 
@@ -5544,7 +5554,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.y = y;
 						size.h = 30;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5554,7 +5564,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesYaw");
 						field->setTabDestField("field");
 
@@ -5583,7 +5593,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.h = 30;
 						y += size.h + border;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5593,7 +5603,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesRoll");
 						field->setTabDestField("field");
 
@@ -5635,7 +5645,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.y = y;
 						size.h = 30;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5645,7 +5655,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(1.f, .2f, .2f, 1.f));
+						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesScaleY");
 						field->setTabDestField("field");
 
@@ -5673,7 +5683,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.y = y;
 						size.h = 30;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5683,7 +5693,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(.2f, 1.f, .2f, 1.f));
+						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesScaleZ");
 						field->setTabDestField("field");
 
@@ -5712,7 +5722,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.h = 30;
 						y += size.h + border;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = frame->addField("field", 9);
@@ -5722,7 +5732,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setEditable(true);
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
-						field->setColor(glm::vec4(.2f, .2f, 1.f, 1.f));
+						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 						field->setTabDestFrame("editor_FrameEntityPropertiesScaleX");
 						field->setTabDestField("field");
 
@@ -5761,7 +5771,7 @@ void Editor::updateGUI(Frame& gui) {
 						size.x = border * 2; size.w = width - border * 4 - 30 - border;
 						size.y = y; size.h = 30;
 						frame->setSize(size);
-						frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+						frame->setColor(WideVector(.25, .25, .25, 1.0));
 						frame->setHigh(false);
 
 						Field* field = scriptField = frame->addField("field", 64);
@@ -5925,7 +5935,7 @@ void Editor::updateGUI(Frame& gui) {
 							size.y = y; size.h = 30;
 							y += size.h + border;
 							frame->setSize(size);
-							frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+							frame->setColor(WideVector(.25, .25, .25, 1.0));
 							frame->setHigh(false);
 
 							Field* field = frame->addField("field", 128);
@@ -5961,7 +5971,7 @@ void Editor::updateGUI(Frame& gui) {
 							size.y = y; size.h = 150;
 							y += size.h + border;
 							frame->setSize(size);
-							frame->setColor(glm::vec4(.25, .25, .25, 1.0));
+							frame->setColor(WideVector(.25, .25, .25, 1.0));
 							frame->setHigh(false);
 							frame->setBorder(0);
 
@@ -5971,7 +5981,7 @@ void Editor::updateGUI(Frame& gui) {
 								Frame::entry_t* entry = frame->addEntry("entry", true);
 								text.format("%s:%s", pair.a.get(), pair.b.get());
 								entry->text = text.get();
-								entry->color = glm::vec4(1.f);
+								entry->color = WideVector(1.f);
 								entry->params.addString(text);
 							}
 						}

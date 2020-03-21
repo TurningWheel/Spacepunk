@@ -154,7 +154,7 @@ void World::initialize(bool empty) {
 	bulletDynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
 	// create shadow camera
-	const Entity::def_t* def = Entity::findDef("Shadow Camera");
+	const Entity::def_t* def = Entity::findDef("Shadow Camera"); assert(def);
 	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Rotation());
 	shadowCamera->setShouldSave(false);
 	defaultShadow.init();

@@ -61,10 +61,10 @@ public:
 	void closeEditor();
 
 	//! getters & setters
-	Renderer*&						getRenderer() { return renderer; }
-	Mixer*&							getMixer() { return mixer; }
-	Frame*&							getGUI() { return gui; }
-	Editor*&						getEditor() { return editor; }
+	Renderer*						getRenderer() { return renderer; }
+	Mixer*							getMixer() { return mixer; }
+	Frame*							getGUI() { return gui; }
+	Editor*							getEditor() { return editor; }
 	const bool						isConsoleAllowed() const { return consoleAllowed; }
 	const bool						isConsoleActive() const { return consoleActive; }
 	const bool						isEditorActive() const { return editor != nullptr; }

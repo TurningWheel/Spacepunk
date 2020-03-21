@@ -38,7 +38,7 @@ void \mbox{\hyperlink{class_frame_ab00f446aae735ca43af5af2e837f27dc}{draw}} (\mb
 \item 
 \mbox{\hyperlink{class_field}{Field}} $\ast$ \mbox{\hyperlink{class_frame_a6589c8c4b114312ab6510ca99ed9fe8b}{add\+Field}} (const char $\ast$name, const int len)
 \item 
-\mbox{\hyperlink{struct_frame_1_1image__t}{image\+\_\+t}} $\ast$ \mbox{\hyperlink{class_frame_aafc662f83c90a46d078b682d023eab04}{add\+Image}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \&pos, const glm\+::vec4 \&color, \mbox{\hyperlink{class_string}{String}} image, const char $\ast$name=\char`\"{}\char`\"{})
+\mbox{\hyperlink{struct_frame_1_1image__t}{image\+\_\+t}} $\ast$ \mbox{\hyperlink{class_frame_a233337cb3b56dfd0555eff4a8fc01ac1}{add\+Image}} (const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \&pos, const \mbox{\hyperlink{class_wide_vector}{Wide\+Vector}} \&color, \mbox{\hyperlink{class_string}{String}} image, const char $\ast$name=\char`\"{}\char`\"{})
 \item 
 \mbox{\hyperlink{struct_frame_1_1entry__t}{entry\+\_\+t}} $\ast$ \mbox{\hyperlink{class_frame_a2b03af79d0384df4fbe39a0c6b03e085}{add\+Entry}} (const char $\ast$name, bool resize\+Frame)
 \item 
@@ -120,8 +120,8 @@ void {\bfseries set\+Actual\+Size} (\mbox{\hyperlink{struct_rect}{Rect}}$<$ int 
 \mbox{\Hypertarget{class_frame_a8ecaef521cfcb5f3a695968fa9a096f1}\label{class_frame_a8ecaef521cfcb5f3a695968fa9a096f1}} 
 void {\bfseries set\+High} (const bool \+\_\+high)
 \item 
-\mbox{\Hypertarget{class_frame_a49af11ed8feb661de1edc8ba48140e59}\label{class_frame_a49af11ed8feb661de1edc8ba48140e59}} 
-void {\bfseries set\+Color} (const glm\+::vec4 \&\+\_\+color)
+\mbox{\Hypertarget{class_frame_ad0fed6f9182ad4442eeedb456fe4ce68}\label{class_frame_ad0fed6f9182ad4442eeedb456fe4ce68}} 
+void {\bfseries set\+Color} (const \mbox{\hyperlink{class_wide_vector}{Wide\+Vector}} \&\+\_\+color)
 \item 
 \mbox{\Hypertarget{class_frame_af071dc8a78b1a7535c7700728a934cc3}\label{class_frame_af071dc8a78b1a7535c7700728a934cc3}} 
 void {\bfseries set\+Disabled} (const bool \+\_\+disabled)
@@ -209,11 +209,11 @@ adds a new frame to the current frame
 \begin{DoxyReturn}{Returns}
 the newly created frame 
 \end{DoxyReturn}
-\mbox{\Hypertarget{class_frame_aafc662f83c90a46d078b682d023eab04}\label{class_frame_aafc662f83c90a46d078b682d023eab04}} 
+\mbox{\Hypertarget{class_frame_a233337cb3b56dfd0555eff4a8fc01ac1}\label{class_frame_a233337cb3b56dfd0555eff4a8fc01ac1}} 
 \index{Frame@{Frame}!addImage@{addImage}}
 \index{addImage@{addImage}!Frame@{Frame}}
 \doxysubsubsection{\texorpdfstring{addImage()}{addImage()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1image__t}{Frame\+::image\+\_\+t}} $\ast$ Frame\+::add\+Image (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \&}]{pos,  }\item[{const glm\+::vec4 \&}]{color,  }\item[{\mbox{\hyperlink{class_string}{String}}}]{image,  }\item[{const char $\ast$}]{name = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_frame_1_1image__t}{Frame\+::image\+\_\+t}} $\ast$ Frame\+::add\+Image (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_rect}{Rect}}$<$ Sint32 $>$ \&}]{pos,  }\item[{const \mbox{\hyperlink{class_wide_vector}{Wide\+Vector}} \&}]{color,  }\item[{\mbox{\hyperlink{class_string}{String}}}]{image,  }\item[{const char $\ast$}]{name = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
 
 adds a new image object to the current frame 
 \begin{DoxyParams}{Parameters}

@@ -57,11 +57,11 @@ void \mbox{\hyperlink{class_world_afe7309d80e20a976df3eccc2fef2503b}{select\+Ent
 \mbox{\Hypertarget{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}\label{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}} 
 virtual void \mbox{\hyperlink{class_world_a0c9bc49322ce9ac8b1ac9e156a34a466}{deselect\+Geometry}} ()=0
 \begin{DoxyCompactList}\small\item\em clears all geometry selection \end{DoxyCompactList}\item 
-const \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} \mbox{\hyperlink{class_world_a5f00b6e4249eda2e2fd343e37ace4f90}{line\+Trace}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest)
+\mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} \mbox{\hyperlink{class_world_a089e6858bd5f9de2628ed1f96c35206a}{line\+Trace}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest)
 \item 
 void \mbox{\hyperlink{class_world_a9c52871b0d388646653c72f41b55f0d7}{line\+Trace\+List}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest, \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} $>$ \&out\+Result)
 \item 
-const \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} \mbox{\hyperlink{class_world_a0164139222f2af35f059cf72e33d550e}{line\+Trace\+No\+Entities}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest)
+\mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} \mbox{\hyperlink{class_world_abb53c8b586ad63c1087f44ca69606c8b}{line\+Trace\+No\+Entities}} (const \mbox{\hyperlink{class_vector}{Vector}} \&origin, const \mbox{\hyperlink{class_vector}{Vector}} \&dest)
 \item 
 \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ \mbox{\hyperlink{class_world_a75b5ca2f562c4bad02777ccd24797e17}{get\+Entities\+By\+Name}} (const char $\ast$name)
 \item 
@@ -255,6 +255,9 @@ Uint32 \mbox{\hyperlink{class_world_a2fb152170d8677f450c79e34666b0dc1}{uids}} = 
 \begin{DoxyCompactList}\small\item\em entities \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{class_world_a81782892c0ea95f37c0505225e052035}\label{class_world_a81782892c0ea95f37c0505225e052035}} 
 \mbox{\hyperlink{class_map}{Map}}$<$ Uint32, \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ {\bfseries entities}
+\item 
+\mbox{\Hypertarget{class_world_ad0b86e47793fe7153ee12f978ef8fef7}\label{class_world_ad0b86e47793fe7153ee12f978ef8fef7}} 
+\mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{class_entity}{Entity}} $\ast$ $>$ {\bfseries entities\+To\+Insert}
 \item 
 \mbox{\Hypertarget{class_world_a10472aa43768d7fef4e5ac8000c844a8}\label{class_world_a10472aa43768d7fef4e5ac8000c844a8}} 
 \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ \mbox{\hyperlink{struct_world_1_1laser__t}{laser\+\_\+t}} $>$ \mbox{\hyperlink{class_world_a10472aa43768d7fef4e5ac8000c844a8}{lasers}}
@@ -479,11 +482,11 @@ post-\/load world initialization
 
 Reimplemented in \mbox{\hyperlink{class_tile_world_ac44d4fd9d09f9d091e2bfee8e8472ca3}{Tile\+World}}, \mbox{\hyperlink{class_sector_world_ad3bd09d89fb0690510040740be2a8482}{Sector\+World}}, and \mbox{\hyperlink{class_basic_world_a8f6e379aed44372b0598c408169ca754}{Basic\+World}}.
 
-\mbox{\Hypertarget{class_world_a5f00b6e4249eda2e2fd343e37ace4f90}\label{class_world_a5f00b6e4249eda2e2fd343e37ace4f90}} 
+\mbox{\Hypertarget{class_world_a089e6858bd5f9de2628ed1f96c35206a}\label{class_world_a089e6858bd5f9de2628ed1f96c35206a}} 
 \index{World@{World}!lineTrace@{lineTrace}}
 \index{lineTrace@{lineTrace}!World@{World}}
 \doxysubsubsection{\texorpdfstring{lineTrace()}{lineTrace()}}
-{\footnotesize\ttfamily const \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} World\+::line\+Trace (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} World\+::line\+Trace (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest }\end{DoxyParamCaption})}
 
 perform a line test (raytrace) through the world which stops at first hit object 
 \begin{DoxyParams}{Parameters}
@@ -510,11 +513,11 @@ perform a line test (raytrace) through the world and gets a list of all objects 
 {\em out\+Result} & the list which will contain all of the \mbox{\hyperlink{struct_world_1_1hit__t}{hit\+\_\+t}} structures (sorted nearest to furthest) \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{class_world_a0164139222f2af35f059cf72e33d550e}\label{class_world_a0164139222f2af35f059cf72e33d550e}} 
+\mbox{\Hypertarget{class_world_abb53c8b586ad63c1087f44ca69606c8b}\label{class_world_abb53c8b586ad63c1087f44ca69606c8b}} 
 \index{World@{World}!lineTraceNoEntities@{lineTraceNoEntities}}
 \index{lineTraceNoEntities@{lineTraceNoEntities}!World@{World}}
 \doxysubsubsection{\texorpdfstring{lineTraceNoEntities()}{lineTraceNoEntities()}}
-{\footnotesize\ttfamily const \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} World\+::line\+Trace\+No\+Entities (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_world_1_1hit__t}{World\+::hit\+\_\+t}} World\+::line\+Trace\+No\+Entities (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{origin,  }\item[{const \mbox{\hyperlink{class_vector}{Vector}} \&}]{dest }\end{DoxyParamCaption})}
 
 perform a line test (raytrace) through the world, skipping entities 
 \begin{DoxyParams}{Parameters}

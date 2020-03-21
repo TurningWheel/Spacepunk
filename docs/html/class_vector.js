@@ -36,6 +36,7 @@ var class_vector =
     [ "operator==", "class_vector.html#ad5435d0dbad5336fe4df23e6ab081612", null ],
     [ "operator>", "class_vector.html#a0b8083064c94cf51d9e479f74e09b6b2", null ],
     [ "operator>=", "class_vector.html#a31da4eaacf894046b8e74eef2fa9cc05", null ],
+    [ "reflect", "class_vector.html#a5280c5777079bdbc95cf393711e02e6c", null ],
     [ "serialize", "class_vector.html#a9e3d9620557949cb5ff94c0898e702bd", null ],
     [ "x", "class_vector.html#aca49165049a1e21ae47afcfc078819ed", null ],
     [ "y", "class_vector.html#a81be9102fca6d9beea3efef522c4c09d", null ],

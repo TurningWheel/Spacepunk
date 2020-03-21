@@ -168,15 +168,26 @@ void Entity::addToEditorList() {
 				entry->text = name.get();
 				entry->params.addInt(uid);
 				if (selected) {
-					entry->color = glm::vec4(1.f, 0.f, 0.f, 1.f);
+					entry->color = WideVector(1.f, 0.f, 0.f, 1.f);
 				} else if (highlighted) {
-					entry->color = glm::vec4(1.f, 1.f, 0.f, 1.f);
+					entry->color = WideVector(1.f, 1.f, 0.f, 1.f);
 				} else {
-					entry->color = glm::vec4(1.f);
+					entry->color = WideVector(1.f);
 				}
 
 				listener = std::make_shared<Frame::listener_t>((void*)entry);
 				entry->listener = listener;
+
+				// move the entry somewhere else in the list
+				auto& entries = levelList->getEntries();
+				entries.removeNode(entries.getLast());
+				auto node = entries.getFirst();
+				for (; node != nullptr; node = node->getNext()) {
+					if (strcmp(entry->text.get(), node->getData()->text.get()) < 0) {
+						break;
+					}
+				}
+				entries.addNode(node, entry);
 			}
 		}
 	}

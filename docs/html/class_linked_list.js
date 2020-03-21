@@ -2,9 +2,11 @@ var class_linked_list =
 [
     [ "ConstIterator", "class_linked_list_1_1_const_iterator.html", "class_linked_list_1_1_const_iterator" ],
     [ "Iterator", "class_linked_list_1_1_iterator.html", "class_linked_list_1_1_iterator" ],
+    [ "SortFunction", "class_linked_list_1_1_sort_function.html", "class_linked_list_1_1_sort_function" ],
     [ "LinkedList", "class_linked_list.html#a3c20fcfec867e867f541061a09fc640c", null ],
     [ "~LinkedList", "class_linked_list.html#a7c37609df3b83bc4eb0281b852f93fd7", null ],
     [ "addNode", "class_linked_list.html#aebf176aa6ef82f1406c1808d0f8830b0", null ],
+    [ "addNode", "class_linked_list.html#a9931cb03047d6c3c89c4331b634c6b95", null ],
     [ "addNodeFirst", "class_linked_list.html#a499bf69a6acd28145f386ce8cd525456", null ],
     [ "addNodeLast", "class_linked_list.html#a38564e6b704f2a01f26ef45e640adfd5", null ],
     [ "begin", "class_linked_list.html#a5113bc802622f17b54d719b806ce2a62", null ],
@@ -27,5 +29,5 @@ var class_linked_list =
     [ "removeNode", "class_linked_list.html#a118a169c7c08c447a0dde63f290ff3e7", null ],
     [ "setFirst", "class_linked_list.html#a8cd9701796f08f22f98483b2aeef3c79", null ],
     [ "setLast", "class_linked_list.html#a830289e30948d6620874f4b9d668b417", null ],
-    [ "sort", "class_linked_list.html#a323d2e734f7d110eafc3fde324c179f6", null ]
+    [ "sort", "class_linked_list.html#a933f83624b55ab5a375d436b05e1223c", null ]
 ];

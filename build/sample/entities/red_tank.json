@@ -7,7 +7,7 @@
         "pos": {
             "x": 200.0,
             "y": -200.0,
-            "z": 150.3000030517578
+            "z": 145.0
         },
         "ang": {
             "Quaternion::version": 0,
@@ -64,8 +64,8 @@
         "keys": {
             "data": [
                 {
-                    "key": "joystick",
-                    "value": "Joy0"
+                    "key": "player",
+                    "value": "0"
                 }
             ]
         },

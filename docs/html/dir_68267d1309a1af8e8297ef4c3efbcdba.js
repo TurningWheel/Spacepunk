@@ -87,7 +87,13 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     ] ],
     [ "Field.hpp", "_field_8hpp.html", "_field_8hpp" ],
     [ "File.hpp", "_file_8hpp.html", "_file_8hpp" ],
-    [ "Frame.hpp", "_frame_8hpp.html", "_frame_8hpp" ],
+    [ "Frame.hpp", "_frame_8hpp.html", [
+      [ "Frame", "class_frame.html", "class_frame" ],
+      [ "image_t", "struct_frame_1_1image__t.html", "struct_frame_1_1image__t" ],
+      [ "listener_t", "struct_frame_1_1listener__t.html", "struct_frame_1_1listener__t" ],
+      [ "entry_t", "struct_frame_1_1entry__t.html", "struct_frame_1_1entry__t" ],
+      [ "result_t", "struct_frame_1_1result__t.html", "struct_frame_1_1result__t" ]
+    ] ],
     [ "Framebuffer.hpp", "_framebuffer_8hpp.html", [
       [ "Framebuffer", "class_framebuffer.html", "class_framebuffer" ]
     ] ],
@@ -130,6 +136,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     ] ],
     [ "LinkedList.hpp", "_linked_list_8hpp.html", [
       [ "LinkedList", "class_linked_list.html", "class_linked_list" ],
+      [ "SortFunction", "class_linked_list_1_1_sort_function.html", "class_linked_list_1_1_sort_function" ],
       [ "Iterator", "class_linked_list_1_1_iterator.html", "class_linked_list_1_1_iterator" ],
       [ "ConstIterator", "class_linked_list_1_1_const_iterator.html", "class_linked_list_1_1_const_iterator" ]
     ] ],

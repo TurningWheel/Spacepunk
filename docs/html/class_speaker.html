@@ -128,8 +128,10 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="separator:a4374760987a17a03e0d71deb2bfa9e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afda5ca9a2a2f762e1134e9a22896c334"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_speaker.html#afda5ca9a2a2f762e1134e9a22896c334">serialize</a> (<a class="el" href="class_file_interface.html">FileInterface</a> *file) override</td></tr>
 <tr class="separator:afda5ca9a2a2f762e1134e9a22896c334"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a764e34755461e9df39d27e3585d548c9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_speaker.html#a764e34755461e9df39d27e3585d548c9">isPlaying</a> (const int index)</td></tr>
-<tr class="separator:a764e34755461e9df39d27e3585d548c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1db8dc6fd179f76373c28a470e0d967"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_speaker.html#ab1db8dc6fd179f76373c28a470e0d967">isPlayingAnything</a> () const</td></tr>
+<tr class="separator:ab1db8dc6fd179f76373c28a470e0d967"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82e75c6324f3d824b4a036d45bc04afa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_speaker.html#a82e75c6324f3d824b4a036d45bc04afa">isPlaying</a> (int index) const</td></tr>
+<tr class="separator:a82e75c6324f3d824b4a036d45bc04afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b8b381387b969039945eba625e71092"><td class="memItemLeft" align="right" valign="top"><a id="a8b8b381387b969039945eba625e71092"></a>
 virtual <a class="el" href="class_component.html#a6bf589d0ff9a71f325c2e8bbc0013ed1">type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_speaker.html#a8b8b381387b969039945eba625e71092">getType</a> () const override</td></tr>
 <tr class="memdesc:a8b8b381387b969039945eba625e71092"><td class="mdescLeft">&#160;</td><td class="mdescRight">getters &amp; setters <br /></td></tr>
@@ -568,8 +570,8 @@ Uint32&#160;</td><td class="memItemRight" valign="bottom"><b>boneIndex</b> = UIN
 
 </div>
 </div>
-<a id="a764e34755461e9df39d27e3585d548c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a764e34755461e9df39d27e3585d548c9">&#9670;&nbsp;</a></span>isPlaying()</h2>
+<a id="a82e75c6324f3d824b4a036d45bc04afa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82e75c6324f3d824b4a036d45bc04afa">&#9670;&nbsp;</a></span>isPlaying()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -577,13 +579,37 @@ Uint32&#160;</td><td class="memItemRight" valign="bottom"><b>boneIndex</b> = UIN
         <tr>
           <td class="memname">bool Speaker::isPlaying </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>determine if the speaker is playing a sound </p><dl class="section return"><dt>Returns</dt><dd>true if the given sound source index is playing </dd></dl>
+<p>determine if the speaker is playing a sound on the given source index </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>the index of the sound source to test </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if a sound is playing </dd></dl>
+
+</div>
+</div>
+<a id="ab1db8dc6fd179f76373c28a470e0d967"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1db8dc6fd179f76373c28a470e0d967">&#9670;&nbsp;</a></span>isPlayingAnything()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Speaker::isPlayingAnything </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>determine if the speaker is playing any sounds at all </p><dl class="section return"><dt>Returns</dt><dd>true if the speaker is playing a sound </dd></dl>
 
 </div>
 </div>

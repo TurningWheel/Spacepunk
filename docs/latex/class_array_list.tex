@@ -104,9 +104,9 @@ static void \mbox{\hyperlink{class_array_list_a99ce2b84b38bcefadf929182cc088f94}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{class_array_list_ad45f1f90cbf0092c86226f523dee8bdf}{merge}} (const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&fn, Uint32 l, Uint32 m, Uint32 r)
-\begin{DoxyCompactList}\small\item\em maximum array capacity \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_array_list_aaa65534328cb301b757d80818250d0fd}{merge\+Sort\+Imp}} (const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&fn, Uint32 l, Uint32 r)
+\begin{DoxyCompactList}\small\item\em maximum array capacity \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_array_list_ad45f1f90cbf0092c86226f523dee8bdf}{merge}} (const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&fn, Uint32 l, Uint32 m, Uint32 r)
 \end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
@@ -282,10 +282,6 @@ insert a value into the list, rearranging all elements after it
 {\footnotesize\ttfamily template$<$typename T $>$ \\
 void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::merge (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&}]{fn,  }\item[{Uint32}]{l,  }\item[{Uint32}]{m,  }\item[{Uint32}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
 
-
-
-maximum array capacity 
-
 merge two subarrays within the array 
 \begin{DoxyParams}{Parameters}
 {\em fn} & the sort function to test with \\
@@ -297,30 +293,16 @@ merge two subarrays within the array
 {\em r} & the end of the right subarray \\
 \hline
 \end{DoxyParams}
-length of first subarray
-
-length of second subarray
-
-create temp vectors
-
-copy data to temp vectors L and R
-
-merge the temp vectors back into arr\mbox{[}l..r\mbox{]}
-
-initial index of first subarray
-
-initial index of second subarray
-
-initial index of merged subarray
-
-copy the remaining elements of L, if there are any
-
-copy the remaining elements of R, if there are any\mbox{\Hypertarget{class_array_list_aaa65534328cb301b757d80818250d0fd}\label{class_array_list_aaa65534328cb301b757d80818250d0fd}} 
+\mbox{\Hypertarget{class_array_list_aaa65534328cb301b757d80818250d0fd}\label{class_array_list_aaa65534328cb301b757d80818250d0fd}} 
 \index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!mergeSortImp@{mergeSortImp}}
 \index{mergeSortImp@{mergeSortImp}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
 \doxysubsubsection{\texorpdfstring{mergeSortImp()}{mergeSortImp()}}
 {\footnotesize\ttfamily template$<$typename T $>$ \\
 void \mbox{\hyperlink{class_array_list}{Array\+List}}$<$ T $>$\+::merge\+Sort\+Imp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_array_list_1_1_sort_function}{Sort\+Function}} \&}]{fn,  }\item[{Uint32}]{l,  }\item[{Uint32}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+maximum array capacity 
 
 recursive merge sort algorithm 
 \begin{DoxyParams}{Parameters}
@@ -331,9 +313,7 @@ recursive merge sort algorithm
 {\em r} & the right index of the subarray to sort \\
 \hline
 \end{DoxyParams}
-same as (l+r) / 2, but avoids overflow for large l and r
-
-Sort first and second halves\mbox{\Hypertarget{class_array_list_a0d32daf81add4056b3c403cdc0d6f01a}\label{class_array_list_a0d32daf81add4056b3c403cdc0d6f01a}} 
+\mbox{\Hypertarget{class_array_list_a0d32daf81add4056b3c403cdc0d6f01a}\label{class_array_list_a0d32daf81add4056b3c403cdc0d6f01a}} 
 \index{ArrayList$<$ T $>$@{ArrayList$<$ T $>$}!operator=@{operator=}}
 \index{operator=@{operator=}!ArrayList$<$ T $>$@{ArrayList$<$ T $>$}}
 \doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}

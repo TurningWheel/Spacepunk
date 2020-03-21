@@ -10,7 +10,9 @@
 class \mbox{\hyperlink{class_linked_list_1_1_const_iterator}{Const\+Iterator}}
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_linked_list_1_1_const_iterator}{Const\+Iterator}}. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{class_linked_list_1_1_iterator}{Iterator}}
-\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_linked_list_1_1_iterator}{Iterator}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_linked_list_1_1_iterator}{Iterator}}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_linked_list_1_1_sort_function}{Sort\+Function}}
+\begin{DoxyCompactList}\small\item\em abstract class to define sort function \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -44,6 +46,8 @@ Uint32 \mbox{\hyperlink{class_linked_list_a39eac2716dfc33853a08e001e6a4c4f4}{ind
 \item 
 \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_aebf176aa6ef82f1406c1808d0f8830b0}{add\+Node}} (const Uint32 index, const T \&data)
 \item 
+\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_a9931cb03047d6c3c89c4331b634c6b95}{add\+Node}} (\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$node, const T \&data)
+\item 
 \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_a499bf69a6acd28145f386ce8cd525456}{add\+Node\+First}} (const T \&data)
 \item 
 \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_a38564e6b704f2a01f26ef45e640adfd5}{add\+Node\+Last}} (const T \&data)
@@ -58,7 +62,7 @@ void \mbox{\hyperlink{class_linked_list_a22123e522d93a813cc6bc456adf40bbf}{remov
 \mbox{\Hypertarget{class_linked_list_aa3abbe1614d01418436824ac66fa6f1a}\label{class_linked_list_aa3abbe1614d01418436824ac66fa6f1a}} 
 void \mbox{\hyperlink{class_linked_list_aa3abbe1614d01418436824ac66fa6f1a}{copy}} (const \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$ \&src)
 \begin{DoxyCompactList}\small\item\em copy one list to another (also copies data) \end{DoxyCompactList}\item 
-\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$ \& \mbox{\hyperlink{class_linked_list_a323d2e734f7d110eafc3fde324c179f6}{sort}} ()
+void \mbox{\hyperlink{class_linked_list_a933f83624b55ab5a375d436b05e1223c}{sort}} (const \mbox{\hyperlink{class_linked_list_1_1_sort_function}{Sort\+Function}} \&fn)
 \item 
 \mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$ \mbox{\hyperlink{class_linked_list_a2cdd801434d43830a9baf4f7c8567fae}{operator\mbox{[}$\,$\mbox{]}}} (const Uint32 index)
 \item 
@@ -94,7 +98,7 @@ A \mbox{\hyperlink{class_linked_list}{Linked\+List}} is a type of list that can 
 \mbox{\Hypertarget{class_linked_list_aebf176aa6ef82f1406c1808d0f8830b0}\label{class_linked_list_aebf176aa6ef82f1406c1808d0f8830b0}} 
 \index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!addNode@{addNode}}
 \index{addNode@{addNode}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
-\doxysubsubsection{\texorpdfstring{addNode()}{addNode()}}
+\doxysubsubsection{\texorpdfstring{addNode()}{addNode()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily template$<$typename T $>$ \\
 \mbox{\hyperlink{class_node}{Node}}$<$T$>$$\ast$ \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::add\+Node (\begin{DoxyParamCaption}\item[{const Uint32}]{index,  }\item[{const T \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
@@ -103,6 +107,23 @@ adds a node to the list
 {\em index} & the position within the list to insert the node \\
 \hline
 {\em data} & the data to be assigned to the node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the newly created \mbox{\hyperlink{class_node}{Node}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_linked_list_a9931cb03047d6c3c89c4331b634c6b95}\label{class_linked_list_a9931cb03047d6c3c89c4331b634c6b95}} 
+\index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!addNode@{addNode}}
+\index{addNode@{addNode}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{addNode()}{addNode()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\mbox{\hyperlink{class_node}{Node}}$<$T$>$$\ast$ \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::add\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_node}{Node}}$<$ T $>$ $\ast$}]{node,  }\item[{const T \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+adds a node to the list 
+\begin{DoxyParams}{Parameters}
+{\em node} & a pre-\/existing node in the list to succeed the new node \\
+\hline
+{\em data} & the data to be assigned to the new node \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -223,16 +244,18 @@ removes a node from the list
 {\em node} & the node to remove from the list \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{class_linked_list_a323d2e734f7d110eafc3fde324c179f6}\label{class_linked_list_a323d2e734f7d110eafc3fde324c179f6}} 
+\mbox{\Hypertarget{class_linked_list_a933f83624b55ab5a375d436b05e1223c}\label{class_linked_list_a933f83624b55ab5a375d436b05e1223c}} 
 \index{LinkedList$<$ T $>$@{LinkedList$<$ T $>$}!sort@{sort}}
 \index{sort@{sort}!LinkedList$<$ T $>$@{LinkedList$<$ T $>$}}
 \doxysubsubsection{\texorpdfstring{sort()}{sort()}}
 {\footnotesize\ttfamily template$<$typename T $>$ \\
-\mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$T$>$\& \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::sort (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+void \mbox{\hyperlink{class_linked_list}{Linked\+List}}$<$ T $>$\+::sort (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_linked_list_1_1_sort_function}{Sort\+Function}} \&}]{fn }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
-sort the list from least significant elements to most significant elements \begin{DoxyReturn}{Returns}
-a reference to the sorted list 
-\end{DoxyReturn}
+sort the list using the given function 
+\begin{DoxyParams}{Parameters}
+{\em fn} & the sort function to use \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
