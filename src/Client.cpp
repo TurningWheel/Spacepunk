@@ -997,77 +997,80 @@ void Client::postProcess() {
 			}
 
 			// debug counters
-			if ((!editor || !editor->isInitialized())) {
-				// fps counter
-				if (cvar_showFPS.toInt()) {
-					char fps[16];
-					snprintf(fps, 16, "%.1f", mainEngine->getFPS());
+			Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
+			if (font) {
+				if ((!editor || !editor->isInitialized())) {
+					// fps counter
+					if (cvar_showFPS.toInt()) {
+						char fps[16];
+						snprintf(fps, 16, "%.1f", mainEngine->getFPS());
 
-					int width;
-					TTF_SizeUTF8(renderer->getMonoFont(), fps, &width, NULL);
+						int width;
+						font->sizeText(fps, &width, NULL);
 
-					Rect<int> pos;
-					Rect<int> rect;
-					rect.x = 0; rect.w = renderer->getXres();
-					rect.y = 0; rect.h = renderer->getYres();
-					pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
-					pos.y = rect.y + 18; pos.h = 0;
+						Rect<int> pos;
+						Rect<int> rect;
+						rect.x = 0; rect.w = renderer->getXres();
+						rect.y = 0; rect.h = renderer->getYres();
+						pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
+						pos.y = rect.y + 18; pos.h = 0;
 
-					renderer->printText(pos, fps);
-				}
+						renderer->printText(font, pos, fps);
+					}
 
-				// player speedometer
-				if (cvar_showSpeed.toInt()) {
-					Node<Player>* node = players.getFirst();
-					if (node) {
-						Player& player = node->getData();
+					// player speedometer
+					if (cvar_showSpeed.toInt()) {
+						Node<Player>* node = players.getFirst();
+						if (node) {
+							Player& player = node->getData();
 
-						if (player.getEntity()) {
-							float fSpeed = player.getEntity()->getVel().length() * mainEngine->getTicksPerSecond() / 64.f;
+							if (player.getEntity()) {
+								float fSpeed = player.getEntity()->getVel().length() * mainEngine->getTicksPerSecond() / 64.f;
 
-							char speed[16];
-							snprintf(speed, 16, "%.1f m/sec", fSpeed);
+								char speed[16];
+								snprintf(speed, 16, "%.1f m/sec", fSpeed);
 
-							int width;
-							TTF_SizeUTF8(renderer->getMonoFont(), speed, &width, NULL);
+								int width;
+								font->sizeText(speed, &width, NULL);
 
-							Rect<int> pos;
-							Rect<int> rect;
-							rect.x = 0; rect.w = renderer->getXres();
-							rect.y = 0; rect.h = renderer->getYres();
-							pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
-							pos.y = rect.y + 18 + 36; pos.h = 0;
+								Rect<int> pos;
+								Rect<int> rect;
+								rect.x = 0; rect.w = renderer->getXres();
+								rect.y = 0; rect.h = renderer->getYres();
+								pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
+								pos.y = rect.y + 18 + 36; pos.h = 0;
 
-							renderer->printText(pos, speed);
+								renderer->printText(font, pos, speed);
+							}
 						}
 					}
-				}
 
-				// camera matrix
-				if (cvar_showMatrix.toInt()) {
-					Node<Player>* node = players.getFirst();
-					if (node) {
-						Player& player = node->getData();
+					// camera matrix
+					if (cvar_showMatrix.toInt()) {
+						Node<Player>* node = players.getFirst();
+						if (node) {
+							Player& player = node->getData();
 
-						if (player.getCamera()) {
-							const glm::mat4& mat = player.getCamera()->getViewMatrix();
+							if (player.getCamera()) {
+								const glm::mat4& mat = player.getCamera()->getViewMatrix();
 
-							char matrixChars[256];
-							snprintf(matrixChars, 256,
-								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-								"%+07.1f %+07.1f %+07.1f %+07.1f\n",
-								mat[0][0], mat[0][1], mat[0][2], mat[0][3],
-								mat[1][0], mat[1][1], mat[1][2], mat[1][3],
-								mat[2][0], mat[2][1], mat[2][2], mat[2][3],
-								mat[3][0], mat[3][1], mat[3][2], mat[3][3]
-							);
+								char matrixChars[256];
+								snprintf(matrixChars, 256,
+									"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+									"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+									"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+									"%+07.1f %+07.1f %+07.1f %+07.1f\n",
+									mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+									mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+									mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+									mat[3][0], mat[3][1], mat[3][2], mat[3][3]
+								);
 
-							Rect<int> pos;
-							pos.x = 18; pos.w = 0;
-							pos.y = 18; pos.h = 0;
-							renderer->printText(pos, matrixChars);
+								Rect<int> pos;
+								pos.x = 18; pos.w = 0;
+								pos.y = 18; pos.h = 0;
+								renderer->printText(font, pos, matrixChars);
+							}
 						}
 					}
 				}

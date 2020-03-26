@@ -71,6 +71,7 @@ function init()
     red_score = red_status:addField("red_score", 5)
     red_score:setSize(size)
     red_score:setJustify(JUSTIFY.CENTER)
+    red_score:setFont("assets/font/CutOutsFLF.ttf#24")
     entity:setKeyValue("red_score", "0")
 
     -- red reload
@@ -108,6 +109,7 @@ function init()
     blue_score = blue_status:addField("blue_score", 5)
     blue_score:setSize(size)
     blue_score:setJustify(JUSTIFY.CENTER)
+    blue_score:setFont("assets/font/CutOutsFLF.ttf#24")
     entity:setKeyValue("blue_score", "0")
 
     -- blue reload

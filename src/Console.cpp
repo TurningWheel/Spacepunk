@@ -18,6 +18,7 @@ Cvar::Cvar(const char* _name, const char* _desc, const char* _value) {
 	name = _name;
 	desc = _desc;
 	value = _value;
+	defaultValue = _value;
 	cvars.insert(_name, this);
 }
 

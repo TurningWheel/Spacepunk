@@ -46,7 +46,6 @@ public:
 	//! @param entity the entity to add to our list
 	Node<Entity*>* addEPopulation(Entity* entity);
 
-	//! getters & setters
 	bool							isChanged() const { return changed; }
 	Tile*							getTile(int index) { return tiles[index]; }
 	const LinkedList<Entity*>&		getEPopulation() const { return ePopulation; }

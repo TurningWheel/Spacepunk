@@ -584,7 +584,6 @@ public:
 	//! unbinds the component from any bones it was bound to
 	void unbindFromBone();
 
-	//! getters & setters
 	virtual type_t					getType() const { return COMPONENT_BASIC; }
 	const Entity*					getEntity() const { return entity; }
 	Entity*							getEntity() { return entity; }

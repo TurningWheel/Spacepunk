@@ -112,10 +112,9 @@ Renderer::~Renderer() {
 		SDL_FreeSurface(mainsurface);
 		mainsurface = nullptr;
 	}
-	if (nullImg)
+	if (nullImg) {
 		delete nullImg;
-	if (monoFont)
-		TTF_CloseFont(monoFont);
+	}
 }
 
 void Renderer::init() {
@@ -287,28 +286,13 @@ int Renderer::initResources() {
 		return 1;
 	}
 
-	// load font
-	if (monoFont) {
-		TTF_CloseFont(monoFont);
-	}
-
-	String filename = mainEngine->buildPath("fonts/mono.ttf").get();
-	//int pointSize = 16.f * (yres / 720.f); // font size
-	int pointSize = 16;
-	if ((monoFont = TTF_OpenFont(filename.get(), pointSize)) == NULL) {
-		mainEngine->fmsg(Engine::MSG_CRITICAL, "failed to load '%s': %s", filename.get(), TTF_GetError());
-		return 1;
-	}
-	TTF_SetFontHinting(monoFont, TTF_HINTING_MONO);
-	TTF_SetFontKerning(monoFont, 0);
-
 	return 0;
 }
 
 bool Renderer::changeVideoMode() {
 	mainEngine->fmsg(Engine::MSG_INFO, "changing video mode.");
 
-	// free text resource (it's all badly wrapped now)
+	// free text resource (it will probably be badly wrapped otherwise)
 	mainEngine->getTextResource().dumpCache();
 
 	// delete framebuffer cache (need to be resized)
@@ -617,6 +601,11 @@ void Renderer::drawConsole(const Sint32 height, const char* input, const LinkedL
 		return;
 	}
 
+	auto monoFont = mainEngine->getFontResource().dataForString(Font::defaultFont);
+	if (!monoFont) {
+		return;
+	}
+
 	// draw main rectangle
 	{
 		Rect<int> size;
@@ -639,13 +628,13 @@ void Renderer::drawConsole(const Sint32 height, const char* input, const LinkedL
 		image->drawColor(nullptr, size, color);
 	}
 
-	// log contents
+	// print arrows
 	int y = height - 20;
 	if (logStart == nullptr) {
 		logStart = log.getLast();
 	} else {
 		int w, h;
-		TTF_SizeUTF8(monoFont, "^", &w, &h);
+		monoFont->sizeText("^", &w, &h);
 		y -= h;
 		int c = 0;
 		for (int x = 0; x + w < xres; x += w, ++c);
@@ -657,17 +646,25 @@ void Renderer::drawConsole(const Sint32 height, const char* input, const LinkedL
 			Rect<int> pos;
 			pos.x = 5; pos.w = 0;
 			pos.y = y; pos.h = 0;
-			printTextColor(pos, glm::vec4(1.f, 0.f, 0.f, 1.f), arrows);
+			printTextColor(monoFont, pos, glm::vec4(1.f, 0.f, 0.f, 1.f), arrows);
 			free(arrows);
 		}
 	}
+
+	// print log contents bottom up
+	Sint32 h = monoFont->height();
 	for (const Node<Engine::logmsg_t>* node = logStart; node != nullptr; node = node->getPrev()) {
 		const Engine::logmsg_t& logMsg = node->getData();
 		const String* str = &logMsg.text;
 		Text* text = mainEngine->getTextResource().dataForString((*str).get());
 		if (text) {
-			Sint32 h = (Sint32)text->getHeight();
-			y -= h;
+			Sint32 lines = 1;
+			for (size_t c = 0; text->getName()[c] != '\0'; ++c) {
+				if (text->getName()[c] == '\n') {
+					++lines;
+				}
+			}
+			y -= h * lines;
 			Rect<int> pos;
 			pos.x = 5; pos.w = 0;
 			pos.y = y; pos.h = 0;
@@ -681,15 +678,17 @@ void Renderer::drawConsole(const Sint32 height, const char* input, const LinkedL
 			}
 		}
 	}
+
+	// print cursor
 	Rect<int> pos;
 	pos.x = 5; pos.w = 0;
 	pos.y = height - 20; pos.h = 0;
 	if (mainEngine->isCursorVisible()) {
 		StringBuf<256> text(">%s_", 1, input);
-		printText(pos, text.get());
+		printText(monoFont, pos, text.get());
 	} else {
 		StringBuf<256> text(">%s", 1, input);
-		printText(pos, text.get());
+		printText(monoFont, pos, text.get());
 	}
 }
 
@@ -713,15 +712,15 @@ void Renderer::drawRect(const Rect<int>* src, const glm::vec4& color) {
 	image->drawColor(nullptr, *src, color);
 }
 
-void Renderer::printText(const Rect<int>& rect, const char* str) {
-	printTextColor(rect, glm::vec4(1.f), str);
+void Renderer::printText(const Font* font, const Rect<int>& rect, const char* str) {
+	printTextColor(font, rect, glm::vec4(1.f), str);
 }
 
-void Renderer::printTextColor(const Rect<int>& rect, const glm::vec4& color, const char* str) {
-	if (str == nullptr || str[0] == '\0') {
+void Renderer::printTextColor(const Font* font, const Rect<int>& rect, const glm::vec4& color, const char* str) {
+	if (str == nullptr || str[0] == '\0' || !font) {
 		return;
 	}
-	Text* text = mainEngine->getTextResource().dataForString(str);
+	Text* text = Text::get(str, font->getName());
 	if (text) {
 		text->drawColor(Rect<int>(), rect, color);
 	}

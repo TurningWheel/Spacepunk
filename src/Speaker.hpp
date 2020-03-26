@@ -61,7 +61,6 @@ public:
 	//! @return true if a sound is playing
 	bool isPlaying(int index) const;
 
-	//! getters & setters
 	virtual type_t		getType() const override { return COMPONENT_SPEAKER; }
 	const char*			getDefaultSound() const { return defaultSound.get(); }
 	bool				isDefaultLoop() const { return defaultLoop; }

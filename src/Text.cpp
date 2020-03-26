@@ -35,6 +35,21 @@ const GLuint Text::indices[6]{
 };
 
 Text::Text(const char* _name) : Asset(_name) {
+	loaded = true;
+}
+
+Text::~Text() {
+	if (surf) {
+		SDL_FreeSurface(surf);
+		surf = nullptr;
+	}
+	if (texid) {
+		glDeleteTextures(1, &texid);
+		texid = 0;
+	}
+}
+
+void Text::render() {
 	Client* client = mainEngine->getLocalClient();
 	if (!client) {
 		return;
@@ -46,25 +61,49 @@ Text::Text(const char* _name) : Asset(_name) {
 		return;
 	}
 
+	// load font
+	String strToRender;
+	StringBuf<64> fontName;
+	Uint32 fontIndex = 0u;
+	if ((fontIndex = name.find(fontBreak)) != String::npos) {
+		fontName = name.substr(fontIndex + 1, UINT32_MAX).get();
+		strToRender = name.substr(0, fontIndex).get();
+	} else {
+		fontName = Font::defaultFont;
+		strToRender = name.get();
+	}
+	Font* font = mainEngine->getFontResource().dataForString(fontName.get());
+	if (!font) {
+		return;
+	}
+	TTF_Font* ttf = font->getTTF();
+
 	const Sint32 xres = renderer->getXres();
-	TTF_Font* font = renderer->getMonoFont();
 	SDL_Color colorBlack = { 0, 0, 0, 255 };
 	SDL_Color colorWhite = { 255, 255, 255, 255 };
 
+	if (surf) {
+		SDL_FreeSurface(surf);
+		surf = nullptr;
+	}
+
 	if (outlineSize > 0) {
-		TTF_SetFontOutline(font, outlineSize);
-		surf = TTF_RenderUTF8_Blended_Wrapped(font, _name, colorBlack, xres);
-		TTF_SetFontOutline(font, 0);
-		SDL_Surface* text = TTF_RenderUTF8_Blended_Wrapped(font, _name, colorWhite, xres);
+		TTF_SetFontOutline(ttf, outlineSize);
+		surf = TTF_RenderUTF8_Blended_Wrapped(ttf, strToRender.get(), colorBlack, xres);
+		TTF_SetFontOutline(ttf, 0);
+		SDL_Surface* text = TTF_RenderUTF8_Blended_Wrapped(ttf, strToRender.get(), colorWhite, xres);
 		SDL_Rect rect;
 		rect.x = 1; rect.y = 1;
 		SDL_BlitSurface(text, NULL, surf, &rect);
 		SDL_FreeSurface(text);
 	} else {
-		TTF_SetFontOutline(font, 0);
-		surf = TTF_RenderUTF8_Blended_Wrapped(font, _name, colorWhite, xres);
+		TTF_SetFontOutline(ttf, 0);
+		surf = TTF_RenderUTF8_Blended_Wrapped(ttf, strToRender.get(), colorWhite, xres);
 	}
-	glGenTextures(1, &texid);
+	assert(surf);
+	if (texid == 0) {
+		glGenTextures(1, &texid);
+	}
 
 	width = 0;
 	height = 0;
@@ -105,18 +144,7 @@ Text::Text(const char* _name) : Asset(_name) {
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, surf->w, surf->h, GL_RGBA, GL_UNSIGNED_BYTE, surf->pixels);
 	SDL_UnlockSurface(surf);
 
-	loaded = true;
-}
-
-Text::~Text() {
-	if (surf) {
-		SDL_FreeSurface(surf);
-		surf = nullptr;
-	}
-	if (texid) {
-		glDeleteTextures(1, &texid);
-		texid = 0;
-	}
+	rendered = true;
 }
 
 void Text::createStaticData() {
@@ -164,13 +192,20 @@ void Text::deleteStaticData() {
 	}
 }
 
-void Text::draw(Rect<int> src, Rect<int> dest) const {
+void Text::draw(Rect<int> src, Rect<int> dest) {
 	drawColor(src, dest, glm::vec4(1.f));
 }
 
-void Text::drawColor(Rect<int> src, Rect<int> dest, const glm::vec4& color) const {
+void Text::drawColor(Rect<int> src, Rect<int> dest, const glm::vec4& color) {
 	int yres = mainEngine->getYres();
 	int xres = mainEngine->getXres();
+
+	if (!rendered) {
+		render();
+	}
+	if (!rendered) {
+		return;
+	}
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/2D.json");
@@ -227,4 +262,23 @@ void Text::drawColor(Rect<int> src, Rect<int> dest, const glm::vec4& color) cons
 	// draw
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 	glBindVertexArray(0);
+}
+
+Text* Text::get(const char* str, const char* font) {
+	if (!str) {
+		return nullptr;
+	}
+	if (font == nullptr || font[0] == '\0') {
+		font = Font::defaultFont;
+	}
+	size_t len0 = strlen(str);
+	size_t len1 = strlen(font);
+	String textAndFont;
+	textAndFont.alloc((Uint32)(len0 + len1 + 2));
+	textAndFont.format("%s%c%s", str, Text::fontBreak, font);
+	Text* text = mainEngine->getTextResource().dataForString(textAndFont.get());
+	if (text && !text->rendered) {
+		text->render();
+	}
+	return text;
 }

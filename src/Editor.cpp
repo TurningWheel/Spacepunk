@@ -1956,19 +1956,19 @@ void Editor::initGUI(const Rect<int>& camRect) {
 				// label
 				{
 					StringBuf<32> name;
-					glm::vec4 color;
+					WideVector color;
 					switch (channel) {
 					case 0:
 						name = "Red";
-						color = glm::vec4(1.0f, 0.1f, 0.1f, 1.0f);
+						color = WideVector(1.0f, 0.1f, 0.1f, 1.0f);
 						break;
 					case 1:
 						name = "Green";
-						color = glm::vec4(0.1f, 1.0f, 0.1f, 1.0f);
+						color = WideVector(0.1f, 1.0f, 0.1f, 1.0f);
 						break;
 					case 2:
 						name = "Blue";
-						color = glm::vec4(0.1f, 0.1f, 1.0f, 1.0f);
+						color = WideVector(0.1f, 0.1f, 1.0f, 1.0f);
 						break;
 					}
 
@@ -6344,6 +6344,8 @@ void Editor::updateGUI(Frame& gui) {
 }
 
 void Editor::draw(Renderer& renderer) {
+	Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
+
 	if (textureSelectorActive) {
 		// texture browser
 		Rect<int> dest = { 0, 0, Tile::size, Tile::size };
@@ -6362,7 +6364,7 @@ void Editor::draw(Renderer& renderer) {
 		Rect<int> pos;
 		pos.x = 18; pos.w = 0;
 		pos.y = renderer.getYres() - 36; pos.h = 0;
-		renderer.printText(pos, textureUnderMouse);
+		renderer.printText(font, pos, textureUnderMouse);
 	} else { // if( textureSelectorActive )
 		if (editingCamera) {
 			const Camera* camera = editingCamera;
@@ -6392,25 +6394,25 @@ void Editor::draw(Renderer& renderer) {
 							, editingCamera->getGlobalAng().yaw
 							, editingCamera->getGlobalAng().pitch
 							, editingCamera->getGlobalAng().roll);*/
-						renderer.printText(pos, matrixChars);
+						renderer.printText(font, pos, matrixChars);
 					} else {
 						//renderer.printText(pos, Editor::editingModeStr[editingMode]);
 					}
 				} else {
-					renderer.printText(pos, "*** PREVIEW ***");
+					renderer.printText(font, pos, "*** PREVIEW ***");
 				}
 			}
 
 			// fps counter
-			if (cvar_showFPS.toInt()) {
+			if (cvar_showFPS.toInt() && font) {
 				char fps[16];
 				snprintf(fps, 16, "%.1f", mainEngine->getFPS());
 				Rect<int> pos;
 				int width;
-				TTF_SizeUTF8(renderer.getMonoFont(), fps, &width, NULL);
+				font->sizeText(fps, &width, NULL);
 				pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
 				pos.y = rect.y + 18; pos.h = 0;
-				renderer.printText(pos, fps);
+				renderer.printText(font, pos, fps);
 			}
 
 			// mark pointer (test worldPosToScreenPos)

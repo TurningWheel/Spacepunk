@@ -169,7 +169,6 @@ public:
 	//! unlocks the net thread so it can be used again
 	void unlockThread();
 
-	//! getters & setters
 	const bool					isConnected() const { return connected; }
 	const bool					isHosting() const { return hosting; }
 	const Uint32				getLocalID() const { return localID; }

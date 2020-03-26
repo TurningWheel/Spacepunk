@@ -58,7 +58,6 @@ public:
 	//! process world events
 	virtual void process() override;
 
-	//! getters & setters
 	virtual const type_t				getType() const { return WORLD_SECTORS; }
 	const ArrayList<Sector*>&			getSectors() const { return sectors; }
 	const ArrayList<SectorVertex*>&		getVertices() const { return vertices; }

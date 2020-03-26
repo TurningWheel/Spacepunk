@@ -15,7 +15,6 @@ public:
 	//! not a valid index
 	static const Uint32 nindex = UINT32_MAX;
 
-	//! getters & setters
 	Uint32							getDepth() const { return depth; }
 	const ArrayList<String>&		getWords() const { return words; }
 

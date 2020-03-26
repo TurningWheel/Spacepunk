@@ -191,9 +191,9 @@ public:
 	//! @return the head frame, which may be the current frame if we have no parent
 	Frame* findHead();
 
-	//! getters & setters
 	Frame*						getParent() { return parent; }
 	const char*					getName() const { return name.get(); }
+	const char*					getFont() const { return font.get(); }
 	const int					getBorder() const { return border; }
 	const Rect<int>&			getSize() const { return size; }
 	const Rect<int>&			getActualSize() const { return actualSize; }
@@ -205,6 +205,7 @@ public:
 	const bool					isDisabled() const { return disabled; }
 	const bool					isHollow() const { return hollow; }
 
+	void	setFont(const char* _font) { font = _font; }
 	void	setBorder(const int _border) { border = _border; }
 	void	setPos(const int x, const int y) { size.x = x; size.y = y; }
 	void	setSize(Rect<int>& _size) { size = _size; }
@@ -215,26 +216,27 @@ public:
 	void	setHollow(const bool _hollow) { hollow = _hollow; }
 
 private:
-	Frame* parent = nullptr;		//! parent frame
-	Script* script = nullptr;		//! script engine
-	String name;					//! internal name of the frame
-	int border = 3;					//! size of the frame's border
-	Rect<int> size;					//! size and position of the frame in its parent frame
-	Rect<int> actualSize;			//! size of the frame's whole contents. when larger than size, activates sliders
-	bool high = true;				//! use Renderer::drawHighFrame(); else use Renderer::drawLowFrame()
-	WideVector color;				//! the frame's color
-	String scriptStr;				//! name of the frame's script (sans path and extension)
-	StringBuf<256> scriptPath;		//! path to the frame's script file
-	bool disabled = false;			//! if true, the frame is invisible and unusable
-	bool focus = false;				//! if true, this frame has window focus
-	const char* tooltip = nullptr;	//! points to the tooltip that should be displayed by the (master) frame, or nullptr if none should be displayed
-	bool hollow = false;			//! if true, the frame is hollow; otherwise it is not
-	bool toBeDeleted = false;		//! if true, the frame will be removed at the end of its process
-	static bool tabbing;			//! used for tabbing between fields
-	bool draggingHSlider = false;	//! if true, we are dragging the horizontal slider
-	bool draggingVSlider = false;	//! if true, we are dragging the vertical slider
-	int oldSliderX = 0;				//! when you start dragging a slider, this is set
-	int oldSliderY = 0;				//! when you start dragging a slider, this is set
+	Frame* parent = nullptr;			//!< parent frame
+	Script* script = nullptr;			//!< script engine
+	String name;						//!< internal name of the frame
+	String font = Font::defaultFont;	//!< name of the font to use for frame entries
+	int border = 3;						//!< size of the frame's border
+	Rect<int> size;						//!< size and position of the frame in its parent frame
+	Rect<int> actualSize;				//!< size of the frame's whole contents. when larger than size, activates sliders
+	bool high = true;					//!< use Renderer::drawHighFrame(); else use Renderer::drawLowFrame()
+	WideVector color;					//!< the frame's color
+	String scriptStr;					//!< name of the frame's script (sans path and extension)
+	StringBuf<256> scriptPath;			//!< path to the frame's script file
+	bool disabled = false;				//!< if true, the frame is invisible and unusable
+	bool focus = false;					//!< if true, this frame has window focus
+	const char* tooltip = nullptr;		//!< points to the tooltip that should be displayed by the (master) frame, or nullptr if none should be displayed
+	bool hollow = false;				//!< if true, the frame is hollow; otherwise it is not
+	bool toBeDeleted = false;			//!< if true, the frame will be removed at the end of its process
+	static bool tabbing;				//!< used for tabbing between fields
+	bool draggingHSlider = false;		//!< if true, we are dragging the horizontal slider
+	bool draggingVSlider = false;		//!< if true, we are dragging the vertical slider
+	int oldSliderX = 0;					//!< when you start dragging a slider, this is set
+	int oldSliderY = 0;					//!< when you start dragging a slider, this is set
 
 	LinkedList<Frame*> frames;
 	LinkedList<Button*> buttons;

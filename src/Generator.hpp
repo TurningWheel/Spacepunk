@@ -254,7 +254,6 @@ public:
 	//! @param file interface to serialize with
 	void serialize(FileInterface * file);
 
-	//! getters & setters
 	const char*						getName() const { return name; }
 	const options_t&				getOptions() const { return options; }
 	const ArrayList<Uint32>&		getTiles() const { return tiles; }

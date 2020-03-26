@@ -45,7 +45,6 @@ public:
 	~Node() {
 	}
 
-	//! getters & setters
 	Node<T>*				getNext() { return next; }
 	Node<T>*				getPrev() { return prev; }
 	LinkedList<T>*			getList() { return list; }

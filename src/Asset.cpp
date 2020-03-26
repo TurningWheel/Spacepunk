@@ -17,6 +17,7 @@ const char* Asset::typeStr[Asset::ASSET_NUM] = {
 	"shaderprogram",
 	"sound",
 	"text",
+	"font",
 	"texture",
 	"framebuffer"
 };

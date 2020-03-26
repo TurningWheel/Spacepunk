@@ -145,18 +145,46 @@ static int console_help(int argc, const char** argv) {
 	}
 	Uint32 len = static_cast<Uint32>(strlen(search));
 
+	// print out cvars
+	mainEngine->fmsg(Engine::MSG_INFO, "Cvars:");
+	ArrayList<Cvar*> cvars;
 	for (auto& pair : Cvar::getMap()) {
 		Cvar* cvar = pair.b;
 		if (strncmp(search, cvar->getName(), len) == 0) {
-			mainEngine->fmsg(Engine::MSG_NOTE, "%s: %s", cvar->getName(), cvar->getDesc());
+			cvars.push(cvar);
 		}
 	}
+	class CvarSort : public ArrayList<Cvar*>::SortFunction {
+	public:
+		virtual const bool operator()(Cvar* a, Cvar* b) const override {
+			return strcmp(a->getName(), b->getName()) < 0;
+		};
+	} cvarSort;
+	cvars.sort(cvarSort);
+	for (auto cvar : cvars) {
+		mainEngine->fmsg(Engine::MSG_NOTE, "%s: %s (default: %s)", cvar->getName(), cvar->getDesc(), cvar->getDefault());
+	}
+
+	// print out ccmds
+	mainEngine->fmsg(Engine::MSG_INFO, "Ccmds:");
+	ArrayList<Ccmd*> ccmds;
 	for (auto& pair : Ccmd::getMap()) {
 		Ccmd* ccmd = pair.b;
 		if (strncmp(search, ccmd->name.get(), len) == 0) {
-			mainEngine->fmsg(Engine::MSG_NOTE, "%s: %s", ccmd->name.get(), ccmd->desc.get());
+			ccmds.push(ccmd);
 		}
 	}
+	class CcmdSort : public ArrayList<Ccmd*>::SortFunction {
+	public:
+		virtual const bool operator()(Ccmd* a, Ccmd* b) const override {
+			return strcmp(a->name.get(), b->name.get()) < 0;
+		};
+	} ccmdSort;
+	ccmds.sort(ccmdSort);
+	for (auto ccmd : ccmds) {
+		mainEngine->fmsg(Engine::MSG_NOTE, "%s: %s", ccmd->name.get(), ccmd->desc.get());
+	}
+
 	return 0;
 }
 
@@ -631,6 +659,7 @@ void Engine::init() {
 	}
 
 	// init resource managers
+	resources.insertUnique("font", new Resource<Font>());
 	resources.insertUnique("mesh", new Resource<Mesh, true>());
 	resources.insertUnique("image", new Resource<Image, true>());
 	resources.insertUnique("material", new Resource<Material>());
@@ -1209,8 +1238,9 @@ void Engine::preProcess() {
 	SDL_SetRelativeMouseMode((SDL_bool)mainEngine->isMouseRelative());
 
 	// update resources
-	getMeshResource().update();
-	getImageResource().update();
+	for (auto& resource : resources) {
+		resource.b->update();
+	}
 
 	// restart timer
 	unsigned int newTicksPerSecond = cvar_tickrate.toInt();

@@ -31,6 +31,7 @@ static Cvar cvar_zeroGravity("player.zerog.enabled", "enable zero-g effects on t
 static Cvar cvar_slopeLimit("player.slope.limit", "the maximum slope of a floor traversible by a player", "45");
 static Cvar cvar_stepHeight("player.step.height", "maximum step height that a player can ascend", "8");
 static Cvar cvar_enableBob("player.bob.enabled", "enable view bobbing", "0");
+static Cvar cvar_defaultController("player.default.enabled", "enable built-in first-person player controller", "1");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
@@ -77,7 +78,7 @@ Player::~Player() {
 
 void Player::setEntity(Entity* _entity) {
 	entity = _entity;
-	if (entity) {
+	if (entity && cvar_defaultController.toInt()) {
 		models = entity->findComponentByName<Component>("models");
 		head = entity->findComponentByName<Model>("Head");
 		torso = entity->findComponentByName<Model>("Torso");

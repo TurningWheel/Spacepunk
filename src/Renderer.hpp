@@ -34,13 +34,11 @@ public:
 		MAX
 	};
 
-	//! getters & setters
 	const bool 					isInitialized() const { return (const bool)initialized; }
 	const bool 					isFullscreen() const { return (const bool)fullscreen; }
 	const Sint32 				getXres() const { return (const Sint32)xres; }
 	const Sint32				getYres() const { return (const Sint32)yres; }
 	const Image*				getNullImage() const { return nullImg; }
-	TTF_Font*					getMonoFont() const { return monoFont; }
 	double						getAspectRatio() const { return ((double)xres) / ((double)yres); }
 	Resource<Framebuffer>&		getFramebufferResource() { return framebufferResource; }
 	const char*					getCurrentFramebuffer() const { return currentFramebuffer.get(); }
@@ -101,15 +99,17 @@ public:
 	void drawRect(const Rect<int>* src, const glm::vec4& color);
 
 	//! writes utf-8 text using a ttf font at the given screen coordinates
-	//! @param rect the position and size of the text image to use
+	//! @param font the font to use (if it is null, then nothing happens - saves you a check)
+	//! @param rect the position and size of the rendered text
 	//! @param str the str to print
-	void printText(const Rect<int>& rect, const char* str);
+	void printText(const Font* font, const Rect<int>& rect, const char* str);
 
 	//! writes utf-8 text using a ttf font at the given screen coordinates
-	//! @param rect the position and size of the text image to use
+	//! @param font the font to use (if it is null, then nothing happens - saves you a check)
+	//! @param rect the position and size of the rendered text
 	//! @param color the color to blend the text with
 	//! @param str the str to print
-	void printTextColor(const Rect<int>& rect, const glm::vec4& color, const char* str);
+	void printTextColor(const Font* font, const Rect<int>& rect, const glm::vec4& color, const char* str);
 
 	//! clears the screen and the z-buffer
 	void clearBuffers();
@@ -157,9 +157,6 @@ private:
 
 	//! system images
 	Image* nullImg = nullptr;
-
-	//! fonts
-	TTF_Font* monoFont = nullptr;
 
 	static const GLuint indices[6];
 	static const GLfloat positions[8];

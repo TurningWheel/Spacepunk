@@ -36,7 +36,6 @@ public:
 	//! @param vertex vertex to assign
 	void own(Sector::vertex_t& vertex);
 
-	//! getters & setters
 	bool									isSelected() const { return selected; }
 	bool									isHighlighted() const { return highlighted; }
 	const ArrayList<Sector::vertex_t*>&		getVertices() const { return vertices; }

@@ -201,7 +201,6 @@ public:
 			}
 		}
 
-		//! getters & setters
 		const ArrayList<param_t*>&		getList() const { return list; }
 		const Uint32					getSize() const { return list.getSize(); }
 

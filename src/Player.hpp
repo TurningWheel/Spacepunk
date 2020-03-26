@@ -81,7 +81,6 @@ public:
 	//! update player gui
 	void updateGUI();
 
-	//! getters & setters
 	const char*				getName() const { return name.get(); }
 	const Uint32			getServerID() const { return serverID; }
 	const Uint32			getLocalID() const { return localID; }

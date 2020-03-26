@@ -2,12 +2,11 @@
 
 #pragma once
 
-#define GLM_FORCE_RADIANS
-#include <glm/vec4.hpp>
-
 #include "Main.hpp"
 #include "Rect.hpp"
 #include "Script.hpp"
+#include "Font.hpp"
+#include "WideVector.hpp"
 
 class Renderer;
 class Frame;
@@ -59,11 +58,11 @@ public:
 	//! @return resultant state of the field after processing
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
-	//! getters & setters
 	const char*					getName() const { return name.get(); }
 	const char*					getText() const { return text; }
 	const Uint32				getTextLen() const { return textLen; }
-	const glm::vec4&			getColor() const { return color; }
+	const char*					getFont() const { return font.get(); }
+	const WideVector&			getColor() const { return color; }
 	const Rect<int>				getSize() const { return size; }
 	const int					getJustify() const { return static_cast<int>(justify); }
 	const bool					isSelected() const { return selected; }
@@ -78,7 +77,7 @@ public:
 	void	setText(const char* _text) { memset(text, '\0', textLen); strncpy(text, _text, textLen); }
 	void	setPos(const int x, const int y) { size.x = x; size.y = y; }
 	void	setSize(const Rect<int>& _size) { size = _size; }
-	void	setColor(const glm::vec4& _color) { color = _color; }
+	void	setColor(const WideVector& _color) { color = _color; }
 	void	setEditable(const bool _editable) { editable = _editable; }
 	void	setNumbersOnly(const bool _numbersOnly) { numbersOnly = _numbersOnly; }
 	void	setJustify(const int _justify) { justify = static_cast<justify_t>(_justify); }
@@ -86,24 +85,24 @@ public:
 	void	setTabDestField(const char* _tabDest) { tabDestField = _tabDest; }
 	void	setTabDestFrame(const char* _tabDest) { tabDestFrame = _tabDest; }
 	void	setCallback(const Script::Function* fn) { callback = fn; }
+	void	setFont(const char* _font) { font = _font; }
 
 private:
-	Frame* parent = nullptr;	//! parent frame
-
-	String name;
-	Script::Args params;
-	char* text = nullptr;
-	Uint32 textLen = 0;
-	glm::vec4 color = glm::vec4(1.f, 1.f, 1.f, 1.f);
-	Rect<int> size;
-	justify_t justify = LEFT;
-	bool selected = false;
-	bool editable = false;
-	bool numbersOnly = false;
-	bool scroll = true;
-	bool selectAll = false;
-	const Script::Function* callback = nullptr;
-
-	String tabDestFrame = invalidName;
-	String tabDestField = invalidName;
+	Frame* parent = nullptr;							//!< parent frame
+	String name;										//!< internal name of the field
+	Script::Args params;								//!< script arguments to use when calling script
+	String font = Font::defaultFont;					//!< font to use for rendering the field
+	char* text = nullptr;								//!< internal text buffer
+	Uint32 textLen = 0;									//!< size of the text buffer in bytes
+	WideVector color = WideVector(1.f);					//!< text color
+	Rect<int> size;										//!< size of the field in pixels
+	justify_t justify = LEFT;							//!< text justification
+	bool selected = false;								//!< whether the field is selected
+	bool editable = false;								//!< whether the field is read-only
+	bool numbersOnly = false;							//!< whether the field can only contain numeric chars
+	bool scroll = true;									//!< whether the field should scroll if the text is longer than its container
+	bool selectAll = false;								//!< whether all the text is selected for editing
+	const Script::Function* callback = nullptr;			//!< the callback to use after text is entered
+	String tabDestFrame = invalidName;					//!< the name of the frame to collect focus if the user presses the Tab key
+	String tabDestField = invalidName;					//!< the name of the field to collect focus if the user presses the Tab key
 };

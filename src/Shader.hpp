@@ -26,7 +26,6 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	//! getters & setters
 	virtual const type_t		getType() const { return ASSET_SHADER; }
 	virtual const shadertype_t	getShaderType() const { return shaderType; }
 	const GLuint				getShaderObject() { return shaderObject; }

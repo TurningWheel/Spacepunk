@@ -19,6 +19,7 @@
 #include "Animation.hpp"
 #include "Dictionary.hpp"
 #include "Cubemap.hpp"
+#include "Font.hpp"
 
 class Server;
 class Client;
@@ -104,6 +105,7 @@ public:
 	const double						getTimeSync() const { return timesync; }
 	const Uint32						getTicks() const { return ticks; }
 	const unsigned int					getTicksPerSecond() const { return ticksPerSecond; }
+	auto&								getFontResource() { return *static_cast<Resource<Font, false>*>(*resources.find("font")); }
 	auto&								getMeshResource() { return *static_cast<Resource<Mesh, true>*>(*resources.find("mesh")); }
 	auto&								getImageResource() { return *static_cast<Resource<Image, true>*>(*resources.find("image")); }
 	auto&								getMaterialResource() { return *static_cast<Resource<Material, false>*>(*resources.find("material")); }

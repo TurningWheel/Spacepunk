@@ -29,7 +29,6 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	//! getters & setters
 	virtual type_t					getType() const override { return COMPONENT_MULTIMESH; }
 	const char*						getMaterial() const { return materialStr.get(); }
 	const char*						getDepthFailMat() const { return depthfailStr.get(); }

@@ -31,7 +31,6 @@ public:
 		}
 	}
 
-	//! getters & setters
 	const T*		getArray() const { return arr; }
 	T*				getArray() { return arr; }
 	Uint32			getSize() const { return size; }
@@ -520,7 +519,6 @@ public:
 		return *this;
 	}
 
-	//! getters & setters
 	static Uint32 getDefaultSize() { return defaultSize; }
 
 protected:

@@ -14,7 +14,6 @@ public:
 	Server();
 	virtual ~Server();
 
-	//! getters & setters
 	virtual bool	isServer() const override { return true; }
 	virtual bool	isClient() const override { return false; }
 

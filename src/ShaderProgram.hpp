@@ -17,7 +17,6 @@ public:
 	ShaderProgram(const char* _name);
 	virtual ~ShaderProgram();
 
-	//! getters & setters
 	virtual const type_t			getType() const { return ASSET_SHADERPROGRAM; }
 	static const ShaderProgram*		getCurrentShader() { return currentShader; }
 

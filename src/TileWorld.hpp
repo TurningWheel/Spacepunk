@@ -106,7 +106,6 @@ public:
 	//! @param height the minimum height of a traversible tile (floor to ceiling)
 	void findRandomTile(float height, int& outX, int& outY);
 
-	//! getters & setters
 	virtual const type_t		getType() const { return WORLD_TILES; }
 	const Uint32				getWidth() const { return width; }
 	const Uint32				getHeight() const { return height; }

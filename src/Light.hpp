@@ -40,7 +40,6 @@ public:
 	static const char* meshStr;
 	static const char* materialStr;
 
-	//! getters & setters
 	virtual type_t		getType() const override { return COMPONENT_LIGHT; }
 	const Vector& 		getColor() const { return color; }
 	const float&		getIntensity() const { return intensity; }

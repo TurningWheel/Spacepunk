@@ -111,7 +111,6 @@ public:
 	//! @return positive number if the packet was interpreted here, 0 otherwise
 	virtual int handleNetworkPacket(Packet& packet, const char* type, Uint32 remoteID) override;
 
-	//! getters & setters
 	const ArrayList<sdlremote_t*>&	getSDLRemoteHosts() const { return SDLremotes; }
 
 protected:

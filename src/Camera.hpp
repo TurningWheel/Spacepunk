@@ -59,7 +59,6 @@ public:
 	static const char* materialStr;
 	const Mesh::shadervars_t shaderVars;
 
-	//! getters & setters
 	virtual type_t		getType() const override { return COMPONENT_CAMERA; }
 	Renderer*&			getRenderer() { return renderer; }
 	const float&		getClipNear() const { return clipNear; }

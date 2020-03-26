@@ -11,8 +11,8 @@
 Button::Button() {
 	size.x = 0; size.w = 32;
 	size.y = 0; size.h = 32;
-	color = glm::vec4(.5f, .5f, .5f, 1.f);
-	textColor = glm::vec4(1.f);
+	color = WideVector(.5f, .5f, .5f, 1.f);
+	textColor = WideVector(1.f);
 }
 
 Button::Button(Frame& _parent) : Button() {
@@ -50,7 +50,7 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	}
 
 	if (!text.empty() && style != STYLE_CHECKBOX) {
-		Text* _text = mainEngine->getTextResource().dataForString(text.get());
+		Text* _text = Text::get(text.get(), font.get());
 		if (_text) {
 			Rect<int> pos;
 			int textX = _size.w / 2 - _text->getWidth() / 2;

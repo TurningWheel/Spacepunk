@@ -84,7 +84,6 @@ public:
 	//! @param camera:
 	void draw(Camera& camera, Light* light);
 
-	//! getters & setters
 	const face_t*		getFace(Uint32 index) const { return faces[index]; }
 	const void*			getMaterial() const { return materialStr.get(); }
 	const bool			isUpdateNeeded() const { return updateNeeded; }

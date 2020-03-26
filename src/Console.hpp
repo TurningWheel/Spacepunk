@@ -51,15 +51,16 @@ public:
 		cached = 0U;
 	}
 
-	//! getters & setters
-	const char*		getName() const { return name; }
-	const char*		getDesc() const { return desc; }
+	const char*		getName() const { return name.get(); }
+	const char*		getDesc() const { return desc.get(); }
+	const char*		getDefault() const { return defaultValue.get(); }
 
 private:
 	Uint8 cached = 0U;
 	String name;
 	String desc;
 	String value;
+	String defaultValue;
 
 	const char* str;
 	Sint32 d;

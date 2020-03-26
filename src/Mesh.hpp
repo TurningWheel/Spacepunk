@@ -181,7 +181,6 @@ public:
 		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
 		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
 
-		//! getters & setters
 		virtual const type_t				getType() const { return ASSET_MESH; }
 		virtual const bool					isStreamable() const { return true; }
 		const unsigned int					getNumVertices() const { return numVertices; }
@@ -222,7 +221,6 @@ public:
 		unsigned int lastIndex = 0;		//!< last index modified
 	};
 
-	//! getters & setters
 	virtual const Asset::type_t				getType() const override { return Asset::ASSET_MESH; }
 	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const { return subMeshes; }
 	const Vector&							getMinBox() const { return minBox; }

@@ -72,7 +72,6 @@ public:
 		glm::vec3 pos;
 	};
 
-	//! getters & setters
 	Uint32					getX() const { return x; }
 	Uint32					getY() const { return y; }
 	Chunk*&					getChunk() { return chunk; }

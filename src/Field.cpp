@@ -99,11 +99,15 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 	Text* text = nullptr;
 	if (!str.empty()) {
-		text = mainEngine->getTextResource().dataForString(str.get());
+		text = Text::get(str.get(), font.get());
 		if (!text) {
 			return;
 		}
 	} else {
+		return;
+	}
+	Font* actualFont = mainEngine->getFontResource().dataForString(font.get());
+	if (!actualFont) {
 		return;
 	}
 
@@ -120,7 +124,7 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 		if (!mainEngine->isCursorVisible()) {
 			int w;
-			TTF_SizeUTF8(renderer.getMonoFont(), "_", &w, nullptr);
+			actualFont->sizeText("_", &w, nullptr);
 			textSizeW += w;
 			textSizeH += 2;
 		}
@@ -164,7 +168,7 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		renderer.drawRect(&rect, glm::vec4(.5f, .5f, 0.f, 1.f));
 	}
 
-	text->drawColor(src, dest, color);
+	text->drawColor(src, dest, glm::vec4(color.x, color.y, color.z, color.w));
 }
 
 Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const bool usable) {

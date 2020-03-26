@@ -26,7 +26,6 @@ public:
 	//! @return the Mix_Channel the sound is playing on, or -1 for errors
 	int playSound(const char* name, const bool loop);
 
-	//! getters & setters
 	const ALCdevice*	getDevice() const { return device; }
 	const ALCcontext*	getContext() const { return context; }
 	bool				isInitialized() const { return initialized; }

@@ -24,7 +24,6 @@ public:
 	~Map() {
 	}
 
-	//! getters & setters
 	ArrayList<OrderedPair<K, T>>&				getHash(Uint32 index) { return data[index]; }
 	const ArrayList<OrderedPair<K, T>>&			getHash(Uint32 index) const { return data[index]; }
 	Uint32										getNumBuckets() const { return numBuckets; }

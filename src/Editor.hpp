@@ -245,7 +245,6 @@ public:
 	//! @param renderer the renderer to draw with
 	void draw(Renderer& renderer);
 
-	//! getters & setters
 	const bool				isInitialized() const { return initialized; }
 	const bool				isCeilingMode() const { return ceilingMode; }
 	Sint32					getEditingMode() const { return static_cast<Sint32>(editingMode); }

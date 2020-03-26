@@ -30,7 +30,6 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	//! getters & setters
 	virtual const type_t		getType() const { return ASSET_MATERIAL; }
 	const ShaderProgram&		getShader() const { return shader; }
 	ShaderProgram&				getShader() { return shader; }

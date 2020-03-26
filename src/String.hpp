@@ -36,7 +36,6 @@ public:
 	//! represents an invalid position in the string
 	static const Uint32 npos = UINT32_MAX;
 
-	//! getters & setters
 	const char*				get() const { return str ? str : ""; }
 	const Uint32			getSize() const { return size; }
 
@@ -428,7 +427,6 @@ public:
 		return str;
 	}
 
-	//! getters & setters
 	static Uint32 getDefaultSize() { return defaultSize; }
 
 protected:

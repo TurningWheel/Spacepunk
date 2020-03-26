@@ -295,7 +295,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 
 		// get rendered text
-		Text* text = mainEngine->getTextResource().dataForString(entry.text.get());
+		Text* text = Text::get(entry.text.get(), font.get());
 		if (text == nullptr) {
 			continue;
 		}
@@ -349,16 +349,19 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	// root frame draws tooltip
 	if (!parent) {
 		if (tooltip) {
-			Text* text = mainEngine->getTextResource().dataForString(tooltip);
-			Rect<int> src;
-			src.x = mainEngine->getMouseX() + 10;
-			src.y = mainEngine->getMouseY();
-			TTF_SizeUTF8(renderer.getMonoFont(), tooltip, &src.w, nullptr);
-			src.h = text->getHeight();
-			renderer.drawRect(&src, WideVector(0.f, 0.f, 1.f, .9f));
-			Rect<int> src2(src.x + 3, src.y + 3, src.w - 6, src.h - 6);
-			renderer.drawRect(&src2, WideVector(0.f, 0.f, 0.f, .9f));
-			text->draw(Rect<int>(), Rect<int>(src.x, src.y, 0, 0));
+			Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
+			if (font) {
+				Text* text = Text::get(tooltip, font->getName());
+				Rect<int> src;
+				src.x = mainEngine->getMouseX() + 10;
+				src.y = mainEngine->getMouseY();
+				font->sizeText(tooltip, &src.w, nullptr);
+				src.h = text->getHeight();
+				renderer.drawRect(&src, WideVector(0.f, 0.f, 1.f, .9f));
+				Rect<int> src2(src.x + 3, src.y + 3, src.w - 6, src.h - 6);
+				renderer.drawRect(&src2, WideVector(0.f, 0.f, 0.f, .9f));
+				text->draw(Rect<int>(), Rect<int>(src.x, src.y, 0, 0));
+			}
 		}
 	}
 

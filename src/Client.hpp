@@ -60,7 +60,6 @@ public:
 	//! closes the editor without terminating the client
 	void closeEditor();
 
-	//! getters & setters
 	Renderer*						getRenderer() { return renderer; }
 	Mixer*							getMixer() { return mixer; }
 	Frame*							getGUI() { return gui; }

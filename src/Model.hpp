@@ -90,7 +90,6 @@ public:
 	//! @return true if the animation has wrapped, otherwise false
 	bool isAnimDone() const;
 
-	//! getters & setters
 	virtual type_t						getType() const override { return COMPONENT_MODEL; }
 	const char*							getMesh() const { return meshStr.get(); }
 	const char*							getMaterial() const { return materialStr.get(); }

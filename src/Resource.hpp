@@ -46,7 +46,6 @@ public:
 		dumpCache();
 	}
 
-	//! getters & setters
 	Map<String, T*>&			getCache() { return cache; }
 
 	//! number of items in the resource
@@ -111,6 +110,9 @@ public:
 
 	//! finishes jobs
 	virtual void update() override {
+		if (!stream) {
+			return;
+		}
 		std::vector<std::string> keys;
 		for (auto& pair : jobs) {
 			auto& name = pair.first;

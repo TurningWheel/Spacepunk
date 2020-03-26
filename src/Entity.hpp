@@ -78,7 +78,6 @@ public:
 	Entity(World* _world, Uint32 uid = UINT32_MAX);
 	virtual ~Entity();
 
-	//! getters & setters
 	const String&						getName() const { return name; }
 	const Uint32&						getUID() const { return uid; }
 	const Uint32&						getTicks() const { return ticks; }

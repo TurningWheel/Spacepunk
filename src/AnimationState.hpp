@@ -63,7 +63,6 @@ public:
 	//! clears all weights associated with this animation
 	void clearWeights();
 
-	//! getters & setters
 	const char*						getName() const { return name.get(); }
 	float							getTicks() const { return ticks; }
 	float							getTicksRate() const { return ticksRate; }
