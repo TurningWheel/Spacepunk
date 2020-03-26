@@ -487,7 +487,8 @@ void Engine::startEditor(const char* path) {
 }
 
 void Engine::editorPlaytest() {
-	mainEngine->loadAllDefs();
+	// TODO: reloading defs here insidiously breaks a lot of game physics. why?
+	//mainEngine->loadAllDefs();
 	if (localClient && localClient->isEditorActive()) {
 		World* world = localClient->getWorld(0);
 		StringBuf<64> path("%s/maps/.playtest.wlb", 1, game.path.get());

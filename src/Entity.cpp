@@ -591,7 +591,7 @@ void Entity::postProcess() {
 
 void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 	bool editorRunning = mainEngine->isEditorRunning();
-	if (!isFlag(flag_t::FLAG_VISIBLE) && (!editorRunning || !shouldSave)) {
+	if (!isFlag(flag_t::FLAG_VISIBLE) && (!world->isShowTools() || !editorRunning || !shouldSave)) {
 		return;
 	}
 
