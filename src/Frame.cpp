@@ -487,8 +487,6 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			// bound
 			actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
 			actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
-<<<<<<< HEAD
-=======
 
 			// figure out if this is the highest frame that could capture us
 			bool highest = true;
@@ -501,7 +499,6 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			if (highest) {
 				result.usable = false;
 			}
->>>>>>> 9652ba80f4ca6bbb0df394bf950251a9cb572b34
 		}
 
 		// filler in between sliders
