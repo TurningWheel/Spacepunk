@@ -99,6 +99,10 @@ function process()
             count = count + 1
         end
 
+<<<<<<< HEAD
+                hit.manifest.entity:remove()
+                entity:remove()
+=======
         -- collision with something that was NOT a tank
         if touchedTank == false then
             if hit.manifest.entity:getName():get() ~= tankWhoShotMe or canHitOwner then
@@ -119,6 +123,7 @@ function process()
 
                     canHitOwner = true
                 end
+>>>>>>> 9652ba80f4ca6bbb0df394bf950251a9cb572b34
             end
         end
 
