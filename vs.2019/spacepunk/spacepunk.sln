@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spacepunk", "spacepunk.vcxproj", "{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Hybrid|x64 = Hybrid|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Debug|x64.ActiveCfg = Debug|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Debug|x64.Build.0 = Debug|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Hybrid|x64.ActiveCfg = Hybrid|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Hybrid|x64.Build.0 = Hybrid|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Release|x64.ActiveCfg = Release|x64
+		{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C05DE9FF-BA74-459E-8123-4721C5F2FBBA}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal

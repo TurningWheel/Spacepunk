@@ -1,0 +1,419 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid|Win32">
+      <Configuration>Hybrid</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Hybrid|x64">
+      <Configuration>Hybrid</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F0067A3A-70C3-4D51-9D1B-9FF7AF2F5887}</ProjectGuid>
+    <RootNamespace>spacepunk</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Spacepunk</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\..\build\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SPACEPUNK_LIBS)\include;$(SPACEPUNK_LIBS)\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SPACEPUNK_LIBS)\lib\x64;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <OutDir>$(SolutionDir)..\..\build\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
+    <TargetName>..\..\..\build\$(ProjectName)</TargetName>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|Win32'">
+    <IncludePath>C:\GameLibs\include;C:\GameLibs\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GameLibs\lib;$(LibraryPath)</LibraryPath>
+    <TargetName>..\..\..\build\$(ProjectName)</TargetName>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SPACEPUNK_LIBS)\include;$(SPACEPUNK_LIBS)\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SPACEPUNK_LIBS)\lib\x64;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <OutDir>$(SolutionDir)..\..\build\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'">
+    <IncludePath>$(SPACEPUNK_LIBS)\include;$(SPACEPUNK_LIBS)\include\bullet3;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SPACEPUNK_LIBS)\lib\x64;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <OutDir>$(SolutionDir)..\..\build\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);ARCH_X86</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32.lib;assimp-vc140-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);ARCH_X64;BUILD_DEBUG</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc141-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);NDEBUG;ARCH_X86</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glew32.lib;assimp-vc140-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);NDEBUG;ARCH_X86</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glew32.lib;assimp-vc140-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);NDEBUG;ARCH_X64;BUILD_RELEASE</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc141-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Hybrid|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);ARCH_X64;BUILD_HYBRID</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>poly2tri.lib;lua51.lib;glew32.lib;assimp-vc141-mt.lib;OpenGL32.lib;glu32.lib;BulletDynamics_vs2010_x64_release.lib;BulletCollision_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib;libpng16.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_net.lib;SDL2_ttf.lib;SDL2.lib;SDL2main.lib;zlib.lib;nfd.lib;OpenAL32.lib;comctl32.lib;ole32.lib;Shell32.lib;DbgHelp.lib</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Font.hpp" />
+    <ClInclude Include="..\..\src\Quaternion.hpp" />
+    <ClInclude Include="..\..\src\Rotation.hpp" />
+    <ClInclude Include="..\..\src\Animation.hpp" />
+    <ClInclude Include="..\..\src\AnimationState.hpp" />
+    <ClInclude Include="..\..\src\ArrayList.hpp" />
+    <ClInclude Include="..\..\src\Asset.hpp" />
+    <ClInclude Include="..\..\src\BasicWorld.hpp" />
+    <ClInclude Include="..\..\src\BBox.hpp" />
+    <ClInclude Include="..\..\src\Button.hpp" />
+    <ClInclude Include="..\..\src\Camera.hpp" />
+    <ClInclude Include="..\..\src\Character.hpp" />
+    <ClInclude Include="..\..\src\Client.hpp" />
+    <ClInclude Include="..\..\src\Component.hpp" />
+    <ClInclude Include="..\..\src\Console.hpp" />
+    <ClInclude Include="..\..\src\Cube.hpp" />
+    <ClInclude Include="..\..\src\Cubemap.hpp" />
+    <ClInclude Include="..\..\src\Dictionary.hpp" />
+    <ClInclude Include="..\..\src\Directory.hpp" />
+    <ClInclude Include="..\..\src\Editor.hpp" />
+    <ClInclude Include="..\..\src\Engine.hpp" />
+    <ClInclude Include="..\..\src\Entity.hpp" />
+    <ClInclude Include="..\..\src\Field.hpp" />
+    <ClInclude Include="..\..\src\File.hpp" />
+    <ClInclude Include="..\..\src\Frame.hpp" />
+    <ClInclude Include="..\..\src\Framebuffer.hpp" />
+    <ClInclude Include="..\..\src\Game.hpp" />
+    <ClInclude Include="..\..\src\Generator.hpp" />
+    <ClInclude Include="..\..\src\Image.hpp" />
+    <ClInclude Include="..\..\src\Input.hpp" />
+    <ClInclude Include="..\..\src\Inventory.hpp" />
+    <ClInclude Include="..\..\src\Item.hpp" />
+    <ClInclude Include="..\..\src\Light.hpp" />
+    <ClInclude Include="..\..\src\Line3D.hpp" />
+    <ClInclude Include="..\..\src\LinkedList.hpp" />
+    <ClInclude Include="..\..\src\Main.hpp" />
+    <ClInclude Include="..\..\src\Map.hpp" />
+    <ClInclude Include="..\..\src\Mesh.hpp" />
+    <ClInclude Include="..\..\src\Mixer.hpp" />
+    <ClInclude Include="..\..\src\Model.hpp" />
+    <ClInclude Include="..\..\src\Multimesh.hpp" />
+    <ClInclude Include="..\..\src\Net.hpp" />
+    <ClInclude Include="..\..\src\NetSDL.hpp" />
+    <ClInclude Include="..\..\src\Node.hpp" />
+    <ClInclude Include="..\..\src\Chunk.hpp" />
+    <ClInclude Include="..\..\src\Packet.hpp" />
+    <ClInclude Include="..\..\src\Pair.hpp" />
+    <ClInclude Include="..\..\src\Path.hpp" />
+    <ClInclude Include="..\..\src\Physics.hpp" />
+    <ClInclude Include="..\..\src\Player.hpp" />
+    <ClInclude Include="..\..\src\Random.hpp" />
+    <ClInclude Include="..\..\src\Rect.hpp" />
+    <ClInclude Include="..\..\src\Renderer.hpp" />
+    <ClInclude Include="..\..\src\Resource.hpp" />
+    <ClInclude Include="..\..\src\savepng.hpp" />
+    <ClInclude Include="..\..\src\Script.hpp" />
+    <ClInclude Include="..\..\src\Sector.hpp" />
+    <ClInclude Include="..\..\src\Atlas.hpp" />
+    <ClInclude Include="..\..\src\SectorVertex.hpp" />
+    <ClInclude Include="..\..\src\SectorWorld.hpp" />
+    <ClInclude Include="..\..\src\Server.hpp" />
+    <ClInclude Include="..\..\src\Shader.hpp" />
+    <ClInclude Include="..\..\src\ShaderProgram.hpp" />
+    <ClInclude Include="..\..\src\Shadow.hpp" />
+    <ClInclude Include="..\..\src\Sound.hpp" />
+    <ClInclude Include="..\..\src\Speaker.hpp" />
+    <ClInclude Include="..\..\src\String.hpp" />
+    <ClInclude Include="..\..\src\Text.hpp" />
+    <ClInclude Include="..\..\src\Material.hpp" />
+    <ClInclude Include="..\..\src\Texture.hpp" />
+    <ClInclude Include="..\..\src\Tile.hpp" />
+    <ClInclude Include="..\..\src\TileWorld.hpp" />
+    <ClInclude Include="..\..\src\Vector.hpp" />
+    <ClInclude Include="..\..\src\Voxel.hpp" />
+    <ClInclude Include="..\..\src\WideVector.hpp" />
+    <ClInclude Include="..\..\src\World.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Animation.cpp" />
+    <ClCompile Include="..\..\src\AnimationState.cpp" />
+    <ClCompile Include="..\..\src\Asset.cpp" />
+    <ClCompile Include="..\..\src\BasicWorld.cpp" />
+    <ClCompile Include="..\..\src\BBox.cpp" />
+    <ClCompile Include="..\..\src\Button.cpp" />
+    <ClCompile Include="..\..\src\Camera.cpp" />
+    <ClCompile Include="..\..\src\Character.cpp" />
+    <ClCompile Include="..\..\src\Client.cpp" />
+    <ClCompile Include="..\..\src\Component.cpp" />
+    <ClCompile Include="..\..\src\Console.cpp" />
+    <ClCompile Include="..\..\src\Cube.cpp" />
+    <ClCompile Include="..\..\src\Cubemap.cpp" />
+    <ClCompile Include="..\..\src\Dictionary.cpp" />
+    <ClCompile Include="..\..\src\Directory.cpp" />
+    <ClCompile Include="..\..\src\Editor.cpp" />
+    <ClCompile Include="..\..\src\Engine.cpp" />
+    <ClCompile Include="..\..\src\Entity.cpp" />
+    <ClCompile Include="..\..\src\Field.cpp" />
+    <ClCompile Include="..\..\src\File.cpp" />
+    <ClCompile Include="..\..\src\Font.cpp" />
+    <ClCompile Include="..\..\src\Frame.cpp" />
+    <ClCompile Include="..\..\src\Framebuffer.cpp" />
+    <ClCompile Include="..\..\src\Game.cpp" />
+    <ClCompile Include="..\..\src\Generator.cpp" />
+    <ClCompile Include="..\..\src\Image.cpp" />
+    <ClCompile Include="..\..\src\Input.cpp" />
+    <ClCompile Include="..\..\src\Inventory.cpp" />
+    <ClCompile Include="..\..\src\Item.cpp" />
+    <ClCompile Include="..\..\src\Light.cpp" />
+    <ClCompile Include="..\..\src\Line3D.cpp" />
+    <ClCompile Include="..\..\src\Main.cpp" />
+    <ClCompile Include="..\..\src\Mesh.cpp" />
+    <ClCompile Include="..\..\src\Chunk.cpp" />
+    <ClCompile Include="..\..\src\Mixer.cpp" />
+    <ClCompile Include="..\..\src\Model.cpp" />
+    <ClCompile Include="..\..\src\Multimesh.cpp" />
+    <ClCompile Include="..\..\src\Net.cpp" />
+    <ClCompile Include="..\..\src\NetSDL.cpp" />
+    <ClCompile Include="..\..\src\Packet.cpp" />
+    <ClCompile Include="..\..\src\Path.cpp" />
+    <ClCompile Include="..\..\src\Physics.cpp" />
+    <ClCompile Include="..\..\src\Player.cpp" />
+    <ClCompile Include="..\..\src\Random.cpp" />
+    <ClCompile Include="..\..\src\Renderer.cpp" />
+    <ClCompile Include="..\..\src\savepng.cpp" />
+    <ClCompile Include="..\..\src\Script.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Sector.cpp" />
+    <ClCompile Include="..\..\src\Atlas.cpp" />
+    <ClCompile Include="..\..\src\SectorVertex.cpp" />
+    <ClCompile Include="..\..\src\SectorWorld.cpp" />
+    <ClCompile Include="..\..\src\Server.cpp" />
+    <ClCompile Include="..\..\src\Shader.cpp" />
+    <ClCompile Include="..\..\src\ShaderProgram.cpp" />
+    <ClCompile Include="..\..\src\Shadow.cpp" />
+    <ClCompile Include="..\..\src\Sound.cpp" />
+    <ClCompile Include="..\..\src\Speaker.cpp" />
+    <ClCompile Include="..\..\src\Text.cpp" />
+    <ClCompile Include="..\..\src\Material.cpp" />
+    <ClCompile Include="..\..\src\Texture.cpp" />
+    <ClCompile Include="..\..\src\Tile.cpp" />
+    <ClCompile Include="..\..\src\TileWorld.cpp" />
+    <ClCompile Include="..\..\src\Voxel.cpp" />
+    <ClCompile Include="..\..\src\World.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
