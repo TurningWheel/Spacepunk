@@ -114,7 +114,6 @@ void main() {
 #else
 	vec3 lWorldTexturePos = (lWorldPos - gModel[3].xyz + (gNormalTransform * vec4(gBoundingBox, 1.f)).xyz) / 256.f;
 	vec2 lTexCoord = (lWorldTexturePos * lTBN).xy;
-	//vec2 lTexCoord = (lWorldTexturePos).xz;
 #endif
 #ifdef BUMPMAP
 	vec3 lNormal = CalcBumpedNormal(lTBN, lTexCoord);

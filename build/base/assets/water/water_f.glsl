@@ -9,7 +9,10 @@ in vec3 Tangent;
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 FragColorBright;
 
+uniform mat4 gModel;
+uniform mat4 gNormalTransform;
 uniform vec3 gCameraPos;
+uniform vec3 gBoundingBox;
 uniform int gTime;
 
 #define MAX_LIGHTS 12
@@ -80,18 +83,16 @@ float ShadowFactor(int light)
 }
 #endif
 
-#ifdef BUMPMAP
-vec3 CalcBumpedNormal() {
-	float lTime = float((gTime % 6000) / 6000.f);
-    vec3 lNormal = normalize(Normal);
-    vec3 lTangent = normalize(Tangent);
+mat3 CalcTBN(vec3 lNormal, vec3 lTangent) {
     lTangent = normalize(lTangent - dot(lTangent, lNormal) * lNormal);
     vec3 lBitangent = cross(lTangent, lNormal);
+    return mat3(lTangent, lBitangent, lNormal);
+}
 
-    vec3 lBumpMapNormal = texture(gTexture[0], TexCoord * 10.f + lTime).xyz;
+#ifdef BUMPMAP
+vec3 CalcBumpedNormal(mat3 lTBN, vec2 lTexCoord) {
+    vec3 lBumpMapNormal = texture(gTexture[1], lTexCoord).xyz;
     lBumpMapNormal = 2.0 * lBumpMapNormal - vec3(1.0, 1.0, 1.0);
-
-    mat3 lTBN = mat3(lTangent, lBitangent, lNormal);
     vec3 lNewNormal = lTBN * lBumpMapNormal;
     lNewNormal = normalize(lNewNormal);
     return lNewNormal;
@@ -99,19 +100,26 @@ vec3 CalcBumpedNormal() {
 #endif
 
 void main() {
-	float  lTime      = float((gTime % 1200) / 1200.f);
-	vec2   lTexCoord  = TexCoord;
-#ifdef BUMPMAP
-	vec3   lNormal    = CalcBumpedNormal();
+
+	mat3 lTBN = CalcTBN(normalize(Normal), normalize(Tangent));
+#ifndef TILED_TEXTURE
+	vec2 lTexCoord = TexCoord;
 #else
-	vec3   lNormal    = Normal;
+	vec3 lWorldTexturePos = (WorldPos - gModel[3].xyz + (gNormalTransform * vec4(gBoundingBox, 1.f)).xyz) / 2048.f;
+	vec2 lTexCoord = (lWorldTexturePos * lTBN).xy;
 #endif
+#ifdef BUMPMAP
+	vec3 lNormal = CalcBumpedNormal(lTBN, lTexCoord);
+#else
+	vec3 lNormal = Normal;
+#endif
+
+	float  lTime      = float((gTime % 1200) / 1200.f);
 	vec3   lOffset    = (texture(gTexture[1], lTexCoord * 4.f + lTime).xyz * 2.f - 1.f) * 10.f;
 	vec3   lWorldPos  = WorldPos + lOffset;
 	vec3   lCameraDir = normalize(gCameraPos - lWorldPos);
-
-	vec3 lReflection = reflect(normalize(lCameraDir), lNormal) * -1;
-	vec4 lTexColor = texture(gCubemap, lReflection);
+	vec3   lReflection = reflect(normalize(lCameraDir), lNormal) * -1;
+	vec4   lTexColor = texture(gCubemap, lReflection);
 
 	// do custom colors
 	if( gCustomColorEnabled ) {
@@ -209,7 +217,7 @@ void main() {
 	}
 #endif
 #ifdef FRESNEL
-	float fresnelPower = dot(lNormal, lCameraDir) * 5.f;
+	float fresnelPower = dot(lNormal, lCameraDir) * 6.f;
 	FragColor = FragColor / fresnelPower;
 #endif
 

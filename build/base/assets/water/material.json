@@ -16,7 +16,8 @@
 				"type": 2,
 				"path": "assets/water/water_f.glsl",
 				"defines": [
-					"FRESNEL"
+					"FRESNEL",
+					"TILED_TEXTURE"
 				]
 			}
 		]
