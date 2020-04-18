@@ -17,6 +17,7 @@ class Camera;
 class Chunk;
 
 extern Cvar cvar_shadowsEnabled;
+extern Cvar cvar_shadowsStaticOnly;
 
 //! An Entity Component that adds a dynamic, shadow-casting light inside of a World.
 class Light : public Component {

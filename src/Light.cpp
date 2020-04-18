@@ -33,7 +33,8 @@ const char* Light::shapeStr[SHAPE_NUM] = {
 	"pyramid"
 };
 
-Cvar cvar_shadowsEnabled("render.shadows", "enables shadow rendering", "3");
+Cvar cvar_shadowsEnabled("render.shadow.enabled", "enables shadow rendering", "1");
+Cvar cvar_shadowsStaticOnly("render.shadow.static", "render only static shadow maps", "0");
 
 Light::Light(Entity& _entity, Component* _parent) :
 	Component(_entity, _parent) {
@@ -133,7 +134,7 @@ void Light::serialize(FileInterface * file) {
 	}
 }
 
-static Cvar cvar_shadowDepthOffset("render.shadowdepthoffset", "shadow depth buffer adjustment", "0");
+static Cvar cvar_shadowDepthOffset("render.shadow.depthoffset", "shadow depth buffer adjustment", "0");
 
 void Light::createShadowMap() {
 	if (!entity || !entity->getWorld()) {

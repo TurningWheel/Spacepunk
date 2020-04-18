@@ -201,7 +201,7 @@ void BasicWorld::draw() {
 
 		// build relevant light list
 		// this could be done better
-		bool shadowsEnabled = (!client->isEditorActive() || !showTools) && !cvar_renderFullbright.toInt() && cvar_shadowsEnabled.toInt();
+		const bool shadowsEnabled = (!client->isEditorActive() || !showTools) && !cvar_renderFullbright.toInt() && cvar_shadowsEnabled.toInt();
 		for (Node<Light*>* node = lights.getFirst(); node != nullptr; node = node->getNext()) {
 			Light* light = node->getData();
 
@@ -212,8 +212,10 @@ void BasicWorld::draw() {
 
 			cameraLightList.push(light);
 			if (shadowsEnabled) {
-				if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
-					light->createShadowMap();
+				if (light->getEntity()->isFlag(Entity::flag_t::FLAG_STATIC) || !cvar_shadowsStaticOnly.toInt()) {
+					if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
+						light->createShadowMap();
+					}
 				}
 			}
 		}

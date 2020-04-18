@@ -915,6 +915,8 @@ void Client::process() {
 	}
 }
 
+Cvar cvar_bloomEnabled("render.bloom.enabled", "enable or disable bloom", "1");
+
 void Client::postProcess() {
 	Game::postProcess();
 
@@ -959,7 +961,7 @@ void Client::postProcess() {
 				showTools = world->isShowTools();
 			}
 
-			if (!showTools || !editor) {
+			if (cvar_bloomEnabled.toInt() && (!editor || !showTools)) {
 				// blur bloom highlights
 				Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1");
 				bloomPass1->clear();
