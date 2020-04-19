@@ -6,11 +6,11 @@
 #include "Client.hpp"
 #include "Renderer.hpp"
 
-const int Shadow::resolution = 2048;
+Cvar cvar_shadowResolution("render.shadow.resolution", "shadow map resolution", "2048");
+
 const float Shadow::camerainfo_t::fov = 90.f;
 const float Shadow::camerainfo_t::clipNear = 1.f;
 const float Shadow::camerainfo_t::clipFar = 1000.f;
-const Rect<Sint32> Shadow::camerainfo_t::win = Rect<Sint32>(0, 0, Shadow::resolution, Shadow::resolution);
 const Shadow::camerainfo_t Shadow::cameraInfo[Shadow::directions] = {
 	{ GL_TEXTURE_CUBE_MAP_POSITIVE_X, Rotation(PI, PI, 0.f) },					// west
 	{ GL_TEXTURE_CUBE_MAP_NEGATIVE_X, Rotation(0.f, PI, 0.f) },					// east
@@ -42,6 +42,7 @@ void Shadow::init() {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	const float resolution = cvar_shadowResolution.toFloat();
 	for (Uint32 i = 0; i < 6; ++i) {
 		glTexImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i), 0, GL_R32UI, resolution, resolution, 0, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
 	}
@@ -109,6 +110,7 @@ void Shadow::bindForWriting(GLenum face) {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, face, shadowMap, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, face, uidMap, 0);
+	const float resolution = cvar_shadowResolution.toFloat();
 	glViewport(0, 0, resolution, resolution);
 }
 

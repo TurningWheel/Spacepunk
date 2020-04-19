@@ -168,6 +168,8 @@ void Light::createShadowMap() {
 		q = q.rotate(Shadow::cameraInfo[c].dir);
 		shadowCamera->setAng(q);
 		shadowCamera->update();
+		int resolution = cvar_shadowResolution.toInt();
+		camera->setWin(Rect<Sint32>(0, 0, resolution, resolution));
 		camera->setClipNear(1.f);
 		camera->setClipFar(radius);
 		camera->setupProjection(false);

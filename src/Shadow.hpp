@@ -12,15 +12,11 @@ public:
 	Shadow();
 	~Shadow();
 
-	//! shadow map resolution
-	static const int resolution;
-
 	//! camera info
 	struct camerainfo_t {
 		GLenum face;
 		Rotation dir;
 		static const float fov;
-		static const Rect<Sint32> win;
 		static const float clipNear;
 		static const float clipFar;
 	};
@@ -50,3 +46,5 @@ private:
 	GLuint shadowMap = 0;
 	GLuint uidMap = 0;
 };
+
+extern Cvar cvar_shadowResolution;

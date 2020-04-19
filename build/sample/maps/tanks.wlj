@@ -461,7 +461,7 @@
                 "z": 1.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -563,7 +563,7 @@
                 "z": 1.0
             },
             "scriptStr": "",
-            "flags": 129,
+            "flags": 16513,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -718,7 +718,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -873,7 +873,7 @@
                 "z": 1.0
             },
             "scriptStr": "",
-            "flags": 129,
+            "flags": 16513,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1100,7 +1100,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1255,7 +1255,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1410,7 +1410,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1565,7 +1565,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -2056,7 +2056,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -2211,7 +2211,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -2366,7 +2366,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -2521,7 +2521,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 385,
+            "flags": 16769,
             "falling": false,
             "sort": 0,
             "EntityItem": {
