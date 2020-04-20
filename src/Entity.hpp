@@ -247,7 +247,7 @@ public:
 	//! draws the entity
 	//! @param camera the camera through which to draw the entity
 	//! @param light the light by which the entity should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) const;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights);
 
 	//! animates all the entity's meshes in unison
 	//! @param name The name of the animation to play
@@ -322,6 +322,9 @@ public:
 
 	//! updates matrices
 	void update();
+
+	//! update bounding box
+	void updateBounds();
 
 	//! clears the node pointing to us in the chunk we are occupying
 	void clearChunkNode() { if (chunkNode) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
@@ -479,6 +482,8 @@ protected:
 	Uint32 componentIDs = 0;
 	ArrayList<Component*> components;		//!< component list
 
+	Vector boundsMax;						//!< bounding-box (read-only, not used for collision)
+	Vector boundsMin;						//!< bounding-box (read-only, not used for collision)
 	Vector pos;								//!< position
 	Vector newPos;							//!< new position to interpolate towards (net)
 	Vector vel;								//!< velocity
@@ -512,6 +517,12 @@ protected:
 
 	Item item;
 	bool canBePickedUp = false;
+
+	struct occlusion_query_t {
+		GLuint id = 0;
+		bool occluded = false;
+	};
+	Map<Camera*, occlusion_query_t> occlusion;
 
 	//! editor variables
 	bool selected = false;

@@ -37,7 +37,12 @@ public:
 	//! @param camera the camera through which to draw the scene
 	//! @param light the light by which the scene should be illuminated (or nullptr for no illumination)
 	//! @param entities the entities to draw
-	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights);
+	void drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Entity*>& entities);
+
+	//! fill an empty draw list with entities sorted by camera distance
+	//! @param camera the camera in question
+	//! @param entities the draw list to fill
+	void fillDrawList(const Camera& camera, ArrayList<Entity*>& entities);
 
 	//! writes the world contents to a file
 	//! @param _filename the filename to write to, or blank to use our last filename

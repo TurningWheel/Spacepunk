@@ -68,6 +68,9 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
+	//! update bounds
+	virtual void updateBounds() override;
+
 	//! updates skin if necessary
 	void updateSkin();
 

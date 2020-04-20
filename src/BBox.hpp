@@ -88,6 +88,9 @@ public:
 	//! updates matrices and rigid body
 	virtual void update() override;
 
+	//! update bounds
+	virtual void updateBounds() override;
+
 	//! draws the component
 	//! @param camera the camera through which to draw the component
 	//! @param light the light by which the component should be illuminated (or nullptr for no illumination)

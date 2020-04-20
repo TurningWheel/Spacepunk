@@ -91,6 +91,43 @@ void Model::process() {
 	}
 }
 
+void Model::updateBounds() {
+	Component::updateBounds();
+	if (entity->isShouldSave() && !hasAnimations()) {
+		Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
+		if (mesh) {
+			Vector maxBox = mesh->getMaxBox();
+			Vector minBox = mesh->getMinBox();
+			Vector offset = (maxBox + minBox) / 2;
+			Vector bounds = (maxBox - minBox) / 2;
+
+			glm::vec3 bScale = glm::vec3(gScale.x, gScale.z, gScale.y);
+			glm::vec3 boxScale = glm::vec3(bounds.x, -bounds.z, bounds.y) * bScale;
+			glm::mat4 mat = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
+			for (float x = -1.f; x <= 1.f; x += 2.f) {
+				for (float y = -1.f; y <= 1.f; y += 2.f) {
+					for (float z = -1.f; z <= 1.f; z += 2.f) {
+						glm::vec3 mScale = mat * glm::vec4(boxScale * glm::vec3(x, y, z), 1.f);
+						Vector scale = Vector(mScale.x, mScale.z, -mScale.y) + gPos - entity->getPos();
+						boundsMax.x = std::max(boundsMax.x, scale.x);
+						boundsMax.y = std::max(boundsMax.y, scale.y);
+						boundsMax.z = std::max(boundsMax.z, scale.z);
+						boundsMin.x = std::min(boundsMin.x, scale.x);
+						boundsMin.y = std::min(boundsMin.y, scale.y);
+						boundsMin.z = std::min(boundsMin.z, scale.z);
+					}
+				}
+			}
+
+			glm::vec3 boxOffset = glm::vec3(offset.x, -offset.z, offset.y) * bScale;
+			glm::vec3 mOffset = mat * glm::vec4(boxOffset, 1.f);
+			Vector trueOffset = Vector(mOffset.x, mOffset.z, -mOffset.y);
+			boundsMax += trueOffset;
+			boundsMin += trueOffset;
+		}
+	}
+}
+
 Uint32 Model::findBoneIndex(const char* name) const {
 	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 	if (mesh) {
@@ -273,7 +310,7 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	// transparent objects not rendered to depth buffer
-	if (camera.getDrawMode() == Camera::DRAW_DEPTH && mat && mat->isTransparent()) {
+	if (camera.getDrawMode() <= Camera::DRAW_DEPTH && mat && mat->isTransparent()) {
 		return;
 	}
 

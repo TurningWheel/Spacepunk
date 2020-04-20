@@ -77,12 +77,17 @@ Mesh::Mesh(const char* _name) : Asset(_name) {
 			}
 			for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
 				Mesh::SubMesh* entry = new Mesh::SubMesh(scene, scene->mMeshes[i]);
-				minBox.x = min(minBox.x, entry->getMinBox().x);
-				minBox.y = min(minBox.y, entry->getMinBox().y);
-				minBox.z = min(minBox.z, entry->getMinBox().z);
-				maxBox.x = max(maxBox.x, entry->getMaxBox().x);
-				maxBox.y = max(maxBox.y, entry->getMaxBox().y);
-				maxBox.z = max(maxBox.z, entry->getMaxBox().z);
+				if (i == 0) {
+					minBox = entry->getMinBox();
+					maxBox = entry->getMaxBox();
+				} else {
+					minBox.x = min(minBox.x, entry->getMinBox().x);
+					minBox.y = min(minBox.y, entry->getMinBox().y);
+					minBox.z = min(minBox.z, entry->getMinBox().z);
+					maxBox.x = max(maxBox.x, entry->getMaxBox().x);
+					maxBox.y = max(maxBox.y, entry->getMaxBox().y);
+					maxBox.z = max(maxBox.z, entry->getMaxBox().z);
+				}
 				subMeshes.addNodeLast(entry);
 				numBones += entry->getNumBones();
 				numVertices += entry->getNumVertices();
@@ -215,6 +220,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	// get shader program
 	Material* mat = nullptr;
 	switch (camera.getDrawMode()) {
+	case Camera::DRAW_BOUNDS:
 	case Camera::DRAW_DEPTH:
 		mat = mainEngine->getMaterialResource().dataForString("shaders/actor/depth.json");
 		break;
@@ -283,7 +289,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	glm::vec3 gMaxBox(maxBox.x, -maxBox.z, maxBox.y);
 	glUniform3fv(shader.getUniformLocation("gBoundingBox"), 1, glm::value_ptr(gMaxBox));
 
-	if (camera.getDrawMode() == Camera::DRAW_DEPTH) {
+	if (camera.getDrawMode() <= Camera::DRAW_DEPTH) {
 
 		// load model matrix into shader
 		glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
@@ -711,16 +717,16 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 			vertices[i * 3 + 2] = mesh->mVertices[i].z;
 
 			if (i == 0) {
-				minBox.x = maxBox.x = vertices[i * 3];
-				minBox.y = maxBox.y = vertices[i * 3 + 2];
-				minBox.z = maxBox.z = vertices[i * 3 + 1];
+				minBox.x = maxBox.x =  vertices[i * 3];
+				minBox.y = maxBox.y =  vertices[i * 3 + 2];
+				minBox.z = maxBox.z = -vertices[i * 3 + 1];
 			} else {
-				minBox.x = min(minBox.x, (float)vertices[i * 3]);
-				minBox.y = min(minBox.y, (float)vertices[i * 3 + 2]);
-				minBox.z = min(minBox.z, (float)vertices[i * 3 + 1]);
-				maxBox.x = max(maxBox.x, (float)vertices[i * 3]);
-				maxBox.y = max(maxBox.y, (float)vertices[i * 3 + 2]);
-				maxBox.z = max(maxBox.z, (float)vertices[i * 3 + 1]);
+				minBox.x = std::min(minBox.x,  vertices[i * 3]);
+				minBox.y = std::min(minBox.y,  vertices[i * 3 + 2]);
+				minBox.z = std::min(minBox.z, -vertices[i * 3 + 1]);
+				maxBox.x = std::max(maxBox.x,  vertices[i * 3]);
+				maxBox.y = std::max(maxBox.y,  vertices[i * 3 + 2]);
+				maxBox.z = std::max(maxBox.z, -vertices[i * 3 + 1]);
 			}
 		}
 	}

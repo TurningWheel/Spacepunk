@@ -6327,12 +6327,11 @@ void Editor::updateGUI(Frame& gui) {
 				} else {
 					entity->resetFlag(static_cast<int>(Entity::flag_t::FLAG_ALLOWTRACE));
 				}
+				entity->update();
 			} else {
 				entity->resetFlag(static_cast<int>(Entity::flag_t::FLAG_VISIBLE));
 				entity->resetFlag(static_cast<int>(Entity::flag_t::FLAG_ALLOWTRACE));
 			}
-
-			entity->update();
 		}
 	}
 

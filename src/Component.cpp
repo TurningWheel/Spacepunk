@@ -971,7 +971,10 @@ void Component::revertToIdentity() {
 }
 
 void Component::update() {
-	updateNeeded = false;
+	if (updateNeeded && entity->getWorld()) {
+		entity->updateBounds();
+		updateNeeded = false;
+	}
 
 	deleteVisMaps();
 
@@ -1022,6 +1025,22 @@ void Component::update() {
 			--c;
 		} else {
 			components[c]->update();
+		}
+	}
+}
+
+void Component::updateBounds() {
+	boundsMax = gPos - entity->getPos();
+	boundsMin = gPos - entity->getPos();
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (!components[c]->editorOnly) {
+			components[c]->updateBounds();
+			boundsMax.x = std::max(boundsMax.x, components[c]->getBoundsMax().x);
+			boundsMax.y = std::max(boundsMax.y, components[c]->getBoundsMax().y);
+			boundsMax.z = std::max(boundsMax.z, components[c]->getBoundsMax().z);
+			boundsMin.x = std::min(boundsMin.x, components[c]->getBoundsMin().x);
+			boundsMin.y = std::min(boundsMin.y, components[c]->getBoundsMin().y);
+			boundsMin.z = std::min(boundsMin.z, components[c]->getBoundsMin().z);
 		}
 	}
 }

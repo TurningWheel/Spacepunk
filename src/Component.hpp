@@ -432,6 +432,9 @@ public:
 	//! updates matrices
 	virtual void update();
 
+	//! update bounds
+	virtual void updateBounds();
+
 	//! checks the component for any components with the given type
 	//! @param type the type to look for
 	//! @return true if the component was found, false otherwise
@@ -608,6 +611,8 @@ public:
 	const bool*						getChunksVisible() const { return chunksVisible; }
 	const ArrayList<Chunk*>&		getVisibleChunks() const { return visibleChunks; }
 	const ArrayList<Attribute*>&	getAttributes() const { return attributes; }
+	const Vector&					getBoundsMax() const { return boundsMax; }
+	const Vector&					getBoundsMin() const { return boundsMin; }
 
 	void				setEditorOnly(bool _editorOnly) { editorOnly = _editorOnly; }
 	void				setName(const char* _name) { name = _name; }
@@ -666,6 +671,9 @@ protected:
 
 	Sint32 currentCX = INT32_MAX;	//!< X coord of the chunk we are currently occupying
 	Sint32 currentCY = INT32_MAX;	//!< Y coord of the chunk we are currently occupying
+
+	Vector boundsMax;		//!< bounding-box (read-only, not used for collision)
+	Vector boundsMin;		//!< bounding-box (read-only, not used for collision)
 
 	//! occlusion test tile world
 	Uint32 tilesWidth = 0;

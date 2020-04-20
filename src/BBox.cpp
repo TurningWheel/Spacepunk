@@ -480,7 +480,7 @@ static Cvar cvar_showBBoxes("showbboxes", "Makes bboxes visible", "0");
 void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	Component::draw(camera, lights);
 
-	if (editorOnly) {
+	if (!cvar_showBBoxes.toInt() && editorOnly) {
 		// don't draw BBoxes that exist only for the editor
 		return;
 	}
@@ -497,9 +497,11 @@ void BBox::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	// don't draw unselected bboxes - it makes things very ugly
-	if (mainEngine->isEditorRunning()) {
-		if (!entity->isSelected() && parent != nullptr) {
-			return;
+	if (!cvar_showBBoxes.toInt()) {
+		if (mainEngine->isEditorRunning()) {
+			if (!entity->isSelected() && parent != nullptr) {
+				return;
+			}
 		}
 	}
 
@@ -624,6 +626,26 @@ void BBox::update() {
 	Vector oldGScale = gScale;
 	Component::update();
 	updateRigidBody(oldGScale);
+}
+
+void BBox::updateBounds() {
+	Component::updateBounds();
+	glm::vec3 bScale = glm::vec3(gScale.x, gScale.z, gScale.y);
+	glm::mat4 mat = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
+	for (float x = -1.f; x <= 1.f; x += 2.f) {
+		for (float y = -1.f; y <= 1.f; y += 2.f) {
+			for (float z = -1.f; z <= 1.f; z += 2.f) {
+				glm::vec3 mScale = mat * glm::vec4(bScale * glm::vec3(x, y, z), 1.f);
+				Vector scale = Vector(mScale.x, mScale.z, mScale.y) + gPos - entity->getPos();
+				boundsMax.x = std::max(boundsMax.x, scale.x);
+				boundsMax.y = std::max(boundsMax.y, scale.y);
+				boundsMax.z = std::max(boundsMax.z, scale.z);
+				boundsMin.x = std::min(boundsMin.x, scale.x);
+				boundsMin.y = std::min(boundsMin.y, scale.y);
+				boundsMin.z = std::min(boundsMin.z, scale.z);
+			}
+		}
+	}
 }
 
 void BBox::load(FILE* fp) {

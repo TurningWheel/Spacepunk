@@ -175,9 +175,13 @@ void Light::createShadowMap() {
 		camera->setupProjection(false);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		if (world->getType() == World::type_t::WORLD_TILES) {
-			static_cast<TileWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({ this }), visibleChunks);
+			auto tw = static_cast<TileWorld*>(world);
+			tw->drawSceneObjects(*camera, ArrayList<Light*>({ this }), visibleChunks);
 		} else if (world->getType() == World::type_t::WORLD_BASIC) {
-			static_cast<BasicWorld*>(world)->drawSceneObjects(*camera, ArrayList<Light*>({ this }));
+			auto bw = static_cast<BasicWorld*>(world);
+			ArrayList<Entity*> drawList;
+			bw->fillDrawList(*camera, drawList);
+			bw->drawSceneObjects(*camera, ArrayList<Light*>({ this }), drawList);
 		}
 	}
 	glPolygonOffset(1.f, 0.f);
