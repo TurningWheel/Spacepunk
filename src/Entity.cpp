@@ -670,9 +670,15 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		} else {
 			Vector offset = (boundsMax + boundsMin) / 2.f + pos;
 			Vector bounds = boundsMax - boundsMin;
+			bounds.x = std::max(bounds.x, 16.f);
+			bounds.y = std::max(bounds.y, 16.f);
+			bounds.z = std::max(bounds.z, 16.f);
 			glm::mat4 translationM = glm::translate(glm::mat4(1.f), glm::vec3(offset.x, -offset.z, offset.y));
 			glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(bounds.x, bounds.z, bounds.y));
-			glm::mat4 mat = translationM * glm::scale(scaleM, glm::vec3(-1.f, 1.f, 1.f)); // invert the cube so we can test when the camera is inside it
+			glm::mat4 mat = translationM * scaleM;
+
+			// draw the cube normally and inverted
+			camera.drawCube(glm::scale(mat, glm::vec3(-1.f, 1.f, 1.f)), glm::vec4(0.f));
 			camera.drawCube(mat, glm::vec4(0.f));
 		}
 		glEndQuery(GL_ANY_SAMPLES_PASSED);

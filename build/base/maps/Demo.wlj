@@ -23,7 +23,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 16769,
+            "flags": 20865,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -280,7 +280,7 @@
                 "z": 10.0
             },
             "scriptStr": "",
-            "flags": 16513,
+            "flags": 20609,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -435,7 +435,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 16769,
+            "flags": 20865,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -590,7 +590,7 @@
                 "z": 0.7115446329116821
             },
             "scriptStr": "",
-            "flags": 16769,
+            "flags": 20865,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -745,7 +745,7 @@
                 "z": 4.0
             },
             "scriptStr": "",
-            "flags": 16769,
+            "flags": 20865,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1317,7 +1317,7 @@
                 "z": 5.316874980926514
             },
             "scriptStr": "",
-            "flags": 16769,
+            "flags": 20865,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1627,7 +1627,7 @@
                 "z": 1.0
             },
             "scriptStr": "",
-            "flags": 16513,
+            "flags": 20609,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1782,7 +1782,7 @@
                 "z": 10.0
             },
             "scriptStr": "",
-            "flags": 16513,
+            "flags": 20609,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -1937,7 +1937,7 @@
                 "z": 10.0
             },
             "scriptStr": "",
-            "flags": 16513,
+            "flags": 20609,
             "falling": false,
             "sort": 0,
             "EntityItem": {
@@ -2092,7 +2092,7 @@
                 "z": 10.0
             },
             "scriptStr": "",
-            "flags": 16513,
+            "flags": 20609,
             "falling": false,
             "sort": 0,
             "EntityItem": {

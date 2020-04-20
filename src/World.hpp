@@ -210,7 +210,6 @@ public:
 	const String&				getZone() const { return zone; }
 	Uint32						getID() const { return id; }
 	const filetype_t			getFiletype() const { return filetype; }
-	Entity*						getShadowCamera() { return shadowCamera; }
 	Shadow&						getDefaultShadow() { return defaultShadow; }
 	const Shadow&				getDefaultShadow() const { return defaultShadow; }
 	void						setMaxUID(Uint32 uid) { uids = std::max(uids, uid); }
@@ -279,7 +278,6 @@ protected:
 	static void bulletCollisionCallback(btBroadphasePair& pair, btCollisionDispatcher& dispatcher, const btDispatcherInfo& info);
 
 	//! shadow map stuff
-	Entity* shadowCamera = nullptr;
 	Shadow defaultShadow;
 };
 

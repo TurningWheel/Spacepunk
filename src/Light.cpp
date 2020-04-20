@@ -56,6 +56,13 @@ Light::Light(Entity& _entity, Component* _parent) :
 	attributes.push(new AttributeFloat("Arc", arc));
 	attributes.push(new AttributeBool("Shadow-casting", shadow));
 	attributes.push(new AttributeEnum<shape_t>("Shape", shapeStr, shape_t::SHAPE_NUM, shape));
+
+	// create shadow camera
+	if (entity->getWorld()) {
+		const Entity::def_t* def = Entity::findDef("Shadow Camera"); assert(def);
+		shadowCamera = Entity::spawnFromDef(entity->getWorld(), *def, Vector(), Rotation());
+		shadowCamera->setShouldSave(false);
+	}
 }
 
 Light::~Light() {
@@ -136,6 +143,23 @@ void Light::serialize(FileInterface * file) {
 
 static Cvar cvar_shadowDepthOffset("render.shadow.depthoffset", "shadow depth buffer adjustment", "0");
 
+void Light::beforeWorldInsertion(const World* world) {
+	Component::beforeWorldInsertion(world);
+	if (shadowCamera) {
+		shadowCamera->remove();
+		shadowCamera = nullptr;
+	}
+}
+
+void Light::afterWorldInsertion(const World* world) {
+	Component::afterWorldInsertion(world);
+	if (entity->getWorld()) {
+		const Entity::def_t* def = Entity::findDef("Shadow Camera"); assert(def);
+		shadowCamera = Entity::spawnFromDef(entity->getWorld(), *def, Vector(), Rotation());
+		shadowCamera->setShouldSave(false);
+	}
+}
+
 void Light::createShadowMap() {
 	if (!entity || !entity->getWorld()) {
 		return;
@@ -154,7 +178,7 @@ void Light::createShadowMap() {
 		return;
 	}
 
-	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
+	assert(shadowCamera);
 	Camera* camera = shadowCamera->findComponentByUID<Camera>(1); assert(camera);
 	camera->setDrawMode(Camera::DRAW_SHADOW);
 	shadowCamera->setPos(gPos);
