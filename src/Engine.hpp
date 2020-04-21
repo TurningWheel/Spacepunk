@@ -305,14 +305,21 @@ public:
 	static bool pointInTriangle(const Vector& a, const Vector& b, const Vector& c, const Vector& p);
 
 	//! determines if one triangle lies inside of another (two-dimensional)
-	//! @param a0: point A on first triangle (container)
-	//! @param b0: point B on first triangle (container)
-	//! @param c0: point C on first triangle (container)
-	//! @param a1: point A on second triangle
-	//! @param b1: point B on second triangle
-	//! @param c1: point C on second triangle
+	//! @param a0 point A on first triangle (container)
+	//! @param b0 point B on first triangle (container)
+	//! @param c0 point C on first triangle (container)
+	//! @param a1 point A on second triangle
+	//! @param b1 point B on second triangle
+	//! @param c1 point C on second triangle
 	//! @return true if the second triangle is in the first one, otherwise false
 	static bool triangleOverlapsTriangle(const Vector& a0, const Vector& b0, const Vector& c0, const Vector& a1, const Vector& b1, const Vector& c1);
+
+	//! measure the distance squared between a point and a 3D bounding box
+	//! @param point the point to measure from
+	//! @param boundsMin min coords of the bounding box
+	//! @param boundsMax max coords of the bounding box
+	//! @return the distance squared
+	static float measurePointToBounds(const Vector& point, const Vector& boundsMin, const Vector& boundsMax);
 
 	//! perform pre-processing on the current frame
 	void preProcess();

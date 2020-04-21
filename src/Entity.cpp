@@ -611,8 +611,6 @@ void Entity::process() {
 	// update component matrices
 	if (updateNeeded) {
 		update();
-	} else if (ticks % 180 == 0) {
-		updateBounds();
 	}
 
 	// process components

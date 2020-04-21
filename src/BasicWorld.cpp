@@ -135,8 +135,8 @@ void BasicWorld::fillDrawList(const Camera& camera, ArrayList<Entity*>& entities
 			camera(_camera) {}
 		virtual ~SortFn() {}
 		virtual const bool operator()(Entity* a, Entity* b) const override {
-			float lengthA = (a->getPos() - camera.getGlobalPos()).lengthSquared();
-			float lengthB = (b->getPos() - camera.getGlobalPos()).lengthSquared();
+			float lengthA = Engine::measurePointToBounds(camera.getGlobalPos(), a->getBoundsMin() + a->getPos(), a->getBoundsMax() + a->getPos());
+			float lengthB = Engine::measurePointToBounds(camera.getGlobalPos(), b->getBoundsMin() + b->getPos(), b->getBoundsMax() + b->getPos());
 			return lengthA < lengthB;
 		}
 		const Camera& camera;
@@ -215,10 +215,17 @@ void BasicWorld::draw() {
 			camera->occlusionTest(camera->getClipFar(), cvar_renderCull.toInt());
 		}
 
-		ArrayList<Light*> cameraLightList;
+		// build and sort entity list by distance to camera
+		ArrayList<Entity*> drawList, reducedDrawList;
+		fillDrawList(*camera, drawList);
+		for (auto entity : drawList) {
+			if (!entity->isShouldSave() || !entity->isOccluded(*camera)) {
+				reducedDrawList.push(entity);
+			}
+		}
 
 		// build relevant light list
-		// this could be done better
+		ArrayList<Light*> cameraLightList;
 		const bool shadowsEnabled = (!client->isEditorActive() || !showTools) && !cvar_renderFullbright.toInt() && cvar_shadowsEnabled.toInt();
 		for (Node<Light*>* node = lights.getFirst(); node != nullptr; node = node->getNext()) {
 			Light* light = node->getData();
@@ -228,6 +235,28 @@ void BasicWorld::draw() {
 				continue;
 			}
 
+			// figure out if the light is affecting any visible objects
+			bool relevant = false;
+			assert(light->getShadowCamera());
+			Camera* shadowCamera = light->getShadowCamera()->findComponentByUID<Camera>(1);
+			assert(shadowCamera);
+			for (auto entity : reducedDrawList) {
+				if (entity->isFlag(Entity::FLAG_VISIBLE)) {
+					if (!entity->isOccluded(*shadowCamera) && entity->isShouldSave()) {
+						float dist = Engine::measurePointToBounds(light->getGlobalPos(),
+							entity->getBoundsMin() + entity->getPos(), entity->getBoundsMax() + entity->getPos());
+						if (dist <= light->getRadius() * light->getRadius()) {
+							relevant = true;
+							break;
+						}
+					}
+				}
+			}
+			if (!relevant) {
+				continue;
+			}
+
+			// add light to light list
 			cameraLightList.push(light);
 			if (shadowsEnabled) {
 				if (light->getEntity()->isFlag(Entity::flag_t::FLAG_STATIC) || !cvar_shadowsStaticOnly.toInt()) {
@@ -237,6 +266,7 @@ void BasicWorld::draw() {
 				}
 			}
 		}
+		int numLights = cameraLightList.getSize();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 		// clear the window area
@@ -252,10 +282,6 @@ void BasicWorld::draw() {
 		glEnable(GL_DEPTH_TEST);
 		glDrawBuffer(GL_NONE);
 
-		// build and sort entity list by distance to camera
-		ArrayList<Entity*> drawList;
-		fillDrawList(*camera, drawList);
-
 		// render bounds for occlusion query
 		camera->setDrawMode(Camera::DRAW_BOUNDS);
 		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
@@ -264,7 +290,7 @@ void BasicWorld::draw() {
 		// render scene into depth buffer
 		camera->setDrawMode(Camera::DRAW_DEPTH);
 		glDepthMask(GL_TRUE);
-		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+		drawSceneObjects(*camera, ArrayList<Light*>(), reducedDrawList);
 
 		if ((client->isEditorActive() && showTools) || cvar_renderFullbright.toInt()) {
 			// render fullbright scene
@@ -276,7 +302,7 @@ void BasicWorld::draw() {
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_GEQUAL);
-			drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+			drawSceneObjects(*camera, ArrayList<Light*>(), reducedDrawList);
 		} else {
 			// render shadowed scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
@@ -293,10 +319,10 @@ void BasicWorld::draw() {
 				for (int c = 0; c < Mesh::maxLights; ++c) {
 					reducedLightList.push(cameraLightList.pop());
 				}
-				drawSceneObjects(*camera, reducedLightList, drawList);
+				drawSceneObjects(*camera, reducedLightList, reducedDrawList);
 				reducedLightList.clear();
 			}
-			drawSceneObjects(*camera, cameraLightList, drawList);
+			drawSceneObjects(*camera, cameraLightList, reducedDrawList);
 		}
 
 		// render scene with glow textures
@@ -304,9 +330,9 @@ void BasicWorld::draw() {
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_GEQUAL);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
-		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+		drawSceneObjects(*camera, ArrayList<Light*>(), reducedDrawList);
 		glDrawBuffer(GL_COLOR_ATTACHMENT1);
-		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+		drawSceneObjects(*camera, ArrayList<Light*>(), reducedDrawList);
 
 		static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
 			GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
@@ -326,18 +352,18 @@ void BasicWorld::draw() {
 		// render triangle lines
 		if (cvar_showVerts.toInt()) {
 			camera->setDrawMode(Camera::DRAW_TRIANGLES);
-			drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+			drawSceneObjects(*camera, ArrayList<Light*>(), reducedDrawList);
 		}
 
 		// render depth fail scene
 		camera->setDrawMode(Camera::DRAW_DEPTHFAIL);
 		glDepthFunc(GL_LESS);
-		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+		drawSceneObjects(*camera, ArrayList<Light*>(), reducedDrawList);
 		glDepthFunc(GL_GEQUAL);
 
 		// render silhouettes
 		camera->setDrawMode(Camera::DRAW_SILHOUETTE);
-		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+		drawSceneObjects(*camera, ArrayList<Light*>(), reducedDrawList);
 
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);
@@ -370,6 +396,17 @@ void BasicWorld::draw() {
 		ShaderProgram::unmount();
 
 		cameraLightList.clear();
+
+		// show stats
+		if (cvar_showStats.toInt()) {
+			Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont); assert(font);
+			Rect<Sint32> rect;
+			rect.x = camera->getWin().x + 10;
+			rect.y = camera->getWin().y + 10;
+			char buf[64];
+			snprintf(buf, sizeof(buf), "lights: %d\nentities: %d", numLights, reducedDrawList.getSize());
+			renderer->printText(font, rect, buf);
+		}
 	}
 
 	for (auto light : lights) {

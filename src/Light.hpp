@@ -52,6 +52,7 @@ public:
 	const bool			isShadow() const { return shadow; }
 	Uint32				getShadowTicks() const { return shadowTicks; }
 	Shadow&				getShadowMap() { return shadowMap; }
+	Entity*				getShadowCamera() { return shadowCamera; }
 
 	void	setColor(const Vector& _color) { color = _color; }
 	void	setIntensity(const float _intensity) { intensity = _intensity; }

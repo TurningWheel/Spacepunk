@@ -1232,3 +1232,4 @@ static Ccmd ccmd_clientCountEntities("client.countentities", "count the number o
 Cvar cvar_showFPS("showfps", "displays an FPS counter", "0");
 Cvar cvar_showSpeed("showspeed", "displays player speedometer", "0");
 Cvar cvar_showMatrix("showmatrix", "displays the camera matrix of the first player", "0");
+Cvar cvar_showStats("showstats", "displays a list of objects drawn in each camera viewport", "0");

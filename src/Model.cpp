@@ -298,6 +298,9 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 
 	// mark model as "broken"
 	resource_error_t error = mainEngine->getMeshResource().getError();
+	if (error != resource_error_t::ERROR_NONE) {
+		refreshBounds = true;
+	}
 	bool hadError = error == resource_error_t::ERROR_CACHEFAILED;
 	if ((!mesh && !meshStr.empty() && hadError) ||
 		(!mat && !materialStr.empty()) ||
@@ -320,6 +323,11 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	if (mesh) {
+		if (refreshBounds) {
+			refreshBounds = false;
+			entity->updateBounds();
+		}
+
 		// skip models that aren't glowing in the "glow" pass...
 		if (camera.getDrawMode() == Camera::DRAW_GLOW) {
 			if (!mat) {

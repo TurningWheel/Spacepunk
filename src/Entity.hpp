@@ -118,6 +118,8 @@ public:
 	const Vector&						getOffset() const { return offset; }
 	bool								isPickupable() const { return canBePickedUp; }
 	const Rotation&						getLookDir() const { return lookDir; }
+	const Vector&						getBoundsMin() const { return boundsMin; }
+	const Vector&						getBoundsMax() const { return boundsMax; }
 
 	void					setName(const char* _name) { name = _name; if (listener) listener->onChangeName(name); }
 	void					setMat(const glm::mat4& _mat);

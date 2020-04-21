@@ -1186,6 +1186,14 @@ bool Engine::triangleOverlapsTriangle(const Vector& a0, const Vector& b0, const 
 	return false;
 }
 
+float Engine::measurePointToBounds(const Vector& point, const Vector& boundsMin, const Vector& boundsMax) {
+	Vector d;
+	d.x = std::max(boundsMin.x - point.x, std::max(0.f, point.x - boundsMax.x));
+	d.y = std::max(boundsMin.y - point.y, std::max(0.f, point.y - boundsMax.y));
+	d.z = std::max(boundsMin.z - point.z, std::max(0.f, point.z - boundsMax.z));
+	return d.lengthSquared();
+}
+
 void Engine::shutdown() {
 	running = false;
 }

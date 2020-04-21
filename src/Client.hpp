@@ -97,3 +97,4 @@ private:
 extern Cvar cvar_showFPS;
 extern Cvar cvar_showSpeed;
 extern Cvar cvar_showMatrix;
+extern Cvar cvar_showStats;
