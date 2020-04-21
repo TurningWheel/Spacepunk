@@ -260,6 +260,14 @@ void BasicWorld::draw() {
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_GEQUAL);
+			while (cameraLightList.getSize() >= Mesh::maxLights) {
+				ArrayList<Light*> reducedLightList;
+				for (int c = 0; c < Mesh::maxLights; ++c) {
+					reducedLightList.push(cameraLightList[0]);
+					cameraLightList.remove(0);
+				}
+				drawSceneObjects(*camera, reducedLightList);
+			}
 			drawSceneObjects(*camera, cameraLightList);
 		}
 
