@@ -171,7 +171,7 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 
 		++index;
 		++textureUnit;
-		if (index >= maxLights || textureUnit >= GL_MAX_TEXTURE_IMAGE_UNITS) {
+		if (index >= maxLights) {
 			break;
 		}
 	}
@@ -184,25 +184,25 @@ Uint32 ShaderProgram::uploadLights(const Camera& camera, const ArrayList<Light*>
 
 	index = 0u;
 	for (auto light : lights) {
-		if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
+		/*if (light->isShadow() && light->getEntity()->isFlag(Entity::FLAG_SHADOW) && cvar_shadowsEnabled.toInt()) {
 			glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
 			light->getShadowMap().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
 		} else {
 			glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
 			camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
-		}
+		}*/
 
 		++index;
 		++textureUnit;
-		if (index >= maxLights || textureUnit >= GL_MAX_TEXTURE_IMAGE_UNITS) {
+		if (index >= maxLights) {
 			break;
 		}
 	}
-	for (; index < maxLights; ++index) {
+	/*for (; index < maxLights; ++index) {
 		glUniform1i(getUniformLocation(uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
 		camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
 		++textureUnit;
-	}
+	}*/
 
 	glUniform1i(getUniformLocation("gNumLights"), (GLint)lights.getSize());
 

@@ -104,6 +104,8 @@ Entity::Entity(World* _world, Uint32 _uid) {
 
 	pathRequested = false;
 	path = nullptr;
+
+	updateBounds();
 }
 
 Entity::~Entity() {
@@ -144,6 +146,16 @@ Entity::~Entity() {
 			query.b.id = 0;
 		}
 	}
+}
+
+bool Entity::isOccluded(Camera& camera) {
+	auto query = occlusion.find(&camera);
+	if (!query) {
+		occlusion.insertUnique(&camera, occlusion_query_t());
+		query = occlusion.find(&camera);
+	}
+	assert(query);
+	return query->occluded;
 }
 
 Game* Entity::getGame() {

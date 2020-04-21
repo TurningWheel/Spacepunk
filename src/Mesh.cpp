@@ -376,10 +376,10 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
 				camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_DEPTH_ATTACHMENT);
 			}
-			for (int index = 0; index < maxLights; ++textureUnit, ++index) {
+			/*for (int index = 0; index < maxLights; ++textureUnit, ++index) {
 				glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
 				camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
-			}
+			}*/
 		} else {
 			glUniform1i(shader.getUniformLocation("gActiveLight"), GL_TRUE);
 			int oldTextureUnit = textureUnit;
@@ -405,10 +405,10 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 				glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gShadowmap", 10, index)), textureUnit);
 				camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_DEPTH_ATTACHMENT);
 			}
-			for (int index = newTextureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
+			/*for (int index = newTextureUnit - oldTextureUnit; index < maxLights; ++textureUnit, ++index) {
 				glUniform1i(shader.getUniformLocation(ShaderProgram::uniformArray(buf, "gUIDmap", 7, index)), textureUnit);
 				camera.getEntity()->getWorld()->getDefaultShadow().bindForReading(GL_TEXTURE0 + textureUnit, GL_COLOR_ATTACHMENT0);
-			}
+			}*/
 		}
 	}
 

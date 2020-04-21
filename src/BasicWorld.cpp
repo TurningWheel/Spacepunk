@@ -228,6 +228,14 @@ void BasicWorld::draw() {
 				continue;
 			}
 
+			/*if (light->getEntity()->isOccluded(*camera)) {
+				continue;
+			}*/
+
+			if (cameraLightList.getSize() >= Mesh::maxLights) {
+				break;
+			}
+
 			cameraLightList.push(light);
 			if (shadowsEnabled) {
 				if (light->getEntity()->isFlag(Entity::flag_t::FLAG_STATIC) || !cvar_shadowsStaticOnly.toInt()) {

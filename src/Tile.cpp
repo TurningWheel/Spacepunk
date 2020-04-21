@@ -178,7 +178,7 @@ ShaderProgram* Tile::loadShader(const TileWorld& world, const Camera& camera, co
 				}
 
 				++index;
-				if (index >= maxLights || index + 4 >= GL_MAX_TEXTURE_IMAGE_UNITS) {
+				if (index >= maxLights) {
 					break;
 				}
 			}

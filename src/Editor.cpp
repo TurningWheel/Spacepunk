@@ -5243,20 +5243,20 @@ void Editor::updateGUI(Frame& gui) {
 	{
 		Frame* console = gui.findFrame("editor_FrameBottomMiniConsole");
 		if (console) {
-			if (console->getEntries().getSize() != client->getConsole().getSize()) {
+			int miniSize = console->getEntries().getSize();
+			int mainSize = client->getConsole().getSize();
+			if (miniSize != mainSize) {
 				while (console->getEntries().getFirst()) {
 					delete console->getEntries().getFirst()->getData();
 					console->getEntries().removeNode(console->getEntries().getFirst());
 				}
-
 				const Node<Engine::logmsg_t>* node;
-				for (node = client->getConsole().getFirst(); node != nullptr; node = node->getNext()) {
+				for (node = client->getConsole().nodeForIndex(std::max(0, mainSize - 100)); node != nullptr; node = node->getNext()) {
 					const Engine::logmsg_t& logMsg = node->getData();
 					Frame::entry_t* entry = console->addEntry("", false);
 					entry->text = logMsg.text.get();
 					entry->color = WideVector(logMsg.color.x, logMsg.color.y, logMsg.color.z, 1.f);
 				}
-
 				console->resizeForEntries();
 				Rect<int> actualSize = console->getActualSize();
 				actualSize.y = actualSize.h - console->getSize().h;

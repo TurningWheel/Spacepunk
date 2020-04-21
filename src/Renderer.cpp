@@ -212,6 +212,14 @@ int Renderer::initVideo() {
 	mainEngine->fmsg(Engine::MSG_INFO, "GL_SHADING_LANGUAGE_VERSION = %s", shVerStr);
 	GLint imageUnits = 0; glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &imageUnits);
 	mainEngine->fmsg(Engine::MSG_INFO, "GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS = %d", imageUnits);
+	GLint maxUniforms = 0; glGetIntegerv(GL_MAX_UNIFORM_LOCATIONS, &maxUniforms);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_MAX_UNIFORM_LOCATIONS = %d", maxUniforms);
+	GLint maxFragUniforms = 0; glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &maxFragUniforms);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_MAX_FRAGMENT_UNIFORM_COMPONENTS = %d", maxFragUniforms);
+	GLint maxTextureUnits = 0; glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_MAX_TEXTURE_IMAGE_UNITS = %d", maxTextureUnits);
+	GLint maxCombinedTextureUnits = 0; glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxCombinedTextureUnits);
+	mainEngine->fmsg(Engine::MSG_INFO, "GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS = %d", maxCombinedTextureUnits);
 
 #if REGISTER_GLDEBUG_CALLBACK
 	// During init, enable debug output
