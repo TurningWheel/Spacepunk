@@ -72,7 +72,7 @@ void BasicWorld::process() {
 	World::process();
 }
 
-void BasicWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights) {
+void BasicWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& lights, const ArrayList<Entity*>& entities) {
 	Client* client = mainEngine->getLocalClient();
 	if (!client)
 		return;
@@ -99,9 +99,7 @@ void BasicWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& light
 	// draw entities
 	if (camera.getDrawMode() != Camera::DRAW_STENCIL) {
 		if (camera.getDrawMode() != Camera::DRAW_GLOW || !editorActive || !showTools) {
-			for (auto pair : entities) {
-				Entity* entity = pair.b;
-
+			for (auto entity : entities) {
 				// in silhouette mode, skip unhighlighted or unselected actors
 				if (camera.getDrawMode() == Camera::DRAW_SILHOUETTE) {
 					if (!entity->isHighlighted() && entity->getUID() != highlightedObj) {
@@ -124,6 +122,26 @@ void BasicWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& light
 	glActiveTexture(GL_TEXTURE0);
 	ShaderProgram::unmount();
 	camera.onFrameDrawn();
+}
+
+void BasicWorld::fillDrawList(const Camera& camera, ArrayList<Entity*>& entities) {
+	for (auto pair : this->entities) {
+		Entity* entity = pair.b;
+		entities.push(entity);
+	}
+	class SortFn : public ArrayList<Entity*>::SortFunction {
+	public:
+		SortFn(const Camera& _camera) :
+			camera(_camera) {}
+		virtual ~SortFn() {}
+		virtual const bool operator()(Entity* a, Entity* b) const override {
+			float lengthA = (a->getPos() - camera.getGlobalPos()).lengthSquared();
+			float lengthB = (b->getPos() - camera.getGlobalPos()).lengthSquared();
+			return lengthA < lengthB;
+		}
+		const Camera& camera;
+	};
+	entities.sort(SortFn(camera));
 }
 
 void BasicWorld::draw() {
@@ -231,13 +249,22 @@ void BasicWorld::draw() {
 
 		// setup projection
 		camera->setupProjection(true);
+		glEnable(GL_DEPTH_TEST);
+		glDrawBuffer(GL_NONE);
+
+		// build and sort entity list by distance to camera
+		ArrayList<Entity*> drawList;
+		fillDrawList(*camera, drawList);
+
+		// render bounds for occlusion query
+		camera->setDrawMode(Camera::DRAW_BOUNDS);
+		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		// render scene into depth buffer
 		camera->setDrawMode(Camera::DRAW_DEPTH);
-		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
-		glDrawBuffer(GL_NONE);
-		drawSceneObjects(*camera, ArrayList<Light*>());
+		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 
 		if ((client->isEditorActive() && showTools) || cvar_renderFullbright.toInt()) {
 			// render fullbright scene
@@ -249,7 +276,7 @@ void BasicWorld::draw() {
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_GEQUAL);
-			drawSceneObjects(*camera, ArrayList<Light*>());
+			drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 		} else {
 			// render shadowed scene
 			camera->setDrawMode(Camera::DRAW_STANDARD);
@@ -260,15 +287,16 @@ void BasicWorld::draw() {
 			glEnable(GL_DEPTH_TEST);
 			glDepthMask(GL_FALSE);
 			glDepthFunc(GL_GEQUAL);
-			while (cameraLightList.getSize() >= Mesh::maxLights) {
-				ArrayList<Light*> reducedLightList;
+
+			ArrayList<Light*> reducedLightList;
+			while (cameraLightList.getSize() > Mesh::maxLights) {
 				for (int c = 0; c < Mesh::maxLights; ++c) {
-					reducedLightList.push(cameraLightList[0]);
-					cameraLightList.remove(0);
+					reducedLightList.push(cameraLightList.pop());
 				}
-				drawSceneObjects(*camera, reducedLightList);
+				drawSceneObjects(*camera, reducedLightList, drawList);
+				reducedLightList.clear();
 			}
-			drawSceneObjects(*camera, cameraLightList);
+			drawSceneObjects(*camera, cameraLightList, drawList);
 		}
 
 		// render scene with glow textures
@@ -276,9 +304,9 @@ void BasicWorld::draw() {
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_GEQUAL);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
-		drawSceneObjects(*camera, ArrayList<Light*>());
+		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 		glDrawBuffer(GL_COLOR_ATTACHMENT1);
-		drawSceneObjects(*camera, ArrayList<Light*>());
+		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 
 		static const GLenum attachments[Framebuffer::ColorBuffer::MAX] = {
 			GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
@@ -298,18 +326,18 @@ void BasicWorld::draw() {
 		// render triangle lines
 		if (cvar_showVerts.toInt()) {
 			camera->setDrawMode(Camera::DRAW_TRIANGLES);
-			drawSceneObjects(*camera, ArrayList<Light*>());
+			drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 		}
 
 		// render depth fail scene
 		camera->setDrawMode(Camera::DRAW_DEPTHFAIL);
 		glDepthFunc(GL_LESS);
-		drawSceneObjects(*camera, ArrayList<Light*>());
+		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 		glDepthFunc(GL_GEQUAL);
 
 		// render silhouettes
 		camera->setDrawMode(Camera::DRAW_SILHOUETTE);
-		drawSceneObjects(*camera, ArrayList<Light*>());
+		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 
 		glDrawBuffer(GL_COLOR_ATTACHMENT0);
 		glEnable(GL_DEPTH_TEST);

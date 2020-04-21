@@ -153,10 +153,7 @@ void World::initialize(bool empty) {
 	bulletDynamicsWorld->setGravity(btVector3(0.f, 0.f, 9.81 * (Tile::size / 2.f)));
 	bulletDynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
-	// create shadow camera
-	const Entity::def_t* def = Entity::findDef("Shadow Camera"); assert(def);
-	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Rotation());
-	shadowCamera->setShouldSave(false);
+	// create default shadow texture
 	defaultShadow.init();
 }
 
@@ -374,9 +371,6 @@ void World::convexSweepList(const btConvexShape* shape, const Vector& originPos,
 				if (!entity->isShouldSave()) {
 					continue;
 				}
-				if (entity == shadowCamera) {
-					continue;
-				}
 			}
 
 			// sort and insert the hit entry into the list of results
@@ -437,7 +431,7 @@ void World::lineTraceList(const Vector& origin, const Vector& dest, LinkedList<W
 				if (!entity->isFlag(Entity::flag_t::FLAG_ALLOWTRACE) && (!mainEngine->isEditorRunning() || !entity->isShouldSave())) {
 					continue;
 				}
-				if (entity == shadowCamera) {
+				if (entity->getName() == "Shadow Camera") {
 					continue;
 				}
 			}

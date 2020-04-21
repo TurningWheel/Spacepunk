@@ -151,6 +151,11 @@ public:
 	void	setSelected(const bool _selected) { selected = _selected; if (listener) listener->onChangeColor(selected, highlighted); }
 	void	setHighlighted(const bool _highlighted) { highlighted = _highlighted; if (listener) listener->onChangeColor(selected, highlighted); }
 
+	//! check if the entity is potentially visible to the given camera
+	//! @param camera the camera in question
+	//! @return true if it is potentially visible, otherwise false
+	bool isOccluded(Camera& camera);
+
 	//! get game sim that we are living in (if any)
 	//! @return the Game* that we are in, or nullptr if we aren't in a game
 	Game* getGame();
@@ -247,7 +252,7 @@ public:
 	//! draws the entity
 	//! @param camera the camera through which to draw the entity
 	//! @param light the light by which the entity should be illuminated (or nullptr for no illumination)
-	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) const;
+	virtual void draw(Camera& camera, const ArrayList<Light*>& lights);
 
 	//! animates all the entity's meshes in unison
 	//! @param name The name of the animation to play
@@ -322,6 +327,9 @@ public:
 
 	//! updates matrices
 	void update();
+
+	//! update bounding box
+	void updateBounds();
 
 	//! clears the node pointing to us in the chunk we are occupying
 	void clearChunkNode() { if (chunkNode) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
@@ -479,6 +487,8 @@ protected:
 	Uint32 componentIDs = 0;
 	ArrayList<Component*> components;		//!< component list
 
+	Vector boundsMax;						//!< bounding-box (read-only, not used for collision)
+	Vector boundsMin;						//!< bounding-box (read-only, not used for collision)
 	Vector pos;								//!< position
 	Vector newPos;							//!< new position to interpolate towards (net)
 	Vector vel;								//!< velocity
@@ -512,6 +522,12 @@ protected:
 
 	Item item;
 	bool canBePickedUp = false;
+
+	struct occlusion_query_t {
+		GLuint id = 0;
+		bool occluded = false;
+	};
+	Map<Camera*, occlusion_query_t> occlusion;
 
 	//! editor variables
 	bool selected = false;

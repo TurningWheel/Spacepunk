@@ -21,6 +21,7 @@
 #include "Chunk.hpp"
 #include "Script.hpp"
 #include "Frame.hpp"
+#include "ShaderProgram.hpp"
 
 //Component headers.
 #include "BBox.hpp"
@@ -103,6 +104,8 @@ Entity::Entity(World* _world, Uint32 _uid) {
 
 	pathRequested = false;
 	path = nullptr;
+
+	updateBounds();
 }
 
 Entity::~Entity() {
@@ -127,15 +130,32 @@ Entity::~Entity() {
 	clearChunkNode();
 
 	// delete script engine
-	if (script)
-	{
+	if (script) {
 		delete script;
 	}
 
-	if (path)
-	{
+	// delete path data
+	if (path) {
 		delete path;
 	}
+
+	// delete occlusion query
+	for (auto& query : occlusion) {
+		if (query.b.id) {
+			glDeleteQueries(1, &query.b.id);
+			query.b.id = 0;
+		}
+	}
+}
+
+bool Entity::isOccluded(Camera& camera) {
+	auto query = occlusion.find(&camera);
+	if (!query) {
+		occlusion.insertUnique(&camera, occlusion_query_t());
+		query = occlusion.find(&camera);
+	}
+	assert(query);
+	return query->occluded;
 }
 
 Game* Entity::getGame() {
@@ -349,7 +369,10 @@ void Entity::findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) co
 }
 
 void Entity::update() {
-	updateNeeded = false;
+	if (updateNeeded && world) {
+		updateBounds();
+		updateNeeded = false;
+	}
 
 	// static entities never update
 	if (ticks && isFlag(Entity::FLAG_STATIC) && !mainEngine->isEditorRunning()) {
@@ -382,7 +405,6 @@ void Entity::update() {
 			}
 		}
 	}
-
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		if (components[c]->isToBeDeleted()) {
 			delete components[c];
@@ -390,6 +412,22 @@ void Entity::update() {
 			--c;
 		} else {
 			components[c]->update();
+		}
+	}
+}
+
+void Entity::updateBounds() {
+	boundsMax = Vector(0.f);
+	boundsMin = Vector(0.f);
+	for (Uint32 c = 0; c < components.getSize(); ++c) {
+		if (!components[c]->isEditorOnly()) {
+			components[c]->updateBounds();
+			boundsMax.x = std::max(boundsMax.x, components[c]->getBoundsMax().x);
+			boundsMax.y = std::max(boundsMax.y, components[c]->getBoundsMax().y);
+			boundsMax.z = std::max(boundsMax.z, components[c]->getBoundsMax().z);
+			boundsMin.x = std::min(boundsMin.x, components[c]->getBoundsMin().x);
+			boundsMin.y = std::min(boundsMin.y, components[c]->getBoundsMin().y);
+			boundsMin.z = std::min(boundsMin.z, components[c]->getBoundsMin().z);
 		}
 	}
 }
@@ -573,6 +611,8 @@ void Entity::process() {
 	// update component matrices
 	if (updateNeeded) {
 		update();
+	} else if (ticks % 180 == 0) {
+		updateBounds();
 	}
 
 	// process components
@@ -589,7 +629,9 @@ void Entity::postProcess() {
 	}
 }
 
-void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
+static Cvar cvar_showBounds("showbounds", "draw cull bounding boxes for entities", "0");
+
+void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	bool editorRunning = mainEngine->isEditorRunning();
 	if (!isFlag(flag_t::FLAG_VISIBLE) && (!world->isShowTools() || !editorRunning || !shouldSave)) {
 		return;
@@ -608,13 +650,100 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) const {
 	}
 
 	// setup overdraw characteristics
-	if (isFlag(Entity::flag_t::FLAG_OVERDRAW)) {
-		glDepthRange(0.f, .01f);
+	if (isFlag(Entity::flag_t::FLAG_OVERDRAW) && camera.getDrawMode() != Camera::DRAW_SHADOW) {
+		glDepthRange(0.99f, 1.f);
+	}
+
+	// get occlusion data for this camera
+	auto query = occlusion.find(&camera);
+	if (!query) {
+		occlusion.insertUnique(&camera, Entity::occlusion_query_t());
+		query = occlusion.find(&camera);
+	}
+	assert(query);
+
+	// draw bounding box for occlusion test
+	if (camera.getDrawMode() == Camera::DRAW_BOUNDS) {
+		glDepthMask(isFlag(FLAG_OCCLUDE) ? GL_TRUE : GL_FALSE);
+		if (query->id) {
+			GLint params = -1;
+			glGetQueryObjectiv(query->id, GL_QUERY_RESULT, &params);
+			assert(params != -1);
+			query->occluded = params == GL_FALSE;
+			glDeleteQueries(1, &query->id);
+			query->id = 0;
+		}
+		glGenQueries(1, &query->id);
+		glBeginQuery(GL_ANY_SAMPLES_PASSED, query->id);
+		if (isFlag(FLAG_OCCLUDE)) {
+			for (Uint32 c = 0; c < components.getSize(); ++c) {
+				components[c]->draw(camera, lights);
+			}
+		} else {
+			Vector offset = (boundsMax + boundsMin) / 2.f + pos;
+			Vector bounds = boundsMax - boundsMin;
+			bounds.x = std::max(bounds.x, 16.f);
+			bounds.y = std::max(bounds.y, 16.f);
+			bounds.z = std::max(bounds.z, 16.f);
+			glm::mat4 translationM = glm::translate(glm::mat4(1.f), glm::vec3(offset.x, -offset.z, offset.y));
+			glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(bounds.x, bounds.z, bounds.y));
+			glm::mat4 mat = translationM * scaleM;
+
+			// draw the cube normally and inverted
+			camera.drawCube(glm::scale(mat, glm::vec3(-1.f, 1.f, 1.f)), glm::vec4(0.f));
+			camera.drawCube(mat, glm::vec4(0.f));
+		}
+		glEndQuery(GL_ANY_SAMPLES_PASSED);
 	}
 
 	// draw components
-	for (Uint32 c = 0; c < components.getSize(); ++c) {
-		components[c]->draw(camera, lights);
+	else if (camera.getDrawMode() != Camera::DRAW_BOUNDS) {
+		if (!query->occluded || !shouldSave) {
+			for (Uint32 c = 0; c < components.getSize(); ++c) {
+				components[c]->draw(camera, lights);
+			}
+		}
+	}
+
+	// draw bounding box for debug
+	if (camera.getDrawMode() == Camera::drawmode_t::DRAW_STANDARD) {
+		if (cvar_showBounds.toInt() && shouldSave && !query->occluded) {
+			Vector offset = (boundsMax + boundsMin) / 2.f + pos;
+			Vector bounds = (boundsMax - boundsMin) / 2.f;
+
+			// X
+			{
+				Vector size(bounds.x * 2.f, 0.f, 0.f);
+				Vector offX(0.f, bounds.y * 2.f, 0.f);
+				Vector offY(0.f, 0.f, bounds.z * 2.f);
+				camera.drawLine3D(1.f, offset - bounds, offset - bounds + size, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offX, offset - bounds + size + offX, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offY, offset - bounds + size + offY, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offX + offY, offset - bounds + size + offX + offY, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+			}
+
+			// Y
+			{
+				Vector size(0.f, bounds.y * 2.f, 0.f);
+				Vector offX(bounds.x * 2.f, 0.f, 0.f);
+				Vector offY(0.f, 0.f, bounds.z * 2.f);
+				camera.drawLine3D(1.f, offset - bounds, offset - bounds + size, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offX, offset - bounds + size + offX, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offY, offset - bounds + size + offY, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offX + offY, offset - bounds + size + offX + offY, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+			}
+
+			// Z
+			{
+				Vector size(0.f, 0.f, bounds.z * 2.f);
+				Vector offX(bounds.x * 2.f, 0.f, 0.f);
+				Vector offY(0.f, bounds.y * 2.f, 0.f);
+				camera.drawLine3D(1.f, offset - bounds, offset - bounds + size, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offX, offset - bounds + size + offX, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offY, offset - bounds + size + offY, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+				camera.drawLine3D(1.f, offset - bounds + offX + offY, offset - bounds + size + offX + offY, glm::vec4(0.f, 0.5f, 1.f, 1.f));
+			}
+		}
 	}
 
 	// reset overdraw characteristics

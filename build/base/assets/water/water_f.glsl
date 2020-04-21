@@ -15,7 +15,7 @@ uniform vec3 gCameraPos;
 uniform vec3 gBoundingBox;
 uniform int gTime;
 
-#define MAX_LIGHTS 12
+#define MAX_LIGHTS 16
 uniform bool gActiveLight;
 uniform vec3 gLightPos[MAX_LIGHTS];
 uniform vec3 gLightColor[MAX_LIGHTS];
@@ -28,11 +28,9 @@ uniform int gLightShape[MAX_LIGHTS];
 #ifndef NOSHADOWMAP
 uniform mat4 gLightProj[MAX_LIGHTS];
 uniform samplerCubeShadow gShadowmap[MAX_LIGHTS];
-uniform usamplerCube gUIDmap[MAX_LIGHTS];
 uniform bool gShadowmapEnabled[MAX_LIGHTS];
 #endif
 uniform int gNumLights;
-uniform uint gUID;
 
 uniform sampler2D gTexture[2]; // 1st = normals, 2nd = dUV
 uniform samplerCube gCubemap;
@@ -53,7 +51,7 @@ float ShadowFactor(int light)
 
 	vec3 lLightDir = WorldPos - gLightPos[light];
 	vec3 lLightDirNormal = normalize(lLightDir);
-	vec3 lDiff = abs(lLightDir);
+	vec3 lDiff = abs(lLightDir) - vec3(4.f);
 	float lDist = min(-max(lDiff.x, max(lDiff.y, lDiff.z)), 0.f);
 	vec4 lClip = gLightProj[light] * vec4(0.f, 0.f, lDist, 1.f);
 	float lDepth = lClip.z / lClip.w;
@@ -61,25 +59,28 @@ float ShadowFactor(int light)
 	float lClampedDist = clamp(lDepth, 0.f, 1.f);
 	vec4 lUVC = vec4(lLightDirNormal, lClampedDist);
 	float lSample = 0.f;
-	uvec4 lUID = uvec4(0);
 
 	// glsl does not let you index a sampler
 	switch (light) {
-		case 0: lSample = texture(gShadowmap[0], lUVC); lUID = texture(gUIDmap[0], lUVC.xyz); break;
-		case 1: lSample = texture(gShadowmap[1], lUVC); lUID = texture(gUIDmap[1], lUVC.xyz); break;
-		case 2: lSample = texture(gShadowmap[2], lUVC); lUID = texture(gUIDmap[2], lUVC.xyz); break;
-		case 3: lSample = texture(gShadowmap[3], lUVC); lUID = texture(gUIDmap[3], lUVC.xyz); break;
-		case 4: lSample = texture(gShadowmap[4], lUVC); lUID = texture(gUIDmap[4], lUVC.xyz); break;
-		case 5: lSample = texture(gShadowmap[5], lUVC); lUID = texture(gUIDmap[5], lUVC.xyz); break;
-		case 6: lSample = texture(gShadowmap[6], lUVC); lUID = texture(gUIDmap[6], lUVC.xyz); break;
-		case 7: lSample = texture(gShadowmap[7], lUVC); lUID = texture(gUIDmap[7], lUVC.xyz); break;
-		case 8: lSample = texture(gShadowmap[8], lUVC); lUID = texture(gUIDmap[8], lUVC.xyz); break;
-		case 9: lSample = texture(gShadowmap[9], lUVC); lUID = texture(gUIDmap[9], lUVC.xyz); break;
-		case 10: lSample = texture(gShadowmap[10], lUVC); lUID = texture(gUIDmap[10], lUVC.xyz); break;
-		case 11: lSample = texture(gShadowmap[11], lUVC); lUID = texture(gUIDmap[11], lUVC.xyz); break;
+		case 0: lSample = texture(gShadowmap[0], lUVC); break;
+		case 1: lSample = texture(gShadowmap[1], lUVC); break;
+		case 2: lSample = texture(gShadowmap[2], lUVC); break;
+		case 3: lSample = texture(gShadowmap[3], lUVC); break;
+		case 4: lSample = texture(gShadowmap[4], lUVC); break;
+		case 5: lSample = texture(gShadowmap[5], lUVC); break;
+		case 6: lSample = texture(gShadowmap[6], lUVC); break;
+		case 7: lSample = texture(gShadowmap[7], lUVC); break;
+		case 8: lSample = texture(gShadowmap[8], lUVC); break;
+		case 9: lSample = texture(gShadowmap[9], lUVC); break;
+		case 10: lSample = texture(gShadowmap[10], lUVC); break;
+		case 11: lSample = texture(gShadowmap[11], lUVC); break;
+		case 12: lSample = texture(gShadowmap[12], lUVC); break;
+		case 13: lSample = texture(gShadowmap[13], lUVC); break;
+		case 14: lSample = texture(gShadowmap[14], lUVC); break;
+		case 15: lSample = texture(gShadowmap[15], lUVC); break;
 	}
 
-	return (lUID.r == gUID) ? 1.f : lSample;
+	return lSample;
 }
 #endif
 

@@ -21,6 +21,7 @@ class Camera : public Component {
 public:
 	//! drawing mode type
 	enum drawmode_t {
+		DRAW_BOUNDS,
 		DRAW_DEPTH,
 
 		//! these two for each light in a scene

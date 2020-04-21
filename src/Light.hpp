@@ -83,6 +83,14 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
+	//! called just before the parent is inserted into a new world
+	//! @param world the world we will be placed into, if any
+	virtual void beforeWorldInsertion(const World* world) override;
+
+	//! called just after the parent is inserted into a new world
+	//! @param world the world we have been placed into, if any
+	virtual void afterWorldInsertion(const World* world) override;
+
 	Light& operator=(const Light& src) {
 		color = src.color;
 		intensity = src.intensity;
@@ -108,4 +116,6 @@ protected:
 	float arc = 70.f;
 	bool shadow = true;
 	shape_t shape = SHAPE_SPHERE;
+
+	Entity* shadowCamera = nullptr;
 };

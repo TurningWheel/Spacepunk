@@ -43,8 +43,8 @@ public:
 
 	virtual bool finalize() override;
 
-	//! maximum number of lights that will fit in the tile shader
-	static const Uint32 maxLights = 12;
+	//! maximum number of lights that will fit in the shader
+	static const Uint32 maxLights = 16;
 
 	//! shader vars
 	struct shadervars_t {
