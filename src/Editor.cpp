@@ -2190,10 +2190,10 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			{
 				Frame* frame = new Frame(*midFrame, "editor_FrameContentNavigatorList");
 				frameRect.x = 0; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 0; frameRect.h = (yres - 44) - 90 - 18 - (tileControls ? (camRect.x - 12) : 0);
+				frameRect.y = 0; frameRect.h = (yres - 44) - 90 - 18 - (squashLeft ? (camRect.x - 12) : 0);
 				frame->setActualSize(frameRect);
 				frameRect.x = 3; frameRect.w = camRect.x - 12 - 6;
-				frameRect.y = 90 + 3; frameRect.h = (yres - 44) - 90 - 18 - (tileControls ? (camRect.x - 12) : 0);
+				frameRect.y = 90 + 3; frameRect.h = (yres - 44) - 90 - 18 - (squashLeft ? (camRect.x - 12) : 0);
 				frame->setSize(frameRect);
 				frame->setBorder(0);
 				frame->setColor(WideVector(.1f, .1f, .1f, 1.f));
