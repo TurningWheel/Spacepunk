@@ -1611,22 +1611,20 @@ String Engine::shortenPath(const char* path) const {
 #endif
 
 	StringBuf<32> withSlashes;
-	do {
-		withSlashes.format("/%s/", game.path.get());
-		offset = pathStr.find(withSlashes.get(), 0);
-		if (offset != String::npos) {
-			pathStr = pathStr.substr(offset + withSlashes.length());
-		} else {
-			for (const mod_t& mod : mods) {
-				withSlashes.format("/%s/", mod.path.get());
-				offset = pathStr.find(withSlashes.get(), 0);
-				if (offset != String::npos) {
-					pathStr = pathStr.substr(offset + withSlashes.length());
-					break;
-				}
+	withSlashes.format("/%s/", game.path.get());
+	offset = pathStr.find(withSlashes.get(), 0);
+	if (offset != String::npos) {
+		pathStr = pathStr.substr(offset + withSlashes.length());
+	} else {
+		for (const mod_t& mod : mods) {
+			withSlashes.format("/%s/", mod.path.get());
+			offset = pathStr.find(withSlashes.get(), 0);
+			if (offset != String::npos) {
+				pathStr = pathStr.substr(offset + withSlashes.length());
+				break;
 			}
 		}
-	} while (offset != String::npos);
+	}
 
 	return pathStr;
 }

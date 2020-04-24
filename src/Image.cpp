@@ -33,25 +33,6 @@ const GLuint Image::indices[6]{
 };
 
 Image::Image(const char* _name) : Asset(_name) {
-	if (_name) {
-		switch (_name[0]) {
-		case '#':
-			++_name;
-			clamp = true;
-			break;
-		case '$':
-			++_name;
-			point = true;
-			break;
-		case '%':
-			++_name;
-			clamp = true;
-			point = true;
-			break;
-		default:
-			break;
-		}
-	}
 	path = mainEngine->buildPath(_name).get();
 
 	mainEngine->fmsg(Engine::MSG_DEBUG, "loading image '%s'...", _name);
