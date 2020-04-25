@@ -139,24 +139,11 @@ Entity::~Entity() {
 	if (path) {
 		delete path;
 	}
-
-	// delete occlusion query
-	for (auto& query : occlusion) {
-		if (query.b.id) {
-			glDeleteQueries(1, &query.b.id);
-			query.b.id = 0;
-		}
-	}
 }
 
 bool Entity::isOccluded(Camera& camera) {
-	auto query = occlusion.find(&camera);
-	if (!query) {
-		occlusion.insertUnique(&camera, occlusion_query_t());
-		query = occlusion.find(&camera);
-	}
-	assert(query);
-	return query->occluded;
+	auto& query = camera.getOcclusionQuery(this);
+	return query.result;
 }
 
 Game* Entity::getGame() {
@@ -658,26 +645,21 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	// get occlusion data for this camera
-	auto query = occlusion.find(&camera);
-	if (!query) {
-		occlusion.insertUnique(&camera, Entity::occlusion_query_t());
-		query = occlusion.find(&camera);
-	}
-	assert(query);
+	auto& query = camera.getOcclusionQuery(this);
 
 	// draw bounding box for occlusion test
 	if (camera.getDrawMode() == Camera::DRAW_BOUNDS) {
 		glDepthMask(isFlag(FLAG_OCCLUDE) ? GL_TRUE : GL_FALSE);
-		if (query->id) {
+		if (query.id) {
 			GLint params = -1;
-			glGetQueryObjectiv(query->id, GL_QUERY_RESULT, &params);
+			glGetQueryObjectiv(query.id, GL_QUERY_RESULT, &params);
 			assert(params != -1);
-			query->occluded = params == GL_FALSE;
-			glDeleteQueries(1, &query->id);
-			query->id = 0;
+			query.result = params == GL_FALSE;
+			glDeleteQueries(1, &query.id);
+			query.id = 0;
 		}
-		glGenQueries(1, &query->id);
-		glBeginQuery(GL_ANY_SAMPLES_PASSED, query->id);
+		glGenQueries(1, &query.id);
+		glBeginQuery(GL_ANY_SAMPLES_PASSED, query.id);
 		if (isFlag(FLAG_OCCLUDE)) {
 			for (Uint32 c = 0; c < components.getSize(); ++c) {
 				components[c]->draw(camera, lights);
@@ -701,7 +683,7 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
 
 	// draw components
 	else if (camera.getDrawMode() != Camera::DRAW_BOUNDS) {
-		if (!query->occluded || !shouldSave) {
+		if (!query.result || !shouldSave) {
 			for (Uint32 c = 0; c < components.getSize(); ++c) {
 				components[c]->draw(camera, lights);
 			}
@@ -710,7 +692,7 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
 
 	// draw bounding box for debug (or editor)
 	if (camera.getDrawMode() == Camera::drawmode_t::DRAW_STANDARD) {
-		if ((cvar_showBounds.toInt() || editorRunning) && shouldSave && !query->occluded) {
+		if ((cvar_showBounds.toInt() || editorRunning) && shouldSave && !query.result) {
 			Vector offset = (boundsMax + boundsMin) / 2.f + pos;
 			Vector bounds = (boundsMax - boundsMin) / 2.f;
 

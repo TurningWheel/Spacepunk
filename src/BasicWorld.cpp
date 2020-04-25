@@ -124,9 +124,13 @@ void BasicWorld::drawSceneObjects(Camera& camera, const ArrayList<Light*>& light
 	camera.onFrameDrawn();
 }
 
-void BasicWorld::fillDrawList(const Camera& camera, ArrayList<Entity*>& entities) {
+void BasicWorld::fillDrawList(const Camera& camera, float maxLength, ArrayList<Entity*>& entities) {
 	for (auto pair : this->entities) {
 		Entity* entity = pair.b;
+		if (Engine::measurePointToBounds(camera.getGlobalPos(),
+			entity->getBoundsMin() + entity->getPos(), entity->getBoundsMax() + entity->getPos()) > maxLength) {
+			continue;
+		}
 		entities.push(entity);
 	}
 	class SortFn : public ArrayList<Entity*>::SortFunction {
@@ -217,12 +221,13 @@ void BasicWorld::draw() {
 
 		// build and sort entity list by distance to camera
 		ArrayList<Entity*> drawList, reducedDrawList;
-		fillDrawList(*camera, drawList);
+		fillDrawList(*camera, FLT_MAX, drawList);
 		for (auto entity : drawList) {
 			if (!entity->isShouldSave() || !entity->isOccluded(*camera)) {
 				reducedDrawList.push(entity);
 			}
 		}
+		int shadowEntitiesDrawn = 0;
 
 		// build relevant light list
 		ArrayList<Light*> cameraLightList;
@@ -237,12 +242,12 @@ void BasicWorld::draw() {
 
 			// figure out if the light is affecting any visible objects
 			bool relevant = false;
-			assert(light->getShadowCamera());
-			Camera* shadowCamera = light->getShadowCamera()->findComponentByUID<Camera>(1);
 			assert(shadowCamera);
+			Camera* actualShadowCamera = shadowCamera->findComponentByUID<Camera>(1);
+			assert(actualShadowCamera);
 			for (auto entity : reducedDrawList) {
 				if (entity->isFlag(Entity::FLAG_VISIBLE)) {
-					if (!entity->isOccluded(*shadowCamera) && entity->isShouldSave()) {
+					if (!entity->isOccluded(*actualShadowCamera) && entity->isShouldSave()) {
 						float dist = Engine::measurePointToBounds(light->getGlobalPos(),
 							entity->getBoundsMin() + entity->getPos(), entity->getBoundsMax() + entity->getPos());
 						if (dist <= light->getRadius() * light->getRadius()) {
@@ -261,7 +266,7 @@ void BasicWorld::draw() {
 			if (shadowsEnabled) {
 				if (light->getEntity()->isFlag(Entity::flag_t::FLAG_STATIC) || !cvar_shadowsStaticOnly.toInt()) {
 					if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
-						light->createShadowMap();
+						shadowEntitiesDrawn += light->createShadowMap();
 					}
 				}
 			}
@@ -282,7 +287,7 @@ void BasicWorld::draw() {
 		glEnable(GL_DEPTH_TEST);
 		glDrawBuffer(GL_NONE);
 
-		// render bounds for occlusion query
+		// perform occlusion queries
 		camera->setDrawMode(Camera::DRAW_BOUNDS);
 		drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -404,7 +409,8 @@ void BasicWorld::draw() {
 			rect.x = camera->getWin().x + 10;
 			rect.y = camera->getWin().y + 10;
 			char buf[64];
-			snprintf(buf, sizeof(buf), "lights: %d\nentities: %d", numLights, reducedDrawList.getSize());
+			snprintf(buf, sizeof(buf), "lights: %d\nentities: %d\nshadow entities: %d",
+				numLights, reducedDrawList.getSize(), shadowEntitiesDrawn);
 			renderer->printText(font, rect, buf);
 		}
 	}

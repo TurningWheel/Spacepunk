@@ -68,6 +68,35 @@ Camera::~Camera() {
 			}
 		}
 	}
+	clearOcclusionData();
+}
+
+void Camera::clearOcclusionData() {
+	for (auto& occlusion : occlusionData) {
+		for (auto& query : occlusion.b) {
+			if (query.b.id) {
+				glDeleteQueries(1, &query.b.id);
+				query.b.id = 0;
+			}
+		}
+	}
+	occlusionData.clear();
+}
+
+Camera::occlusion_query_t& Camera::getOcclusionQuery(Entity* entity) {
+	auto map = occlusionData.find(occlusionIndex);
+	if (!map) {
+		occlusionData.insert(occlusionIndex, Map<Entity*, occlusion_query_t>());
+		map = occlusionData.find(occlusionIndex);
+	}
+	assert(map);
+	auto query = map->find(entity);
+	if (!query) {
+		map->insert(entity, occlusion_query_t());
+		query = map->find(entity);
+	}
+	assert(query);
+	return *query;
 }
 
 void Camera::setListener() {

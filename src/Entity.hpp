@@ -526,12 +526,6 @@ protected:
 	Item item;
 	bool canBePickedUp = false;
 
-	struct occlusion_query_t {
-		GLuint id = 0;
-		bool occluded = false;
-	};
-	Map<Camera*, occlusion_query_t> occlusion;
-
 	//! editor variables
 	bool selected = false;
 	bool highlighted = false;

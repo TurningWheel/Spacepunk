@@ -212,6 +212,7 @@ public:
 	const filetype_t			getFiletype() const { return filetype; }
 	Shadow&						getDefaultShadow() { return defaultShadow; }
 	const Shadow&				getDefaultShadow() const { return defaultShadow; }
+	Entity*						getShadowCamera() { return shadowCamera; }
 	void						setMaxUID(Uint32 uid) { uids = std::max(uids, uid); }
 
 	bool				isPointerActive() const { return pointerActive; }
@@ -277,8 +278,9 @@ protected:
 
 	static void bulletCollisionCallback(btBroadphasePair& pair, btCollisionDispatcher& dispatcher, const btDispatcherInfo& info);
 
-	//! shadow map stuff
+	//! shadow stuff
 	Shadow defaultShadow;
+	Entity* shadowCamera = nullptr;
 };
 
 extern Cvar cvar_showEdges;

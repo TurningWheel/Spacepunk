@@ -56,13 +56,6 @@ Light::Light(Entity& _entity, Component* _parent) :
 	attributes.push(new AttributeFloat("Arc", arc));
 	attributes.push(new AttributeBool("Shadow-casting", shadow));
 	attributes.push(new AttributeEnum<shape_t>("Shape", shapeStr, shape_t::SHAPE_NUM, shape));
-
-	// create shadow camera
-	if (entity->getWorld()) {
-		const Entity::def_t* def = Entity::findDef("Shadow Camera"); assert(def);
-		shadowCamera = Entity::spawnFromDef(entity->getWorld(), *def, Vector(), Rotation());
-		shadowCamera->setShouldSave(false);
-	}
 }
 
 Light::~Light() {
@@ -143,44 +136,28 @@ void Light::serialize(FileInterface * file) {
 
 static Cvar cvar_shadowDepthOffset("render.shadow.depthoffset", "shadow depth buffer adjustment", "0");
 
-void Light::beforeWorldInsertion(const World* world) {
-	Component::beforeWorldInsertion(world);
-	if (shadowCamera) {
-		shadowCamera->remove();
-		shadowCamera = nullptr;
-	}
-}
+int Light::createShadowMap() {
+	int result = 0;
 
-void Light::afterWorldInsertion(const World* world) {
-	Component::afterWorldInsertion(world);
-	if (entity->getWorld()) {
-		const Entity::def_t* def = Entity::findDef("Shadow Camera"); assert(def);
-		shadowCamera = Entity::spawnFromDef(entity->getWorld(), *def, Vector(), Rotation());
-		shadowCamera->setShouldSave(false);
-	}
-}
-
-void Light::createShadowMap() {
 	if (!entity || !entity->getWorld()) {
-		return;
+		return result;
 	}
 	World* world = entity->getWorld();
 	if (!world) {
-		return;
+		return result;
 	}
 	if (entity->getTicks() == shadowTicks && shadowMap.isInitialized()) {
-		return;
+		return result;
 	} else {
 		shadowTicks = entity->getTicks();
 	}
 
 	if (shadowMap.isInitialized() && entity->isFlag(Entity::FLAG_STATIC)) {
-		return;
+		return result;
 	}
 
-	assert(shadowCamera);
+	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
 	Camera* camera = shadowCamera->findComponentByUID<Camera>(1); assert(camera);
-	camera->setDrawMode(Camera::DRAW_SHADOW);
 	shadowCamera->setPos(gPos);
 
 	glPolygonOffset(cvar_shadowDepthOffset.toFloat(), 0.f);
@@ -197,16 +174,30 @@ void Light::createShadowMap() {
 		camera->setClipNear(1.f);
 		camera->setClipFar(radius);
 		camera->setupProjection(false);
+		auto bw = static_cast<BasicWorld*>(world); assert(bw);
+		ArrayList<Entity*> drawList;
+		bw->fillDrawList(*camera, radius * radius, drawList);
+
+		// perform occlusion queries
+		camera->setOcclusionIndex(entity->getUID() * 6 + c);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		if (world->getType() == World::type_t::WORLD_TILES) {
-			auto tw = static_cast<TileWorld*>(world);
-			tw->drawSceneObjects(*camera, ArrayList<Light*>({ this }), visibleChunks);
-		} else if (world->getType() == World::type_t::WORLD_BASIC) {
-			auto bw = static_cast<BasicWorld*>(world);
-			ArrayList<Entity*> drawList;
-			bw->fillDrawList(*camera, drawList);
-			bw->drawSceneObjects(*camera, ArrayList<Light*>({ this }), drawList);
+		camera->setDrawMode(Camera::DRAW_BOUNDS);
+		bw->drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+
+		// create reduced draw list
+		ArrayList<Entity*> reducedDrawList;
+		for (auto entity : drawList) {
+			if (entity->isShouldSave() && !entity->isOccluded(*camera) && entity->isFlag(Entity::FLAG_VISIBLE)) {
+				reducedDrawList.push(entity);
+			}
 		}
+		result += reducedDrawList.getSize();
+
+		// draw shadow buffer
+		glDepthMask(GL_TRUE);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		camera->setDrawMode(Camera::DRAW_SHADOW);
+		bw->drawSceneObjects(*camera, ArrayList<Light*>({ this }), reducedDrawList);
 	}
 	glPolygonOffset(1.f, 0.f);
 
@@ -218,6 +209,7 @@ void Light::createShadowMap() {
 	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	shadowMapDrawn = true;
+	return result;
 }
 
 void Light::deleteShadowMap() {

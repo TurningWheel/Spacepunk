@@ -52,7 +52,6 @@ public:
 	const bool			isShadow() const { return shadow; }
 	Uint32				getShadowTicks() const { return shadowTicks; }
 	Shadow&				getShadowMap() { return shadowMap; }
-	Entity*				getShadowCamera() { return shadowCamera; }
 
 	void	setColor(const Vector& _color) { color = _color; }
 	void	setIntensity(const float _intensity) { intensity = _intensity; }
@@ -71,7 +70,8 @@ public:
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
 	//! creates a shadow map from the light source
-	void createShadowMap();
+	//! @return the number of entities rendered to create the shadow map
+	int createShadowMap();
 
 	//! deletes the shadow map
 	void deleteShadowMap();
@@ -83,14 +83,6 @@ public:
 	//! save/load this object to a file
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
-
-	//! called just before the parent is inserted into a new world
-	//! @param world the world we will be placed into, if any
-	virtual void beforeWorldInsertion(const World* world) override;
-
-	//! called just after the parent is inserted into a new world
-	//! @param world the world we have been placed into, if any
-	virtual void afterWorldInsertion(const World* world) override;
 
 	Light& operator=(const Light& src) {
 		color = src.color;
@@ -117,6 +109,4 @@ protected:
 	float arc = 70.f;
 	bool shadow = true;
 	shape_t shape = SHAPE_SPHERE;
-
-	Entity* shadowCamera = nullptr;
 };

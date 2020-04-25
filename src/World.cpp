@@ -153,8 +153,11 @@ void World::initialize(bool empty) {
 	bulletDynamicsWorld->setGravity(btVector3(0.f, 0.f, 9.81 * (Tile::size / 2.f)));
 	bulletDynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
-	// create default shadow texture
+	// create shadow camera + default shadow texture
 	defaultShadow.init();
+	const Entity::def_t* def = Entity::findDef("Shadow Camera"); assert(def);
+	shadowCamera = Entity::spawnFromDef(this, *def, Vector(), Rotation());
+	shadowCamera->setShouldSave(false);
 }
 
 void World::getSelectedEntities(LinkedList<Entity*>& outResult) {

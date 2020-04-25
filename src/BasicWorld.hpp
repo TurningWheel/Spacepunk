@@ -41,8 +41,9 @@ public:
 
 	//! fill an empty draw list with entities sorted by camera distance
 	//! @param camera the camera in question
+	//! @param maxLength if an entity is further away than this, it will be skipped
 	//! @param entities the draw list to fill
-	void fillDrawList(const Camera& camera, ArrayList<Entity*>& entities);
+	void fillDrawList(const Camera& camera, float maxLength, ArrayList<Entity*>& entities);
 
 	//! writes the world contents to a file
 	//! @param _filename the filename to write to, or blank to use our last filename

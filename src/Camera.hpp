@@ -52,6 +52,12 @@ public:
 		glm::vec4 color;
 	};
 
+	//! occlusion query
+	struct occlusion_query_t {
+		bool result = false;
+		GLuint id = 0;
+	};
+
 	Camera(Entity& _entity, Component* _parent);
 	virtual ~Camera();
 
@@ -73,6 +79,7 @@ public:
 	const bool&			isOrtho() const { return ortho; }
 	const Uint32		getFramesDrawn() const { return framesDrawn; }
 	const bool&			isEnabled() const { return enabled; }
+	Uint32				getOcclusionIndex() const { return occlusionIndex; }
 
 	void	setClipNear(float _clipNear) { clipNear = _clipNear; }
 	void	setClipFar(float _clipFar) { clipFar = _clipFar; }
@@ -81,6 +88,7 @@ public:
 	void	setDrawMode(drawmode_t _drawMode) { drawMode = _drawMode; }
 	void	setOrtho(const bool _ortho) { ortho = _ortho; }
 	void	setEnabled(const bool _enabled) { enabled = _enabled; }
+	void	setOcclusionIndex(Uint32 _occlusionIndex) { occlusionIndex = _occlusionIndex; }
 
 	//! make a reversed-Z projection matrix with infinite range
 	//! @param radians The vertical fov
@@ -173,6 +181,14 @@ public:
 	//! called when a frame is finished drawing from the camera
 	void onFrameDrawn();
 
+	//! clear all occlusion data
+	void clearOcclusionData();
+
+	//! get the occlusion query for a given entity
+	//! @param entity the entity in question
+	//! @return the occlusion query
+	occlusion_query_t& getOcclusionQuery(Entity* entity);
+
 	Camera& operator=(const Camera& src) {
 		projMatrix = src.projMatrix;
 		viewMatrix = src.viewMatrix;
@@ -188,6 +204,10 @@ public:
 
 protected:
 	Renderer* renderer = nullptr;
+
+	//! occlusion data
+	Map<Uint32, Map<Entity*, occlusion_query_t>> occlusionData;
+	Uint32 occlusionIndex = 0;
 
 	//! drawing mode
 	drawmode_t drawMode = DRAW_STANDARD;
