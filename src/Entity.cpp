@@ -105,7 +105,7 @@ Entity::Entity(World* _world, Uint32 _uid) {
 	pathRequested = false;
 	path = nullptr;
 
-	updateBounds();
+	update();
 }
 
 Entity::~Entity() {
@@ -116,6 +116,7 @@ Entity::~Entity() {
 	if (listener) {
 		listener->onDeleted();
 	}
+	deleteRigidBody();
 
 	// delete components
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
@@ -254,6 +255,7 @@ void Entity::finishInsertIntoWorld() {
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->beforeWorldInsertion(newWorld);
 	}
+	deleteRigidBody();
 
 	// insert to new world
 	if (world) {
@@ -271,6 +273,7 @@ void Entity::finishInsertIntoWorld() {
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		components[c]->afterWorldInsertion(newWorld);
 	}
+	updateRigidBody();
 
 	// if we're moving a player, we need to signal that client
 	if (player) {
@@ -369,11 +372,6 @@ void Entity::findEntitiesInRadius(float radius, LinkedList<Entity*>& outList) co
 }
 
 void Entity::update() {
-	if (updateNeeded && world) {
-		updateBounds();
-		updateNeeded = false;
-	}
-
 	// static entities never update
 	if (ticks && isFlag(Entity::FLAG_STATIC) && !mainEngine->isEditorRunning()) {
 		return;
@@ -405,6 +403,7 @@ void Entity::update() {
 			}
 		}
 	}
+
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		if (components[c]->isToBeDeleted()) {
 			delete components[c];
@@ -413,6 +412,11 @@ void Entity::update() {
 		} else {
 			components[c]->update();
 		}
+	}
+
+	if (updateNeeded && world) {
+		updateBounds();
+		updateNeeded = false;
 	}
 }
 
@@ -430,6 +434,7 @@ void Entity::updateBounds() {
 			boundsMin.z = std::min(boundsMin.z, components[c]->getBoundsMin().z);
 		}
 	}
+	updateRigidBody();
 }
 
 void Entity::updatePacket(Packet& packet) const {
@@ -630,8 +635,8 @@ void Entity::postProcess() {
 static Cvar cvar_showBounds("showbounds", "draw cull bounding boxes for entities", "0");
 
 void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
-	bool editorRunning = mainEngine->isEditorRunning();
-	if (!isFlag(flag_t::FLAG_VISIBLE) && (!world->isShowTools() || !editorRunning || !shouldSave)) {
+	bool editorRunning = mainEngine->isEditorRunning() && world->isShowTools();
+	if (!isFlag(flag_t::FLAG_VISIBLE) && (!editorRunning || !shouldSave)) {
 		return;
 	}
 
@@ -641,7 +646,7 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	}
 
 	// in editor, skip entities at too great a distance
-	if (editorRunning && world->isShowTools() && !camera.isOrtho()) {
+	if (editorRunning && !camera.isOrtho()) {
 		if ((camera.getGlobalPos() - pos).lengthSquared() > camera.getClipFar() * camera.getClipFar() / 4.f) {
 			return;
 		}
@@ -703,9 +708,9 @@ void Entity::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		}
 	}
 
-	// draw bounding box for debug
+	// draw bounding box for debug (or editor)
 	if (camera.getDrawMode() == Camera::drawmode_t::DRAW_STANDARD) {
-		if (cvar_showBounds.toInt() && shouldSave && !query->occluded) {
+		if ((cvar_showBounds.toInt() || editorRunning) && shouldSave && !query->occluded) {
 			Vector offset = (boundsMax + boundsMin) / 2.f + pos;
 			Vector bounds = (boundsMax - boundsMin) / 2.f;
 
@@ -1346,5 +1351,72 @@ bool Entity::isServerObj() const {
 		return !world->isClientObj();
 	} else {
 		return false;
+	}
+}
+
+void Entity::deleteRigidBody() {
+	// delete old rigid body
+	if (rigidBody != nullptr) {
+		if (dynamicsWorld) {
+			dynamicsWorld->removeRigidBody(rigidBody);
+		}
+		if (rigidBody->getUserPointer()) {
+			delete rigidBody->getUserPointer();
+			rigidBody->setUserPointer(nullptr);
+		}
+		delete rigidBody;
+		rigidBody = nullptr;
+	}
+
+	// delete motion state
+	if (motionState != nullptr) {
+		delete motionState;
+		motionState = nullptr;
+	}
+
+	// delete collision volume
+	if (collisionShapePtr != nullptr) {
+		delete collisionShapePtr;
+		collisionShapePtr = nullptr;
+	}
+}
+
+void Entity::updateRigidBody() {
+	if (!mainEngine->isEditorRunning() || !shouldSave) {
+		return; // this collision box is ONLY used for editor selection
+	}
+	deleteRigidBody();
+
+	Vector offset = (boundsMax + boundsMin) / 2.f + pos;
+	Vector bounds = (boundsMax - boundsMin) / 2.f;
+	bounds.x = std::max(bounds.x, 16.f);
+	bounds.y = std::max(bounds.y, 16.f);
+	bounds.z = std::max(bounds.z, 16.f);
+
+	// setup new collision volume
+	collisionShapePtr = new btBoxShape(btVector3(bounds.x, bounds.y, bounds.z));
+
+	// create motion state
+	btVector3 pos(offset.x, offset.y, offset.z);
+	motionState = new btDefaultMotionState(btTransform(btQuaternion(0.f, 0.f, 0.f, 1.f), pos));
+
+	// create rigid body
+	btRigidBody::btRigidBodyConstructionInfo
+		rigidBodyCI(0, motionState, collisionShapePtr, btVector3(0.f, 0.f, 0.f));
+	rigidBody = new btRigidBody(rigidBodyCI);
+
+	// create physics manifest
+	auto manifest = new World::physics_manifest_t();
+	manifest->world = world;
+	manifest->entity = this;
+	manifest->bbox = nullptr;
+	rigidBody->setUserPointer(manifest);
+
+	// add a new rigid body to the simulation
+	if (world) {
+		dynamicsWorld = world->getBulletDynamicsWorld();
+		if (dynamicsWorld) {
+			dynamicsWorld->addRigidBody(rigidBody);
+		}
 	}
 }

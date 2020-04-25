@@ -500,7 +500,7 @@ protected:
 	Rotation lookDir;						//!< euler-based look dir
 	Vector scale;							//!< visual scale
 	glm::mat4 mat;							//!< matrix (position * rotation * scale)
-	bool updateNeeded = false;				//!< if true, matrix gets updated, and component matrices get updated
+	bool updateNeeded = true;				//!< if true, matrix gets updated, and component matrices get updated
 
 	Sint32 currentCX = INT32_MAX;			//!< X coord of the chunk we are currently occupying
 	Sint32 currentCY = INT32_MAX;			//!< Y coord of the chunk we are currently occupying
@@ -535,6 +535,15 @@ protected:
 	bool selected = false;
 	bool highlighted = false;
 	std::shared_ptr<Frame::listener_t> listener;
+
+	//! editor selection box stuff
+	btDiscreteDynamicsWorld* dynamicsWorld = nullptr;
+	btCollisionShape* collisionShapePtr = nullptr;
+	btDefaultMotionState* motionState = nullptr;
+	btRigidBody* rigidBody = nullptr;
+
+	void updateRigidBody();
+	void deleteRigidBody();
 
 	Vector pathNode;
 	Vector pathDir;

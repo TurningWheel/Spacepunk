@@ -971,11 +971,6 @@ void Component::revertToIdentity() {
 }
 
 void Component::update() {
-	if (updateNeeded && entity->getWorld()) {
-		entity->updateBounds();
-		updateNeeded = false;
-	}
-
 	deleteVisMaps();
 
 	glm::mat4 translationM = glm::translate(glm::mat4(1.f), glm::vec3(lPos.x, -lPos.z, lPos.y));
@@ -1026,6 +1021,11 @@ void Component::update() {
 		} else {
 			components[c]->update();
 		}
+	}
+
+	if (updateNeeded && entity->getWorld()) {
+		entity->updateBounds();
+		updateNeeded = false;
 	}
 }
 
