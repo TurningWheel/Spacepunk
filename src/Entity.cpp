@@ -424,7 +424,7 @@ void Entity::updateBounds() {
 	boundsMax = Vector(0.f);
 	boundsMin = Vector(0.f);
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
-		if (!components[c]->isEditorOnly()) {
+		if (!components[c]->isEditorOnly() && !components[c]->isToBeDeleted()) {
 			components[c]->updateBounds();
 			boundsMax.x = std::max(boundsMax.x, components[c]->getBoundsMax().x);
 			boundsMax.y = std::max(boundsMax.y, components[c]->getBoundsMax().y);

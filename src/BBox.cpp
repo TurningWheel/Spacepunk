@@ -636,7 +636,7 @@ void BBox::updateBounds() {
 		for (float y = -1.f; y <= 1.f; y += 2.f) {
 			for (float z = -1.f; z <= 1.f; z += 2.f) {
 				glm::vec3 mScale = mat * glm::vec4(bScale * glm::vec3(x, y, z), 1.f);
-				Vector scale = Vector(mScale.x, mScale.z, mScale.y) + gPos - entity->getPos();
+				Vector scale = Vector(mScale.x, mScale.z, -mScale.y);
 				boundsMax.x = std::max(boundsMax.x, scale.x);
 				boundsMax.y = std::max(boundsMax.y, scale.y);
 				boundsMax.z = std::max(boundsMax.z, scale.z);
@@ -646,6 +646,8 @@ void BBox::updateBounds() {
 			}
 		}
 	}
+	boundsMax += gPos - entity->getPos();
+	boundsMin += gPos - entity->getPos();
 }
 
 void BBox::load(FILE* fp) {

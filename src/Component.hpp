@@ -523,6 +523,7 @@ public:
 	T* addComponent() {
 		T* component = new T(*entity, this);
 		components.push(component);
+		entity->updateBounds();
 		return component;
 	}
 

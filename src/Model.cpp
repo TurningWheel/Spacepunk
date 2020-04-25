@@ -92,7 +92,6 @@ void Model::process() {
 }
 
 void Model::updateBounds() {
-	Component::updateBounds();
 	if (entity->isShouldSave() && !hasAnimations()) {
 		Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
 		if (mesh) {
@@ -101,14 +100,18 @@ void Model::updateBounds() {
 			Vector offset = (maxBox + minBox) / 2;
 			Vector bounds = (maxBox - minBox) / 2;
 
+			glm::mat4 mat = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
 			glm::vec3 bScale = glm::vec3(gScale.x, gScale.z, gScale.y);
 			glm::vec3 boxScale = glm::vec3(bounds.x, -bounds.z, bounds.y) * bScale;
-			glm::mat4 mat = glm::mat4(glm::quat(gAng.w, gAng.x, gAng.y, gAng.z));
+
+			boundsMax = Vector(0.f);
+			boundsMin = Vector(0.f);
+
 			for (float x = -1.f; x <= 1.f; x += 2.f) {
 				for (float y = -1.f; y <= 1.f; y += 2.f) {
 					for (float z = -1.f; z <= 1.f; z += 2.f) {
 						glm::vec3 mScale = mat * glm::vec4(boxScale * glm::vec3(x, y, z), 1.f);
-						Vector scale = Vector(mScale.x, mScale.z, -mScale.y) + gPos - entity->getPos();
+						Vector scale = Vector(mScale.x, mScale.z, -mScale.y);
 						boundsMax.x = std::max(boundsMax.x, scale.x);
 						boundsMax.y = std::max(boundsMax.y, scale.y);
 						boundsMax.z = std::max(boundsMax.z, scale.z);
@@ -122,9 +125,25 @@ void Model::updateBounds() {
 			glm::vec3 boxOffset = glm::vec3(offset.x, -offset.z, offset.y) * bScale;
 			glm::vec3 mOffset = mat * glm::vec4(boxOffset, 1.f);
 			Vector trueOffset = Vector(mOffset.x, mOffset.z, -mOffset.y);
-			boundsMax += trueOffset;
-			boundsMin += trueOffset;
+			boundsMax += gPos - entity->getPos() + trueOffset;
+			boundsMin += gPos - entity->getPos() + trueOffset;
+
+			for (Uint32 c = 0; c < components.getSize(); ++c) {
+				if (!components[c]->isEditorOnly()) {
+					components[c]->updateBounds();
+					boundsMax.x = std::max(boundsMax.x, components[c]->getBoundsMax().x);
+					boundsMax.y = std::max(boundsMax.y, components[c]->getBoundsMax().y);
+					boundsMax.z = std::max(boundsMax.z, components[c]->getBoundsMax().z);
+					boundsMin.x = std::min(boundsMin.x, components[c]->getBoundsMin().x);
+					boundsMin.y = std::min(boundsMin.y, components[c]->getBoundsMin().y);
+					boundsMin.z = std::min(boundsMin.z, components[c]->getBoundsMin().z);
+				}
+			}
+		} else {
+			Component::updateBounds();
 		}
+	} else {
+		Component::updateBounds();
 	}
 }
 

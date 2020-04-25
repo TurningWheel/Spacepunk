@@ -408,6 +408,7 @@ public:
 	T* addComponent() {
 		T* component = new T(*this, nullptr);
 		components.push(component);
+		updateBounds();
 		return component;
 	}
 

@@ -1033,7 +1033,7 @@ void Component::updateBounds() {
 	boundsMax = gPos - entity->getPos();
 	boundsMin = gPos - entity->getPos();
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
-		if (!components[c]->editorOnly) {
+		if (!components[c]->editorOnly && !components[c]->toBeDeleted) {
 			components[c]->updateBounds();
 			boundsMax.x = std::max(boundsMax.x, components[c]->getBoundsMax().x);
 			boundsMax.y = std::max(boundsMax.y, components[c]->getBoundsMax().y);
@@ -1236,6 +1236,7 @@ bool Component::removeComponentByUID(const Uint32 uid) {
 }
 
 void Component::remove() {
+	entity->updateBounds();
 	toBeDeleted = true;
 }
 
