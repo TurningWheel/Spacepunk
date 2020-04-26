@@ -69,6 +69,9 @@ public:
 	//! @param light the light to light the light with (whew) (unused)
 	virtual void draw(Camera& camera, const ArrayList<Light*>& lights) override;
 
+	//! determine if the given entity is occluded by the light's shadow camera
+	bool isOccluded(Entity& entity);
+
 	//! creates a shadow map from the light source
 	//! @return the number of entities rendered to create the shadow map
 	int createShadowMap();

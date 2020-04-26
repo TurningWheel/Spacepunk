@@ -1030,6 +1030,9 @@ void Component::update() {
 }
 
 void Component::updateBounds() {
+	if (!entity->getWorld()) {
+		return;
+	}
 	boundsMax = gPos - entity->getPos();
 	boundsMin = gPos - entity->getPos();
 	for (Uint32 c = 0; c < components.getSize(); ++c) {

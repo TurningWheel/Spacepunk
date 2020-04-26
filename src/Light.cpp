@@ -136,6 +136,23 @@ void Light::serialize(FileInterface * file) {
 
 static Cvar cvar_shadowDepthOffset("render.shadow.depthoffset", "shadow depth buffer adjustment", "0");
 
+bool Light::isOccluded(Entity& entity) {
+	World* world = this->entity->getWorld();
+	if (!world) {
+		return true;
+	}
+	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
+	Camera* camera = shadowCamera->findComponentByUID<Camera>(1); assert(camera);
+	for (int c = 0; c < 6; ++c) {
+		camera->setOcclusionIndex(this->entity->getUID() * 6 + c);
+		auto& query = camera->getOcclusionQuery(&entity);
+		if (query.result == false) {
+			return false;
+		}
+	}
+	return true;
+}
+
 int Light::createShadowMap() {
 	int result = 0;
 

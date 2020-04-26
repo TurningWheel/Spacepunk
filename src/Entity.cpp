@@ -408,6 +408,9 @@ void Entity::update() {
 }
 
 void Entity::updateBounds() {
+	if (!world) {
+		return;
+	}
 	boundsMax = Vector(0.f);
 	boundsMin = Vector(0.f);
 	for (Uint32 c = 0; c < components.getSize(); ++c) {

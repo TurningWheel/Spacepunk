@@ -825,7 +825,10 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 		indices = new GLuint[mesh->mNumFaces * 3 * 2];
 
 		for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-			assert(mesh->mFaces[i].mNumIndices == 3);
+			if(mesh->mFaces[i].mNumIndices != 3) {
+				--i;
+				continue;
+			}
 			indices[i * 6] = mesh->mFaces[i].mIndices[0];
 			indices[i * 6 + 2] = mesh->mFaces[i].mIndices[1];
 			indices[i * 6 + 4] = mesh->mFaces[i].mIndices[2];

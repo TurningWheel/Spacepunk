@@ -242,12 +242,9 @@ void BasicWorld::draw() {
 
 			// figure out if the light is affecting any visible objects
 			bool relevant = false;
-			assert(shadowCamera);
-			Camera* actualShadowCamera = shadowCamera->findComponentByUID<Camera>(1);
-			assert(actualShadowCamera);
 			for (auto entity : reducedDrawList) {
 				if (entity->isFlag(Entity::FLAG_VISIBLE)) {
-					if (!entity->isOccluded(*actualShadowCamera) && entity->isShouldSave()) {
+					if (!light->isOccluded(*entity) && entity->isShouldSave()) {
 						float dist = Engine::measurePointToBounds(light->getGlobalPos(),
 							entity->getBoundsMin() + entity->getPos(), entity->getBoundsMax() + entity->getPos());
 						if (dist <= light->getRadius() * light->getRadius()) {
