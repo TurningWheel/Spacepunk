@@ -212,9 +212,11 @@ int Light::createShadowMap() {
 
 		// draw shadow buffer
 		glDepthMask(GL_TRUE);
+		glDisable(GL_CULL_FACE);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		camera->setDrawMode(Camera::DRAW_SHADOW);
 		bw->drawSceneObjects(*camera, ArrayList<Light*>({ this }), reducedDrawList);
+		glEnable(GL_CULL_FACE);
 	}
 	glPolygonOffset(1.f, 0.f);
 

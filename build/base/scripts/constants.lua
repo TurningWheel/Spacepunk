@@ -17,6 +17,14 @@ INT16_MAX = 0xffff; INT16_MAX = protect(INT16_MAX)
 UINT32_MAX = 0xffffffff; UINT32_MAX = protect(UINT32_MAX)
 INT32_MAX = 0xffffffff; INT32_MAX = protect(INT32_MAX)
 
+-- Frame border styles
+BORDER = {
+    FLAT = 0,
+    BEVEL_HIGH = 1,
+    BEVEL_LOW = 2,
+}
+BORDER = protect(BORDER)
+
 -- BBox collision shapes
 SHAPE = {
 	BOX = 0,

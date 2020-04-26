@@ -24,6 +24,14 @@ public:
 	Frame(Frame& parent, const char* _name = "", const char* _script = "");
 	~Frame();
 
+	//! border style
+	enum border_style_t {
+		BORDER_FLAT,
+		BORDER_BEVEL_HIGH,
+		BORDER_BEVEL_LOW,
+		BORDER_MAX
+	};
+
 	//! frame image
 	struct image_t {
 		String name;
@@ -197,7 +205,7 @@ public:
 	const int					getBorder() const { return border; }
 	const Rect<int>&			getSize() const { return size; }
 	const Rect<int>&			getActualSize() const { return actualSize; }
-	const bool					isHigh() const { return high; }
+	int							getBorderStyle() const { return borderStyle; }
 	LinkedList<Frame*>&			getFrames() { return frames; }
 	LinkedList<Field*>&			getFields() { return fields; }
 	LinkedList<Button*>&		getButtons() { return buttons; }
@@ -210,33 +218,36 @@ public:
 	void	setPos(const int x, const int y) { size.x = x; size.y = y; }
 	void	setSize(Rect<int>& _size) { size = _size; }
 	void	setActualSize(Rect<int>& _actualSize) { actualSize = _actualSize; }
-	void	setHigh(const bool _high) { high = _high; }
+	void	setBorderStyle(int _borderStyle) { borderStyle = static_cast<border_style_t>(_borderStyle); }
+	void	setHigh(bool b) { borderStyle = b ? BORDER_BEVEL_HIGH : BORDER_BEVEL_LOW; }
 	void	setColor(const WideVector& _color) { color = _color; }
+	void	setBorderColor(const WideVector& _color) { borderColor = _color; }
 	void	setDisabled(const bool _disabled) { disabled = _disabled; }
 	void	setHollow(const bool _hollow) { hollow = _hollow; }
 
 private:
-	Frame* parent = nullptr;			//!< parent frame
-	Script* script = nullptr;			//!< script engine
-	String name;						//!< internal name of the frame
-	String font = Font::defaultFont;	//!< name of the font to use for frame entries
-	int border = 3;						//!< size of the frame's border
-	Rect<int> size;						//!< size and position of the frame in its parent frame
-	Rect<int> actualSize;				//!< size of the frame's whole contents. when larger than size, activates sliders
-	bool high = true;					//!< use Renderer::drawHighFrame(); else use Renderer::drawLowFrame()
-	WideVector color;					//!< the frame's color
-	String scriptStr;					//!< name of the frame's script (sans path and extension)
-	StringBuf<256> scriptPath;			//!< path to the frame's script file
-	bool disabled = false;				//!< if true, the frame is invisible and unusable
-	bool focus = false;					//!< if true, this frame has window focus
-	const char* tooltip = nullptr;		//!< points to the tooltip that should be displayed by the (master) frame, or nullptr if none should be displayed
-	bool hollow = false;				//!< if true, the frame is hollow; otherwise it is not
-	bool toBeDeleted = false;			//!< if true, the frame will be removed at the end of its process
-	static bool tabbing;				//!< used for tabbing between fields
-	bool draggingHSlider = false;		//!< if true, we are dragging the horizontal slider
-	bool draggingVSlider = false;		//!< if true, we are dragging the vertical slider
-	int oldSliderX = 0;					//!< when you start dragging a slider, this is set
-	int oldSliderY = 0;					//!< when you start dragging a slider, this is set
+	Frame* parent = nullptr;							//!< parent frame
+	Script* script = nullptr;							//!< script engine
+	String name;										//!< internal name of the frame
+	String font = Font::defaultFont;					//!< name of the font to use for frame entries
+	int border = 3;										//!< size of the frame's border
+	Rect<int> size;										//!< size and position of the frame in its parent frame
+	Rect<int> actualSize;								//!< size of the frame's whole contents. when larger than size, activates sliders
+	border_style_t borderStyle = BORDER_BEVEL_HIGH;		//!< border style
+	WideVector color;									//!< the frame's color
+	WideVector borderColor;								//!< the frame's border color (only used for flat border)
+	String scriptStr;									//!< name of the frame's script (sans path and extension)
+	StringBuf<256> scriptPath;							//!< path to the frame's script file
+	bool disabled = false;								//!< if true, the frame is invisible and unusable
+	bool focus = false;									//!< if true, this frame has window focus
+	const char* tooltip = nullptr;						//!< points to the tooltip that should be displayed by the (master) frame, or nullptr if none should be displayed
+	bool hollow = false;								//!< if true, the frame is hollow; otherwise it is not
+	bool toBeDeleted = false;							//!< if true, the frame will be removed at the end of its process
+	static bool tabbing;								//!< used for tabbing between fields
+	bool draggingHSlider = false;						//!< if true, we are dragging the horizontal slider
+	bool draggingVSlider = false;						//!< if true, we are dragging the vertical slider
+	int oldSliderX = 0;									//!< when you start dragging a slider, this is set
+	int oldSliderY = 0;									//!< when you start dragging a slider, this is set
 
 	LinkedList<Frame*> frames;
 	LinkedList<Button*> buttons;

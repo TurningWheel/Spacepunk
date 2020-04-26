@@ -93,6 +93,13 @@ public:
 	//! @param hollow if true, the center of the frame will not be drawn
 	void drawLowFrame(const Rect<int>& src, const int frameSize, const glm::vec4& color, const bool hollow = false);
 
+	//! draw a frame with a flattened edge
+	//! @param src the size and coordinates of the frame
+	//! @param frameSize the size of the frame border in pixels
+	//! @param color the frame's color
+	//! @param hollow if true, the center of the frame will not be drawn
+	void drawFrame(const Rect<int>& src, const int frameSize, const glm::vec4& color, const bool hollow = false);
+
 	//! draw a filled rectangle in screen space
 	//! @param src the size and coordinates of the rectangle
 	//! @param color the 32-bit color of the rectangle

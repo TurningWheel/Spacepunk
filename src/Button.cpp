@@ -43,10 +43,20 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		return;
 
 	glm::vec4 _color = highlighted ? color * 1.5f : color;
-	if (pressed) {
-		renderer.drawLowFrame(_size, border, _color);
+	if (border) {
+		if (pressed) {
+			renderer.drawLowFrame(_size, border, _color);
+		} else {
+			renderer.drawHighFrame(_size, border, _color);
+		}
 	} else {
-		renderer.drawHighFrame(_size, border, _color);
+		if (pressed) {
+			renderer.drawFrame(_size, border, color);
+			renderer.drawFrame(_size, 2, _color, true);
+		} else {
+			renderer.drawFrame(_size, border, color);
+			renderer.drawFrame(_size, 1, _color, true);
+		}
 	}
 
 	if (!text.empty() && style != STYLE_CHECKBOX) {

@@ -149,7 +149,10 @@ Script::Script(Frame& _frame) {
 		exposeEditor(*client->getEditor());
 		exposeEntity();
 	}
+	exposeEntity();
 	exposeFrame();
+	exposeExtra();
+	exposeVector();
 	exposeWorld();
 }
 
@@ -252,12 +255,14 @@ void Script::exposeFrame() {
 		.addFunction("getBorder", &Frame::getBorder)
 		.addFunction("getSize", &Frame::getSize)
 		.addFunction("getActualSize", &Frame::getActualSize)
-		.addFunction("isHigh", &Frame::isHigh)
+		.addFunction("getBorderStyle", &Frame::getBorderStyle)
 		.addFunction("getFrames", &Frame::getFrames)
 		.addFunction("getButtons", &Frame::getButtons)
 		.addFunction("setBorder", &Frame::setBorder)
 		.addFunction("setSize", &Frame::setSize)
 		.addFunction("setActualSize", &Frame::setActualSize)
+		.addFunction("setBorderStyle", &Frame::setBorderStyle)
+		.addFunction("setBorderColor", &Frame::setBorderColor)
 		.addFunction("setHigh", &Frame::setHigh)
 		.addFunction("setColor", &Frame::setColor)
 		.addFunction("addFrame", &Frame::addFrame)
@@ -692,6 +697,7 @@ void Script::exposeEntity() {
 		.addFunction("insertIntoWorld", &Entity::insertIntoWorld)
 		.addFunction("warp", &Entity::warp)
 		.addFunction("remoteExecute", &Entity::remoteExecute)
+		.addFunction("dispatch", &Entity::dispatch)
 		.addFunction("isClientObj", &Entity::isClientObj)
 		.addFunction("isServerObj", &Entity::isServerObj)
 		.addFunction("nearestCeiling", &Entity::nearestCeiling)

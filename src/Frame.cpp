@@ -231,10 +231,16 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		barRect.w = sliderSize;
 		barRect.h = sliderSize;
 		if (border > 0) {
-			if (high) {
+			switch (borderStyle) {
+			case BORDER_FLAT:
+				renderer.drawFrame(barRect, border, color);
+				break;
+			case BORDER_BEVEL_HIGH:
 				renderer.drawHighFrame(barRect, border, color);
-			} else {
+				break;
+			case BORDER_BEVEL_LOW:
 				renderer.drawLowFrame(barRect, border, color);
+				break;
 			}
 		} else {
 			renderer.drawRect(&barRect, color);
@@ -367,10 +373,16 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 	// draw frame borders, if any
 	if (border > 0) {
-		if (high) {
+		switch (borderStyle) {
+		case BORDER_FLAT:
+			renderer.drawFrame(_size, border, borderColor, true);
+			break;
+		case BORDER_BEVEL_HIGH:
 			renderer.drawHighFrame(_size, border, color, true);
-		} else {
+			break;
+		case BORDER_BEVEL_LOW:
 			renderer.drawLowFrame(_size, border, color, true);
+			break;
 		}
 	}
 }

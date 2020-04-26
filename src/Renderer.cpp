@@ -603,6 +603,58 @@ void Renderer::drawLowFrame(const Rect<int>& src, const int frameSize, const glm
 	}
 }
 
+void Renderer::drawFrame(const Rect<int>& src, const int frameSize, const glm::vec4& color, const bool hollow) {
+	Image* image = mainEngine->getImageResource().dataForString("images/system/white.png");
+	if (!image) {
+		return;
+	}
+
+	if (!hollow) {
+		// draw center rectangle
+		image->drawColor(nullptr, src, color);
+	} else {
+		// draw top
+		if (frameSize > 0) {
+			Rect<int> size;
+			size.x = src.x;
+			size.y = src.y;
+			size.w = src.w;
+			size.h = frameSize;
+			image->drawColor(nullptr, size, color);
+		}
+
+		// draw left
+		if (frameSize > 0) {
+			Rect<int> size;
+			size.x = src.x;
+			size.y = src.y + frameSize;
+			size.w = frameSize;
+			size.h = src.h - frameSize;
+			image->drawColor(nullptr, size, color);
+		}
+
+		// draw bottom
+		if (frameSize > 0) {
+			Rect<int> size;
+			size.x = src.x + frameSize;
+			size.y = src.y + src.h - frameSize;
+			size.w = src.w - frameSize;
+			size.h = frameSize;
+			image->drawColor(nullptr, size, color);
+		}
+
+		// draw right
+		if (frameSize > 0) {
+			Rect<int> size;
+			size.x = src.x + src.w - frameSize;
+			size.y = src.y + frameSize;
+			size.w = frameSize;
+			size.h = src.h - frameSize * 2;
+			image->drawColor(nullptr, size, color);
+		}
+	}
+}
+
 void Renderer::drawConsole(const Sint32 height, const char* input, const LinkedList<Engine::logmsg_t>& log, const Node<Engine::logmsg_t>* logStart) {
 	Image* image = mainEngine->getImageResource().dataForString("images/system/white.png");
 	if (!image) {
