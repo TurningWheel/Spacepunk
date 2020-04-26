@@ -147,7 +147,6 @@ Script::Script(Frame& _frame) {
 	exposeClient();
 	if (client->getEditor()) {
 		exposeEditor(*client->getEditor());
-		exposeEntity();
 	}
 	exposeEntity();
 	exposeFrame();
