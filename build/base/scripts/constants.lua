@@ -117,9 +117,11 @@ FLAG = protect(FLAG)
 
 -- Field justification
 JUSTIFY = {
-	LEFT = 0,
-	CENTER = 1,
-	RIGHT = 2,
+    TOP = 0,
+    BOTTOM = 1,
+    LEFT = 2,
+    RIGHT = 3,
+    CENTER = 4,
 }
 JUSTIFY = protect(JUSTIFY)
 

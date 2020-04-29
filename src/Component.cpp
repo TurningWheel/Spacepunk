@@ -151,7 +151,7 @@ void Component::AttributeFloat::createAttributeUI(Frame& properties, int x, int&
 	field->setCallback(new Callback(value));
 
 	char f[16];
-	snprintf(f, 16, "%.1f", value);
+	snprintf(f, 16, "%.2f", value);
 	field->setText(f);
 
 	// label

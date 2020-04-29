@@ -27,9 +27,11 @@ public:
 
 	//! text justification
 	enum justify_t {
+		TOP,
+		BOTTOM,
 		LEFT,
-		CENTER,
 		RIGHT,
+		CENTER,
 		JUSTIFY_TYPE_LENGTH
 	};
 
@@ -64,7 +66,8 @@ public:
 	const char*					getFont() const { return font.get(); }
 	const WideVector&			getColor() const { return color; }
 	const Rect<int>				getSize() const { return size; }
-	const int					getJustify() const { return static_cast<int>(justify); }
+	const int					getHJustify() const { return static_cast<int>(hjustify); }
+	const int					getVJustify() const { return static_cast<int>(vjustify); }
 	const bool					isSelected() const { return selected; }
 	const bool					isEditable() const { return editable; }
 	const bool					isNumbersOnly() const { return numbersOnly; }
@@ -80,7 +83,9 @@ public:
 	void	setColor(const WideVector& _color) { color = _color; }
 	void	setEditable(const bool _editable) { editable = _editable; }
 	void	setNumbersOnly(const bool _numbersOnly) { numbersOnly = _numbersOnly; }
-	void	setJustify(const int _justify) { justify = static_cast<justify_t>(_justify); }
+	void	setJustify(const int _justify) { hjustify = vjustify = static_cast<justify_t>(_justify); }
+	void	setHJustify(const int _justify) { hjustify = static_cast<justify_t>(_justify); }
+	void	setVJustify(const int _justify) { vjustify = static_cast<justify_t>(_justify); }
 	void	setScroll(const bool _scroll) { scroll = _scroll; }
 	void	setTabDestField(const char* _tabDest) { tabDestField = _tabDest; }
 	void	setTabDestFrame(const char* _tabDest) { tabDestFrame = _tabDest; }
@@ -96,7 +101,8 @@ private:
 	Uint32 textLen = 0;									//!< size of the text buffer in bytes
 	WideVector color = WideVector(1.f);					//!< text color
 	Rect<int> size;										//!< size of the field in pixels
-	justify_t justify = LEFT;							//!< text justification
+	justify_t hjustify = LEFT;							//!< horizontal text justification
+	justify_t vjustify = TOP;							//!< vertical text justification
 	bool selected = false;								//!< whether the field is selected
 	bool editable = false;								//!< whether the field is read-only
 	bool numbersOnly = false;							//!< whether the field can only contain numeric chars

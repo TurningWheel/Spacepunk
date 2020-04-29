@@ -445,13 +445,13 @@ int Engine::loadConfig(const char* filename) {
 	return 0;
 }
 
-int Engine::saveConfig(const char* filename) {
+int Engine::saveConfig(const char* filename, const ArrayList<String>& cvars, const ArrayList<String>& ccmds) {
 	if (!filename) {
 		return 1;
 	}
 	FILE *fp;
 
-	StringBuf<64> _filename("%s/%s", 2, game.path.get(), filename);
+	StringBuf<64> _filename = filename;
 	if (_filename.find(".cfg") == UINT32_MAX) {
 		_filename.append(".cfg");
 	}
@@ -464,7 +464,29 @@ int Engine::saveConfig(const char* filename) {
 		return 1;
 	}
 
-	// write relevant data (TODO)
+	// write header comment to file
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	fprintf(fp, "# this file was auto-generated on %d-%02d-%02d at %02d:%02d:%02d\n\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+	// write cvars
+	if (cvars.getSize() == 1 && cvars[0] == "*") {
+		for (auto& cvar : Cvar::getMap()) {
+			fprintf(fp, "%s %s\n", cvar.b->getName(), cvar.b->toStr());
+		}
+	} else {
+		for (auto& name : cvars) {
+			auto cvar = Cvar::getMap().find(name);
+			if (cvar) {
+				fprintf(fp, "%s %s\n", (*cvar)->getName(), (*cvar)->toStr());
+			}
+		}
+	}
+
+	// write ccmds
+	for (auto& ccmd : ccmds) {
+		fprintf(fp, "%s\n", ccmd.get());
+	}
 
 	// close file
 	fclose(fp);

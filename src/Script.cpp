@@ -196,6 +196,8 @@ void Script::exposeEngine() {
 		.addStaticFunction("triangleCoords", &Engine::triangleCoords)
 		.addStaticFunction("pointInTriangle", &Engine::pointInTriangle)
 		.addStaticFunction("strcmp", &Engine::strCompare)
+		.addFunction("loadConfig", &Engine::loadConfig)
+		.addFunction("saveConfig", &Engine::saveConfig)
 		.endClass()
 		;
 
@@ -286,7 +288,8 @@ void Script::exposeFrame() {
 		.addFunction("getTextLen", &Field::getTextLen)
 		.addFunction("getColor", &Field::getColor)
 		.addFunction("getSize", &Field::getSize)
-		.addFunction("getJustify", &Field::getJustify)
+		.addFunction("getHJustify", &Field::getHJustify)
+		.addFunction("getVJustify", &Field::getVJustify)
 		.addFunction("isSelected", &Field::isSelected)
 		.addFunction("isEditable", &Field::isEditable)
 		.addFunction("isNumbersOnly", &Field::isNumbersOnly)
@@ -303,6 +306,8 @@ void Script::exposeFrame() {
 		.addFunction("setEditable", &Field::setEditable)
 		.addFunction("setNumbersOnly", &Field::setNumbersOnly)
 		.addFunction("setJustify", &Field::setJustify)
+		.addFunction("setHJustify", &Field::setHJustify)
+		.addFunction("setVJustify", &Field::setVJustify)
 		.addFunction("setScroll", &Field::setScroll)
 		.addFunction("setTabDestField", &Field::setTabDestField)
 		.addFunction("setTabDestFrame", &Field::setTabDestFrame)
@@ -350,7 +355,7 @@ void Script::exposeString() {
 	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
 
 	luabridge::getGlobalNamespace(lua)
-		.beginClass<String>("String")
+		.beginClass<StringBuf<64>>("String")
 		.addConstructor<void(*) (const char*)>()
 		.addFunction("get", &String::get)
 		.addFunction("getSize", &String::getSize)

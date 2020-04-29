@@ -4712,7 +4712,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char x[16];
-			snprintf(x, 16, "%.1f", component->getLocalPos().x);
+			snprintf(x, 16, "%.2f", component->getLocalPos().x);
 			field->setText(x);
 		}
 
@@ -4752,7 +4752,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char y[16];
-			snprintf(y, 16, "%.1f", component->getLocalPos().y);
+			snprintf(y, 16, "%.2f", component->getLocalPos().y);
 			field->setText(y);
 		}
 
@@ -4793,7 +4793,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char z[16];
-			snprintf(z, 16, "%.1f", component->getLocalPos().z);
+			snprintf(z, 16, "%.2f", component->getLocalPos().z);
 			field->setText(z);
 		}
 
@@ -4847,7 +4847,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char roll[16];
-			snprintf(roll, 16, "%.1f", component->getLocalAng().toRotation().degreesRoll());
+			snprintf(roll, 16, "%.2f", component->getLocalAng().toRotation().degreesRoll());
 			field->setText(roll);
 		}
 
@@ -4887,7 +4887,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char pitch[16];
-			snprintf(pitch, 16, "%.1f", component->getLocalAng().toRotation().degreesPitch());
+			snprintf(pitch, 16, "%.2f", component->getLocalAng().toRotation().degreesPitch());
 			field->setText(pitch);
 		}
 
@@ -4928,7 +4928,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char yaw[16];
-			snprintf(yaw, 16, "%.1f", component->getLocalAng().toRotation().degreesYaw());
+			snprintf(yaw, 16, "%.2f", component->getLocalAng().toRotation().degreesYaw());
 			field->setText(yaw);
 		}
 
@@ -4982,7 +4982,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char x[16];
-			snprintf(x, 16, "%.1f", component->getLocalScale().x);
+			snprintf(x, 16, "%.2f", component->getLocalScale().x);
 			field->setText(x);
 		}
 
@@ -5022,7 +5022,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char y[16];
-			snprintf(y, 16, "%.1f", component->getLocalScale().y);
+			snprintf(y, 16, "%.2f", component->getLocalScale().y);
 			field->setText(y);
 		}
 
@@ -5063,7 +5063,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->getParams().addInt(component->getUID());
 
 			char z[16];
-			snprintf(z, 16, "%.1f", component->getLocalScale().z);
+			snprintf(z, 16, "%.2f", component->getLocalScale().z);
 			field->setText(z);
 		}
 
@@ -5405,7 +5405,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char x[16];
-							snprintf(x, 16, "%.1f", firstEntity->getPos().x);
+							snprintf(x, 16, "%.2f", firstEntity->getPos().x);
 							field->setText(x);
 						}
 					}
@@ -5443,7 +5443,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char y[16];
-							snprintf(y, 16, "%.1f", firstEntity->getPos().y);
+							snprintf(y, 16, "%.2f", firstEntity->getPos().y);
 							field->setText(y);
 						}
 					}
@@ -5482,7 +5482,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char z[16];
-							snprintf(z, 16, "%.1f", firstEntity->getPos().z);
+							snprintf(z, 16, "%.2f", firstEntity->getPos().z);
 							field->setText(z);
 						}
 					}
@@ -5534,7 +5534,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char roll[16];
-							snprintf(roll, 16, "%.1f", firstEntity->getAng().toRotation().degreesRoll());
+							snprintf(roll, 16, "%.2f", firstEntity->getAng().toRotation().degreesRoll());
 							field->setText(roll);
 						}
 					}
@@ -5572,7 +5572,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char pitch[16];
-							snprintf(pitch, 16, "%.1f", firstEntity->getAng().toRotation().degreesPitch());
+							snprintf(pitch, 16, "%.2f", firstEntity->getAng().toRotation().degreesPitch());
 							field->setText(pitch);
 						}
 					}
@@ -5611,7 +5611,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char yaw[16];
-							snprintf(yaw, 16, "%.1f", firstEntity->getAng().toRotation().degreesYaw());
+							snprintf(yaw, 16, "%.2f", firstEntity->getAng().toRotation().degreesYaw());
 							field->setText(yaw);
 						}
 					}
@@ -5663,7 +5663,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char x[16];
-							snprintf(x, 16, "%.1f", firstEntity->getScale().x);
+							snprintf(x, 16, "%.2f", firstEntity->getScale().x);
 							field->setText(x);
 						}
 					}
@@ -5701,7 +5701,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char y[16];
-							snprintf(y, 16, "%.1f", firstEntity->getScale().y);
+							snprintf(y, 16, "%.2f", firstEntity->getScale().y);
 							field->setText(y);
 						}
 					}
@@ -5740,7 +5740,7 @@ void Editor::updateGUI(Frame& gui) {
 							field->setText("...");
 						} else {
 							char z[16];
-							snprintf(z, 16, "%.1f", firstEntity->getScale().z);
+							snprintf(z, 16, "%.2f", firstEntity->getScale().z);
 							field->setText(z);
 						}
 					}
@@ -6073,21 +6073,21 @@ void Editor::updateGUI(Frame& gui) {
 				// translate mode
 				if (widgetMode == TRANSLATE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetPos.x);
+					snprintf(buf, 16, "%.2f", widgetPos.x);
 					field->setText(buf);
 				}
 
 				// rotate mode
 				else if (widgetMode == ROTATE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetAng.degreesRoll());
+					snprintf(buf, 16, "%.2f", widgetAng.degreesRoll());
 					field->setText(buf);
 				}
 
 				// scale mode
 				else if (widgetMode == SCALE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetScale.x);
+					snprintf(buf, 16, "%.2f", widgetScale.x);
 					field->setText(buf);
 				}
 			}
@@ -6113,21 +6113,21 @@ void Editor::updateGUI(Frame& gui) {
 				// translate mode
 				if (widgetMode == TRANSLATE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetPos.y);
+					snprintf(buf, 16, "%.2f", widgetPos.y);
 					field->setText(buf);
 				}
 
 				// rotate mode
 				else if (widgetMode == ROTATE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetAng.degreesPitch());
+					snprintf(buf, 16, "%.2f", widgetAng.degreesPitch());
 					field->setText(buf);
 				}
 
 				// scale mode
 				else if (widgetMode == SCALE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetScale.y);
+					snprintf(buf, 16, "%.2f", widgetScale.y);
 					field->setText(buf);
 				}
 			}
@@ -6153,21 +6153,21 @@ void Editor::updateGUI(Frame& gui) {
 				// translate mode
 				if (widgetMode == TRANSLATE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetPos.z);
+					snprintf(buf, 16, "%.2f", widgetPos.z);
 					field->setText(buf);
 				}
 
 				// rotate mode
 				else if (widgetMode == ROTATE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetAng.degreesYaw());
+					snprintf(buf, 16, "%.2f", widgetAng.degreesYaw());
 					field->setText(buf);
 				}
 
 				// scale mode
 				else if (widgetMode == SCALE) {
 					char buf[16];
-					snprintf(buf, 16, "%.1f", widgetScale.z);
+					snprintf(buf, 16, "%.2f", widgetScale.z);
 					field->setText(buf);
 				}
 			}
@@ -6405,7 +6405,7 @@ void Editor::draw(Renderer& renderer) {
 			// fps counter
 			if (cvar_showFPS.toInt() && font) {
 				char fps[16];
-				snprintf(fps, 16, "%.1f", mainEngine->getFPS());
+				snprintf(fps, 16, "%.2f", mainEngine->getFPS());
 				Rect<int> pos;
 				int width;
 				font->sizeText(fps, &width, NULL);

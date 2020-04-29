@@ -204,14 +204,16 @@ public:
 	void doCommand(const char* arg);
 
 	//! load and execute a config file
-	//! @param filename filename of the config file to load (auto-prepends active game folder)
+	//! @param filename filename of the config file to load (NOT including mod folder)
 	//! @return 0 on success, non-zero on error
 	int loadConfig(const char* filename);
 
 	//! write a config file
-	//! @param filename filename of the config file to write (auto-prepends active game folder)
+	//! @param filename filename of the config file to write (including mod folder!)
+	//! @param cvars the specific cvars to write to the config file, or a list with one element ("*") to represent ALL cvars
+	//! @param ccmds an array of specific console commands to write to the config file
 	//! @return 0 on success, non-zero on error
-	int saveConfig(const char* filename);
+	int saveConfig(const char* filename, const ArrayList<String>& cvars, const ArrayList<String>& ccmds);
 
 	//! copy the contents of the engine log to another one
 	//! @param dest the destination log to copy to

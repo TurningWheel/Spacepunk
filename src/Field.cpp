@@ -117,9 +117,9 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 	if (selected) {
 		textSizeH += 2;
-		if (justify == RIGHT) {
+		if (hjustify == RIGHT || hjustify == BOTTOM) {
 			textSizeH -= 4;
-		} else if (justify == CENTER) {
+		} else if (hjustify == CENTER) {
 			textSizeH -= 2;
 		}
 		if (!mainEngine->isCursorVisible()) {
@@ -131,14 +131,18 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	}
 
 	Rect<int> pos;
-	if (justify == LEFT) {
+	if (hjustify == LEFT || hjustify == TOP) {
 		pos.x = _size.x + size.x - _actualSize.x;
-		pos.y = _size.y + size.y - _actualSize.y;
-	} else if (justify == CENTER) {
+	} else if (hjustify == CENTER) {
 		pos.x = _size.x + size.x + size.w / 2 - textSizeW / 2 - _actualSize.x;
-		pos.y = _size.y + size.y + size.h / 2 - textSizeH / 2 - _actualSize.y;
-	} else if (justify == RIGHT) {
+	} else if (hjustify == RIGHT || hjustify == BOTTOM) {
 		pos.x = _size.x + size.x + size.w - textSizeW - _actualSize.x;
+	}
+	if (vjustify == LEFT || vjustify == TOP) {
+		pos.y = _size.y + size.y - _actualSize.y;
+	} else if (vjustify == CENTER) {
+		pos.y = _size.y + size.y + size.h / 2 - textSizeH / 2 - _actualSize.y;
+	} else if (vjustify == RIGHT || vjustify == BOTTOM) {
 		pos.y = _size.y + size.y + size.h - textSizeH - _actualSize.y;
 	}
 	pos.w = textSizeW;
@@ -157,7 +161,7 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	src.h = pos.h - (dest.y - pos.y) - max(0, (pos.y + pos.h) - (rect.y + rect.h));
 
 	// fit text to window
-	if (justify == LEFT && scroll) {
+	if ((hjustify == LEFT || hjustify == TOP) && scroll) {
 		src.x = max(src.x, textSizeW - rect.w);
 	}
 
