@@ -27,6 +27,15 @@ Client::Client() {
 	mixer = new Mixer();
 	script = new Script(*this);
 	gui = new Frame("root");
+
+	Rect<int> guiRect;
+	guiRect.x = 0;
+	guiRect.y = 0;
+	guiRect.w = Frame::virtualScreenX;
+	guiRect.h = Frame::virtualScreenY;
+	gui->setSize(guiRect);
+	gui->setActualSize(guiRect);
+	gui->setHollow(true);
 }
 
 Client::~Client() {
@@ -745,9 +754,7 @@ void Client::runConsole() {
 
 		// submit console command
 		if (mainEngine->pressKey(SDL_SCANCODE_RETURN) || mainEngine->getKeyStatus(SDL_SCANCODE_KP_ENTER)) {
-			const char* command[1];
-			command[0] = consoleInput;
-			mainEngine->commandLine(1, command);
+			mainEngine->doCommand(consoleInput);
 			String oldCommand(consoleInput);
 			mainEngine->getCommandHistory().addNodeLast(oldCommand);
 			cuCommand = nullptr;
@@ -854,18 +861,6 @@ void Client::preProcess() {
 			}
 		}
 	}
-	if (gui) {
-		Sint32 xres = mainEngine->getXres();
-		Sint32 yres = mainEngine->getYres();
-		Rect<int> guiRect;
-		guiRect.x = 0;
-		guiRect.y = 0;
-		guiRect.w = xres;
-		guiRect.h = yres;
-		gui->setSize(guiRect);
-		gui->setActualSize(guiRect);
-		gui->setHollow(true);
-	}
 	handleNetMessages();
 	Game::preProcess();
 }
@@ -945,13 +940,16 @@ void Client::postProcess() {
 			textureSelectorActive = editor->isTextureSelectorActive();
 		}
 
+		int xres = mainEngine->getXres();
+		int yres = mainEngine->getYres();
+
 		// set framebuffer
 		renderer->clearBuffers();
-		Framebuffer* fbo = renderer->bindFBO("__main");
+		Framebuffer* fbo = renderer->bindFBO("__main", xres, yres);
 		fbo->clear();
 
 		if (!textureSelectorActive) {
-			Framebuffer* scene = renderer->bindFBO("scene");
+			Framebuffer* scene = renderer->bindFBO("scene", xres, yres);
 			scene->clear();
 
 			bool showTools = false;
@@ -963,35 +961,39 @@ void Client::postProcess() {
 
 			if (cvar_bloomEnabled.toInt() && (!editor || !showTools)) {
 				// blur bloom highlights
-				Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1");
+				Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1", xres, yres);
 				bloomPass1->clear();
 				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_HORIZONTAL);
-				Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2");
+				Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2", xres, yres);
 				bloomPass2->clear();
 				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_VERTICAL);
 
 				// blend bloom with scene
-				bloomPass1 = renderer->bindFBO("bloomPass1");
+				bloomPass1 = renderer->bindFBO("bloomPass1", xres, yres);
 				renderer->blendFramebuffer(*bloomPass2, GL_COLOR_ATTACHMENT0, *scene, GL_COLOR_ATTACHMENT0);
 
 				// blit bloomed scene to window
-				Framebuffer* fbo = renderer->bindFBO("__main");
+				(void)renderer->bindFBO("__main", xres, yres);
 				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
 			} else {
 				// blit scene to window
-				Framebuffer* fbo = renderer->bindFBO("__main");
+				(void)renderer->bindFBO("__main", xres, yres);
 				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
 			}
 
 			// editor interface
+			Framebuffer* gui_fbo = renderer->bindFBO("gui", Frame::virtualScreenX, Frame::virtualScreenY);
+			gui_fbo->clear();
 			if (editor && editor->isInitialized()) {
 				editor->draw(*renderer);
 			}
 
-			// draw frames
+			// draw gui
 			if (gui && !editorFullscreen) {
 				gui->draw(*renderer);
 			}
+			(void)renderer->bindFBO("__main", xres, yres);
+			renderer->blitFramebuffer(*gui_fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GUI);
 
 			// draw console
 			if (consoleHeight > 0) {

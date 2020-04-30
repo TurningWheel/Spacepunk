@@ -212,12 +212,15 @@ void Editor::buttonEntityAddComponent(unsigned int uid) {
 
 	int border = frame->getBorder();
 
+	int mousex = mainEngine->getMouseX() * ((float)Frame::virtualScreenX / mainEngine->getXres());
+	int mousey = mainEngine->getMouseY() * ((float)Frame::virtualScreenY / mainEngine->getYres());
+
 	Rect<int> rect;
 	rect.x = 0; rect.w = 200 + border * 2;
 	rect.y = 0; rect.h = 200;
 	frame->setActualSize(rect);
-	rect.x = mainEngine->getMouseX() + 8; rect.w = 200 + border * 2;
-	rect.y = mainEngine->getMouseY() + 8; rect.h = 200;
+	rect.x = mousex + 10; rect.w = 200 + border * 2;
+	rect.y = mousey + 10; rect.h = 200;
 	frame->setSize(rect);
 	frame->setColor(WideVector(.5f, .5f, .5f, 1.f));
 
@@ -318,8 +321,8 @@ void Editor::buttonNew() {
 
 	Frame* topFrame = new Frame(*gui, "editor_FrameNewConfirm");
 
-	int xres = mainEngine->getXres();
-	int yres = mainEngine->getYres();
+	int xres = Frame::virtualScreenX;
+	int yres = Frame::virtualScreenY;
 
 	Rect<int> rect;
 
@@ -514,8 +517,8 @@ void Editor::buttonEditorSettings() {
 
 	Frame* topFrame = new Frame(*gui, "editor_FrameEditorSettings");
 
-	int xres = mainEngine->getXres();
-	int yres = mainEngine->getYres();
+	int xres = Frame::virtualScreenX;
+	int yres = Frame::virtualScreenY;
 
 	Rect<int> winrect;
 
@@ -796,8 +799,8 @@ void Editor::buttonMapSettings() {
 
 	Frame* topFrame = new Frame(*gui, "editor_FrameMapSettings");
 
-	int xres = mainEngine->getXres();
-	int yres = mainEngine->getYres();
+	int xres = Frame::virtualScreenX;
+	int yres = Frame::virtualScreenY;
 
 	Rect<int> rect;
 
@@ -1220,8 +1223,8 @@ void Editor::buttonHelp() {
 	playSound("editor/logon.wav");
 	Frame* topFrame = new Frame(*gui, "editor_FrameHelp");
 
-	int xres = mainEngine->getXres();
-	int yres = mainEngine->getYres();
+	int xres = Frame::virtualScreenX;
+	int yres = Frame::virtualScreenY;
 
 	Rect<int> rect;
 
@@ -1372,6 +1375,9 @@ void Editor::selectAllEntities(const bool selected) {
 }
 
 void Editor::initWidgets() {
+	const Sint32 xres = Frame::virtualScreenX;
+	const Sint32 yres = Frame::virtualScreenY;
+
 	Entity* entity = nullptr;
 
 	// add camera
@@ -1384,8 +1390,6 @@ void Editor::initWidgets() {
 
 	// set camera window
 	Rect<int> camRect;
-	const Sint32 xres = mainEngine->getXres();
-	const Sint32 yres = mainEngine->getYres();
 	camRect.x = xres / 5;
 	camRect.w = xres - xres / 2.5f;
 	camRect.y = 44;
@@ -1625,8 +1629,8 @@ void Editor::initWidgets() {
 
 void Editor::initGUI(const Rect<int>& camRect) {
 	// setup gui
-	Sint32 xres = mainEngine->getXres();
-	Sint32 yres = mainEngine->getYres();
+	Sint32 xres = Frame::virtualScreenX;
+	Sint32 yres = Frame::virtualScreenY;
 
 	Frame* gui = client->getGUI()->findFrame("editor_gui");
 	Rect<int> guiRect;
@@ -3343,8 +3347,8 @@ void Editor::handleWidget(World& world) {
 	}
 
 	if (highlightedWidget) {
-		Sint32 mouseX = mainEngine->getMouseX();
-		Sint32 mouseY = mainEngine->getMouseY();
+		int mouseX = mainEngine->getMouseX() * (mainEngine->getXres() / (float)Frame::virtualScreenX);
+		int mouseY = mainEngine->getMouseY() * (mainEngine->getYres() / (float)Frame::virtualScreenY);
 
 		Vector rayStart, rayEnd;
 		editingCamera->screenPosToWorldRay(mouseX, mouseY, rayStart, rayEnd);
@@ -3749,6 +3753,9 @@ void Editor::preProcess() {
 void Editor::process(const bool usable) {
 	World& world = *this->world;
 
+	int xres = Frame::virtualScreenX;
+	int yres = Frame::virtualScreenY;
+
 	if (mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL)) {
 		if (mainEngine->pressKey(SDL_SCANCODE_F)) {
 			fullscreen = (fullscreen == false);
@@ -3782,14 +3789,10 @@ void Editor::process(const bool usable) {
 
 		if (editingCamera) {
 			Rect<int> camRect;
-
-			const Sint32 xres = mainEngine->getXres();
-			const Sint32 yres = mainEngine->getYres();
 			camRect.x = xres / 5;
 			camRect.w = xres - xres / 2.5f;
 			camRect.y = 44;
 			camRect.h = yres - 44 - 200;
-
 			editingCamera->setWin(camRect);
 		}
 	}
@@ -3909,12 +3912,16 @@ void Editor::process(const bool usable) {
 			if (usable || entityToSpawn) {
 				const Sint32& mouseX = mainEngine->getMouseX();
 				const Sint32& mouseY = mainEngine->getMouseY();
-				const Rect<int>& rect = camera->getWin();
 				Vector rayStart, rayEnd;
 
 				// determine if the mouse is in the viewport
 				bool inWindow = false;
 				if (!mainEngine->isMouseRelative()) {
+					Rect<int> rect = camera->getWin();
+					rect.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+					rect.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+					rect.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+					rect.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
 					if (rect.containsPoint(mouseX, mouseY)) {
 						inWindow = true;
 					}
@@ -5142,8 +5149,8 @@ void Editor::updateGUI(Frame& gui) {
 
 			playSound("editor/warning.wav");
 
-			int xres = mainEngine->getXres();
-			int yres = mainEngine->getYres();
+			int xres = Frame::virtualScreenX;
+			int yres = Frame::virtualScreenY;
 
 			Rect<int> size;
 			size.x = 0; size.w = 400;

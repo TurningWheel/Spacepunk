@@ -31,25 +31,27 @@ public:
 		HDR,
 		BLUR_HORIZONTAL,
 		BLUR_VERTICAL,
+		GUI,
 		MAX
 	};
 
 	const bool 					isInitialized() const { return (const bool)initialized; }
 	const bool 					isFullscreen() const { return (const bool)fullscreen; }
-	const Sint32 				getXres() const { return (const Sint32)xres; }
-	const Sint32				getYres() const { return (const Sint32)yres; }
 	const Image*				getNullImage() const { return nullImg; }
-	double						getAspectRatio() const { return ((double)xres) / ((double)yres); }
 	Resource<Framebuffer>&		getFramebufferResource() { return framebufferResource; }
 	const char*					getCurrentFramebuffer() const { return currentFramebuffer.get(); }
 
 	void	setFullscreen(bool _fullscreen) { fullscreen = _fullscreen; }
-	void	setXres(const Sint32 _xres) { xres = _xres; }
-	void	setYres(const Sint32 _yres) { yres = _yres; }
 	void	setCurrentFramebuffer(const char* str) { currentFramebuffer = str; }
 
 	//! sets up the renderer
 	void init();
+
+	//! gets the width of the active framebuffer
+	int getXres();
+	
+	//! gets the height of the active framebuffer
+	int getYres();
 
 	//! gets the pixel at the given coordinates in the given SDL_Surface
 	//! @param surface the SDL_Surface to inspect
@@ -133,6 +135,9 @@ public:
 	//! @param attachment1 buffer from second fbo to blend
 	void blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuffer& fbo1, GLenum attachment1);
 
+	//! get the currently active fbo
+	Framebuffer* getFramebuffer();
+
 	//! refreshes the game window with the latest drawings. Called at the end of the frame
 	void swapWindow();
 
@@ -142,16 +147,16 @@ public:
 
 	//! bind the fbo with the given name, creating a new one if it doesn't exist
 	//! @param name the name of the fbo to retrieve
+	//! @param width the width of the fbo
+	//! @param height the height of the fbo
 	//! @return the fbo
-	Framebuffer* bindFBO(const char* name);
+	Framebuffer* bindFBO(const char* name, int width, int height);
 
 private:
 	const char* loadStr = "Loading...";
 	const Uint32 maxTextures = 1024;
 	bool initialized = false;
 	bool fullscreen;
-	Sint32 xres;
-	Sint32 yres;
 
 	Resource<Framebuffer> framebufferResource;
 	String currentFramebuffer;

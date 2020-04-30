@@ -79,7 +79,7 @@ private:
 	Frame*		gui = nullptr; //! active gui
 	Editor*		editor = nullptr; //! level editor
 
-	//! console variables
+	// console variables
 	static const int consoleLen = 80;
 	bool consoleAllowed = true;
 	bool consoleActive = false;

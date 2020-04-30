@@ -197,8 +197,10 @@ void Text::draw(Rect<int> src, Rect<int> dest) {
 }
 
 void Text::drawColor(Rect<int> src, Rect<int> dest, const glm::vec4& color) {
-	int yres = mainEngine->getYres();
-	int xres = mainEngine->getXres();
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+	int xres = renderer->getXres();
+	int yres = renderer->getYres();
 
 	if (!rendered) {
 		render();

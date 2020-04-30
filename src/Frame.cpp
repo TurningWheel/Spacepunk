@@ -142,8 +142,10 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		renderer.drawRect(&_size, color);
 	}
 
-	Sint32 omousex = mainEngine->getOldMouseX();
-	Sint32 omousey = mainEngine->getOldMouseY();
+	Sint32 mousex = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 mousey = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
 
 	// horizontal slider
 	if (actualSize.w > size.w) {
@@ -331,10 +333,12 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		if (src.w <= 0 || src.h <= 0 || dest.w <= 0 || dest.h <= 0)
 			break;
 
+		Rect<Sint32> entryback = dest;
+		entryback.w = _size.w - border * 2;
 		if (entry.pressed) {
-			renderer.drawRect(&dest, color*2.f);
+			renderer.drawRect(&entryback, color*2.f);
 		} else if (entry.highlighted) {
-			renderer.drawRect(&dest, color*1.5f);
+			renderer.drawRect(&entryback, color*1.5f);
 		}
 
 		text->drawColor(src, dest, entry.color);
@@ -354,13 +358,13 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 
 	// root frame draws tooltip
 	if (!parent) {
-		if (tooltip) {
+		if (tooltip && tooltip[0] != '\0') {
 			Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
 			if (font) {
 				Text* text = Text::get(tooltip, font->getName());
 				Rect<int> src;
-				src.x = mainEngine->getMouseX() + 10;
-				src.y = mainEngine->getMouseY();
+				src.x = mousex + 10;
+				src.y = mousey;
 				font->sizeText(tooltip, &src.w, nullptr);
 				src.h = text->getHeight();
 				renderer.drawRect(&src, WideVector(0.f, 0.f, 1.f, .9f));
@@ -391,13 +395,12 @@ Frame::result_t Frame::process() {
 	result_t result = process(size, actualSize, true);
 
 	tooltip = nullptr;
-	if (result.tooltip) {
-		if (result.tooltip[0] != '\0') {
-			if (SDL_GetTicks() - result.highlightTime >= tooltipTime) {
-				tooltip = result.tooltip;
-			}
+	if (result.tooltip && result.tooltip[0] != '\0') {
+		if (SDL_GetTicks() - result.highlightTime >= tooltipTime) {
+			tooltip = result.tooltip;
 		}
 	}
+	postprocess();
 
 	return result;
 }
@@ -451,12 +454,13 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
+	Sint32 mousex = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 mousey = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+
 	// process sliders
 	if (parent != nullptr && !hollow && usable) {
-		Sint32 mousex = mainEngine->getMouseX();
-		Sint32 mousey = mainEngine->getMouseY();
-		Sint32 omousex = mainEngine->getOldMouseX();
-		Sint32 omousey = mainEngine->getOldMouseY();
 
 		Rect<int> fullSize = _size;
 		fullSize.h += (actualSize.w > size.w) ? sliderSize : 0;
@@ -552,6 +556,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 					actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
 				}
 				usable = result.usable = false;
+				ticks = -1; // hack to fix sliders in drop downs
 			} else {
 				if (handleRect.containsPoint(omousex, omousey)) {
 					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
@@ -559,6 +564,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 						oldSliderX = actualSize.x;
 					}
 					usable = result.usable = false;
+					ticks = -1; // hack to fix sliders in drop downs
 				} else if (sliderRect.containsPoint(omousex, omousey)) {
 					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
 						actualSize.x += omousex < handleRect.x ? -min(entrySize * 4, size.w) : min(entrySize * 4, size.w);
@@ -566,6 +572,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 						mainEngine->pressMouse(SDL_BUTTON_LEFT);
 					}
 					usable = result.usable = false;
+					ticks = -1; // hack to fix sliders in drop downs
 				}
 			}
 		}
@@ -599,6 +606,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 					actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
 				}
 				usable = result.usable = false;
+				ticks = -1; // hack to fix sliders in drop downs
 			} else {
 				if (handleRect.containsPoint(omousex, omousey)) {
 					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
@@ -606,6 +614,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 						oldSliderY = actualSize.y;
 					}
 					usable = result.usable = false;
+					ticks = -1; // hack to fix sliders in drop downs
 				} else if (sliderRect.containsPoint(omousex, omousey)) {
 					if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
 						actualSize.y += omousey < handleRect.y ? -min(entrySize * 4, size.h) : min(entrySize * 4, size.h);
@@ -613,6 +622,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 						mainEngine->pressMouse(SDL_BUTTON_LEFT);
 					}
 					usable = result.usable = false;
+					ticks = -1; // hack to fix sliders in drop downs
 				}
 			}
 		}
@@ -647,9 +657,6 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		script->dispatch("process");
 	}
 
-	Sint32 omousex = mainEngine->getOldMouseX();
-	Sint32 omousey = mainEngine->getOldMouseY();
-
 	// process the frame's list entries
 	if (usable && list.getSize() > 0) {
 		int i;
@@ -673,8 +680,10 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 
 			if (_size.containsPoint(omousex, omousey) && entryRect.containsPoint(omousex, omousey)) {
 				result.highlightTime = entry.highlightTime;
-				result.tooltip = entry.text.get();
-				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+				result.tooltip = entry.tooltip.get();
+				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT) ||
+					((mainEngine->getKeyStatus(SDL_SCANCODE_SPACE) ||
+					mainEngine->getKeyStatus(SDL_SCANCODE_RETURN)) && !mainEngine->getInputStr())) {
 					if (!entry.pressed) {
 						entry.pressed = true;
 						Script::Args args(entry.params);
@@ -775,9 +784,60 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 	// frame suicide :(
 	if (toBeDeleted) {
 		result.removed = true;
+	} else {
+		++ticks;
 	}
 
 	return result;
+}
+
+void Frame::postprocess() {
+	if (dropDown) {
+		if (!dropDownClicked) {
+			for (int c = 0; c < 8; ++c) {
+				if (mainEngine->getMouseStatus(c)) {
+					dropDownClicked |= 1 << c;
+				}
+			}
+			if (mainEngine->getKeyStatus(SDL_SCANCODE_ESCAPE)) {
+				dropDownClicked |= 1 << 8;
+			}
+			if (mainEngine->getKeyStatus(SDL_SCANCODE_TAB)) {
+				dropDownClicked |= 1 << 9;
+			}
+			if (mainEngine->getKeyStatus(SDL_SCANCODE_RETURN)) {
+				dropDownClicked |= 1 << 10;
+			}
+			if (mainEngine->getKeyStatus(SDL_SCANCODE_SPACE)) {
+				dropDownClicked |= 1 << 11;
+			}
+		} else {
+			for (int c = 0; c < 8; ++c) {
+				if (!mainEngine->getMouseStatus(c)) {
+					dropDownClicked &= ~(1 << c);
+				}
+			}
+			if (!mainEngine->getKeyStatus(SDL_SCANCODE_ESCAPE)) {
+				dropDownClicked &= ~(1 << 8);
+			}
+			if (!mainEngine->getKeyStatus(SDL_SCANCODE_TAB)) {
+				dropDownClicked &= ~(1 << 9);
+			}
+			if (!mainEngine->getKeyStatus(SDL_SCANCODE_RETURN)) {
+				dropDownClicked &= ~(1 << 10);
+			}
+			if (!mainEngine->getKeyStatus(SDL_SCANCODE_SPACE)) {
+				dropDownClicked &= ~(1 << 11);
+			}
+			if (!dropDownClicked && ticks > 0) {
+				toBeDeleted = true;
+			}
+		}
+	}
+
+	for (auto frame : frames) {
+		frame->postprocess();
+	}
 }
 
 Frame* Frame::addFrame(const char* name, const char* script) {
@@ -966,6 +1026,7 @@ Frame::entry_t* Frame::findEntry(const char* name) {
 }
 
 void Frame::resizeForEntries() {
+	actualSize.w = size.w;
 	actualSize.h = (Uint32)list.getSize() * entrySize;
 	actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
 }
@@ -995,8 +1056,8 @@ bool Frame::capturesMouse(Rect<int>* curSize, Rect<int>* curActualSize) {
 			if (_size.w <= 0 || _size.h <= 0) {
 				return false;
 			} else {
-				int omousex = mainEngine->getOldMouseX();
-				int omousey = mainEngine->getOldMouseY();
+				Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+				Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
 				if (_size.containsPoint(omousex, omousey)) {
 					return true;
 				} else {

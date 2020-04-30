@@ -50,8 +50,8 @@ function init()
 
     localClient = engine:getLocalClient()
     gui = localClient:getGUI()
-    xres = engine:getXres()
-    yres = engine:getYres()
+    xres = 1920
+    yres = 1080
     size = RectSint32()
 
     -- red status

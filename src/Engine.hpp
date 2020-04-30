@@ -332,6 +332,10 @@ public:
 	//! perform post-processing on the current frame
 	void postProcess();
 
+	//! gather a list of available display modes
+	//! @return a list of display modes
+	ArrayList<String> getDisplayModes() const;
+
 	//! generate a stack trace
 	//! @return a list of strings representing stack frames
 	ArrayList<StringBuf<Engine::stackTraceStrSize>> stackTrace() const;

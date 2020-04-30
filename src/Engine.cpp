@@ -109,8 +109,6 @@ static int console_size(int argc, const char** argv) {
 		if (renderer) {
 			mainEngine->setXres(xres);
 			mainEngine->setYres(yres);
-			renderer->setXres(xres);
-			renderer->setYres(yres);
 			renderer->changeVideoMode();
 			return 0;
 		}
@@ -1610,6 +1608,40 @@ void Engine::postProcess() {
 	}
 
 	++cycles;
+}
+
+ArrayList<String> Engine::getDisplayModes() const {
+	ArrayList<String> result;
+
+	// build a sorted list of all the modes supported by the primary display
+	ArrayList<SDL_DisplayMode> modeList;
+	int modes = SDL_GetNumDisplayModes(0);
+	for (int c = 0; c < modes; ++c) {
+		modeList.push(SDL_DisplayMode());
+		int index = modeList.getSize() - 1;
+		if (SDL_GetDisplayMode(0, c, &modeList[index]) == 0) {
+			for (int i = 0; i < index; ++i) {
+				if (modeList[i].w == modeList[index].w &&
+					modeList[i].h == modeList[index].h) {
+					modeList.pop();
+					break;
+				}
+			}
+		}
+	}
+	class SortFn : public ArrayList<SDL_DisplayMode>::SortFunction {
+	public:
+		virtual const bool operator()(const SDL_DisplayMode a, const SDL_DisplayMode b) const override {
+			return a.w == b.w ? a.h > b.h : a.w > b.w;
+		}
+	};
+	modeList.sort(SortFn());
+
+	// produce a string version of the list
+	for (auto& mode : modeList) {
+		result.push(StringBuf<32>("%d %d", 2, mode.w, mode.h));
+	}
+	return result;
 }
 
 String Engine::shortenPath(const char* path) const {

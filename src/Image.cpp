@@ -9,6 +9,8 @@
 #include "Main.hpp"
 #include "Engine.hpp"
 #include "Image.hpp"
+#include "Client.hpp"
+#include "Renderer.hpp"
 
 GLuint Image::vao = 0;
 GLuint Image::vbo[BUFFER_TYPE_LENGTH] = { 0 };
@@ -150,8 +152,10 @@ void Image::drawColor(const Rect<int>* src, const Rect<int>& dest, const glm::ve
 		return;
 	}
 
-	int yres = mainEngine->getYres();
-	int xres = mainEngine->getXres();
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+	int xres = renderer->getXres();
+	int yres = renderer->getYres();
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/2D.json");

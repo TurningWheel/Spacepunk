@@ -1,4 +1,4 @@
-// Button.cpp
+﻿// Button.cpp
 
 #include "Main.hpp"
 #include "Engine.hpp"
@@ -63,7 +63,7 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		Text* _text = Text::get(text.get(), font.get());
 		if (_text) {
 			Rect<int> pos;
-			int textX = _size.w / 2 - _text->getWidth() / 2;
+			int textX = style == STYLE_DROPDOWN ? 5 + border : _size.w / 2 - _text->getWidth() / 2;
 			int textY = _size.h / 2 - _text->getHeight() / 2;
 			pos.x = _size.x + textX; pos.w = min((int)_text->getWidth(), _size.w);
 			pos.y = _size.y + textY; pos.h = min((int)_text->getHeight(), _size.h);
@@ -97,27 +97,52 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 			}
 		}
 	}
+
+	// drop down buttons have an image on the right side (presumably a down arrow)
+	if (style == STYLE_DROPDOWN) {
+		Image* iconImg = mainEngine->getImageResource().dataForString(icon.get());
+		if (iconImg) {
+			Rect<int> pos;
+			pos.y = _size.y + border; pos.h = _size.h - border * 2;
+			pos.w = pos.h; pos.x = _size.x + _size.w - border - pos.w;
+			if (pos.w <= 0 || pos.h <= 0) {
+				return;
+			}
+
+			float w = iconImg->getWidth();
+			float h = iconImg->getHeight();
+
+			// TODO scale the drop-down image
+			Rect<Sint32> section;
+			section.x = 0;
+			section.y = size.y - _actualSize.y < 0 ? -(size.y - _actualSize.y) * (h / (size.h - border * 2)) : 0;
+			section.w = ((float)pos.w / (size.h - border * 2)) * w;
+			section.h = ((float)pos.h / (size.h - border * 2)) * h;
+
+			iconImg->draw(&section, pos);
+		}
+	}
 }
 
 Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const bool usable) {
 	result_t result;
-	if (style != STYLE_NORMAL) {
-		result.tooltip = nullptr;
-		result.highlightTime = SDL_GetTicks();
-		result.highlighted = false;
-		result.pressed = pressed;
-		result.clicked = false;
-	} else {
+	if (style == STYLE_CHECKBOX || style == STYLE_TOGGLE) {
 		result.tooltip = nullptr;
 		result.highlightTime = SDL_GetTicks();
 		result.highlighted = false;
 		result.pressed = false;
 		result.clicked = false;
+	} else {
+		result.tooltip = nullptr;
+		result.highlightTime = SDL_GetTicks();
+		result.highlighted = false;
+		result.pressed = pressed;
+		result.clicked = false;
 	}
 	if (disabled) {
 		highlightTime = result.highlightTime;
 		highlighted = false;
-		if (style == STYLE_NORMAL) {
+		if (style != STYLE_CHECKBOX && style != STYLE_TOGGLE) {
 			pressed = false;
 		}
 		return result;
@@ -125,7 +150,7 @@ Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const b
 	if (!usable) {
 		highlightTime = result.highlightTime;
 		highlighted = false;
-		if (style == STYLE_NORMAL) {
+		if (style != STYLE_CHECKBOX && style != STYLE_TOGGLE) {
 			pressed = false;
 		}
 		return result;
@@ -140,10 +165,10 @@ Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const b
 		return result;
 	}
 
-	Sint32 mousex = mainEngine->getMouseX();
-	Sint32 mousey = mainEngine->getMouseY();
-	Sint32 omousex = mainEngine->getOldMouseX();
-	Sint32 omousey = mainEngine->getOldMouseY();
+	Sint32 mousex = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 mousey = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
 
 	if (_size.containsPoint(omousex, omousey)) {
 		result.highlighted = highlighted = true;
@@ -166,7 +191,7 @@ Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const b
 		} else {
 			if (pressed != reallyPressed) {
 				result.clicked = true;
-				if (style != STYLE_NORMAL) {
+				if (style == STYLE_CHECKBOX || style == STYLE_TOGGLE) {
 					reallyPressed = (reallyPressed == false);
 				}
 			}

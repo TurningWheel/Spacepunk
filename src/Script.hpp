@@ -202,7 +202,7 @@ public:
 		}
 
 		const ArrayList<param_t*>&		getList() const { return list; }
-		const Uint32					getSize() const { return list.getSize(); }
+		int								getSize() const { return (int)list.getSize(); }
 
 		//! push all args onto the lua stack
 		//! @param lua the lua stack to push args into
@@ -213,6 +213,17 @@ public:
 			}
 			while (list.getSize() > 0) {
 				delete list.pop();
+			}
+		}
+
+		//! copy the args from one struct to another
+		//! @param src the args to copy
+		void copy(const Args& src) {
+			while (list.getSize() > 0) {
+				delete list.pop();
+			}
+			for (Uint32 c = 0; c < src.list.getSize(); ++c) {
+				list.push(src.list[c]->copy());
 			}
 		}
 

@@ -56,12 +56,18 @@ public:
 	struct entry_t {
 		~entry_t();
 
-		StringBuf<32> name;
+		String name;
 		String text;
+		String tooltip;
 		Script::Args params;
 		WideVector color;
 		String image;
-		String path;
+
+		//! exists for lua, really
+		void setParams(const Script::Args& src) {
+			params.copy(src);
+		}
+
 		bool pressed = false;
 		bool highlighted = false;
 		Uint32 highlightTime = 0;
@@ -89,6 +95,12 @@ public:
 	//! width/height of the slider(s) that appear when actualSize > size (in pixels)
 	static const Sint32 sliderSize;
 
+	//! virtual screen size (width)
+	static const int virtualScreenX = 1920;
+
+	//! virtual screen size (height)
+	static const int virtualScreenY = 1080;
+
 	//! vertical size of a list entry
 	static const int entrySize = 20;
 
@@ -112,6 +124,9 @@ public:
 	//! @param usable true if another object doesn't have the mouse's attention, false otherwise
 	//! @return compiled results of frame processing
 	result_t process(Rect<int> _size, Rect<int> actualSize, const bool usable);
+
+	//! to be performed recursively on every frame after process()
+	void postprocess();
 
 	//! adds a new frame to the current frame
 	//! @param name internal name of the new frame
@@ -212,6 +227,7 @@ public:
 	LinkedList<entry_t*>&		getEntries() { return list; }
 	const bool					isDisabled() const { return disabled; }
 	const bool					isHollow() const { return hollow; }
+	const bool					isDropDown() const { return dropDown; }
 
 	void	setFont(const char* _font) { font = _font; }
 	void	setBorder(const int _border) { border = _border; }
@@ -224,6 +240,7 @@ public:
 	void	setBorderColor(const WideVector& _color) { borderColor = _color; }
 	void	setDisabled(const bool _disabled) { disabled = _disabled; }
 	void	setHollow(const bool _hollow) { hollow = _hollow; }
+	void	setDropDown(const bool _dropDown) { dropDown = _dropDown; }
 
 private:
 	Frame* parent = nullptr;							//!< parent frame
@@ -248,6 +265,9 @@ private:
 	bool draggingVSlider = false;						//!< if true, we are dragging the vertical slider
 	int oldSliderX = 0;									//!< when you start dragging a slider, this is set
 	int oldSliderY = 0;									//!< when you start dragging a slider, this is set
+	bool dropDown = false;								//!< if true, the frame is destroyed when specific inputs register
+	Uint32 ticks = 0;									//!< number of engine ticks this frame has persisted
+	Uint32 dropDownClicked = 0;							//!< key states stored for removing drop downs
 
 	LinkedList<Frame*> frames;
 	LinkedList<Button*> buttons;

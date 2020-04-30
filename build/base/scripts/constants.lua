@@ -41,6 +41,7 @@ STYLE = {
 	NORMAL = 0,
 	TOGGLE = 1,
 	CHECKBOX = 2,
+    DROPDOWN = 3,
 }
 STYLE = protect(STYLE)
 

@@ -188,6 +188,7 @@ void Script::exposeEngine() {
 		.addFunction("random", &Engine::random)
 		.addFunction("playSound", &Engine::playSound)
 		.addFunction("commandLine", &Engine::commandLine)
+		.addFunction("doCommand", &Engine::doCommand)
 		.addFunction("shutdown", &Engine::shutdown)
 		.addFunction("editorPlaytest", &Engine::editorPlaytest)
 		.addFunction("smsg", &Engine::smsg)
@@ -198,6 +199,7 @@ void Script::exposeEngine() {
 		.addStaticFunction("strcmp", &Engine::strCompare)
 		.addFunction("loadConfig", &Engine::loadConfig)
 		.addFunction("saveConfig", &Engine::saveConfig)
+		.addFunction("getDisplayModes", &Engine::getDisplayModes)
 		.endClass()
 		;
 
@@ -221,6 +223,7 @@ void Script::exposeEngine() {
 		.beginClass<Script::Args>("ScriptArgs")
 		.addConstructor<void(*)()>()
 		.addFunction("getSize", &Script::Args::getSize)
+		.addFunction("copy", &Script::Args::copy)
 		.addFunction("addBool", &Script::Args::addBool)
 		.addFunction("addInt", &Script::Args::addInt)
 		.addFunction("addFloat", &Script::Args::addFloat)
@@ -275,8 +278,13 @@ void Script::exposeFrame() {
 		.addFunction("removeSelf", &Frame::removeSelf)
 		.addFunction("remove", &Frame::remove)
 		.addFunction("removeEntry", &Frame::removeEntry)
-		.addFunction("findEntry", &Frame::findEntry)
 		.addFunction("findFrame", &Frame::findFrame)
+		.addFunction("findButton", &Frame::findButton)
+		.addFunction("findField", &Frame::findField)
+		.addFunction("findImage", &Frame::findImage)
+		.addFunction("findEntry", &Frame::findEntry)
+		.addFunction("isDropDown", &Frame::isDropDown)
+		.addFunction("setDropDown", &Frame::setDropDown)
 		.endClass()
 		;
 
@@ -341,6 +349,17 @@ void Script::exposeFrame() {
 		.endClass()
 		;
 
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<Frame::entry_t>("Entry")
+		.addData("name", &Frame::entry_t::name)
+		.addData("text", &Frame::entry_t::text)
+		.addData("tooltip", &Frame::entry_t::tooltip)
+		.addData("color", &Frame::entry_t::color)
+		.addData("image", &Frame::entry_t::image)
+		.addFunction("setParams", &Frame::entry_t::setParams)
+		.endClass()
+		;
+
 	if (frame) {
 		luabridge::push(lua, frame);
 		lua_setglobal(lua, "frame");
@@ -355,7 +374,7 @@ void Script::exposeString() {
 	FindCharFn findChar = static_cast<FindCharFn>(&String::find);
 
 	luabridge::getGlobalNamespace(lua)
-		.beginClass<StringBuf<64>>("String")
+		.beginClass<String>("String")
 		.addConstructor<void(*) (const char*)>()
 		.addFunction("get", &String::get)
 		.addFunction("getSize", &String::getSize)

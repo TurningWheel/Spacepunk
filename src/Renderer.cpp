@@ -83,8 +83,6 @@ static void GLAPIENTRY onGlDebugMessageCallback(
 #endif
 
 Renderer::Renderer() {
-	xres = mainEngine->getXres();
-	yres = mainEngine->getYres();
 	fullscreen = mainEngine->isFullscreen();
 }
 
@@ -139,6 +137,8 @@ int Renderer::initVideo() {
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
+	int xres = mainEngine->getXres();
+	int yres = mainEngine->getYres();
 	mainEngine->fmsg(Engine::MSG_INFO, "setting display mode to %dx%d...", xres, yres);
 
 	Uint32 flags = 0;
@@ -324,8 +324,6 @@ bool Renderer::changeVideoMode() {
 
 	// set video mode
 	if (initVideo()) {
-		setXres(1280);
-		setYres(720);
 		setFullscreen(false);
 		mainEngine->fmsg(Engine::MSG_WARN, "failed to set video mode to desired values, defaulting to safe video mode...");
 		if (initVideo()) {
@@ -458,7 +456,9 @@ void Renderer::takeScreenshot() {
 	strftime(buffer, 32, "%Y-%m-%d %H-%M-%S", tm_info);
 	snprintf(filename, 256, "Screenshot %s.png", buffer);
 
-	unsigned char* pixels = new unsigned char[xres*yres * 3]; // 3 bytes for BGR
+	int xres = getXres();
+	int yres = getYres();
+	unsigned char* pixels = new unsigned char[xres * yres * 3]; // 3 bytes for BGR
 	glReadPixels(0, 0, xres, yres, GL_BGR, GL_UNSIGNED_BYTE, pixels);
 	SDL_Surface* temp = SDL_CreateRGBSurfaceFrom(pixels, xres, yres, 24, xres * 3, 0, 0, 0, 0);
 	if (temp) {
@@ -666,6 +666,8 @@ void Renderer::drawConsole(const Sint32 height, const char* input, const LinkedL
 		return;
 	}
 
+	int xres = getXres();
+
 	// draw main rectangle
 	{
 		Rect<int> size;
@@ -763,8 +765,8 @@ void Renderer::drawRect(const Rect<int>* src, const glm::vec4& color) {
 	if (src == nullptr) {
 		secondsrc.x = 0;
 		secondsrc.y = 0;
-		secondsrc.w = xres;
-		secondsrc.h = yres;
+		secondsrc.w = getXres();
+		secondsrc.h = getYres();
 		src = &secondsrc;
 	}
 
@@ -786,6 +788,16 @@ void Renderer::printTextColor(const Font* font, const Rect<int>& rect, const glm
 	}
 }
 
+int Renderer::getXres() {
+	Framebuffer* fbo = getFramebuffer();
+	return fbo ? (int)fbo->getWidth() : mainEngine->getXres();
+}
+
+int Renderer::getYres() {
+	Framebuffer* fbo = getFramebuffer();
+	return fbo ? (int)fbo->getHeight() : mainEngine->getYres();
+}
+
 void Renderer::clearBuffers() {
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_DEPTH_TEST);
@@ -805,6 +817,8 @@ void Renderer::blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuff
 	}
 	ShaderProgram& shader = mat->getShader().mount();
 
+	int xres = fbo0.getWidth();
+	int yres = fbo0.getHeight();
 	glViewport(0, 0, xres, yres);
 
 	// bind texture
@@ -823,6 +837,14 @@ void Renderer::blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuff
 
 	ShaderProgram::unmount();
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+}
+
+Framebuffer* Renderer::getFramebuffer() {
+	Framebuffer* fbo = nullptr;
+	if (!currentFramebuffer.empty()) {
+		fbo = framebufferResource.dataForString(currentFramebuffer.get());
+	}
+	return fbo;
 }
 
 void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType type) {
@@ -844,6 +866,9 @@ void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType typ
 	case BLUR_VERTICAL:
 		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blur_v.json");
 		break;
+	case GUI:
+		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_gui.json");
+		break;
 	default:
 		break;
 	}
@@ -852,6 +877,8 @@ void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType typ
 	}
 	ShaderProgram& shader = mat->getShader().mount();
 
+	int xres = getXres();
+	int yres = getYres();
 	glViewport(0, 0, xres, yres);
 
 	// bind texture
@@ -874,11 +901,11 @@ void Renderer::swapWindow() {
 	SDL_GL_SwapWindow(window);
 }
 
-Framebuffer* Renderer::bindFBO(const char* name) {
+Framebuffer* Renderer::bindFBO(const char* name, int width, int height) {
 	Framebuffer* fbo = framebufferResource.dataForString(name);
 	assert(fbo);
 	if (!fbo->isInitialized()) {
-		fbo->init(xres, yres);
+		fbo->init(width, height);
 	}
 	fbo->bindForWriting();
 	return fbo;

@@ -34,8 +34,8 @@ Camera::Camera(Entity& _entity, Component* _parent) :
 	if (renderer) {
 		win.x = 0;
 		win.y = 0;
-		win.w = renderer->getXres();
-		win.h = renderer->getYres();
+		win.w = Frame::virtualScreenX;
+		win.h = Frame::virtualScreenY;
 	}
 
 	// add a bbox for editor usage
@@ -146,6 +146,14 @@ void Camera::setupProjection(bool scissor) {
 		return;
 	}
 
+	Rect<int> win = this->win;
+	if (entity->getName() != "Shadow Camera") {
+		win.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		win.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		win.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+		win.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+	}
+
 	bool o = ortho || cvar_cameraAllOrtho.toInt();
 
 	if (o) {
@@ -189,6 +197,14 @@ Vector Camera::worldPosToScreenPos(const Vector& original) const {
 		return Vector();
 	}
 
+	Rect<int> win = this->win;
+	if (entity->getName() != "Shadow Camera") {
+		win.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		win.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		win.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+		win.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+	}
+
 	// get object position
 	glm::vec3 position(original.x, -original.z, original.y);
 
@@ -201,6 +217,14 @@ Vector Camera::worldPosToScreenPos(const Vector& original) const {
 void Camera::screenPosToWorldRay(int x, int y, Vector& out_origin, Vector& out_direction) const {
 	if (!renderer) {
 		return;
+	}
+
+	Rect<int> win = this->win;
+	if (entity->getName() != "Shadow Camera") {
+		win.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		win.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		win.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+		win.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
 	}
 
 	x = x - win.x;

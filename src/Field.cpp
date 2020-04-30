@@ -195,8 +195,8 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 		return result;
 	}
 
-	Sint32 omousex = mainEngine->getOldMouseX();
-	Sint32 omousey = mainEngine->getOldMouseY();
+	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
 
 	if (selected) {
 		if (mainEngine->getInputStr() != text) {

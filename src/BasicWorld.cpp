@@ -274,6 +274,10 @@ void BasicWorld::draw() {
 		// clear the window area
 		glClear(GL_DEPTH_BUFFER_BIT);
 		Rect<int> backgroundRect = camera->getWin();
+		backgroundRect.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		backgroundRect.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+		backgroundRect.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+		backgroundRect.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
 		renderer->drawRect(&backgroundRect, glm::vec4(0.f, 0.f, 0.f, 1.f));
 
 		// set proper light blending function
@@ -390,11 +394,7 @@ void BasicWorld::draw() {
 
 		// reset GL state
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		int xres = renderer->getXres();
-		int yres = renderer->getYres();
-		glViewport(0, 0, xres, yres);
-		glScissor(0, 0, xres, yres);
-		glEnable(GL_SCISSOR_TEST);
+		glDisable(GL_SCISSOR_TEST);
 		ShaderProgram::unmount();
 
 		cameraLightList.clear();
