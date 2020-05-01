@@ -3780,7 +3780,7 @@ void Editor::process(const bool usable) {
 		}
 
 		if (editingCamera) {
-			editingCamera->setWin(Rect<int>(0, 0, mainEngine->getXres(), mainEngine->getYres()));
+			editingCamera->setWin(Rect<int>(0, 0, Frame::virtualScreenX, Frame::virtualScreenY));
 		}
 	} else {
 		if (minimap) {
