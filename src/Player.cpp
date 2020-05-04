@@ -33,6 +33,8 @@ static Cvar cvar_stepHeight("player.step.height", "maximum step height that a pl
 static Cvar cvar_enableBob("player.bob.enabled", "enable view bobbing", "0");
 static Cvar cvar_defaultController("player.default.enabled", "enable built-in first-person player controller", "1");
 
+Cvar cvar_fov("player.fov", "field of view", "70.0");
+
 Player::Player() {
 	Random& rand = mainEngine->getRandom();
 

@@ -22,6 +22,7 @@
 #include "AnimationState.hpp"
 #include "Vector.hpp"
 #include "WideVector.hpp"
+#include "Slider.hpp"
 
 //Component headers
 #include "Component.hpp"
@@ -262,6 +263,7 @@ void Script::exposeFrame() {
 		.addFunction("getBorderStyle", &Frame::getBorderStyle)
 		.addFunction("getFrames", &Frame::getFrames)
 		.addFunction("getButtons", &Frame::getButtons)
+		.addFunction("getSliders", &Frame::getSliders)
 		.addFunction("setBorder", &Frame::setBorder)
 		.addFunction("setSize", &Frame::setSize)
 		.addFunction("setActualSize", &Frame::setActualSize)
@@ -271,6 +273,7 @@ void Script::exposeFrame() {
 		.addFunction("setColor", &Frame::setColor)
 		.addFunction("addFrame", &Frame::addFrame)
 		.addFunction("addButton", &Frame::addButton)
+		.addFunction("addSlider", &Frame::addSlider)
 		.addFunction("addField", &Frame::addField)
 		.addFunction("addImage", &Frame::addImage)
 		.addFunction("addEntry", &Frame::addEntry)
@@ -283,6 +286,7 @@ void Script::exposeFrame() {
 		.addFunction("findField", &Frame::findField)
 		.addFunction("findImage", &Frame::findImage)
 		.addFunction("findEntry", &Frame::findEntry)
+		.addFunction("findSlider", &Frame::findSlider)
 		.addFunction("isDropDown", &Frame::isDropDown)
 		.addFunction("setDropDown", &Frame::setDropDown)
 		.endClass()
@@ -357,6 +361,34 @@ void Script::exposeFrame() {
 		.addData("color", &Frame::entry_t::color)
 		.addData("image", &Frame::entry_t::image)
 		.addFunction("setParams", &Frame::entry_t::setParams)
+		.endClass()
+		;
+
+	luabridge::getGlobalNamespace(lua)
+		.beginClass<Slider>("Slider")
+		.addFunction("getName", &Slider::getName)
+		.addFunction("getValue", &Slider::getValue)
+		.addFunction("getMaxValue", &Slider::getMaxValue)
+		.addFunction("getMinValue", &Slider::getMinValue)
+		.addFunction("getBorder", &Slider::getBorder)
+		.addFunction("getHandleSize", &Slider::getHandleSize)
+		.addFunction("getRailSize", &Slider::getRailSize)
+		.addFunction("getTooltip", &Slider::getTooltip)
+		.addFunction("isPressed", &Slider::isPressed)
+		.addFunction("isHighlighted", &Slider::isHighlighted)
+		.addFunction("isDisabled", &Slider::isDisabled)
+		.addFunction("getColor", &Slider::getColor)
+		.addFunction("setName", &Slider::setName)
+		.addFunction("setValue", &Slider::setValue)
+		.addFunction("setMaxValue", &Slider::setMaxValue)
+		.addFunction("setMinValue", &Slider::setMinValue)
+		.addFunction("setBorder", &Slider::setBorder)
+		.addFunction("setHandleSize", &Slider::setHandleSize)
+		.addFunction("setRailSize", &Slider::setRailSize)
+		.addFunction("setTooltip", &Slider::setTooltip)
+		.addFunction("setDisabled", &Slider::setDisabled)
+		.addFunction("setColor", &Slider::setColor)
+		.addFunction("setCallback", &Slider::setCallback)
 		.endClass()
 		;
 

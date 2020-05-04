@@ -672,10 +672,12 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			result.highlightTime = sliderResult.highlightTime;
 			result.tooltip = sliderResult.tooltip;
 			if (sliderResult.clicked) {
+				Script::Args args;
+				args.addFloat(slider.getValue());
 				if (slider.getCallback()) {
-					(*slider.getCallback())(Script::Args());
+					(*slider.getCallback())(args);
 				} else if (script) {
-					script->dispatch(slider.getName());
+					script->dispatch(slider.getName(), &args);
 				}
 			}
 			result.usable = usable = false;
@@ -1065,6 +1067,16 @@ Frame::entry_t* Frame::findEntry(const char* name) {
 		entry_t& entry = *node->getData();
 		if (entry.name == name) {
 			return &entry;
+		}
+	}
+	return nullptr;
+}
+
+Slider* Frame::findSlider(const char* name) {
+	for (Node<Slider*>* node = sliders.getFirst(); node != nullptr; node = node->getNext()) {
+		Slider& slider = *node->getData();
+		if (strcmp(slider.getName(), name) == 0) {
+			return &slider;
 		}
 	}
 	return nullptr;

@@ -158,3 +158,5 @@ private:
 	float bobLength = 0.f;
 	Vector originalCameraPos;
 };
+
+extern Cvar cvar_fov;
