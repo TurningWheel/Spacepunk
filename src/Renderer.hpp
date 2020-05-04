@@ -7,6 +7,7 @@
 #include "Framebuffer.hpp"
 #include "Resource.hpp"
 
+class Font;
 class Image;
 
 //! Contains basic video and rendering context data as well as 2D drawing functions

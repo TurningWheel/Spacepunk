@@ -32,9 +32,6 @@ void Button::setIcon(const char* _icon) {
 }
 
 void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
-	if (disabled)
-		return;
-
 	_size.x += max(0, size.x - _actualSize.x);
 	_size.y += max(0, size.y - _actualSize.y);
 	_size.w = min(size.w, _size.w - size.x + _actualSize.x) + min(0, size.x - _actualSize.x);
@@ -42,7 +39,7 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	if (_size.w <= 0 || _size.h <= 0)
 		return;
 
-	glm::vec4 _color = highlighted ? color * 1.5f : color;
+	glm::vec4 _color = disabled ? color * .5f : (highlighted ? color * 1.5f : color);
 	if (border) {
 		if (pressed) {
 			renderer.drawLowFrame(_size, border, _color);

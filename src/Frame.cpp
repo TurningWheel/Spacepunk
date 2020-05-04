@@ -10,6 +10,7 @@
 #include "Script.hpp"
 #include "Image.hpp"
 #include "Field.hpp"
+#include "Slider.hpp"
 
 bool Frame::tabbing = false;
 const Sint32 Frame::sliderSize = 15;
@@ -350,6 +351,12 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		button.draw(renderer, _size, scroll);
 	}
 
+	// draw sliders
+	for (Node<Slider*>* node = sliders.getFirst(); node != nullptr; node = node->getNext()) {
+		Slider& slider = *node->getData();
+		slider.draw(renderer, _size, scroll);
+	}
+
 	// draw subframes
 	for (Node<Frame*>* node = frames.getFirst(); node != nullptr; node = node->getNext()) {
 		Frame& frame = *node->getData();
@@ -653,6 +660,28 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
+	// process sliders
+	Node<Slider*>* prevSlider = nullptr;
+	for (Node<Slider*>* node = sliders.getLast(); node != nullptr; node = prevSlider) {
+		Slider& slider = *node->getData();
+
+		prevSlider = node->getPrev();
+
+		Slider::result_t sliderResult = slider.process(_size, actualSize, usable);
+		if (usable && sliderResult.highlighted) {
+			result.highlightTime = sliderResult.highlightTime;
+			result.tooltip = sliderResult.tooltip;
+			if (sliderResult.clicked) {
+				if (slider.getCallback()) {
+					(*slider.getCallback())(Script::Args());
+				} else if (script) {
+					script->dispatch(slider.getName());
+				}
+			}
+			result.usable = usable = false;
+		}
+	}
+
 	if (script) {
 		script->dispatch("process");
 	}
@@ -869,6 +898,16 @@ Frame::image_t* Frame::addImage(const Rect<Sint32>& pos, const WideVector& color
 	return imageObj;
 }
 
+Slider* Frame::addSlider(const char* name) {
+	if (!name) {
+		return nullptr;
+	}
+	Slider* slider = new Slider(*this);
+	slider->setName(name);
+	sliders.addNodeLast(slider);
+	return slider;
+}
+
 Frame::entry_t* Frame::addEntry(const char* name, bool resizeFrame) {
 	entry_t* entry = new entry_t();
 	entry->name = name;
@@ -910,6 +949,12 @@ void Frame::clear() {
 	while (images.getFirst()) {
 		delete images.getFirst()->getData();
 		images.removeNode(images.getFirst());
+	}
+
+	// delete sliders
+	while (sliders.getFirst()) {
+		delete sliders.getFirst()->getData();
+		sliders.removeNode(sliders.getFirst());
 	}
 
 	// delete list

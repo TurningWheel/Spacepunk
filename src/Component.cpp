@@ -12,6 +12,8 @@
 #include "Entity.hpp"
 #include "TileWorld.hpp"
 #include "Frame.hpp"
+#include "Button.hpp"
+#include "Field.hpp"
 
 //Component headers.
 #include "BBox.hpp"

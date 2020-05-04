@@ -4,16 +4,18 @@
 
 #include "LinkedList.hpp"
 #include "Rect.hpp"
-#include "Button.hpp"
-#include "Field.hpp"
 #include "Script.hpp"
 #include "WideVector.hpp"
+#include "Font.hpp"
 
 #include <memory>
 
-class Renderer;
 class Image;
 class Field;
+class Button;
+class Field;
+class Slider;
+class Renderer;
 
 //! A container for a gui (ie, a window)
 //! When a frame's size is smaller than its actual size, sliders will automatically be placed in the frame.
@@ -159,7 +161,12 @@ public:
 	//! @return the newly created entry object
 	entry_t* addEntry(const char* name, bool resizeFrame);
 
-	//! removes all frames, buttons, fields, images, and list entries from the frame
+	//! adds a new slider object to the current frame
+	//! @param name the name of the slider
+	//! @return the newly created slider object
+	Slider* addSlider(const char* name);
+
+	//! removes all objects and list entries from the frame
 	void clear();
 
 	//! removes the frame itself, as well as all contained objects
@@ -201,6 +208,11 @@ public:
 	//! @return the entry, or nullptr if it could not be found
 	entry_t* findEntry(const char* name);
 
+	//! find a slider in this frame
+	//! @param name the name of the slider to find
+	//! @return the slider, or nullptr if it could not be found
+	Slider* findSlider(const char* name);
+
 	//! resizes the frame to accomodate all list entries
 	void resizeForEntries();
 
@@ -225,6 +237,7 @@ public:
 	LinkedList<Field*>&			getFields() { return fields; }
 	LinkedList<Button*>&		getButtons() { return buttons; }
 	LinkedList<entry_t*>&		getEntries() { return list; }
+	LinkedList<Slider*>&		getSliders() { return sliders; }
 	const bool					isDisabled() const { return disabled; }
 	const bool					isHollow() const { return hollow; }
 	const bool					isDropDown() const { return dropDown; }
@@ -274,4 +287,5 @@ private:
 	LinkedList<Field*> fields;
 	LinkedList<image_t*> images;
 	LinkedList<entry_t*> list;
+	LinkedList<Slider*> sliders;
 };

@@ -91,9 +91,9 @@ private:
 	bool pressed = false;							//!< button pressed state
 	bool reallyPressed = false;						//!< the "actual" button state, pre-mouse process
 	bool highlighted = false;						//!< true if mouse is hovering over button; false otherwise
+	bool disabled = false;							//!< if true, the button is dimmed and unusable
 	WideVector color;								//!< the button's color
 	WideVector textColor;							//!< text color
 	style_t style = STYLE_NORMAL;					//!< button style
-	bool disabled = false;							//!< if true, the button is invisible and unusable
 	Uint32 highlightTime = 0;						//!< records the time since the button was highlighted
 };

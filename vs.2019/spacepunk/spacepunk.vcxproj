@@ -332,6 +332,7 @@
     <ClInclude Include="..\..\src\Shader.hpp" />
     <ClInclude Include="..\..\src\ShaderProgram.hpp" />
     <ClInclude Include="..\..\src\Shadow.hpp" />
+    <ClInclude Include="..\..\src\Slider.hpp" />
     <ClInclude Include="..\..\src\Sound.hpp" />
     <ClInclude Include="..\..\src\Speaker.hpp" />
     <ClInclude Include="..\..\src\String.hpp" />
@@ -403,6 +404,7 @@
     <ClCompile Include="..\..\src\Shader.cpp" />
     <ClCompile Include="..\..\src\ShaderProgram.cpp" />
     <ClCompile Include="..\..\src\Shadow.cpp" />
+    <ClCompile Include="..\..\src\Slider.cpp" />
     <ClCompile Include="..\..\src\Sound.cpp" />
     <ClCompile Include="..\..\src\Speaker.cpp" />
     <ClCompile Include="..\..\src\Text.cpp" />

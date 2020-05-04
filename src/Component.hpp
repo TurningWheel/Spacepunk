@@ -11,6 +11,7 @@
 #include "WideVector.hpp"
 #include "Script.hpp"
 #include "Frame.hpp"
+#include "Field.hpp"
 #include "Rotation.hpp"
 #include "Quaternion.hpp"
 
