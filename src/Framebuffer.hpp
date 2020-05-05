@@ -4,8 +4,7 @@
 
 #include "Main.hpp"
 #include "Asset.hpp"
-
-#pragma once
+#include "Console.hpp"
 
 //! A Framebuffer is a unique type of object belonging to the Renderer which basically represents a "screen" texture that can be rendered to.
 class Framebuffer : public Asset {
@@ -57,4 +56,7 @@ private:
 
 	Uint32 width = 0;
 	Uint32 height = 0;
+	Uint32 samples = 0;
 };
+
+extern Cvar cvar_antialias;

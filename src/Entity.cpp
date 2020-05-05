@@ -556,7 +556,7 @@ void Entity::process() {
 
 	// interpolate between new and old positions
 	if (!editor) {
-		if (ticks - lastUpdate <= mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
+		if (ticks - lastUpdate <= (Uint32)mainEngine->getTicksPerSecond() / 15 && !isFlag(flag_t::FLAG_LOCAL)) {
 			Vector oPos = pos;
 			Quaternion oAng = ang;
 

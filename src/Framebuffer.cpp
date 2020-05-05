@@ -5,6 +5,8 @@
 #include "Client.hpp"
 #include "Renderer.hpp"
 
+Cvar cvar_antialias("render.multisample", "the number of samples to use for antialiasing (0 = off)", "4");
+
 Framebuffer::Framebuffer(const char* _name) : Asset(_name) {
 	loaded = true;
 }
@@ -21,6 +23,10 @@ void Framebuffer::init(Uint32 _width, Uint32 _height) {
 	width = _width;
 	height = _height;
 
+	GLint maxSamples = 0;
+	glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+	samples = std::min(std::max(0, cvar_antialias.toInt()), (int)maxSamples);
+
 	glActiveTexture(GL_TEXTURE0);
 
 	// Create the FBO
@@ -29,19 +35,35 @@ void Framebuffer::init(Uint32 _width, Uint32 _height) {
 
 	// Create the color textures
 	glGenTextures(ColorBuffer::MAX, color);
-	for (int c = 0; c < ColorBuffer::MAX; ++c) {
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color[c]);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA32F, width, height, false);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + c, GL_TEXTURE_2D_MULTISAMPLE, color[c], 0);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	if (samples) {
+		for (int c = 0; c < ColorBuffer::MAX; ++c) {
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color[c]);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA32F, width, height, false);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + c, GL_TEXTURE_2D_MULTISAMPLE, color[c], 0);
+			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+		}
+	} else {
+		for (int c = 0; c < ColorBuffer::MAX; ++c) {
+			glBindTexture(GL_TEXTURE_2D, color[c]);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + c, GL_TEXTURE_2D, color[c], 0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
 	}
 
 	// Create the depth texture
 	glGenTextures(1, &depth);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH32F_STENCIL8, width, height, false);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth, 0);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	if (samples) {
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH32F_STENCIL8, width, height, false);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth, 0);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	} else {
+		glBindTexture(GL_TEXTURE_2D, depth);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH32F_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV, nullptr);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 
 	// finalize fbo
 	static const GLenum attachments[ColorBuffer::MAX] = {
@@ -83,10 +105,11 @@ void Framebuffer::bindForWriting() {
 	if (!fbo)
 		return;
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	GLenum type = samples ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 	for (int c = 0; c < ColorBuffer::MAX; ++c) {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + c, GL_TEXTURE_2D_MULTISAMPLE, color[c], 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + c, type, color[c], 0);
 	}
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depth, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, type, depth, 0);
 	glViewport(0, 0, width, height);
 
 	// remember which fbo is bound for writing
@@ -97,14 +120,15 @@ void Framebuffer::bindForWriting() {
 
 void Framebuffer::bindForReading(GLenum textureUnit, GLenum attachment) const {
 	glActiveTexture(textureUnit);
+	GLenum type = samples ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 	for (int c = 0; c < ColorBuffer::MAX; ++c) {
 		if (color[c] && attachment == GL_COLOR_ATTACHMENT0 + c) {
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color[c]);
+			glBindTexture(type, color[c]);
 			return;
 		}
 	}
 	if (depth && attachment == GL_DEPTH_ATTACHMENT) {
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depth);
+		glBindTexture(type, depth);
 		return;
 	}
 }

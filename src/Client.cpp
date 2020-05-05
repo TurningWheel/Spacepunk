@@ -943,6 +943,19 @@ void Client::postProcess() {
 		int xres = mainEngine->getXres();
 		int yres = mainEngine->getYres();
 
+		// set antialiasing
+		int samples = renderer->getMultisamples();
+		if (samples != cvar_antialias.toInt()) {
+			samples = cvar_antialias.toInt();
+			renderer->setMultisamples(samples);
+			if (samples) {
+				glEnable(GL_MULTISAMPLE);
+			} else {
+				glDisable(GL_MULTISAMPLE);
+			}
+			renderer->getFramebufferResource().dumpCache();
+		}
+
 		// set framebuffer
 		renderer->clearBuffers();
 		Framebuffer* fbo = renderer->bindFBO("__main", xres, yres);
@@ -994,6 +1007,14 @@ void Client::postProcess() {
 			}
 			(void)renderer->bindFBO("__main", xres, yres);
 			renderer->blitFramebuffer(*gui_fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GUI);
+
+			// gamma adjustment
+			Framebuffer* gamma = renderer->bindFBO("gamma", xres, yres);
+			gamma->clear();
+			renderer->blitFramebuffer(*fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GAMMA);
+			(void)renderer->bindFBO("__main", xres, yres);
+			fbo->clear();
+			renderer->blitFramebuffer(*gamma, GL_COLOR_ATTACHMENT0, Renderer::BlitType::BASIC);
 
 			// draw console
 			if (consoleHeight > 0) {

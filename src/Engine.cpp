@@ -94,6 +94,22 @@ static int console_fullscreen(int argc, const char** argv) {
 	return 1;
 }
 
+static int console_vsync(int argc, const char** argv) {
+	Client* client = mainEngine->getLocalClient();
+	if (!client || !client->getRenderer()) {
+		return 1;
+	}
+	if (argc != 1) {
+		return 2;
+	}
+
+	int vsync = strtol(argv[0], nullptr, 10);
+	client->getRenderer()->setVsync(vsync);
+	SDL_GL_SetSwapInterval(vsync);
+
+	return 0;
+}
+
 static int console_size(int argc, const char** argv) {
 	if (argc < 2) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "not enough args. ex: size 1280 720");
@@ -272,6 +288,7 @@ static Ccmd ccmd_help("help", "lists all console commands and variables", &conso
 static Ccmd ccmd_shutdown("exit", "kill engine immediately", &console_shutdown);
 static Ccmd ccmd_windowed("windowed", "set the engine to windowed mode", &console_windowed);
 static Ccmd ccmd_fullscreen("fullscreen", "set the engine to fullscreen mode", &console_fullscreen);
+static Ccmd ccmd_vsync("vsync", "set vsync on (1), off (0), or adaptive (-1)", &console_vsync);
 static Ccmd ccmd_size("size", "change screen resolution", &console_size);
 static Ccmd ccmd_clear("clear", "clear engine log", &console_clear);
 static Ccmd ccmd_version("version", "display engine version", &console_version);
@@ -402,6 +419,15 @@ void Engine::doCommand(const char* arg) {
 	const char* command[1];
 	command[0] = arg;
 	mainEngine->commandLine(1, command);
+}
+
+const char* Engine::getCvar(const char* name) {
+	auto cvar = Cvar::getMap().find(name);
+	if (cvar) {
+		return (*cvar)->toStr();
+	} else {
+		return "";
+	}
 }
 
 int Engine::loadConfig(const char* filename) {
@@ -868,6 +894,22 @@ bool Engine::isEditorRunning() {
 		}
 	}
 	return false;
+}
+
+const char* Engine::getVsyncMode() const {
+	if (localClient && localClient->getRenderer()) {
+		switch (localClient->getRenderer()->getVsync()) {
+		case 1:
+			return "On";
+		case -1:
+			return "Adaptive";
+		default:
+		case 0:
+			return "Off";
+		}
+	} else {
+		return "Off";
+	}
 }
 
 void Engine::loadAllResources() {

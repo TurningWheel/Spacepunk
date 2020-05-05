@@ -33,6 +33,7 @@ public:
 		BLUR_HORIZONTAL,
 		BLUR_VERTICAL,
 		GUI,
+		GAMMA,
 		MAX
 	};
 
@@ -41,9 +42,13 @@ public:
 	const Image*				getNullImage() const { return nullImg; }
 	Resource<Framebuffer>&		getFramebufferResource() { return framebufferResource; }
 	const char*					getCurrentFramebuffer() const { return currentFramebuffer.get(); }
+	int							getMultisamples() const { return multisamples; }
+	int							getVsync() const { return vsync; }
 
 	void	setFullscreen(bool _fullscreen) { fullscreen = _fullscreen; }
+	void	setMultisamples(int samples) { multisamples = samples; }
 	void	setCurrentFramebuffer(const char* str) { currentFramebuffer = str; }
+	void	setVsync(int _vsync) { vsync = _vsync; }
 
 	//! sets up the renderer
 	void init();
@@ -158,6 +163,8 @@ private:
 	const Uint32 maxTextures = 1024;
 	bool initialized = false;
 	bool fullscreen;
+	int multisamples = 0u;
+	int vsync = 0;
 
 	Resource<Framebuffer> framebufferResource;
 	String currentFramebuffer;

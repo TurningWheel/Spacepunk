@@ -811,7 +811,7 @@ void Renderer::blendFramebuffer(Framebuffer& fbo0, GLenum attachment0, Framebuff
 	glDisable(GL_STENCIL_TEST);
 
 	// load shader
-	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blend.json");
+	Material* mat = mainEngine->getMaterialResource().dataForString(multisamples ? "shaders/basic/fbo_blend_ms.json" : "shaders/basic/fbo_blend.json");
 	if (!mat) {
 		return;
 	}
@@ -847,6 +847,8 @@ Framebuffer* Renderer::getFramebuffer() {
 	return fbo;
 }
 
+static Cvar cvar_gamma("render.gamma", "brightness percentage", "100.0");
+
 void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType type) {
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
@@ -855,19 +857,22 @@ void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType typ
 	Material* mat = nullptr;
 	switch (type) {
 	case BASIC:
-		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo.json");
+		mat = mainEngine->getMaterialResource().dataForString(multisamples ? "shaders/basic/fbo_ms.json" : "shaders/basic/fbo.json");
 		break;
 	case HDR:
-		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_hdr.json");
+		mat = mainEngine->getMaterialResource().dataForString(multisamples ? "shaders/basic/fbo_hdr_ms.json" : "shaders/basic/fbo_hdr.json");
 		break;
 	case BLUR_HORIZONTAL:
-		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blur_h.json");
+		mat = mainEngine->getMaterialResource().dataForString(multisamples ? "shaders/basic/fbo_blur_h_ms.json" : "shaders/basic/fbo_blur_h.json");
 		break;
 	case BLUR_VERTICAL:
-		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_blur_v.json");
+		mat = mainEngine->getMaterialResource().dataForString(multisamples ? "shaders/basic/fbo_blur_v_ms.json" : "shaders/basic/fbo_blur_v.json");
 		break;
 	case GUI:
-		mat = mainEngine->getMaterialResource().dataForString("shaders/basic/fbo_gui.json");
+		mat = mainEngine->getMaterialResource().dataForString(multisamples ? "shaders/basic/fbo_gui_ms.json" : "shaders/basic/fbo_gui.json");
+		break;
+	case GAMMA:
+		mat = mainEngine->getMaterialResource().dataForString(multisamples ? "shaders/basic/fbo_gamma_ms.json" : "shaders/basic/fbo_gamma.json");
 		break;
 	default:
 		break;
@@ -887,6 +892,7 @@ void Renderer::blitFramebuffer(Framebuffer& fbo, GLenum attachment, BlitType typ
 	// upload uniform variables
 	glUniform2iv(shader.getUniformLocation("gResolution"), 1, glm::value_ptr(glm::ivec2(xres, yres)));
 	glUniform1i(shader.getUniformLocation("gTexture"), 0);
+	glUniform1f(shader.getUniformLocation("gGamma"), cvar_gamma.toFloat() / 100.f);
 
 	// bind vertex array
 	glBindVertexArray(vao);

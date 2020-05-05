@@ -4,7 +4,11 @@ out vec4 FragColor;
 
 in vec2 TexCoord;
 
+#ifdef MULTISAMPLE
 uniform sampler2DMS gTexture;
+#else
+uniform sampler2D gTexture;
+#endif
 uniform ivec2 gResolution;
 
 #define PI 3.14159265358979323846
@@ -18,11 +22,16 @@ float gauss(float off, float dev) {
 
 vec3 getColor(vec2 coords) {
     vec3 Color = vec3(0.f);
+#ifdef MULTISAMPLE
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 0).rgb * 0.25f;
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 1).rgb * 0.25f;
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 2).rgb * 0.25f;
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 3).rgb * 0.25f;
     return Color;
+#else
+    Color += texelFetch(gTexture, ivec2(coords * gResolution), 0).rgb;
+    return Color;
+#endif
 }
 
 void main() {

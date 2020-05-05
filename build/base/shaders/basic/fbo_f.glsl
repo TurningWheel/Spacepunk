@@ -4,15 +4,24 @@ in vec2 TexCoord;
 
 out vec4 FragColor;
 
+#ifdef MULTISAMPLE
 uniform sampler2DMS gTexture;
+#else
+uniform sampler2D gTexture;
+#endif
 uniform ivec2 gResolution;
+uniform float gGamma;
 
 vec4 tex(ivec2 coords) {
 	vec4 Color = vec4(0.f);
+#ifdef MULTISAMPLE
 	Color += texelFetch(gTexture, coords, 0).rgba * 0.25f;
 	Color += texelFetch(gTexture, coords, 1).rgba * 0.25f;
 	Color += texelFetch(gTexture, coords, 2).rgba * 0.25f;
 	Color += texelFetch(gTexture, coords, 3).rgba * 0.25f;
+#else
+	Color += texelFetch(gTexture, coords, 0).rgba;
+#endif
 	return Color;
 }
 
@@ -32,8 +41,8 @@ vec4 BiCubic(vec2 coords) {
     vec4 nDenom = vec4(0.0f, 0.0f, 0.0f, 0.0f);
     float a = fract(coords.x); // get the decimal part
     float b = fract(coords.y); // get the decimal part
-    for (int m = 0; m <= 1; ++m) {
-        for (int n = 0; n <= 1; ++n) {
+    for (int m = -1; m <= 1; ++m) {
+        for (int n = -1; n <= 1; ++n) {
 			vec4 vecData = tex(ivec2(coords + vec2(float(m), float(n))));
 			float f0 = Triangular(float(m) - a);
 			vec4 vecCoef0 = vec4(f0, f0, f0, f0);
@@ -52,12 +61,16 @@ void main() {
 #ifndef GUI
 	// basic copy
 	vec4 Color = tex(ivec2(TexCoord * gResolution));
+#ifndef GAMMA
 	FragColor = Color;
+#else
+	FragColor = vec4(Color.rgb * gGamma, Color.a);
+#endif
 #else
 	// gui
 	vec2 res = vec2(1920.f, 1080.f);
 	vec4 Color = BiCubic(TexCoord * res);
-	FragColor = Color;
+	FragColor = vec4(Color.rgb, min(Color.a, 1.0));
 #endif
 #else
 	// HDR tone-mapping

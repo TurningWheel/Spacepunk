@@ -77,34 +77,34 @@ public:
 	//! amount of ticks within which two clicks register as a "double-click"
 	static const unsigned int doubleClickTime = 30;
 
-	const bool							isInitialized() const { return initialized; }
-	const bool							isRunning() const { return running; }
-	const bool							isPaused() const { return paused; }
-	const bool							isFullscreen() const { return fullscreen; }
-	const bool							isRunningClient() const { return runningClient; }
-	const bool							isRunningServer() const { return runningServer; }
+	bool								isInitialized() const { return initialized; }
+	bool								isRunning() const { return running; }
+	bool								isPaused() const { return paused; }
+	bool								isFullscreen() const { return fullscreen; }
+	bool								isRunningClient() const { return runningClient; }
+	bool								isRunningServer() const { return runningServer; }
 	const char*							getGameTitle() const { return game.name.get(); }
 	Client*								getLocalClient() { return localClient; }
 	Server*								getLocalServer() { return localServer; }
 	int									getXres() const { return xres; }
 	int									getYres() const { return yres; }
-	const bool							getKeyStatus(const int index) const { return keystatus[index]; }
-	const bool							getAnyKeyStatus() const { return anykeystatus; }
+	bool								getKeyStatus(const int index) const { return keystatus[index]; }
+	bool								getAnyKeyStatus() const { return anykeystatus; }
 	const char*							getLastKeyPressed() const { return lastkeypressed; }
-	const bool							getMouseStatus(const int index) const { return mousestatus[index]; }
-	const bool							getDBCMouseStatus(const int index) const { return dbc_mousestatus[index]; }
-	const Sint32						getMouseX() const { return mousex; }
-	const Sint32						getMouseY() const { return mousey; }
-	const Sint32						getOldMouseX() const { return omousex; }
-	const Sint32						getOldMouseY() const { return omousey; }
-	const Sint32						getMouseWheelX() const { return mousewheelx; }
-	const Sint32						getMouseWheelY() const { return mousewheely; }
-	const Sint32						getMouseMoveX() const { return mousexrel; }
-	const Sint32						getMouseMoveY() const { return mouseyrel; }
-	const double						getFPS() const { return fps; }
-	const double						getTimeSync() const { return timesync; }
-	const Uint32						getTicks() const { return ticks; }
-	const unsigned int					getTicksPerSecond() const { return ticksPerSecond; }
+	bool								getMouseStatus(const int index) const { return mousestatus[index]; }
+	bool								getDBCMouseStatus(const int index) const { return dbc_mousestatus[index]; }
+	Sint32								getMouseX() const { return mousex; }
+	Sint32								getMouseY() const { return mousey; }
+	Sint32								getOldMouseX() const { return omousex; }
+	Sint32								getOldMouseY() const { return omousey; }
+	Sint32								getMouseWheelX() const { return mousewheelx; }
+	Sint32								getMouseWheelY() const { return mousewheely; }
+	Sint32								getMouseMoveX() const { return mousexrel; }
+	Sint32								getMouseMoveY() const { return mouseyrel; }
+	double								getFPS() const { return fps; }
+	double								getTimeSync() const { return timesync; }
+	Uint32								getTicks() const { return ticks; }
+	int									getTicksPerSecond() const { return (int)ticksPerSecond; }
 	auto&								getFontResource() { return *static_cast<Resource<Font, false>*>(*resources.find("font")); }
 	auto&								getMeshResource() { return *static_cast<Resource<Mesh, true>*>(*resources.find("mesh")); }
 	auto&								getImageResource() { return *static_cast<Resource<Image, true>*>(*resources.find("image")); }
@@ -121,15 +121,15 @@ public:
 	const LinkedList<Entity::def_t*>&	getEntityDefs() { return entityDefs; }
 	LinkedList<String>&					getCommandHistory() { return commandHistory; }
 	const char*							getInputStr() { return inputstr; }
-	const bool							isCursorVisible() const { return (ticks - cursorflash) % ticksPerSecond < ticksPerSecond / 2; }
-	const bool							isMouseRelative() const { return mouseRelative; }
-	const bool							isKillSignal() const { return killSignal; }
+	bool								isCursorVisible() const { return (ticks - cursorflash) % ticksPerSecond < ticksPerSecond / 2; }
+	bool								isMouseRelative() const { return mouseRelative; }
+	bool								isKillSignal() const { return killSignal; }
 	Random&								getRandom() { return rand; }
 	const char*							getLastInput() const { return lastInput; }
 	LinkedList<SDL_GameController*>&	getControllers() { return controllers; }
 	LinkedList<SDL_Joystick*>&			getJoysticks() { return joysticks; }
 	Input&								getInput(int index) { return inputs[index]; }
-	const bool							isPlayTest() const { return playTest; }
+	bool								isPlayTest() const { return playTest; }
 
 	void								setPaused(const bool _paused) { paused = _paused; }
 	void								setInputStr(char* const _inputstr) { inputstr = _inputstr; inputnum = false; }
@@ -187,6 +187,9 @@ public:
 	//! @return true if the editor is currently running
 	bool isEditorRunning();
 
+	//! @return the current vsync mode as a string
+	const char* getVsyncMode() const;
+
 	//! plays a sound file
 	//! @param name the filename of the sound to play
 	void playSound(const char* name);
@@ -202,6 +205,11 @@ public:
 	//! parse a single console command
 	//! @param arg the command to process
 	void doCommand(const char* arg);
+
+	//! get the value of the given cvar
+	//! @param name the name of the cvar
+	//! @return the value of the cvar as a string
+	const char* getCvar(const char* name);
 
 	//! load and execute a config file
 	//! @param filename filename of the config file to load (NOT including mod folder)

@@ -1,0 +1,27 @@
+{
+	"Material::version": 0,
+	"transparent": false,
+	"shadow": false,
+	"program": {
+		"ShaderProgram::version": 0,
+		"shaders": [
+			{
+				"Shader::version": 0,
+				"type": 0,
+				"path": "shaders/basic/fbo_v.glsl",
+				"defines": []
+			},
+			{
+				"Shader::version": 0,
+				"type": 2,
+				"path": "shaders/basic/fbo_blur_f.glsl",
+				"defines": [
+					"MULTISAMPLE"
+				]
+			}
+		]
+	},
+	"textures": [],
+	"glowTextures": [],
+	"cubemaps": []
+}
