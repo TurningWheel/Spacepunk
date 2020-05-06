@@ -41,8 +41,12 @@ vec4 BiCubic(vec2 coords) {
     vec4 nDenom = vec4(0.0f, 0.0f, 0.0f, 0.0f);
     float a = fract(coords.x); // get the decimal part
     float b = fract(coords.y); // get the decimal part
-    for (int m = -1; m <= 1; ++m) {
-        for (int n = -1; n <= 1; ++n) {
+    ivec2 samples = ivec2(ceil(1920.f / gResolution.x),
+    	ceil(1080.f / gResolution.y));
+    ivec2 start = - samples / 2;
+    ivec2 end = samples / 2;
+    for (int m = start.x; m <= end.x; ++m) {
+        for (int n = start.y; n <= end.y; ++n) {
 			vec4 vecData = tex(ivec2(coords + vec2(float(m), float(n))));
 			float f0 = Triangular(float(m) - a);
 			vec4 vecCoef0 = vec4(f0, f0, f0, f0);
@@ -64,13 +68,13 @@ void main() {
 #ifndef GAMMA
 	FragColor = Color;
 #else
-	FragColor = vec4(Color.rgb * gGamma, Color.a);
+	FragColor = vec4(Color.rgb * gGamma, min(Color.a, 1.0));
 #endif
 #else
 	// gui
 	vec2 res = vec2(1920.f, 1080.f);
 	vec4 Color = BiCubic(TexCoord * res);
-	FragColor = vec4(Color.rgb, min(Color.a, 1.0));
+	FragColor = Color;
 #endif
 #else
 	// HDR tone-mapping
@@ -89,4 +93,5 @@ void main() {
 
 	FragColor = vec4(Mapped, 1.f);
 #endif
+	FragColor = clamp(FragColor, vec4(0.f), vec4(1.f));
 }

@@ -994,6 +994,8 @@ void Client::postProcess() {
 				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
 			}
 
+			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
 			// editor interface
 			Framebuffer* gui_fbo = renderer->bindFBO("gui", Frame::virtualScreenX, Frame::virtualScreenY);
 			gui_fbo->clear();
@@ -1005,6 +1007,9 @@ void Client::postProcess() {
 			if (gui && !editorFullscreen) {
 				gui->draw(*renderer);
 			}
+
+			// blit gui
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			(void)renderer->bindFBO("__main", xres, yres);
 			renderer->blitFramebuffer(*gui_fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GUI);
 

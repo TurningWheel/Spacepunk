@@ -344,6 +344,7 @@ void Script::exposeFrame() {
 		.addFunction("setSize", &Button::setSize)
 		.addFunction("setColor", &Button::setColor)
 		.addFunction("setTextColor", &Button::setTextColor)
+		.addFunction("setBorderColor", &Button::setBorderColor)
 		.addFunction("setName", &Button::setName)
 		.addFunction("setText", &Button::setText)
 		.addFunction("setFont", &Button::setFont)

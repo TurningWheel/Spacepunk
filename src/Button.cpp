@@ -40,19 +40,25 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		return;
 
 	glm::vec4 _color = disabled ? color * .5f : (highlighted ? color * 1.5f : color);
+	glm::vec4 _borderColor = _color;
+	if (borderColor.w) {
+		_borderColor = disabled ? borderColor * .5f : (highlighted ? borderColor * 1.5f : borderColor);
+	}
 	if (border) {
 		if (pressed) {
-			renderer.drawLowFrame(_size, border, _color);
+			renderer.drawFrame(_size, border, _color);
+			renderer.drawLowFrame(_size, border, _borderColor, true);
 		} else {
-			renderer.drawHighFrame(_size, border, _color);
+			renderer.drawFrame(_size, border, _color);
+			renderer.drawHighFrame(_size, border, _borderColor, true);
 		}
 	} else {
 		if (pressed) {
-			renderer.drawFrame(_size, border, color);
-			renderer.drawFrame(_size, 2, _color, true);
+			renderer.drawFrame(_size, border, color * .9f);
+			renderer.drawFrame(_size, 1, _borderColor * .9f, true);
 		} else {
 			renderer.drawFrame(_size, border, color);
-			renderer.drawFrame(_size, 1, _color, true);
+			renderer.drawFrame(_size, 1, _borderColor, true);
 		}
 	}
 

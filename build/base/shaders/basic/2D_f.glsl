@@ -9,4 +9,5 @@ uniform vec4 gColor;
 
 void main() {
 	FragColor = gColor * texture(gTexture, TexCoord);
+	FragColor = clamp(FragColor, vec4(0.f), vec4(1.f));
 }

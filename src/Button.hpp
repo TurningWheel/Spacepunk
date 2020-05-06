@@ -67,6 +67,7 @@ public:
 	void	setSize(Rect<int>& _size) { size = _size; }
 	void	setColor(const WideVector& _color) { color = _color; }
 	void	setTextColor(const WideVector& _color) { textColor = _color; }
+	void	setBorderColor(const WideVector& _color) { borderColor = _color; }
 	void	setName(const char* _name) { name = _name; }
 	void	setText(const char* _text) { text = _text; }
 	void	setFont(const char* _font) { font = _font; }
@@ -94,6 +95,7 @@ private:
 	bool disabled = false;							//!< if true, the button is dimmed and unusable
 	WideVector color;								//!< the button's color
 	WideVector textColor;							//!< text color
+	WideVector borderColor;							//!< (optional) border color
 	style_t style = STYLE_NORMAL;					//!< button style
 	Uint32 highlightTime = 0;						//!< records the time since the button was highlighted
 };

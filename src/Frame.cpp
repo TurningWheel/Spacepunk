@@ -441,6 +441,53 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 	if (_size.w <= 0 || _size.h <= 0)
 		return result;
 
+	Rect<int> fullSize = _size;
+	fullSize.h += (actualSize.w > size.w) ? sliderSize : 0;
+	fullSize.w += (actualSize.h > size.h) ? sliderSize : 0;
+
+	Sint32 mousex = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 mousey = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+
+	// scroll with mouse wheel
+	if (parent != nullptr && !hollow && fullSize.containsPoint(omousex, omousey) && usable) {
+		// x scroll with mouse wheel
+		if (actualSize.w > size.w) {
+			if (mainEngine->getMouseWheelX() < 0) {
+				actualSize.x += min(entrySize * 4, size.w);
+				usable = result.usable = false;
+			} else if (mainEngine->getMouseWheelX() > 0) {
+				actualSize.x -= min(entrySize * 4, size.w);
+				usable = result.usable = false;
+			}
+			if (actualSize.h <= size.h) {
+				if (mainEngine->getMouseWheelY() < 0) {
+					actualSize.x += min(entrySize * 4, size.w);
+					usable = result.usable = false;
+				} else if (mainEngine->getMouseWheelY() > 0) {
+					actualSize.x -= min(entrySize * 4, size.w);
+					usable = result.usable = false;
+				}
+			}
+		}
+
+		// y scroll with mouse wheel
+		if (actualSize.h > size.h) {
+			if (mainEngine->getMouseWheelY() < 0) {
+				actualSize.y += min(entrySize * 4, size.h);
+				usable = result.usable = false;
+			} else if (mainEngine->getMouseWheelY() > 0) {
+				actualSize.y -= min(entrySize * 4, size.h);
+				usable = result.usable = false;
+			}
+		}
+
+		// bound
+		actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
+		actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
+	}
+
 	// process frames
 	Node<Frame*>* prevNode = nullptr;
 	for (Node<Frame*>* node = frames.getLast(); node != nullptr; node = prevNode) {
@@ -461,69 +508,8 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
-	Sint32 mousex = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
-	Sint32 mousey = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
-	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
-	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
-
 	// process sliders
 	if (parent != nullptr && !hollow && usable) {
-
-		Rect<int> fullSize = _size;
-		fullSize.h += (actualSize.w > size.w) ? sliderSize : 0;
-		fullSize.w += (actualSize.h > size.h) ? sliderSize : 0;
-
-		// main window space
-		if (fullSize.containsPoint(omousex, omousey)) {
-
-			// x scroll with mouse wheel x
-			if (actualSize.w > size.w) {
-				if (mainEngine->getMouseWheelX() < 0) {
-					actualSize.x += min(entrySize * 4, size.w);
-					result.usable = false;
-				} else if (mainEngine->getMouseWheelX() > 0) {
-					actualSize.x -= min(entrySize * 4, size.w);
-					result.usable = false;
-				}
-			}
-
-			if (actualSize.h > size.h) {
-				// y scroll with mouse wheel y
-				if (mainEngine->getMouseWheelY() < 0) {
-					actualSize.y += min(entrySize * 4, size.h);
-					result.usable = false;
-				} else if (mainEngine->getMouseWheelY() > 0) {
-					actualSize.y -= min(entrySize * 4, size.h);
-					result.usable = false;
-				}
-			} else if (actualSize.w > size.w) {
-				// x scroll with mouse wheel y
-				if (mainEngine->getMouseWheelY() < 0) {
-					actualSize.x += min(entrySize * 4, size.w);
-					result.usable = false;
-				} else if (mainEngine->getMouseWheelY() > 0) {
-					actualSize.x -= min(entrySize * 4, size.w);
-					result.usable = false;
-				}
-			}
-
-			// bound
-			actualSize.x = min(max(0, actualSize.x), max(0, actualSize.w - size.w));
-			actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
-
-			// figure out if this is the highest frame that could capture us
-			bool highest = true;
-			for (auto up = parent; up != nullptr; up = up->parent) {
-				if (!up->hollow) {
-					highest = false;
-					break;
-				}
-			}
-			if (highest) {
-				result.usable = false;
-			}
-		}
-
 		// filler in between sliders
 		if (actualSize.w > size.w && actualSize.h > size.h) {
 			Rect<int> sliderRect;
@@ -810,6 +796,10 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			field.deselect();
 			destField->select();
 		}
+	}
+
+	if (_size.containsPoint(omousex, omousey) && !hollow) {
+		result.usable = usable = false;
 	}
 
 	// frame suicide :(
