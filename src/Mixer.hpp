@@ -23,8 +23,13 @@ public:
 
 	//! play the given sound effect
 	//! @param loop if true, the sound will loop indefinitely; otherwise, it will only play once
-	//! @return the Mix_Channel the sound is playing on, or -1 for errors
+	//! @return the channel the sound is playing on, or -1 for errors
 	int playSound(const char* name, const bool loop);
+
+	//! stop the given sound effect
+	//! @param channel the channel the sound is playing on
+	//! @return true if the sound was stopped, otherwise false
+	bool stopSound(int channel);
 
 	const ALCdevice*	getDevice() const { return device; }
 	const ALCcontext*	getContext() const { return context; }

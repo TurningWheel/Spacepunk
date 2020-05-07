@@ -100,3 +100,7 @@ int Mixer::playSound(const char* name, const bool loop) {
 	}
 	return -1;
 }
+
+bool Mixer::stopSound(int channel) {
+	return Mix_HaltChannel(channel) == 0;
+}

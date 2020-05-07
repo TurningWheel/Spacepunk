@@ -3909,121 +3909,116 @@ void Editor::process(const bool usable) {
 			if (!usable) {
 				world.setPointerActive(false);
 			}
-			if (usable || entityToSpawn) {
-				const Sint32& mouseX = mainEngine->getMouseX();
-				const Sint32& mouseY = mainEngine->getMouseY();
-				Vector rayStart, rayEnd;
+			const Sint32& mouseX = mainEngine->getMouseX();
+			const Sint32& mouseY = mainEngine->getMouseY();
+			Vector rayStart, rayEnd;
 
-				// determine if the mouse is in the viewport
-				bool inWindow = false;
-				if (!mainEngine->isMouseRelative()) {
-					Rect<int> rect = camera->getWin();
-					rect.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
-					rect.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
-					rect.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
-					rect.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
-					if (rect.containsPoint(mouseX, mouseY)) {
-						inWindow = true;
-					}
+			// determine if the mouse is in the viewport
+			bool inWindow = false;
+			if (!mainEngine->isMouseRelative()) {
+				Rect<int> rect = camera->getWin();
+				rect.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+				rect.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
+				rect.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+				rect.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+				if (rect.containsPoint(mouseX, mouseY)) {
+					inWindow = true;
 				}
+			}
 
-				if (inWindow) {
-					camera->screenPosToWorldRay(mouseX, mouseY, rayStart, rayEnd);
-					Vector rayStop = rayStart + rayEnd * camera->getClipFar();
+			LinkedList<World::hit_t> list;
+			if (inWindow && (usable || entityToSpawn)) {
+				camera->screenPosToWorldRay(mouseX, mouseY, rayStart, rayEnd);
+				Vector rayStop = rayStart + rayEnd * camera->getClipFar();
+				world.lineTraceList(rayStart, rayStop, list);
+				if (list.getSize() > 0) {
+					world.setPointerActive(false);
+					highlightedVertex = World::nuid;
+					if (!highlightedObjManuallySet) {
+						highlightedObj = World::nuid;
+					}
+					highlightedSector = nullptr;
+					highlightedFace = -1;
 
-					// ray trace the world
-					LinkedList<World::hit_t> list;
-					world.lineTraceList(rayStart, rayStop, list);
+					// find the widget under the mouse, if it's there
+					World::hit_t widgetUnderMouse;
+					Node<World::hit_t>* nextNode;
+					for (Node<World::hit_t>* node = list.getFirst(); node != nullptr; node = nextNode) {
+						const World::hit_t& hit = node->getData();
+						nextNode = node->getNext();
 
-					if (list.getSize() > 0) {
-						world.setPointerActive(false);
-						highlightedVertex = World::nuid;
-						if (!highlightedObjManuallySet) {
-							highlightedObj = World::nuid;
-						}
-						highlightedSector = nullptr;
-						highlightedFace = -1;
-
-						// find the widget under the mouse, if it's there
-						World::hit_t widgetUnderMouse;
-						Node<World::hit_t>* nextNode;
-						for (Node<World::hit_t>* node = list.getFirst(); node != nullptr; node = nextNode) {
-							const World::hit_t& hit = node->getData();
-							nextNode = node->getNext();
-
-							if (hit.manifest) {
-								if (hit.manifest->entity) {
-									Entity* entity = hit.manifest->entity;
-									if (entity == entityToSpawn) {
-										list.removeNode(node);
-										continue;
-									} else if (!entity->isShouldSave()) {
-										if (entity->getName().find("widget") != UINT32_MAX) {
-											widgetUnderMouse = hit;
-											break;
-										}
+						if (hit.manifest) {
+							if (hit.manifest->entity) {
+								Entity* entity = hit.manifest->entity;
+								if (entity == entityToSpawn) {
+									list.removeNode(node);
+									continue;
+								} else if (!entity->isShouldSave()) {
+									if (entity->getName().find("widget") != UINT32_MAX) {
+										widgetUnderMouse = hit;
+										break;
 									}
 								}
 							}
 						}
+					}
 
-						// pick the thing we're pointing at
-						if (list.getSize() > 0) {
-							const World::hit_t& firstObjectHit = list[0]->getData();
-							const World::hit_t& hit = (widgetUnderMouse.manifest && widgetUnderMouse.manifest->entity) ? widgetUnderMouse : firstObjectHit;
+					// pick the thing we're pointing at
+					if (list.getSize() > 0) {
+						const World::hit_t& firstObjectHit = list[0]->getData();
+						const World::hit_t& hit = (widgetUnderMouse.manifest && widgetUnderMouse.manifest->entity) ? widgetUnderMouse : firstObjectHit;
 
-							if (!hit.manifest || !hit.manifest->entity) {
-								world.setPointerActive(true);
+						if (!hit.manifest || !hit.manifest->entity) {
+							world.setPointerActive(true);
 
-								if (editingMode == ENTITIES) {
-									if (entityToSpawn != nullptr) {
-										if (entityToSpawn->hasComponent(Component::COMPONENT_LIGHT)) {
-											world.setPointerPos(hit.pos + hit.normal*5.f);
-										} else {
-											world.setPointerPos(hit.pos);
-										}
+							if (editingMode == ENTITIES) {
+								if (entityToSpawn != nullptr) {
+									if (entityToSpawn->hasComponent(Component::COMPONENT_LIGHT)) {
+										world.setPointerPos(hit.pos + hit.normal*5.f);
 									} else {
 										world.setPointerPos(hit.pos);
 									}
 								} else {
-									if (hit.normal.z == 0) {
-										if (editingMode == TILES) {
-											world.setPointerPos(hit.pos - hit.normal);
-										} else if (editingMode == TEXTURES) {
-											world.setPointerPos(hit.pos + hit.normal);
-										}
-									} else {
-										world.setPointerPos(hit.pos);
+									world.setPointerPos(hit.pos);
+								}
+							} else {
+								if (hit.normal.z == 0) {
+									if (editingMode == TILES) {
+										world.setPointerPos(hit.pos - hit.normal);
+									} else if (editingMode == TEXTURES) {
+										world.setPointerPos(hit.pos + hit.normal);
+									}
+								} else {
+									world.setPointerPos(hit.pos);
 
-										if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-											if (hit.normal.z < 0) {
-												ceilingMode = false;
-											} else {
-												ceilingMode = true;
-											}
+									if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+										if (hit.normal.z < 0) {
+											ceilingMode = false;
+										} else {
+											ceilingMode = true;
 										}
 									}
 								}
-							} else if (hit.manifest && hit.manifest->entity) {
-								world.setPointerActive(true);
-								world.setPointerPos(hit.pos);
-								if (!leftClicking || leftClick) {
-									highlightedObj = hit.manifest->entity->getUID();
-								}
+							}
+						} else if (hit.manifest && hit.manifest->entity) {
+							world.setPointerActive(true);
+							world.setPointerPos(hit.pos);
+							if (!leftClicking || leftClick) {
+								highlightedObj = hit.manifest->entity->getUID();
 							}
 						}
 					}
-					if (list.getSize() == 0)
-					{
-						highlightedVertex = World::nuid;
-						highlightedSector = nullptr;
-						highlightedFace = -1;
-						world.setPointerActive(true);
-						world.setPointerPos(rayStart + rayEnd * 256.f);
-						if (!highlightedObjManuallySet && (!leftClicking || leftClick)) {
-							highlightedObj = World::nuid;
-						}
-					}
+				}
+			}
+			if (list.getSize() == 0)
+			{
+				highlightedVertex = World::nuid;
+				highlightedSector = nullptr;
+				highlightedFace = -1;
+				world.setPointerActive(true);
+				world.setPointerPos(rayStart + rayEnd * 256.f);
+				if (!highlightedObjManuallySet && (!leftClicking || leftClick)) {
+					highlightedObj = World::nuid;
 				}
 			}
 		}
