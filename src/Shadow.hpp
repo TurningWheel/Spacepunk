@@ -40,11 +40,13 @@ public:
 
 	const GLuint	getFBO() const { return fbo; }
 	bool			isInitialized() const { return fbo != 0; }
+	float			getResolution() const { return resolution; }
 
 private:
 	GLuint fbo = 0;
 	GLuint shadowMap = 0;
 	GLuint uidMap = 0;
+	float resolution = 0.f;
 };
 
 extern Cvar cvar_shadowResolution;

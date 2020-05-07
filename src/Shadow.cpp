@@ -28,7 +28,7 @@ Shadow::~Shadow() {
 }
 
 void Shadow::init() {
-	if (fbo || shadowMap) {
+	if (fbo) {
 		return;
 	}
 
@@ -42,7 +42,7 @@ void Shadow::init() {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	const float resolution = cvar_shadowResolution.toFloat();
+	resolution = cvar_shadowResolution.toFloat();
 	for (Uint32 i = 0; i < 6; ++i) {
 		glTexImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i), 0, GL_R32UI, resolution, resolution, 0, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
 	}
@@ -105,13 +105,12 @@ void Shadow::term() {
 }
 
 void Shadow::bindForWriting(GLenum face) {
-	if (!fbo || !shadowMap)
+	if (!fbo)
 		return;
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, face, shadowMap, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, face, uidMap, 0);
-	const float resolution = cvar_shadowResolution.toFloat();
-	glViewport(0, 0, resolution, resolution);
+	glViewport(0, 0, (int)resolution, (int)resolution);
 }
 
 void Shadow::bindForReading(GLenum textureUnit, GLenum attachment) const {

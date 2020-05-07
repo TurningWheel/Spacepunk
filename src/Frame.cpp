@@ -496,8 +496,8 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		prevNode = node->getPrev();
 
 		result_t frameResult = frame.process(_size, actualSize, usable);
+		usable = result.usable = frameResult.usable;
 		if (!frameResult.removed) {
-			usable = result.usable = frameResult.usable;
 			if (frameResult.tooltip != nullptr) {
 				result = frameResult;
 			}

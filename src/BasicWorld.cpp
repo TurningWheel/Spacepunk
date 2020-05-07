@@ -260,6 +260,8 @@ void BasicWorld::draw() {
 
 			// add light to light list
 			cameraLightList.push(light);
+
+			// create shadow map
 			if (shadowsEnabled) {
 				if (light->getEntity()->isFlag(Entity::flag_t::FLAG_STATIC) || !cvar_shadowsStaticOnly.toInt()) {
 					if (light->getEntity()->isFlag(Entity::flag_t::FLAG_SHADOW) && light->isShadow()) {
@@ -413,7 +415,8 @@ void BasicWorld::draw() {
 	}
 
 	for (auto light : lights) {
-		if (light->getShadowTicks() != light->getEntity()->getTicks()) {
+		if (light->getShadowTicks() != light->getEntity()->getTicks() ||
+			light->getShadowMap().getResolution() != cvar_shadowResolution.toFloat()) {
 			light->deleteShadowMap();
 		}
 	}
