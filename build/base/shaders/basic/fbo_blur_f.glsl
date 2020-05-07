@@ -21,17 +21,16 @@ float gauss(float off, float dev) {
 }
 
 vec3 getColor(vec2 coords) {
-    vec3 Color = vec3(0.f);
 #ifdef MULTISAMPLE
+    vec3 Color = vec3(0.f);
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 0).rgb * 0.25f;
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 1).rgb * 0.25f;
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 2).rgb * 0.25f;
     Color += texelFetch(gTexture, ivec2(coords * gResolution), 3).rgb * 0.25f;
-    return Color;
 #else
-    Color += texelFetch(gTexture, ivec2(coords * gResolution), 0).rgb;
-    return Color;
+    vec3 Color = texelFetch(gTexture, ivec2(coords * gResolution), 0).rgb;
 #endif
+    return Color;
 }
 
 void main() {

@@ -13,14 +13,14 @@ uniform ivec2 gResolution;
 uniform float gGamma;
 
 vec4 tex(ivec2 coords) {
-	vec4 Color = vec4(0.f);
 #ifdef MULTISAMPLE
-	Color += texelFetch(gTexture, coords, 0).rgba * 0.25f;
-	Color += texelFetch(gTexture, coords, 1).rgba * 0.25f;
-	Color += texelFetch(gTexture, coords, 2).rgba * 0.25f;
-	Color += texelFetch(gTexture, coords, 3).rgba * 0.25f;
+	vec4 Color = vec4(0.f);
+	Color += texelFetch(gTexture, coords, 0) * 0.25f;
+	Color += texelFetch(gTexture, coords, 1) * 0.25f;
+	Color += texelFetch(gTexture, coords, 2) * 0.25f;
+	Color += texelFetch(gTexture, coords, 3) * 0.25f;
 #else
-	Color += texelFetch(gTexture, coords, 0).rgba;
+	vec4 Color = texelFetch(gTexture, coords, 0);
 #endif
 	return Color;
 }

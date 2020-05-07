@@ -8,8 +8,7 @@ out vec2 TexCoord;
 uniform mat4 gView;
 
 void main() {
-	vec4 lPos    = vec4(iPosition, 0.0, 1.0);
-	gl_Position  = gView * lPos;
-	
+	vec4 lPos   = vec4(iPosition, 0.0, 1.0);
+	gl_Position = gView * lPos;
 	TexCoord    = iTexCoord;
 }
