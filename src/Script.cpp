@@ -495,6 +495,7 @@ void Script::exposeVector() {
 		.addFunction("normal", &Vector::normal)
 		.addFunction("normalize", &Vector::normalize)
 		.addFunction("reflect", &Vector::reflect)
+		.addFunction("toStr", &Vector::toStr)
 		.endClass()
 		;
 
@@ -521,6 +522,7 @@ void Script::exposeVector() {
 		.addFunction("lengthSquared", &WideVector::lengthSquared)
 		.addFunction("normal", &WideVector::normal)
 		.addFunction("normalize", &WideVector::normalize)
+		.addFunction("toStr", &WideVector::toStr)
 		.endClass()
 		;
 

@@ -7,6 +7,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "File.hpp"
+#include "String.hpp"
 
 //! Records (x, y, z) vector with float accuracy
 class Vector {
@@ -285,5 +286,14 @@ public:
 		file->property("x", x);
 		file->property("y", y);
 		file->property("z", z);
+	}
+
+	//! convert the vector to a string
+	//! @return string representation of the vector
+	String toStr() const {
+		String str;
+		str.alloc(64);
+		str.format("%.2f %.2f %.2f", x, y, z);
+		return str;
 	}
 };

@@ -303,6 +303,11 @@ static Ccmd ccmd_cachesize("cachesize", "prints the size of all resource caches 
 static Ccmd ccmd_printDir("printdir", "shows the directory that the engine is running from", &console_printDir);
 static Cvar cvar_tickrate("tickrate", "number of frames processed in a second", "60");
 
+// gameplay specific cvars:
+static Cvar cvar_streamerMode("gameplay.streamer.enabled", "privacy mode for streamers, obscures addresses etc.", "0");
+static Cvar cvar_disableScreenshake("gameplay.screenshake.disabled", "disable screenshake to alleviate motion sickness", "0");
+static Cvar cvar_colorblindMode("gameplay.colorblind.enabled", "enable colorblind mode to help improve contrast for colorblind players", "0");
+
 void Engine::printCacheSize() const {
 	Uint32 total = 0;
 	for (auto& pair : resources) {

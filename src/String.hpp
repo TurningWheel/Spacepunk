@@ -105,6 +105,7 @@ public:
 
 	//! copies formatted src string into our string. string will always be null-terminated
 	//! @param src the formatted string to copy
+	//! @return the formatted string
 	const char* format(const char* src, ...) {
 		if (str == nullptr || size == 0) {
 			return "";

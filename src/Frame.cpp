@@ -15,6 +15,12 @@
 bool Frame::tabbing = false;
 const Sint32 Frame::sliderSize = 15;
 
+static Cvar cvar_tooltipFont("tooltip.font", "font to use for tooltips", Font::defaultFont);
+static Cvar cvar_tooltipColorBackground("tooltip.color.background", "color to use for tooltip background", "0.0 0.0 0.0 0.9");
+static Cvar cvar_tooltipColorBorder("tooltip.color.border", "color to use for tooltip border", "1.0 0.5 0.0 1.0");
+static Cvar cvar_tooltipColorText("tooltip.color.text", "color to use for tooltip text", "1.0 1.0 1.0 1.0");
+static Cvar cvar_tooltipBorderWidth("tooltip.border.width", "width of tooltip border", "3");
+
 void Frame::listener_t::onDeleted() {
 	if (!entry) {
 		return;
@@ -366,18 +372,29 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	// root frame draws tooltip
 	if (!parent) {
 		if (tooltip && tooltip[0] != '\0') {
-			Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
+			Font* font = mainEngine->getFontResource().dataForString(cvar_tooltipFont.toStr());
 			if (font) {
 				Text* text = Text::get(tooltip, font->getName());
 				Rect<int> src;
-				src.x = mousex + 10;
+				src.x = mousex + 20 * ((float)Frame::virtualScreenX / mainEngine->getXres());
 				src.y = mousey;
-				font->sizeText(tooltip, &src.w, nullptr);
-				src.h = text->getHeight();
-				renderer.drawRect(&src, WideVector(0.f, 0.f, 1.f, .9f));
-				Rect<int> src2(src.x + 3, src.y + 3, src.w - 6, src.h - 6);
-				renderer.drawRect(&src2, WideVector(0.f, 0.f, 0.f, .9f));
-				text->draw(Rect<int>(), Rect<int>(src.x, src.y, 0, 0));
+				src.w = text->getWidth() + 2;
+				src.h = text->getHeight() + 2;
+
+				int border = cvar_tooltipBorderWidth.toInt();
+
+				float f0[4] = { 0.f };
+				Engine::readFloat(cvar_tooltipColorBorder.toStr(), f0, 4);
+				renderer.drawRect(&src, WideVector(f0[0], f0[1], f0[2], f0[3]));
+
+				float f1[4] = { 0.f };
+				Engine::readFloat(cvar_tooltipColorBackground.toStr(), f1, 4);
+				Rect<int> src2(src.x + border, src.y + border, src.w - border * 2, src.h - border * 2);
+				renderer.drawRect(&src2, WideVector(f1[0], f1[1], f1[2], f1[3]));
+
+				float f2[4] = { 0.f };
+				Engine::readFloat(cvar_tooltipColorText.toStr(), f2, 4);
+				text->drawColor(Rect<int>(), Rect<int>(src.x + 1, src.y + 1, 0, 0), glm::vec4(f2[0], f2[1], f2[2], f2[3]));
 			}
 		}
 	}

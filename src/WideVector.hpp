@@ -275,4 +275,13 @@ public:
 			return false;
 		}
 	}
+
+	//! convert the vector to a string
+	//! @return string representation of the vector
+	String toStr() const {
+		String str;
+		str.alloc(64);
+		str.format("%.2f %.2f %.2f %.2f", x, y, z, w);
+		return str;
+	}
 };
