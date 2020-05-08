@@ -85,8 +85,10 @@ void Shadow::init() {
 
 	Client* client = mainEngine->getLocalClient(); assert(client);
 	Renderer* renderer = client->getRenderer(); assert(renderer);
-	Framebuffer* fbo = renderer->getFramebuffer(); assert(fbo);
-	fbo->bindForWriting();
+	Framebuffer* fbo = renderer->getFramebuffer();
+	if (fbo) {
+		fbo->bindForWriting();
+	}
 }
 
 void Shadow::term() {

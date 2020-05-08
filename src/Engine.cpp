@@ -1565,10 +1565,13 @@ void Engine::preProcess() {
 
 		// run console
 		if (consoleSleep <= ticks) {
-			Node<String>* ccmdToRun = ccmdsToRun.getFirst();
-			if (ccmdToRun) {
+			Node<String>* ccmdToRun;
+			while ((ccmdToRun = ccmdsToRun.getFirst()) != nullptr) {
 				doCommand(ccmdToRun->getData().get());
 				ccmdsToRun.removeNode(ccmdToRun);
+				if (consoleSleep) {
+					break;
+				}
 			}
 		}
 	}
