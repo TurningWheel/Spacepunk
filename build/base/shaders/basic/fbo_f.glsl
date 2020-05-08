@@ -53,7 +53,9 @@ vec4 BiCubic(vec2 coords) {
 			float f1 = Triangular(-(float(n) - b));
 			vec4 vecCoef1 = vec4(f1, f1, f1, f1);
             nSum = nSum + (vecData * vecCoef0 * vecCoef1);
-            nDenom = nDenom + (vecData.a * vecCoef0 * vecCoef1);
+            if (vecData.a > 0.f) {
+            	nDenom = nDenom + (vecCoef0 * vecCoef1);
+            }
         }
     }
     return nSum / nDenom;

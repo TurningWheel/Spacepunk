@@ -4,6 +4,7 @@
 #include "Engine.hpp"
 #include "Camera.hpp"
 #include "Sound.hpp"
+#include "Mixer.hpp"
 
 Sound::Sound(const char* _name) : Asset(_name) {
 	path = mainEngine->buildPath(_name).get();
@@ -27,8 +28,14 @@ Sound::~Sound() {
 int Sound::play(const bool loop) {
 	int loops = loop ? -1 : 0;
 	int channel = Mix_PlayChannel(-1, chunk, loops);
+
+	// determine volume
+	float master = std::min(std::max(0.f, cvar_volumeMaster.toFloat() / 100.f), 1.f);
+	float sfx = std::min(std::max(0.f, cvar_volumeSFX.toFloat() / 100.f), 1.f);
+	float volume = master * sfx;
+
 	if (channel != -1) {
-		Mix_Volume(channel, 32);
+		Mix_Volume(channel, (int)(volume * 32));
 	}
 	return channel;
 }

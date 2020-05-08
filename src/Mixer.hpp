@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Console.hpp"
+
 class Camera;
 
 //! The Mixer class contains all the state about 3D listeners in the world and the audio engine,
@@ -45,3 +47,7 @@ private:
 
 	bool initialized = false;
 };
+
+extern Cvar cvar_volumeMaster;
+extern Cvar cvar_volumeSFX;
+extern Cvar cvar_volumeMusic;

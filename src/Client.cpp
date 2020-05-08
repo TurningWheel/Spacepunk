@@ -995,7 +995,6 @@ void Client::postProcess() {
 			}
 
 			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
 			// editor interface
 			Framebuffer* gui_fbo = renderer->bindFBO("gui", Frame::virtualScreenX, Frame::virtualScreenY);
 			gui_fbo->clear();
@@ -1009,9 +1008,9 @@ void Client::postProcess() {
 			}
 
 			// blit gui
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			(void)renderer->bindFBO("__main", xres, yres);
 			renderer->blitFramebuffer(*gui_fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GUI);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			// gamma adjustment
 			Framebuffer* gamma = renderer->bindFBO("gamma", xres, yres);

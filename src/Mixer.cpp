@@ -12,6 +12,10 @@
 #include "Mixer.hpp"
 #include "Tile.hpp"
 
+Cvar cvar_volumeMaster("sound.volume.master", "master sound volume (0-100)", "100.0");
+Cvar cvar_volumeSFX("sound.volume.sfx", "sound effects volume (0-100)", "100.0");
+Cvar cvar_volumeMusic("sound.volume.music", "music volume (0-100)", "100.0");
+
 Mixer::Mixer() {
 }
 
@@ -81,6 +85,11 @@ void Mixer::setListener(Camera* camera) {
 
 	float f = 2.f / Tile::size;
 
+	// determine volume
+	float master = std::min(std::max(0.f, cvar_volumeMaster.toFloat() / 100.f), 1.f);
+	float sfx = std::min(std::max(0.f, cvar_volumeSFX.toFloat() / 100.f), 1.f);
+	float volume = master * sfx;
+
 	// derive orientation
 	auto& m = camera->getGlobalMat();
 	ALfloat orientation[6] = { m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2] };
@@ -91,6 +100,10 @@ void Mixer::setListener(Camera* camera) {
 	alListener3f(AL_POSITION, pos.x*f, -pos.z*f, pos.y*f);
 	alListener3f(AL_VELOCITY, vel.x*f, -vel.z*f, vel.y*f);
 	alListenerfv(AL_ORIENTATION, orientation);
+	alListenerf(AL_GAIN, volume);
+
+	// set global sound volumes as well:
+	Mix_Volume(-1, (int)(volume * 32));
 }
 
 int Mixer::playSound(const char* name, const bool loop) {
