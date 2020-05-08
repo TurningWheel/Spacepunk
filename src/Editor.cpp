@@ -1344,6 +1344,7 @@ void Editor::playSound(const char* path) {
 void Editor::toggleSelectEntity(const Uint32 uid) {
 	Entity* entity = world->uidToEntity(uid);
 	if (entity) {
+		highlightedObjManuallySet = true;
 		entity->setHighlighted(entity->isSelected() == false);
 		entity->setSelected(entity->isSelected() == false);
 
@@ -1356,6 +1357,7 @@ void Editor::toggleSelectEntity(const Uint32 uid) {
 void Editor::selectEntity(const Uint32 uid, const bool selected) {
 	Entity* entity = world->uidToEntity(uid);
 	if (entity) {
+		highlightedObjManuallySet = true;
 		entity->setSelected(selected);
 		entity->setHighlighted(selected);
 		playSound("editor/rollover.wav");
@@ -1363,6 +1365,7 @@ void Editor::selectEntity(const Uint32 uid, const bool selected) {
 }
 
 void Editor::selectAllEntities(const bool selected) {
+	highlightedObjManuallySet = true;
 	for (auto pair : world->getEntities()) {
 		Entity* entity = pair.b;
 		entity->setSelected(selected);
@@ -3743,7 +3746,9 @@ void Editor::preProcess() {
 	}
 
 	// allows the editor to clear the highlighted object when the mouse is out of the viewport
-	highlightedObjManuallySet = false;
+	if (!leftClicking) {
+		highlightedObjManuallySet = false;
+	}
 }
 
 #define GLM_FORCE_RADIANS
@@ -3909,18 +3914,15 @@ void Editor::process(const bool usable) {
 			if (!usable) {
 				world.setPointerActive(false);
 			}
-			const Sint32& mouseX = mainEngine->getMouseX();
-			const Sint32& mouseY = mainEngine->getMouseY();
 			Vector rayStart, rayEnd;
 
 			// determine if the mouse is in the viewport
-			bool inWindow = false;
+			previousInWindow = inWindow;
+			inWindow = false;
 			if (!mainEngine->isMouseRelative()) {
 				Rect<int> rect = camera->getWin();
-				rect.x *= mainEngine->getXres() / (float)Frame::virtualScreenX;
-				rect.w *= mainEngine->getXres() / (float)Frame::virtualScreenX;
-				rect.y *= mainEngine->getYres() / (float)Frame::virtualScreenY;
-				rect.h *= mainEngine->getYres() / (float)Frame::virtualScreenY;
+				Sint32 mouseX = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+				Sint32 mouseY = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
 				if (rect.containsPoint(mouseX, mouseY)) {
 					inWindow = true;
 				}
@@ -3928,6 +3930,8 @@ void Editor::process(const bool usable) {
 
 			LinkedList<World::hit_t> list;
 			if (inWindow && (usable || entityToSpawn)) {
+				Sint32 mouseX = mainEngine->getMouseX();
+				Sint32 mouseY = mainEngine->getMouseY();
 				camera->screenPosToWorldRay(mouseX, mouseY, rayStart, rayEnd);
 				Vector rayStop = rayStart + rayEnd * camera->getClipFar();
 				world.lineTraceList(rayStart, rayStop, list);
@@ -4010,16 +4014,18 @@ void Editor::process(const bool usable) {
 					}
 				}
 			}
-			if (list.getSize() == 0)
-			{
+			if ((list.getSize() == 0 && usable && inWindow) ||
+				(!inWindow && !entityToSpawn && !highlightedObjManuallySet && !leftClicking) ||
+				(list.getSize() == 0 && entityToSpawn && inWindow) ||
+				(leftClick && !inWindow)) {
+				if (!highlightedObjManuallySet) {
+					highlightedObj = World::nuid;
+				}
 				highlightedVertex = World::nuid;
 				highlightedSector = nullptr;
 				highlightedFace = -1;
 				world.setPointerActive(true);
 				world.setPointerPos(rayStart + rayEnd * 256.f);
-				if (!highlightedObjManuallySet && (!leftClicking || leftClick)) {
-					highlightedObj = World::nuid;
-				}
 			}
 		}
 

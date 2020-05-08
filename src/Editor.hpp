@@ -296,6 +296,7 @@ private:
 	bool highlightedObjManuallySet = false;
 	bool leftClick = false, leftClicking = false, leftClickLock = false;
 	Entity* entityToSpawn = nullptr;
+	bool inWindow = false, previousInWindow = false;
 
 	//! texture browser
 	bool textureSelectorActive = false;
