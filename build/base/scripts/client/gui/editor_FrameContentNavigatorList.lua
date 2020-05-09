@@ -6,14 +6,14 @@ function spawnClick(str)
 	editor:selectAllEntities(false)
 	editor:selectEntityForSpawn(str)
 	editor:playSound("editor/pickup.wav")
-	engine:msg(1,"Spawning entity '" .. str .. "'")
+	engine:msg(1, string.format("Spawning entity \"%s\"", str))
 end
 
 function spawnCtrlClick(str)
 	editor:setEditingMode(2)
 	editor:selectEntityForSpawn(str)
 	editor:playSound("editor/pickup.wav")
-	engine:msg(1,"Spawning entity '" .. str .. "'")
+	engine:msg(1, string.format("Spawning entity \"%s\"", str))
 end
 
 function spawnHighlight(str)

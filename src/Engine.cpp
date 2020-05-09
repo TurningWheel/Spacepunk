@@ -1347,6 +1347,9 @@ void Engine::preProcess() {
 	SDL_GameController* pad = nullptr;
 	SDL_Joystick* joystick = nullptr;
 
+	if (framesToDo) {
+		lastInputOfAnyKind = "";
+	}
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_QUIT: // if SDL receives the shutdown signal
@@ -1378,6 +1381,7 @@ void Engine::preProcess() {
 				}
 			}
 			lastkeypressed = SDL_GetKeyName(SDL_GetKeyFromScancode(event.key.keysym.scancode));
+			lastInputOfAnyKind = lastkeypressed;
 			keystatus[event.key.keysym.scancode] = true;
 			anykeystatus = true;
 			break;
@@ -1407,6 +1411,7 @@ void Engine::preProcess() {
 		case SDL_MOUSEBUTTONDOWN: // if a mouse button is pressed...
 		{
 			if (!mousestatus[event.button.button]) {
+				lastInputOfAnyKind.format("Mouse%d", event.button.button);
 				mousestatus[event.button.button] = true;
 				if (ticks - mouseClickTime <= doubleClickTime) {
 					dbc_mousestatus[event.button.button] = true;
@@ -1460,6 +1465,35 @@ void Engine::preProcess() {
 			}
 			break;
 		}
+		case SDL_JOYBUTTONDOWN:
+		{
+			lastInputOfAnyKind.format("Joy%dButton%d", event.jbutton.which, event.jbutton.button);
+			break;
+		}
+		case SDL_JOYAXISMOTION:
+		{
+			if (event.jaxis.value < 0) {
+				lastInputOfAnyKind.format("Joy%dAxis-%d", event.jaxis.which, event.jaxis.axis);
+			} else {
+				lastInputOfAnyKind.format("Joy%dAxis+%d", event.jaxis.which, event.jaxis.axis);
+			}
+			break;
+		}
+		case SDL_JOYHATMOTION:
+		{
+			switch (event.jhat.value) {
+			case SDL_HAT_LEFTUP: lastInputOfAnyKind.format("Joy%dHat%dLeftUp", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_UP: lastInputOfAnyKind.format("Joy%dHat%dUp", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_RIGHTUP: lastInputOfAnyKind.format("Joy%dHat%dRightUp", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_RIGHT: lastInputOfAnyKind.format("Joy%dHat%dRight", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_RIGHTDOWN: lastInputOfAnyKind.format("Joy%dHat%dRightDown", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_DOWN: lastInputOfAnyKind.format("Joy%dHat%dDown", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_LEFTDOWN: lastInputOfAnyKind.format("Joy%dHat%dLeftDown", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_LEFT: lastInputOfAnyKind.format("Joy%dHat%dLeft", event.jhat.which, event.jhat.hat); break;
+			case SDL_HAT_CENTERED: lastInputOfAnyKind.format("Joy%dHat%dCentered", event.jhat.which, event.jhat.hat); break;
+			}
+			break;
+		}
 		case SDL_JOYDEVICEREMOVED:
 		{
 			joystick = SDL_JoystickFromInstanceID(event.jdevice.which);
@@ -1492,6 +1526,50 @@ void Engine::preProcess() {
 					inputs[c].refresh();
 				}
 				break;
+			}
+			break;
+		}
+		case SDL_CONTROLLERBUTTONDOWN:
+		{
+			switch (event.cbutton.button) {
+			case SDL_CONTROLLER_BUTTON_A: lastInputOfAnyKind.format("Pad%dButtonA", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_B: lastInputOfAnyKind.format("Pad%dButtonB", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_X: lastInputOfAnyKind.format("Pad%dButtonX", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_Y: lastInputOfAnyKind.format("Pad%dButtonY", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_BACK: lastInputOfAnyKind.format("Pad%dButtonBack", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_START: lastInputOfAnyKind.format("Pad%dButtonStart", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_LEFTSTICK: lastInputOfAnyKind.format("Pad%dButtonLeftStick", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_RIGHTSTICK: lastInputOfAnyKind.format("Pad%dButtonRightStick", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: lastInputOfAnyKind.format("Pad%dButtonLeftBumper", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: lastInputOfAnyKind.format("Pad%dButtonRightBumper", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_DPAD_LEFT: lastInputOfAnyKind.format("Pad%dDpadX-", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_DPAD_RIGHT: lastInputOfAnyKind.format("Pad%dDpadX+", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_DPAD_UP: lastInputOfAnyKind.format("Pad%dDpadY-", event.cbutton.which); break;
+			case SDL_CONTROLLER_BUTTON_DPAD_DOWN: lastInputOfAnyKind.format("Pad%dDpadY+", event.cbutton.which); break;
+			}
+			break;
+		}
+		case SDL_CONTROLLERAXISMOTION:
+		{
+			switch (event.caxis.axis) {
+			case SDL_CONTROLLER_AXIS_LEFTX: event.caxis.value < 0 ?
+				lastInputOfAnyKind.format("Pad%dStickLeftX-", event.caxis.which):
+				lastInputOfAnyKind.format("Pad%dStickLeftX+", event.caxis.which);
+				break;
+			case SDL_CONTROLLER_AXIS_LEFTY: event.caxis.value < 0 ?
+				lastInputOfAnyKind.format("Pad%dStickLeftY-", event.caxis.which):
+				lastInputOfAnyKind.format("Pad%dStickLeftY+", event.caxis.which);
+				break;
+			case SDL_CONTROLLER_AXIS_RIGHTX: event.caxis.value < 0 ?
+				lastInputOfAnyKind.format("Pad%dStickRightX-", event.caxis.which):
+				lastInputOfAnyKind.format("Pad%dStickRightX+", event.caxis.which);
+				break;
+			case SDL_CONTROLLER_AXIS_RIGHTY: event.caxis.value < 0 ?
+				lastInputOfAnyKind.format("Pad%dStickRightY-", event.caxis.which):
+				lastInputOfAnyKind.format("Pad%dStickRightY+", event.caxis.which);
+				break;
+			case SDL_CONTROLLER_AXIS_TRIGGERLEFT: lastInputOfAnyKind.format("Pad%dLeftTrigger"); break;
+			case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: lastInputOfAnyKind.format("Pad%dRightTrigger"); break;
 			}
 			break;
 		}

@@ -264,12 +264,6 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		scroll.y -= size.y - _actualSize.y;
 	}
 
-	// render fields
-	for (Node<Field*>* node = fields.getFirst(); node != nullptr; node = node->getNext()) {
-		Field& field = *node->getData();
-		field.draw(renderer, _size, scroll);
-	}
-
 	// render images
 	for (Node<image_t*>* node = images.getFirst(); node != nullptr; node = node->getNext()) {
 		image_t& image = *node->getData();
@@ -349,6 +343,12 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 
 		text->drawColor(src, dest, entry.color);
+	}
+
+	// render fields
+	for (Node<Field*>* node = fields.getFirst(); node != nullptr; node = node->getNext()) {
+		Field& field = *node->getData();
+		field.draw(renderer, _size, scroll);
 	}
 
 	// draw buttons
@@ -967,6 +967,13 @@ void Frame::clear() {
 	}
 
 	// delete list
+	while (list.getFirst()) {
+		delete list.getFirst()->getData();
+		list.removeNode(list.getFirst());
+	}
+}
+
+void Frame::clearEntries() {
 	while (list.getFirst()) {
 		delete list.getFirst()->getData();
 		list.removeNode(list.getFirst());

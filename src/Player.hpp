@@ -129,6 +129,8 @@ private:
 	bool buttonCrouch = false;
 	float buttonLeanLeft = 0.f;
 	float buttonLeanRight = 0.f;
+	float mouseX = 0.f;
+	float mouseY = 0.f;
 
 	//! inventory vars
 	bool inventoryVisible = false;

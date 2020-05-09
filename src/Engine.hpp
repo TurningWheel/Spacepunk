@@ -90,6 +90,7 @@ public:
 	int									getYres() const { return yres; }
 	bool								getKeyStatus(const int index) const { return keystatus[index]; }
 	bool								getAnyKeyStatus() const { return anykeystatus; }
+	const char*							getLastInputOfAnyKind() const { return lastInputOfAnyKind.get(); }
 	const char*							getLastKeyPressed() const { return lastkeypressed; }
 	bool								getMouseStatus(const int index) const { return mousestatus[index]; }
 	bool								getDBCMouseStatus(const int index) const { return dbc_mousestatus[index]; }
@@ -458,6 +459,7 @@ private:
 	LinkedList<String> ccmdsToRun;
 
 	//! input data
+	StringBuf<64> lastInputOfAnyKind;
 	bool inputAllowed = true;
 	const char* lastkeypressed = nullptr;
 	char lastInput[SDL_TEXTINPUTEVENT_TEXT_SIZE] = { 0 };

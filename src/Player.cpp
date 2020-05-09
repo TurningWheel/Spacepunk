@@ -17,6 +17,8 @@
 
 const char* Player::defaultName = "Player";
 
+static Cvar cvar_mouseYInvert("player.mouselook.inverty", "invert y-axis on mouse look", "0");
+static Cvar cvar_mouseSmooth("player.mouselook.smooth", "smooth mouse look over multiple frames", "0");
 static Cvar cvar_mouseSpeed("player.mouselook.speed", "adjusts mouse sensitivity", "0.1");
 static Cvar cvar_mouselook("player.mouselook.playernum", "assigns mouse control to the given player", "0");
 static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "9");
@@ -167,8 +169,8 @@ bool Player::spawn(World& _world, const Vector& pos, const Rotation& ang) {
 			Rect<Sint32> rect;
 			rect.x = 0;
 			rect.y = 0;
-			rect.w = mainEngine->getXres();
-			rect.h = mainEngine->getYres();
+			rect.w = Frame::virtualScreenX;
+			rect.h = Frame::virtualScreenY;
 			camera->setWin(rect);
 
 			setupGUI();
@@ -470,11 +472,16 @@ void Player::control() {
 	// looking
 	if (!client->isConsoleActive()) {
 		if (mainEngine->isMouseRelative() && cvar_mouselook.toInt() == localID) {
-			float mousex = mainEngine->getMouseMoveX();
-			float mousey = mainEngine->getMouseMoveY();
+			if (cvar_mouseSmooth.toInt()) {
+				mouseX = mouseX * .75f + mainEngine->getMouseMoveX() / 4.f;
+				mouseY = mouseY * .75f + (cvar_mouseYInvert.toInt() ? mainEngine->getMouseMoveY() * -.25f : mainEngine->getMouseMoveY() / 4.f);
+			} else {
+				mouseX = mainEngine->getMouseMoveX();
+				mouseY = cvar_mouseYInvert.toInt() ? mainEngine->getMouseMoveY() * -1 : mainEngine->getMouseMoveY();
+			}
 
-			rot.yaw += mousex * timeFactor * cvar_mouseSpeed.toFloat();
-			rot.pitch += mousey * timeFactor  * cvar_mouseSpeed.toFloat() * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
+			rot.yaw += mouseX * timeFactor * cvar_mouseSpeed.toFloat();
+			rot.pitch += mouseY * timeFactor  * cvar_mouseSpeed.toFloat() * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 		}
 		rot.yaw += (input.analog("LookRight") - input.analog("LookLeft")) * timeFactor * 2.f;
 		rot.pitch += (input.analog("LookDown") - input.analog("LookUp")) * timeFactor * 2.f * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
@@ -721,19 +728,19 @@ void Player::updateCamera() {
 		Rect<Sint32> rect;
 		if (localPlayerCount < 2) {
 			rect.x = 0;
-			rect.w = mainEngine->getXres();
+			rect.w = Frame::virtualScreenX;
 			rect.y = 0;
-			rect.h = mainEngine->getYres();
+			rect.h = Frame::virtualScreenY;
 		} else if (localPlayerCount < 3) {
 			rect.x = 0;
-			rect.w = mainEngine->getXres();
-			rect.y = (localID % 2) * (mainEngine->getYres() / 2);
-			rect.h = mainEngine->getYres() / 2;
+			rect.w = Frame::virtualScreenX;
+			rect.y = (localID % 2) * (Frame::virtualScreenY / 2);
+			rect.h = Frame::virtualScreenY / 2;
 		} else {
-			rect.x = (localID % 2) * (mainEngine->getXres() / 2);
-			rect.w = mainEngine->getXres() / 2;
-			rect.y = (localID > 1) * (mainEngine->getYres() / 2);
-			rect.h = mainEngine->getYres() / 2;
+			rect.x = (localID % 2) * (Frame::virtualScreenX / 2);
+			rect.w = Frame::virtualScreenX / 2;
+			rect.y = (localID > 1) * (Frame::virtualScreenY / 2);
+			rect.h = Frame::virtualScreenY / 2;
 		}
 		camera->setWin(rect);
 		if (headBone != UINT32_MAX) {

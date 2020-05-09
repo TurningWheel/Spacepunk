@@ -169,6 +169,9 @@ public:
 	//! removes all objects and list entries from the frame
 	void clear();
 
+	//! remove all list entries from the frame
+	void clearEntries();
+
 	//! removes the frame itself, as well as all contained objects
 	void removeSelf();
 
