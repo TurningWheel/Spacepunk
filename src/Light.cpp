@@ -204,7 +204,7 @@ int Light::createShadowMap() {
 		// create reduced draw list
 		ArrayList<Entity*> reducedDrawList;
 		for (auto entity : drawList) {
-			if (entity->isShouldSave() && !entity->isOccluded(*camera) && entity->isFlag(Entity::FLAG_VISIBLE)) {
+			if (!entity->isOccluded(*camera) && entity->isFlag(Entity::FLAG_VISIBLE)) {
 				reducedDrawList.push(entity);
 			}
 		}
