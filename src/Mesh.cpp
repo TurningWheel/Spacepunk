@@ -824,18 +824,24 @@ Mesh::SubMesh::SubMesh(const aiScene* _scene, aiMesh* mesh) {
 			delete[] indices;
 		indices = new GLuint[mesh->mNumFaces * 3 * 2];
 
-		for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-			if(mesh->mFaces[i].mNumIndices != 3) {
-				--i;
-				continue;
+		int index = 0;
+		for (unsigned int i = 0; i < mesh->mNumFaces; ++i, ++index) {
+			auto* p = &indices[index * 6];
+			if(mesh->mFaces[i].mNumIndices == 3) {
+				p[0] = mesh->mFaces[i].mIndices[0];
+				p[2] = mesh->mFaces[i].mIndices[1];
+				p[4] = mesh->mFaces[i].mIndices[2];
+				p[1] = findAdjacentIndex(*mesh, p[0], p[2], p[4]);
+				p[3] = findAdjacentIndex(*mesh, p[2], p[4], p[0]);
+				p[5] = findAdjacentIndex(*mesh, p[4], p[0], p[2]);
+			} else {
+				p[0] = 0;
+				p[1] = 0;
+				p[2] = 0;
+				p[3] = 0;
+				p[4] = 0;
+				p[5] = 0;
 			}
-			indices[i * 6] = mesh->mFaces[i].mIndices[0];
-			indices[i * 6 + 2] = mesh->mFaces[i].mIndices[1];
-			indices[i * 6 + 4] = mesh->mFaces[i].mIndices[2];
-
-			indices[i * 6 + 1] = findAdjacentIndex(*mesh, indices[i * 6], indices[i * 6 + 2], indices[i * 6 + 4]);
-			indices[i * 6 + 3] = findAdjacentIndex(*mesh, indices[i * 6 + 2], indices[i * 6 + 4], indices[i * 6]);
-			indices[i * 6 + 5] = findAdjacentIndex(*mesh, indices[i * 6 + 4], indices[i * 6], indices[i * 6 + 2]);
 		}
 	}
 }
