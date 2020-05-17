@@ -11,8 +11,6 @@
 #include "World.hpp"
 #include "Entity.hpp"
 #include "Script.hpp"
-#include "Tile.hpp"
-#include "Chunk.hpp"
 #include "Frame.hpp"
 #include "Button.hpp"
 #include "Field.hpp"
@@ -615,7 +613,6 @@ void Script::exposeEditor(Editor& _editor) {
 		.addFunction("buttonHelp", &Editor::buttonHelp)
 		.addFunction("buttonWorldRotate", &Editor::buttonWorldRotate)
 		.addFunction("playSound", &Editor::playSound)
-		.addFunction("optimizeChunks", &Editor::optimizeChunks)
 		.endClass()
 		;
 

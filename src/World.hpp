@@ -70,6 +70,9 @@ public:
 	//! const variables
 	static const char* fileExtensions[FILE_MAX];
 
+	//! tile size
+	static const int tileSize;
+
 	//! invalid uid for any entity
 	static const Uint32 nuid;
 

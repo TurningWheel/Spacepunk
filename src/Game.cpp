@@ -3,12 +3,9 @@
 #include "Main.hpp"
 #include "Engine.hpp"
 #include "World.hpp"
-#include "TileWorld.hpp"
-#include "SectorWorld.hpp"
 #include "BasicWorld.hpp"
 #include "Camera.hpp"
 #include "Game.hpp"
-#include "Tile.hpp"
 #include "Generator.hpp"
 
 Game::Game() {
@@ -81,34 +78,6 @@ BasicWorld* Game::newBasicWorld(const char* name) {
 	BasicWorld* world = new BasicWorld(this, false, (Uint32)worlds.getSize(), name);
 	world->initialize(!world->isLoaded());
 	worlds.addNodeLast(world);
-	return world;
-}
-
-SectorWorld* Game::newSectorWorld(const char* name) {
-	SectorWorld* world = new SectorWorld(this, false, (Uint32)worlds.getSize(), name);
-	world->initialize(!world->isLoaded());
-	worlds.addNodeLast(world);
-	return world;
-}
-
-TileWorld* Game::newTileWorld(const char* name, int width, int height) {
-	TileWorld* world = new TileWorld(this, false, (Uint32)worlds.getSize(), Tile::SIDE_EAST, "", width, height, name);
-	world->initialize(!world->isLoaded());
-	worlds.addNodeLast(world);
-	return world;
-}
-
-TileWorld* Game::genTileWorld(const char* path) {
-	String fullPath = mainEngine->buildPath(path);
-
-	Generator gen(isClient());
-	FileHelper::readObject(fullPath, gen);
-	gen.createDungeon();
-
-	TileWorld* world = new TileWorld(this, (Uint32)worlds.getSize(), path, gen);
-	world->initialize(!world->isLoaded());
-	worlds.addNodeLast(world);
-
 	return world;
 }
 

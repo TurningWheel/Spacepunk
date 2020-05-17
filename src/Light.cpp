@@ -15,9 +15,6 @@
 #include "Camera.hpp"
 #include "Script.hpp"
 #include "BBox.hpp"
-#include "Chunk.hpp"
-#include "Tile.hpp"
-#include "TileWorld.hpp"
 #include "BasicWorld.hpp"
 #include "Renderer.hpp"
 
@@ -69,8 +66,7 @@ void Light::update() {
 	// occlusion test
 	World* world = entity->getWorld();
 	if (world && world->isLoaded()) {
-		if (lastUpdate != entity->getTicks() || !chunksVisible) {
-			occlusionTest(radius, cvar_lightCull.toInt());
+		if (lastUpdate != entity->getTicks()) {
 			lastUpdate = entity->getTicks();
 		}
 	}

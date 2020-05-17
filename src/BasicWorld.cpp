@@ -8,8 +8,6 @@
 
 #include "Main.hpp"
 #include "Engine.hpp"
-#include "SectorVertex.hpp"
-#include "Sector.hpp"
 #include "BasicWorld.hpp"
 #include "Renderer.hpp"
 #include "Editor.hpp"
@@ -212,11 +210,6 @@ void BasicWorld::draw() {
 		// skip cameras whose window is too small
 		if (camera->getWin().w <= 0 || camera->getWin().h <= 0) {
 			continue;
-		}
-
-		// occlusion test
-		if (!camera->getChunksVisible()) {
-			camera->occlusionTest(camera->getClipFar(), cvar_renderCull.toInt());
 		}
 
 		// build and sort entity list by distance to camera

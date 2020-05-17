@@ -1,7 +1,6 @@
 // Path.cpp
 
 #include "Main.hpp"
-#include "TileWorld.hpp"
 
 #include <queue>
 
@@ -26,13 +25,7 @@ PathFinder::~PathFinder()
 }
 
 void PathFinder::generateSimpleMap() {
-	mapWidth = world.getWidth();
-	mapHeight = world.getHeight();
-	map.resize(mapWidth * mapHeight);
-
-	for (Uint32 index = 0; index < map.getSize(); ++index) {
-		map[index] = world.getTiles()[index].hasVolume() ? 1 : 0;
-	}
+	return; // TODO
 }
 
 std::future<PathFinder::Path*> PathFinder::generateAStarPath(Sint32 startX, Sint32 startY, Sint32 endX, Sint32 endY) {
@@ -45,12 +38,13 @@ std::future<PathFinder::Path*> PathFinder::generateAStarPath(Sint32 startX, Sint
 		return std::future<Path*>(); // return invalid future
 	}
 
-	if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX >(Sint32)world.getWidth() || startY >(Sint32)world.getHeight() || endX >(Sint32)world.getWidth() || endY >(Sint32)world.getHeight()) {
+	/*if (startX < 0 || startY < 0 || endX < 0 || endY < 0 || startX >(Sint32)world.getWidth() || startY >(Sint32)world.getHeight() || endX >(Sint32)world.getWidth() || endY >(Sint32)world.getHeight()) {
 		mainEngine->fmsg(Engine::MSG_WARN, "Pathfinder is returning an invalid path future due to invalid pathing bounds!");
 		return std::future<Path*>(); // return invalid future
-	}
+	}*/
 
-	AStarTask task(map, world.getWidth(), world.getHeight(), startX, startY, endX, endY);
+	// TODO include the width and height
+	AStarTask task(map, 10, 10, startX, startY, endX, endY);
 	return std::async(std::launch::async, task);
 }
 

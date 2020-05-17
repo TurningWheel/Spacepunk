@@ -15,7 +15,6 @@
 #include "Rotation.hpp"
 #include "Quaternion.hpp"
 
-class Chunk;
 class Entity;
 class Camera;
 class Light;
@@ -409,24 +408,6 @@ public:
 	//! @return true if we collide, false if we do not
 	virtual bool checkCollision() const;
 
-	//! marks tiles, chunks, and sectors that are visible to the component
-	//! @param range maximum range to test occlusion with
-	//! @param accuracy resolution for the occlusion test
-	void occlusionTest(float range, int accuracy);
-
-	//! determine if the component has culled the given entity from LOS
-	//! @param entity the entity to test visibility of
-	//! @param accuracy bitfield:
-	//		* 1: also cast from immediate neighbors
-	//		* 2: neighbor tiles always visible by extension
-	//		* 4: respect entities with OCCLUDE flag
-	//		* 8: with 2: diagonal neighbors also counted
-	//! @return true if the entity might pass a line-of-sight test
-	bool seesEntity(const Entity& entity, float range, int accuracy);
-
-	//! delete occlusion data
-	void deleteVisMaps();
-
 	//! delete occlusion data for self and children
 	void deleteAllVisMaps();
 
@@ -540,12 +521,6 @@ public:
 	//! @param dest the component which will contain our copies
 	void copyComponents(Component& dest);
 
-	//! clears the node pointing to us in the chunk we are occupying
-	void clearChunkNode() { if (chunkNode) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
-
-	//! clears the chunk nodes of all components
-	void clearAllChunkNodes();
-
 	//! load the component from a file
 	//! @param fp the file to read from
 	virtual void load(FILE* fp);
@@ -609,9 +584,6 @@ public:
 	const Vector&					getGlobalScale() const { return gScale; }
 	const glm::mat4&				getGlobalMat() const { return gMat; }
 	bool							isCollapsed() const { return collapsed; }
-	const bool*						getTilesVisible() const { return tilesVisible; }
-	const bool*						getChunksVisible() const { return chunksVisible; }
-	const ArrayList<Chunk*>&		getVisibleChunks() const { return visibleChunks; }
 	const ArrayList<Attribute*>&	getAttributes() const { return attributes; }
 	const Vector&					getBoundsMax() const { return boundsMax; }
 	const Vector&					getBoundsMin() const { return boundsMin; }
@@ -676,16 +648,6 @@ protected:
 
 	Vector boundsMax;		//!< bounding-box (read-only, not used for collision)
 	Vector boundsMin;		//!< bounding-box (read-only, not used for collision)
-
-	//! occlusion test tile world
-	Uint32 tilesWidth = 0;
-	Uint32 tilesHeight = 0;
-	bool* tilesVisible = nullptr;
-	bool* chunksVisible = nullptr;
-	ArrayList<Chunk*> visibleChunks;
-	void occlusionTestTiles(float range, int accuracy);
-	void occlusionTestTilesStep(float range, Sint32 tX, Sint32 tY, int accuracy);
-	bool occlusionTestTilesLine(Sint32 sX, Sint32 sY, Sint32 eX, Sint32 eY, bool entities);
 
 	//! attributes available for reflection
 	ArrayList<Attribute*> attributes;

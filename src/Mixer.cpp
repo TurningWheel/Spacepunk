@@ -10,7 +10,6 @@
 #include "Engine.hpp"
 #include "Camera.hpp"
 #include "Mixer.hpp"
-#include "Tile.hpp"
 
 Cvar cvar_volumeMaster("sound.volume.master", "master sound volume (0-100)", "100.0");
 Cvar cvar_volumeSFX("sound.volume.sfx", "sound effects volume (0-100)", "100.0");
@@ -83,7 +82,7 @@ void Mixer::setListener(Camera* camera) {
 		return;
 	}
 
-	float f = 2.f / Tile::size;
+	float f = 2.f / World::tileSize;
 
 	// determine volume
 	float master = std::min(std::max(0.f, cvar_volumeMaster.toFloat() / 100.f), 1.f);

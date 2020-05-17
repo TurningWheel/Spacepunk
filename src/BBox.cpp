@@ -12,9 +12,7 @@
 #include "BBox.hpp"
 #include "Mesh.hpp"
 #include "Model.hpp"
-#include "Tile.hpp"
 #include "World.hpp"
-#include "TileWorld.hpp"
 #include "Camera.hpp"
 
 btQuaternion btQuat(const Quaternion& q) {

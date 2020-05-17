@@ -17,6 +17,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+const int World::tileSize = 32;
 const Uint32 World::nuid = UINT32_MAX;
 const char* World::fileExtensions[World::FILE_MAX] = {
 	"wlb",
@@ -150,7 +151,7 @@ void World::initialize(bool empty) {
 
 	// the world
 	bulletDynamicsWorld = new btDiscreteDynamicsWorld(bulletDispatcher, bulletBroadphase, bulletSolver, bulletCollisionConfiguration);
-	bulletDynamicsWorld->setGravity(btVector3(0.f, 0.f, 9.81 * (Tile::size / 2.f)));
+	bulletDynamicsWorld->setGravity(btVector3(0.f, 0.f, 9.81 * (World::tileSize / 2.f)));
 	bulletDynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
 	// create shadow camera + default shadow texture

@@ -18,7 +18,6 @@
 #include "World.hpp"
 #include "Map.hpp"
 #include "Path.hpp"
-#include "Tile.hpp"
 #include "Item.hpp"
 #include "Script.hpp"
 #include "Frame.hpp"
@@ -107,9 +106,9 @@ public:
 	const sort_t&						getSort() const { return sort; }
 	Sint32								getCurrentCX() const { return currentCX; }
 	Sint32								getCurrentCY() const { return currentCY; }
-	int									getCurrentTileX() const { return static_cast<int>(getPos().x) / Tile::size; }
-	int									getCurrentTileY() const { return static_cast<int>(getPos().y) / Tile::size; }
-	int									getCurrentTileZ() const { return static_cast<int>(getPos().z) / Tile::size; }
+	int									getCurrentTileX() const { return static_cast<int>(getPos().x) / World::tileSize; }
+	int									getCurrentTileY() const { return static_cast<int>(getPos().y) / World::tileSize; }
+	int									getCurrentTileZ() const { return static_cast<int>(getPos().z) / World::tileSize; }
 	bool								isPathRequested() const { return pathRequested; }
 	const Vector&						getPathNodePosition() const { return pathNode; }
 	const Vector&						getPathNodeDir() const { return pathDir; }

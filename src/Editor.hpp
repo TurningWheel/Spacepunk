@@ -4,7 +4,6 @@
 
 #include "Rotation.hpp"
 #include "Vector.hpp"
-#include "Tile.hpp"
 
 class Frame;
 class Client;
@@ -228,9 +227,6 @@ public:
 	//! @param z the scale value to use
 	void widgetScaleZ(float z);
 
-	//! optimizes the chunks of a tile world
-	void optimizeChunks();
-
 	//! setup a frame in the editor
 	void preProcess();
 
@@ -282,7 +278,6 @@ private:
 	bool editingText = false;
 	bool fullscreen = false; //! when true, viewport takes up whole window
 	bool guiNeedsUpdate = false; //! when true, redo entity properties window
-	Tile::shadervars_t tileShaderVars;
 
 	//! when this changes, we need to update the entity properties panel
 	LinkedList<Uint32> selectedEntityManifest;
@@ -344,24 +339,8 @@ private:
 	//! @param scaleImg the path to the scale icon
 	void updateWidgetImages(Frame* parent, const char* translateImg, const char* rotateImg, const char* scaleImg);
 
-	//! update tile pane
-	//! @param world world we are editing
-	//! @param pointerX pointer X coord
-	//! @param pointerY pointer Y coord
-	void updateTileFields(TileWorld& world, Sint32 pointerX, Sint32 pointerY);
-
-	//! update tiles in the given world
-	//! @param world world we are editing
-	void updateTiles(TileWorld& world);
-
-	//! edit the tiles in the world
-	void editTiles(bool usable);
-
 	//! edit the entities in the world
 	void editEntities(bool usable);
-
-	//! edit the sectors in the world
-	void editSectors(bool usable);
 
 	//! widget controls
 	//! @param world the world to edit

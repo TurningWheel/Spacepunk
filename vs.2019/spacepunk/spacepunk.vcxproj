@@ -312,11 +312,9 @@
     <ClInclude Include="..\..\src\Net.hpp" />
     <ClInclude Include="..\..\src\NetSDL.hpp" />
     <ClInclude Include="..\..\src\Node.hpp" />
-    <ClInclude Include="..\..\src\Chunk.hpp" />
     <ClInclude Include="..\..\src\Packet.hpp" />
     <ClInclude Include="..\..\src\Pair.hpp" />
     <ClInclude Include="..\..\src\Path.hpp" />
-    <ClInclude Include="..\..\src\Physics.hpp" />
     <ClInclude Include="..\..\src\Player.hpp" />
     <ClInclude Include="..\..\src\Random.hpp" />
     <ClInclude Include="..\..\src\Rect.hpp" />
@@ -324,10 +322,6 @@
     <ClInclude Include="..\..\src\Resource.hpp" />
     <ClInclude Include="..\..\src\savepng.hpp" />
     <ClInclude Include="..\..\src\Script.hpp" />
-    <ClInclude Include="..\..\src\Sector.hpp" />
-    <ClInclude Include="..\..\src\Atlas.hpp" />
-    <ClInclude Include="..\..\src\SectorVertex.hpp" />
-    <ClInclude Include="..\..\src\SectorWorld.hpp" />
     <ClInclude Include="..\..\src\Server.hpp" />
     <ClInclude Include="..\..\src\Shader.hpp" />
     <ClInclude Include="..\..\src\ShaderProgram.hpp" />
@@ -338,9 +332,6 @@
     <ClInclude Include="..\..\src\String.hpp" />
     <ClInclude Include="..\..\src\Text.hpp" />
     <ClInclude Include="..\..\src\Material.hpp" />
-    <ClInclude Include="..\..\src\Texture.hpp" />
-    <ClInclude Include="..\..\src\Tile.hpp" />
-    <ClInclude Include="..\..\src\TileWorld.hpp" />
     <ClInclude Include="..\..\src\Vector.hpp" />
     <ClInclude Include="..\..\src\Voxel.hpp" />
     <ClInclude Include="..\..\src\WideVector.hpp" />
@@ -380,7 +371,6 @@
     <ClCompile Include="..\..\src\Line3D.cpp" />
     <ClCompile Include="..\..\src\Main.cpp" />
     <ClCompile Include="..\..\src\Mesh.cpp" />
-    <ClCompile Include="..\..\src\Chunk.cpp" />
     <ClCompile Include="..\..\src\Mixer.cpp" />
     <ClCompile Include="..\..\src\Model.cpp" />
     <ClCompile Include="..\..\src\Multimesh.cpp" />
@@ -388,7 +378,6 @@
     <ClCompile Include="..\..\src\NetSDL.cpp" />
     <ClCompile Include="..\..\src\Packet.cpp" />
     <ClCompile Include="..\..\src\Path.cpp" />
-    <ClCompile Include="..\..\src\Physics.cpp" />
     <ClCompile Include="..\..\src\Player.cpp" />
     <ClCompile Include="..\..\src\Random.cpp" />
     <ClCompile Include="..\..\src\Renderer.cpp" />
@@ -396,10 +385,6 @@
     <ClCompile Include="..\..\src\Script.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="..\..\src\Sector.cpp" />
-    <ClCompile Include="..\..\src\Atlas.cpp" />
-    <ClCompile Include="..\..\src\SectorVertex.cpp" />
-    <ClCompile Include="..\..\src\SectorWorld.cpp" />
     <ClCompile Include="..\..\src\Server.cpp" />
     <ClCompile Include="..\..\src\Shader.cpp" />
     <ClCompile Include="..\..\src\ShaderProgram.cpp" />
@@ -409,9 +394,6 @@
     <ClCompile Include="..\..\src\Speaker.cpp" />
     <ClCompile Include="..\..\src\Text.cpp" />
     <ClCompile Include="..\..\src\Material.cpp" />
-    <ClCompile Include="..\..\src\Texture.cpp" />
-    <ClCompile Include="..\..\src\Tile.cpp" />
-    <ClCompile Include="..\..\src\TileWorld.cpp" />
     <ClCompile Include="..\..\src\Voxel.cpp" />
     <ClCompile Include="..\..\src\World.cpp" />
   </ItemGroup>

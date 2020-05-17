@@ -13,7 +13,6 @@
 #include "Rotation.hpp"
 #include "Renderer.hpp"
 #include "World.hpp"
-#include "Tile.hpp"
 #include "Script.hpp"
 #include "BBox.hpp"
 #include "Mesh.hpp"

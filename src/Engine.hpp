@@ -4,7 +4,6 @@
 
 #include "Asset.hpp"
 #include "Resource.hpp"
-#include "Atlas.hpp"
 #include "Entity.hpp"
 #include "Random.hpp"
 #include "Mesh.hpp"
@@ -12,7 +11,6 @@
 #include "ShaderProgram.hpp"
 #include "Image.hpp"
 #include "Material.hpp"
-#include "Texture.hpp"
 #include "Text.hpp"
 #include "Sound.hpp"
 #include "Input.hpp"
@@ -110,15 +108,10 @@ public:
 	auto&								getMeshResource() { return *static_cast<Resource<Mesh, true>*>(*resources.find("mesh")); }
 	auto&								getImageResource() { return *static_cast<Resource<Image, true>*>(*resources.find("image")); }
 	auto&								getMaterialResource() { return *static_cast<Resource<Material, false>*>(*resources.find("material")); }
-	auto&								getTextureResource() { return *static_cast<Resource<Texture, false>*>(*resources.find("texture")); }
 	auto&								getTextResource() { return *static_cast<Resource<Text, false>*>(*resources.find("text")); }
 	auto&								getSoundResource() { return *static_cast<Resource<Sound, false>*>(*resources.find("sound")); }
 	auto&								getAnimationResource() { return *static_cast<Resource<Animation, false>*>(*resources.find("animation")); }
 	auto&								getCubemapResource() { return *static_cast<Resource<Cubemap, false>*>(*resources.find("cubemap")); }
-	Dictionary&							getTextureDictionary() { return textureDictionary; }
-	const Atlas&						getTileDiffuseTextures() { return tileDiffuseTextures; }
-	const Atlas&						getTileNormalTextures() { return tileNormalTextures; }
-	const Atlas&						getTileEffectsTextures() { return tileEffectsTextures; }
 	const LinkedList<Entity::def_t*>&	getEntityDefs() { return entityDefs; }
 	LinkedList<String>&					getCommandHistory() { return commandHistory; }
 	const char*							getInputStr() { return inputstr; }
@@ -428,12 +421,6 @@ private:
 
 	//! resource caches
 	Map<StringBuf<32>, ResourceBase*> resources;
-
-	//! tile texture data
-	Atlas tileDiffuseTextures;
-	Atlas tileNormalTextures;
-	Atlas tileEffectsTextures;
-	Dictionary textureDictionary;
 
 	//! entity definitions
 	LinkedList<Entity::def_t*> entityDefs;

@@ -9,7 +9,6 @@
 #include "Engine.hpp"
 #include "Entity.hpp"
 #include "World.hpp"
-#include "Tile.hpp"
 #include "Speaker.hpp"
 #include "Sound.hpp"
 #include "Camera.hpp"
@@ -85,11 +84,11 @@ int Speaker::playSound(const char* _name, const bool loop, float range) {
 		auto& m = gMat;
 		ALfloat orientation[6] = { m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2] };
 
-		float f = 2.f / Tile::size;
+		float f = 2.f / World::tileSize;
 		alSource3f(sources[index], AL_POSITION, gPos.x*f, -gPos.z*f, gPos.y*f);
 		alSource3f(sources[index], AL_VELOCITY, entity->getVel().x*f, -entity->getVel().z*f, entity->getVel().y*f);
 		alSourcefv(sources[index], AL_DIRECTION, orientation);
-		alSourcef(sources[index], AL_REFERENCE_DISTANCE, range / Tile::size);
+		alSourcef(sources[index], AL_REFERENCE_DISTANCE, range / World::tileSize);
 		//alSourcef(sources[index], AL_MAX_DISTANCE, range / Tile::size);
 
 		// play the sound
@@ -182,11 +181,12 @@ void Speaker::process() {
 				auto& m = gMat;
 				ALfloat orientation[6] = { m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2] };
 
-				float f = 2.f / Tile::size;
+				float f = 2.f / World::tileSize;
 				alSource3f(sources[i], AL_POSITION, gPos.x*f, -gPos.z*f, gPos.y*f);
 				alSource3f(sources[i], AL_VELOCITY, entity->getVel().x*f, -entity->getVel().z*f, entity->getVel().y*f);
 				alSourcefv(sources[i], AL_DIRECTION, orientation);
 
+				// figure out if the source and the listener are in the same world
 				bool inWorld = false;
 				Camera* camera = nullptr;
 				Mixer* mixer = nullptr;
@@ -210,8 +210,22 @@ void Speaker::process() {
 					}
 				}
 
+				// if they are in the same world, do a line trace and
+				// apply a low-pass filter if an occluder blocks the sound source
 				if (inWorld) {
-					if (camera->seesEntity(*entity, camera->getClipFar(), cvar_speakerCull.toInt())) {
+					World* world = entity->getWorld();
+					LinkedList<World::hit_t> hits;
+					world->lineTraceList(camera->getGlobalPos(), gPos, hits);
+					bool blocked = false;
+					for (auto& hit : hits) {
+						if (hit.manifest && hit.manifest->entity) {
+							if (hit.manifest->entity->isFlag(Entity::FLAG_OCCLUDE)) {
+								blocked = true;
+								break;
+							}
+						}
+					}
+					if (!blocked) {
 						alSourcei(sources[i], AL_DIRECT_FILTER, 0);
 						alSourcef(sources[i], AL_GAIN, 1.f);
 					} else {

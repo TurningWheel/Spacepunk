@@ -12,16 +12,10 @@
 #include "Entity.hpp"
 #include "Light.hpp"
 #include "Camera.hpp"
-#include "Tile.hpp"
-#include "Chunk.hpp"
 #include "Mixer.hpp"
 #include "Renderer.hpp"
 #include "Editor.hpp"
 #include "Console.hpp"
-#include "TileWorld.hpp"
-#include "SectorVertex.hpp"
-#include "Sector.hpp"
-#include "SectorWorld.hpp"
 #include "BasicWorld.hpp"
 
 //Component Headers.
@@ -1138,10 +1132,6 @@ void Editor::buttonMapSettingsApply() {
 
 	// apply settings to map
 	world->setNameStr(name);
-	if (world->getType() == World::WORLD_TILES) {
-		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		tileworld->resize(left, right, up, down);
-	}
 }
 
 void Editor::buttonSave() {
@@ -1310,26 +1300,7 @@ void Editor::buttonHelp() {
 }
 
 void Editor::buttonWorldRotate(int rotate) {
-	Tile::side_t dir = Tile::SIDE_EAST;
-	switch (rotate) {
-	case 90:
-		dir = Tile::SIDE_SOUTH;
-		break;
-	case 180:
-		dir = Tile::SIDE_WEST;
-		break;
-	case 270:
-		dir = Tile::SIDE_NORTH;
-		break;
-	default:
-		break;
-	}
-
-	if (world->getType() == World::WORLD_TILES) {
-		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		tileworld->rotate(dir);
-		tileworld->initialize(false);
-	}
+	// deprecated
 }
 
 void Editor::playSound(const char* path) {
@@ -1419,7 +1390,7 @@ void Editor::initWidgets() {
 	minimap->setWin(mapRect);
 	minimap->setOrtho(true);
 	minimap->setClipFar(999999.f);
-	minimap->setFov(Tile::size * 8);
+	minimap->setFov(World::tileSize * 8);
 	minimap->setLocalAng(minimapRot[0]);
 
 	// clear widget variables
@@ -2666,638 +2637,6 @@ void Editor::entityKeyValueSelect(const char* pair) {
 	field->setText(pair);
 }
 
-void Editor::updateTileFields(TileWorld& world, Sint32 pointerX, Sint32 pointerY) {
-	pointerX = min(max(0, pointerX), (Sint32)world.getWidth() - 1);
-	pointerY = min(max(0, pointerY), (Sint32)world.getHeight() - 1);
-
-	Frame* gui = client->getGUI();
-	if (gui) {
-		Tile& tile = world.getTiles()[pointerY + pointerX * world.getHeight()];
-
-		for (int c = 0; c < 2; ++c) {
-			StringBuf<32> label;
-			switch (c) {
-			case 1:
-				label = "Ceiling";
-				break;
-			default:
-				label = "Floor";
-				break;
-			}
-
-			// update height
-			{
-				StringBuf<64> name;
-				name.format("editor_Tile%sHeight", label.get());
-				Frame* frame = gui->findFrame(name.get());
-				if (frame) {
-					Field* field = frame->findField("field");
-					if (field) {
-						char buf[16] = { 0 };
-						if (c == 0) {
-							snprintf(buf, 16, "%d", tile.getFloorHeight());
-						} else if (c == 1) {
-							snprintf(buf, 16, "%d", tile.getCeilingHeight());
-						}
-						field->setText(buf);
-					}
-				}
-			}
-
-			// update slope dir
-			{
-				StringBuf<64> name;
-				name.format("editor_Tile%sSlopeDir", label.get());
-				Frame* frame = gui->findFrame(name.get());
-				if (frame) {
-					Field* field = frame->findField("field");
-					if (field) {
-						char buf[16] = { 0 };
-						if (c == 0) {
-							snprintf(buf, 16, "%d", static_cast<int>(tile.getFloorSlopeSide()));
-						} else if (c == 1) {
-							snprintf(buf, 16, "%d", static_cast<int>(tile.getCeilingSlopeSide()));
-						}
-						field->setText(buf);
-					}
-				}
-			}
-
-			// update slope size
-			{
-				StringBuf<64> name;
-				name.format("editor_Tile%sSlopeSize", label.get());
-				Frame* frame = gui->findFrame(name.get());
-				if (frame) {
-					Field* field = frame->findField("field");
-					if (field) {
-						char buf[16] = { 0 };
-						if (c == 0) {
-							snprintf(buf, 16, "%d", tile.getFloorSlopeSize());
-						} else if (c == 1) {
-							snprintf(buf, 16, "%d", tile.getCeilingSlopeSize());
-						}
-						field->setText(buf);
-					}
-				}
-			}
-		}
-	}
-}
-
-void Editor::updateTiles(TileWorld& world) {
-	ArrayList<Tile>& tiles = world.getTiles();
-	for (Uint32 x = 0; x < world.getWidth(); ++x) {
-		for (Uint32 y = 0; y < world.getHeight(); ++y) {
-			Tile& tile = tiles[y + x * world.getHeight()];
-			if (tile.isChanged()) {
-				tile.setChanged(false);
-				Tile* neighbor = nullptr;
-
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_EAST)) != nullptr) {
-					tile.compileUpperVertices(*neighbor, Tile::SIDE_EAST);
-					tile.compileLowerVertices(*neighbor, Tile::SIDE_EAST);
-				}
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) != nullptr) {
-					tile.compileUpperVertices(*neighbor, Tile::SIDE_SOUTH);
-					tile.compileLowerVertices(*neighbor, Tile::SIDE_SOUTH);
-				}
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_WEST)) != nullptr) {
-					tile.compileUpperVertices(*neighbor, Tile::SIDE_WEST);
-					tile.compileLowerVertices(*neighbor, Tile::SIDE_WEST);
-				}
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) != nullptr) {
-					tile.compileUpperVertices(*neighbor, Tile::SIDE_NORTH);
-					tile.compileLowerVertices(*neighbor, Tile::SIDE_NORTH);
-				}
-				tile.compileCeilingVertices();
-				tile.compileFloorVertices();
-				tile.buildBuffers();
-				tile.compileBulletPhysicsMesh();
-			}
-		}
-	}
-}
-
-void Editor::editTiles(bool usable) {
-	Camera* camera = editingCamera;
-	if (!camera)
-		return;
-	Rotation ang = camera->getEntity()->getLookDir();
-	ang.bindAngles();
-
-	if (world->getType() != World::WORLD_TILES) {
-		return;
-	}
-
-	TileWorld& world = *(static_cast<TileWorld*>(this->world));
-	ArrayList<Tile>& tiles = world.getTiles();
-
-	// select tiles
-	bool buttonSpace = false;
-	bool buttonBackspace = false;
-	if (mainEngine->getInputStr() == nullptr) {
-		buttonSpace = mainEngine->getMouseStatus(SDL_BUTTON_LEFT) && world.isPointerActive();
-		buttonBackspace = mainEngine->getKeyStatus(SDL_SCANCODE_BACKSPACE) | mainEngine->getKeyStatus(SDL_SCANCODE_ESCAPE);
-	}
-
-	const Vector& pos = world.getPointerPos();
-	Sint32 pointerX = min(max(0, static_cast<Sint32>(pos.x / Tile::size)), (Sint32)world.getWidth() - 1);
-	Sint32 pointerY = min(max(0, static_cast<Sint32>(pos.y / Tile::size)), (Sint32)world.getHeight() - 1);
-
-	// select highlighted tile
-	if (buttonSpace) {
-		if (!world.isSelecting()) {
-			world.setSelecting(true);
-			if (world.isPointerActive()) {
-				Rect<int> rect;
-				rect.x = pointerX; rect.y = pointerY;
-				rect.w = 0; rect.h = 0;
-				world.setSelectedRect(rect);
-
-				// update tile editing fields
-				updateTileFields(world, pointerX, pointerY);
-			}
-		} else {
-			if (world.isPointerActive()) {
-				Rect<int> rect = world.getSelectedRect();
-				rect.w = pointerX - rect.x;
-				rect.h = pointerY - rect.y;
-				world.setSelectedRect(rect);
-			}
-		}
-	} else if (world.isSelecting()) {
-		world.setSelecting(false);
-	}
-
-	// deselect all tiles
-	if (buttonBackspace) {
-		world.deselectGeometry();
-		world.selectEntities(false);
-	}
-
-	// copy/paste
-	if (!mainEngine->getInputStr()) {
-		if (mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL)) {
-			bool paste = mainEngine->pressKey(SDL_SCANCODE_V);
-			bool cut = mainEngine->pressKey(SDL_SCANCODE_X);
-			bool copy = mainEngine->pressKey(SDL_SCANCODE_C);
-
-			// paste tiles
-			if (paste && copiedTiles) {
-				Rect<int> rect = world.getSelectedRect();
-				rect.w = min(copiedTiles->getWidth(), world.getWidth() - rect.x);
-				rect.h = min(copiedTiles->getHeight(), world.getHeight() - rect.y);
-
-				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
-					Sint32 pitch = x * world.getHeight();
-					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
-						tiles[y + pitch] = copiedTiles->getTiles()[(y - rect.y) + (x - rect.x) * copiedTiles->getHeight()];
-					}
-				}
-				rect.x = max(0, rect.x - 1);
-				rect.y = max(0, rect.y - 1);
-				rect.w = min((int)world.getWidth() - 1, rect.w + 2);
-				rect.h = min((int)world.getHeight() - 1, rect.h + 2);
-				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
-					Sint32 pitch = x * world.getHeight();
-					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
-						tiles[y + pitch].setChanged(true);
-						tiles[y + pitch].getChunk()->setChanged(true);
-					}
-				}
-
-				updateTiles(world);
-			}
-
-			// copy/cut tiles
-			if (copy || cut) {
-				Rect<int> rect = world.getSelectedRect();
-				rect.x += rect.w >= 0 ? 0 : rect.w;
-				rect.y += rect.h >= 0 ? 0 : rect.h;
-				rect.w = abs(rect.w) + 1;
-				rect.h = abs(rect.h) + 1;
-
-				if (copiedTiles) {
-					delete copiedTiles;
-				}
-
-				// create world for copied tiles
-				copiedTiles = new TileWorld(nullptr, true, 0, Tile::side_t::SIDE_EAST, "", rect.w, rect.h, "Copied Tiles");
-				for (Sint32 x = rect.x; x < rect.x + rect.w; ++x) {
-					Sint32 pitch = x * world.getHeight();
-					for (Sint32 y = rect.y; y < rect.y + rect.h; ++y) {
-						copiedTiles->getTiles()[(y - rect.y) + (x - rect.x) * rect.h] = tiles[y + pitch];
-						if (cut) {
-							tiles[y + pitch] = Tile();
-							tiles[y + pitch].setChanged(true);
-							tiles[y + pitch].getChunk()->setChanged(true);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// manipulate tiles
-	bool buttonRight = false;
-	bool buttonDown = false;
-	bool buttonLeft = false;
-	bool buttonUp = false;
-	bool buttonEnter = false;
-	bool buttonPlus = false;
-	bool buttonMinus = false;
-	bool buttonZero = false;
-	if (client->getTicks() - editTick >= ((Uint32)mainEngine->getTicksPerSecond()) / 5 && mainEngine->getInputStr() == nullptr) {
-		if (ang.yaw >= 5 * PI / 4 && ang.yaw < 7 * PI / 4) {
-			buttonRight = mainEngine->getKeyStatus(SDL_SCANCODE_KP_6);
-			buttonDown = mainEngine->getKeyStatus(SDL_SCANCODE_KP_2);
-			buttonLeft = mainEngine->getKeyStatus(SDL_SCANCODE_KP_4);
-			buttonUp = mainEngine->getKeyStatus(SDL_SCANCODE_KP_8);
-		} else if (ang.yaw >= 3 * PI / 4 && ang.yaw < 5 * PI / 4) {
-			buttonRight = mainEngine->getKeyStatus(SDL_SCANCODE_KP_2);
-			buttonDown = mainEngine->getKeyStatus(SDL_SCANCODE_KP_4);
-			buttonLeft = mainEngine->getKeyStatus(SDL_SCANCODE_KP_8);
-			buttonUp = mainEngine->getKeyStatus(SDL_SCANCODE_KP_6);
-		} else if (ang.yaw >= PI / 4 && ang.yaw < 3 * PI / 4) {
-			buttonRight = mainEngine->getKeyStatus(SDL_SCANCODE_KP_4);
-			buttonDown = mainEngine->getKeyStatus(SDL_SCANCODE_KP_8);
-			buttonLeft = mainEngine->getKeyStatus(SDL_SCANCODE_KP_6);
-			buttonUp = mainEngine->getKeyStatus(SDL_SCANCODE_KP_2);
-		} else {
-			buttonRight = mainEngine->getKeyStatus(SDL_SCANCODE_KP_8);
-			buttonDown = mainEngine->getKeyStatus(SDL_SCANCODE_KP_6);
-			buttonLeft = mainEngine->getKeyStatus(SDL_SCANCODE_KP_2);
-			buttonUp = mainEngine->getKeyStatus(SDL_SCANCODE_KP_4);
-		}
-		buttonEnter = mainEngine->getKeyStatus(SDL_SCANCODE_KP_ENTER);
-		buttonPlus = mainEngine->getKeyStatus(SDL_SCANCODE_KP_PLUS);
-		buttonMinus = mainEngine->getKeyStatus(SDL_SCANCODE_KP_MINUS);
-		buttonZero = mainEngine->getKeyStatus(SDL_SCANCODE_KP_0);
-	}
-	if (ceilingMode) {
-		glm::vec3 ceilingPos;
-		const Vector& cameraPos = camera->getGlobalPos();
-		Uint32 cameraX = min(max(static_cast<Uint32>(0), static_cast<Uint32>(cameraPos.x / Tile::size)), world.getWidth() - 1);
-		Uint32 cameraY = min(max(static_cast<Uint32>(0), static_cast<Uint32>(cameraPos.y / Tile::size)), world.getHeight() - 1);
-		Tile& tile = tiles[cameraY + cameraX * world.getHeight()];
-		ceilingPos.x = cameraPos.x;
-		ceilingPos.y = cameraPos.y;
-		ceilingPos.z = tile.getCeilingHeight();
-		tile.setCeilingSlopeHeightForVec(ceilingPos);
-		if (usable) {
-			buttonPlus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY() < 0 : mainEngine->getMouseWheelY() > 0;
-			buttonMinus |= cameraPos.z > ceilingPos.z ? mainEngine->getMouseWheelY() > 0 : mainEngine->getMouseWheelY() < 0;
-		}
-	} else {
-		glm::vec3 floorPos;
-		const Vector& cameraPos = camera->getGlobalPos();
-		Uint32 cameraX = min(max(static_cast<Uint32>(0), static_cast<Uint32>(cameraPos.x / Tile::size)), world.getWidth() - 1);
-		Uint32 cameraY = min(max(static_cast<Uint32>(0), static_cast<Uint32>(cameraPos.y / Tile::size)), world.getHeight() - 1);
-		Tile& tile = tiles[cameraY + cameraX * world.getHeight()];
-		floorPos.x = cameraPos.x;
-		floorPos.y = cameraPos.y;
-		floorPos.z = tile.getFloorHeight();
-		tile.setFloorSlopeHeightForVec(floorPos);
-		if (usable) {
-			buttonPlus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY() < 0 : mainEngine->getMouseWheelY() > 0;
-			buttonMinus |= cameraPos.z > floorPos.z ? mainEngine->getMouseWheelY() > 0 : mainEngine->getMouseWheelY() < 0;
-		}
-	}
-
-	if (buttonRight || buttonLeft || buttonDown || buttonUp || buttonEnter || buttonPlus || buttonMinus || buttonZero) {
-		editTick = client->getTicks();
-
-		/*if( buttonZero ) {
-		for( Uint32 x=world.getSelectedRect().x; x<world.getSelectedRect().w; ++x ) {
-		for( Uint32 y=0; y<world.getHeight(); ++y ) {
-		Tile& tile = tiles[y+x*world.getHeight()];
-		}
-		}
-		}*/
-
-		for (Uint32 x = 0; x < world.getWidth(); ++x) {
-			for (Uint32 y = 0; y < world.getHeight(); ++y) {
-				Tile& tile = tiles[y + x * world.getHeight()];
-				if (!tile.selected())
-					continue;
-
-				// change east property
-				if (buttonRight) {
-					if (ceilingMode) {
-						if (editingMode == TEXTURES) {
-							// change upper east texture
-							textureSide = 0;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope ceiling east
-							if (tile.getCeilingSlopeSide() != Tile::SIDE_EAST) {
-								tile.setCeilingSlopeSide(Tile::SIDE_EAST);
-								tile.setCeilingSlopeSize(0);
-							}
-							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * ((Sint32)x - world.getSelectedRect().x));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					} else {
-						if (editingMode == TEXTURES) {
-							// change lower east texture
-							textureSide = 4;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope floor east
-							if (tile.getFloorSlopeSide() != Tile::SIDE_EAST) {
-								tile.setFloorSlopeSide(Tile::SIDE_EAST);
-								tile.setFloorSlopeSize(0);
-							}
-							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * ((Sint32)x - world.getSelectedRect().x));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					}
-				}
-
-				// change south property
-				if (buttonDown) {
-					if (ceilingMode) {
-						if (editingMode == TEXTURES) {
-							// change upper south texture
-							textureSide = 1;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope ceiling south
-							if (tile.getCeilingSlopeSide() != Tile::SIDE_SOUTH) {
-								tile.setCeilingSlopeSide(Tile::SIDE_SOUTH);
-								tile.setCeilingSlopeSize(0);
-							}
-							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * ((Sint32)y - world.getSelectedRect().y));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					} else {
-						if (editingMode == TEXTURES) {
-							// change lower south texture
-							textureSide = 5;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope floor south
-							if (tile.getFloorSlopeSide() != Tile::SIDE_SOUTH) {
-								tile.setFloorSlopeSide(Tile::SIDE_SOUTH);
-								tile.setFloorSlopeSize(0);
-							}
-							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * ((Sint32)y - world.getSelectedRect().y));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					}
-				}
-
-				// change west property
-				if (buttonLeft) {
-					if (ceilingMode) {
-						if (editingMode == TEXTURES) {
-							// change upper west texture
-							textureSide = 2;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope ceiling west
-							if (tile.getCeilingSlopeSide() != Tile::SIDE_WEST) {
-								tile.setCeilingSlopeSide(Tile::SIDE_WEST);
-								tile.setCeilingSlopeSize(0);
-							}
-							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w - ((Sint32)x - world.getSelectedRect().x)));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					} else {
-						if (editingMode == TEXTURES) {
-							// change lower west texture
-							textureSide = 6;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope floor west
-							if (tile.getFloorSlopeSide() != Tile::SIDE_WEST) {
-								tile.setFloorSlopeSide(Tile::SIDE_WEST);
-								tile.setFloorSlopeSize(0);
-							}
-							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().w - ((Sint32)x - world.getSelectedRect().x)));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					}
-				}
-
-				// change north property
-				if (buttonUp) {
-					if (ceilingMode) {
-						if (editingMode == TEXTURES) {
-							// change upper north texture
-							textureSide = 3;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope ceiling north
-							if (tile.getCeilingSlopeSide() != Tile::SIDE_NORTH) {
-								tile.setCeilingSlopeSide(Tile::SIDE_NORTH);
-								tile.setCeilingSlopeSize(0);
-							}
-							tile.setCeilingSlopeSize(tile.getCeilingSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h - ((Sint32)y - world.getSelectedRect().y)));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					} else {
-						if (editingMode == TEXTURES) {
-							// change lower north texture
-							textureSide = 7;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else if (editingMode == TILES) {
-							// slope floor north
-							if (tile.getFloorSlopeSide() != Tile::SIDE_NORTH) {
-								tile.setFloorSlopeSide(Tile::SIDE_NORTH);
-								tile.setFloorSlopeSize(0);
-							}
-							tile.setFloorSlopeSize(tile.getFloorSlopeSize() + cvar_snapTranslate.toFloat());
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat() * (world.getSelectedRect().h - ((Sint32)y - world.getSelectedRect().y)));
-							tile.setChanged(true);
-							tile.getChunk()->setChanged(true);
-						}
-					}
-				}
-
-				// paint
-				if (buttonZero) {
-					Frame* gui = client->getGUI();
-
-					Tile::shadervars_t shaderVars;
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorRed0");
-						Field* field = frame->findField("field");
-						shaderVars.customColorR[0] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorRed1");
-						Field* field = frame->findField("field");
-						shaderVars.customColorR[1] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorRed2");
-						Field* field = frame->findField("field");
-						shaderVars.customColorR[2] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorGreen0");
-						Field* field = frame->findField("field");
-						shaderVars.customColorG[0] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorGreen1");
-						Field* field = frame->findField("field");
-						shaderVars.customColorG[1] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorGreen2");
-						Field* field = frame->findField("field");
-						shaderVars.customColorG[2] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorBlue0");
-						Field* field = frame->findField("field");
-						shaderVars.customColorB[0] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorBlue1");
-						Field* field = frame->findField("field");
-						shaderVars.customColorB[1] = strtof(field->getText(), nullptr);
-					}
-					{
-						Frame* frame = gui->findFrame("editor_FrameTileCustomColorBlue2");
-						Field* field = frame->findField("field");
-						shaderVars.customColorB[2] = strtof(field->getText(), nullptr);
-					}
-					tile.setShaderVars(shaderVars);
-					tile.setChanged(true);
-					tile.getChunk()->setChanged(true);
-				}
-
-				// set center property
-				if (buttonEnter) {
-					if (editingMode == TILES) {
-						// erase slope
-						if (ceilingMode) {
-							tile.setCeilingSlopeSize(0);
-						} else {
-							tile.setFloorSlopeSize(0);
-						}
-						tile.setChanged(true);
-						tile.getChunk()->setChanged(true);
-					} else if (editingMode == TEXTURES) {
-						if (ceilingMode) {
-							// set ceiling texture
-							textureSide = 8;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						} else {
-							// set floor texture
-							textureSide = 9;
-							textureSelectorActive = true;
-							mainEngine->setMouseRelative(false); // make mouse usable
-						}
-					}
-				}
-
-				// lower tile
-				if (buttonPlus) {
-					if (editingMode == TILES) {
-						if (ceilingMode) {
-							// lower ceiling
-							tile.setCeilingHeight(tile.getCeilingHeight() + cvar_snapTranslate.toFloat());
-							if (tile.getCeilingHeight() + tile.getCeilingSlopeSize() > tile.getFloorHeight())
-								tile.setCeilingHeight(tile.getFloorHeight() - tile.getCeilingSlopeSize());
-						} else {
-							// lower floor
-							tile.setFloorHeight(tile.getFloorHeight() + cvar_snapTranslate.toFloat());
-						}
-						tile.setChanged(true);
-						tile.getChunk()->setChanged(true);
-					}
-				}
-
-				// raise tile
-				if (buttonMinus) {
-					if (editingMode == TILES) {
-						if (ceilingMode) {
-							// raise ceiling
-							tile.setCeilingHeight(tile.getCeilingHeight() - cvar_snapTranslate.toFloat());
-						} else {
-							// raise floor
-							tile.setFloorHeight(tile.getFloorHeight() - cvar_snapTranslate.toFloat());
-							if (tile.getFloorHeight() < tile.getCeilingHeight() + tile.getCeilingSlopeSize())
-								tile.setFloorHeight(tile.getCeilingHeight() + tile.getCeilingSlopeSize());
-						}
-						tile.setChanged(true);
-						tile.getChunk()->setChanged(true);
-					}
-				}
-
-				Tile* neighbor = nullptr;
-
-				// compile eastern walls
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_EAST)) != nullptr) {
-					neighbor->setChanged(true);
-					neighbor->getChunk()->setChanged(true);
-				}
-
-				// compile southern walls
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_SOUTH)) != nullptr) {
-					neighbor->setChanged(true);
-					neighbor->getChunk()->setChanged(true);
-				}
-
-				// compile western walls
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_WEST)) != nullptr) {
-					neighbor->setChanged(true);
-					neighbor->getChunk()->setChanged(true);
-				}
-
-				// compile northern walls
-				if ((neighbor = tile.findNeighbor(Tile::SIDE_NORTH)) != nullptr) {
-					neighbor->setChanged(true);
-					neighbor->getChunk()->setChanged(true);
-				}
-			}
-		}
-
-		updateTiles(world);
-		updateTileFields(world, world.getSelectedRect().x, world.getSelectedRect().y);
-	}
-
-	unsigned int w = world.calcChunksWidth();
-	unsigned int h = world.calcChunksHeight();
-	for (Uint32 x = 0; x < w; ++x) {
-		for (Uint32 y = 0; y < h; ++y) {
-			Chunk& chunk = world.getChunks()[y + x * h];
-			if (chunk.isChanged()) {
-				chunk.setChanged(false);
-				chunk.buildBuffers();
-			}
-		}
-	}
-}
-
 void Editor::handleWidget(World& world) {
 	bool highlightedWidget = false;
 
@@ -3387,26 +2726,6 @@ void Editor::handleWidget(World& world) {
 							entity->setPos(newPos);
 						}
 					}
-				} else if (editingMode == SECTORS) {
-					SectorWorld& sectorWorld = static_cast<SectorWorld&>(world);
-					for (Uint32 c = 0; c < sectorWorld.getVertices().getSize(); ++c) {
-						SectorVertex* vertex = sectorWorld.getVertices()[c];
-
-						if (vertex->isSelected()) {
-							Vector* oldPos = oldVecs.find(vertex);
-							Vector diff = (intersection - oldIntersection);
-							Vector newPos = (oldPos ? *oldPos : Vector()) + diff * affect;
-
-							// grid snapping
-							if (cvar_snapEnabled.toInt()) {
-								newPos.x -= fmod(newPos.x, cvar_snapTranslate.toFloat());
-								newPos.y -= fmod(newPos.y, cvar_snapTranslate.toFloat());
-								newPos.z -= fmod(newPos.z, cvar_snapTranslate.toFloat());
-							}
-
-							vertex->move(glm::vec3(newPos.x, newPos.y, newPos.z));
-						}
-					}
 				}
 			}
 
@@ -3462,7 +2781,7 @@ void Editor::handleWidget(World& world) {
 
 					if (entity->isSelected() || isWidget) {
 						Vector newScale = isWidget ? Vector(1.f) : entity->getScale();
-						Vector size = (intersection - oldIntersection) / static_cast<float>(Tile::size);
+						Vector size = (intersection - oldIntersection) / static_cast<float>(World::tileSize);
 						size = size * affect;
 						newScale += size;
 
@@ -3483,89 +2802,6 @@ void Editor::handleWidget(World& world) {
 					}
 				}
 				oldIntersection = intersection;
-			}
-		}
-	}
-}
-
-void Editor::editSectors(bool usable) {
-	if (world->getType() != World::WORLD_SECTORS) {
-		return;
-	}
-	World& world = *(static_cast<World*>(this->world));
-	SectorWorld& sectorWorld = *(static_cast<SectorWorld*>(this->world));
-	ArrayList<SectorVertex*>& vertices = sectorWorld.getVertices();
-
-	// widget utilization
-	if (editingCamera) {
-		if (leftClicking) {
-			handleWidget(world);
-		} else {
-			if (draggingWidget) {
-				draggingWidget = false;
-
-				oldVecs.clear();
-				for (Uint32 c = 0; c < sectorWorld.getVertices().getSize(); ++c) {
-					SectorVertex* vertex = sectorWorld.getVertices()[c];
-					oldVecs.insert(vertex, vertex->getPos());
-				}
-			}
-		}
-	}
-
-	// select none
-	if (mainEngine->pressKey(SDL_SCANCODE_ESCAPE)) {
-		if (!editingText) {
-			playSound("editor/deselect.wav");
-			sectorWorld.selectVertices(false);
-		}
-	}
-
-	// highlight vertex
-	for (Uint32 c = 0; c < vertices.getSize(); ++c) {
-		SectorVertex* vertex = vertices[c];
-		vertex->setHighlighted(c == highlightedVertex);
-	}
-
-	// select vertex
-	if (leftClick) {
-		if (highlightedVertex < vertices.getSize()) {
-			SectorVertex* vertex = vertices[highlightedVertex];
-
-			if (!mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL)) {
-				sectorWorld.selectVertices(false);
-			}
-			vertex->setHighlighted(true);
-			vertex->setSelected(true);
-
-			playSound("editor/rollover.wav");
-		} else {
-			if (mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT) && highlightedSector != nullptr && highlightedFace >= 0) {
-				const Sector::face_t* face = highlightedSector->getFace(highlightedFace);
-				Vector newVertexPos = world.getPointerPos();
-				newVertexPos.x -= face->normal.x * 8;
-				newVertexPos.y -= face->normal.y * 8;
-				newVertexPos.z -= face->normal.z * 8;
-				highlightedSector->splitFace(highlightedFace, newVertexPos);
-			} else {
-				// select widget
-				Entity* entity;
-				if ((entity = world.uidToEntity(highlightedObj)) != nullptr) {
-					if (!entity->isShouldSave()) {
-						if (entity->getName().find("widget") != UINT32_MAX) {
-							entity->setHighlighted(true);
-
-							Model* model = entity->findComponentByName<Model>("model");
-							Mesh::shadervars_t shaderVars = model->getShaderVars();
-							shaderVars.highlightColor = glm::vec4(1.f, 1.f, 0.f, 1.f);
-							model->setShaderVars(shaderVars);
-						}
-					}
-				} else if (world.isPointerActive()) {
-					if (!mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL)) {
-						sectorWorld.selectVertices(false);
-					}
-				}
 			}
 		}
 	}
@@ -3802,360 +3038,273 @@ void Editor::process(const bool usable) {
 		}
 	}
 
-	if (!textureSelectorActive) {
-		// left clicking
-		leftClick = false;
-		if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT) && !leftClicking && !leftClickLock) {
-			leftClicking = true;
-			leftClick = true;
-		} else if (!mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-			leftClicking = false;
-			leftClickLock = false;
-		}
+	// left clicking
+	leftClick = false;
+	if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT) && !leftClicking && !leftClickLock) {
+		leftClicking = true;
+		leftClick = true;
+	} else if (!mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+		leftClicking = false;
+		leftClickLock = false;
+	}
 
-		// minimap controls
-		if (minimap && !mainEngine->isMouseRelative()) {
-			Frame* gui = client->getGUI();
-			if (gui) {
-				Frame* frame = gui->findFrame("editor_Minimap");
-				if (frame) {
-					if (frame->capturesMouse()) {
-						// zoom-in / zoom-out
-						if (mainEngine->getMouseWheelY() > 0) {
-							Sint32 newFov = max(minimap->getFov() - Tile::size * 2, Tile::size);
-							minimap->setFov(newFov);
-						} else if (mainEngine->getMouseWheelY() < 0) {
-							Sint32 newFov = min(minimap->getFov() + Tile::size * 2, Tile::size * 128);
-							minimap->setFov(newFov);
-						}
+	// minimap controls
+	if (minimap && !mainEngine->isMouseRelative()) {
+		Frame* gui = client->getGUI();
+		if (gui) {
+			Frame* frame = gui->findFrame("editor_Minimap");
+			if (frame) {
+				if (frame->capturesMouse()) {
+					// zoom-in / zoom-out
+					if (mainEngine->getMouseWheelY() > 0) {
+						Sint32 newFov = max(minimap->getFov() - World::tileSize * 2, World::tileSize);
+						minimap->setFov(newFov);
+					} else if (mainEngine->getMouseWheelY() < 0) {
+						Sint32 newFov = min(minimap->getFov() + World::tileSize * 2, World::tileSize * 128);
+						minimap->setFov(newFov);
+					}
 
-						// change perspective
-						if (mainEngine->pressKey(SDL_SCANCODE_1)) {
-							minimap->setLocalAng(minimapRot[0]);
-						}
-						if (mainEngine->pressKey(SDL_SCANCODE_2)) {
-							minimap->setLocalAng(minimapRot[1]);
-						}
-						if (mainEngine->pressKey(SDL_SCANCODE_3)) {
-							minimap->setLocalAng(minimapRot[2]);
-						}
+					// change perspective
+					if (mainEngine->pressKey(SDL_SCANCODE_1)) {
+						minimap->setLocalAng(minimapRot[0]);
+					}
+					if (mainEngine->pressKey(SDL_SCANCODE_2)) {
+						minimap->setLocalAng(minimapRot[1]);
+					}
+					if (mainEngine->pressKey(SDL_SCANCODE_3)) {
+						minimap->setLocalAng(minimapRot[2]);
 					}
 				}
 			}
 		}
+	}
 
-		// viewport controls
-		if (editingCamera && !mainEngine->getInputStr()) {
-			Camera* camera = editingCamera;
+	// viewport controls
+	if (editingCamera && !mainEngine->getInputStr()) {
+		Camera* camera = editingCamera;
 
-			Rotation newAng(0.f, 0.f, 0.f);
-			Vector newPos(0.f, 0.f, 0.f);
+		Rotation newAng(0.f, 0.f, 0.f);
+		Vector newPos(0.f, 0.f, 0.f);
 
-			// keyboard controls
-			float buttonRight = (float)mainEngine->getKeyStatus(SDL_SCANCODE_D) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonLeft = (float)mainEngine->getKeyStatus(SDL_SCANCODE_A) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonForward = (float)mainEngine->getKeyStatus(SDL_SCANCODE_W) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonBackward = (float)mainEngine->getKeyStatus(SDL_SCANCODE_S) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonUp = (float)mainEngine->getKeyStatus(SDL_SCANCODE_E) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonDown = (float)mainEngine->getKeyStatus(SDL_SCANCODE_Q) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		// keyboard controls
+		float buttonRight = (float)mainEngine->getKeyStatus(SDL_SCANCODE_D) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonLeft = (float)mainEngine->getKeyStatus(SDL_SCANCODE_A) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonForward = (float)mainEngine->getKeyStatus(SDL_SCANCODE_W) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonBackward = (float)mainEngine->getKeyStatus(SDL_SCANCODE_S) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonUp = (float)mainEngine->getKeyStatus(SDL_SCANCODE_E) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonDown = (float)mainEngine->getKeyStatus(SDL_SCANCODE_Q) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
 
-			// camera movement
-			float timeFactor = Tile::size * 6.f / mainEngine->getTicksPerSecond();
+		// camera movement
+		float timeFactor = World::tileSize * 6.f / mainEngine->getTicksPerSecond();
 
-			Vector forward = camera->getEntity()->getAng().toVector();
-			newPos += forward * buttonForward * timeFactor;
-			newPos -= forward * buttonBackward * timeFactor;
+		Vector forward = camera->getEntity()->getAng().toVector();
+		newPos += forward * buttonForward * timeFactor;
+		newPos -= forward * buttonBackward * timeFactor;
 
-			Vector right = camera->getEntity()->getAng().rotate(Rotation(PI / 2.f, 0.f, 0.f)).toVector();
-			newPos += right * buttonRight * timeFactor;
-			newPos -= right * buttonLeft * timeFactor;
+		Vector right = camera->getEntity()->getAng().rotate(Rotation(PI / 2.f, 0.f, 0.f)).toVector();
+		newPos += right * buttonRight * timeFactor;
+		newPos -= right * buttonLeft * timeFactor;
 
-			Vector up = camera->getEntity()->getAng().rotate(Rotation(0.f, -PI / 2.f, 0.f)).toVector();
-			newPos += up * buttonUp * timeFactor / 2.f;
-			newPos -= up * buttonDown * timeFactor / 2.f;
+		Vector up = camera->getEntity()->getAng().rotate(Rotation(0.f, -PI / 2.f, 0.f)).toVector();
+		newPos += up * buttonUp * timeFactor / 2.f;
+		newPos -= up * buttonDown * timeFactor / 2.f;
 
-			// mouse controls
-			if (mainEngine->isMouseRelative()) {
-				double mousex = mainEngine->getMouseMoveX() / 4.f;
-				double mousey = mainEngine->getMouseMoveY() / 4.f;
+		// mouse controls
+		if (mainEngine->isMouseRelative()) {
+			double mousex = mainEngine->getMouseMoveX() / 4.f;
+			double mousey = mainEngine->getMouseMoveY() / 4.f;
 
-				newAng.yaw += PI / (mainEngine->getTicksPerSecond() * 3) * (mousex);
-				newAng.pitch += PI / (mainEngine->getTicksPerSecond() * 3) * (mousey);
+			newAng.yaw += PI / (mainEngine->getTicksPerSecond() * 3) * (mousex);
+			newAng.pitch += PI / (mainEngine->getTicksPerSecond() * 3) * (mousey);
+		}
+
+		float buttonLookRight = (float)mainEngine->getKeyStatus(SDL_SCANCODE_RIGHT) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonLookLeft = (float)mainEngine->getKeyStatus(SDL_SCANCODE_LEFT) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonLookUp = (float)mainEngine->getKeyStatus(SDL_SCANCODE_UP) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+		float buttonLookDown = (float)mainEngine->getKeyStatus(SDL_SCANCODE_DOWN) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
+
+		newAng.roll += (buttonLookLeft - buttonLookRight) * .05f;
+		newAng.pitch += (buttonLookDown - buttonLookUp) * .05f;
+
+		// apply translation + rotation
+		//camera->getEntity()->setRot(newAng);
+		newAng = newAng + camera->getEntity()->getLookDir();
+		newAng.wrapAngles();
+		if (newAng.pitch > PI / 2.f) {
+			newAng.pitch = PI / 2.f;
+		} if (newAng.pitch < -PI / 2.f) {
+			newAng.pitch = -PI / 2.f;
+		}
+		camera->getEntity()->setLookDir(newAng);
+		camera->getEntity()->setAng(Quaternion(newAng));
+		camera->getEntity()->setVel(newPos);
+		camera->getEntity()->update();
+		client->getMixer()->setListener(camera);
+
+		if (minimap) {
+			minimap->getEntity()->setPos(camera->getEntity()->getPos());
+		}
+
+		// move selector (mouse pointer)
+		if (!usable) {
+			world.setPointerActive(false);
+		}
+		Vector rayStart, rayEnd;
+
+		// determine if the mouse is in the viewport
+		previousInWindow = inWindow;
+		inWindow = false;
+		if (!mainEngine->isMouseRelative()) {
+			Rect<int> rect = camera->getWin();
+			Sint32 mouseX = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
+			Sint32 mouseY = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+			if (rect.containsPoint(mouseX, mouseY)) {
+				inWindow = true;
 			}
+		}
 
-			float buttonLookRight = (float)mainEngine->getKeyStatus(SDL_SCANCODE_RIGHT) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonLookLeft = (float)mainEngine->getKeyStatus(SDL_SCANCODE_LEFT) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonLookUp = (float)mainEngine->getKeyStatus(SDL_SCANCODE_UP) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-			float buttonLookDown = (float)mainEngine->getKeyStatus(SDL_SCANCODE_DOWN) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
-
-			newAng.roll += (buttonLookLeft - buttonLookRight) * .05f;
-			newAng.pitch += (buttonLookDown - buttonLookUp) * .05f;
-
-			// apply translation + rotation
-			//camera->getEntity()->setRot(newAng);
-			newAng = newAng + camera->getEntity()->getLookDir();
-			newAng.wrapAngles();
-			if (newAng.pitch > PI / 2.f) {
-				newAng.pitch = PI / 2.f;
-			} if (newAng.pitch < -PI / 2.f) {
-				newAng.pitch = -PI / 2.f;
-			}
-			camera->getEntity()->setLookDir(newAng);
-			camera->getEntity()->setAng(Quaternion(newAng));
-			camera->getEntity()->setVel(newPos);
-			camera->getEntity()->update();
-			client->getMixer()->setListener(camera);
-
-			if (minimap) {
-				minimap->getEntity()->setPos(camera->getEntity()->getPos());
-			}
-
-			// move selector (mouse pointer)
-			if (!usable) {
+		LinkedList<World::hit_t> list;
+		if (inWindow && (usable || entityToSpawn)) {
+			Sint32 mouseX = mainEngine->getMouseX();
+			Sint32 mouseY = mainEngine->getMouseY();
+			camera->screenPosToWorldRay(mouseX, mouseY, rayStart, rayEnd);
+			Vector rayStop = rayStart + rayEnd * camera->getClipFar();
+			world.lineTraceList(rayStart, rayStop, list);
+			if (list.getSize() > 0) {
 				world.setPointerActive(false);
-			}
-			Vector rayStart, rayEnd;
-
-			// determine if the mouse is in the viewport
-			previousInWindow = inWindow;
-			inWindow = false;
-			if (!mainEngine->isMouseRelative()) {
-				Rect<int> rect = camera->getWin();
-				Sint32 mouseX = (mainEngine->getMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
-				Sint32 mouseY = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
-				if (rect.containsPoint(mouseX, mouseY)) {
-					inWindow = true;
+				highlightedVertex = World::nuid;
+				if (!highlightedObjManuallySet) {
+					highlightedObj = World::nuid;
 				}
-			}
+				highlightedSector = nullptr;
+				highlightedFace = -1;
 
-			LinkedList<World::hit_t> list;
-			if (inWindow && (usable || entityToSpawn)) {
-				Sint32 mouseX = mainEngine->getMouseX();
-				Sint32 mouseY = mainEngine->getMouseY();
-				camera->screenPosToWorldRay(mouseX, mouseY, rayStart, rayEnd);
-				Vector rayStop = rayStart + rayEnd * camera->getClipFar();
-				world.lineTraceList(rayStart, rayStop, list);
-				if (list.getSize() > 0) {
-					world.setPointerActive(false);
-					highlightedVertex = World::nuid;
-					if (!highlightedObjManuallySet) {
-						highlightedObj = World::nuid;
-					}
-					highlightedSector = nullptr;
-					highlightedFace = -1;
+				// find the widget under the mouse, if it's there
+				World::hit_t widgetUnderMouse;
+				Node<World::hit_t>* nextNode;
+				for (Node<World::hit_t>* node = list.getFirst(); node != nullptr; node = nextNode) {
+					const World::hit_t& hit = node->getData();
+					nextNode = node->getNext();
 
-					// find the widget under the mouse, if it's there
-					World::hit_t widgetUnderMouse;
-					Node<World::hit_t>* nextNode;
-					for (Node<World::hit_t>* node = list.getFirst(); node != nullptr; node = nextNode) {
-						const World::hit_t& hit = node->getData();
-						nextNode = node->getNext();
-
-						if (hit.manifest) {
-							if (hit.manifest->entity) {
-								Entity* entity = hit.manifest->entity;
-								if (entity == entityToSpawn) {
-									list.removeNode(node);
-									continue;
-								} else if (!entity->isShouldSave()) {
-									if (entity->getName().find("widget") != UINT32_MAX) {
-										widgetUnderMouse = hit;
-										break;
-									}
+					if (hit.manifest) {
+						if (hit.manifest->entity) {
+							Entity* entity = hit.manifest->entity;
+							if (entity == entityToSpawn) {
+								list.removeNode(node);
+								continue;
+							} else if (!entity->isShouldSave()) {
+								if (entity->getName().find("widget") != UINT32_MAX) {
+									widgetUnderMouse = hit;
+									break;
 								}
 							}
 						}
 					}
+				}
 
-					// pick the thing we're pointing at
-					if (list.getSize() > 0) {
-						const World::hit_t& firstObjectHit = list[0]->getData();
-						const World::hit_t& hit = (widgetUnderMouse.manifest && widgetUnderMouse.manifest->entity) ? widgetUnderMouse : firstObjectHit;
+				// pick the thing we're pointing at
+				if (list.getSize() > 0) {
+					const World::hit_t& firstObjectHit = list[0]->getData();
+					const World::hit_t& hit = (widgetUnderMouse.manifest && widgetUnderMouse.manifest->entity) ? widgetUnderMouse : firstObjectHit;
 
-						if (!hit.manifest || !hit.manifest->entity) {
-							world.setPointerActive(true);
+					if (!hit.manifest || !hit.manifest->entity) {
+						world.setPointerActive(true);
 
-							if (editingMode == ENTITIES) {
-								if (entityToSpawn != nullptr) {
-									if (entityToSpawn->hasComponent(Component::COMPONENT_LIGHT)) {
-										world.setPointerPos(hit.pos + hit.normal*5.f);
-									} else {
-										world.setPointerPos(hit.pos);
-									}
+						if (editingMode == ENTITIES) {
+							if (entityToSpawn != nullptr) {
+								if (entityToSpawn->hasComponent(Component::COMPONENT_LIGHT)) {
+									world.setPointerPos(hit.pos + hit.normal*5.f);
 								} else {
 									world.setPointerPos(hit.pos);
 								}
 							} else {
-								if (hit.normal.z == 0) {
-									if (editingMode == TILES) {
-										world.setPointerPos(hit.pos - hit.normal);
-									} else if (editingMode == TEXTURES) {
-										world.setPointerPos(hit.pos + hit.normal);
-									}
-								} else {
-									world.setPointerPos(hit.pos);
+								world.setPointerPos(hit.pos);
+							}
+						} else {
+							if (hit.normal.z == 0) {
+								if (editingMode == TILES) {
+									world.setPointerPos(hit.pos - hit.normal);
+								} else if (editingMode == TEXTURES) {
+									world.setPointerPos(hit.pos + hit.normal);
+								}
+							} else {
+								world.setPointerPos(hit.pos);
 
-									if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-										if (hit.normal.z < 0) {
-											ceilingMode = false;
-										} else {
-											ceilingMode = true;
-										}
+								if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+									if (hit.normal.z < 0) {
+										ceilingMode = false;
+									} else {
+										ceilingMode = true;
 									}
 								}
 							}
-						} else if (hit.manifest && hit.manifest->entity) {
-							world.setPointerActive(true);
-							world.setPointerPos(hit.pos);
-							if (!leftClicking || leftClick) {
-								highlightedObj = hit.manifest->entity->getUID();
-							}
+						}
+					} else if (hit.manifest && hit.manifest->entity) {
+						world.setPointerActive(true);
+						world.setPointerPos(hit.pos);
+						if (!leftClicking || leftClick) {
+							highlightedObj = hit.manifest->entity->getUID();
 						}
 					}
 				}
 			}
-			if ((list.getSize() == 0 && usable && inWindow) ||
-				(!inWindow && !entityToSpawn && !highlightedObjManuallySet && !leftClicking) ||
-				(list.getSize() == 0 && entityToSpawn && inWindow) ||
-				(leftClick && !inWindow)) {
-				if (!highlightedObjManuallySet) {
-					highlightedObj = World::nuid;
-				}
-				highlightedVertex = World::nuid;
-				highlightedSector = nullptr;
-				highlightedFace = -1;
-				world.setPointerActive(true);
-				world.setPointerPos(rayStart + rayEnd * 256.f);
+		}
+		if ((list.getSize() == 0 && usable && inWindow) ||
+			(!inWindow && !entityToSpawn && !highlightedObjManuallySet && !leftClicking) ||
+			(list.getSize() == 0 && entityToSpawn && inWindow) ||
+			(leftClick && !inWindow)) {
+			if (!highlightedObjManuallySet) {
+				highlightedObj = World::nuid;
+			}
+			highlightedVertex = World::nuid;
+			highlightedSector = nullptr;
+			highlightedFace = -1;
+			world.setPointerActive(true);
+			world.setPointerPos(rayStart + rayEnd * 256.f);
+		}
+	}
+
+	// closing entity add component window
+	{
+		Frame* gui = client->getGUI();
+		Frame* frame = gui->findFrame("editor_FrameEntityAddComponent");
+		if (frame) {
+			if (mainEngine->pressKey(SDL_SCANCODE_ESCAPE)) {
+				playSound("editor/cancel.wav");
+				frame->removeSelf();
 			}
 		}
+	}
 
-		// closing entity add component window
-		{
-			Frame* gui = client->getGUI();
-			Frame* frame = gui->findFrame("editor_FrameEntityAddComponent");
-			if (frame) {
-				if (mainEngine->pressKey(SDL_SCANCODE_ESCAPE)) {
-					playSound("editor/cancel.wav");
-					frame->removeSelf();
-				}
-			}
-		}
+	// closing entity properties window
+	{
+		Frame* gui = client->getGUI();
+		Frame* frame = gui->findFrame("editor_FrameEntityProperties");
+		if (frame) {
+			if (mainEngine->pressKey(SDL_SCANCODE_ESCAPE)) {
+				playSound("editor/menuclose.wav");
+				frame->removeSelf();
 
-		// closing entity properties window
-		{
-			Frame* gui = client->getGUI();
-			Frame* frame = gui->findFrame("editor_FrameEntityProperties");
-			if (frame) {
-				if (mainEngine->pressKey(SDL_SCANCODE_ESCAPE)) {
-					playSound("editor/menuclose.wav");
-					frame->removeSelf();
-
-					Button* button = client->getGUI()->findButton("buttonEntityProperties");
-					if (button) {
-						button->setPressed(false);
-					}
-				}
-			}
-		}
-
-		// main editing functionality
-		if (editingMode == TILES || editingMode == TEXTURES) {
-			editTiles(usable);
-		} else if (editingMode == ENTITIES) {
-			editEntities(usable);
-		} else if (editingMode == SECTORS) {
-			editSectors(usable);
-		}
-
-		// toggle mouselook
-		if (mainEngine->pressMouse(SDL_BUTTON_RIGHT)) {
-			mainEngine->setMouseRelative(mainEngine->isMouseRelative() == false);
-		}
-	} else { // if( !textureSelectorActive )
-		textureScroll += mainEngine->getMouseWheelY() * 128;
-
-		// get texture under mouse
-		Renderer* renderer = client->getRenderer();
-		textureUnderMouse = "";
-		unsigned int textureNum = mainEngine->getMouseX() / Tile::size;
-		textureNum += ((mainEngine->getMouseY() - textureScroll) / Tile::size) * (renderer->getXres() / Tile::size);
-		if (textureNum >= mainEngine->getTextureResource().size()) {
-			textureNum = 0;
-		} else {
-			unsigned int index = 0;
-			for (auto& pair : mainEngine->getTextureResource().getCache()) {
-				if (index == textureNum) {
-					textureUnderMouse = pair.b->getName();
-					break;
-				}
-				++index;
-			}
-		}
-
-		// apply texture
-		if (mainEngine->pressMouse(SDL_BUTTON_LEFT)) {
-			textureSelectorActive = false;
-			leftClicking = false;
-			leftClickLock = true;
-
-			Uint32 index = 0;
-			if (textureUnderMouse && textureUnderMouse[0] != '\0' && strcmp(textureUnderMouse, Tile::defaultTexture) != 0) {
-				index = mainEngine->getTextureDictionary().find(textureUnderMouse);
-				if (index == Dictionary::nindex) {
-					index = mainEngine->getTextureDictionary().getWords().getSize();
-					mainEngine->getTextureDictionary().insert(textureUnderMouse);
-				}
-			}
-
-			if (world.getType() == World::WORLD_TILES) {
-				TileWorld* tileworld = static_cast<TileWorld*>(this->world);
-				for (Uint32 x = 0; x < tileworld->getWidth(); ++x) {
-					for (Uint32 y = 0; y < tileworld->getHeight(); ++y) {
-						Tile& tile = tileworld->getTiles()[y + x * tileworld->getHeight()];
-						if (!tile.selected())
-							continue;
-						switch (textureSide) {
-						case 0:
-							tile.setUpperTexture(Tile::SIDE_EAST, (Uint32)index);
-							break;
-						case 1:
-							tile.setUpperTexture(Tile::SIDE_SOUTH, (Uint32)index);
-							break;
-						case 2:
-							tile.setUpperTexture(Tile::SIDE_WEST, (Uint32)index);
-							break;
-						case 3:
-							tile.setUpperTexture(Tile::SIDE_NORTH, (Uint32)index);
-							break;
-						case 4:
-							tile.setLowerTexture(Tile::SIDE_EAST, (Uint32)index);
-							break;
-						case 5:
-							tile.setLowerTexture(Tile::SIDE_SOUTH, (Uint32)index);
-							break;
-						case 6:
-							tile.setLowerTexture(Tile::SIDE_WEST, (Uint32)index);
-							break;
-						case 7:
-							tile.setLowerTexture(Tile::SIDE_NORTH, (Uint32)index);
-							break;
-						case 8:
-							tile.setCeilingTexture((Uint32)index);
-							break;
-						case 9:
-							tile.setFloorTexture((Uint32)index);
-							break;
-						default:
-							break;
-						}
-						tile.getChunk()->setChanged(true);
-					}
+				Button* button = client->getGUI()->findButton("buttonEntityProperties");
+				if (button) {
+					button->setPressed(false);
 				}
 			}
 		}
-		if (mainEngine->pressKey(SDL_SCANCODE_ESCAPE)) {
-			textureSelectorActive = false;
-		}
+	}
+
+	// main editing functionality
+	if (editingMode == TILES || editingMode == TEXTURES) {
+		//editTiles(usable);
+	} else if (editingMode == ENTITIES) {
+		editEntities(usable);
+	} else if (editingMode == SECTORS) {
+		//editSectors(usable);
+	}
+
+	// toggle mouselook
+	if (mainEngine->pressMouse(SDL_BUTTON_RIGHT)) {
+		mainEngine->setMouseRelative(mainEngine->isMouseRelative() == false);
 	}
 }
 
@@ -6208,27 +5357,6 @@ void Editor::updateGUI(Frame& gui) {
 				}
 				widgetVisible = true;
 			}
-		} else if (editingMode == SECTORS && world->getType() == World::WORLD_SECTORS) {
-			SectorWorld& sectorWorld = static_cast<SectorWorld&>(*this->world);
-			ArrayList<SectorVertex*>& vertices = sectorWorld.getVertices();
-			Vector average;
-
-			int numSelected = 0;
-			for (Uint32 c = 0; c < vertices.getSize(); ++c) {
-				SectorVertex* vertex = sectorWorld.getVertices()[c];
-				if (vertex->isSelected()) {
-					average += vertex->getPos();
-					++numSelected;
-				}
-			}
-			if (numSelected) {
-				average /= numSelected;
-				widgetPos = average;
-				if (!leftClicking) {
-					oldWidgetPos = widgetPos;
-				}
-				widgetVisible = true;
-			}
 		}
 
 		// set widget direction to face the camera
@@ -6350,111 +5478,73 @@ void Editor::updateGUI(Frame& gui) {
 	}
 }
 
+static Cvar cvar_testPointer("editor.test.worldPosToScreenPos.enabled", "", "0");
+
 void Editor::draw(Renderer& renderer) {
 	Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
 
-	if (textureSelectorActive) {
-		// texture browser
-		Rect<int> dest = { 0, 0, Tile::size, Tile::size };
-		dest.y = textureScroll;
-		for (auto& pair : mainEngine->getTextureResource().getCache()) {
-			const Image* image = pair.b->getTextures()[0];
-			image->draw(nullptr, dest);
+	if (editingCamera) {
+		const Camera* camera = editingCamera;
+		const Rect<int>& rect = camera->getWin();
 
-			dest.x += Tile::size;
-			if ((Sint32)(dest.x + Tile::size) > renderer.getXres()) {
-				dest.x = 0;
-				dest.y += Tile::size;
+		// show edit mode
+		Rect<int> pos;
+		pos.x = rect.x + 18; pos.w = 0;
+		pos.y = rect.y + 18; pos.h = 0;
+		if (!fullscreen) {
+			if (world->isShowTools()) {
+				if (cvar_showMatrix.toInt()) {
+					const glm::mat4& mat = editingCamera->getGlobalMat();
+					char matrixChars[256];
+					snprintf(matrixChars, 256,
+						"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+						"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+						"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+						"%+07.1f %+07.1f %+07.1f %+07.1f\n",
+						mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+						mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+						mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+						mat[3][0], mat[3][1], mat[3][2], mat[3][3]
+					);
+					/*char matrixChars[256];
+					snprintf(matrixChars, 256, "%.2f %.2f %.2f"
+						, editingCamera->getGlobalAng().yaw
+						, editingCamera->getGlobalAng().pitch
+						, editingCamera->getGlobalAng().roll);*/
+					renderer.printText(font, pos, matrixChars);
+				} else {
+					//renderer.printText(pos, Editor::editingModeStr[editingMode]);
+				}
+			} else {
+				renderer.printText(font, pos, "*** PREVIEW ***");
 			}
 		}
 
-		Rect<int> pos;
-		pos.x = 18; pos.w = 0;
-		pos.y = renderer.getYres() - 36; pos.h = 0;
-		renderer.printText(font, pos, textureUnderMouse);
-	} else { // if( textureSelectorActive )
-		if (editingCamera) {
-			const Camera* camera = editingCamera;
-			const Rect<int>& rect = camera->getWin();
-
-			// show edit mode
+		// fps counter
+		if (cvar_showFPS.toInt() && font) {
+			char fps[16];
+			snprintf(fps, 16, "%.2f", mainEngine->getFPS());
 			Rect<int> pos;
-			pos.x = rect.x + 18; pos.w = 0;
+			int width;
+			font->sizeText(fps, &width, NULL);
+			pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
 			pos.y = rect.y + 18; pos.h = 0;
-			if (!fullscreen) {
-				if (world->isShowTools()) {
-					if (cvar_showMatrix.toInt()) {
-						const glm::mat4& mat = editingCamera->getGlobalMat();
-						char matrixChars[256];
-						snprintf(matrixChars, 256,
-							"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-							"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-							"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-							"%+07.1f %+07.1f %+07.1f %+07.1f\n",
-							mat[0][0], mat[0][1], mat[0][2], mat[0][3],
-							mat[1][0], mat[1][1], mat[1][2], mat[1][3],
-							mat[2][0], mat[2][1], mat[2][2], mat[2][3],
-							mat[3][0], mat[3][1], mat[3][2], mat[3][3]
-						);
-						/*char matrixChars[256];
-						snprintf(matrixChars, 256, "%.2f %.2f %.2f"
-							, editingCamera->getGlobalAng().yaw
-							, editingCamera->getGlobalAng().pitch
-							, editingCamera->getGlobalAng().roll);*/
-						renderer.printText(font, pos, matrixChars);
-					} else {
-						//renderer.printText(pos, Editor::editingModeStr[editingMode]);
-					}
-				} else {
-					renderer.printText(font, pos, "*** PREVIEW ***");
-				}
-			}
+			renderer.printText(font, pos, fps);
+		}
 
-			// fps counter
-			if (cvar_showFPS.toInt() && font) {
-				char fps[16];
-				snprintf(fps, 16, "%.2f", mainEngine->getFPS());
-				Rect<int> pos;
-				int width;
-				font->sizeText(fps, &width, NULL);
-				pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
-				pos.y = rect.y + 18; pos.h = 0;
-				renderer.printText(font, pos, fps);
-			}
-
-			// mark pointer (test worldPosToScreenPos)
-			/*Vector diff = world->getPointerPos() - camera->getGlobalPos();
+		// mark pointer (test worldPosToScreenPos)
+		if (cvar_testPointer.toInt()) {
+			Vector diff = world->getPointerPos() - camera->getGlobalPos();
 			float dot = diff.dot(camera->getGlobalAng().toVector());
-
-			if( dot > 0 ) {
+			if (dot > 0) {
 				Vector proj = camera->worldPosToScreenPos(world->getPointerPos());
 				Rect<int> pos;
 				pos.x = proj.x-4; pos.y = proj.y-4;
 				pos.w = 8; pos.h = 8;
-				if( camera->getWin().containsPoint(pos.x,pos.y) ) {
+				if (camera->getWin().containsPoint(pos.x,pos.y)) {
 					renderer.drawRect(&pos,glm::vec4(1.f,1.f,0.f,1.f));
 				}
-			}*/
-		}
-	}
-}
-
-void Editor::optimizeChunks() {
-	if (world->getType() != World::WORLD_TILES) {
-		return;
-	} else {
-		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		tileworld->optimizeChunks();
-
-		for (auto pair : world->getEntities()) {
-			Entity* entity = pair.b;
-
-			LinkedList<Light*> list;
-			entity->findAllComponents<Light>(Component::COMPONENT_LIGHT, list);
-			for (auto light : list) {
-				light->update();
 			}
-			list.removeAll();
 		}
 	}
 }

@@ -145,39 +145,6 @@ public:
 		void serialize(FileInterface * file);
 	};
 
-	//! Library
-	struct lib_t {
-		virtual ~lib_t() {}
-		void loadPieces(ArrayList<piece_t>& pieces, bool clientObj);
-		void freePieces(ArrayList<piece_t>& pieces);
-	};
-
-	//! Room library
-	struct roomlib_t : public lib_t {
-		virtual ~roomlib_t() {}
-		ArrayList<piece_t> corners;
-		ArrayList<piece_t> cornersInner;
-		ArrayList<piece_t> tunnelDoors;
-		ArrayList<piece_t> mids;
-		ArrayList<piece_t> walls;
-		ArrayList<piece_t> largeWalls;
-		ArrayList<piece_t> doors;
-
-		void serialize(FileInterface * file);
-	};
-
-	//! Tunnel library
-	struct tunnellib_t : public lib_t {
-		virtual ~tunnellib_t() {}
-		ArrayList<piece_t> corners;
-		ArrayList<piece_t> deadEnds;
-		ArrayList<piece_t> intersections;
-		ArrayList<piece_t> straights;
-		ArrayList<piece_t> tJunctions;
-
-		void serialize(FileInterface * file);
-	};
-
 	//! Cell bits
 	static const Uint32 NOTHING = 0;
 	static const Uint32 BLOCKED = (1 << 0);
@@ -257,8 +224,6 @@ public:
 	const char*						getName() const { return name; }
 	const options_t&				getOptions() const { return options; }
 	const ArrayList<Uint32>&		getTiles() const { return tiles; }
-	const ArrayList<roomlib_t>&		getRoomPieces() const { return roomLibs; }
-	const ArrayList<tunnellib_t>&	getTunnelPieces() const { return tunnelLibs; }
 
 	void				setName(const char* _name) { name = _name; }
 	void				setOptions(const options_t& _options) { options = _options; }
@@ -319,10 +284,6 @@ private:
 
 	//! raw dungeon data
 	ArrayList<Uint32> tiles;
-
-	//! room library
-	ArrayList<roomlib_t> roomLibs;
-	ArrayList<tunnellib_t> tunnelLibs;
 
 	//! level kit
 	String levelkit;

@@ -11,7 +11,6 @@
 #include "Engine.hpp"
 #include "NetSDL.hpp"
 #include "Console.hpp"
-#include "TileWorld.hpp"
 #include "BBox.hpp"
 
 Server::Server() {
@@ -689,24 +688,6 @@ static int console_host(int argc, const char** argv) {
 	return 0;
 }
 
-static int console_serverGen(int argc, const char** argv) {
-	Server* server = mainEngine->getLocalServer();
-	if (server == nullptr) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "No server currently running.");
-		return 1;
-	}
-
-	String path;
-	if (argc >= 1) {
-		path = argv[0];
-	} else {
-		path = "maps/tilesets/template.json";
-	}
-	server->genTileWorld(path.get());
-
-	return 0;
-}
-
 static int console_serverSaveMap(int argc, const char** argv) {
 	if (argc < 2) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "missing args. ex: server.savemap 0 TestOutput");
@@ -759,7 +740,6 @@ static Ccmd ccmd_host("host", "inits a new local server", &console_host);
 static Ccmd ccmd_serverReset("server.reset", "restarts the local server", &console_serverReset);
 static Ccmd ccmd_serverDisconnect("server.disconnect", "disconnects the server from all remote hosts", &console_serverDisconnect);
 static Ccmd ccmd_serverMap("server.map", "loads a world file on the local server", &console_serverMap);
-static Ccmd ccmd_serverGen("server.gen", "generates a level using the given properties", &console_serverGen);
 static Ccmd ccmd_serverSaveMap("server.savemap", "saves the given level to disk", &console_serverSaveMap);
 static Ccmd ccmd_serverCount("server.count", "counts the number of levels running on the server", &console_serverCount);
 static Ccmd ccmd_serverCountEntities("server.countentities", "count the number of entities in all worlds on the server", &console_serverCountEntities);

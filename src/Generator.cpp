@@ -5,7 +5,6 @@
 #include "Generator.hpp"
 #include "Console.hpp"
 #include "File.hpp"
-#include "TileWorld.hpp"
 
 const Sint32 Generator::TUNNELDIRS[4] = { WEST, NORTH, SOUTH, EAST };
 const Sint32 Generator::OPPOSITE[4] = { WEST, NORTH, EAST, SOUTH };
@@ -73,22 +72,6 @@ Generator::Generator(bool _clientObj, const options_t& _options) :
 }
 
 Generator::~Generator() {
-	for (auto &room : roomLibs) {
-		room.freePieces(room.corners);
-		room.freePieces(room.cornersInner);
-		room.freePieces(room.tunnelDoors);
-		room.freePieces(room.mids);
-		room.freePieces(room.walls);
-		room.freePieces(room.largeWalls);
-		room.freePieces(room.doors);
-	}
-	for (auto &tunnel : tunnelLibs) {
-		tunnel.freePieces(tunnel.corners);
-		tunnel.freePieces(tunnel.deadEnds);
-		tunnel.freePieces(tunnel.intersections);
-		tunnel.freePieces(tunnel.straights);
-		tunnel.freePieces(tunnel.tJunctions);
-	}
 }
 
 void Generator::writeFile(const char* path) {
@@ -124,23 +107,6 @@ void Generator::writeFile(const char* path) {
 }
 
 void Generator::createDungeon() {
-	for (auto &room : roomLibs) {
-		room.loadPieces(room.corners, clientObj);
-		room.loadPieces(room.cornersInner, clientObj);
-		room.loadPieces(room.tunnelDoors, clientObj);
-		room.loadPieces(room.mids, clientObj);
-		room.loadPieces(room.walls, clientObj);
-		room.loadPieces(room.largeWalls, clientObj);
-		room.loadPieces(room.doors, clientObj);
-	}
-	for (auto &tunnel : tunnelLibs) {
-		tunnel.loadPieces(tunnel.corners, clientObj);
-		tunnel.loadPieces(tunnel.deadEnds, clientObj);
-		tunnel.loadPieces(tunnel.intersections, clientObj);
-		tunnel.loadPieces(tunnel.straights, clientObj);
-		tunnel.loadPieces(tunnel.tJunctions, clientObj);
-	}
-
 	subCols = options.dungeonWidth / options.subdivisor;
 	subRows = options.dungeonHeight / options.subdivisor;
 	maxCols = subCols * options.subdivisor;
@@ -791,13 +757,13 @@ void Generator::emptyBlocks() {
 }
 
 void Generator::serialize(FileInterface * file) {
-	Uint32 version = 1;
+	Uint32 version = 2;
 	file->property("Generator::version", version);
 	file->property("name", name);
 	file->property("options", options);
 	if (version < 1) {
-		file->property("rooms", roomLibs);
-		file->property("tunnels", tunnelLibs);
+		//file->property("rooms", roomLibs);
+		//file->property("tunnels", tunnelLibs);
 	} else {
 		file->property("levelkit", levelkit);
 	}
@@ -829,50 +795,6 @@ void Generator::options_t::serialize(FileInterface * file) {
 	file->property("lifeSupport", lifeSupport);
 }
 
-void Generator::roomlib_t::serialize(FileInterface * file) {
-	Uint32 version = 0;
-	file->property("Generator::roomlib_t::version", version);
-	file->property("corners", corners);
-	file->property("corners-inner", cornersInner);
-	file->property("tunnel-doors", tunnelDoors);
-	file->property("mids", mids);
-	file->property("walls", walls);
-	file->property("large-walls", largeWalls);
-	file->property("doors", doors);
-}
-
-void Generator::tunnellib_t::serialize(FileInterface * file) {
-	Uint32 version = 0;
-	file->property("Generator::tunnellib_t::version", version);
-	file->property("corners", corners);
-	file->property("dead-ends", deadEnds);
-	file->property("intersections", intersections);
-	file->property("straights", straights);
-	file->property("t-junctions", tJunctions);
-}
-
 void Generator::piece_t::serialize(FileInterface * file) {
 	file->property("path", path);
-}
-
-void Generator::lib_t::loadPieces(ArrayList<piece_t>& pieces, bool clientObj) {
-	for (auto &piece : pieces) {
-		String fullPath = mainEngine->buildPath(piece.path.get()).get();
-		for (int sideInt = Tile::SIDE_EAST; sideInt < Tile::SIDE_TYPE_LENGTH; ++sideInt) {
-			if (piece.angles[sideInt] == nullptr) {
-				Tile::side_t side = static_cast<Tile::side_t>(sideInt);
-				piece.angles[sideInt] = new TileWorld(nullptr, true, UINT32_MAX, side, fullPath.get());
-			}
-		}
-	}
-}
-
-void Generator::lib_t::freePieces(ArrayList<piece_t>& pieces) {
-	for (auto &piece : pieces) {
-		for (int sideInt = Tile::SIDE_EAST; sideInt < Tile::SIDE_TYPE_LENGTH; ++sideInt) {
-			if (piece.angles[sideInt]) {
-				delete piece.angles[sideInt];
-			}
-		}
-	}
 }

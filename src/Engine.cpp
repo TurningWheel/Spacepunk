@@ -7,7 +7,6 @@
 #include "Renderer.hpp"
 #include "Directory.hpp"
 #include "World.hpp"
-#include "TileWorld.hpp"
 #include "Console.hpp"
 #include "Editor.hpp"
 #include "Mixer.hpp"
@@ -711,7 +710,6 @@ void Engine::init() {
 	resources.insertUnique("mesh", new Resource<Mesh, true>());
 	resources.insertUnique("image", new Resource<Image, true>());
 	resources.insertUnique("material", new Resource<Material>());
-	resources.insertUnique("texture", new Resource<Texture>());
 	resources.insertUnique("text", new Resource<Text>());
 	resources.insertUnique("sound", new Resource<Sound>());
 	resources.insertUnique("animation", new Resource<Animation>());
@@ -719,10 +717,6 @@ void Engine::init() {
 
 	// cache resources
 	fmsg(Engine::MSG_INFO, "game folder is '%s'", game.path.get());
-	//textureDictionary.insert(Tile::defaultTexture);
-	tileDiffuseTextures.init();
-	tileNormalTextures.init();
-	tileEffectsTextures.init();
 	loadAllResources();
 	loadAllDefs();
 
@@ -731,71 +725,7 @@ void Engine::init() {
 }
 
 void Engine::loadResources(const char* folder) {
-	fmsg(Engine::MSG_INFO, "loading resources from '%s'...", folder);
-
-	// tile textures
-	{
-		StringBuf<64> textureDirPath;
-		textureDirPath.format("%s/images/tile", folder);
-		Directory textureDir(textureDirPath.get());
-		for (Node<String>* node = textureDir.getList().getFirst(); node != nullptr; node = node->getNext()) {
-			String& str = node->getData();
-
-			if (str.length() >= 5 && str.substr(str.length() - 5) == ".json") {
-				StringBuf<64> name("images/tile/");
-				name.append(str.get());
-				getTextureResource().dataForString(name.get());
-			}
-		}
-	}
-
-	// tile diffuse textures
-	{
-		StringBuf<64> textureDirPath;
-		textureDirPath.format("%s/images/tile/diffuse", folder);
-		Directory textureDir(textureDirPath.get());
-		for (Node<String>* node = textureDir.getList().getFirst(); node != nullptr; node = node->getNext()) {
-			String& str = node->getData();
-
-			if (str.length() >= 4 && str.get()[str.length() - 4] == '.') {
-				StringBuf<64> name("images/tile/diffuse/");
-				name.append(str.get());
-				tileDiffuseTextures.loadImage(name.get());
-			}
-		}
-	}
-
-	// tile normal textures
-	{
-		StringBuf<64> textureDirPath;
-		textureDirPath.format("%s/images/tile/normal", folder);
-		Directory textureDir(textureDirPath.get());
-		for (Node<String>* node = textureDir.getList().getFirst(); node != nullptr; node = node->getNext()) {
-			String& str = node->getData();
-
-			if (str.length() >= 4 && str.get()[str.length() - 4] == '.') {
-				StringBuf<64> name("images/tile/normal/");
-				name.append(str.get());
-				tileNormalTextures.loadImage(name.get());
-			}
-		}
-	}
-
-	// tile effects textures
-	{
-		StringBuf<64> textureDirPath;
-		textureDirPath.format("%s/images/tile/fx", folder);
-		Directory textureDir(textureDirPath.get());
-		for (Node<String>* node = textureDir.getList().getFirst(); node != nullptr; node = node->getNext()) {
-			String& str = node->getData();
-
-			if (str.length() >= 4 && str.get()[str.length() - 4] == '.') {
-				StringBuf<64> name("images/tile/fx/");
-				name.append(str.get());
-				tileEffectsTextures.loadImage(name.get());
-			}
-		}
-	}
+	// deprecated
 }
 
 void Engine::loadDefs(const char* folder) {
@@ -923,22 +853,6 @@ void Engine::loadAllResources() {
 	for (mod_t& mod : mods) {
 		loadResources(mod.path.get());
 	}
-	tileDiffuseTextures.refresh();
-	tileNormalTextures.refresh();
-	tileEffectsTextures.refresh();
-
-	// to update tile textures completely,
-	// all world chunks must be rebuilt
-	if (localClient) {
-		int end = (int)localClient->numWorlds();
-		for (int c = 0; c < end; ++c) {
-			World* world = localClient->getWorld(c);
-			if (world->getType() == World::WORLD_TILES) {
-				TileWorld* tileworld = static_cast<TileWorld*>(world);
-				tileworld->rebuildChunks();
-			}
-		}
-	}
 }
 
 void Engine::loadAllDefs() {
@@ -964,15 +878,6 @@ void Engine::dumpResources(const char* type) {
 			resource->dumpCache();
 		}
 	}
-
-	return; // below not used
-
-	tileDiffuseTextures.cleanup();
-	tileDiffuseTextures.init();
-	tileNormalTextures.cleanup();
-	tileNormalTextures.init();
-	tileEffectsTextures.cleanup();
-	tileEffectsTextures.init();
 }
 
 void Engine::fmsg(const Uint32 msgType, const char* fmt, ...) {

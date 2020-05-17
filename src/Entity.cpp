@@ -14,11 +14,8 @@
 #include "Engine.hpp"
 #include "Client.hpp"
 #include "World.hpp"
-#include "TileWorld.hpp"
 #include "Resource.hpp"
-#include "Tile.hpp"
 #include "Entity.hpp"
-#include "Chunk.hpp"
 #include "Script.hpp"
 #include "Frame.hpp"
 #include "ShaderProgram.hpp"
@@ -151,13 +148,6 @@ Game* Entity::getGame() {
 		return world->getGame();
 	} else {
 		return nullptr;
-	}
-}
-
-void Entity::clearAllChunkNodes() {
-	clearChunkNode();
-	for (Uint32 c = 0; c < components.getSize(); ++c) {
-		components[c]->clearAllChunkNodes();
 	}
 }
 
@@ -305,12 +295,6 @@ void Entity::remove() {
 	toBeDeleted = true;
 }
 
-void Entity::deleteAllVisMaps() {
-	for (Uint32 c = 0; c < components.getSize(); ++c) {
-		components[c]->deleteAllVisMaps();
-	}
-}
-
 bool Entity::isNearCharacter(float radius) const {
 	LinkedList<Entity*> list;
 	findEntitiesInRadius(radius, list);
@@ -368,28 +352,6 @@ void Entity::update() {
 	glm::mat4 rotationM = glm::mat4(glm::quat(ang.w, ang.x, ang.y, ang.z));
 	glm::mat4 scaleM = glm::scale(glm::mat4(1.f), glm::vec3(scale.x, scale.z, scale.y));
 	mat = translationM * rotationM * scaleM;
-
-	// update the chunk node
-	if (world && world->getType() == World::WORLD_TILES) {
-		TileWorld* tileworld = static_cast<TileWorld*>(world);
-		if (tileworld && tileworld->getChunks().getSize()) {
-			Sint32 cW = tileworld->calcChunksWidth();
-			Sint32 cH = tileworld->calcChunksHeight();
-			if (cW > 0 && cH > 0) {
-				Sint32 cX = std::min(std::max(0, (Sint32)floor((pos.x / Tile::size) / Chunk::size)), cW - 1);
-				Sint32 cY = std::min(std::max(0, (Sint32)floor((pos.y / Tile::size) / Chunk::size)), cH - 1);
-
-				if (cX != currentCX || cY != currentCY) {
-					clearChunkNode();
-
-					currentCX = cX;
-					currentCY = cY;
-
-					chunkNode = tileworld->getChunks()[cY + cX * cH].addEPopulation(this);
-				}
-			}
-		}
-	}
 
 	for (Uint32 c = 0; c < components.getSize(); ++c) {
 		if (components[c]->isToBeDeleted()) {
@@ -496,46 +458,6 @@ void Entity::preProcess() {
 
 void Entity::process() {
 	++ticks;
-
-	// update path request
-	if (path) {
-		pathRequested = false;
-		if (path->getSize() == 0) {
-			delete path;
-			path = nullptr;
-		} else {
-			const PathFinder::PathWaypoint& node = path->getFirst()->getData();
-
-			if (world->getType() != World::type_t::WORLD_TILES) {
-				TileWorld* tileWorld = static_cast<TileWorld*>(world);
-
-				// place dest coordinates in the middle of the tile
-				pathNode.x = node.x * Tile::size + Tile::size / 2.f; float& x = pathNode.x;
-				pathNode.y = node.y * Tile::size + Tile::size / 2.f; float& y = pathNode.y;
-				pathNode.z = tileWorld->getTiles()[y + x * tileWorld->getHeight()].getFloorHeight(); float& z = pathNode.z;
-				float epsilon = Tile::size / 4.f;
-
-				if (pos.x >= x - epsilon && pos.x <= x - epsilon &&
-					pos.y >= y - epsilon && pos.y <= y - epsilon) {
-					path->removeNode(path->getFirst());
-
-					//Finished pathfinding.
-					if (path->getSize() == 0) {
-						mainEngine->fmsg(Engine::MSG_DEBUG, "Entity '%s' reached goal tile (%d, %d)!", getName().get(), node.x, node.y);
-						pathNode = Vector(0.f);
-						pathDir = Vector(0.f);
-
-						delete path;
-						path = nullptr;
-					}
-				} else {
-					//Move to the target tile.
-					//Stop moving once reached destination.
-					Vector pathDir = (pathNode - pos).normal();
-				}
-			}
-		}
-	}
 
 	// run entity script
 	bool editor = mainEngine->isEditorRunning() && !mainEngine->isPlayTest();
@@ -1252,17 +1174,7 @@ void Entity::findAPath(int endX, int endY) {
 }
 
 void Entity::findRandomPath() {
-	if (!world || world->getType() != World::WORLD_TILES) {
-		return;
-	}
-	TileWorld* tileWorld = static_cast<TileWorld*>(world);
-
-	Sint32 x = -1;
-	Sint32 y = -1;
-	tileWorld->findRandomTile(Tile::size, x, y);
-	if (x >= 0 && y >= 0) {
-		findAPath(x, y);
-	}
+	return; // deprecated
 }
 
 bool Entity::pathFinished() {

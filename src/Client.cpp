@@ -133,17 +133,7 @@ void Client::handleNetMessages() {
 						for (Uint32 c = 0; c < numWorlds; ++c) {
 							Uint8 worldType;
 							packet.read8(worldType);
-							if (worldType == 'g') {
-								Uint32 pathLen;
-								packet.read32(pathLen);
-								char* path = new char[pathLen + 1];
-								if (path) {
-									packet.read(path, pathLen);
-									path[pathLen] = '\0';
-									genTileWorld(path);
-									delete[] path;
-								}
-							} else if (worldType == 'f') {
+							if (worldType == 'f') {
 								Uint32 filenameLen;
 								packet.read32(filenameLen);
 								char* filename = new char[filenameLen + 1];
