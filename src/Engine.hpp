@@ -217,6 +217,18 @@ public:
 	//! @return 0 on success, non-zero on error
 	int saveConfig(const char* filename, const ArrayList<String>& cvars, const ArrayList<String>& ccmds);
 
+	//! create a system dialog for opening files (blocking)
+	//! @param filterList list of file extensions (eg "txt,exe")
+	//! @param defaultPath default path to open in (or nullptr for system default)
+	//! @return file path on success, empty string on cancel/error
+	String fileOpenDialog(const char* filterList, const char* defaultPath);
+
+	//! create a system dialog for saving files (blocking)
+	//! @param filterList list of file extensions (eg "txt,exe")
+	//! @param defaultPath default path to open in (or nullptr for system default)
+	//! @return file path on success, empty string on cancel/error
+	String fileSaveDialog(const char* filterList, const char* defaultPath);
+
 	//! copy the contents of the engine log to another one
 	//! @param dest the destination log to copy to
 	//! @return true if the dest was cleared in the process

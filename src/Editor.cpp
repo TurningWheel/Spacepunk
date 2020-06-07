@@ -1135,10 +1135,6 @@ void Editor::buttonMapSettingsApply() {
 }
 
 void Editor::buttonSave() {
-	// so the engine timer doesn't go nuts in the background
-	mainEngine->setPaused(true);
-
-	// build extension list
 	StringBuf<64> extensions;
 	for (int c = 0; c < static_cast<int>(World::FILE_WLD); ++c) {
 		if (c != 0) {
@@ -1146,30 +1142,15 @@ void Editor::buttonSave() {
 		}
 		extensions.append(World::fileExtensions[c]);
 	}
-
-	nfdchar_t* resultPath = nullptr;
-	nfdresult_t result = NFD_SaveDialog(extensions.get(), nullptr, &resultPath);
-	if (result == NFD_CANCEL) {
-		mainEngine->setPaused(false);
-		return;
-	} else if (result == NFD_ERROR) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open save dialog: %s", NFD_GetError());
-		mainEngine->setPaused(false);
-		return;
+	String result = mainEngine->fileSaveDialog(extensions.get(), nullptr);
+	if (!result.empty()) {
+		playSound("editor/install.wav");
+		world->changeFilename(result.get());
+		world->saveFile();
 	}
-
-	playSound("editor/install.wav");
-	world->changeFilename(resultPath);
-	world->saveFile();
-
-	mainEngine->setPaused(false);
 }
 
 void Editor::buttonLoad() {
-	// so the engine timer doesn't go nuts in the background
-	mainEngine->setPaused(true);
-
-	// build extension list
 	StringBuf<64> extensions;
 	for (int c = 0; c < static_cast<int>(World::FILE_MAX); ++c) {
 		if (c != 0) {
@@ -1177,30 +1158,19 @@ void Editor::buttonLoad() {
 		}
 		extensions.append(World::fileExtensions[c]);
 	}
+	String result = mainEngine->fileOpenDialog(extensions.get(), nullptr);
+	if (!result.empty()) {
+		// create new empty world
+		client->closeAllWorlds();
+		world = client->loadWorld(result.get(), false);
+		initWidgets();
 
-	nfdchar_t* resultPath = nullptr;
-	nfdresult_t result = NFD_OpenDialog(extensions.get(), nullptr, &resultPath);
-	if (result == NFD_CANCEL) {
-		mainEngine->setPaused(false);
-		return;
-	} else if (result == NFD_ERROR) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
-		mainEngine->setPaused(false);
-		return;
+		// add existing entities to level navigator
+		for (auto pair : world->getEntities()) {
+			Entity* entity = pair.b;
+			entity->addToEditorList();
+		}
 	}
-
-	// create new empty world
-	client->closeAllWorlds();
-	world = client->loadWorld(resultPath, false);
-	initWidgets();
-
-	// add existing entities to level navigator
-	for (auto pair : world->getEntities()) {
-		Entity* entity = pair.b;
-		entity->addToEditorList();
-	}
-
-	mainEngine->setPaused(false);
 }
 
 void Editor::buttonHelp() {
@@ -2572,27 +2542,15 @@ void Editor::entitiesFlag(const Uint32 flag) {
 }
 
 void Editor::entitiesSave() {
-	// so the engine timer doesn't go nuts in the background
-	mainEngine->setPaused(true);
-
 	LinkedList<Entity*> selectedEntities;
 	world->findSelectedEntities(selectedEntities);
 	for (auto entity : selectedEntities) {
-		nfdchar_t* resultPath = nullptr;
-		nfdresult_t result = NFD_SaveDialog("json", nullptr, &resultPath);
-		if (result == NFD_CANCEL) {
-			mainEngine->setPaused(false);
-			return;
-		} else if (result == NFD_ERROR) {
-			mainEngine->fmsg(Engine::MSG_ERROR, "failed to open save dialog: %s", NFD_GetError());
-			mainEngine->setPaused(false);
-			return;
+		String result = mainEngine->fileSaveDialog("json", nullptr);
+		if (!result.empty()) {
+			entity->saveDef(result.get());
 		}
-
-		entity->saveDef(resultPath);
 	}
 	mainEngine->loadAllDefs();
-	mainEngine->setPaused(false);
 }
 
 void Editor::entityKeyValueEnter(const char* pair) {
@@ -3095,7 +3053,7 @@ void Editor::process(const bool usable) {
 		float buttonDown = (float)mainEngine->getKeyStatus(SDL_SCANCODE_Q) * (1.f + (float)mainEngine->getKeyStatus(SDL_SCANCODE_LSHIFT));
 
 		// camera movement
-		float timeFactor = World::tileSize * 6.f / mainEngine->getTicksPerSecond();
+		float timeFactor = 800.f / mainEngine->getTicksPerSecond();
 
 		Vector forward = camera->getEntity()->getAng().toVector();
 		newPos += forward * buttonForward * timeFactor;
@@ -4954,18 +4912,9 @@ void Editor::updateGUI(Frame& gui) {
 							{}
 							virtual ~ScriptButtonCallback() {}
 							virtual int operator()(Script::Args& args) const override {
-								mainEngine->setPaused(true);
-								nfdchar_t* resultPath = nullptr;
-								nfdresult_t result = NFD_OpenDialog("lua", nullptr, &resultPath);
-								if (result == NFD_CANCEL) {
-									mainEngine->setPaused(false);
-									return 1;
-								} else if (result == NFD_ERROR) {
-									mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
-									mainEngine->setPaused(false);
-									return 2;
-								} else {
-									String value = resultPath;
+								String result = mainEngine->fileOpenDialog("lua", nullptr);
+								if (!result.empty()) {
+									String value = result.get();
 
 									// cut out slashes
 									Uint32 i = 0;
@@ -4994,9 +4943,8 @@ void Editor::updateGUI(Frame& gui) {
 									}
 									entity->setScriptStr(value.get());
 									field->setText(value.get());
-									mainEngine->setPaused(false);
-									return 0;
 								}
+								return result.empty() ? 1 : 0;
 							}
 						private:
 							Entity* entity = nullptr;

@@ -434,21 +434,13 @@ void Component::AttributeFile::createAttributeUI(Frame& properties, int x, int& 
 }
 
 int Component::AttributeFile::ButtonCallback::operator()(Script::Args& args) const {
-	mainEngine->setPaused(true);
-	nfdchar_t* resultPath = nullptr;
-	nfdresult_t result = NFD_OpenDialog(extensions, nullptr, &resultPath);
-	if (result == NFD_CANCEL) {
-		mainEngine->setPaused(false);
-		return 1;
-	} else if (result == NFD_ERROR) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
-		mainEngine->setPaused(false);
-		return 2;
-	} else {
-		value = mainEngine->shortenPath(resultPath);
+	String result = mainEngine->fileOpenDialog(extensions, nullptr);
+	if (!result.empty()) {
+		value = mainEngine->shortenPath(result.get());
 		field->setText(value.get());
-		mainEngine->setPaused(false);
 		return 0;
+	} else {
+		return 1;
 	}
 }
 

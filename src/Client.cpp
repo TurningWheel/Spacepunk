@@ -1204,6 +1204,16 @@ static int console_clientMap(int argc, const char** argv) {
 	}
 }
 
+static int console_clientCloseMaps(int argc, const char** argv) {
+	Client* client = mainEngine->getLocalClient();
+	if (client) {
+		client->closeAllWorlds();
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
 static int console_clientSpawn(int argc, const char** argv) {
 	if (argc < 1) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Please specify player number. ex: client.spawn 0");
@@ -1241,6 +1251,7 @@ static int console_clientCountEntities(int argc, const char** argv) {
 }
 
 static Ccmd ccmd_clientReset("client.reset", "restarts the local client", &console_clientReset);
+static Ccmd ccmd_clientCloseMaps("client.closemaps", "close all maps on the client", &console_clientCloseMaps);
 static Ccmd ccmd_clientDisconnect("client.disconnect", "disconnects the client from the remote host", &console_clientDisconnect);
 static Ccmd ccmd_clientMap("client.map", "loads a world file on the local client", &console_clientMap);
 static Ccmd ccmd_clientSpawn("client.spawn", "spawns a new player into the world we are connected to", &console_clientSpawn);

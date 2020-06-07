@@ -683,6 +683,16 @@ static int console_serverMap(int argc, const char** argv) {
 	}
 }
 
+static int console_serverCloseMaps(int argc, const char** argv) {
+	Server* server = mainEngine->getLocalServer();
+	if (server) {
+		server->closeAllWorlds();
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
 static int console_host(int argc, const char** argv) {
 	mainEngine->startServer();
 	return 0;
@@ -738,6 +748,7 @@ static int console_serverCountEntities(int argc, const char** argv) {
 
 static Ccmd ccmd_host("host", "inits a new local server", &console_host);
 static Ccmd ccmd_serverReset("server.reset", "restarts the local server", &console_serverReset);
+static Ccmd ccmd_serverCloseMaps("server.closemaps", "close all maps on the server", &console_serverReset);
 static Ccmd ccmd_serverDisconnect("server.disconnect", "disconnects the server from all remote hosts", &console_serverDisconnect);
 static Ccmd ccmd_serverMap("server.map", "loads a world file on the local server", &console_serverMap);
 static Ccmd ccmd_serverSaveMap("server.savemap", "saves the given level to disk", &console_serverSaveMap);

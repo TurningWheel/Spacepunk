@@ -202,6 +202,8 @@ void Script::exposeEngine() {
 		.addStaticFunction("strcmp", &Engine::strCompare)
 		.addFunction("loadConfig", &Engine::loadConfig)
 		.addFunction("saveConfig", &Engine::saveConfig)
+		.addFunction("fileOpenDialog", &Engine::fileOpenDialog)
+		.addFunction("fileSaveDialog", &Engine::fileSaveDialog)
 		.addFunction("getDisplayModes", &Engine::getDisplayModes)
 		.endClass()
 		;

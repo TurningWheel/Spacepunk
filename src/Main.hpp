@@ -90,9 +90,6 @@
 #define GLM_FORCE_RADIANS
 #include <glm/fwd.hpp>
 
-//! native file dialog
-#include <nfd/nfd.h>
-
 extern const float PI;
 extern const float SQRT2;
 extern const char* versionStr;

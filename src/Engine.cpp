@@ -15,6 +15,9 @@
 #include <DbgHelp.h>
 #endif
 
+//! native file dialog
+#include <nfd/nfd.h>
+
 std::atomic_bool Engine::paused(false);
 
 // log message code strings
@@ -398,7 +401,8 @@ void Engine::commandLine(const int argc, const char **argv) {
 							++argc;
 						}
 					}
-					(*ccmd)->func(argc, argv);
+					int result = (*ccmd)->func(argc, argv);
+					fmsg(MSG_DEBUG, "%s returned %d", cmd, result);
 					delete[] argv;
 					continue;
 				}
@@ -520,6 +524,36 @@ int Engine::saveConfig(const char* filename, const ArrayList<String>& cvars, con
 	// close file
 	fclose(fp);
 	return 0;
+}
+
+String Engine::fileOpenDialog(const char* filterList, const char* defaultPath) {
+	setPaused(true);
+	nfdchar_t* outPath = nullptr;
+	nfdresult_t result = NFD_OpenDialog(filterList, defaultPath, &outPath);
+	setPaused(false);
+	if (result == NFD_OKAY) {
+		return String(outPath);
+	} else if (result == NFD_CANCEL) {
+		return String();
+	} else {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open load dialog: %s", NFD_GetError());
+		return String();
+	}
+}
+
+String Engine::fileSaveDialog(const char* filterList, const char* defaultPath) {
+	setPaused(true);
+	nfdchar_t* outPath = nullptr;
+	nfdresult_t result = NFD_SaveDialog(filterList, defaultPath, &outPath);
+	setPaused(false);
+	if (result == NFD_OKAY) {
+		return String(outPath);
+	} else if (result == NFD_CANCEL) {
+		return String();
+	} else {
+		mainEngine->fmsg(Engine::MSG_ERROR, "failed to open save dialog: %s", NFD_GetError());
+		return String();
+	}
 }
 
 void Engine::startEditor(const char* path) {
