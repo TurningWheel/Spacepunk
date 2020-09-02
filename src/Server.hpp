@@ -12,7 +12,12 @@ class Script;
 class Server : public Game {
 public:
 	Server();
+	Server(const Server&) = delete;
+	Server(Server&&) = delete;
 	virtual ~Server();
+
+	Server& operator=(const Server&) = delete;
+	Server& operator=(Server&&) = delete;
 
 	virtual bool	isServer() const override { return true; }
 	virtual bool	isClient() const override { return false; }

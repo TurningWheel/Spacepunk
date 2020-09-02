@@ -207,9 +207,15 @@ public:
 		void serialize(FileInterface * file);
 	};
 
+	Generator() = delete;
 	Generator(bool _clientObj);
 	Generator(bool _clientObj, const options_t& _options);
+	Generator(const Generator&) = delete;
+	Generator(Generator&&) = delete;
 	~Generator();
+
+	Generator& operator=(const Generator&) = delete;
+	Generator& operator=(Generator&&) = delete;
 
 	//! Generate the dungeon with the supplied options
 	void createDungeon();

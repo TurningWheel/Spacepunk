@@ -33,7 +33,12 @@ public:
 	Player();
 	Player(const char* _name);
 	Player(const char* _name, colors_t _colors);
-	~Player();
+	Player(const Player&) = default;
+	Player(Player&&) = default;
+	~Player() = default;
+
+	Player& operator=(const Player&) = default;
+	Player& operator=(Player&&) = default;
 
 	//! static properties
 	static const Uint32 invalidID = UINT32_MAX;

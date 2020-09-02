@@ -1919,7 +1919,7 @@ void Engine::mod_t::serialize(FileInterface* file) {
 
 #ifdef PLATFORM_WINDOWS
 
-ArrayList<StringBuf<Engine::stackTraceStrSize>> Engine::stackTrace() const {
+ArrayList<String> Engine::stackTrace() const {
 	HANDLE process = GetCurrentProcess();
 
 	void* stack[stackTraceSize];
@@ -1932,10 +1932,11 @@ ArrayList<StringBuf<Engine::stackTraceStrSize>> Engine::stackTrace() const {
 	symbol->MaxNameLen = stackTraceStrSize - 1;
 	symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
 
-	ArrayList<StringBuf<Engine::stackTraceStrSize>> result;
+	ArrayList<String> result;
 	for (int c = 0; c < frames; ++c) {
 		SymFromAddr(process, (DWORD64)(stack[c]), 0, symbol);
-		StringBuf<Engine::stackTraceStrSize> str;
+		String str;
+		str.alloc(stackTraceStrSize);
 		str.format("#%d %s (%p)", c + 1, symbol->Name, symbol->Address);
 		result.push(str);
 	}
@@ -1948,14 +1949,15 @@ ArrayList<StringBuf<Engine::stackTraceStrSize>> Engine::stackTrace() const {
 
 #include <execinfo.h>
 
-ArrayList<StringBuf<Engine::stackTraceStrSize>> Engine::stackTrace() const {
+ArrayList<String> Engine::stackTrace() const {
 	void* funcs[stackTraceSize];
 	int numCalls = backtrace(funcs, stackTraceSize);
 	char** strings = backtrace_symbols(funcs, numCalls);
 
-	ArrayList<StringBuf<Engine::stackTraceStrSize>> result;
+	ArrayList<String> result;
 	for (int c = 0; c < numCalls; ++c) {
-		StringBuf<Engine::stackTraceStrSize> str;
+		String str;
+		str.alloc(stackTraceStrSize);
 		str.format("#%d %s (%p)", c + 1, strings[c], funcs[c]);
 		result.push(str);
 	}

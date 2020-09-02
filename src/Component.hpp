@@ -385,7 +385,10 @@ public:
 
 	static const unsigned int nuid = UINT32_MAX;
 
+	Component() = delete;
 	Component(Entity& _entity, Component* _parent);
+	Component(const Component&) = delete;
+	Component(Component&&) = delete;
 	virtual ~Component();
 
 	//! draws the component
@@ -407,9 +410,6 @@ public:
 	//! check whether the component collides with anything at the current location
 	//! @return true if we collide, false if we do not
 	virtual bool checkCollision() const;
-
-	//! delete occlusion data for self and children
-	void deleteAllVisMaps();
 
 	//! updates matrices
 	virtual void update();
@@ -517,9 +517,9 @@ public:
 	//! @param dest the entity which will contain our copies
 	void copy(Entity* dest);
 
-	//! copy sub-components into another component
-	//! @param dest the component which will contain our copies
-	void copyComponents(Component& dest);
+	//! copy sub-components from another component into this component
+	//! @param src the component whose components we wish to copy
+	void copyComponents(const Component* src);
 
 	//! load the component from a file
 	//! @param fp the file to read from
@@ -607,6 +607,8 @@ public:
 		updateNeeded = true;
 		return *this;
 	}
+
+	Component& operator=(Component&&) = delete;
 
 protected:
 	Entity* entity = nullptr;

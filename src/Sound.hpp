@@ -7,9 +7,14 @@
 //! A Sound is an audio asset loaded from disk. You can play it directly here if you want.
 class Sound : public Asset {
 public:
-	Sound() {}
+	Sound() = default;
 	Sound(const char* _name);
+	Sound(const Sound&) = delete;
+	Sound(Sound&&) = delete;
 	virtual ~Sound();
+
+	Sound& operator=(const Sound&) = delete;
+	Sound& operator=(Sound&&) = delete;
 
 	//! plays the sound without any listener (2D)
 	//! @param loop if true, the sound will loop indefinitely; otherwise, it will only play once

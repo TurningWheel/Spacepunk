@@ -41,9 +41,16 @@ public:
 		}
 	}
 
+	Node(const Node&) = default;
+	Node(Node&&) = default;
+
+	Node& operator=(const Node&) = default;
+	Node& operator=(Node&&) = default;
+
 	//! will NOT remove node from list
-	~Node() {
-	}
+	~Node() = default;
+	
+	friend class LinkedList<T>;
 
 	Node<T>*				getNext() { return next; }
 	Node<T>*				getPrev() { return prev; }

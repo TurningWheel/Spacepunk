@@ -14,7 +14,12 @@ class Image;
 class Renderer {
 public:
 	Renderer();
+	Renderer(const Renderer&) = delete;
+	Renderer(Renderer&&) = delete;
 	~Renderer();
+
+	Renderer& operator=(const Renderer&) = delete;
+	Renderer& operator=(Renderer&&) = delete;
 
 	//! color constants
 	static const unsigned int colorBlack = 0xFF000000;

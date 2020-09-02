@@ -12,8 +12,14 @@ class Game;
 //! If acting as client, term() should be called to close any existing connection(s), followed by connect() to join a server.
 class Net {
 public:
+	Net() = delete;
 	Net(Game& _parent);
-	virtual ~Net();
+	Net(const Net&) = delete;
+	Net(Net&&) = delete;
+	virtual ~Net() = default;
+
+	Net& operator=(const Net&) = delete;
+	Net& operator=(Net&&) = delete;
 
 	//! invalid client id
 	static const Uint32 invalidID = UINT32_MAX;

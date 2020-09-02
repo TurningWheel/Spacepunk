@@ -8,9 +8,14 @@
 //! A Cubemap is a texture with 6 sides.
 class Cubemap : public Asset {
 public:
-	Cubemap() {}
+	Cubemap() = default;
 	Cubemap(const char* _name);
+	Cubemap(const Cubemap&) = delete;
+	Cubemap(Cubemap&&) = delete;
 	virtual ~Cubemap();
+
+	Cubemap& operator=(const Cubemap&) = delete;
+	Cubemap& operator=(Cubemap&&) = delete;
 
 	//! save/load this object to a file
 	//! @param file interface to serialize with

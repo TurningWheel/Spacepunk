@@ -25,7 +25,12 @@ class BBox;
 //! pretty much exclusively. Historically, TileWorld was the main world type.
 class World {
 public:
+	World() = delete;
 	World(Game* _game);
+	World(const World&) = delete;
+	World(World&&) = delete;
+	World& operator=(const World&) = delete;
+	World& operator=(World&&) = delete;
 	virtual ~World();
 
 	//! data owned by every physics object in a world

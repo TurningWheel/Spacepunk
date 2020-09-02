@@ -12,9 +12,6 @@ Net::Net(Game& _parent) {
 	localGID = mainEngine->getRandom().getUint32();
 }
 
-Net::~Net() {
-}
-
 bool Net::signPacket(Packet& packet) {
 	return packet.sign(mainEngine->getTicks(), localID);
 }

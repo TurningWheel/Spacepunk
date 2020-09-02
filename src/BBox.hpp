@@ -30,7 +30,10 @@ public:
 	};
 	static const char* shapeStr[SHAPE_MAX];
 
+	BBox() = delete;
 	BBox(Entity& _entity, Component* _parent);
+	BBox(const BBox&) = delete;
+	BBox(BBox&&) = delete;
 	virtual ~BBox();
 
 	//! bbox models
@@ -122,6 +125,8 @@ public:
 		dirty = true;
 		return *this;
 	}
+
+	BBox& operator=(BBox&&) = delete;
 
 private:
 	bool enabled = true;

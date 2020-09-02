@@ -14,12 +14,20 @@ public:
 	float w = 0.f;
 
 	//! constructors
-	WideVector() {}
-	WideVector(const WideVector& src) {
+	WideVector() = default;
+	WideVector(const WideVector& src) = default;
+	WideVector(WideVector&&) = default;
+	WideVector(const Vector& src, float _w) {
 		x = src.x;
 		y = src.y;
 		z = src.z;
-		w = src.w;
+		w = _w;
+	}
+	WideVector(Vector&& src, float _w) {
+		x = src.x;
+		y = src.y;
+		z = src.z;
+		w = _w;
 	}
 	WideVector(const float factor) {
 		x = factor;
@@ -39,7 +47,10 @@ public:
 		z = arr[2];
 		w = arr[3];
 	}
-	~WideVector() {}
+	virtual ~WideVector() = default;
+
+	WideVector& operator=(const WideVector&) = default;
+	WideVector& operator=(WideVector&&) = default;
 
 	//! determines whether the vector represents a true volume
 	//! @return true if all elements are nonzero, false otherwise
@@ -103,15 +114,6 @@ public:
 	//! conversion to btVector4
 	operator btVector4() const {
 		return btVector4(x, y, z, w);
-	}
-
-	//! operator =
-	WideVector& operator=(const WideVector& src) {
-		x = src.x;
-		y = src.y;
-		z = src.z;
-		w = src.w;
-		return *this;
 	}
 
 	//! operator +

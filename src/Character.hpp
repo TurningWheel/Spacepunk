@@ -40,7 +40,10 @@ public:
 	static const Sint32 DEFAULT_CHARISMA = 0;
 	static const Sint32 DEFAULT_LUCK = 0;
 
+	Character() = delete;
 	Character(Entity& entity, Component* parent);
+	Character(const Character&) = delete;
+	Character(Character&&) = delete;
 	virtual ~Character();
 
 	virtual void load(FILE* fp);
@@ -120,6 +123,8 @@ public:
 		updateNeeded = true;
 		return *this;
 	}
+
+	Character& operator=(Character&&) = delete;
 
 private:
 	//General

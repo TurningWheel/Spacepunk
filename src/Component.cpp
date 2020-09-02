@@ -740,7 +740,7 @@ void Component::copy(Component* dest) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "failed to copy component");
 	} else {
 		*component = *this;
-		copyComponents(*component);
+		component->copyComponents(this);
 		mainEngine->fmsg(Engine::MSG_DEBUG, "copied %s component", Component::typeStr[(int)getType()]);
 	}
 }
@@ -822,14 +822,18 @@ void Component::copy(Entity* dest) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "failed to copy component");
 	} else {
 		*component = *this;
-		copyComponents(*component);
+		component->copyComponents(this);
 		mainEngine->fmsg(Engine::MSG_DEBUG, "copied %s component", Component::typeStr[(int)getType()]);
 	}
 }
 
-void Component::copyComponents(Component& dest) {
-	for (Uint32 c = 0; c < components.getSize(); ++c) {
-		components[c]->copy(&dest);
+void Component::copyComponents(const Component* src) {
+	if (!src) {
+		// lua bridge won't compile unless the parameter is a pointer
+		return;
+	}
+	for (Uint32 c = 0; c < src->components.getSize(); ++c) {
+		src->components[c]->copy(this);
 	}
 }
 

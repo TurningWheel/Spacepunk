@@ -58,9 +58,6 @@ Model::Model(Entity& _entity, Component* _parent) :
 	attributes.push(new AttributeColor("Custom Glow", shaderVars.customColorA));
 }
 
-Model::~Model() {
-}
-
 float Model::getAnimTicks() const {
 	const AnimationState* animation = animations.find(currentAnimation.get());
 	if (animation) {

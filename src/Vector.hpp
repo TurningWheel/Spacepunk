@@ -15,12 +15,9 @@ public:
 	float x = 0.f, y = 0.f, z = 0.f;
 
 	//! constructors
-	Vector() {}
-	Vector(const Vector& src) {
-		x = src.x;
-		y = src.y;
-		z = src.z;
-	}
+	Vector() = default;
+	Vector(const Vector& src) = default;
+	Vector(Vector&&) = default;
 	Vector(const float factor) {
 		x = factor;
 		y = factor;
@@ -36,7 +33,10 @@ public:
 		y = arr[1];
 		z = arr[2];
 	}
-	~Vector() {}
+	virtual ~Vector() = default;
+
+	Vector& operator=(const Vector& src) = default;
+	Vector& operator=(Vector&& src) = default;
 
 	//! reflect this vector against a surface
 	//! @param n the normal vector of the surface to reflect against
@@ -120,14 +120,6 @@ public:
 	//! conversion to btVector3
 	operator btVector3() const {
 		return btVector3(x, y, z);
-	}
-
-	//! operator =
-	Vector& operator=(const Vector& src) {
-		x = src.x;
-		y = src.y;
-		z = src.z;
-		return *this;
 	}
 
 	//! operator +

@@ -10,7 +10,10 @@
 //! This allows you to build a room for instance out of multiple small meshes that get optimized for the engine.
 class Multimesh : public Component {
 public:
+	Multimesh() = delete;
 	Multimesh(Entity& _entity, Component* _parent);
+	Multimesh(const Multimesh&) = delete;
+	Multimesh(Multimesh&&) = delete;
 	virtual ~Multimesh();
 
 	//! draws the component
@@ -45,6 +48,8 @@ public:
 		updateNeeded = true;
 		return *this;
 	}
+
+	Multimesh& operator=(Multimesh&&) = delete;
 
 private:
 	String materialStr;					//! standard material

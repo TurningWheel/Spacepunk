@@ -11,8 +11,13 @@
 
 class Item {
 public:
-	Item() {
-	}
+	Item() = default;
+	Item(const Item&) = default;
+	Item(Item&&) = default;
+	~Item() = default;
+
+	Item& operator=(const Item&) = default;
+	Item& operator=(Item&&) = default;
 
 	typedef ArrayList<String> StringList;
 	typedef Map<String, String> StringMap;

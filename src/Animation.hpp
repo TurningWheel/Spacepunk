@@ -11,9 +11,14 @@
 //! available to a single model for playing.
 class Animation : public Asset {
 public:
-	Animation() {}
+	Animation() = default;
 	Animation(const char* _name);
-	virtual ~Animation() {}
+	virtual ~Animation() = default;
+
+	Animation(const Animation&) = delete;
+	Animation(Animation&&) = delete;
+	Animation& operator=(const Animation&) = delete;
+	Animation& operator=(Animation&&) = delete;
 
 	//! animation entry
 	struct entry_t {

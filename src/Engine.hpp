@@ -27,8 +27,14 @@ class FileInterface;
 //! the local Client and Server (if they are running), functions to step everything forward, update devices, etc.
 class Engine {
 public:
+	Engine() = delete;
 	Engine(int argc, char **argv);
+	Engine(const Engine&) = delete;
+	Engine(Engine&&) = delete;
 	~Engine();
+
+	Engine& operator=(const Engine&) = delete;
+	Engine& operator=(Engine&&) = delete;
 
 	static const int stackTraceSize = 100;
 	static const int stackTraceStrSize = 256;
@@ -352,7 +358,7 @@ public:
 
 	//! generate a stack trace
 	//! @return a list of strings representing stack frames
-	ArrayList<StringBuf<Engine::stackTraceStrSize>> stackTrace() const;
+	ArrayList<String> stackTrace() const;
 
 	//! return the value of a key and reset it if it's been pressed
 	//! !IMPORTANT! should generally NOT be used, as it "locks" the key for the rest of the frame after being pressed

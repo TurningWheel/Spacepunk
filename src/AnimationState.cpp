@@ -30,9 +30,6 @@ AnimationState::AnimationState(const Animation::entry_t& entry, const ArrayList<
 	}
 }
 
-AnimationState::~AnimationState() {
-}
-
 static Cvar cvar_animRate("anim.rate", "controls rate of model anims", "1.0");
 
 bool AnimationState::update(Speaker* speaker) {

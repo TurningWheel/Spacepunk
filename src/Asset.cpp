@@ -22,15 +22,9 @@ const char* Asset::typeStr[Asset::ASSET_NUM] = {
 	"framebuffer"
 };
 
-Asset::Asset() {
-}
-
 Asset::Asset(const char* _name) {
 	assert(_name);
 	name = _name;
-}
-
-Asset::~Asset() {
 }
 
 bool Asset::finalize() {

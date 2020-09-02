@@ -20,9 +20,6 @@ const Shadow::camerainfo_t Shadow::cameraInfo[Shadow::directions] = {
 	{ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, Rotation(PI / 2.f, PI, 0.f) },			// south
 };
 
-Shadow::Shadow() {
-}
-
 Shadow::~Shadow() {
 	term();
 }

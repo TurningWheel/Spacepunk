@@ -76,10 +76,6 @@ Player::Player(const char* _name, colors_t _colors) {
 	colors = _colors;
 }
 
-Player::~Player() {
-
-}
-
 void Player::setEntity(Entity* _entity) {
 	entity = _entity;
 	if (entity && cvar_defaultController.toInt()) {

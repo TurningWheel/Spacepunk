@@ -15,8 +15,13 @@ class TileWorld;
 //! Contains all the code for the editor.
 class Editor {
 public:
-	Editor();
+	Editor() = default;
+	Editor(const Editor&) = delete;
+	Editor(Editor&&) = delete;
 	~Editor();
+
+	Editor& operator=(const Editor&) = delete;
+	Editor& operator=(Editor&&) = delete;
 
 	//! editing mode
 	enum editingmode_t {

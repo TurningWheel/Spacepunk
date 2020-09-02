@@ -32,7 +32,13 @@ enum class EFileFormat {
 
 class FileInterface {
 public:
-	virtual ~FileInterface() {}
+	FileInterface() = default;
+	FileInterface(const FileInterface&) = delete;
+	FileInterface(FileInterface&&) = delete;
+	virtual ~FileInterface() = default;
+
+	FileInterface& operator=(const FileInterface&) = delete;
+	FileInterface& operator=(FileInterface&&) = delete;
 
 	//! @return true if this interface is reading data from a file, false if it is writing
 	virtual bool isReading() const = 0;
@@ -144,6 +150,14 @@ public:
 //! The main static interface to read and write JSON files to disk.
 class FileHelper {
 public:
+	FileHelper() = default;
+	FileHelper(const FileHelper&) = delete;
+	FileHelper(FileHelper&&) = delete;
+	~FileHelper() = default;
+
+	FileHelper& operator=(const FileHelper&) = delete;
+	FileHelper& operator=(FileHelper&&) = delete;
+
 	//! Write an object's data to a file
 	//! @param filename the name of the file to write
 	//! @param v the object to write

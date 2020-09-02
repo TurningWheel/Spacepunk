@@ -7,9 +7,14 @@
 
 class Font : public Asset {
 public:
-	Font() {}
+	Font() = default;
 	Font(const char* _name);
+	Font(const Font&) = delete;
+	Font(Font&&) = delete;
 	virtual ~Font();
+
+	Font& operator=(const Font&) = delete;
+	Font& operator=(Font&&) = delete;
 
 	//! built-in font
 	static const char* defaultFont;

@@ -7,9 +7,18 @@
 //! A Packet is essentially a data buffer designed to be sent over the net.
 class Packet {
 public:
-	Packet() {}
-	Packet(const Packet& src);
-	~Packet() {}
+	Packet() = default;
+	Packet(const Packet& src) {
+		copy(src);
+	}
+	Packet(Packet&&) = delete;
+	~Packet() = default;
+
+	Packet& operator=(const Packet& src) {
+		copy(src);
+	}
+
+	Packet& operator=(Packet&&) = delete;
 
 	//! max size of the data buffer
 	static const Uint32 maxLen = 1024;

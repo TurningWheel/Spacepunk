@@ -9,7 +9,12 @@ class Camera;
 class Cube {
 public:
 	Cube();
+	Cube(const Cube&) = delete;
+	Cube(Cube&&) = delete;
 	~Cube();
+
+	Cube& operator=(const Cube&) = delete;
+	Cube& operator=(Cube&&) = delete;
 
 	//! draws the cube
 	//! @param camera the camera to project the cube with

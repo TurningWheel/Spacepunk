@@ -14,10 +14,16 @@ class Renderer;
 //! a Slider lives in a frame and allows a user to select a range of values
 class Slider {
 public:
+    Slider() = delete;
     Slider(Frame& _parent) :
         parent(&_parent)
         {}
-    ~Slider() {}
+    Slider(const Slider&) = delete;
+    Slider(Slider&&) = delete;
+    ~Slider() = default;
+
+    Slider& operator=(const Slider&) = delete;
+    Slider& operator=(Slider&&) = delete;
 
     //! the result of the slider process
     struct result_t {

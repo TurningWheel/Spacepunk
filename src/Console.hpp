@@ -9,8 +9,14 @@
 //! console variable
 struct Cvar {
 public:
+	Cvar() = delete;
 	Cvar(const char* _name, const char* _desc, const char* _value);
+	Cvar(const Cvar&) = delete;
+	Cvar(Cvar&&) = delete;
 	virtual ~Cvar() {}
+
+	Cvar& operator=(const Cvar&) = delete;
+	Cvar& operator=(Cvar&&) = delete;
 
 	static Map<String, Cvar*>& getMap();
 
@@ -70,8 +76,14 @@ private:
 //! console command
 struct Ccmd {
 public:
+	Ccmd() = delete;
 	Ccmd(const char* _name, const char* _desc, int(*_func)(int, const char**));
+	Ccmd(const Ccmd&) = delete;
+	Ccmd(Ccmd&&) = delete;
 	virtual ~Ccmd() {}
+
+	Ccmd& operator=(const Ccmd&) = delete;
+	Ccmd& operator=(Ccmd&&) = delete;
 
 	static Map<String, Ccmd*>& getMap();
 

@@ -74,8 +74,14 @@ public:
 	//! editor definition
 	struct def_t;
 
+	Entity() = delete;
 	Entity(World* _world, Uint32 uid = UINT32_MAX);
+	Entity(const Entity&) = delete;
+	Entity(Entity&&) = delete;
 	virtual ~Entity();
+
+	Entity& operator=(const Entity&) = delete;
+	Entity& operator=(Entity&&) = delete;
 
 	const String&						getName() const { return name; }
 	const Uint32&						getUID() const { return uid; }
@@ -189,9 +195,6 @@ public:
 
 	//! removes the entity from the current simulation
 	void remove();
-
-	//! delete occlusion data for self and children
-	void deleteAllVisMaps();
 
 	//! finds all entities within a given radius to this entity
 	//! @param radius the radius to search in
@@ -331,12 +334,6 @@ public:
 
 	//! update bounding box
 	void updateBounds();
-
-	//! clears the node pointing to us in the chunk we are occupying
-	void clearChunkNode() { if (chunkNode) { chunkNode->getList()->removeNode(chunkNode); chunkNode = nullptr; } }
-
-	//! clears the chunk nodes of all components
-	void clearAllChunkNodes();
 
 	//! generate a new ID for a component and advance the component ID counter
 	//! @return the fresh ID

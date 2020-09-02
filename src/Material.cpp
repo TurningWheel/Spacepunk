@@ -13,9 +13,6 @@ Material::Material(const char* _name) : Asset(_name) {
 	loaded = FileHelper::readObject(path.get(), *this);
 }
 
-Material::~Material() {
-}
-
 void Material::serialize(FileInterface* file) {
 	int version = 0;
 	file->property("Material::version", version);

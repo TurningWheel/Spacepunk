@@ -9,8 +9,14 @@
 //! Implements the Net class using SDL
 class NetSDL : public Net {
 public:
+	NetSDL() = delete;
 	NetSDL(Game& _parent);
-	virtual ~NetSDL();
+	NetSDL(const NetSDL&) = delete;
+	NetSDL(NetSDL&&) = delete;
+	virtual ~NetSDL() = default;
+
+	NetSDL& operator=(const NetSDL&) = delete;
+	NetSDL& operator=(NetSDL&&) = delete;
 
 	//! remote host
 	struct sdlremote_t : remote_t {

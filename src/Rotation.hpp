@@ -15,18 +15,18 @@ class Rotation {
 public:
 	float yaw = 0, pitch = 0, roll = 0;
 
-	//! constructors
-	Rotation() {}
-	Rotation(const Rotation& src) {
-		yaw = src.yaw;
-		pitch = src.pitch;
-		roll = src.roll;
-	}
+	Rotation() = default;
+	Rotation(const Rotation& src) = default;
+	Rotation(Rotation&&) = default;
 	Rotation(float _yaw, float _pitch, float _roll) {
 		yaw = _yaw;
 		pitch = _pitch;
 		roll = _roll;
 	}
+	~Rotation() = default;
+
+	Rotation& operator=(const Rotation&) = default;
+	Rotation& operator=(Rotation&&) = default;
 
 	//! converts the angle attributes to radians (default)
 	const float		radiansYaw() const { return yaw; }
@@ -34,17 +34,9 @@ public:
 	const float		radiansRoll() const { return roll; }
 
 	//! converts the angle attributes to degrees
-	const float		degreesYaw() const { return (yaw	* radiansToDegrees); }
-	const float		degreesPitch() const { return (pitch	* radiansToDegrees); }
-	const float		degreesRoll() const { return (roll	* radiansToDegrees); }
-
-	//! copy the angle to another angle
-	Rotation& operator=(const Rotation& src) {
-		yaw = src.yaw;
-		pitch = src.pitch;
-		roll = src.roll;
-		return *this;
-	}
+	const float		degreesYaw() const { return (yaw * radiansToDegrees); }
+	const float		degreesPitch() const { return (pitch * radiansToDegrees); }
+	const float		degreesRoll() const { return (roll * radiansToDegrees); }
 
 	//! add one angle to another
 	Rotation operator+(const Rotation& src) const {

@@ -18,9 +18,29 @@ public:
 		MAX
 	};
 
-	Shader();
+	Shader() = default;
 	Shader(const ArrayList<String>& _defines, shadertype_t _shaderType, const char* _name);
+	Shader(const Shader&) = delete;
+	Shader(Shader&& rhs) {
+		Asset::operator=(rhs);
+		defines = rhs.defines;
+		shaderType = rhs.shaderType;
+		shaderObject = rhs.shaderObject;
+		shaderSource = rhs.shaderSource;
+		rhs.shaderObject = 0;
+	}
 	virtual ~Shader();
+
+	Shader& operator=(const Shader&) = delete;
+	Shader& operator=(Shader&& rhs) {
+		Asset::operator=(rhs);
+		defines = rhs.defines;
+		shaderType = rhs.shaderType;
+		shaderObject = rhs.shaderObject;
+		shaderSource = rhs.shaderSource;
+		rhs.shaderObject = 0;
+		return *this;
+	}
 
 	//! save/load this object to a file
 	//! @param file interface to serialize with
@@ -35,7 +55,6 @@ private:
 	shadertype_t shaderType = MAX;
 	GLuint shaderObject = 0;
 	String shaderSource;
-	GLint len = 0;
 
 	//! runs the below functions
 	bool init();

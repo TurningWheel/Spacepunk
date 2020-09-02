@@ -11,9 +11,14 @@
 //! Materials combine Image objects, a ShaderProgram, and other meta-data into a single class
 class Material : public Asset {
 public:
-	Material() {}
+	Material() = default;
 	Material(const char* _name);
-	virtual ~Material();
+	Material(const Material&) = default;
+	Material(Material&&) = default;
+	virtual ~Material() = default;
+
+	Material& operator=(const Material&) = default;
+	Material& operator=(Material&&) = default;
 
 	enum texturekind_t {
 		STANDARD,

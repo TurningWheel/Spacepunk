@@ -21,7 +21,19 @@ public:
 		data.resize(numBuckets);
 		copy(src);
 	}
-	~Map() {
+	Map(Map&& src) { 
+		swap(std::move(src));
+	}
+	~Map() = default;
+
+	Map& operator=(const Map& src) {
+		copy(src);
+		return *this;
+	}
+
+	Map& operator=(Map&& src) {
+		swap(std::move(src));
+		return *this;
 	}
 
 	ArrayList<OrderedPair<K, T>>&				getHash(Uint32 index) { return data[index]; }
@@ -143,13 +155,25 @@ public:
 	}
 
 	//! replace the contents of this map with those of another
-	//! @param src The map to copy
-	void copy(const Map<K, T>& src) {
+	//! @param src the map to copy
+	void copy(const Map& src) {
 		clear();
 		rehash(src.getNumBuckets());
 		for (auto& it : src) {
 			insert(it.a, it.b);
 		}
+	}
+
+	//! swap the contents of this map with those of another
+	//! @param src the map to swap with
+	void swap(Map&& src) {
+		data.swap(std::move(src.data));
+		auto tbuckets = numBuckets;
+		auto tsize = size;
+		numBuckets = src.numBuckets;
+		size = src.size;
+		src.numBuckets = tbuckets;
+		src.size = tsize;
 	}
 
 	//! save/load this object to a file

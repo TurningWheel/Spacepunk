@@ -4,10 +4,6 @@
 #include "Engine.hpp"
 #include "Shader.hpp"
 
-Shader::Shader() : Asset() {
-
-}
-
 Shader::Shader(const ArrayList<String>& _defines, shadertype_t _shaderType, const char* _name) : Asset(_name) {
 	path = mainEngine->buildPath(_name).get();
 	shaderType = _shaderType;
@@ -104,9 +100,6 @@ int Shader::load() {
 	shaderSource[i] = '\0';
 	shaderSource[i - 1] = '\0';
 
-	// store off final length
-	this->len = (GLint)shaderSource.getSize() - 1;
-
 	// close file, return success
 	fclose(fp);
 	return 0;
@@ -134,6 +127,7 @@ int Shader::compile() {
 	// create shader object
 	shaderObject = glCreateShader(glShaderType);
 	const GLchar* src = shaderSource.get();
+	GLint len = (GLint)shaderSource.getSize() - 1;
 	glShaderSource(shaderObject, 1, &src, &len);
 
 	// compile shader

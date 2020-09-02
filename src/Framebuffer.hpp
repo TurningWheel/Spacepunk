@@ -9,9 +9,14 @@
 //! A Framebuffer is a unique type of object belonging to the Renderer which basically represents a "screen" texture that can be rendered to.
 class Framebuffer : public Asset {
 public:
-	Framebuffer() {}
+	Framebuffer() = default;
 	Framebuffer(const char* _name);
+	Framebuffer(const Framebuffer&) = delete;
+	Framebuffer(Framebuffer&&) = delete;
 	virtual ~Framebuffer();
+
+	Framebuffer& operator=(const Framebuffer&) = delete;
+	Framebuffer& operator=(Framebuffer&&) = delete;
 
 	//! color buffers
 	enum ColorBuffer {

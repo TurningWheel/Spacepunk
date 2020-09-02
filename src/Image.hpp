@@ -9,9 +9,14 @@
 //! An Image is a type of asset that contains all the raw data for a unique 2D image
 class Image : public Asset {
 public:
-	Image() {}
+	Image() = default;
 	Image(const char* _name);
+	Image(const Image&) = delete;
+	Image(Image&&) = delete;
 	virtual ~Image();
+
+	Image& operator=(const Image&) = delete;
+	Image& operator=(Image&&) = delete;
 
 	virtual bool finalize() override;
 

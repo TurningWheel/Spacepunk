@@ -9,8 +9,13 @@
 //! A Dictionary is a data structure that enables very fast lookup of a large volume of words, each mapped to a unique integer.
 class Dictionary {
 public:
-	Dictionary() {}
+	Dictionary() = default;
+	Dictionary(const Dictionary&) = default;
+	Dictionary(Dictionary&&) = default;
 	~Dictionary();
+
+	Dictionary& operator=(const Dictionary&) = default;
+	Dictionary& operator=(Dictionary&&) = default;
 
 	//! not a valid index
 	static const Uint32 nindex = UINT32_MAX;

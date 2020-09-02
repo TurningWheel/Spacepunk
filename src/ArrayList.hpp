@@ -13,11 +13,14 @@
 template <typename T>
 class ArrayList {
 public:
-	ArrayList() {
-	}
+	ArrayList() = default;
 
 	ArrayList(const ArrayList& src) {
 		copy(src);
+	}
+
+	ArrayList(ArrayList&& src) {
+		swap(std::move(src));
 	}
 
 	ArrayList(const std::initializer_list<T>& src) {
@@ -178,18 +181,18 @@ public:
 
 	//! quickly swap the internal array of this list with that of another list
 	//! @param src the list to swap with
-	void swap(ArrayList& src) {
-		auto tempArr = arr;
-		arr = src.arr;
-		src.arr = tempArr;
-
-		auto tempMaxSize = maxSize;
-		maxSize = src.maxSize;
-		src.maxSize = tempMaxSize;
-
-		auto tempSize = size;
-		size = src.size;
-		src.size = tempSize;
+	//! @return *this;
+	virtual ArrayList& swap(ArrayList<T>&& src) {
+		auto tarr = src.arr;
+		auto tsize = src.size;
+		auto tmaxSize = src.maxSize;
+		src.arr = arr;
+		src.size = size;
+		src.maxSize = maxSize;
+		arr = tarr;
+		size = tsize;
+		maxSize = tmaxSize;
+		return *this;
 	}
 
 	//! push a value onto the list
@@ -284,6 +287,13 @@ public:
 	//! @return *this;
 	ArrayList& operator=(const ArrayList& src) {
 		return copy(src);
+	}
+
+	//! exchange contents with another list
+	//! @param src the list to copy into our list
+	//! @return *this;
+	ArrayList& operator=(ArrayList&& src) {
+		return swap(std::move(src));
 	}
 
 	//! replace list contents with those of an array
@@ -476,12 +486,13 @@ protected:
 template <typename T, Uint32 defaultSize>
 class StaticArrayList : public ArrayList<T> {
 public:
-	StaticArrayList() {
-	}
+	StaticArrayList() = default;
 
 	StaticArrayList(const StaticArrayList& src) {
 		copy(src);
 	}
+
+	StaticArrayList(StaticArrayList&& src) = delete;
 
 	StaticArrayList(const std::initializer_list<T>& src) {
 		copy(src);
@@ -491,6 +502,16 @@ public:
 		if (this->arr == defaultArr) {
 			this->arr = nullptr;
 		}
+	}
+
+	StaticArrayList& operator=(const StaticArrayList& rhs) {
+		return copy(src);
+	}
+
+	StaticArrayList& operator=(StaticArrayList&&) = delete;
+
+	virtual ArrayList& swap(ArrayList&& src) override {
+		assert(0 && "StaticArrayList::swap not supported");
 	}
 
 	//! resize the internal list

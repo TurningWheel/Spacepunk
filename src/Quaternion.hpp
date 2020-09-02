@@ -19,8 +19,7 @@ public:
 	float z = 0.f;
 	float w = 1.f;
 
-	Quaternion() {
-	}
+	Quaternion() = default;
 
 	Quaternion(float _x, float _y, float _z, float _w) :
 		x(_x),
@@ -29,12 +28,9 @@ public:
 		w(_w)
 	{}
 
-	Quaternion(const Quaternion& q) :
-		x(q.x),
-		y(q.y),
-		z(q.z),
-		w(q.w)
-	{}
+	Quaternion(const Quaternion&) = default;
+
+	Quaternion(Quaternion&&) = default;
 
 	Quaternion(const Rotation& rot) {
 		*this = rotate(rot);
@@ -194,6 +190,10 @@ public:
 	bool operator!=(const Quaternion& q) const {
 		return x != q.x || y != q.y || z != q.z || w != q.w;
 	}
+
+	Quaternion& operator=(const Quaternion& rhs) = default;
+
+	Quaternion& operator=(Quaternion&& rhs) = default;
 
 	void serialize(FileInterface * file) {
 		int version = 0;

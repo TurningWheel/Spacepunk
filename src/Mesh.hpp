@@ -37,9 +37,14 @@ typedef ArrayList<skincache_t> SkinCache;
 //! Do not confuse a Mesh with a Model. Meshes are unique and represent the raw data itself; a Model is an Entity Component that binds a Mesh to an Entity.
 class Mesh : public Asset {
 public:
-	Mesh() {}
+	Mesh() = default;
 	Mesh(const char* _name);
+	Mesh(const Mesh&) = delete;
+	Mesh(Mesh&&) = delete;
 	virtual ~Mesh();
+
+	Mesh& operator=(const Mesh&) = delete;
+	Mesh& operator=(Mesh&&) = delete;
 
 	virtual bool finalize() override;
 

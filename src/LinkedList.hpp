@@ -13,9 +13,25 @@
 template <typename T>
 class LinkedList {
 public:
-	LinkedList() {}
+	LinkedList() = default;
+	LinkedList(const LinkedList& src) {
+		copy(src);
+	}
+	LinkedList(LinkedList&& src) {
+		swap(std::move(src));
+	}
 	~LinkedList() {
 		removeAll();
+	}
+
+	LinkedList& operator=(const LinkedList& src) {
+		copy(src);
+		return *this;
+	}
+
+	LinkedList& operator=(LinkedList&& src) {
+		swap(std::move(src));
+		return *this;
 	}
 
 	//! parameter functions
@@ -160,9 +176,30 @@ public:
 	}
 
 	//! copy one list to another (also copies data)
+	//! @param src list to copy from
 	void copy(const LinkedList<T>& src) {
 		for (const Node<T>* node = src.getFirst(); node != nullptr; node = node->getNext()) {
 			addNodeLast(node->getData());
+		}
+	}
+
+	//! swaps contents of one list with that of another
+	//! @param src list to swap with
+	void swap(LinkedList<T>&& src) {
+		auto tfirst = first;
+		auto tlast = last;
+		auto tsize = size;
+		first = src.first;
+		last = src.last;
+		size = src.size;
+		src.first = tfirst;
+		src.last = tlast;
+		src.size = tsize;
+		for (auto node : *this) {
+			node->list = this;
+		}
+		for (auto node : src) {
+			node->list = &src;
 		}
 	}
 

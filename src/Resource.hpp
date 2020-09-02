@@ -18,8 +18,13 @@ enum resource_error_t {
 
 class ResourceBase {
 public:
-	ResourceBase() {}
-	virtual ~ResourceBase() {}
+	ResourceBase() = default;
+	ResourceBase(const ResourceBase&) = delete;
+	ResourceBase(ResourceBase&&) = delete;
+	virtual ~ResourceBase() = default;
+
+	ResourceBase& operator=(const ResourceBase&) = delete;
+	ResourceBase& operator=(ResourceBase&&) = delete;
 
 	const resource_error_t		getError() const { return error; }
 	virtual Asset::type_t		getType() const = 0;
@@ -45,6 +50,12 @@ public:
 		delete defaultAsset;
 		dumpCache();
 	}
+
+	Resource(const Resource&) = delete;
+	Resource(Resource&&) = delete;
+
+	Resource& operator=(const Resource&) = delete;
+	Resource& operator=(Resource&&) = delete;
 
 	Map<String, T*>&			getCache() { return cache; }
 

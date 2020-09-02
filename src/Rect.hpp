@@ -9,7 +9,13 @@ template <typename T>
 struct Rect {
 	T x = 0, y = 0, w = 0, h = 0;
 
-	Rect() {};
+	Rect() = default;
+	Rect(const Rect&) = default;
+	Rect(Rect&&) = default;
+	~Rect() = default;
+
+	Rect& operator=(const Rect&) = default;
+	Rect& operator=(Rect&&) = default;
 
 	Rect(T _x, T _y, T _w, T _h) {
 		x = _x;
@@ -23,10 +29,6 @@ struct Rect {
 		y = arr[1];
 		w = arr[2];
 		h = arr[3];
-	}
-
-	Rect(const Rect<T>& rect) {
-		*this = rect;
 	}
 
 	//! determines if the given point lies within the bounds of the rectangle

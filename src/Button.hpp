@@ -17,7 +17,12 @@ class Button {
 public:
 	Button();
 	Button(Frame& _parent);
+	Button(const Button&) = delete;
+	Button(Button&&) = delete;
 	~Button();
+
+	Button& operator=(const Button&) = delete;
+	Button& operator=(Button&&) = delete;
 
 	//! the result of the button process
 	struct result_t {

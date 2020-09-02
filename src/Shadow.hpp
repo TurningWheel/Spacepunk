@@ -9,8 +9,13 @@
 //! Contains all the data associated with a shadow map created from a Light
 class Shadow {
 public:
-	Shadow();
+	Shadow() = default;
+	Shadow(const Shadow&) = delete;
+	Shadow(Shadow&&) = delete;
 	~Shadow();
+
+	Shadow& operator=(const Shadow&) = delete;
+	Shadow& operator=(Shadow&&) = delete;
 
 	//! camera info
 	struct camerainfo_t {

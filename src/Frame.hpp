@@ -22,9 +22,15 @@ class Renderer;
 //! Frame objects can be populated with Field objects, Button objects, other Frame objects, and more.
 class Frame {
 public:
+	Frame() = delete;
 	Frame(const char* _name = "", const char* _script = "");
 	Frame(Frame& parent, const char* _name = "", const char* _script = "");
+	Frame(const Frame&) = delete;
+	Frame(Frame&&) = delete;
 	~Frame();
+
+	Frame& operator=(const Frame&) = delete;
+	Frame& operator=(Frame&&) = delete;
 
 	//! border style
 	enum border_style_t {

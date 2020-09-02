@@ -124,9 +124,6 @@ Entity::~Entity() {
 	}
 	components.clear();
 
-	// remove chunk node
-	clearChunkNode();
-
 	// delete script engine
 	if (script) {
 		delete script;

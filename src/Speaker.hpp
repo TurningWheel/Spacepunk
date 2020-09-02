@@ -10,7 +10,10 @@
 //! A Speaker is a type of Entity Component that can play 3D sounds, among other things.
 class Speaker : public Component {
 public:
+	Speaker() = delete;
 	Speaker(Entity& _entity, Component* _parent);
+	Speaker(const Speaker&) = delete;
+	Speaker(Speaker&&) = delete;
 	virtual ~Speaker();
 
 	//! max sounds per component
@@ -79,6 +82,8 @@ public:
 		updateNeeded = true;
 		return *this;
 	}
+
+	Speaker& operator=(Speaker&&) = delete;
 
 private:
 	ALuint sources[maxSources];

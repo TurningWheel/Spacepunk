@@ -30,8 +30,11 @@ class Camera;
 //! A Model is an entity component that combines a Mesh, an Animation, and a Material to form a viewable 3D object.
 class Model : public Component {
 public:
+	Model() = delete;
 	Model(Entity& _entity, Component* _parent);
-	virtual ~Model();
+	Model(const Model&) = delete;
+	Model(Model&&) = delete;
+	virtual ~Model() = default;
 
 	//! max animations that a model can play
 	static const int maxAnimations;
@@ -129,6 +132,8 @@ public:
 		updateNeeded = true;
 		return *this;
 	}
+
+	Model& operator=(Model&&) = delete;
 
 	//! used by entity def importer to prevent meshes loading when def is imported
 	static bool dontLoadMesh;

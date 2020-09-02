@@ -9,9 +9,14 @@ class FileInterface;
 //! Abstract interface that defines an object stored in a Resource hash
 class Asset {
 public:
-	Asset();
+	Asset() = default;
 	Asset(const char* _name);
-	virtual ~Asset();
+	Asset(const Asset&) = default;
+	Asset(Asset&&) = default;
+	virtual ~Asset() = default;
+
+	Asset& operator=(const Asset&) = default;
+	Asset& operator=(Asset&&) = default;
 
 	//! optional function for streamable types
 	//! @return true if the asset was successfully loaded, otherwise false

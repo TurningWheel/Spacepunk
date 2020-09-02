@@ -10,8 +10,13 @@
 //! collect the input data from the physical devices, and provide it back to you for scripting purposes.
 class Input {
 public:
-	Input() {}
-	~Input() {}
+	Input() = default;
+	Input(const Input&) = delete;
+	Input(Input&&) = delete;
+	~Input() = default;
+
+	Input& operator=(const Input&) = delete;
+	Input& operator=(Input&&) = delete;
 
 	//! input mapping
 	struct binding_t {

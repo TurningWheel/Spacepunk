@@ -8,9 +8,6 @@
 #include "Game.hpp"
 #include "Generator.hpp"
 
-Game::Game() {
-}
-
 Game::~Game() {
 	mainEngine->fmsg(Engine::MSG_INFO, "cleaning up gamestate");
 

@@ -17,8 +17,13 @@ class BasicWorld;
 //! This is an abstract class, implemented by Server and Client
 class Game {
 public:
-	Game();
+	Game() = default;
+	Game(const Game&) = delete;
+	Game(Game&&) = delete;
 	virtual ~Game();
+
+	Game& operator=(const Game&) = delete;
+	Game& operator=(Game&&) = delete;
 
 	//! invalid world id
 	static const Uint32 invalidID = UINT32_MAX;

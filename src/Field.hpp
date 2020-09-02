@@ -20,7 +20,12 @@ public:
 	Field(Frame& _parent);
 	Field(Frame& _parent, const int _textLen);
 	Field(Frame& _parent, const char* _text);
+	Field(const Field&) = delete;
+	Field(Field&&) = delete;
 	~Field();
+
+	Field& operator=(const Field&) = delete;
+	Field& operator=(Field&&) = delete;
 
 	//! no fields or frames should ever have this name!
 	static const char* invalidName;

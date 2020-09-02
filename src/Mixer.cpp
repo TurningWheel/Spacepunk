@@ -15,9 +15,6 @@ Cvar cvar_volumeMaster("sound.volume.master", "master sound volume (0-100)", "10
 Cvar cvar_volumeSFX("sound.volume.sfx", "sound effects volume (0-100)", "100.0");
 Cvar cvar_volumeMusic("sound.volume.music", "music volume (0-100)", "100.0");
 
-Mixer::Mixer() {
-}
-
 Mixer::~Mixer() {
 	alDeleteFilters(1, &filter_lowpass);
 	alcMakeContextCurrent(NULL);

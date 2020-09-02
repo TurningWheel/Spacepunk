@@ -18,12 +18,18 @@ class Editor;
 //! Different functions are exposed to different scripts, depending on the class that owns it.
 class Script {
 public:
+	Script() = delete;
+	Script(const Script&) = delete;
+	Script(Script&&) = delete;
 	Script(Client& _client);
 	Script(Server& _server);
 	Script(World& _world);
 	Script(Entity& _entity);
 	Script(Frame& _frame);
 	~Script();
+
+	Script& operator=(const Script&) = delete;
+	Script& operator=(Script&&) = delete;
 
 	//! script variable types
 	enum var_t {

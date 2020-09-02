@@ -19,7 +19,12 @@ class Editor;
 class Client : public Game {
 public:
 	Client();
+	Client(const Client&) = delete;
+	Client(Client&&) = delete;
 	virtual ~Client();
+
+	Client& operator=(const Client&) = delete;
+	Client& operator=(Client&&) = delete;
 
 	typedef LinkedList<Engine::logmsg_t> LogList;
 

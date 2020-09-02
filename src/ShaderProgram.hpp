@@ -15,10 +15,15 @@ class ShaderProgram : public Asset {
 public:
 	ShaderProgram();
 	ShaderProgram(const char* _name);
+	ShaderProgram(const ShaderProgram&) = delete;
+	ShaderProgram(ShaderProgram&&) = delete;
 	virtual ~ShaderProgram();
 
 	virtual const type_t			getType() const { return ASSET_SHADERPROGRAM; }
 	static const ShaderProgram*		getCurrentShader() { return currentShader; }
+
+	ShaderProgram& operator=(const ShaderProgram&) = delete;
+	ShaderProgram& operator=(ShaderProgram&&) = delete;
 
 	//! gets the location of a uniform variable
 	//! @param name the name of the variable to be retrieved

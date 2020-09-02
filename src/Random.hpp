@@ -8,7 +8,12 @@
 class Random {
 public:
 	Random();
-	~Random() {}
+	Random(const Random&) = default;
+	Random(Random&&) = default;
+	~Random() = default;
+
+	Random& operator=(const Random&) = default;
+	Random& operator=(Random&&) = default;
 
 	//! seed the rng based on the current time
 	void seedTime();

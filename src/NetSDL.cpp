@@ -28,9 +28,6 @@ NetSDL::NetSDL(Game& _parent) : Net(_parent) {
 	}*/
 }
 
-NetSDL::~NetSDL() {
-}
-
 void NetSDL::init() {
 }
 

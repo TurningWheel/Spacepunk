@@ -11,15 +11,21 @@ class Frame;
 
 class Inventory {
 public:
+	Inventory() = default;
+	Inventory(const Inventory&) = default;
+	Inventory(Inventory&&) = default;
+	~Inventory() = default;
+
+	Inventory& operator=(const Inventory&) = default;
+	Inventory& operator=(Inventory&&) = default;
+
 	float nanoMatter;
 	float bioMatter;
 	float neuroThread;
 
-	class Slot {
-	public:
-
-		bool locked; //! if the slot is locked
-		class Entity* entity;
+	struct Slot {
+		bool locked = false; //! if the slot is locked
+		class Entity* entity = nullptr;
 
 		void serialize(FileInterface * file);
 	};

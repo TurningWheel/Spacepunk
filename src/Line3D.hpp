@@ -10,7 +10,12 @@ class Camera;
 class Line3D {
 public:
 	Line3D();
+	Line3D(const Line3D&) = delete;
+	Line3D(Line3D&&) = delete;
 	~Line3D();
+
+	Line3D& operator=(const Line3D&) = delete;
+	Line3D& operator=(Line3D&&) = delete;
 
 	//! draws the line
 	//! @param camera the camera to project the line with

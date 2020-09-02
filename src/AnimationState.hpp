@@ -14,7 +14,12 @@ class AnimationState {
 public:
 	AnimationState();
 	AnimationState(const Animation::entry_t& entry, const ArrayList<Animation::sound_t>& sounds);
-	~AnimationState();
+	AnimationState(const AnimationState&) = default;
+	AnimationState(AnimationState&&) = default;
+	~AnimationState() = default;
+
+	AnimationState& operator=(const AnimationState&) = default;
+	AnimationState& operator=(AnimationState&&) = default;
 
 	//! sound trigger
 	struct sound_t {

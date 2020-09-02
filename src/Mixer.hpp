@@ -10,8 +10,13 @@ class Camera;
 //! and provides methods for playing 2D sounds, among other things.
 class Mixer {
 public:
-	Mixer();
+	Mixer() = default;
+	Mixer(const Mixer&) = delete;
+	Mixer(Mixer&&) = delete;
 	~Mixer();
+
+	Mixer& operator=(const Mixer&) = delete;
+	Mixer& operator=(Mixer&&) = delete;
 
 	//! opens the mixer
 	void init();

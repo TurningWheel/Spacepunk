@@ -10,6 +10,7 @@ class Mesh;
 
 //! Contains all the data associated with a voxel Mesh.
 struct VoxelMeshData {
+	VoxelMeshData() = delete;
 	VoxelMeshData(Uint32 numFaces) {
 		vertexCount = 3 * numFaces;
 		indexCount = vertexCount * 2;
@@ -27,6 +28,12 @@ struct VoxelMeshData {
 			indices[i + 5] = findAdjacentIndex(indices[i + 4], indices[i], indices[i + 2]);
 		}
 	}
+	VoxelMeshData(const VoxelMeshData&) = delete;
+	VoxelMeshData(VoxelMeshData&&) = default;
+	~VoxelMeshData() = default;
+
+	VoxelMeshData& operator=(const VoxelMeshData&) = delete;
+	VoxelMeshData& operator=(VoxelMeshData&&) = default;
 
 	//! 24bit positions, colors
 	std::unique_ptr<GLfloat[]> positions;

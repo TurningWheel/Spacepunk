@@ -4,10 +4,6 @@
 #include "Engine.hpp"
 #include "Packet.hpp"
 
-Packet::Packet(const Packet& src) {
-	copy(src);
-}
-
 void Packet::clear() {
 	for (Uint32 c = 0; c < maxLen; ++c) {
 		data[c] = 0;

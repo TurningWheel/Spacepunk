@@ -58,7 +58,10 @@ public:
 		GLuint id = 0;
 	};
 
+	Camera() = delete;
 	Camera(Entity& _entity, Component* _parent);
+	Camera(const Camera&) = delete;
+	Camera(Camera&&) = delete;
 	virtual ~Camera();
 
 	//! camera model
@@ -201,6 +204,8 @@ public:
 		updateNeeded = true;
 		return *this;
 	}
+
+	Camera& operator=(Camera&&) = delete;
 
 protected:
 	Renderer* renderer = nullptr;

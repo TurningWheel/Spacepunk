@@ -10,9 +10,14 @@
 //! Contains some text that was rendered to a texture with a ttf font.
 class Text : public Asset {
 public:
-	Text() {}
+	Text() = default;
 	Text(const char* _name);
+	Text(const Text&) = delete;
+	Text(Text&&) = delete;
 	virtual ~Text();
+
+	Text& operator=(const Text&) = delete;
+	Text& operator=(Text&&) = delete;
 
 	//! size of the black text outline
 	static const int outlineSize = 1;

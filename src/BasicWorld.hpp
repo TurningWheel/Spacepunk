@@ -8,7 +8,12 @@
 //! See World for more info.
 class BasicWorld : public World {
 public:
+	BasicWorld() = delete;
 	BasicWorld(Game* _game, bool _silent, Uint32 _id, const char* _name);
+	BasicWorld(const BasicWorld&) = delete;
+	BasicWorld(BasicWorld&&) = delete;
+	BasicWorld& operator=(const BasicWorld&) = delete;
+	BasicWorld& operator=(BasicWorld&&) = delete;
 	virtual ~BasicWorld();
 
 	//! const variables

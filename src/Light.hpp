@@ -34,7 +34,10 @@ public:
 	};
 	static const char* shapeStr[static_cast<int>(shape_t::SHAPE_NUM)];
 
+	Light() = delete;
 	Light(Entity& _entity, Component* _parent);
+	Light(const Light&) = delete;
+	Light(Light&&) = delete;
 	virtual ~Light();
 
 	//! light model
@@ -97,6 +100,8 @@ public:
 		updateNeeded = true;
 		return *this;
 	}
+
+	Light& operator=(Light&&) = delete;
 
 protected:
 	ArrayList<Chunk*> chunksLit;

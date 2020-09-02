@@ -17,8 +17,7 @@ inline char* strncpy_s(char *strDest, Uint32 numberOfElements, const char *strSo
 //! Performs data and methods to operate a string buffer
 class String {
 public:
-	String() {
-	}
+	String() = default;
 	String(const String& src) {
 		assign(src.get());
 	}
@@ -348,16 +347,35 @@ public:
 	}
 
 	//! assign operator
-	const char* operator=(const char* src) {
-		return assign(src);
+	String& operator=(const char* src) {
+		assign(src);
+		return *this;
 	}
-	const char* operator=(const String& src) {
-		return assign(src.get());
+	String& operator=(const String& src) {
+		assign(src.get());
+		return *this;
+	}
+
+	//! move operator
+	String& operator=(String&& src) {
+		swap(std::move(src));
+		return *this;
 	}
 
 	//! conversion to const char*
 	operator const char*() const {
 		return get();
+	}
+
+	//! swap contents of this string with those of another
+	//! @param src other string
+	virtual void swap(String&& src) {
+		auto tstr = str;
+		auto tsize = size;
+		str = src.str;
+		size = src.size;
+		src.str = tstr;
+		src.size = tsize;
 	}
 
 protected:
@@ -373,9 +391,14 @@ public:
 		size = defaultSize;
 		str = defaultStr;
 	}
+	StringBuf(const StringBuf& src) {
+		assign(src.get());
+	}
 	StringBuf(const String& src) {
 		assign(src.get());
 	}
+	StringBuf(String&&) = delete;
+	StringBuf(StringBuf&&) = delete;
 	StringBuf(const char* src) {
 		size = defaultSize;
 		str = defaultStr;
@@ -407,6 +430,22 @@ public:
 		}
 	}
 
+	StringBuf& operator=(const char* src) {
+		assign(src);
+		return *this;
+	}
+	StringBuf& operator=(const String& src) {
+		assign(src.get());
+		return *this;
+	}
+	StringBuf& operator=(const StringBuf& src) {
+		assign(src.get());
+		return *this;
+	}
+
+	StringBuf& operator=(StringBuf&&) = delete;
+	StringBuf& operator=(String&&) = delete;
+
 	//! allocs / reallocs the string (erases data!)
 	//! @param newSize the size (in chars) of the string to alloc
 	//! @return the alloc'd string
@@ -426,6 +465,10 @@ public:
 		str[0] = '\0';
 		str[size - 1] = '\0';
 		return str;
+	}
+
+	virtual void swap(String&& src) override {
+		assert(0 && "StringBuf::swap() is not supported");
 	}
 
 	static Uint32 getDefaultSize() { return defaultSize; }
