@@ -7,10 +7,10 @@
 #include "Script.hpp"
 #include "WideVector.hpp"
 #include "Font.hpp"
+#include "Widget.hpp"
 
 #include <memory>
 
-class Image;
 class Field;
 class Button;
 class Field;
@@ -20,14 +20,14 @@ class Renderer;
 //! A container for a gui (ie, a window)
 //! When a frame's size is smaller than its actual size, sliders will automatically be placed in the frame.
 //! Frame objects can be populated with Field objects, Button objects, other Frame objects, and more.
-class Frame {
+class Frame : public Widget {
 public:
 	Frame() = delete;
 	Frame(const char* _name = "", const char* _script = "");
 	Frame(Frame& parent, const char* _name = "", const char* _script = "");
 	Frame(const Frame&) = delete;
 	Frame(Frame&&) = delete;
-	~Frame();
+	virtual ~Frame();
 
 	Frame& operator=(const Frame&) = delete;
 	Frame& operator=(Frame&&) = delete;
@@ -48,8 +48,11 @@ public:
 		Rect<Sint32> pos;
 	};
 
+	struct entry_t;
+
+	//! list entry listener
 	struct listener_t {
-		listener_t(void* _entry) :
+		listener_t(entry_t* _entry) :
 			entry(_entry) {}
 
 		void onDeleted();
@@ -57,7 +60,7 @@ public:
 		void onChangeName(const char* name);
 
 		//! Frame::entry_t*
-		void* entry = nullptr;
+		entry_t* entry = nullptr;
 	};
 
 	//! frame list entry
@@ -192,6 +195,12 @@ public:
 	//! @return true if the entry was successfully removed, false otherwise
 	bool removeEntry(const char* name, bool resizeFrame);
 
+	//! find the widget with the given name
+	//! @param name the name of the widget to find
+	//! @param recursive true if you want to search all child frames as well, otherwise false
+	//! @return the widget with the given name, or nullptr if the widget could not be found
+	Widget* findWidget(const char* name, bool recursive = false);
+
 	//! recursively searches all embedded frames for a specific frame
 	//! @param name the name of the frame to find
 	//! @return the frame with the given name, or nullptr if the frame could not be found
@@ -222,8 +231,15 @@ public:
 	//! @return the slider, or nullptr if it could not be found
 	Slider* findSlider(const char* name);
 
+	//! get the frame's parent frame, if any
+	//! @return the parent frame, or nullptr if there is none
+	Frame* getParent();
+
 	//! resizes the frame to accomodate all list entries
 	void resizeForEntries();
+
+	//! deselect all frame elements recursively
+	virtual void deselect() override;
 
 	//! determines if the mouse is currently within the frame or not
 	//! @param curSize used by the recursion algorithm, ignore or always pass nullptr
@@ -231,12 +247,7 @@ public:
 	//! @return true if it is, false otherwise
 	bool capturesMouse(Rect<int>* curSize = nullptr, Rect<int>* curActualSize = nullptr);
 
-	//! recursively locates the head frame (ie root gui) for this frame
-	//! @return the head frame, which may be the current frame if we have no parent
-	Frame* findHead();
-
-	Frame*						getParent() { return parent; }
-	const char*					getName() const { return name.get(); }
+	virtual type_t              getType() const override { return WIDGET_FRAME; }
 	const char*					getFont() const { return font.get(); }
 	const int					getBorder() const { return border; }
 	const Rect<int>&			getSize() const { return size; }
@@ -250,6 +261,7 @@ public:
 	const bool					isDisabled() const { return disabled; }
 	const bool					isHollow() const { return hollow; }
 	const bool					isDropDown() const { return dropDown; }
+	Script*						getScript() { return script; }
 
 	void	setFont(const char* _font) { font = _font; }
 	void	setBorder(const int _border) { border = _border; }
@@ -265,9 +277,8 @@ public:
 	void	setDropDown(const bool _dropDown) { dropDown = _dropDown; }
 
 private:
-	Frame* parent = nullptr;							//!< parent frame
 	Script* script = nullptr;							//!< script engine
-	String name;										//!< internal name of the frame
+	Uint32 ticks = 0;									//!< number of engine ticks this frame has persisted
 	String font = Font::defaultFont;					//!< name of the font to use for frame entries
 	int border = 3;										//!< size of the frame's border
 	Rect<int> size;										//!< size and position of the frame in its parent frame
@@ -277,18 +288,14 @@ private:
 	WideVector borderColor;								//!< the frame's border color (only used for flat border)
 	String scriptStr;									//!< name of the frame's script (sans path and extension)
 	StringBuf<256> scriptPath;							//!< path to the frame's script file
-	bool disabled = false;								//!< if true, the frame is invisible and unusable
-	bool focus = false;									//!< if true, this frame has window focus
 	const char* tooltip = nullptr;						//!< points to the tooltip that should be displayed by the (master) frame, or nullptr if none should be displayed
 	bool hollow = false;								//!< if true, the frame is hollow; otherwise it is not
 	bool toBeDeleted = false;							//!< if true, the frame will be removed at the end of its process
-	static bool tabbing;								//!< used for tabbing between fields
 	bool draggingHSlider = false;						//!< if true, we are dragging the horizontal slider
 	bool draggingVSlider = false;						//!< if true, we are dragging the vertical slider
 	int oldSliderX = 0;									//!< when you start dragging a slider, this is set
 	int oldSliderY = 0;									//!< when you start dragging a slider, this is set
 	bool dropDown = false;								//!< if true, the frame is destroyed when specific inputs register
-	Uint32 ticks = 0;									//!< number of engine ticks this frame has persisted
 	Uint32 dropDownClicked = 0;							//!< key states stored for removing drop downs
 
 	LinkedList<Frame*> frames;

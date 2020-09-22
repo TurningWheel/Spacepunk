@@ -335,6 +335,7 @@
     <ClInclude Include="..\..\src\Vector.hpp" />
     <ClInclude Include="..\..\src\Voxel.hpp" />
     <ClInclude Include="..\..\src\WideVector.hpp" />
+    <ClInclude Include="..\..\src\Widget.hpp" />
     <ClInclude Include="..\..\src\World.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -395,6 +396,7 @@
     <ClCompile Include="..\..\src\Text.cpp" />
     <ClCompile Include="..\..\src\Material.cpp" />
     <ClCompile Include="..\..\src\Voxel.cpp" />
+    <ClCompile Include="..\..\src\Widget.cpp" />
     <ClCompile Include="..\..\src\World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

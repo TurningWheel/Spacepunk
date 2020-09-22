@@ -6,24 +6,15 @@
 #include "Frame.hpp"
 #include "Field.hpp"
 
-// no fields or frames should ever have this name!
-const char* Field::invalidName = "WACKAWACKA";
-
 Field::Field() : Field("") {
 }
 
 Field::Field(const int _textLen) {
-	textLen = _textLen + 1;
-	text = (char*)calloc(textLen, sizeof(char));
+	text.alloc(_textLen + 1);
 }
 
 Field::Field(const char* _text) {
-	textLen = static_cast<Uint32>(strlen(_text)) + 1;
-	text = (char*)calloc(textLen, sizeof(char));
-	if (text) {
-		text[textLen - 1] = '\0';
-		strncpy(text, _text, textLen - 1);
-	}
+	text = _text;
 }
 
 Field::Field(Frame& _parent) {
@@ -43,10 +34,6 @@ Field::Field(Frame& _parent, const char* _text) : Field(_text) {
 
 Field::~Field() {
 	deselect();
-	if (text) {
-		free(text);
-		text = nullptr;
-	}
 	if (callback) {
 		delete callback;
 		callback = nullptr;
@@ -55,8 +42,8 @@ Field::~Field() {
 
 void Field::select() {
 	selected = true;
-	mainEngine->setInputStr(text);
-	mainEngine->setInputLen((int)textLen - 1);
+	mainEngine->setInputStr(const_cast<char*>(text.get()));
+	mainEngine->setInputLen(text.getSize());
 	mainEngine->setInputNumbersOnly(numbersOnly);
 	SDL_StartTextInput();
 }
@@ -220,7 +207,7 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 				const char* keys = mainEngine->getLastInput();
 				if (keys) {
 					if (!Engine::charsHaveLetters(keys, (Uint32)strlen(keys)) || !numbersOnly) {
-						strncpy(text, keys, textLen - 1);
+						text = keys;
 						selectAll = false;
 					}
 				}

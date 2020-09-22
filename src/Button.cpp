@@ -31,6 +31,27 @@ void Button::setIcon(const char* _icon) {
 	icon = _icon;
 }
 
+void Button::activate() {
+	Widget* head = findHead();
+	if (head && head->getType() == WIDGET_FRAME) {
+		Frame* f = static_cast<Frame*>(head);
+		f->deselect(); // this deselects everything in the gui
+	}
+
+	Script::Args args(params);
+	if (callback) {
+		(*callback)(args);
+	} else if (parent) {
+		Frame* fparent = static_cast<Frame*>(parent);
+		Script* script = fparent->getScript();
+		if (script) {
+			script->dispatch(name.get(), &args);
+		}
+	} else {
+		mainEngine->fmsg(Engine::MSG_ERROR, "button clicked with no callback (script or otherwise)");
+	}
+}
+
 void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	_size.x += max(0, size.x - _actualSize.x);
 	_size.y += max(0, size.y - _actualSize.y);
@@ -39,10 +60,11 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	if (_size.w <= 0 || _size.h <= 0)
 		return;
 
-	glm::vec4 _color = disabled ? color * .5f : (highlighted ? color * 1.5f : color);
+	bool h = highlighted | selected;
+	glm::vec4 _color = disabled ? color * .5f : (h ? color * 1.5f : color);
 	glm::vec4 _borderColor = _color;
 	if (borderColor.w) {
-		_borderColor = disabled ? borderColor * .5f : (highlighted ? borderColor * 1.5f : borderColor);
+		_borderColor = disabled ? borderColor * .5f : (h ? borderColor * 1.5f : borderColor);
 	}
 	if (border) {
 		if (pressed) {
@@ -186,6 +208,7 @@ Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const b
 	result.clicked = false;
 	if (highlighted) {
 		if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+			select();
 			if (_size.containsPoint(mousex, mousey)) {
 				result.pressed = pressed = (reallyPressed == false);
 			} else {

@@ -7,19 +7,20 @@
 #include "Script.hpp"
 #include "Font.hpp"
 #include "WideVector.hpp"
+#include "Widget.hpp"
 
 class Renderer;
 class Frame;
 class Image;
 
 //! A Button lives in a Frame and can have scripted actions or a native callback.
-class Button {
+class Button : public Widget {
 public:
 	Button();
 	Button(Frame& _parent);
 	Button(const Button&) = delete;
 	Button(Button&&) = delete;
-	~Button();
+	virtual ~Button();
 
 	Button& operator=(const Button&) = delete;
 	Button& operator=(Button&&) = delete;
@@ -46,7 +47,7 @@ public:
 	//! @param renderer the renderer object used to draw the button
 	//! @param _size size and position of button's parent frame
 	//! @param _actualSize offset into the parent frame space (scroll)
-	void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
+	virtual void draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize);
 
 	//! handles button clicks, etc.
 	//! @param _size size and position of button's parent frame
@@ -55,14 +56,14 @@ public:
 	//! @return resultant state of the button after processing
 	result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
-	const char*					getName() const { return name.get(); }
+	//! activates the button
+	virtual void activate() override;
+
+	virtual type_t              getType() const override { return WIDGET_BUTTON; }
 	const char*					getText() const { return text.get(); }
 	const char*					getFont() const { return font.get(); }
 	int							getBorder() const { return border; }
 	const Rect<int>&			getSize() const { return size; }
-	bool						isPressed() const { return pressed; }
-	bool						isHighlighted() const { return highlighted; }
-	bool						isDisabled() const { return disabled; }
 	int							getStyle() const { return style; }
 	Script::Args&				getParams() { return params; }
 	const Script::Function*		getCallback() const { return callback; }
@@ -73,20 +74,15 @@ public:
 	void	setColor(const WideVector& _color) { color = _color; }
 	void	setTextColor(const WideVector& _color) { textColor = _color; }
 	void	setBorderColor(const WideVector& _color) { borderColor = _color; }
-	void	setName(const char* _name) { name = _name; }
 	void	setText(const char* _text) { text = _text; }
 	void	setFont(const char* _font) { font = _font; }
 	void	setIcon(const char* _icon);
 	void	setTooltip(const char* _tooltip) { tooltip = _tooltip; }
-	void	setDisabled(bool _disabled) { disabled = _disabled; }
 	void	setStyle(int _style) { style = static_cast<style_t>(_style); }
-	void	setPressed(bool _pressed) { reallyPressed = pressed = _pressed; }
 	void	setCallback(const Script::Function* fn) { callback = fn; }
 
 private:
-	Frame* parent = nullptr;						//!< parent frame
 	const Script::Function* callback = nullptr;		//!< native callback for clicking
-	String name;									//!< internal button name
 	String text;									//!< button text, if any
 	String font = Font::defaultFont;				//!< button font
 	String icon;									//!< icon, if any (supersedes text content)
@@ -94,13 +90,8 @@ private:
 	Script::Args params;							//!< optional function parameters to use when the button function is called	
 	int border = 3;									//!< size of the button border in pixels
 	Rect<int> size;									//!< size and position of the button within its parent frame
-	bool pressed = false;							//!< button pressed state
-	bool reallyPressed = false;						//!< the "actual" button state, pre-mouse process
-	bool highlighted = false;						//!< true if mouse is hovering over button; false otherwise
-	bool disabled = false;							//!< if true, the button is dimmed and unusable
 	WideVector color;								//!< the button's color
 	WideVector textColor;							//!< text color
 	WideVector borderColor;							//!< (optional) border color
 	style_t style = STYLE_NORMAL;					//!< button style
-	Uint32 highlightTime = 0;						//!< records the time since the button was highlighted
 };

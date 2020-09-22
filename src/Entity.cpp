@@ -170,7 +170,7 @@ void Entity::addToEditorList() {
 					entry->color = WideVector(1.f);
 				}
 
-				listener = std::make_shared<Frame::listener_t>((void*)entry);
+				listener = std::make_shared<Frame::listener_t>(entry);
 				entry->listener = listener;
 
 				// move the entry somewhere else in the list

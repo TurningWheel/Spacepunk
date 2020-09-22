@@ -12,7 +12,6 @@
 #include "Field.hpp"
 #include "Slider.hpp"
 
-bool Frame::tabbing = false;
 const Sint32 Frame::sliderSize = 15;
 
 static Cvar cvar_tooltipFont("tooltip.font", "font to use for tooltips", Font::defaultFont);
@@ -505,6 +504,9 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		actualSize.y = min(max(0, actualSize.y), max(0, actualSize.h - size.h));
 	}
 
+	// widget to move to after processing inputs
+	Widget* destWidget = nullptr;
+
 	// process frames
 	Node<Frame*>* prevNode = nullptr;
 	for (Node<Frame*>* node = frames.getLast(); node != nullptr; node = prevNode) {
@@ -525,7 +527,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
-	// process sliders
+	// process (frame view) sliders
 	if (parent != nullptr && !hollow && usable) {
 		// filler in between sliders
 		if (actualSize.w > size.w && actualSize.h > size.h) {
@@ -642,33 +644,36 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 	Node<Button*>* prevButton = nullptr;
 	for (Node<Button*>* node = buttons.getLast(); node != nullptr; node = prevButton) {
 		Button& button = *node->getData();
-
 		prevButton = node->getPrev();
+
+		if (!destWidget) {
+			destWidget = button.handleInput();
+		}
 
 		Button::result_t buttonResult = button.process(_size, actualSize, usable);
 		if (usable && buttonResult.highlighted) {
 			result.highlightTime = buttonResult.highlightTime;
 			result.tooltip = buttonResult.tooltip;
 			if (buttonResult.clicked) {
-				Script::Args args(button.getParams());
-				if (button.getCallback()) {
-					(*button.getCallback())(args);
-				} else if (script) {
-					script->dispatch(button.getName(), &args);
-				} else {
-					mainEngine->fmsg(Engine::MSG_ERROR, "button clicked with no callback (script or otherwise)");
-				}
+				button.activate();
 			}
 			result.usable = usable = false;
 		}
+
+		if (destWidget && button.isSelected()) {
+			button.deselect();
+		}
 	}
 
-	// process sliders
+	// process (widget) sliders
 	Node<Slider*>* prevSlider = nullptr;
 	for (Node<Slider*>* node = sliders.getLast(); node != nullptr; node = prevSlider) {
 		Slider& slider = *node->getData();
-
 		prevSlider = node->getPrev();
+
+		if (!destWidget) {
+			destWidget = slider.handleInput();
+		}
 
 		Slider::result_t sliderResult = slider.process(_size, actualSize, usable);
 		if (usable && sliderResult.highlighted) {
@@ -684,6 +689,10 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 				}
 			}
 			result.usable = usable = false;
+		}
+
+		if (destWidget && slider.isSelected()) {
+			slider.deselect();
 		}
 	}
 
@@ -765,29 +774,15 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		}
 	}
 
-	// clear tabbing
-	if (!mainEngine->getKeyStatus(SDL_SCANCODE_TAB)) {
-		tabbing = false;
-	}
-
 	// process fields
 	Node<Field*>* prevField = nullptr;
 	for (Node<Field*>* node = fields.getLast(); node != nullptr; node = prevField) {
 		Field& field = *node->getData();
-
 		prevField = node->getPrev();
 
-		// handle tabbing
-		Field* destField = nullptr;
-		if (field.isSelected()) {
-			if (mainEngine->getKeyStatus(SDL_SCANCODE_TAB) && !tabbing) {
-				tabbing = true;
-				Frame* gui = findHead();
-				Frame* destFrame = gui->findFrame(field.getTabDestFrame());
-				if (destFrame) {
-					destField = destFrame->findField(field.getTabDestField());
-				}
-			}
+		// widget capture input
+		if (!destWidget) {
+			destWidget = field.handleInput();
 		}
 
 		Field::result_t fieldResult = field.process(_size, actualSize, usable);
@@ -797,7 +792,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			}
 		}
 
-		if (fieldResult.entered || destField) {
+		if (fieldResult.entered || destWidget) {
 			Script::Args args(field.getParams());
 			args.addString(field.getText());
 			if (field.getCallback()) {
@@ -809,14 +804,17 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			}
 		}
 
-		if (destField) {
+		if (destWidget && field.isSelected()) {
 			field.deselect();
-			destField->select();
 		}
 	}
 
 	if (_size.containsPoint(omousex, omousey) && !hollow) {
 		result.usable = usable = false;
+	}
+
+	if (destWidget) {
+		destWidget->select();
 	}
 
 	// frame suicide :(
@@ -1013,6 +1011,14 @@ bool Frame::remove(const char* name) {
 			return true;
 		}
 	}
+	for (Node<Slider*>* node = sliders.getFirst(); node != nullptr; node = node->getNext()) {
+		Slider& slider = *node->getData();
+		if (strcmp(slider.getName(), name) == 0) {
+			delete node->getData();
+			sliders.removeNode(node);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -1029,6 +1035,38 @@ bool Frame::removeEntry(const char* name, bool resizeFrame) {
 		}
 	}
 	return false;
+}
+
+Widget* Frame::findWidget(const char* name, bool recursive) {
+	for (auto frame : frames) {
+		if (strcmp(frame->getName(), name) == 0) {
+			return frame;
+		}
+	}
+	for (auto button : buttons) {
+		if (strcmp(button->getName(), name) == 0) {
+			return button;
+		}
+	}
+	for (auto field : fields) {
+		if (strcmp(field->getName(), name) == 0) {
+			return field;
+		}
+	}
+	for (auto slider : sliders) {
+		if (strcmp(slider->getName(), name) == 0) {
+			return slider;
+		}
+	}
+	if (recursive) {
+		for (auto frame : frames) {
+			Widget* w = frame->findWidget(name, recursive);
+			if (w) {
+				return w;
+			}
+		}
+	}
+	return nullptr;
 }
 
 Frame* Frame::findFrame(const char* name) {
@@ -1111,7 +1149,8 @@ bool Frame::capturesMouse(Rect<int>* curSize, Rect<int>* curActualSize) {
 	Rect<int>& _actualSize = curActualSize ? *curActualSize : newActualSize;
 
 	if (parent) {
-		if (parent->capturesMouse(&_size, &_actualSize)) {
+		auto pframe = static_cast<Frame*>(parent);
+		if (pframe->capturesMouse(&_size, &_actualSize)) {
 			_size.x += max(0, size.x - _actualSize.x);
 			_size.y += max(0, size.y - _actualSize.y);
 			if (size.h < actualSize.h) {
@@ -1143,10 +1182,26 @@ bool Frame::capturesMouse(Rect<int>* curSize, Rect<int>* curActualSize) {
 	}
 }
 
-Frame* Frame::findHead() {
-	if (parent) {
-		return parent->findHead();
+Frame* Frame::getParent() {
+	if (parent && parent->getType() == WIDGET_FRAME) {
+		return static_cast<Frame*>(parent);
 	} else {
-		return this;
+		return nullptr;
+	}
+}
+
+void Frame::deselect() {
+	selected = false;
+	for (auto frame : frames) {
+		frame->deselect();
+	}
+	for (auto button : buttons) {
+		button->deselect();
+	}
+	for (auto field : fields) {
+		field->deselect();
+	}
+	for (auto slider : sliders) {
+		slider->deselect();
 	}
 }

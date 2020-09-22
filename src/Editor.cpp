@@ -639,8 +639,8 @@ void Editor::buttonEditorSettings() {
 		size.y = 3; size.h = rect.h - 6;
 		field->setSize(size);
 		field->setEditable(true);
-		field->setTabDestFrame("editor_FrameEditorSettingsSnapRotate");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameEditorSettingsSnapRotate");
+		field->setWidgetTab("field");
 
 		y += rect.h + border;
 	}
@@ -682,8 +682,8 @@ void Editor::buttonEditorSettings() {
 		size.y = 3; size.h = rect.h - 6;
 		field->setSize(size);
 		field->setEditable(true);
-		field->setTabDestFrame("editor_FrameEditorSettingsSnapScale");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameEditorSettingsSnapScale");
+		field->setWidgetTab("field");
 
 		y += rect.h + border;
 	}
@@ -725,8 +725,8 @@ void Editor::buttonEditorSettings() {
 		size.y = 3; size.h = rect.h - 6;
 		field->setSize(size);
 		field->setEditable(true);
-		field->setTabDestFrame("editor_FrameEditorSettingsSnapTranslate");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameEditorSettingsSnapTranslate");
+		field->setWidgetTab("field");
 
 		y += rect.h + border;
 	}
@@ -872,8 +872,8 @@ void Editor::buttonMapSettings() {
 		field->setSize(size);
 		field->setText(world->getNameStr().get());
 		field->setEditable(true);
-		field->setTabDestFrame("editor_FrameMapSettingsUp");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameMapSettingsUp");
+		field->setWidgetTab("field");
 	}
 
 	// label
@@ -911,8 +911,8 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setTabDestFrame("editor_FrameMapSettingsRight");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameMapSettingsRight");
+		field->setWidgetTab("field");
 
 		// label
 		{
@@ -951,8 +951,8 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setTabDestFrame("editor_FrameMapSettingsUp");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameMapSettingsUp");
+		field->setWidgetTab("field");
 
 		// label
 		{
@@ -991,8 +991,8 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setTabDestFrame("editor_FrameMapSettingsDown");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameMapSettingsDown");
+		field->setWidgetTab("field");
 
 		// label
 		{
@@ -1031,8 +1031,8 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setTabDestFrame("editor_FrameMapSettingsLeft");
-		field->setTabDestField("field");
+		field->setWidgetTabParent("editor_FrameMapSettingsLeft");
+		field->setWidgetTab("field");
 
 		// label
 		{
@@ -1817,11 +1817,11 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					field->setNumbersOnly(true);
 					field->setJustify(Field::RIGHT);
 					if (c == 0) {
-						field->setTabDestFrame("editor_TileCeilingHeight");
+						field->setWidgetTabParent("editor_TileCeilingHeight");
 					} else {
-						field->setTabDestFrame("editor_TileFloorSlopeDir");
+						field->setWidgetTabParent("editor_TileFloorSlopeDir");
 					}
-					field->setTabDestField("field");
+					field->setWidgetTab("field");
 				}
 
 				// slope dir
@@ -1853,11 +1853,11 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					field->setNumbersOnly(true);
 					field->setJustify(Field::RIGHT);
 					if (c == 0) {
-						field->setTabDestFrame("editor_TileCeilingSlopeDir");
+						field->setWidgetTabParent("editor_TileCeilingSlopeDir");
 					} else {
-						field->setTabDestFrame("editor_TileFloorSlopeSize");
+						field->setWidgetTabParent("editor_TileFloorSlopeSize");
 					}
-					field->setTabDestField("field");
+					field->setWidgetTab("field");
 				}
 
 				// slope size
@@ -1889,11 +1889,11 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					field->setNumbersOnly(true);
 					field->setJustify(Field::RIGHT);
 					if (c == 0) {
-						field->setTabDestFrame("editor_TileCeilingSlopeSize");
+						field->setWidgetTabParent("editor_TileCeilingSlopeSize");
 					} else {
-						field->setTabDestFrame("editor_TileFloorHeight");
+						field->setWidgetTabParent("editor_TileFloorHeight");
 					}
-					field->setTabDestField("field");
+					field->setWidgetTab("field");
 				}
 			}
 
@@ -2295,8 +2295,8 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setTabDestField("propertyY");
-			field->setTabDestFrame("editor_FramePanelY");
+			field->setWidgetTab("propertyY");
+			field->setWidgetTabParent("editor_FramePanelY");
 		}
 	}
 
@@ -2330,8 +2330,8 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setTabDestField("propertyZ");
-			field->setTabDestFrame("editor_FramePanelZ");
+			field->setWidgetTab("propertyZ");
+			field->setWidgetTabParent("editor_FramePanelZ");
 		}
 	}
 
@@ -2365,8 +2365,8 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			field->setEditable(true);
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
-			field->setTabDestField("propertyX");
-			field->setTabDestFrame("editor_FramePanelX");
+			field->setWidgetTab("propertyX");
+			field->setWidgetTabParent("editor_FramePanelX");
 		}
 	}
 
@@ -3817,8 +3817,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateY%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(0);
 			field->getParams().addInt(component->getUID());
@@ -3857,8 +3857,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateZ%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(1);
 			field->getParams().addInt(component->getUID());
@@ -3898,8 +3898,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateX%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(2);
 			field->getParams().addInt(component->getUID());
@@ -3952,8 +3952,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateY%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(0);
 			field->getParams().addInt(component->getUID());
@@ -3992,8 +3992,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateZ%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(1);
 			field->getParams().addInt(component->getUID());
@@ -4033,8 +4033,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateX%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(2);
 			field->getParams().addInt(component->getUID());
@@ -4087,8 +4087,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleY%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(0);
 			field->getParams().addInt(component->getUID());
@@ -4127,8 +4127,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleZ%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(1);
 			field->getParams().addInt(component->getUID());
@@ -4168,8 +4168,8 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleX%d", 1, component->getUID());
-			field->setTabDestFrame(dest.get());
-			field->setTabDestField("field");
+			field->setWidgetTabParent(dest.get());
+			field->setWidgetTab("field");
 
 			field->getParams().addInt(2);
 			field->getParams().addInt(component->getUID());
@@ -4510,8 +4510,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesTranslateY");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesTranslateY");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4548,8 +4548,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesTranslateZ");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesTranslateZ");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4587,8 +4587,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesTranslateX");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesTranslateX");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4639,8 +4639,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesPitch");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesPitch");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4677,8 +4677,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesYaw");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesYaw");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4716,8 +4716,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesRoll");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesRoll");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4768,8 +4768,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesScaleY");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesScaleY");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4806,8 +4806,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesScaleZ");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesScaleZ");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");
@@ -4845,8 +4845,8 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
-						field->setTabDestFrame("editor_FrameEntityPropertiesScaleX");
-						field->setTabDestField("field");
+						field->setWidgetTabParent("editor_FrameEntityPropertiesScaleX");
+						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
 							field->setText("...");

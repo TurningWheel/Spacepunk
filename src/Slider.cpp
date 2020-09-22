@@ -3,6 +3,10 @@
 #include "Slider.hpp"
 #include "Renderer.hpp"
 
+Slider::Slider(Frame& _parent) {
+	parent = &_parent;
+}
+
 void Slider::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	Rect<int> _handleSize, _railSize;
 
