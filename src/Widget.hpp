@@ -4,13 +4,16 @@
 
 #include "Main.hpp"
 #include "String.hpp"
+#include "LinkedList.hpp"
+
+class Frame;
 
 class Widget {
 public:
     Widget() = default;
     Widget(const Widget&) = delete;
     Widget(Widget&&) = delete;
-    virtual ~Widget() = default;
+    virtual ~Widget();
 
     Widget& operator=(const Widget&) = delete;
     Widget& operator=(Widget&&) = delete;
@@ -25,7 +28,7 @@ public:
 
     virtual type_t  getType() const = 0;
     const char*		getName() const { return name.get(); }
-    bool			isPressed() const { return pressed; }
+    bool			isPressed() const { return reallyPressed; }
     bool			isHighlighted() const { return selected | highlighted; }
     bool			isSelected() const { return selected; }
     bool			isDisabled() const { return disabled; }
@@ -39,7 +42,7 @@ public:
     const char*     getWidgetPageLeft() const { return widgetPageLeft.get(); }
     const char*     getWidgetPageRight() const { return widgetPageRight.get(); }
     const char*     getWidgetBack() const { return widgetBack.get(); }
-    const char*     getWidgetTabParent() const { return widgetTabParent.get(); }
+    const char*     getWidgetSearchParent() const { return widgetSearchParent.get(); }
     const char*     getWidgetTab() const { return widgetTab.get(); }
 
     void	setName(const char* _name) { name = _name; }
@@ -55,7 +58,7 @@ public:
     void    setWidgetPageLeft(const char* s) { widgetPageLeft = s; }
     void    setWidgetPageRight(const char* s) { widgetPageRight = s; }
     void    setWidgetBack(const char* s) { widgetBack = s; }
-    void    setWidgetTabParent(const char* s) { widgetTabParent = s; }
+    void    setWidgetSearchParent(const char* s) { widgetSearchParent = s; }
     void    setWidgetTab(const char* s) { widgetTab = s; }
 
     //! recursively locates the head widget for this widget
@@ -75,8 +78,19 @@ public:
     //! @return the next widget to select, or nullptr if no widget was selected
     Widget* handleInput();
 
+    //! adopt a new widget as one of our children
+    //! @param widget the widget to adopt
+    void adoptWidget(Widget& widget);
+
+    //! find a widget amongst our children
+    //! @param name the name of the widget to find
+    //! @param recursive true to search recursively or not
+    //! @return the widget found, or nullptr if it was not found
+    Widget* findWidget(const char* name, bool recursive);
+
 protected:
     Widget* parent = nullptr;                       //!< parent widget
+    LinkedList<Widget*> widgets;                    //!< widget children
     String name;                                    //!< widget name
     bool pressed = false;							//!< pressed state
     bool reallyPressed = false;						//!< the "actual" pressed state, pre-mouse process
@@ -87,6 +101,7 @@ protected:
     Uint32 highlightTime = 0u;						//!< records the time since the widget was highlighted
     Sint32 owner = 0;                               //!< which player owns this widget (0 = player 1, 1 = player 2, etc)
 
+    String widgetSearchParent;                      //!< parent of widget to select (use to narrow search)
     String widgetRight;             				//!< next widget to select right
     String widgetDown;                              //!< next widget to select down
     String widgetLeft;                              //!< next widget to select left
@@ -94,6 +109,7 @@ protected:
     String widgetPageLeft;                          //!< widget to activate when you press MenuPageLeft
     String widgetPageRight;                         //!< widget to activate when you press MenuPageRight
     String widgetBack;                              //!< widget to activate when you press MenuCancel
-    String widgetTabParent;                         //!< parent of widget to select when you press tab
     String widgetTab;                               //!< widget to select when you press tab
+
+    Frame* findSearchRoot();
 };

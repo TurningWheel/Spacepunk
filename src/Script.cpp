@@ -274,7 +274,7 @@ void Script::exposeFrame() {
 		.addFunction("getWidgetPageLeft", &Widget::getWidgetPageLeft)
 		.addFunction("getWidgetPageRight", &Widget::getWidgetPageRight)
 		.addFunction("getWidgetBack", &Widget::getWidgetBack)
-		.addFunction("getWidgetTabParent", &Widget::getWidgetTabParent)
+		.addFunction("getWidgetSearchParent", &Widget::getWidgetSearchParent)
 		.addFunction("getWidgetTab", &Widget::getWidgetTab)
 		.addFunction("setName", &Widget::setName)
 		.addFunction("setPressed", &Widget::setPressed)
@@ -289,8 +289,13 @@ void Script::exposeFrame() {
 		.addFunction("setWidgetPageLeft", &Widget::setWidgetPageLeft)
 		.addFunction("setWidgetPageRight", &Widget::setWidgetPageRight)
 		.addFunction("setWidgetBack", &Widget::setWidgetBack)
-		.addFunction("setWidgetTabParent", &Widget::setWidgetTabParent)
+		.addFunction("setWidgetSearchParent", &Widget::setWidgetSearchParent)
 		.addFunction("setWidgetTab", &Widget::setWidgetTab)
+		.addFunction("findHead", &Widget::findHead)
+		.addFunction("activate", &Widget::activate)
+		.addFunction("select", &Widget::select)
+		.addFunction("deselect", &Widget::deselect)
+		.addFunction("findWidget", &Widget::findWidget)
 		.endClass()
 		;
 

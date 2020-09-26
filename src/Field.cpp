@@ -20,16 +20,19 @@ Field::Field(const char* _text) {
 Field::Field(Frame& _parent) {
 	parent = &_parent;
 	_parent.getFields().addNodeLast(this);
+	_parent.adoptWidget(*this);
 }
 
 Field::Field(Frame& _parent, const int _textLen) : Field(_textLen) {
 	parent = &_parent;
 	_parent.getFields().addNodeLast(this);
+	_parent.adoptWidget(*this);
 }
 
 Field::Field(Frame& _parent, const char* _text) : Field(_text) {
 	parent = &_parent;
 	_parent.getFields().addNodeLast(this);
+	_parent.adoptWidget(*this);
 }
 
 Field::~Field() {

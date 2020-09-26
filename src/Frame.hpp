@@ -195,12 +195,6 @@ public:
 	//! @return true if the entry was successfully removed, false otherwise
 	bool removeEntry(const char* name, bool resizeFrame);
 
-	//! find the widget with the given name
-	//! @param name the name of the widget to find
-	//! @param recursive true if you want to search all child frames as well, otherwise false
-	//! @return the widget with the given name, or nullptr if the widget could not be found
-	Widget* findWidget(const char* name, bool recursive = false);
-
 	//! recursively searches all embedded frames for a specific frame
 	//! @param name the name of the frame to find
 	//! @return the frame with the given name, or nullptr if the frame could not be found
@@ -247,21 +241,25 @@ public:
 	//! @return true if it is, false otherwise
 	bool capturesMouse(Rect<int>* curSize = nullptr, Rect<int>* curActualSize = nullptr);
 
-	virtual type_t              getType() const override { return WIDGET_FRAME; }
-	const char*					getFont() const { return font.get(); }
-	const int					getBorder() const { return border; }
-	const Rect<int>&			getSize() const { return size; }
-	const Rect<int>&			getActualSize() const { return actualSize; }
-	int							getBorderStyle() const { return borderStyle; }
-	LinkedList<Frame*>&			getFrames() { return frames; }
-	LinkedList<Field*>&			getFields() { return fields; }
-	LinkedList<Button*>&		getButtons() { return buttons; }
-	LinkedList<entry_t*>&		getEntries() { return list; }
-	LinkedList<Slider*>&		getSliders() { return sliders; }
-	const bool					isDisabled() const { return disabled; }
-	const bool					isHollow() const { return hollow; }
-	const bool					isDropDown() const { return dropDown; }
-	Script*						getScript() { return script; }
+	//! set the list selection to the given index
+	//! @param index the index to set the list selection to
+	void setSelection(int index);
+
+	virtual type_t					getType() const override { return WIDGET_FRAME; }
+	const char*						getFont() const { return font.get(); }
+	const int						getBorder() const { return border; }
+	const Rect<int>&				getSize() const { return size; }
+	const Rect<int>&				getActualSize() const { return actualSize; }
+	int								getBorderStyle() const { return borderStyle; }
+	LinkedList<Frame*>&				getFrames() { return frames; }
+	LinkedList<Field*>&				getFields() { return fields; }
+	LinkedList<Button*>&			getButtons() { return buttons; }
+	LinkedList<Slider*>&			getSliders() { return sliders; }
+	LinkedList<entry_t*>&			getEntries() { return list; }
+	const bool						isDisabled() const { return disabled; }
+	const bool						isHollow() const { return hollow; }
+	const bool						isDropDown() const { return dropDown; }
+	Script*							getScript() { return script; }
 
 	void	setFont(const char* _font) { font = _font; }
 	void	setBorder(const int _border) { border = _border; }
@@ -297,11 +295,15 @@ private:
 	int oldSliderY = 0;									//!< when you start dragging a slider, this is set
 	bool dropDown = false;								//!< if true, the frame is destroyed when specific inputs register
 	Uint32 dropDownClicked = 0;							//!< key states stored for removing drop downs
+	Node<entry_t*>* selection = nullptr;				//!< entry selection
 
 	LinkedList<Frame*> frames;
 	LinkedList<Button*> buttons;
 	LinkedList<Field*> fields;
 	LinkedList<image_t*> images;
-	LinkedList<entry_t*> list;
 	LinkedList<Slider*> sliders;
+	LinkedList<entry_t*> list;
+
+	void scrollToSelection();
+	void activateEntry(entry_t& entry);
 };

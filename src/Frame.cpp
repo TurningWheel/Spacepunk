@@ -11,6 +11,7 @@
 #include "Image.hpp"
 #include "Field.hpp"
 #include "Slider.hpp"
+#include "Player.hpp"
 
 const Sint32 Frame::sliderSize = 15;
 
@@ -110,6 +111,7 @@ Frame::Frame(const char* _name, const char* _script) {
 Frame::Frame(Frame& _parent, const char* _name, const char* _script) : Frame(_name, _script) {
 	parent = &_parent;
 	_parent.getFrames().addNodeLast(this);
+	_parent.adoptWidget(*this);
 }
 
 Frame::~Frame() {
@@ -295,7 +297,7 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	// render list entries
 	int listStart = std::min(std::max(0, scroll.y / entrySize), (int)list.getSize() - 1);
 	int i = listStart;
-	Node<entry_t*>* node = node = list.nodeForIndex(listStart);
+	Node<entry_t*>* node = list.nodeForIndex(listStart);
 	for (; node != nullptr; node = node->getNext(), ++i) {
 		entry_t& entry = *node->getData();
 		if (entry.text.empty()) {
@@ -338,6 +340,8 @@ void Frame::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		if (entry.pressed) {
 			renderer.drawRect(&entryback, color*2.f);
 		} else if (entry.highlighted) {
+			renderer.drawRect(&entryback, color*1.5f);
+		} else if (selection == node) {
 			renderer.drawRect(&entryback, color*1.5f);
 		}
 
@@ -465,6 +469,66 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 	Sint32 mousey = (mainEngine->getMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
 	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
 	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
+
+	if (selected) {
+		Input& input = mainEngine->getInput(owner);
+
+		// unselect list
+		if (input.binaryToggle("MenuCancel")) {
+			input.consumeBinaryToggle("MenuCancel");
+			deselect();
+			if (!widgetBack.empty()) {
+				Frame* root = findSearchRoot(); assert(root);
+				Widget* search = root->findWidget(widgetBack.get(), true);
+				if (search) {
+					search->select();
+				}
+			}
+			if (dropDown) {
+				toBeDeleted = true;
+			}
+		}
+
+		// activate selection
+		if (input.binaryToggle("MenuConfirm")) {
+			input.consumeBinaryToggle("MenuConfirm");
+			if (selection) {
+				activateEntry(*selection->getData());
+			}
+			if (dropDown) {
+				if (!widgetBack.empty()) {
+					Frame* root = findSearchRoot(); assert(root);
+					Widget* search = root->findWidget(widgetBack.get(), true);
+					if (search) {
+						search->select();
+					}
+				}
+				toBeDeleted = true;
+			}
+		}
+
+		// choose a selection
+		if (!selection) {
+			if (input.binaryToggle("MenuUp") || 
+				input.binaryToggle("MenuDown")) {
+				input.consumeBinaryToggle("MenuUp");
+				input.consumeBinaryToggle("MenuDown");
+				selection = list.getFirst();
+				scrollToSelection();
+			}
+		} else {
+			if (input.binaryToggle("MenuUp")) {
+				input.consumeBinaryToggle("MenuUp");
+				selection = selection->getPrev() ? selection->getPrev() : selection;
+				scrollToSelection();
+			}
+			if (input.binaryToggle("MenuDown")) {
+				input.consumeBinaryToggle("MenuDown");
+				selection = selection->getNext() ? selection->getNext() : selection;
+				scrollToSelection();
+			}
+		}
+	}
 
 	// scroll with mouse wheel
 	if (parent != nullptr && !hollow && fullSize.containsPoint(omousex, omousey) && usable) {
@@ -671,8 +735,10 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		Slider& slider = *node->getData();
 		prevSlider = node->getPrev();
 
-		if (!destWidget) {
+		if (!destWidget && !slider.isActivated()) {
 			destWidget = slider.handleInput();
+		} else {
+			slider.control();
 		}
 
 		Slider::result_t sliderResult = slider.process(_size, actualSize, usable);
@@ -680,13 +746,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			result.highlightTime = sliderResult.highlightTime;
 			result.tooltip = sliderResult.tooltip;
 			if (sliderResult.clicked) {
-				Script::Args args;
-				args.addFloat(slider.getValue());
-				if (slider.getCallback()) {
-					(*slider.getCallback())(args);
-				} else if (script) {
-					script->dispatch(slider.getName(), &args);
-				}
+				slider.fireCallback();
 			}
 			result.usable = usable = false;
 		}
@@ -711,6 +771,9 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			nextnode = node->getNext();
 
 			if (entry.suicide) {
+				if (selection == node) {
+					selection = node->getPrev();
+				}
 				delete node->getData();
 				list.removeNode(node);
 				--i;
@@ -724,27 +787,10 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			if (_size.containsPoint(omousex, omousey) && entryRect.containsPoint(omousex, omousey)) {
 				result.highlightTime = entry.highlightTime;
 				result.tooltip = entry.tooltip.get();
-				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT) ||
-					((mainEngine->getKeyStatus(SDL_SCANCODE_SPACE) ||
-					mainEngine->getKeyStatus(SDL_SCANCODE_RETURN)) && !mainEngine->getInputStr())) {
+				if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
 					if (!entry.pressed) {
 						entry.pressed = true;
-						Script::Args args(entry.params);
-						if (mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL)) {
-							if (entry.ctrlClick) {
-								(*entry.ctrlClick)(args);
-							} else if (script) {
-								StringBuf<64> dispatch("%sCtrlClick", 1, entry.name.get());
-								script->dispatch(dispatch.get(), &args);
-							}
-						} else {
-							if (entry.click) {
-								(*entry.click)(args);
-							} else if (script) {
-								StringBuf<64> dispatch("%sClick", 1, entry.name.get());
-								script->dispatch(dispatch.get(), &args);
-							}
-						}
+						activateEntry(entry);
 					}
 				} else {
 					entry.pressed = false;
@@ -792,7 +838,7 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 			}
 		}
 
-		if (fieldResult.entered || destWidget) {
+		if (fieldResult.entered || (destWidget && field.isSelected())) {
 			Script::Args args(field.getParams());
 			args.addString(field.getText());
 			if (field.getCallback()) {
@@ -828,24 +874,12 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 }
 
 void Frame::postprocess() {
-	if (dropDown) {
+	if (dropDown && owner == cvar_mouselook.toInt()) {
 		if (!dropDownClicked) {
 			for (int c = 0; c < 8; ++c) {
 				if (mainEngine->getMouseStatus(c)) {
 					dropDownClicked |= 1 << c;
 				}
-			}
-			if (mainEngine->getKeyStatus(SDL_SCANCODE_ESCAPE)) {
-				dropDownClicked |= 1 << 8;
-			}
-			if (mainEngine->getKeyStatus(SDL_SCANCODE_TAB)) {
-				dropDownClicked |= 1 << 9;
-			}
-			if (mainEngine->getKeyStatus(SDL_SCANCODE_RETURN)) {
-				dropDownClicked |= 1 << 10;
-			}
-			if (mainEngine->getKeyStatus(SDL_SCANCODE_SPACE)) {
-				dropDownClicked |= 1 << 11;
 			}
 		} else {
 			for (int c = 0; c < 8; ++c) {
@@ -853,24 +887,11 @@ void Frame::postprocess() {
 					dropDownClicked &= ~(1 << c);
 				}
 			}
-			if (!mainEngine->getKeyStatus(SDL_SCANCODE_ESCAPE)) {
-				dropDownClicked &= ~(1 << 8);
-			}
-			if (!mainEngine->getKeyStatus(SDL_SCANCODE_TAB)) {
-				dropDownClicked &= ~(1 << 9);
-			}
-			if (!mainEngine->getKeyStatus(SDL_SCANCODE_RETURN)) {
-				dropDownClicked &= ~(1 << 10);
-			}
-			if (!mainEngine->getKeyStatus(SDL_SCANCODE_SPACE)) {
-				dropDownClicked &= ~(1 << 11);
-			}
 			if (!dropDownClicked && ticks > 0) {
 				toBeDeleted = true;
 			}
 		}
 	}
-
 	for (auto frame : frames) {
 		frame->postprocess();
 	}
@@ -969,6 +990,7 @@ void Frame::clear() {
 		delete list.getFirst()->getData();
 		list.removeNode(list.getFirst());
 	}
+	selection = nullptr;
 }
 
 void Frame::clearEntries() {
@@ -976,6 +998,7 @@ void Frame::clearEntries() {
 		delete list.getFirst()->getData();
 		list.removeNode(list.getFirst());
 	}
+	selection = nullptr;
 }
 
 bool Frame::remove(const char* name) {
@@ -1026,6 +1049,9 @@ bool Frame::removeEntry(const char* name, bool resizeFrame) {
 	for (Node<entry_t*>* node = list.getFirst(); node != nullptr; node = node->getNext()) {
 		entry_t& entry = *node->getData();
 		if (entry.name == name) {
+			if (selection == node) {
+				selection = node->getPrev();
+			}
 			delete node->getData();
 			list.removeNode(node);
 			if (resizeFrame) {
@@ -1037,45 +1063,12 @@ bool Frame::removeEntry(const char* name, bool resizeFrame) {
 	return false;
 }
 
-Widget* Frame::findWidget(const char* name, bool recursive) {
+Frame* Frame::findFrame(const char* name) {
 	for (auto frame : frames) {
 		if (strcmp(frame->getName(), name) == 0) {
 			return frame;
-		}
-	}
-	for (auto button : buttons) {
-		if (strcmp(button->getName(), name) == 0) {
-			return button;
-		}
-	}
-	for (auto field : fields) {
-		if (strcmp(field->getName(), name) == 0) {
-			return field;
-		}
-	}
-	for (auto slider : sliders) {
-		if (strcmp(slider->getName(), name) == 0) {
-			return slider;
-		}
-	}
-	if (recursive) {
-		for (auto frame : frames) {
-			Widget* w = frame->findWidget(name, recursive);
-			if (w) {
-				return w;
-			}
-		}
-	}
-	return nullptr;
-}
-
-Frame* Frame::findFrame(const char* name) {
-	for (Node<Frame*>* node = frames.getFirst(); node != nullptr; node = node->getNext()) {
-		Frame& frame = *node->getData();
-		if (strcmp(frame.getName(), name) == 0) {
-			return &frame;
 		} else {
-			Frame* subFrame = frame.findFrame(name);
+			Frame* subFrame = frame->findFrame(name);
 			if (subFrame) {
 				return subFrame;
 			}
@@ -1085,50 +1078,45 @@ Frame* Frame::findFrame(const char* name) {
 }
 
 Button* Frame::findButton(const char* name) {
-	for (Node<Button*>* node = buttons.getFirst(); node != nullptr; node = node->getNext()) {
-		Button& button = *node->getData();
-		if (strcmp(button.getName(), name) == 0) {
-			return &button;
+	for (auto button : buttons) {
+		if (strcmp(button->getName(), name) == 0) {
+			return button;
 		}
 	}
 	return nullptr;
 }
 
 Field* Frame::findField(const char* name) {
-	for (Node<Field*>* node = fields.getFirst(); node != nullptr; node = node->getNext()) {
-		Field& field = *node->getData();
-		if (strcmp(field.getName(), name) == 0) {
-			return &field;
+	for (auto field : fields) {
+		if (strcmp(field->getName(), name) == 0) {
+			return field;
 		}
 	}
 	return nullptr;
 }
 
 Frame::image_t* Frame::findImage(const char* name) {
-	for (Node<image_t*>* node = images.getFirst(); node != nullptr; node = node->getNext()) {
-		image_t& image = *node->getData();
-		if (image.name == name) {
-			return &image;
+	for (auto image : images) {
+		if (image->name == name) {
+			return image;
 		}
 	}
 	return nullptr;
 }
 
 Frame::entry_t* Frame::findEntry(const char* name) {
-	for (Node<entry_t*>* node = list.getFirst(); node != nullptr; node = node->getNext()) {
-		entry_t& entry = *node->getData();
-		if (entry.name == name) {
-			return &entry;
+	for (auto entry : list) {
+		if (entry->name == name) {
+			return entry;
 		}
 	}
 	return nullptr;
 }
 
 Slider* Frame::findSlider(const char* name) {
-	for (Node<Slider*>* node = sliders.getFirst(); node != nullptr; node = node->getNext()) {
-		Slider& slider = *node->getData();
-		if (strcmp(slider.getName(), name) == 0) {
-			return &slider;
+	for (auto slider : sliders) {
+		if (strcmp(slider->getName(), name) == 0) {
+			return slider;
 		}
 	}
 	return nullptr;
@@ -1193,15 +1181,59 @@ Frame* Frame::getParent() {
 void Frame::deselect() {
 	selected = false;
 	for (auto frame : frames) {
-		frame->deselect();
+		if (frame->getOwner() == owner) {
+			frame->deselect();
+		}
 	}
 	for (auto button : buttons) {
-		button->deselect();
+		if (button->getOwner() == owner) {
+			button->deselect();
+		}
 	}
 	for (auto field : fields) {
-		field->deselect();
+		if (field->getOwner() == owner) {
+			field->deselect();
+		}
 	}
 	for (auto slider : sliders) {
-		slider->deselect();
+		if (slider->getOwner() == owner) {
+			slider->deselect();
+		}
+	}
+}
+
+void Frame::setSelection(int index) {
+	selection = list.nodeForIndex((Uint32)index);
+}
+
+void Frame::scrollToSelection() {
+	if (!selection) {
+		return;
+	}
+	int index = (int)list.indexForNode(selection);
+	if (actualSize.y > index * entrySize) {
+		actualSize.y = index * entrySize;
+	}
+	if (actualSize.y + size.h < (index + 1) * entrySize) {
+		actualSize.y = (index + 1) * entrySize - size.h;
+	}
+}
+
+void Frame::activateEntry(entry_t& entry) {
+	Script::Args args(entry.params);
+	if (mainEngine->getKeyStatus(SDL_SCANCODE_LCTRL) || mainEngine->getKeyStatus(SDL_SCANCODE_RCTRL)) {
+		if (entry.ctrlClick) {
+			(*entry.ctrlClick)(args);
+		} else if (script) {
+			StringBuf<64> dispatch("%sCtrlClick", 1, entry.name.get());
+			script->dispatch(dispatch.get(), &args);
+		}
+	} else {
+		if (entry.click) {
+			(*entry.click)(args);
+		} else if (script) {
+			StringBuf<64> dispatch("%sClick", 1, entry.name.get());
+			script->dispatch(dispatch.get(), &args);
+		}
 	}
 }

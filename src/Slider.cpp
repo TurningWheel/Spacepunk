@@ -5,6 +5,7 @@
 
 Slider::Slider(Frame& _parent) {
 	parent = &_parent;
+	_parent.adoptWidget(*this);
 }
 
 void Slider::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
@@ -33,7 +34,11 @@ void Slider::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	_handleSize.w = min(handleSize.w, _size.w - handleSize.x + _actualSize.x) + min(0, handleSize.x - _actualSize.x);
 	_handleSize.h = min(handleSize.h, _size.h - handleSize.y + _actualSize.y) + min(0, handleSize.y - _actualSize.y);
 	if (_handleSize.w > 0 && _handleSize.h > 0) {
-		glm::vec4 _color = disabled ? color * .5f : (highlighted ? color * 1.5f : color);
+		bool h = highlighted | selected;
+		glm::vec4 _color = disabled ? color * .5f : (h ? color * 1.5f : color);
+		if (activated) {
+			_color *= 1.5f;
+		}
 		if (border) {
 			renderer.drawHighFrame(_handleSize, border, _color);
 		} else {
@@ -106,6 +111,7 @@ Slider::result_t Slider::process(Rect<int> _size, Rect<int> _actualSize, const b
 	result.clicked = false;
 	if (highlighted) {
 		if (mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
+			select();
 			pressed = true;
 			float oldValue = value;
 			value = ((float)(mousex - offX) / railSize.w) * (float)(maxValue - minValue) + minValue;
@@ -121,4 +127,81 @@ Slider::result_t Slider::process(Rect<int> _size, Rect<int> _actualSize, const b
 	}
 
 	return result;
+}
+
+void Slider::activate() {
+	activated = activated == false;
+}
+
+void Slider::fireCallback() {
+	Script::Args args;
+	args.addFloat(value);
+	if (callback) {
+		(*callback)(args);
+	} else if (parent) {
+		Frame* fparent = static_cast<Frame*>(parent);
+		Script* script = fparent->getScript();
+		if (script) {
+			script->dispatch(name.get(), &args);
+		}
+	}
+}
+
+void Slider::control() {
+	Uint32 ticks = mainEngine->getTicks();
+	if (!activated) {
+		moveStartTime = ticks;
+		return;
+	}
+	Input& input = mainEngine->getInput(owner);
+	if (input.binaryToggle("MenuCancel") ||
+		input.binaryToggle("MenuConfirm")) {
+		input.consumeBinaryToggle("MenuCancel");
+		input.consumeBinaryToggle("MenuConfirm");
+		activated = false;
+	} else {
+		if (input.binary("MenuRight") || input.binary("MenuLeft")) {
+			Uint32 timeMoved = ticks - moveStartTime;
+			Uint32 lastMove = ticks - lastMoveTime;
+			Uint32 sec = mainEngine->getTicksPerSecond();
+			float inc = input.binary("MenuRight") ? 1.f : -1.f;
+			float ovalue = value;
+			if (timeMoved < sec) {
+				if (lastMove > sec / 5) {
+					value += inc;
+				}
+			}
+			else if (timeMoved < sec * 2) {
+				if (lastMove > sec / 10) {
+					value += inc;
+				}
+			}
+			else if (timeMoved < sec * 3) {
+				if (lastMove > sec / 20) {
+					value += inc;
+				}
+			}
+			else if (timeMoved < sec * 4) {
+				if (lastMove > sec / 40) {
+					value += inc;
+				}
+			} else {
+				if (lastMove > sec / 80) {
+					value += inc;
+				}
+			}
+			value = std::min(std::max(minValue, value), maxValue);
+			if (value != ovalue) {
+				lastMoveTime = ticks;
+				fireCallback();
+			}
+		} else {
+			moveStartTime = ticks;
+		}
+	}
+}
+
+void Slider::deselect() {
+	activated = false;
+	Widget::deselect();
 }

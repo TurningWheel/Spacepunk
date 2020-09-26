@@ -2,8 +2,28 @@
 
 #include "Widget.hpp"
 #include "Engine.hpp"
+#include "Frame.hpp"
+
+Widget::~Widget() {
+	if (parent) {
+		for (auto node = parent->widgets.getFirst(); node != nullptr; node = node->getNext()) {
+			if (node->getData() == this) {
+				parent->widgets.removeNode(node);
+				break;
+			}
+		}
+	}
+}
 
 void Widget::select() {
+	if (selected) {
+		return;
+	}
+	Widget* head = findHead();
+	if (head && head->getType() == WIDGET_FRAME) {
+		Frame* f = static_cast<Frame*>(head);
+		f->deselect(); // this deselects everything in the gui
+	}
 	selected = true;
 }
 
@@ -15,29 +35,39 @@ void Widget::activate() {
 	// no-op
 }
 
+Frame* Widget::findSearchRoot() {
+	Widget* gui = findHead();
+	if (gui && gui->getType() == WIDGET_FRAME) {
+		if (widgetSearchParent.empty()) {
+			return static_cast<Frame*>(gui);
+		} else {
+			auto search = gui->findWidget(widgetSearchParent.get(), true);
+			if (search && search->getType() == WIDGET_FRAME) {
+				return static_cast<Frame*>(search);
+			} else {
+				return static_cast<Frame*>(gui);
+			}
+		}
+	} else {
+		return nullptr;
+	}
+}
+
 Widget* Widget::handleInput() {
 	Widget* result = nullptr;
 	while (selected) {
 		Input& input = mainEngine->getInput(owner);
-		Frame* gui = static_cast<Frame*>(findHead());
+
+		// find search root
+		Frame* root = nullptr;
 
 		// tab to next element
 		if (mainEngine->pressKey(SDL_SCANCODE_TAB)) {
 			if (!widgetTab.empty()) {
-				if (widgetTabParent.empty()) {
-					result = gui->findWidget(widgetTab.get(), true);
-					if (result) {
-						break;
-					}
-				} else {
-					auto p = gui->findWidget(widgetTabParent.get(), true);
-					if (p && p->getType() == WIDGET_FRAME) {
-						auto f = static_cast<Frame*>(p);
-						result = f->findWidget(widgetTab.get(), true);
-						if (result) {
-							break;
-						}
-					}
+				root = root ? root : findSearchRoot();
+				result = root->findWidget(widgetTab.get(), true);
+				if (result) {
+					break;
 				}
 			}
 		}
@@ -52,7 +82,8 @@ Widget* Widget::handleInput() {
 		for (int c = 0; c < sizeof(moves) / sizeof(moves[0]); ++c) {
 			if (input.binaryToggle(moves[c][0])) {
 				if (moves[c][1] && moves[c][1] != '\0') {
-					result = gui->findWidget(moves[c][1], true);
+					root = root ? root : findSearchRoot();
+					result = root->findWidget(moves[c][1], true);
 					if (result) {
 						input.consumeBinaryToggle(moves[c][0]);
 						break;
@@ -64,7 +95,8 @@ Widget* Widget::handleInput() {
 		// next tab
 		if (input.binaryToggle("MenuPageRight")) {
 			if (!widgetPageRight.empty()) {
-				result = gui->findWidget(widgetPageRight.get(), true);
+				root = root ? root : findSearchRoot();
+				result = root->findWidget(widgetPageRight.get(), true);
 				if (result) {
 					input.consumeBinaryToggle("MenuPageRight");
 					result->activate();
@@ -76,7 +108,8 @@ Widget* Widget::handleInput() {
 		// previous tab
 		if (input.binaryToggle("MenuPageLeft")) {
 			if (!widgetPageLeft.empty()) {
-				result = gui->findWidget(widgetPageLeft.get(), true);
+				root = root ? root : findSearchRoot();
+				result = root->findWidget(widgetPageLeft.get(), true);
 				if (result) {
 					input.consumeBinaryToggle("MenuPageLeft");
 					result->activate();
@@ -95,7 +128,8 @@ Widget* Widget::handleInput() {
 		// cancel selection
 		if (input.binaryToggle("MenuCancel")) {
 			if (!widgetBack.empty()) {
-				result = gui->findWidget(widgetBack.get(), true);
+				root = root ? root : findSearchRoot();
+				result = root->findWidget(widgetBack.get(), true);
 				if (result) {
 					input.consumeBinaryToggle("MenuCancel");
 					result->activate();
@@ -110,9 +144,39 @@ Widget* Widget::handleInput() {
 }
 
 Widget* Widget::findHead() {
-    if (parent) {
+    if (parent && parent->owner == owner) {
         return parent->findHead();
     } else {
         return this;
     }
+}
+
+Widget* Widget::findWidget(const char* name, bool recursive) {
+	for (auto widget : widgets) {
+		if (widget->owner != owner) {
+			continue;
+		}
+		if (widget->name == name) {
+			return widget;
+		} else if (recursive) {
+			auto result = widget->findWidget(name, recursive);
+			if (result) {
+				return result;
+			}
+		}
+	}
+	return nullptr;
+}
+
+void Widget::adoptWidget(Widget& widget) {
+	if (widget.parent) {
+		for (auto node = widget.parent->widgets.getFirst(); node != nullptr; node = node->getNext()) {
+			if (node->getData() == &widget) {
+				widget.parent->widgets.removeNode(node);
+				break;
+			}
+		}
+	}
+	widget.parent = this;
+	widgets.addNodeLast(&widget);
 }

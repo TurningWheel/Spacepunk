@@ -18,6 +18,7 @@ Button::Button() {
 Button::Button(Frame& _parent) : Button() {
 	parent = &_parent;
 	_parent.getButtons().addNodeLast(this);
+	_parent.adoptWidget(*this);
 }
 
 Button::~Button() {
@@ -32,12 +33,11 @@ void Button::setIcon(const char* _icon) {
 }
 
 void Button::activate() {
-	Widget* head = findHead();
-	if (head && head->getType() == WIDGET_FRAME) {
-		Frame* f = static_cast<Frame*>(head);
-		f->deselect(); // this deselects everything in the gui
+	if (style == STYLE_NORMAL) {
+		setPressed(true);
+	} else {
+		setPressed(isPressed()==false);
 	}
-
 	Script::Args args(params);
 	if (callback) {
 		(*callback)(args);
@@ -60,11 +60,14 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	if (_size.w <= 0 || _size.h <= 0)
 		return;
 
-	bool h = highlighted | selected;
-	glm::vec4 _color = disabled ? color * .5f : (h ? color * 1.5f : color);
+	glm::vec4 _color = disabled ? color * .5f : (highlighted ? color * 1.5f : color);
 	glm::vec4 _borderColor = _color;
 	if (borderColor.w) {
-		_borderColor = disabled ? borderColor * .5f : (h ? borderColor * 1.5f : borderColor);
+		_borderColor = disabled ? borderColor * .5f : (highlighted ? borderColor * 1.5f : borderColor);
+	}
+	if (selected) {
+		_color *= 1.25f;
+		_borderColor *= 1.25f;
 	}
 	if (border) {
 		if (pressed) {
@@ -76,11 +79,11 @@ void Button::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 		}
 	} else {
 		if (pressed) {
-			renderer.drawFrame(_size, border, color * .9f);
-			renderer.drawFrame(_size, 1, _borderColor * .9f, true);
+			renderer.drawFrame(_size, border, selected ? color * 1.25f * .9f : color * .9f);
+			renderer.drawFrame(_size, 2, _borderColor * .9f, true);
 		} else {
-			renderer.drawFrame(_size, border, color);
-			renderer.drawFrame(_size, 1, _borderColor, true);
+			renderer.drawFrame(_size, border, selected ? color * 1.25f : color);
+			renderer.drawFrame(_size, 2, _borderColor, true);
 		}
 	}
 
@@ -168,7 +171,7 @@ Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const b
 		highlightTime = result.highlightTime;
 		highlighted = false;
 		if (style != STYLE_CHECKBOX && style != STYLE_TOGGLE) {
-			pressed = false;
+			reallyPressed = pressed = false;
 		}
 		return result;
 	}
@@ -176,7 +179,7 @@ Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const b
 		highlightTime = result.highlightTime;
 		highlighted = false;
 		if (style != STYLE_CHECKBOX && style != STYLE_TOGGLE) {
-			pressed = false;
+			reallyPressed = pressed = false;
 		}
 		return result;
 	}

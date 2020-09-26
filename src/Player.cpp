@@ -20,7 +20,6 @@ const char* Player::defaultName = "Player";
 static Cvar cvar_mouseYInvert("player.mouselook.inverty", "invert y-axis on mouse look", "0");
 static Cvar cvar_mouseSmooth("player.mouselook.smooth", "smooth mouse look over multiple frames", "0");
 static Cvar cvar_mouseSpeed("player.mouselook.speed", "adjusts mouse sensitivity", "0.1");
-static Cvar cvar_mouselook("player.mouselook.playernum", "assigns mouse control to the given player", "0");
 static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "9");
 static Cvar cvar_speed("player.speed", "player movement speed", "28");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
@@ -36,6 +35,7 @@ static Cvar cvar_enableBob("player.bob.enabled", "enable view bobbing", "0");
 static Cvar cvar_defaultController("player.default.enabled", "enable built-in first-person player controller", "1");
 
 Cvar cvar_fov("player.fov", "field of view", "70.0");
+Cvar cvar_mouselook("player.mouselook.playernum", "assigns mouse control to the given player", "0");
 
 Player::Player() {
 	Random& rand = mainEngine->getRandom();

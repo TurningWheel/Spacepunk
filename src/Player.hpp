@@ -167,3 +167,4 @@ private:
 };
 
 extern Cvar cvar_fov;
+extern Cvar cvar_mouselook;

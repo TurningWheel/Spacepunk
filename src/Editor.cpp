@@ -639,7 +639,7 @@ void Editor::buttonEditorSettings() {
 		size.y = 3; size.h = rect.h - 6;
 		field->setSize(size);
 		field->setEditable(true);
-		field->setWidgetTabParent("editor_FrameEditorSettingsSnapRotate");
+		field->setWidgetSearchParent("editor_FrameEditorSettingsSnapRotate");
 		field->setWidgetTab("field");
 
 		y += rect.h + border;
@@ -682,7 +682,7 @@ void Editor::buttonEditorSettings() {
 		size.y = 3; size.h = rect.h - 6;
 		field->setSize(size);
 		field->setEditable(true);
-		field->setWidgetTabParent("editor_FrameEditorSettingsSnapScale");
+		field->setWidgetSearchParent("editor_FrameEditorSettingsSnapScale");
 		field->setWidgetTab("field");
 
 		y += rect.h + border;
@@ -725,7 +725,7 @@ void Editor::buttonEditorSettings() {
 		size.y = 3; size.h = rect.h - 6;
 		field->setSize(size);
 		field->setEditable(true);
-		field->setWidgetTabParent("editor_FrameEditorSettingsSnapTranslate");
+		field->setWidgetSearchParent("editor_FrameEditorSettingsSnapTranslate");
 		field->setWidgetTab("field");
 
 		y += rect.h + border;
@@ -872,7 +872,7 @@ void Editor::buttonMapSettings() {
 		field->setSize(size);
 		field->setText(world->getNameStr().get());
 		field->setEditable(true);
-		field->setWidgetTabParent("editor_FrameMapSettingsUp");
+		field->setWidgetSearchParent("editor_FrameMapSettingsUp");
 		field->setWidgetTab("field");
 	}
 
@@ -911,7 +911,7 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setWidgetTabParent("editor_FrameMapSettingsRight");
+		field->setWidgetSearchParent("editor_FrameMapSettingsRight");
 		field->setWidgetTab("field");
 
 		// label
@@ -951,7 +951,7 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setWidgetTabParent("editor_FrameMapSettingsUp");
+		field->setWidgetSearchParent("editor_FrameMapSettingsUp");
 		field->setWidgetTab("field");
 
 		// label
@@ -991,7 +991,7 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setWidgetTabParent("editor_FrameMapSettingsDown");
+		field->setWidgetSearchParent("editor_FrameMapSettingsDown");
 		field->setWidgetTab("field");
 
 		// label
@@ -1031,7 +1031,7 @@ void Editor::buttonMapSettings() {
 		field->setEditable(true);
 		field->setNumbersOnly(true);
 		field->setJustify(Field::RIGHT);
-		field->setWidgetTabParent("editor_FrameMapSettingsLeft");
+		field->setWidgetSearchParent("editor_FrameMapSettingsLeft");
 		field->setWidgetTab("field");
 
 		// label
@@ -1817,9 +1817,9 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					field->setNumbersOnly(true);
 					field->setJustify(Field::RIGHT);
 					if (c == 0) {
-						field->setWidgetTabParent("editor_TileCeilingHeight");
+						field->setWidgetSearchParent("editor_TileCeilingHeight");
 					} else {
-						field->setWidgetTabParent("editor_TileFloorSlopeDir");
+						field->setWidgetSearchParent("editor_TileFloorSlopeDir");
 					}
 					field->setWidgetTab("field");
 				}
@@ -1853,9 +1853,9 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					field->setNumbersOnly(true);
 					field->setJustify(Field::RIGHT);
 					if (c == 0) {
-						field->setWidgetTabParent("editor_TileCeilingSlopeDir");
+						field->setWidgetSearchParent("editor_TileCeilingSlopeDir");
 					} else {
-						field->setWidgetTabParent("editor_TileFloorSlopeSize");
+						field->setWidgetSearchParent("editor_TileFloorSlopeSize");
 					}
 					field->setWidgetTab("field");
 				}
@@ -1889,9 +1889,9 @@ void Editor::initGUI(const Rect<int>& camRect) {
 					field->setNumbersOnly(true);
 					field->setJustify(Field::RIGHT);
 					if (c == 0) {
-						field->setWidgetTabParent("editor_TileCeilingSlopeSize");
+						field->setWidgetSearchParent("editor_TileCeilingSlopeSize");
 					} else {
-						field->setWidgetTabParent("editor_TileFloorHeight");
+						field->setWidgetSearchParent("editor_TileFloorHeight");
 					}
 					field->setWidgetTab("field");
 				}
@@ -2296,7 +2296,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
 			field->setWidgetTab("propertyY");
-			field->setWidgetTabParent("editor_FramePanelY");
+			field->setWidgetSearchParent("editor_FramePanelY");
 		}
 	}
 
@@ -2331,7 +2331,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
 			field->setWidgetTab("propertyZ");
-			field->setWidgetTabParent("editor_FramePanelZ");
+			field->setWidgetSearchParent("editor_FramePanelZ");
 		}
 	}
 
@@ -2366,7 +2366,7 @@ void Editor::initGUI(const Rect<int>& camRect) {
 			field->setNumbersOnly(true);
 			field->setJustify(Field::RIGHT);
 			field->setWidgetTab("propertyX");
-			field->setWidgetTabParent("editor_FramePanelX");
+			field->setWidgetSearchParent("editor_FramePanelX");
 		}
 	}
 
@@ -3817,7 +3817,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateY%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(0);
@@ -3857,7 +3857,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateZ%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(1);
@@ -3898,7 +3898,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentTranslateX%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(2);
@@ -3952,7 +3952,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateY%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(0);
@@ -3992,7 +3992,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateZ%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(1);
@@ -4033,7 +4033,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentRotateX%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(2);
@@ -4087,7 +4087,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(1.f, .2f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleY%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(0);
@@ -4127,7 +4127,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleZ%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(1);
@@ -4168,7 +4168,7 @@ void Editor::componentGUI(Frame& properties, Component* component, int& x, int& 
 			field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
 
 			StringBuf<32> dest("editor_FrameComponentScaleX%d", 1, component->getUID());
-			field->setWidgetTabParent(dest.get());
+			field->setWidgetSearchParent(dest.get());
 			field->setWidgetTab("field");
 
 			field->getParams().addInt(2);
@@ -4510,7 +4510,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesTranslateY");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesTranslateY");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4548,7 +4548,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesTranslateZ");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesTranslateZ");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4587,7 +4587,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesTranslateX");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesTranslateX");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4639,7 +4639,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesPitch");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesPitch");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4677,7 +4677,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesYaw");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesYaw");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4716,7 +4716,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesRoll");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesRoll");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4768,7 +4768,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(1.f, .2f, .2f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesScaleY");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesScaleY");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4806,7 +4806,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, 1.f, .2f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesScaleZ");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesScaleZ");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {
@@ -4845,7 +4845,7 @@ void Editor::updateGUI(Frame& gui) {
 						field->setNumbersOnly(true);
 						field->setJustify(Field::RIGHT);
 						field->setColor(WideVector(.2f, .2f, 1.f, 1.f));
-						field->setWidgetTabParent("editor_FrameEntityPropertiesScaleX");
+						field->setWidgetSearchParent("editor_FrameEntityPropertiesScaleX");
 						field->setWidgetTab("field");
 
 						if (selectedEntities.getSize() > 1) {

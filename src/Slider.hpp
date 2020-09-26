@@ -45,6 +45,18 @@ public:
     //! @return resultant state of the slider after processing
     result_t process(Rect<int> _size, Rect<int> _actualSize, const bool usable);
 
+    //! activates the slider
+    virtual void activate() override;
+
+    //! control slider with keyboard/gamepad inputs
+    void control();
+
+    //! trigger callback
+    void fireCallback();
+
+    //! deselect the slider
+    virtual void deselect() override;
+
     virtual type_t              getType() const override { return WIDGET_SLIDER; }
     float                       getValue() const { return value; }
     float                       getMaxValue() const { return maxValue; }
@@ -55,6 +67,7 @@ public:
     const char*                 getTooltip() const { return tooltip.get(); }
     const WideVector&           getColor() const { return color; }
     const Script::Function*     getCallback() const { return callback; }
+    bool                        isActivated() const { return activated; }
 
     void    setValue(float _value) { value = _value; }
     void    setMaxValue(float _value) { maxValue = _value; }
@@ -72,8 +85,11 @@ private:
     float maxValue = 0.f;                           //!< maximum value
     float minValue = 0.f;                           //!< minimum value
     int border = 3;                                 //!< border size in pixels
+    bool activated = false;                         //!< if true, the slider captures all input
     Rect<int> handleSize;                           //!< size of the handle in pixels
     Rect<int> railSize;                             //!< size of the rail in pixels
     String tooltip;								    //!< if empty, button has no tooltip; otherwise, it does
     WideVector color;								//!< the slider's color
+    Uint32 moveStartTime = 0u;                      //!< when the player started holding a direction to move the slider
+    Uint32 lastMoveTime = 0u;                       //!< last time the slider was moved
 };
