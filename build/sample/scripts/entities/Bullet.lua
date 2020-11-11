@@ -6,7 +6,7 @@ require "base/scripts/vector"
 function die()
     local world = entity:getWorld()
     local explosion = world:spawnEntity("Explosion", entity:getPos(), entity:getAng():toRotation())
-    explosion:setKeyValue("soundToPlay", "boom.wav")
+    explosion:setKeyValue("soundToPlay", "sounds/boom.wav")
     entity:remove()
     return explosion
 end
@@ -66,7 +66,7 @@ function process()
                 -- destroy the tank
                 local world = entity:getWorld()
                 local explosion = world:spawnEntity("Explosion", tank:getPos(), tank:getAng():toRotation())
-                explosion:setKeyValue("soundToPlay", "explosion.wav")
+                explosion:setKeyValue("soundToPlay", "sounds/explosion.wav")
                 explosion:setFlag(FLAG.DEPTHFAIL)
                 tank:remove()
 
@@ -110,7 +110,7 @@ function process()
                 else
                     -- ricochet sound
                     speaker = entity:findSpeakerByName("speaker")
-                    speaker:playSound("ricochet.wav", false, 1000)
+                    speaker:playSound("sounds/ricochet.wav", false, 1000)
 
                     -- bounce
                     dir = dir:reflect(hit.normal)

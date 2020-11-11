@@ -87,8 +87,12 @@ public:
 
 private:
 	ALuint sources[maxSources];
+	ALuint filters[maxSources];
 
 	String defaultSound;
 	bool defaultLoop = false;
 	float defaultRange = 256.f;
+	Uint32 timeSinceChange = 0;
+	bool blocked = true;
+	float lowpassFactor = 0.f;
 };

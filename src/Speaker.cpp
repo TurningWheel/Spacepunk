@@ -57,7 +57,7 @@ int Speaker::playSound(const char* _name, const bool loop, float range) {
 		return -1;
 	}
 
-	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", 1, _name).get());
+	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("%s", 1, _name).get());
 	if (sound) {
 		int index = maxSources;
 		for (int i = 0; i < maxSources; ++i) {
@@ -78,6 +78,19 @@ int Speaker::playSound(const char* _name, const bool loop, float range) {
 			alSourcei(sources[index], AL_LOOPING, AL_TRUE);
 		} else {
 			alSourcei(sources[index], AL_LOOPING, AL_FALSE);
+		}
+
+		// create low pass filter
+		alGenFilters(1, &filters[index]);
+		if (alIsFilter(filters[index]) && alGetError() == AL_NO_ERROR) {
+			alFilteri(filters[index], AL_FILTER_TYPE, AL_FILTER_LOWPASS);
+			if (alGetError() != AL_NO_ERROR) {
+				mainEngine->fmsg(Engine::MSG_ERROR, "failed to setup lowpass filter");
+			} else {
+				alSourcei(sources[index], AL_DIRECT_FILTER, filters[index]);
+			}
+		} else {
+			mainEngine->fmsg(Engine::MSG_ERROR, "failed to create lowpass filter");
 		}
 
 		// position and orient the sound in 3D space
@@ -131,6 +144,7 @@ bool Speaker::stopSound(const int index) {
 		return false;
 	alSourceStop(sources[index]);
 	alDeleteSources(1, &sources[index]);
+	alDeleteFilters(1, &filters[index]);
 	sources[index] = 0;
 	return true;
 }
@@ -216,27 +230,34 @@ void Speaker::process() {
 					World* world = entity->getWorld();
 					LinkedList<World::hit_t> hits;
 					world->lineTraceList(camera->getGlobalPos(), gPos, hits);
-					bool blocked = false;
+					bool newBlocked = false;
 					for (auto& hit : hits) {
 						if (hit.manifest && hit.manifest->entity) {
 							if (hit.manifest->entity->isFlag(Entity::FLAG_OCCLUDE)) {
-								blocked = true;
+								newBlocked = true;
 								break;
 							}
 						}
 					}
-					if (!blocked) {
-						alSourcei(sources[i], AL_DIRECT_FILTER, 0);
-						alSourcef(sources[i], AL_GAIN, 1.f);
-					} else {
-						alSourcei(sources[i], AL_DIRECT_FILTER, mixer->getLowpassFilter());
-						alSourcef(sources[i], AL_GAIN, 1.0f);
+					if (blocked != newBlocked &&
+						(entity->getTicks() - timeSinceChange > (Uint32)mainEngine->getTicksPerSecond() || !timeSinceChange)) {
+						timeSinceChange = entity->getTicks();
+						blocked = newBlocked;
 					}
+					float oldFactor = lowpassFactor;
+					lowpassFactor = blocked ? min(1.f, lowpassFactor + 0.05f) : max(0.f, lowpassFactor - 0.05f);
+					if (oldFactor != lowpassFactor) {
+						alFilterf(filters[i], AL_LOWPASS_GAIN, 1.f - 0.75f * lowpassFactor);
+						alFilterf(filters[i], AL_LOWPASS_GAINHF, 1.f - 0.75f * lowpassFactor);
+						alSourcei(sources[i], AL_DIRECT_FILTER, filters[i]);
+					}
+					alSourcef(sources[i], AL_GAIN, 1.f);
 				} else {
 					alSourcef(sources[i], AL_GAIN, 0.f);
 				}
 			} else {
 				alDeleteSources(1, &sources[i]);
+				alDeleteFilters(1, &filters[i]);
 				sources[i] = 0;
 			}
 		}

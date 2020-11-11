@@ -17,7 +17,7 @@ function init()
     spawnShield = entity:getKeyValueAsInt("spawnShield")
     if spawnShield > 0 then
         speaker = entity:findSpeakerByName("speaker")
-        speaker:playSound("pop.wav", false, 1000)
+        speaker:playSound("sounds/pop.wav", false, 1000)
     end
 end
 
@@ -61,7 +61,7 @@ function process()
         bullet:setKeyValue("owner", entity:getName():get())
         input:consumeBinaryToggle("Fire")
         speaker = entity:findSpeakerByName("speaker")
-        speaker:playSound("fire.wav", false, 1000)
+        speaker:playSound("sounds/fire.wav", false, 1000)
         shootTimer = step * 2 -- 2 second reload
     end
 

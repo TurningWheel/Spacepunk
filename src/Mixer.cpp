@@ -16,7 +16,6 @@ Cvar cvar_volumeSFX("sound.volume.sfx", "sound effects volume (0-100)", "100.0")
 Cvar cvar_volumeMusic("sound.volume.music", "music volume (0-100)", "100.0");
 
 Mixer::~Mixer() {
-	alDeleteFilters(1, &filter_lowpass);
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(context);
 	alcCloseDevice(device);
@@ -36,21 +35,7 @@ void Mixer::init() {
 		mainEngine->fmsg(Engine::MSG_ERROR, "failed to set current audio context");
 		return;
 	}
-
-	// create low pass filter
 	alGetError();
-	alGenFilters(1, &filter_lowpass);
-	if (alIsFilter(filter_lowpass) && alGetError() == AL_NO_ERROR) {
-		alFilteri(filter_lowpass, AL_FILTER_TYPE, AL_FILTER_LOWPASS);
-		if (alGetError() != AL_NO_ERROR) {
-			mainEngine->fmsg(Engine::MSG_ERROR, "failed to setup lowpass filter");
-		} else {
-			alFilterf(filter_lowpass, AL_LOWPASS_GAIN, 0.25f);
-			alFilterf(filter_lowpass, AL_LOWPASS_GAINHF, 0.25f);
-		}
-	} else {
-		mainEngine->fmsg(Engine::MSG_ERROR, "failed to create lowpass filter");
-	}
 
 	initialized = true;
 }
@@ -103,7 +88,7 @@ void Mixer::setListener(Camera* camera) {
 }
 
 int Mixer::playSound(const char* name, const bool loop) {
-	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("sounds/%s", 1, name).get());
+	Sound* sound = mainEngine->getSoundResource().dataForString(StringBuf<64>("%s", 1, name).get());
 	if (sound) {
 		return sound->play(loop);
 	}

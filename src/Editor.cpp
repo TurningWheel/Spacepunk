@@ -1275,7 +1275,9 @@ void Editor::playSound(const char* path) {
 		return;
 
 	if (cvar_editorSounds.toInt()) {
-		mainEngine->playSound(path);
+		StringBuf<128> str;
+		str.format("sounds/%s", path);
+		mainEngine->playSound(str.get());
 	}
 }
 

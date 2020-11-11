@@ -42,13 +42,11 @@ public:
 	const ALCcontext*	getContext() const { return context; }
 	bool				isInitialized() const { return initialized; }
 	Camera*				getListener() { return listener; }
-	ALuint				getLowpassFilter() const { return filter_lowpass; }
 
 private:
 	ALCdevice*	device = nullptr;
 	ALCcontext*	context = nullptr;
 	Camera* listener = nullptr;
-	ALuint filter_lowpass = 0;
 
 	bool initialized = false;
 };

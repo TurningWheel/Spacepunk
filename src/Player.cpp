@@ -326,8 +326,8 @@ void Player::control() {
 		mainEngine->setMouseRelative(true);
 	}
 
-	//Vector vel = originalVel;
-	Vector vel = entity->getVel();
+	Vector vel = originalVel;
+	//Vector vel = entity->getVel();
 	bool warpNeeded = false;
 
 	World::hit_t floorHit, ceilingHit;

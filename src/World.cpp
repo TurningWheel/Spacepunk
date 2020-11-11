@@ -266,7 +266,7 @@ const bool World::selectEntity(const Uint32 uid, const bool b) {
 		entity->setHighlighted(b);
 
 		if (b) {
-			mainEngine->playSound("editor/message.wav");
+			mainEngine->playSound("sounds/editor/message.wav");
 		}
 		return true;
 	}
@@ -283,7 +283,7 @@ void World::selectEntities(const bool b) {
 	}
 
 	if (b) {
-		mainEngine->playSound("editor/message.wav");
+		mainEngine->playSound("sounds/editor/message.wav");
 	}
 }
 
