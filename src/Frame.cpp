@@ -859,15 +859,13 @@ Frame::result_t Frame::process(Rect<int> _size, Rect<int> _actualSize, bool usab
 		result.usable = usable = false;
 	}
 
-	if (destWidget) {
-		destWidget->select();
-	}
-
-	// frame suicide :(
 	if (toBeDeleted) {
 		result.removed = true;
 	} else {
 		++ticks;
+		if (destWidget) {
+			destWidget->select();
+		}
 	}
 
 	return result;
