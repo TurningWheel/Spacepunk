@@ -188,7 +188,7 @@ public:
 	//! @return true on success, false on failure
 	virtual bool saveFile(const char* _filename = "", bool updateFilename = false) = 0;
 
-	//! update filename and shortname members
+	//! update filename
 	//! @param _filename the new full filename for the world
 	void changeFilename(const char* _filename);
 
@@ -208,7 +208,6 @@ public:
 	Game*						getGame() { return game; }
 	const Uint32				getTicks() const { return ticks; }
 	const String&				getFilename() const { return filename; }
-	const String&				getShortname() const { return shortname; }
 	const String&				getNameStr() const { return nameStr; }
 	Map<Uint32, Entity*>&		getEntities() { return entities; }
 	const Map<Uint32, Entity*>&	getEntities() const { return entities; }
@@ -251,7 +250,6 @@ protected:
 
 	String zone;						//!< room family
 	String filename;					//!< full path
-	String shortname;					//!< shortened filename (without folder path)
 	String nameStr;						//!< descriptive name (eg 'Hub World')
 	filetype_t filetype = FILE_BINARY;	//!< filetype (binary vs json vs wld)
 

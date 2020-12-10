@@ -260,8 +260,8 @@ void Entity::finishInsertIntoWorld() {
 			packet.write32(offset.x);
 			packet.write32(anchor ? anchor->getUID() : World::nuid);
 
-			packet.write(world->getShortname().get());
-			packet.write32((Uint32)world->getShortname().length());
+			packet.write(world->getFilename().get());
+			packet.write32((Uint32)world->getFilename().length());
 
 			packet.write32(player->getServerID());
 			packet.write32(player->getLocalID());

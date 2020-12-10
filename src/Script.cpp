@@ -204,6 +204,7 @@ void Script::exposeEngine() {
 		.addFunction("saveConfig", &Engine::saveConfig)
 		.addFunction("fileOpenDialog", &Engine::fileOpenDialog)
 		.addFunction("fileSaveDialog", &Engine::fileSaveDialog)
+		.addFunction("shortenPath", &Engine::shortenPath)
 		.addFunction("getDisplayModes", &Engine::getDisplayModes)
 		.endClass()
 		;
@@ -661,7 +662,6 @@ void Script::exposeWorld() {
 		.beginClass<World>("World")
 		.addFunction("getTicks", &World::getTicks)
 		.addFunction("getFilename", &World::getFilename)
-		.addFunction("getShortname", &World::getShortname)
 		.addFunction("getNameStr", &World::getNameStr)
 		.addFunction("isClientObj", &World::isClientObj)
 		.addFunction("isServerObj", &World::isServerObj)

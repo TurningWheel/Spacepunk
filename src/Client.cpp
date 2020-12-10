@@ -140,7 +140,7 @@ void Client::handleNetMessages() {
 								if (filename) {
 									packet.read(filename, filenameLen);
 									filename[filenameLen] = '\0';
-									loadWorld(filename, true);
+									loadWorld(filename, false);
 									delete[] filename;
 								}
 							}
@@ -244,7 +244,7 @@ void Client::handleNetMessages() {
 						packet.read(&worldFilename[0], worldFilenameLen);
 						World* world = worldForName(worldFilename.get());
 						if (!world) {
-							world = loadWorld(worldFilename.get(), true);
+							world = loadWorld(worldFilename.get(), false);
 						}
 						assert(world);
 
@@ -302,7 +302,7 @@ void Client::handleNetMessages() {
 						packet.read(&worldFilename[0], worldFilenameLen);
 						World* world = worldForName(worldFilename.get());
 						if (!world) {
-							world = loadWorld(worldFilename.get(), true);
+							world = loadWorld(worldFilename.get(), false);
 						}
 						assert(world);
 

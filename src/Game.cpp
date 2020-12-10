@@ -38,8 +38,7 @@ void Game::incrementFrame() {
 World* Game::loadWorld(const char* filename, bool buildPath) {
 	World* world = nullptr;
 	if (buildPath) {
-		StringBuf<64> fullPath("maps/%s", 1, filename);
-		String path = mainEngine->buildPath(fullPath.get()).get();
+		String path = mainEngine->buildPath(filename).get();
 
 		auto bworld = new BasicWorld(this, false, (Uint32)worlds.getSize(), "Untitled World");
 		bworld->changeFilename(path.get());
@@ -80,7 +79,7 @@ BasicWorld* Game::newBasicWorld(const char* name) {
 
 World* Game::worldForName(const char* name) {
 	for (auto world : worlds) {
-		if (world->getShortname() == name) {
+		if (world->getFilename() == name) {
 			return world;
 		}
 	}

@@ -43,8 +43,11 @@ public:
 		bool entered;
 	};
 
-	//! selects the field for text editing
-	virtual void select() override;
+	//! activates the field for text editing
+	virtual void activate() override;
+
+	//! deactivate text editing
+	void deactivate();
 
 	//! deselects the field
 	virtual void deselect() override;
@@ -99,5 +102,6 @@ private:
 	bool numbersOnly = false;							//!< whether the field can only contain numeric chars
 	bool scroll = true;									//!< whether the field should scroll if the text is longer than its container
 	bool selectAll = false;								//!< whether all the text is selected for editing
+	bool activated = false;								//!< whether field is active for text editing
 	const Script::Function* callback = nullptr;			//!< the callback to use after text is entered
 };

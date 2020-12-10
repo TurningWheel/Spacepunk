@@ -43,8 +43,9 @@ Field::~Field() {
 	}
 }
 
-void Field::select() {
-	selected = true;
+void Field::activate() {
+	Widget::select();
+	activated = true;
 	mainEngine->setInputStr(const_cast<char*>(text.get()));
 	mainEngine->setInputLen(text.getSize());
 	mainEngine->setInputNumbersOnly(numbersOnly);
@@ -52,14 +53,25 @@ void Field::select() {
 }
 
 void Field::deselect() {
+	if (editable) {
+		deactivate();
+	}
+	Widget::deselect();
+}
+
+void Field::deactivate() {
+	activated = false;
 	selectAll = false;
-	selected = false;
-	if (mainEngine->getInputStr() == text) {
+	if (mainEngine->getInputStr() == text.get()) {
 		mainEngine->setInputStr(nullptr);
 		mainEngine->setInputLen(0);
 		SDL_StopTextInput();
 	}
 }
+
+static Cvar cvar_fieldColorHighlight("field.color.highlight", "color used for highlighted text fields", "0.0 0.0 0.25 1.0");
+static Cvar cvar_fieldColorActivated("field.color.activated", "color used for activated text fields", "0.0 0.0 0.5 1.0");
+static Cvar cvar_fieldColorSelectAll("field.color.selectall", "color used for text fields when all text is selected", "0.75 0.25 0.0 1.0");
 
 void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	Rect<int> rect;
@@ -70,16 +82,28 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	if (rect.w <= 0 || rect.h <= 0)
 		return;
 
-	if (selected) {
-		renderer.drawRect(&rect, glm::vec4(0.f, 0.f, .5f, 1.f));
+	if (activated) {
+		if (selectAll) {
+			float f[4] = { 0.f };
+			Engine::readFloat(cvar_fieldColorSelectAll.toStr(), f, 4);
+			renderer.drawRect(&rect, glm::vec4(f[0], f[1], f[2], f[3]));
+		} else {
+			float f[4] = { 0.f };
+			Engine::readFloat(cvar_fieldColorActivated.toStr(), f, 4);
+			renderer.drawRect(&rect, glm::vec4(f[0], f[1], f[2], f[3]));
+		}
+	} else if (selected) {
+		float f[4] = { 0.f };
+		Engine::readFloat(cvar_fieldColorHighlight.toStr(), f, 4);
+		renderer.drawRect(&rect, glm::vec4(f[0], f[1], f[2], f[3]));
 	}
 
 	String str;
-	if (selected && mainEngine->isCursorVisible()) {
+	if (activated && mainEngine->isCursorVisible()) {
 		str.alloc((Uint32)strlen(text) + 2);
 		str.assign(text);
 		str.append("_");
-	} else if (selected) {
+	} else if (activated) {
 		str.alloc((Uint32)strlen(text) + 2);
 		str.assign(text);
 		str.append(" ");
@@ -105,7 +129,7 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	int textSizeW = text->getWidth();
 	int textSizeH = text->getHeight();
 
-	if (selected) {
+	if (activated) {
 		textSizeH += 2;
 		if (hjustify == RIGHT || hjustify == BOTTOM) {
 			textSizeH -= 4;
@@ -158,10 +182,6 @@ void Field::draw(Renderer& renderer, Rect<int> _size, Rect<int> _actualSize) {
 	if (src.w <= 0 || src.h <= 0 || dest.w <= 0 || dest.h <= 0)
 		return;
 
-	if (selectAll && selected) {
-		renderer.drawRect(&rect, glm::vec4(.5f, .5f, 0.f, 1.f));
-	}
-
 	text->drawColor(src, dest, glm::vec4(color.x, color.y, color.z, color.w));
 }
 
@@ -170,9 +190,9 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 	result.highlighted = false;
 	result.entered = false;
 	if (!editable) {
-		if (selected) {
+		if (activated) {
 			result.entered = true;
-			deselect();
+			deactivate();
 		}
 		return result;
 	}
@@ -188,21 +208,21 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 	Sint32 omousex = (mainEngine->getOldMouseX() / (float)mainEngine->getXres()) * (float)Frame::virtualScreenX;
 	Sint32 omousey = (mainEngine->getOldMouseY() / (float)mainEngine->getYres()) * (float)Frame::virtualScreenY;
 
-	if (selected) {
+	if (activated) {
 		if (mainEngine->getInputStr() != text) {
 			result.entered = true;
-			deselect();
+			deactivate();
 			if (mainEngine->getInputStr() == nullptr) {
 				SDL_StopTextInput();
 			}
 		}
 		if (mainEngine->getKeyStatus(SDL_SCANCODE_RETURN) || mainEngine->getKeyStatus(SDL_SCANCODE_KP_ENTER)) {
 			result.entered = true;
-			deselect();
+			deactivate();
 		}
 		if (mainEngine->getKeyStatus(SDL_SCANCODE_ESCAPE) || mainEngine->getMouseStatus(SDL_BUTTON_RIGHT)) {
 			result.entered = true;
-			deselect();
+			deactivate();
 		}
 
 		if (selectAll) {
@@ -224,12 +244,12 @@ Field::result_t Field::process(Rect<int> _size, Rect<int> _actualSize, const boo
 	}
 
 	if (!result.highlighted && mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-		if (selected) {
+		if (activated) {
 			result.entered = true;
-			deselect();
+			deactivate();
 		}
 	} else if (result.highlighted && mainEngine->getMouseStatus(SDL_BUTTON_LEFT)) {
-		select();
+		activate();
 		if (mainEngine->getDBCMouseStatus(SDL_BUTTON_LEFT)) {
 			selectAll = true;
 		}

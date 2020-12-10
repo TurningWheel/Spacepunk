@@ -213,27 +213,6 @@ void World::changeFilename(const char* _filename) {
 		filetype = FILE_BINARY;
 		filename.appendf(".%s", fileExtensions[static_cast<int>(filetype)]);
 	}
-
-	// create shortened filename
-	shortname = filename;
-	Uint32 i = 0;
-	do {
-		i = shortname.find('/', 0);
-		if (i != UINT32_MAX) {
-			shortname = shortname.substr(i + 1);
-		}
-	} while (i != UINT32_MAX);
-
-#ifdef PLATFORM_WINDOWS
-	// windows has to cut out their crazy backward slashes, too.
-	i = 0;
-	do {
-		i = shortname.find('\\', 0);
-		if (i != UINT32_MAX) {
-			shortname = shortname.substr(i + 1);
-		}
-	} while (i != UINT32_MAX);
-#endif
 }
 
 bool World::isShowTools() const {

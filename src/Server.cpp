@@ -208,8 +208,8 @@ void Server::handleNetMessages() {
 									packet.write32(entity->getPos().y);
 									packet.write32(entity->getPos().x);
 
-									packet.write(world->getShortname().get());
-									packet.write32((Uint32)world->getShortname().length());
+									packet.write(world->getFilename().get());
+									packet.write32((Uint32)world->getFilename().length());
 
 									packet.write32(serverID);
 									packet.write32(localID);
@@ -356,8 +356,8 @@ void Server::handleNetMessages() {
 
 									World* world = entity->getWorld();
 									assert(world);
-									packet.write(world->getShortname().get());
-									packet.write32((Uint32)world->getShortname().length());
+									packet.write(world->getFilename().get());
+									packet.write32((Uint32)world->getFilename().length());
 
 									packet.write32(player->getServerID());
 									packet.write32(player->getLocalID());
@@ -495,8 +495,8 @@ void Server::onEstablishConnection(Uint32 remoteID) {
 			packet.write32((Uint32)world->getZone().length());
 			packet.write8('g');
 		} else {
-			packet.write(world->getShortname().get());
-			packet.write32((Uint32)world->getShortname().length());
+			packet.write(world->getFilename().get());
+			packet.write32((Uint32)world->getFilename().length());
 			packet.write8('f');
 		}
 	}
@@ -712,8 +712,7 @@ static int console_serverSaveMap(int argc, const char** argv) {
 
 	int worldID = strtol(argv[0], nullptr, 10);
 	World* world = server->getWorld(worldID);
-	StringBuf<256> path("maps/%s", 1, argv[1]);
-	path = mainEngine->buildPath(path.get()).get();
+	String path = mainEngine->buildPath(argv[1]).get();
 	world->saveFile(path.get(), true);
 
 	return 0;

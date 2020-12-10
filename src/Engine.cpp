@@ -272,7 +272,8 @@ static int console_sleep(int argc, const char** argv) {
 		mainEngine->fmsg(Engine::MSG_ERROR, "Please enter time to sleep in seconds. ex: sleep 5");
 		return 1;
 	}
-	int seconds = strtol(argv[0], nullptr, 10);
+	float seconds;
+	Engine::readFloat(argv[0], &seconds, 1);
 	mainEngine->setConsoleSleep(mainEngine->getTicks() + seconds * mainEngine->getTicksPerSecond());
 	return 0;
 }
@@ -425,9 +426,16 @@ void Engine::commandLine(const int argc, const char **argv) {
 }
 
 void Engine::doCommand(const char* arg) {
-	const char* command[1];
-	command[0] = arg;
-	mainEngine->commandLine(1, command);
+	if (consoleSleep > ticks) {
+		// queue command
+		String ccmd = arg;
+		ccmdsToRun.addNodeLast(ccmd);
+	} else {
+		// run command immediately
+		const char* command[1];
+		command[0] = arg;
+		mainEngine->commandLine(1, command);
+	}
 }
 
 const char* Engine::getCvar(const char* name) {

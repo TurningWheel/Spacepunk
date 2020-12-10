@@ -583,7 +583,7 @@ bool BasicWorld::saveFile(const char* _filename, bool updateFilename) {
 		return false;
 	}
 	if (_filename == nullptr || _filename[0] == '\0') {
-		mainEngine->fmsg(Engine::MSG_INFO, "saving world file '%s'...", shortname.get());
+		mainEngine->fmsg(Engine::MSG_INFO, "saving world file '%s'...", filename.get());
 	} else {
 		mainEngine->fmsg(Engine::MSG_INFO, "saving world file '%s'...", _filename);
 	}

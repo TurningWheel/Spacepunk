@@ -30,6 +30,7 @@ build/base/maps/.playtest.wlb
 build/base/maps/autosave*
 build/*.bat
 build/spacepunk/*
+build/sp/*
 build/barony/*
 build/junk/*
 build*.zip
