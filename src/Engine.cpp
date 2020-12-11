@@ -735,6 +735,13 @@ void Engine::init() {
 	lastTick = std::chrono::steady_clock::now();
 	SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH);
 
+	// initialize renderer
+	if (renderer) {
+		delete renderer;
+		renderer = nullptr;
+	}
+	renderer = new Renderer();
+
 	// instantiate local server
 	if (runningServer) {
 		localServer = new Server();
@@ -808,6 +815,10 @@ void Engine::term() {
 		delete localServer;
 		localServer = nullptr;
 		runningServer = false;
+	}
+	if (renderer) {
+		delete renderer;
+		renderer = nullptr;
 	}
 
 	// stop engine timer

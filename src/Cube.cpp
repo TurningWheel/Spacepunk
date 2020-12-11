@@ -181,7 +181,21 @@ Cube::~Cube() {
 
 void Cube::draw(Camera& camera, const glm::mat4& transform, const glm::vec4& color) {
 	// setup view matrix
-	const glm::mat4 viewMatrix = camera.getProjViewMatrix() * transform;
+	glm::mat4 viewMatrix;
+	if (camera.getDrawMode() == Camera::DRAW_BOUNDS &&
+		camera.getEntity()->getName() != "Shadow Camera") {
+		// TODO fix this ugly hack!
+		Vector diff = Vector(transform[3][0], transform[3][2], -transform[3][1]) - camera.getGlobalPos();
+		Quaternion ang = Rotation(atan2f(diff.y, diff.x), atan2f(diff.z, sqrtf(diff.x*diff.x + diff.y*diff.y)), 0.f);
+		Quaternion q = Quaternion(Rotation(PI / 2.f, 0.f, 0.f)) * ang;
+		glm::mat4 rot = glm::mat4(glm::quat(-q.w, q.z, q.y, -q.x));
+		glm::mat4 pos = glm::translate(glm::mat4(1.f), glm::vec3(
+			-camera.getGlobalPos().x, camera.getGlobalPos().z, -camera.getGlobalPos().y));
+		glm::mat4 final = rot * pos;
+		viewMatrix = camera.getProjMatrix() * final * transform;
+	} else {
+		viewMatrix = camera.getProjViewMatrix() * transform;
+	}
 
 	// load shader
 	Material* mat = mainEngine->getMaterialResource().dataForString("shaders/basic/cube.json");

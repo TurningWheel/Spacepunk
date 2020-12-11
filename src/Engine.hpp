@@ -88,6 +88,7 @@ public:
 	bool								isRunningClient() const { return runningClient; }
 	bool								isRunningServer() const { return runningServer; }
 	const char*							getGameTitle() const { return game.name.get(); }
+	Renderer*							getRenderer() { return renderer; }
 	Client*								getLocalClient() { return localClient; }
 	Server*								getLocalServer() { return localServer; }
 	int									getXres() const { return xres; }
@@ -446,7 +447,8 @@ private:
 	//! random number generator
 	Random rand;
 
-	//! video data (startup settings)
+	//! video data
+	Renderer* renderer = nullptr;
 	bool fullscreen = false;
 	Sint32 xres = 1280;
 	Sint32 yres = 720;

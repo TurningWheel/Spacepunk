@@ -37,8 +37,7 @@ void Server::init() {
 
 	// start a playtest
 	if (mainEngine->isPlayTest()) {
-		StringBuf<32> path(".playtest.wlb");
-		loadWorld(path.get(), true);
+		loadWorld("base/maps/.playtest.wlb", false);
 	}
 }
 

@@ -31,7 +31,8 @@ static Cvar cvar_wallWalkLimit("player.wallwalk.limit", "the maximum difference 
 static Cvar cvar_zeroGravity("player.zerog.enabled", "enable zero-g effects on the player", "0");
 static Cvar cvar_slopeLimit("player.slope.limit", "the maximum slope of a floor traversible by a player", "45");
 static Cvar cvar_stepHeight("player.step.height", "maximum step height that a player can ascend", "8");
-static Cvar cvar_enableBob("player.bob.enabled", "enable view bobbing", "0");
+static Cvar cvar_enableBob("player.bob.enabled", "enable view bobbing", "1");
+static Cvar cvar_enableHeadBoneCamera("player.headbonecamera.enabled", "bind the camera to the player's headbone", "0");
 static Cvar cvar_defaultController("player.default.enabled", "enable built-in first-person player controller", "1");
 
 Cvar cvar_fov("player.fov", "field of view", "70.0");
@@ -347,7 +348,7 @@ void Player::control() {
 	buttonLeanLeft = 0.f;
 	buttonLeanRight = 0.f;
 	buttonJump = false;
-	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling <= totalHeight : false;
+	buttonCrouch = cvar_canCrouch.toInt() ? nearestCeiling <= totalHeight && !entity->isFalling() : false;
 	if (!client->isConsoleActive()) {
 		buttonCrouch |= input.binary("MoveDown");
 
@@ -704,24 +705,31 @@ void Player::updateCamera() {
 		camera->setLocalPos(originalCameraPos);
 		camera->setLocalAng(entity->getLookDir());
 
-		Uint32 headBone = UINT32_MAX;
-		if (head) {
-			head->updateSkin();
-			headBone = head->findBoneIndex("Bone_Head");
-			if (headBone != UINT32_MAX) {
-				auto mat = head->findBone(headBone);
-				auto pos = Vector(mat[3][0], mat[3][2], -mat[3][1]);
-				camera->setLocalPos(pos + models->getLocalPos());
+		// bobbing
+		if (cvar_enableHeadBoneCamera.toInt()) {
+			if (head) {
+				head->updateSkin();
+				Uint32 headBone = head->findBoneIndex("Bone_Head");
+				if (headBone != UINT32_MAX) {
+					auto mat = head->findBone(headBone);
+					auto pos = Vector(mat[3][0], mat[3][2], -mat[3][1]);
+					camera->setLocalPos(pos + models->getLocalPos());
+					camera->translate(Vector(16.f, 0.f, 0.f));
+				}
 			}
 		}
+		if (cvar_enableBob.toInt()) {
+			camera->translate(Vector(0.f, 0.f, sinf(bobAngle) * 4.f * bobLength));
+		}
 
+		// set listener for player 1
 		if (localID == 0) {
 			client->getMixer()->setListener(camera);
 		}
 
-		int localPlayerCount = client->numLocalPlayers();
-
+		// set screen size
 		Rect<Sint32> rect;
+		int localPlayerCount = client->numLocalPlayers();
 		if (localPlayerCount < 2) {
 			rect.x = 0;
 			rect.w = Frame::virtualScreenX;
@@ -739,12 +747,7 @@ void Player::updateCamera() {
 			rect.h = Frame::virtualScreenY / 2;
 		}
 		camera->setWin(rect);
-		if (headBone != UINT32_MAX) {
-			camera->translate(Vector(16.f, 0.f, 0.f));
-		}
-		if (cvar_enableBob.toInt()) {
-			camera->translate(Vector(0.f, 0.f, sinf(bobAngle) * 4.f * bobLength));
-		}
+
 		camera->update();
 	}
 }

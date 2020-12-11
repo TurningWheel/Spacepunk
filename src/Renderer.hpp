@@ -164,7 +164,6 @@ public:
 	Framebuffer* bindFBO(const char* name, int width, int height);
 
 private:
-	const char* loadStr = "Loading...";
 	const Uint32 maxTextures = 1024;
 	bool initialized = false;
 	bool fullscreen;

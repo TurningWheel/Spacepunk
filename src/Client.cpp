@@ -23,7 +23,7 @@ using namespace std;
 
 Client::Client() {
 	net = new NetSDL(*this);
-	renderer = new Renderer();
+	renderer = mainEngine->getRenderer();
 	mixer = new Mixer();
 	script = new Script(*this);
 	gui = new Frame("root");
@@ -50,10 +50,6 @@ Client::~Client() {
 	if (editor) {
 		delete editor;
 		editor = nullptr;
-	}
-	if (renderer) {
-		delete renderer;
-		renderer = nullptr;
 	}
 	if (mixer) {
 		delete mixer;

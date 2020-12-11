@@ -15,7 +15,6 @@ class Editor;
 //! A Client implements the Game interface and lives in the Engine.
 //! In order to play a singleplayer or listening game, the engine instantiates a Client and a Server, meaning there are two Game states running at once.
 //! A Server will dictate game updates to a client, but in other respects they are mostly identical.
-//! The Client does own a Renderer however.
 class Client : public Game {
 public:
 	Client();
