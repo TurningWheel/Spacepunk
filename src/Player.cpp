@@ -452,6 +452,12 @@ void Player::control() {
 		}
 	}
 
+	// hit head on ceiling
+	if (nearestCeiling <= totalHeight && entity->isFalling() && vel.dot(up) > 0) {
+		Vector verticalVelocity = up * vel.dot(up);
+		vel -= verticalVelocity;
+	}
+
 	// calculate movement vectors
 	vel += forward * buttonForward * speedFactor * timeFactor;
 	vel -= forward * buttonBackward * speedFactor * timeFactor;
