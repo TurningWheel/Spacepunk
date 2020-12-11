@@ -757,6 +757,7 @@ void Engine::init() {
 	// init resource managers
 	resources.insertUnique("font", new Resource<Font>());
 	resources.insertUnique("mesh", new Resource<Mesh, true>());
+	resources.insertUnique("staticmesh", new Resource<Mesh, false>());
 	resources.insertUnique("image", new Resource<Image, true>());
 	resources.insertUnique("material", new Resource<Material>());
 	resources.insertUnique("text", new Resource<Text>());

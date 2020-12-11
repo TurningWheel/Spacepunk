@@ -32,6 +32,12 @@ bool Asset::finalize() {
 }
 
 bool Asset::valid(const char* name) {
+	if (!name || name[0] == '\0') {
+		return false;
+	}
+	if (name[0] == '#') {
+		return true;
+	}
 	String path = mainEngine->buildPath(name).get();
 	FILE* fp = nullptr;
 	if ((fp = fopen(path.get(), "r")) != nullptr) {

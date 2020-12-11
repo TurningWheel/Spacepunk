@@ -35,7 +35,21 @@ const GLuint Image::indices[6]{
 };
 
 Image::Image(const char* _name) : Asset(_name) {
-	path = mainEngine->buildPath(_name).get();
+	const char* clippedName = _name;
+	if (clippedName[0] == '#') {
+		++clippedName;
+		clamp = true;
+	}
+	if (clippedName[0] == '$') {
+		++clippedName;
+		point = true;
+	}
+	if (clippedName[0] == '%') {
+		++clippedName;
+		clamp = true;
+		point = true;
+	}
+	path = mainEngine->buildPath(clippedName).get();
 
 	mainEngine->fmsg(Engine::MSG_DEBUG, "loading image '%s'...", _name);
 	if ((surf = IMG_Load(path.get())) == NULL) {

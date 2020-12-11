@@ -47,7 +47,9 @@ Model::Model(Entity& _entity, Component* _parent) :
 	}
 
 	// exposed attributes
-	attributes.push(new AttributeFile("Mesh", "vox,FBX,dae,gltf,glb,blend,3ds,ase,obj,ifc,xgl,zgl,ply,dxf,lwo,lws,lxo,stl,x,ac,ms3d,cob,scn,xml,ogex,3d,mdl,md2,md3,pk3,mdc,md5,smd,vta,b3d,q3d,q3s,nff,noff,raw,ter,hmp,ndo", meshStr));
+	attributes.push(new AttributeFile("Mesh", "vox,FBX,dae,gltf,glb,blend,3ds,ase,obj,ifc,"
+		"xgl,zgl,ply,dxf,lwo,lws,lxo,stl,x,ac,ms3d,cob,scn,xml,ogex,3d,mdl,md2,md3,pk3,"
+		"mdc,md5,smd,vta,b3d,q3d,q3s,nff,noff,raw,ter,hmp,ndo", meshStr));
 	attributes.push(new AttributeFile("Material", "json", materialStr));
 	attributes.push(new AttributeFile("Depth Fail Material", "json", depthfailStr));
 	attributes.push(new AttributeFile("Animation", "json", animationStr));

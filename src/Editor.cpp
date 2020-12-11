@@ -5504,7 +5504,7 @@ static int console_editor(int argc, const char** argv) {
 	if (mainEngine->isPlayTest()) {
 		mainEngine->setPlayTest(false);
 		if (path.empty()) {
-			path = ".playtest.wlb";
+			path = "maps/.playtest.wlb";
 		}
 	}
 	mainEngine->loadAllDefs();

@@ -110,7 +110,9 @@ bool Mesh::finalize() {
 		}
 		return loaded = subMeshes.getSize() != 0;
 	} else {
-		return false;
+		// if this is true, we are dealing with a multimesh, and not having a scene is normal.
+		// otherwise, something has gone wrong and the mesh is invalid.
+		return loaded = name[0] == '#';
 	}
 }
 
@@ -137,8 +139,9 @@ void Mesh::composeMesh(const LinkedList<Model*>& models, const glm::mat4& root) 
 	unsigned int _numVertices = 0;
 	unsigned int _numIndices = 0;
 	for (auto model : models) {
-		Mesh* mesh = mainEngine->getMeshResource().dataForString(model->getMesh());
+		Mesh* mesh = mainEngine->getStaticMeshResource().dataForString(model->getMesh());
 		if (!mesh) {
+			mainEngine->fmsg(Engine::MSG_WARN, "tried to compose multimesh with mesh that couldn't be found");
 			continue;
 		}
 		for (auto submesh : mesh->getSubMeshes()) {
@@ -151,8 +154,9 @@ void Mesh::composeMesh(const LinkedList<Model*>& models, const glm::mat4& root) 
 	}
 	Mesh::SubMesh* entry = new Mesh::SubMesh(_numIndices, _numVertices);
 	for (auto model : models) {
-		Mesh* mesh = mainEngine->getMeshResource().dataForString(model->getMesh());
+		Mesh* mesh = mainEngine->getStaticMeshResource().dataForString(model->getMesh());
 		if (!mesh) {
+			mainEngine->fmsg(Engine::MSG_WARN, "tried to compose multimesh with mesh that couldn't be found");
 			continue;
 		}
 		for (auto submesh : mesh->getSubMeshes()) {
@@ -289,13 +293,15 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 	glm::vec3 gMaxBox(maxBox.x, -maxBox.z, maxBox.y);
 	glUniform3fv(shader.getUniformLocation("gBoundingBox"), 1, glm::value_ptr(gMaxBox));
 
+	glm::mat4 viewMatrix = camera.getProjViewMatrix();
+
 	if (camera.getDrawMode() <= Camera::DRAW_DEPTH) {
 
 		// load model matrix into shader
 		glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 		// load projection matrix into shader
-		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	} else if (camera.getDrawMode() == Camera::DRAW_SHADOW) {
 		// load guid
 		Uint32 hashed = component.getEntity()->getUID();
@@ -306,7 +312,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 		glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 		// load projection matrix into shader
-		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
 		// load light data into shader
 		if (lights.getSize()) {
@@ -322,7 +328,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 		glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 		// load projection matrix into shader
-		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
 		// load camera position into shader
 		glm::vec3 cameraPos(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);
@@ -334,7 +340,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 		glUniformMatrix4fv(shader.getUniformLocation("gModel"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 		// load projection matrix into shader
-		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
 		// load light data into shader
 		if (lights.getSize()) {
@@ -359,7 +365,7 @@ ShaderProgram* Mesh::loadShader(const Component& component, Camera& camera, cons
 		glUniformMatrix4fv(shader.getUniformLocation("gNormalTransform"), 1, GL_FALSE, glm::value_ptr(normalMat));
 
 		// load projection matrix into shader
-		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(camera.getProjViewMatrix()));
+		glUniformMatrix4fv(shader.getUniformLocation("gView"), 1, GL_FALSE, glm::value_ptr(viewMatrix));
 
 		// load camera position into shader
 		glm::vec3 cameraPos = glm::vec3(camera.getGlobalPos().x, -camera.getGlobalPos().z, camera.getGlobalPos().y);

@@ -87,17 +87,17 @@ public:
 			T* data = nullptr;
 			if (stream) {
 				if (cache.getSize()) {
-					if (Asset::valid(name)) {
-						auto it = jobs.find(name);
-						if (it == jobs.end()) {
+					auto it = jobs.find(name);
+					if (it == jobs.end()) {
+						if (Asset::valid(name)) {
 							jobs.emplace(name, std::async(std::launch::async, &Resource::load, this, name));
+						} else {
+							error = resource_error_t::ERROR_CACHEFAILED;
+							return nullptr;
 						}
-						error = resource_error_t::ERROR_CACHEINPROGRESS;
-						return nullptr;
-					} else {
-						error = resource_error_t::ERROR_CACHEFAILED;
-						return nullptr;
 					}
+					error = resource_error_t::ERROR_CACHEINPROGRESS;
+					return nullptr;
 				} else {
 					data = load(name);
 					data->finalize();

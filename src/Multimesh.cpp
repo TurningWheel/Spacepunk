@@ -24,7 +24,7 @@ Multimesh::Multimesh(Entity& _entity, Component* _parent) :
 
 Multimesh::~Multimesh() {
 	if (!meshStr.empty()) {
-		mainEngine->getMeshResource().deleteData(meshStr.get());
+		mainEngine->getStaticMeshResource().deleteData(meshStr.get());
 	}
 }
 
@@ -66,7 +66,7 @@ void Multimesh::draw(Camera& camera, const ArrayList<Light*>& lights) {
 		return;
 
 	// load assets
-	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get());
+	Mesh* mesh = mainEngine->getStaticMeshResource().dataForString(meshStr.get()); assert(mesh);
 	Material* mat = mainEngine->getMaterialResource().dataForString(materialStr.get());
 	Material* depthfailmat = mainEngine->getMaterialResource().dataForString(depthfailStr.get());
 
@@ -121,7 +121,7 @@ void Multimesh::draw(Camera& camera, const ArrayList<Light*>& lights) {
 
 void Multimesh::update() {
 	Component::update();
-	Mesh* mesh = mainEngine->getMeshResource().dataForString(meshStr.get()); assert(mesh);
+	Mesh* mesh = mainEngine->getStaticMeshResource().dataForString(meshStr.get()); assert(mesh);
 	mesh->clear();
 	LinkedList<Model*> models;
 	findAllComponents<Model>(Component::type_t::COMPONENT_MODEL, models);
@@ -147,7 +147,7 @@ String Multimesh::generateGUID() {
 
 void Multimesh::afterWorldInsertion(const World* world) {
 	if (!meshStr.empty()) {
-		mainEngine->getMeshResource().deleteData(meshStr.get());
+		mainEngine->getStaticMeshResource().deleteData(meshStr.get());
 	}
 	meshStr = generateGUID();
 }

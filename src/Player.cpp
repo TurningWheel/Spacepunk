@@ -21,9 +21,9 @@ static Cvar cvar_mouseYInvert("player.mouselook.inverty", "invert y-axis on mous
 static Cvar cvar_mouseSmooth("player.mouselook.smooth", "smooth mouse look over multiple frames", "0");
 static Cvar cvar_mouseSpeed("player.mouselook.speed", "adjusts mouse sensitivity", "0.1");
 static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "9");
-static Cvar cvar_speed("player.speed", "player movement speed", "28");
+static Cvar cvar_speed("player.speed", "player movement speed", "64");
 static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
-static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "4.0");
+static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "5.0");
 static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "1");
 static Cvar cvar_crouchSpeed("player.crouch.speed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "0");
@@ -466,7 +466,9 @@ void Player::control() {
 
 	// friction
 	if (!entity->isFalling()) {
-		vel *= .9;
+		vel *= .8;
+	} else {
+		vel *= .99;
 	}
 	rot.yaw *= .5;
 	rot.pitch *= .5;
@@ -700,7 +702,7 @@ void Player::updateCamera() {
 	if (bobAngle > PI*2.f) {
 		bobAngle -= PI * 2.f;
 	}
-	if (moving && cvar_enableBob.toInt()) {
+	if (moving && cvar_enableBob.toInt() && !entity->isFalling()) {
 		bobLength = min(bobLength + 0.1f, 1.f);
 	} else {
 		bobLength = max(bobLength - 0.1f, 0.f);
