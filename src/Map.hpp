@@ -337,6 +337,12 @@ private:
 	unsigned long hash(Uint32 key) const {
 		return static_cast<unsigned long>(key);
 	}
+	unsigned long hash(Sint64 key) const {
+		return static_cast<unsigned long>(key);
+	}
+	unsigned long hash(Uint64 key) const {
+		return static_cast<unsigned long>(key);
+	}
 	unsigned long hash(bool key) const {
 		return key ? 1 : 0;
 	}

@@ -292,6 +292,10 @@ void Model::draw(Camera& camera, const ArrayList<Light*>& lights) {
 	if (camera.getDrawMode() == Camera::DRAW_SHADOW && lights[0]->getEntity()->isFlag(Entity::FLAG_STATIC) && !entity->isFlag(Entity::FLAG_STATIC))
 		return;
 
+	// genius models don't cast shadows from their own lights
+	if (camera.getDrawMode() == Camera::DRAW_SHADOW && lights[0]->getEntity() == entity && genius)
+		return;
+
 	// skip certain passes if necessary
 	if (camera.getDrawMode() == Camera::DRAW_SHADOW && !(entity->isFlag(Entity::flag_t::FLAG_SHADOW)))
 		return;

@@ -140,7 +140,7 @@ bool Light::isOccluded(Entity& entity) {
 	Entity* shadowCamera = world->getShadowCamera(); assert(shadowCamera);
 	Camera* camera = shadowCamera->findComponentByUID<Camera>(1); assert(camera);
 	for (int c = 0; c < 6; ++c) {
-		camera->setOcclusionIndex(this->entity->getUID() * 6 + c);
+		camera->setOcclusionIndex((((Uint64)this->entity->getUID()) << 32) | (Uint64)(this->uid << 1) | (Uint64)c);
 		auto& query = camera->getOcclusionQuery(&entity);
 		if (query.result == false) {
 			return false;
@@ -190,18 +190,22 @@ int Light::createShadowMap() {
 		auto bw = static_cast<BasicWorld*>(world); assert(bw);
 		ArrayList<Entity*> drawList;
 		bw->fillDrawList(*camera, radius * radius, drawList);
-
-		// perform occlusion queries
-		camera->setOcclusionIndex(entity->getUID() * 6 + c);
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-		camera->setDrawMode(Camera::DRAW_BOUNDS);
-		bw->drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+		camera->setOcclusionIndex((((Uint64)this->entity->getUID()) << 32) | (Uint64)(this->uid << 1) | (Uint64)c);
 
 		// create reduced draw list
+		// TODO there are bugs with this that cause certain objects to be counted as occluded!
+		// solve please!
 		ArrayList<Entity*> reducedDrawList;
-		for (auto entity : drawList) {
-			if (!entity->isOccluded(*camera) && entity->isFlag(Entity::FLAG_VISIBLE)) {
-				reducedDrawList.push(entity);
+		if (entity->isFlag(Entity::FLAG_STATIC)) {
+			reducedDrawList = drawList;
+		} else {
+			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+			camera->setDrawMode(Camera::DRAW_BOUNDS);
+			//bw->drawSceneObjects(*camera, ArrayList<Light*>(), drawList);
+			for (auto entity : drawList) {
+				if (!entity->isOccluded(*camera) && entity->isFlag(Entity::FLAG_VISIBLE)) {
+					reducedDrawList.push(entity);
+				}
 			}
 		}
 		result += reducedDrawList.getSize();

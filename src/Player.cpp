@@ -427,6 +427,7 @@ void Player::control() {
 				const float slope = cosf(cvar_slopeLimit.toFloat() * PI / 180.f);
 				if (up.dot(floorHit.normal) > slope) {
 					entity->setFalling(false);
+					timeSinceLanding = entity->getTicks();
 					vel -= vel * down.absolute();
 				}
 			} else {
@@ -438,11 +439,13 @@ void Player::control() {
 				entity->setFalling(true);
 				vel += up * cvar_jumpPower.toFloat();
 			} else {
-				if (nearestFloor > middleOfBody + 1.f) {
+				if (nearestFloor >= middleOfBody + stepHeight) {
 					entity->setFalling(true);
 				} else {
 					float feetHeight = bbox->getLocalScale().z + stepHeight;
-					float rebound = min(1.f, feetHeight - nearestFloor);
+					float rebound = entity->getTicks() - timeSinceLanding < 30 ?
+						min(1.f, feetHeight - nearestFloor) :
+						feetHeight - nearestFloor;
 					Vector pos = entity->getPos();
 					pos = pos + up * rebound;
 					entity->setPos(pos);
@@ -584,8 +587,27 @@ void Player::control() {
 		playerAng = entity->getAng();
 	}
 
-	//Interacting with entities.
+	// update entity vectors
+	Vector standingOnVel;
+	originalVel = vel;
+	if (entityStandingOn) {
+		standingOnVel = entityStandingOn->getVel();
+	}
+	entity->setVel(vel + standingOnVel);
+	Rotation finalRot = orienting ? Rotation() : rot;
+	entity->setRot(finalRot);
+	entity->update();
+	if (warpNeeded) {
+		Quaternion ang = entity->getAng();
+		ang = ang * Quaternion(finalRot);
+		entity->setAng(ang);
+		entity->warp();
+	}
+
+	// additional inputs
 	if (!client->isConsoleActive()) {
+
+		// interacting with entities
 		World* world = entity->getWorld();
 		if (camera && world)
 		{
@@ -593,7 +615,7 @@ void Player::control() {
 				if (holdingInteract)
 				{
 					// 60hz
-					interactHoldTime += 1 / 60;
+					interactHoldTime += 1.f / 60.f;
 				}
 				holdingInteract = true;
 				input.consumeBinaryToggle("Interact");
@@ -628,66 +650,49 @@ void Player::control() {
 						}
 					}
 				}
-			} else
-			{
+			} else {
 				holdingInteract = false;
 
 				interactHoldTime = 0;
 			}
-			// Toggling inventory
-			if (input.binaryToggle("Status"))
-			{
-				input.consumeBinaryToggle("Status");
-				entity->setInventoryVisibility(!inventoryVisible);
-				inventoryVisible = !inventoryVisible;
+		}
+
+		// Toggling inventory
+		if (input.binaryToggle("Status"))
+		{
+			input.consumeBinaryToggle("Status");
+			entity->setInventoryVisibility(!inventoryVisible);
+			inventoryVisible = !inventoryVisible;
+		}
+
+		// using hand items (shooting)
+		if (lTool && input.binaryToggle("HandLeft")) {
+			Uint32 bone = lTool->findBoneIndex("emitter");
+			glm::mat4 mat = lTool->getGlobalMat();
+			if (bone != UINT32_MAX) {
+				mat *= lTool->findBone(bone);
 			}
+			auto red = WideVector(1.f, 0.f, 0.f, 1.f);
+			lTool->shootLaser(mat, red, 8.f, 20.f);
 		}
-	}
-
-	// update entity vectors
-	Vector standingOnVel;
-	originalVel = vel;
-	if (entityStandingOn) {
-		standingOnVel = entityStandingOn->getVel();
-	}
-	entity->setVel(vel + standingOnVel);
-	Rotation finalRot = orienting ? Rotation() : rot;
-	entity->setRot(finalRot);
-	entity->update();
-	if (warpNeeded) {
-		Quaternion ang = entity->getAng();
-		ang = ang * Quaternion(finalRot);
-		entity->setAng(ang);
-		entity->warp();
-	}
-
-	// using hand items (shooting)
-	if (lTool && input.binaryToggle("HandLeft")) {
-		Uint32 bone = lTool->findBoneIndex("emitter");
-		glm::mat4 mat = lTool->getGlobalMat();
-		if (bone != UINT32_MAX) {
-			mat *= lTool->findBone(bone);
+		if (rTool && input.binaryToggle("HandRight")) {
+			Uint32 bone = rTool->findBoneIndex("emitter");
+			glm::mat4 mat = rTool->getGlobalMat();
+			if (bone != UINT32_MAX) {
+				mat *= rTool->findBone(bone);
+			}
+			auto red = WideVector(1.f, 0.f, 0.f, 1.f);
+			rTool->shootLaser(mat, red, 8.f, 20.f);
 		}
-		auto red = WideVector(1.f, 0.f, 0.f, 1.f);
-		lTool->shootLaser(mat, red, 8.f, 20.f);
-	}
-	if (rTool && input.binaryToggle("HandRight")) {
-		Uint32 bone = rTool->findBoneIndex("emitter");
-		glm::mat4 mat = rTool->getGlobalMat();
-		if (bone != UINT32_MAX) {
-			mat *= rTool->findBone(bone);
-		}
-		auto red = WideVector(1.f, 0.f, 0.f, 1.f);
-		rTool->shootLaser(mat, red, 8.f, 20.f);
-	}
-	input.consumeBinaryToggle("HandLeft");
-	input.consumeBinaryToggle("HandRight");
+		input.consumeBinaryToggle("HandLeft");
+		input.consumeBinaryToggle("HandRight");
 
-	// lamp
-	if (lamp && input.binaryToggle("Inventory1")) {
-		lamp->setIntensity(lamp->getIntensity() == 0.f ? 1.f : 0.f);
+		// lamp
+		if (lamp && input.binaryToggle("Inventory1")) {
+			lamp->setIntensity(lamp->getIntensity() == 0.f ? 1.f : 0.f);
+		}
+		input.consumeBinaryToggle("Inventory1");
 	}
-	input.consumeBinaryToggle("Inventory1");
 }
 
 void Player::updateCamera() {

@@ -164,6 +164,7 @@ private:
 	float bobAngle = 0.f;
 	float bobLength = 0.f;
 	Vector originalCameraPos;
+	Uint32 timeSinceLanding = 0;
 };
 
 extern Cvar cvar_fov;

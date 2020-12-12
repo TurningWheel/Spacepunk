@@ -2934,7 +2934,6 @@ void Editor::preProcess() {
 		StringBuf<64> path;
 		path.format("maps/autosave%d.%s", count, World::fileExtensions[static_cast<int>(world->getFiletype())]);
 		path = mainEngine->buildPath(path.get()).get();
-		playSound("editor/install.wav");
 		world->saveFile(path.get(), true);
 	}
 
