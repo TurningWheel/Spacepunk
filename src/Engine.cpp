@@ -1281,7 +1281,7 @@ void Engine::preProcess() {
 
 	// do timer
 	std::chrono::duration<double> msInterval(1.0 / ticksPerSecond);
-	auto now = std::chrono::steady_clock::now();
+	auto now = std::chrono::high_resolution_clock::now();
 	int framesToDo = (now - lastTick) / msInterval;
 	if (framesToDo) {
 		lastTick = now;
@@ -1689,8 +1689,16 @@ void Engine::postProcess() {
 			loadAllResources();
 		}
 	}
-
 	++cycles;
+
+	// sleep thread for a bit
+	std::chrono::duration<double> msInterval(1.0 / ticksPerSecond);
+	auto sleepTime = (msInterval - (std::chrono::high_resolution_clock::now() - lastTick)) / 2;
+	if (sleepTime > std::chrono::milliseconds(1)) {
+		std::this_thread::sleep_for(sleepTime);
+	} else {
+		std::this_thread::yield();
+	}
 }
 
 ArrayList<String> Engine::getDisplayModes() const {
