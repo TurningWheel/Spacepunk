@@ -36,13 +36,13 @@ float Triangular(float f) {
 	return 0.f;
 }
 
-vec4 BiCubic(vec2 coords) {
+vec4 BiCubic(vec2 coords, vec2 res1, vec2 res2) {
     vec4 nSum   = vec4(0.0f, 0.0f, 0.0f, 0.0f);
     vec4 nDenom = vec4(0.0f, 0.0f, 0.0f, 0.0f);
     float a = fract(coords.x); // get the decimal part
     float b = fract(coords.y); // get the decimal part
-    ivec2 samples = ivec2(ceil(1920.f / gResolution.x),
-    	ceil(1080.f / gResolution.y));
+    ivec2 samples = ivec2(ceil(res1.x / res2.x),
+    	ceil(res1.y / res2.y));
     ivec2 start = - samples / 2;
     ivec2 end = samples / 2;
     for (int m = start.x; m <= end.x; ++m) {
@@ -74,8 +74,11 @@ void main() {
 #endif
 #else
 	// gui
-	vec2 res = vec2(1920.f, 1080.f);
-	vec4 Color = BiCubic(TexCoord * res);
+	vec2 guiRes = vec2(1920.f, 1080.f);
+	vec2 scrRes = vec2(gResolution);
+	vec2 res1 = vec2(guiRes.x > scrRes.x ? guiRes.x : scrRes.x, guiRes.y > scrRes.y ? guiRes.y : scrRes.y);
+	vec2 res2 = vec2(guiRes.x > scrRes.x ? scrRes.x : guiRes.x, guiRes.y > scrRes.y ? scrRes.y : guiRes.y);
+	vec4 Color = BiCubic(TexCoord * guiRes, res1, res2);
 	FragColor = Color;
 #endif
 #else

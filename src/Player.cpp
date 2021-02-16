@@ -405,7 +405,7 @@ void Player::control() {
 
 	// time and speed
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
-	float timeFactor = 1.f / 60.f;
+	float timeFactor = mainEngine->getTimeFactor();
 
 	// set bbox and origin
 	if (cvar_zeroGravity.toInt()) {
@@ -468,14 +468,14 @@ void Player::control() {
 	vel -= right * buttonLeft * speedFactor * timeFactor;
 
 	// friction
-	if (!entity->isFalling()) {
-		vel *= .8;
+	if (entity->isFalling()) {
+		vel -= vel * timeFactor * 0.4f;
 	} else {
-		vel *= .99;
+		vel -= vel * timeFactor * 14.f;
 	}
-	rot.yaw *= .5;
-	rot.pitch *= .5;
-	rot.roll *= .5;
+	rot.yaw -= rot.yaw * timeFactor * 50.f;
+	rot.pitch -= rot.pitch * timeFactor * 50.f;
+	rot.roll -= rot.roll * timeFactor * 50.f;
 
 	// looking
 	if (!client->isConsoleActive()) {
@@ -543,9 +543,6 @@ void Player::control() {
 			lookDir.pitch = -vLimit;
 		}
 		entity->setLookDir(lookDir);
-
-		// don't actually turn the entity vertically
-		rot.pitch = 0.f;
 	}
 
 	// orient to ground
@@ -574,8 +571,12 @@ void Player::control() {
 			}
 		}
 	}
+
+	Rotation trueRot = rot;
+	trueRot.pitch = 0.f;
+
 	if (orienting) {
-		playerAng = playerAng * Quaternion(rot);
+		playerAng = playerAng * Quaternion(trueRot);
 		orient += timeFactor;
 		if (orient > 1.f) {
 			orienting = false;
@@ -594,7 +595,7 @@ void Player::control() {
 		standingOnVel = entityStandingOn->getVel();
 	}
 	entity->setVel(vel + standingOnVel);
-	Rotation finalRot = orienting ? Rotation() : rot;
+	Rotation finalRot = orienting ? Rotation() : trueRot;
 	entity->setRot(finalRot);
 	entity->update();
 	if (warpNeeded) {
@@ -615,7 +616,7 @@ void Player::control() {
 				if (holdingInteract)
 				{
 					// 60hz
-					interactHoldTime += 1.f / 60.f;
+					interactHoldTime += timeFactor;
 				}
 				holdingInteract = true;
 				input.consumeBinaryToggle("Interact");
@@ -673,7 +674,7 @@ void Player::control() {
 				mat *= lTool->findBone(bone);
 			}
 			auto red = WideVector(1.f, 0.f, 0.f, 1.f);
-			lTool->shootLaser(mat, red, 8.f, 20.f);
+			lTool->shootLaser(mat, red, 8.f, 1.f);
 		}
 		if (rTool && input.binaryToggle("HandRight")) {
 			Uint32 bone = rTool->findBoneIndex("emitter");
@@ -682,7 +683,7 @@ void Player::control() {
 				mat *= rTool->findBone(bone);
 			}
 			auto red = WideVector(1.f, 0.f, 0.f, 1.f);
-			rTool->shootLaser(mat, red, 8.f, 20.f);
+			rTool->shootLaser(mat, red, 8.f, 1.f);
 		}
 		input.consumeBinaryToggle("HandLeft");
 		input.consumeBinaryToggle("HandRight");

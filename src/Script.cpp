@@ -186,6 +186,7 @@ void Script::exposeEngine() {
 		.addFunction("getMouseMoveY", &Engine::getMouseMoveY)
 		.addFunction("getFPS", &Engine::getFPS)
 		.addFunction("getTimeSync", &Engine::getTimeSync)
+		.addFunction("getTimeFactor", &Engine::getTimeFactor)
 		.addFunction("getTicksPerSecond", &Engine::getTicksPerSecond)
 		.addFunction("random", &Engine::random)
 		.addFunction("playSound", &Engine::playSound)

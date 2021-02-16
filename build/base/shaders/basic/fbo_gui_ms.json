@@ -17,6 +17,7 @@
 				"path": "shaders/basic/fbo_f.glsl",
 				"defines": [
 					"GUI",
+					"GAMMA",
 					"MULTISAMPLE"
 				]
 			}

@@ -515,7 +515,7 @@ void World::process() {
 	for (Uint32 c = 0; c < lasers.getSize(); ++c) {
 		auto& laser = lasers[c];
 		if (laser.life > 0.f) {
-			laser.life -= 1.f;
+			laser.life -= mainEngine->getTimeFactor();
 			if (laser.life <= 0.f) {
 				lasers.remove(c);
 				--c;

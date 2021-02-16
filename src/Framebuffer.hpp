@@ -33,6 +33,9 @@ public:
 	//! delete gl data for framebuffer
 	void term();
 
+	//! unbind framebuffer from writing
+	static void unbind();
+
 	//! binds the framebuffer for writing
 	void bindForWriting();
 

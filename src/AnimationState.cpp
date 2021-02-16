@@ -46,7 +46,7 @@ bool AnimationState::update(Speaker* speaker) {
 			(ticksRate > 0.f && ticks < length) ||
 			(ticksRate < 0.f && ticks > 0.f))) {
 			float oldTicks = ticks;
-			float animSpeed = ((float)Engine::defaultTickRate / (float)mainEngine->getTicksPerSecond());
+			float animSpeed = mainEngine->getTimeFactor() * Engine::defaultTickRate; // all animations are 60fps
 			float step = ticksRate * animSpeed;
 
 			ticks += step * cvar_animRate.toFloat();

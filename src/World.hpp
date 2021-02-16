@@ -201,7 +201,7 @@ public:
 	//! @param end The end point of the laser
 	//! @param color The laser's color
 	//! @param size The width of the laser
-	//! @param life The lifespan of the laser in ticks (60 = 1sec)
+	//! @param life The lifespan of the laser in seconds
 	laser_t& addLaser(const Vector& start, const Vector& end, const glm::vec4& color, float size, float life);
 
 	virtual const type_t		getType() const = 0;

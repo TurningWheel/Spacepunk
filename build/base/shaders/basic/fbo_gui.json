@@ -16,7 +16,8 @@
 				"type": 2,
 				"path": "shaders/basic/fbo_f.glsl",
 				"defines": [
-					"GUI"
+					"GUI",
+					"GAMMA"
 				]
 			}
 		]

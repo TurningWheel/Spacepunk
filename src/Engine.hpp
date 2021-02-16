@@ -108,6 +108,7 @@ public:
 	Sint32								getMouseMoveX() const { return mousexrel; }
 	Sint32								getMouseMoveY() const { return mouseyrel; }
 	double								getFPS() const { return fps; }
+	double								getTimeFactor() const { return 1.0 / (double)ticksPerSecond; }
 	double								getTimeSync() const { return timesync; }
 	Uint32								getTicks() const { return ticks; }
 	int									getTicksPerSecond() const { return (int)ticksPerSecond; }

@@ -942,162 +942,146 @@ void Client::postProcess() {
 
 		// set framebuffer
 		renderer->clearBuffers();
-		Framebuffer* fbo = renderer->bindFBO("__main", xres, yres);
-		fbo->clear();
 
-		if (!textureSelectorActive) {
-			Framebuffer* scene = renderer->bindFBO("scene", xres, yres);
-			scene->clear();
+		Framebuffer* scene = renderer->bindFBO("scene", xres, yres);
+		scene->clear();
 
-			bool showTools = false;
-			for (Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext()) {
-				World* world = node->getData();
-				world->draw();
-				showTools = world->isShowTools();
-			}
+		bool showTools = false;
+		for (Node<World*>* node = worlds.getFirst(); node != nullptr; node = node->getNext()) {
+			World* world = node->getData();
+			world->draw();
+			showTools = world->isShowTools();
+		}
 
-			if (cvar_bloomEnabled.toInt() && (!editor || !showTools)) {
-				// blur bloom highlights
-				Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1", xres, yres);
-				bloomPass1->clear();
-				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_HORIZONTAL);
-				Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2", xres, yres);
-				bloomPass2->clear();
-				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_VERTICAL);
+		if (cvar_bloomEnabled.toInt() && (!editor || !showTools)) {
+			// TODO bloom pass is VERY SLOW right now!
+			// figure out a way to make it faster!
 
-				// blend bloom with scene
-				bloomPass1 = renderer->bindFBO("bloomPass1", xres, yres);
-				renderer->blendFramebuffer(*bloomPass2, GL_COLOR_ATTACHMENT0, *scene, GL_COLOR_ATTACHMENT0);
+			// blur bloom highlights
+			Framebuffer* bloomPass1 = renderer->bindFBO("bloomPass1", xres, yres);
+			bloomPass1->clear();
+			renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_HORIZONTAL);
+			Framebuffer* bloomPass2 = renderer->bindFBO("bloomPass2", xres, yres);
+			bloomPass2->clear();
+			renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT1, Renderer::BlitType::BLUR_VERTICAL);
 
-				// blit bloomed scene to window
-				(void)renderer->bindFBO("__main", xres, yres);
-				renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
-			} else {
-				// blit scene to window
-				(void)renderer->bindFBO("__main", xres, yres);
-				renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
-			}
+			// blend bloom with scene
+			bloomPass1 = renderer->bindFBO("bloomPass1", xres, yres);
+			renderer->blendFramebuffer(*bloomPass2, GL_COLOR_ATTACHMENT0, *scene, GL_COLOR_ATTACHMENT0);
 
-			glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-			// editor interface
-			Framebuffer* gui_fbo = renderer->bindFBO("gui", Frame::virtualScreenX, Frame::virtualScreenY);
-			gui_fbo->clear();
-			if (editor && editor->isInitialized()) {
-				editor->draw(*renderer);
-			}
+			// blit bloomed scene to window backbuffer
+			Framebuffer::unbind();
+			renderer->blitFramebuffer(*bloomPass1, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
+		} else {
+			// blit scene to window
+			Framebuffer::unbind();
+			renderer->blitFramebuffer(*scene, GL_COLOR_ATTACHMENT0, Renderer::BlitType::HDR);
+		}
 
-			// draw gui
-			if (gui && !editorFullscreen) {
-				gui->draw(*renderer);
-			}
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		// editor interface
+		Framebuffer* gui_fbo = renderer->bindFBO("gui", Frame::virtualScreenX, Frame::virtualScreenY);
+		gui_fbo->clear();
+		if (editor && editor->isInitialized()) {
+			editor->draw(*renderer);
+		}
 
-			// blit gui
-			(void)renderer->bindFBO("__main", xres, yres);
-			renderer->blitFramebuffer(*gui_fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GUI);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// draw gui
+		if (gui && !editorFullscreen) {
+			gui->draw(*renderer);
+		}
 
-			// gamma adjustment
-			Framebuffer* gamma = renderer->bindFBO("gamma", xres, yres);
-			gamma->clear();
-			renderer->blitFramebuffer(*fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GAMMA);
-			(void)renderer->bindFBO("__main", xres, yres);
-			fbo->clear();
-			renderer->blitFramebuffer(*gamma, GL_COLOR_ATTACHMENT0, Renderer::BlitType::BASIC);
+		// blit gui and do gamma adjustment
+		Framebuffer::unbind();
+		renderer->blitFramebuffer(*gui_fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::GUI);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			// draw console
-			if (consoleHeight > 0) {
-				renderer->drawConsole(consoleHeight, consoleInput, console, logStart);
-			}
+		// draw console
+		if (consoleHeight > 0) {
+			renderer->drawConsole(consoleHeight, consoleInput, console, logStart);
+		}
 
-			// debug counters
-			Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
-			if (font) {
-				if ((!editor || !editor->isInitialized())) {
-					// fps counter
-					if (cvar_showFPS.toInt()) {
-						char fps[16];
-						snprintf(fps, 16, "%.1f", mainEngine->getFPS());
+		// debug counters
+		Font* font = mainEngine->getFontResource().dataForString(Font::defaultFont);
+		if (font) {
+			if ((!editor || !editor->isInitialized())) {
+				// fps counter
+				if (cvar_showFPS.toInt()) {
+					char fps[16];
+					snprintf(fps, 16, "%.1f", mainEngine->getFPS());
 
-						int width;
-						font->sizeText(fps, &width, NULL);
+					int width;
+					font->sizeText(fps, &width, NULL);
 
-						Rect<int> pos;
-						Rect<int> rect;
-						rect.x = 0; rect.w = renderer->getXres();
-						rect.y = 0; rect.h = renderer->getYres();
-						pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
-						pos.y = rect.y + 18; pos.h = 0;
+					Rect<int> pos;
+					Rect<int> rect;
+					rect.x = 0; rect.w = renderer->getXres();
+					rect.y = 0; rect.h = renderer->getYres();
+					pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
+					pos.y = rect.y + 18; pos.h = 0;
 
-						renderer->printText(font, pos, fps);
-					}
+					renderer->printText(font, pos, fps);
+				}
 
-					// player speedometer
-					if (cvar_showSpeed.toInt()) {
-						Node<Player>* node = players.getFirst();
-						if (node) {
-							Player& player = node->getData();
+				// player speedometer
+				if (cvar_showSpeed.toInt()) {
+					Node<Player>* node = players.getFirst();
+					if (node) {
+						Player& player = node->getData();
 
-							if (player.getEntity()) {
-								float fSpeed = player.getEntity()->getVel().length() * mainEngine->getTicksPerSecond() / 64.f;
+						if (player.getEntity()) {
+							float fSpeed = player.getEntity()->getVel().length() * mainEngine->getTicksPerSecond() / 64.f;
 
-								char speed[16];
-								snprintf(speed, 16, "%.1f m/sec", fSpeed);
+							char speed[16];
+							snprintf(speed, 16, "%.1f m/sec", fSpeed);
 
-								int width;
-								font->sizeText(speed, &width, NULL);
+							int width;
+							font->sizeText(speed, &width, NULL);
 
-								Rect<int> pos;
-								Rect<int> rect;
-								rect.x = 0; rect.w = renderer->getXres();
-								rect.y = 0; rect.h = renderer->getYres();
-								pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
-								pos.y = rect.y + 18 + 36; pos.h = 0;
+							Rect<int> pos;
+							Rect<int> rect;
+							rect.x = 0; rect.w = renderer->getXres();
+							rect.y = 0; rect.h = renderer->getYres();
+							pos.x = rect.x + rect.w - 18 - width; pos.w = 0;
+							pos.y = rect.y + 18 + 36; pos.h = 0;
 
-								renderer->printText(font, pos, speed);
-							}
+							renderer->printText(font, pos, speed);
 						}
 					}
+				}
 
-					// camera matrix
-					if (cvar_showMatrix.toInt()) {
-						Node<Player>* node = players.getFirst();
-						if (node) {
-							Player& player = node->getData();
+				// camera matrix
+				if (cvar_showMatrix.toInt()) {
+					Node<Player>* node = players.getFirst();
+					if (node) {
+						Player& player = node->getData();
 
-							if (player.getCamera()) {
-								const glm::mat4& mat = player.getCamera()->getViewMatrix();
+						if (player.getCamera()) {
+							const glm::mat4& mat = player.getCamera()->getViewMatrix();
 
-								char matrixChars[256];
-								snprintf(matrixChars, 256,
-									"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-									"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-									"%+07.1f %+07.1f %+07.1f %+07.1f\n"
-									"%+07.1f %+07.1f %+07.1f %+07.1f\n",
-									mat[0][0], mat[0][1], mat[0][2], mat[0][3],
-									mat[1][0], mat[1][1], mat[1][2], mat[1][3],
-									mat[2][0], mat[2][1], mat[2][2], mat[2][3],
-									mat[3][0], mat[3][1], mat[3][2], mat[3][3]
-								);
+							char matrixChars[256];
+							snprintf(matrixChars, 256,
+								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+								"%+07.1f %+07.1f %+07.1f %+07.1f\n"
+								"%+07.1f %+07.1f %+07.1f %+07.1f\n",
+								mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+								mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+								mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+								mat[3][0], mat[3][1], mat[3][2], mat[3][3]
+							);
 
-								Rect<int> pos;
-								pos.x = 18; pos.w = 0;
-								pos.y = 18; pos.h = 0;
-								renderer->printText(font, pos, matrixChars);
-							}
+							Rect<int> pos;
+							pos.x = 18; pos.w = 0;
+							pos.y = 18; pos.h = 0;
+							renderer->printText(font, pos, matrixChars);
 						}
 					}
 				}
 			}
-		} else {
-			// just the editor interface
-			if (editor && editor->isInitialized()) {
-				editor->draw(*renderer);
-			}
 		}
 
 		// swap screen buffer
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		renderer->blitFramebuffer(*fbo, GL_COLOR_ATTACHMENT0, Renderer::BlitType::BASIC);
 		renderer->swapWindow();
 
 		// screenshots

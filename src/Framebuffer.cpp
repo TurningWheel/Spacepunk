@@ -109,6 +109,17 @@ void Framebuffer::term() {
 	}
 }
 
+void Framebuffer::unbind() {
+	Client* client = mainEngine->getLocalClient(); assert(client);
+	Renderer* renderer = client->getRenderer(); assert(renderer);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, renderer->getXres(), renderer->getYres());
+
+	// remember which fbo is bound for writing
+	renderer->setCurrentFramebuffer("");
+}
+
 void Framebuffer::bindForWriting() {
 	if (!fbo)
 		return;

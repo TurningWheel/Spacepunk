@@ -221,7 +221,11 @@ Button::result_t Button::process(Rect<int> _size, Rect<int> _actualSize, const b
 			if (pressed != reallyPressed) {
 				result.clicked = true;
 			}
-			pressed = reallyPressed;
+			if (style != STYLE_CHECKBOX && style != STYLE_TOGGLE) {
+				reallyPressed = pressed = false;
+			} else {
+				pressed = reallyPressed;
+			}
 		}
 	} else {
 		if (style != STYLE_CHECKBOX && style != STYLE_TOGGLE) {
