@@ -809,6 +809,7 @@ bool Entity::move() {
 					vel = newPos - oldPos;
 				} else {
 					physics->applyMoveForces(vel, rot);
+					vel = newPos - oldPos;
 				}
 				updateNeeded = true;
 			} else {

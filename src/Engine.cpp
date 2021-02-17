@@ -1273,13 +1273,8 @@ void Engine::preProcess() {
 		resource.b->update();
 	}
 
-	// restart timer
-	unsigned int newTicksPerSecond = cvar_tickrate.toInt();
-	if (newTicksPerSecond != ticksPerSecond) {
-		ticksPerSecond = newTicksPerSecond;
-	}
-
 	// do timer
+	ticksPerSecond = cvar_tickrate.toInt();
 	std::chrono::duration<double> msInterval(1.0 / ticksPerSecond);
 	auto now = std::chrono::high_resolution_clock::now();
 	int framesToDo = (now - lastTick) / msInterval;
@@ -1593,13 +1588,15 @@ void Engine::preProcess() {
 		ot = t;
 
 		// calculate fps
-		if (timesync != 0)
+		if (timesync != 0) {
 			frameval[cycles&(fpsAverage - 1)] = 1.0 / timesync;
-		else
+		} else {
 			frameval[cycles&(fpsAverage - 1)] = 1.0;
+		}
 		double d = frameval[0];
-		for (Uint32 i = 1; i < fpsAverage; ++i)
+		for (Uint32 i = 1; i < fpsAverage; ++i) {
 			d += frameval[i];
+		}
 		if (SDL_GetTicks() - lastfpscount > 500) {
 			lastfpscount = SDL_GetTicks();
 			fps = (d / fpsAverage) * 1000;

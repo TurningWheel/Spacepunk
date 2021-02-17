@@ -148,12 +148,9 @@ private:
 	bool moving = false;
 	bool crouching = false;
 	bool jumped = false;
-	Rotation oldLookDir;
-	Vector originalVel;
-	Quaternion playerAng;
 	bool orienting = false;
 	float orient = 0.f;
-	Rotation rot;
+	Quaternion playerAng;
 	Vector crouchScale;
 	Vector crouchOrigin;
 	Vector standScale;

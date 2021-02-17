@@ -20,10 +20,10 @@ const char* Player::defaultName = "Player";
 static Cvar cvar_mouseYInvert("player.mouselook.inverty", "invert y-axis on mouse look", "0");
 static Cvar cvar_mouseSmooth("player.mouselook.smooth", "smooth mouse look over multiple frames", "0");
 static Cvar cvar_mouseSpeed("player.mouselook.speed", "adjusts mouse sensitivity", "0.1");
-static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "9");
-static Cvar cvar_speed("player.speed", "player movement speed", "64");
-static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".02");
-static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "5.0");
+static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "800");
+static Cvar cvar_speed("player.speed", "player movement speed", "400.0");
+static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".2");
+static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "128.0");
 static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "1");
 static Cvar cvar_crouchSpeed("player.crouch.speed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "0");
@@ -327,8 +327,9 @@ void Player::control() {
 		mainEngine->setMouseRelative(true);
 	}
 
-	Vector vel = originalVel;
-	//Vector vel = entity->getVel();
+	Vector acc;
+	Vector vel = entity->getVel();
+	Rotation rot;
 	bool warpNeeded = false;
 
 	World::hit_t floorHit, ceilingHit;
@@ -404,7 +405,9 @@ void Player::control() {
 	Vector up = (playerAng * Quaternion(Rotation(0.f, -PI / 2.f, 0.f))).toVector();
 
 	// time and speed
-	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) * (entity->isFalling() ? cvar_airControl.toFloat() : 1.f) * cvar_speed.toFloat();
+	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) *
+		(entity->isFalling() ? cvar_airControl.toFloat() : 1.f) *
+		cvar_speed.toFloat();
 	float timeFactor = mainEngine->getTimeFactor();
 
 	// set bbox and origin
@@ -419,8 +422,8 @@ void Player::control() {
 	float middleOfBody = standScale.z + stepHeight;
 	if (cvar_zeroGravity.toInt()) {
 		entity->setFalling(true);
-		vel += up * buttonJump * speedFactor * timeFactor;
-		vel -= up * buttonCrouch * speedFactor * timeFactor;
+		acc += up * buttonJump * speedFactor * timeFactor;
+		acc -= up * buttonCrouch * speedFactor * timeFactor;
 	} else {
 		if (entity->isFalling()) {
 			if (nearestFloor <= middleOfBody && vel.normal().dot(down) > 0.f) {
@@ -431,13 +434,13 @@ void Player::control() {
 					vel -= vel * down.absolute();
 				}
 			} else {
-				vel += down * cvar_gravity.toFloat() * timeFactor;
+				acc += down * cvar_gravity.toFloat() * timeFactor;
 			}
 		} else {
 			if (buttonJump) {
 				jumped = true;
 				entity->setFalling(true);
-				vel += up * cvar_jumpPower.toFloat();
+				acc += up * cvar_jumpPower.toFloat();
 			} else {
 				if (nearestFloor >= middleOfBody + stepHeight) {
 					entity->setFalling(true);
@@ -450,59 +453,51 @@ void Player::control() {
 					pos = pos + up * rebound;
 					entity->setPos(pos);
 					warpNeeded = true;
+					vel -= vel * down.absolute();
 				}
 			}
 		}
 	}
 
-	// hit head on ceiling
-	if (nearestCeiling <= totalHeight && entity->isFalling() && vel.dot(up) > 0) {
-		Vector verticalVelocity = up * vel.dot(up);
-		vel -= verticalVelocity;
-	}
-
 	// calculate movement vectors
-	vel += forward * buttonForward * speedFactor * timeFactor;
-	vel -= forward * buttonBackward * speedFactor * timeFactor;
-	vel += right * buttonRight * speedFactor * timeFactor;
-	vel -= right * buttonLeft * speedFactor * timeFactor;
-
-	// friction
-	if (entity->isFalling()) {
-		vel -= vel * timeFactor * 0.4f;
-	} else {
-		vel -= vel * timeFactor * 14.f;
-	}
-	rot.yaw -= rot.yaw * timeFactor * 50.f;
-	rot.pitch -= rot.pitch * timeFactor * 50.f;
-	rot.roll -= rot.roll * timeFactor * 50.f;
+	acc += forward * buttonForward * speedFactor * timeFactor;
+	acc -= forward * buttonBackward * speedFactor * timeFactor;
+	acc += right * buttonRight * speedFactor * timeFactor;
+	acc -= right * buttonLeft * speedFactor * timeFactor;
 
 	// looking
 	if (!client->isConsoleActive()) {
+		// mouse looking
 		if (mainEngine->isMouseRelative() && cvar_mouselook.toInt() == localID) {
 			if (cvar_mouseSmooth.toInt()) {
 				mouseX = mouseX * .75f + mainEngine->getMouseMoveX() / 4.f;
-				mouseY = mouseY * .75f + (cvar_mouseYInvert.toInt() ? mainEngine->getMouseMoveY() * -.25f : mainEngine->getMouseMoveY() / 4.f);
+				mouseY = mouseY * .75f + mainEngine->getMouseMoveY() / 4.f;
 			} else {
 				mouseX = mainEngine->getMouseMoveX();
-				mouseY = cvar_mouseYInvert.toInt() ? mainEngine->getMouseMoveY() * -1 : mainEngine->getMouseMoveY();
+				mouseY = mainEngine->getMouseMoveY();
 			}
+			if (cvar_mouseYInvert.toInt()) {
+				mouseY = -mouseY;
+			}
+			rot.yaw += mouseX * 0.01f * cvar_mouseSpeed.toFloat();
+			rot.pitch += mouseY * 0.01f * cvar_mouseSpeed.toFloat() * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
+		}
 
-			rot.yaw += mouseX * timeFactor * cvar_mouseSpeed.toFloat();
-			rot.pitch += mouseY * timeFactor  * cvar_mouseSpeed.toFloat() * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
-		}
-		rot.yaw += (input.analog("LookRight") - input.analog("LookLeft")) * timeFactor * 2.f;
-		rot.pitch += (input.analog("LookDown") - input.analog("LookUp")) * timeFactor * 2.f * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
-		if (cvar_zeroGravity.toInt()) {
-			rot.roll += (buttonLeanRight - buttonLeanLeft) * timeFactor * .5f;
-		} else {
-			rot.roll = 0.f;
-		}
+		// normal input looking
+		rot.yaw += (input.analog("LookRight") - input.analog("LookLeft")) * timeFactor * PI;
+		rot.pitch += (input.analog("LookDown") - input.analog("LookUp")) * timeFactor * PI * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 	}
+
+	// rolling in zero-gravity
+	if (cvar_zeroGravity.toInt()) {
+		rot.roll += (buttonLeanRight - buttonLeanLeft) * timeFactor * .5f;
+	} else {
+		rot.roll = 0.f;
+	}
+
 	rot.wrapAngles();
 
-	// change look dir
-
+	// update entity look dir
 	if (cvar_zeroGravity.toInt()) {
 		Rotation lookDir = entity->getLookDir();
 		if (lookDir.yaw > 0.f) {
@@ -590,11 +585,11 @@ void Player::control() {
 
 	// update entity vectors
 	Vector standingOnVel;
-	originalVel = vel;
 	if (entityStandingOn) {
 		standingOnVel = entityStandingOn->getVel();
 	}
-	entity->setVel(vel + standingOnVel);
+	Vector finalVel = standingOnVel + acc;
+	entity->setVel(finalVel);
 	Rotation finalRot = orienting ? Rotation() : trueRot;
 	entity->setRot(finalRot);
 	entity->update();
@@ -704,14 +699,16 @@ void Player::updateCamera() {
 
 	Input& input = mainEngine->getInput(localID);
 
-	bobAngle += PI / 15.f;
+	// bobbing
+	float timeFactor = mainEngine->getTimeFactor();
+	bobAngle += PI * timeFactor * 4.f;
 	if (bobAngle > PI*2.f) {
 		bobAngle -= PI * 2.f;
 	}
 	if (moving && cvar_enableBob.toInt() && !entity->isFalling()) {
-		bobLength = min(bobLength + 0.1f, 1.f);
+		bobLength = min(bobLength + timeFactor * 4.f, 1.f);
 	} else {
-		bobLength = max(bobLength - 0.1f, 0.f);
+		bobLength = max(bobLength - timeFactor * 4.f, 0.f);
 	}
 
 	// move camera

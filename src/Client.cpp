@@ -733,8 +733,10 @@ void Client::runConsole() {
 			SDL_StopTextInput();
 		}
 	}
+	float timeFactor = mainEngine->getTimeFactor();
+	int dropRate = renderer->getYres() * timeFactor * 8.f;
 	if (consoleActive) {
-		consoleHeight = min(consoleHeight + renderer->getYres() / 10, renderer->getYres() / 2);
+		consoleHeight = min(consoleHeight + dropRate, renderer->getYres() / 2);
 
 		// submit console command
 		if (mainEngine->pressKey(SDL_SCANCODE_RETURN) || mainEngine->getKeyStatus(SDL_SCANCODE_KP_ENTER)) {
@@ -818,7 +820,7 @@ void Client::runConsole() {
 			logStart = nullptr;
 		}
 	} else {
-		consoleHeight = max(consoleHeight - renderer->getYres() / 10, 0);
+		consoleHeight = max(consoleHeight - dropRate, 0);
 	}
 	}
 
