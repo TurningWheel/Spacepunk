@@ -88,20 +88,26 @@ Uint32 Net::getRemoteWithID(const Uint32 remoteID) const {
 }
 
 static int console_join(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "A remote address is needed. ex: join localhost");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A remote address is needed. ex: %s localhost", argv[0]);
 		return 1;
 	}
-	mainEngine->joinServer(argv[0]);
+	mainEngine->joinServer(argv[1]);
 	return 0;
 }
 
 static int console_say(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "A message is needed. ex: say Hello World!");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A message is needed. ex: %s Hello World!", argv[0]);
 		return 1;
 	}
-	mainEngine->chat(argv[0]);
+	StringBuf<1024> buf;
+	for (int c = 1; c < argc - 1; ++c) {
+		buf.append(argv[c]);
+		buf.append(" ");
+	}
+	buf.append(argv[argc - 1]);
+	mainEngine->chat(buf);
 	return 0;
 }
 

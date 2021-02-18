@@ -669,13 +669,13 @@ static int console_serverReset(int argc, const char** argv) {
 }
 
 static int console_serverMap(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "A path is needed. ex: server.map TestWorld");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A path is needed. ex: %s TestWorld", argv[0]);
 		return 1;
 	}
 	Server* server = mainEngine->getLocalServer();
 	if (server) {
-		server->loadWorld(argv[0], true);
+		server->loadWorld(argv[1], true);
 		return 0;
 	} else {
 		return 1;
@@ -698,8 +698,8 @@ static int console_host(int argc, const char** argv) {
 }
 
 static int console_serverSaveMap(int argc, const char** argv) {
-	if (argc < 2) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "missing args. ex: server.savemap 0 TestOutput");
+	if (argc < 3) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "missing args. ex: %s 0 TestOutput", argv[0]);
 		return 1;
 	}
 
@@ -709,9 +709,9 @@ static int console_serverSaveMap(int argc, const char** argv) {
 		return 1;
 	}
 
-	int worldID = strtol(argv[0], nullptr, 10);
+	int worldID = strtol(argv[1], nullptr, 10);
 	World* world = server->getWorld(worldID);
-	String path = mainEngine->buildPath(argv[1]).get();
+	String path = mainEngine->buildPath(argv[2]).get();
 	world->saveFile(path.get(), true);
 
 	return 0;

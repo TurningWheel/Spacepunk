@@ -106,7 +106,7 @@ static int console_vsync(int argc, const char** argv) {
 		return 2;
 	}
 
-	int vsync = strtol(argv[0], nullptr, 10);
+	int vsync = strtol(argv[1], nullptr, 10);
 	client->getRenderer()->setVsync(vsync);
 	SDL_GL_SetSwapInterval(vsync);
 
@@ -114,12 +114,12 @@ static int console_vsync(int argc, const char** argv) {
 }
 
 static int console_size(int argc, const char** argv) {
-	if (argc < 2) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "not enough args. ex: size 1280 720");
+	if (argc < 3) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "not enough args. ex: %s 1280 720", argv[0]);
 		return 1;
 	}
-	int xres = max(320, atoi(argv[0]));
-	int yres = max(200, atoi(argv[1]));
+	int xres = max(320, atoi(argv[1]));
+	int yres = max(200, atoi(argv[2]));
 
 	// update renderer settings, if running
 	Client* client = mainEngine->getLocalClient();
@@ -146,8 +146,8 @@ static int console_version(int argc, const char** argv) {
 }
 
 static int console_dump(int argc, const char** argv) {
-	if (argc > 0) {
-		mainEngine->dumpResources(argv[0]);
+	if (argc > 1) {
+		mainEngine->dumpResources(argv[1]);
 	} else {
 		mainEngine->dumpResources(nullptr);
 	}
@@ -157,8 +157,8 @@ static int console_dump(int argc, const char** argv) {
 
 static int console_help(int argc, const char** argv) {
 	const char* search = "";
-	if (argc > 0) {
-		search = argv[0];
+	if (argc > 1) {
+		search = argv[1];
 	}
 	Uint32 len = static_cast<Uint32>(strlen(search));
 
@@ -179,7 +179,7 @@ static int console_help(int argc, const char** argv) {
 	} cvarSort;
 	cvars.sort(cvarSort);
 	for (auto cvar : cvars) {
-		mainEngine->fmsg(Engine::MSG_NOTE, "%s: %s (default: %s)", cvar->getName(), cvar->getDesc(), cvar->getDefault());
+		mainEngine->fmsg(Engine::MSG_NOTE, "%s: %s (cur: %s, default: %s)", cvar->getName(), cvar->getDesc(), cvar->toStr(), cvar->getDefault());
 	}
 
 	// print out ccmds
@@ -206,11 +206,11 @@ static int console_help(int argc, const char** argv) {
 }
 
 static int console_mount(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "A mod folder is needed. ex: mount testmod");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A mod folder is needed. ex: %s testmod", argv[0]);
 		return 1;
 	}
-	if (mainEngine->addMod(argv[0])) {
+	if (mainEngine->addMod(argv[1])) {
 		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
@@ -228,11 +228,11 @@ static int console_mount(int argc, const char** argv) {
 }
 
 static int console_unmount(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "A mod folder is needed. ex: unmount testmod");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A mod folder is needed. ex: %s testmod", argv[0]);
 		return 1;
 	}
-	if (mainEngine->removeMod(argv[0])) {
+	if (mainEngine->removeMod(argv[1])) {
 		mainEngine->dumpResources(nullptr);
 		mainEngine->loadAllResources();
 		mainEngine->loadAllDefs();
@@ -259,21 +259,21 @@ static int console_play(int argc, const char** argv) {
 }
 
 static int console_loadConfig(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "A path is needed. ex: loadconfig autoexec.cfg");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A path is needed. ex: %s autoexec.cfg", argv[0]);
 		return 1;
 	}
-	mainEngine->loadConfig(argv[0]);
+	mainEngine->loadConfig(argv[1]);
 	return 0;
 }
 
 static int console_sleep(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "Please enter time to sleep in seconds. ex: sleep 5");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "Please enter time to sleep in seconds. ex: %s 5", argv[0]);
 		return 1;
 	}
 	float seconds;
-	Engine::readFloat(argv[0], &seconds, 1);
+	Engine::readFloat(argv[1], &seconds, 1);
 	mainEngine->setConsoleSleep(mainEngine->getTicks() + seconds * mainEngine->getTicksPerSecond());
 	return 0;
 }
@@ -285,6 +285,27 @@ static int console_cacheSize(int argc, const char** argv) {
 
 static int console_printDir(int argc, const char** argv) {
 	mainEngine->fmsg(Engine::MSG_INFO, mainEngine->getRunningDir());
+	return 0;
+}
+
+static int console_map(int argc, const char** argv) {
+	if (argc <= 1) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "usage: %s YourMapHere", argv[0]);
+		return 1;
+	}
+	StringBuf<128> serverMap;
+	serverMap.format("server.map %s", argv[1]);
+	mainEngine->doCommand("server.reset");
+	mainEngine->doCommand("sleep 0.1");
+	mainEngine->doCommand("host");
+	mainEngine->doCommand("sleep 0.1");
+	mainEngine->doCommand(serverMap.get());
+	mainEngine->doCommand("sleep 0.1");
+	mainEngine->doCommand("client.reset");
+	mainEngine->doCommand("sleep 0.1");
+	mainEngine->doCommand("join localhost");
+	mainEngine->doCommand("sleep 0.1");
+	mainEngine->doCommand("client.spawn 0");
 	return 0;
 }
 
@@ -304,6 +325,7 @@ static Ccmd ccmd_loadconfig("loadconfig", "loads the given config file", &consol
 static Ccmd ccmd_sleep("sleep", "waits X seconds before running the next command, useful for configs", &console_sleep);
 static Ccmd ccmd_cachesize("cachesize", "prints the size of all resource caches in bytes", &console_cacheSize);
 static Ccmd ccmd_printDir("printdir", "shows the directory that the engine is running from", &console_printDir);
+static Ccmd ccmd_map("map", "start a new game map", &console_map);
 static Cvar cvar_tickrate("tickrate", "number of frames processed in a second", "60");
 
 // gameplay specific cvars:
@@ -396,11 +418,9 @@ void Engine::commandLine(const int argc, const char **argv) {
 					int argc = 0;
 					const char** argv = new const char*[10];
 					while (token && argc < 10) {
+						argv[argc] = token;
 						token = strtok(nullptr, " ");
-						if (token) {
-							argv[argc] = token;
-							++argc;
-						}
+						++argc;
 					}
 					int result = (*ccmd)->func(argc, argv);
 					fmsg(MSG_DEBUG, "%s returned %d", cmd, result);

@@ -20,16 +20,18 @@ const char* Player::defaultName = "Player";
 static Cvar cvar_mouseYInvert("player.mouselook.inverty", "invert y-axis on mouse look", "0");
 static Cvar cvar_mouseSmooth("player.mouselook.smooth", "smooth mouse look over multiple frames", "0");
 static Cvar cvar_mouseSpeed("player.mouselook.speed", "adjusts mouse sensitivity", "0.1");
-static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "800");
-static Cvar cvar_speed("player.speed", "player movement speed", "400.0");
-static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".2");
-static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "128.0");
+static Cvar cvar_gravity("player.gravity", "gravity that players are subjected to", "800.0");
+static Cvar cvar_speed("player.speed", "player movement speed", "2000.0");
+static Cvar cvar_jumpPower("player.jump.power", "player jump strength", "300.0");
+static Cvar cvar_frictionGround("player.friction.ground", "friction coefficient on the ground", "8.0");
+static Cvar cvar_frictionAir("player.friction.air", "friction coefficient in the air", "0.2");
+static Cvar cvar_airControl("player.aircontrol", "movement speed modifier while in the air", ".05");
 static Cvar cvar_canCrouch("player.crouch.enabled", "whether player can crouch at all or not", "1");
 static Cvar cvar_crouchSpeed("player.crouch.speed", "movement speed modifier while crouching", ".25");
 static Cvar cvar_wallWalk("player.wallwalk.enabled", "enable wall-walking ability on the player", "0");
-static Cvar cvar_wallWalkLimit("player.wallwalk.limit", "the maximum difference in slope that can be overcome with wall-walking", "45");
+static Cvar cvar_wallWalkLimit("player.wallwalk.limit", "the maximum difference in slope that can be overcome with wall-walking", "50");
 static Cvar cvar_zeroGravity("player.zerog.enabled", "enable zero-g effects on the player", "0");
-static Cvar cvar_slopeLimit("player.slope.limit", "the maximum slope of a floor traversible by a player", "45");
+static Cvar cvar_slopeLimit("player.slope.limit", "the maximum slope of a floor traversible by a player", "50");
 static Cvar cvar_stepHeight("player.step.height", "maximum step height that a player can ascend", "8");
 static Cvar cvar_enableBob("player.bob.enabled", "enable view bobbing", "1");
 static Cvar cvar_enableHeadBoneCamera("player.headbonecamera.enabled", "bind the camera to the player's headbone", "0");
@@ -290,17 +292,19 @@ void Player::putInCrouch(bool crouch) {
 	crouching = crouch;
 	Vector scale = bbox->getLocalScale();
 	Vector origin = originOffset;
+	float timeFactor = mainEngine->getTimeFactor();
+	float diff = timeFactor * 100.f;
 	const Vector& targetScale = crouching ? crouchScale : standScale;
 	const Vector& targetOrigin = crouching ? crouchOrigin : standOrigin;
 	if (scale.z < targetScale.z) {
-		scale.z = min(scale.z + 1.f, targetScale.z);
+		scale.z = min(scale.z + diff, targetScale.z);
 	} else if (scale.z > targetScale.z) {
-		scale.z = max(scale.z - 1.f, targetScale.z);
+		scale.z = max(scale.z - diff, targetScale.z);
 	}
 	if (origin.z < targetOrigin.z) {
-		origin.z = min(origin.z + 1.f, targetOrigin.z);
+		origin.z = min(origin.z + diff, targetOrigin.z);
 	} else if (origin.z > targetOrigin.z) {
-		origin.z = max(origin.z - 1.f, targetOrigin.z);
+		origin.z = max(origin.z - diff, targetOrigin.z);
 	}
 	bbox->setLocalScale(scale);
 	originOffset = origin;
@@ -328,9 +332,9 @@ void Player::control() {
 	}
 
 	Vector acc;
-	Vector vel = entity->getVel();
 	Rotation rot;
 	bool warpNeeded = false;
+	Vector vel = entity->getVel();
 
 	World::hit_t floorHit, ceilingHit;
 	float totalHeight = standScale.z + originOffset.z;
@@ -339,6 +343,14 @@ void Player::control() {
 
 	Entity* entityStandingOn = floorHit.manifest ? floorHit.manifest->entity : nullptr;
 	Entity* entityAbove = ceilingHit.manifest ? ceilingHit.manifest->entity : nullptr;
+
+	// moving platforms
+	if (!entity->isFalling()) {
+		vel -= standingOnVel;
+		if (entityStandingOn) {
+			standingOnVel = entityStandingOn->getVel();
+		}
+	}
 
 	// collect movement inputs
 	Input& input = mainEngine->getInput(localID);
@@ -389,12 +401,9 @@ void Player::control() {
 	}
 
 	// animation
-	if (buttonCrouch) {
+	if (buttonCrouch && cvar_canCrouch.toInt() && !cvar_zeroGravity.toInt()) {
 		crouching = true;
 	} else {
-		crouching = false;
-	}
-	if (cvar_canCrouch.toInt() == 0) {
 		crouching = false;
 	}
 
@@ -405,65 +414,72 @@ void Player::control() {
 	Vector up = (playerAng * Quaternion(Rotation(0.f, -PI / 2.f, 0.f))).toVector();
 
 	// time and speed
+	float timeFactor = mainEngine->getTimeFactor();
 	float speedFactor = (crouching ? cvar_crouchSpeed.toFloat() : 1.f) *
 		(entity->isFalling() ? cvar_airControl.toFloat() : 1.f) *
 		cvar_speed.toFloat();
-	float timeFactor = mainEngine->getTimeFactor();
 
 	// set bbox and origin
-	if (cvar_zeroGravity.toInt()) {
-		putInCrouch(false);
-	} else {
-		putInCrouch(crouching);
-	}
+	putInCrouch(crouching);
 
 	// set falling state and do attach-to-ground
 	float stepHeight = cvar_stepHeight.toFloat();
 	float middleOfBody = standScale.z + stepHeight;
 	if (cvar_zeroGravity.toInt()) {
 		entity->setFalling(true);
-		acc += up * buttonJump * speedFactor * timeFactor;
-		acc -= up * buttonCrouch * speedFactor * timeFactor;
+		acc += (  up *   buttonJump * speedFactor) * timeFactor;
+		acc += (down * buttonCrouch * speedFactor) * timeFactor;
 	} else {
 		if (entity->isFalling()) {
 			if (nearestFloor <= middleOfBody && vel.normal().dot(down) > 0.f) {
 				const float slope = cosf(cvar_slopeLimit.toFloat() * PI / 180.f);
 				if (up.dot(floorHit.normal) > slope) {
+					// land on ground
 					entity->setFalling(false);
 					timeSinceLanding = entity->getTicks();
 					vel -= vel * down.absolute();
-				}
-			} else {
-				acc += down * cvar_gravity.toFloat() * timeFactor;
-			}
-		} else {
-			if (buttonJump) {
-				jumped = true;
-				entity->setFalling(true);
-				acc += up * cvar_jumpPower.toFloat();
-			} else {
-				if (nearestFloor >= middleOfBody + stepHeight) {
-					entity->setFalling(true);
-				} else {
+					acc -= acc * down.absolute();
+
+					// attach-to-ground
 					float feetHeight = bbox->getLocalScale().z + stepHeight;
-					float rebound = entity->getTicks() - timeSinceLanding < 30 ?
-						min(1.f, feetHeight - nearestFloor) :
-						feetHeight - nearestFloor;
+					float rebound = min(sqrtf(timeFactor) * 32.f, feetHeight - nearestFloor);
 					Vector pos = entity->getPos();
 					pos = pos + up * rebound;
 					entity->setPos(pos);
 					warpNeeded = true;
-					vel -= vel * down.absolute();
+				}
+			} else {
+				// apply gravity
+				acc += (down * cvar_gravity.toFloat()) * timeFactor;
+			}
+		} else {
+			if (buttonJump) {
+				// jump off ground
+				jumped = true;
+				entity->setFalling(true);
+				acc += (up * cvar_jumpPower.toFloat());
+			} else {
+				if (nearestFloor >= middleOfBody + stepHeight) {
+					// walk off platform
+					entity->setFalling(true);
+				} else {
+					// attach-to-ground
+					float feetHeight = bbox->getLocalScale().z + stepHeight;
+					float rebound = min(sqrtf(timeFactor) * 32.f, feetHeight - nearestFloor);
+					Vector pos = entity->getPos();
+					pos = pos + up * rebound;
+					entity->setPos(pos);
+					warpNeeded = true;
 				}
 			}
 		}
 	}
 
 	// calculate movement vectors
-	acc += forward * buttonForward * speedFactor * timeFactor;
-	acc -= forward * buttonBackward * speedFactor * timeFactor;
-	acc += right * buttonRight * speedFactor * timeFactor;
-	acc -= right * buttonLeft * speedFactor * timeFactor;
+	acc += (forward * buttonForward * speedFactor) * timeFactor;
+	acc -= (forward * buttonBackward * speedFactor) * timeFactor;
+	acc += (right * buttonRight * speedFactor) * timeFactor;
+	acc -= (right * buttonLeft * speedFactor) * timeFactor;
 
 	// looking
 	if (!client->isConsoleActive()) {
@@ -484,13 +500,14 @@ void Player::control() {
 		}
 
 		// normal input looking
-		rot.yaw += (input.analog("LookRight") - input.analog("LookLeft")) * timeFactor * PI;
-		rot.pitch += (input.analog("LookDown") - input.analog("LookUp")) * timeFactor * PI * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
+		rot.yaw += ((input.analog("LookRight") - input.analog("LookLeft")) * PI) * timeFactor;
+		rot.pitch += ((input.analog("LookDown") - input.analog("LookUp")) * PI) * timeFactor * (cvar_zeroGravity.toInt() ? -1.f : 1.f);
 	}
 
 	// rolling in zero-gravity
 	if (cvar_zeroGravity.toInt()) {
-		rot.roll += (buttonLeanRight - buttonLeanLeft) * timeFactor * .5f;
+		float rollSpeed = 0.5f;
+		rot.roll += ((buttonLeanRight - buttonLeanLeft) * rollSpeed) * timeFactor;
 	} else {
 		rot.roll = 0.f;
 	}
@@ -562,13 +579,16 @@ void Player::control() {
 
 					Vector down = (playerAng * Quaternion(Rotation(0.f, PI / 2.f, 0.f))).toVector();
 					vel -= vel * down.absolute();
+					acc -= acc * down.absolute();
 				}
 			}
 		}
 	}
 
 	Rotation trueRot = rot;
-	trueRot.pitch = 0.f;
+	if (!cvar_zeroGravity.toInt()) {
+		trueRot.pitch = 0.f;
+	}
 
 	if (orienting) {
 		playerAng = playerAng * Quaternion(trueRot);
@@ -583,22 +603,25 @@ void Player::control() {
 		playerAng = entity->getAng();
 	}
 
-	// update entity vectors
-	Vector standingOnVel;
-	if (entityStandingOn) {
-		standingOnVel = entityStandingOn->getVel();
+	// friction
+	if (entity->isFalling()) {
+		vel -= vel * timeFactor * cvar_frictionAir.toFloat();
+	} else {
+		vel -= vel * timeFactor * cvar_frictionGround.toFloat();
 	}
-	Vector finalVel = standingOnVel + acc;
+
+	// update entity vectors
+	Vector finalVel = vel + standingOnVel + acc * timeFactor;
 	entity->setVel(finalVel);
 	Rotation finalRot = orienting ? Rotation() : trueRot;
 	entity->setRot(finalRot);
-	entity->update();
 	if (warpNeeded) {
 		Quaternion ang = entity->getAng();
 		ang = ang * Quaternion(finalRot);
 		entity->setAng(ang);
 		entity->warp();
 	}
+	entity->update();
 
 	// additional inputs
 	if (!client->isConsoleActive()) {

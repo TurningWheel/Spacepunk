@@ -1171,13 +1171,13 @@ static int console_clientReset(int argc, const char** argv) {
 }
 
 static int console_clientMap(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "A path is needed. ex: client.map TestWorld");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "A path is needed. ex: %s TestWorld", argv[0]);
 		return 1;
 	}
 	Client* client = mainEngine->getLocalClient();
 	if (client) {
-		client->loadWorld(argv[0], true);
+		client->loadWorld(argv[1], true);
 		return 0;
 	} else {
 		return 1;
@@ -1195,12 +1195,12 @@ static int console_clientCloseMaps(int argc, const char** argv) {
 }
 
 static int console_clientSpawn(int argc, const char** argv) {
-	if (argc < 1) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "Please specify player number. ex: client.spawn 0");
+	if (argc < 2) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "Please specify player number. ex: %s 0", argv[0]);
 		return 1;
 	}
 
-	int num = strtol(argv[0], nullptr, 10);
+	int num = strtol(argv[1], nullptr, 10);
 	Client* client = mainEngine->getLocalClient();
 	if (client) {
 		int numPlayers = client->numLocalPlayers();

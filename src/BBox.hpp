@@ -73,7 +73,10 @@ public:
 	virtual bool checkCollision() const override;
 
 	//! apply movement forces (velocity and rotation) to bbox's physics component
-	void applyMoveForces(const Vector& vel, const Rotation& rot);
+	//! @param vel the new velocity
+	//! @param rot the new rotation
+	//! @return the old velocity
+	Vector applyMoveForces(const Vector& vel, const Rotation& rot);
 
 	//! apply a force to the bbox's physics component
 	//! @param force the force to apply in world coordinates

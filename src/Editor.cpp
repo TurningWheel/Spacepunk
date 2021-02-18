@@ -5497,8 +5497,8 @@ void Editor::draw(Renderer& renderer) {
 
 static int console_editor(int argc, const char** argv) {
 	String path;
-	if (argc >= 1) {
-		path = argv[0];
+	if (argc >= 2) {
+		path = argv[1];
 	}
 	if (mainEngine->isPlayTest()) {
 		mainEngine->setPlayTest(false);

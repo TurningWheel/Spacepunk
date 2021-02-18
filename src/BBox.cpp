@@ -367,10 +367,12 @@ void BBox::createRigidBody() {
 	}
 }
 
-void BBox::applyMoveForces(const Vector& vel, const Rotation& ang) {
+Vector BBox::applyMoveForces(const Vector& vel, const Rotation& ang) {
+	Vector oldVelocity;
 	if (ghostObject && controller) {
 		ghostObject->activate();
 		Vector newVel = vel;
+		oldVelocity = static_cast<Vector>(controller->getLinearVelocity());
 		controller->setLinearVelocity(newVel);
 
 		float radians = 1.f / PI;
@@ -388,6 +390,7 @@ void BBox::applyMoveForces(const Vector& vel, const Rotation& ang) {
 		//float degrees = 180.f / PI;
 		//controller->setAngularVelocity(btVector3(ang.roll * degrees, ang.pitch * degrees, ang.yaw * degrees));
 	}
+	return oldVelocity;
 }
 
 void BBox::applyForce(const Vector& force, const Vector& origin) {

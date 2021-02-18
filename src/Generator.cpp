@@ -39,15 +39,15 @@ const Generator::closeend_t Generator::closeends[4] = {
 
 static int console_generatorTest(int argc, const char** argv) {
 	String inPath, outPath;
-	if (argc == 0) {
+	if (argc == 1) {
 		inPath = "maps/tilesets/template.json";
 		outPath = "output.txt";
-	} else if (argc == 1) {
+	} else if (argc == 2) {
 		inPath = "maps/tilesets/template.json";
-		outPath = argv[0];
-	} else if (argc >= 2) {
-		inPath = argv[0];
 		outPath = argv[1];
+	} else if (argc >= 3) {
+		inPath = argv[1];
+		outPath = argv[2];
 	}
 
 	inPath = mainEngine->buildPath(inPath.get());

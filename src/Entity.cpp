@@ -808,8 +808,10 @@ bool Entity::move() {
 				if (physics->getMass() > 0.f) {
 					vel = newPos - oldPos;
 				} else {
-					physics->applyMoveForces(vel, rot);
-					vel = newPos - oldPos;
+					Vector oldVel = physics->applyMoveForces(vel, rot);
+					if (!oldVel.close(newPos - oldPos)) {
+						vel = newPos - oldPos;
+					}
 				}
 				updateNeeded = true;
 			} else {

@@ -162,6 +162,7 @@ private:
 	float bobLength = 0.f;
 	Vector originalCameraPos;
 	Uint32 timeSinceLanding = 0;
+	Vector standingOnVel;
 };
 
 extern Cvar cvar_fov;

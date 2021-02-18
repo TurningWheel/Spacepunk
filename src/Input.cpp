@@ -398,15 +398,15 @@ SDL_Scancode Input::getScancodeFromName(const char* name) {
 }
 
 static int console_bind(int argc, const char** argv) {
-	if (argc < 3) {
-		mainEngine->fmsg(Engine::MSG_ERROR, "Not enough args. ex: bind 0 MoveForward W");
+	if (argc < 4) {
+		mainEngine->fmsg(Engine::MSG_ERROR, "Not enough args. ex: %s 0 MoveForward W", argv[0]);
 		return 1;
 	}
-	int num = argv[0][0] - '0';
+	int num = argv[1][0] - '0';
 	if (num >= 0 && num < 4) {
-		const char* binding = argv[1];
-		StringBuf<32> input(argv[2]);
-		for (int c = 3; c < argc; ++c) {
+		const char* binding = argv[2];
+		StringBuf<64> input(argv[3]);
+		for (int c = 4; c < argc; ++c) {
 			input.appendf(" %s", argv[c]);
 		}
 		mainEngine->getInput(num).rebind(binding, input.get());
