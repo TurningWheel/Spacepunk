@@ -1,6 +1,6 @@
 // Script.cpp
 
-#include <luajit-2.0/lua.hpp>
+#include <luajit-2.1/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 #include <functional>
 
@@ -190,7 +190,7 @@ void Script::exposeEngine() {
 		.addFunction("getTicksPerSecond", &Engine::getTicksPerSecond)
 		.addFunction("random", &Engine::random)
 		.addFunction("playSound", &Engine::playSound)
-		.addFunction("commandLine", &Engine::commandLine)
+		//.addFunction("commandLine", &Engine::commandLine)
 		.addFunction("doCommand", &Engine::doCommand)
 		.addFunction("getCvar", &Engine::getCvar)
 		.addFunction("shutdown", &Engine::shutdown)
@@ -235,7 +235,7 @@ void Script::exposeEngine() {
 		.addFunction("addInt", &Script::Args::addInt)
 		.addFunction("addFloat", &Script::Args::addFloat)
 		.addFunction("addString", &Script::Args::addString)
-		.addFunction("addPointer", &Script::Args::addPointer)
+		//.addFunction("addPointer", &Script::Args::addPointer)
 		.addFunction("addNil", &Script::Args::addNil)
 		.endClass()
 		;
@@ -246,7 +246,8 @@ void Script::exposeEngine() {
 		;
 
 	if (engine) {
-		luabridge::push(lua, engine);
+	    std::error_code ec;
+		(void)luabridge::push(lua, engine, ec);
 		lua_setglobal(lua, "engine");
 	}
 
@@ -390,11 +391,11 @@ void Script::exposeFrame() {
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Frame::entry_t>("Entry")
-		.addData("name", &Frame::entry_t::name)
-		.addData("text", &Frame::entry_t::text)
-		.addData("tooltip", &Frame::entry_t::tooltip)
-		.addData("color", &Frame::entry_t::color)
-		.addData("image", &Frame::entry_t::image)
+		.addProperty("name", &Frame::entry_t::name)
+		.addProperty("text", &Frame::entry_t::text)
+		.addProperty("tooltip", &Frame::entry_t::tooltip)
+		.addProperty("color", &Frame::entry_t::color)
+		.addProperty("image", &Frame::entry_t::image)
 		.addFunction("setParams", &Frame::entry_t::setParams)
 		.endClass()
 		;
@@ -422,7 +423,8 @@ void Script::exposeFrame() {
 		;
 
 	if (frame) {
-		luabridge::push(lua, frame);
+	    std::error_code ec;
+		(void)luabridge::push(lua, frame, ec);
 		lua_setglobal(lua, "frame");
 	}
 }
@@ -462,9 +464,9 @@ void Script::exposeAngle() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Rotation>("Rotation")
 		.addConstructor<void(*) (float, float, float)>()
-		.addData("yaw", &Rotation::yaw, true)
-		.addData("pitch", &Rotation::pitch, true)
-		.addData("roll", &Rotation::roll, true)
+		.addProperty("yaw", &Rotation::yaw, true)
+		.addProperty("pitch", &Rotation::pitch, true)
+		.addProperty("roll", &Rotation::roll, true)
 		.addFunction("radiansYaw", &Rotation::radiansYaw)
 		.addFunction("radiansPitch", &Rotation::radiansPitch)
 		.addFunction("radiansRoll", &Rotation::radiansRoll)
@@ -484,10 +486,10 @@ void Script::exposeAngle() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Quaternion>("Quaternion")
 		.addConstructor<void(*) (float, float, float, float)>()
-		.addData("x", &Quaternion::x, true)
-		.addData("y", &Quaternion::y, true)
-		.addData("z", &Quaternion::z, true)
-		.addData("w", &Quaternion::w, true)
+		.addProperty("x", &Quaternion::x, true)
+		.addProperty("y", &Quaternion::y, true)
+		.addProperty("z", &Quaternion::z, true)
+		.addProperty("w", &Quaternion::w, true)
 		.addFunction("toVector", &Quaternion::toVector)
 		.addFunction("toRotation", &Quaternion::toRotation)
 		.addFunction("rotate", &Quaternion::rotate)
@@ -507,12 +509,12 @@ void Script::exposeVector() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<Vector>("Vector")
 		.addConstructor<void(*) (float, float, float)>()
-		.addData("x", &Vector::x, true)
-		.addData("y", &Vector::y, true)
-		.addData("z", &Vector::z, true)
-		.addData("r", &Vector::x, true)
-		.addData("g", &Vector::y, true)
-		.addData("b", &Vector::z, true)
+		.addProperty("x", &Vector::x, true)
+		.addProperty("y", &Vector::y, true)
+		.addProperty("z", &Vector::z, true)
+		.addProperty("r", &Vector::x, true)
+		.addProperty("g", &Vector::y, true)
+		.addProperty("b", &Vector::z, true)
 		.addFunction("hasVolume", &Vector::hasVolume)
 		.addFunction("dot", &Vector::dot)
 		.addFunction("cross", &Vector::cross)
@@ -533,14 +535,14 @@ void Script::exposeVector() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<WideVector>("WideVector")
 		.addConstructor<void(*) (float, float, float, float)>()
-		.addData("x", (float WideVector::*)&WideVector::x, true)
-		.addData("y", (float WideVector::*)&WideVector::y, true)
-		.addData("z", (float WideVector::*)&WideVector::z, true)
-		.addData("w", &WideVector::w, true)
-		.addData("r", (float WideVector::*)&WideVector::x, true)
-		.addData("g", (float WideVector::*)&WideVector::y, true)
-		.addData("b", (float WideVector::*)&WideVector::z, true)
-		.addData("a", &WideVector::w, true)
+		.addProperty("x", (float WideVector::*)&WideVector::x, true)
+		.addProperty("y", (float WideVector::*)&WideVector::y, true)
+		.addProperty("z", (float WideVector::*)&WideVector::z, true)
+		.addProperty("w", &WideVector::w, true)
+		.addProperty("r", (float WideVector::*)&WideVector::x, true)
+		.addProperty("g", (float WideVector::*)&WideVector::y, true)
+		.addProperty("b", (float WideVector::*)&WideVector::z, true)
+		.addProperty("a", &WideVector::w, true)
 		.addFunction("hasVolume", &WideVector::hasVolume)
 		.addFunction("dot", &WideVector::dot)
 		.addFunction("cross", &WideVector::cross)
@@ -581,7 +583,8 @@ void Script::exposeClient() {
 		;
 
 	if (client) {
-		luabridge::push(lua, client);
+	    std::error_code ec;
+		(void)luabridge::push(lua, client, ec);
 		lua_setglobal(lua, "client");
 	}
 }
@@ -642,7 +645,8 @@ void Script::exposeEditor(Editor& _editor) {
 		;
 
 	editor = &_editor;
-	luabridge::push(lua, editor);
+    std::error_code ec;
+	(void)luabridge::push(lua, editor, ec);
 	lua_setglobal(lua, "editor");
 }
 
@@ -653,7 +657,8 @@ void Script::exposeServer() {
 		;
 
 	if (server) {
-		luabridge::push(lua, server);
+	    std::error_code ec;
+		(void)luabridge::push(lua, server, ec);
 		lua_setglobal(lua, "server");
 	}
 }
@@ -683,7 +688,8 @@ void Script::exposeWorld() {
 		;
 
 	if (world) {
-		luabridge::push(lua, world);
+	    std::error_code ec;
+		(void)luabridge::push(lua, world, ec);
 		lua_setglobal(lua, "world");
 	}
 
@@ -800,7 +806,8 @@ void Script::exposeEntity() {
 	exposeMultimesh();
 
 	if (entity) {
-		luabridge::push(lua, entity);
+	    std::error_code ec;
+		(void)luabridge::push(lua, entity, ec);
 		lua_setglobal(lua, "entity");
 	}
 
@@ -1062,12 +1069,12 @@ void Script::exposeEmitter() {
 void Script::exposeMultimesh() {
 	luabridge::getGlobalNamespace(lua)
 		.deriveClass<Multimesh, Component>("Multimesh")
-		.addFunction("getMaterial", &Model::getMaterial)
-		.addFunction("getDepthFailMat", &Model::getDepthFailMat)
-		.addFunction("getShaderVars", &Model::getShaderVars)
-		.addFunction("setMaterial", &Model::setMaterial)
-		.addFunction("setDepthFailMat", &Model::setDepthFailMat)
-		.addFunction("setShaderVars", &Model::setShaderVars)
+		.addFunction("getMaterial", &Multimesh::getMaterial)
+		.addFunction("getDepthFailMat", &Multimesh::getDepthFailMat)
+		.addFunction("getShaderVars", &Multimesh::getShaderVars)
+		.addFunction("setMaterial", &Multimesh::setMaterial)
+		.addFunction("setDepthFailMat", &Multimesh::setDepthFailMat)
+		.addFunction("setShaderVars", &Multimesh::setShaderVars)
 		.endClass()
 		;
 
@@ -1079,18 +1086,18 @@ void Script::exposeExtra() {
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<World::hit_t>("Hit")
 		.addConstructor<void(*)()>()
-		.addData("pos", &World::hit_t::pos, true)
-		.addData("normal", &World::hit_t::normal, true)
-		.addData("manifest", &World::hit_t::manifest, true)
+		.addProperty("pos", &World::hit_t::pos, true)
+		.addProperty("normal", &World::hit_t::normal, true)
+		.addProperty("manifest", &World::hit_t::manifest, true)
 		.endClass()
 		;
 
 	luabridge::getGlobalNamespace(lua)
 		.beginClass<World::physics_manifest_t>("PhysicsManifest")
 		.addConstructor<void(*)()>()
-		.addData("bbox", &World::physics_manifest_t::bbox, true)
-		.addData("entity", &World::physics_manifest_t::entity, true)
-		.addData("world", &World::physics_manifest_t::world, true)
+		.addProperty("bbox", &World::physics_manifest_t::bbox, true)
+		.addProperty("entity", &World::physics_manifest_t::entity, true)
+		.addProperty("world", &World::physics_manifest_t::world, true)
 		.endClass()
 		;
 }

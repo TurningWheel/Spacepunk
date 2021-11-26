@@ -16,6 +16,7 @@ public:
 
 	Packet& operator=(const Packet& src) {
 		copy(src);
+		return *this;
 	}
 
 	Packet& operator=(Packet&&) = delete;

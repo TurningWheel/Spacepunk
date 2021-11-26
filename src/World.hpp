@@ -204,16 +204,16 @@ public:
 	//! @param life The lifespan of the laser in seconds
 	laser_t& addLaser(const Vector& start, const Vector& end, const glm::vec4& color, float size, float life);
 
-	virtual const type_t		getType() const = 0;
+	virtual type_t		        getType() const = 0;
 	Game*						getGame() { return game; }
-	const Uint32				getTicks() const { return ticks; }
+	Uint32				        getTicks() const { return ticks; }
 	const String&				getFilename() const { return filename; }
 	const String&				getNameStr() const { return nameStr; }
 	Map<Uint32, Entity*>&		getEntities() { return entities; }
 	const Map<Uint32, Entity*>&	getEntities() const { return entities; }
 	btDiscreteDynamicsWorld*&	getBulletDynamicsWorld() { return bulletDynamicsWorld; }
-	const bool					isClientObj() const { return clientObj; }
-	const bool					isServerObj() const { return !clientObj; }
+	bool					    isClientObj() const { return clientObj; }
+	bool					    isServerObj() const { return !clientObj; }
 	const String&				getZone() const { return zone; }
 	Uint32						getID() const { return id; }
 	const filetype_t			getFiletype() const { return filetype; }

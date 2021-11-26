@@ -67,9 +67,9 @@ public:
 	Mixer*							getMixer() { return mixer; }
 	Frame*							getGUI() { return gui; }
 	Editor*							getEditor() { return editor; }
-	const bool						isConsoleAllowed() const { return consoleAllowed; }
-	const bool						isConsoleActive() const { return consoleActive; }
-	const bool						isEditorActive() const { return editor != nullptr; }
+	bool					    	isConsoleAllowed() const { return consoleAllowed; }
+	bool					    	isConsoleActive() const { return consoleActive; }
+	bool					    	isEditorActive() const { return editor != nullptr; }
 	const LogList&					getConsole() const { return console; }
 
 	void	setCuCommand(Node<String>* const node) { cuCommand = node; }

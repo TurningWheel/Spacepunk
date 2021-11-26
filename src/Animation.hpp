@@ -52,7 +52,7 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	virtual const Asset::type_t		getType() const { return Asset::ASSET_ANIMATION; }
+	virtual Asset::type_t		    getType() const { return Asset::ASSET_ANIMATION; }
 	const ArrayList<entry_t>&		getEntries() const { return entries; }
 	const ArrayList<sound_t>&		getSounds() const { return sounds; }
 

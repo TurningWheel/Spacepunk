@@ -12,7 +12,7 @@ class Frame;
 class Editor;
 
 #include "String.hpp"
-#include <luajit-2.0/lua.hpp>
+#include <luajit-2.1/lua.hpp>
 
 //! The Script class defines a Lua script engine instance.
 //! Different functions are exposed to different scripts, depending on the class that owns it.

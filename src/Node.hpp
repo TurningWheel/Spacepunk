@@ -4,7 +4,7 @@
 
 #include "Main.hpp"
 
-#include <luajit-2.0/lua.hpp>
+#include <luajit-2.1/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 
 template <typename T>
@@ -75,21 +75,11 @@ public:
 		NodeFn getNext = static_cast<NodeFn>(&Node<T>::getNext);
 		NodeFn getPrev = static_cast<NodeFn>(&Node<T>::getPrev);
 
-		typedef const Node<T>* (Node<T>::*NodeConstFn)() const;
-		NodeConstFn getNextConst = static_cast<NodeConstFn>(&Node<T>::getNext);
-		NodeConstFn getPrevConst = static_cast<NodeConstFn>(&Node<T>::getPrev);
-
 		typedef LinkedList<T>* (Node<T>::*ListFn)();
 		ListFn getList = static_cast<ListFn>(&Node<T>::getList);
 
-		typedef const LinkedList<T>* (Node<T>::*ListConstFn)() const;
-		ListConstFn getListConst = static_cast<ListConstFn>(&Node<T>::getList);
-
 		typedef T& (Node<T>::*DataFn)();
 		DataFn getData = static_cast<DataFn>(&Node<T>::getData);
-
-		typedef const T& (Node<T>::*DataConstFn)() const;
-		DataConstFn getDataConst = static_cast<DataConstFn>(&Node<T>::getData);
 
 		luabridge::getGlobalNamespace(lua)
 			.beginClass<Node<T>>(name)
@@ -97,14 +87,7 @@ public:
 			.addFunction("getPrev", getPrev)
 			.addFunction("getList", getList)
 			.addFunction("getData", getData)
-			.addFunction("getNextConst", getNextConst)
-			.addFunction("getPrevConst", getPrevConst)
-			.addFunction("getListConst", getListConst)
-			.addFunction("getDataConst", getDataConst)
 			.addFunction("getSizeOfData", &Node<T>::getSizeOfData)
-			.addFunction("setNext", &Node<T>::setNext)
-			.addFunction("setPrev", &Node<T>::setPrev)
-			.addFunction("setData", &Node<T>::setData)
 			.endClass()
 			;
 	}

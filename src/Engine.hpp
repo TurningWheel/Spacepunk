@@ -461,7 +461,8 @@ private:
 	double frameval[fpsAverage];
 	Uint32 ticks = 0, cycles = 0, lastfpscount = 0;
 	bool executedFrames = false;
-	std::chrono::time_point<std::chrono::steady_clock> lastTick;
+	double lastTick = 0.0;
+	double frameDiff = 0.0;
 
 	//! console data
 	Uint32 consoleSleep = 0;

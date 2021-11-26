@@ -247,7 +247,7 @@ public:
 
 	virtual type_t					getType() const override { return WIDGET_FRAME; }
 	const char*						getFont() const { return font.get(); }
-	const int						getBorder() const { return border; }
+	int						        getBorder() const { return border; }
 	const Rect<int>&				getSize() const { return size; }
 	const Rect<int>&				getActualSize() const { return actualSize; }
 	int								getBorderStyle() const { return borderStyle; }
@@ -256,9 +256,9 @@ public:
 	LinkedList<Button*>&			getButtons() { return buttons; }
 	LinkedList<Slider*>&			getSliders() { return sliders; }
 	LinkedList<entry_t*>&			getEntries() { return list; }
-	const bool						isDisabled() const { return disabled; }
-	const bool						isHollow() const { return hollow; }
-	const bool						isDropDown() const { return dropDown; }
+	bool				    		isDisabled() const { return disabled; }
+	bool					    	isHollow() const { return hollow; }
+	bool					    	isDropDown() const { return dropDown; }
 	Script*							getScript() { return script; }
 
 	void	setFont(const char* _font) { font = _font; }

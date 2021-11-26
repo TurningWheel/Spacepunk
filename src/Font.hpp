@@ -19,7 +19,7 @@ public:
 	//! built-in font
 	static const char* defaultFont;
 
-	virtual const type_t	getType() const { return ASSET_FONT; }
+	virtual type_t	        getType() const { return ASSET_FONT; }
 	TTF_Font*				getTTF() { return font; }
 
 	//! get the size of the given text string in pixels

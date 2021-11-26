@@ -175,10 +175,10 @@ public:
 	//! unlocks the net thread so it can be used again
 	void unlockThread();
 
-	const bool					isConnected() const { return connected; }
-	const bool					isHosting() const { return hosting; }
-	const Uint32				getLocalID() const { return localID; }
-	const Uint32				getLocalGID() const { return localGID; }
+	bool				    	isConnected() const { return connected; }
+	bool			      		isHosting() const { return hosting; }
+	Uint32			        	getLocalID() const { return localID; }
+	Uint32		        		getLocalGID() const { return localGID; }
 	ArrayList<remote_t*>&		getRemoteHosts() { return remotes; }
 
 	void					setParent(Game* _parent) { parent = _parent; }

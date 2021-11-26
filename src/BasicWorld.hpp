@@ -66,7 +66,7 @@ public:
 	//! pathfinding
 	virtual std::future<PathFinder::Path*> findAPath(int startX, int startY, int endX, int endY) override;
 
-	virtual const type_t				getType() const { return WORLD_BASIC; }
+	virtual type_t getType() const { return WORLD_BASIC; }
 
 protected:
 	//! when a new world is spawned, it generates an obstacle map/cache of all static obstacles.

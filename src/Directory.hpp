@@ -17,7 +17,7 @@ public:
 	Directory& operator=(const Directory&) = default;
 	Directory& operator=(Directory&&) = default;
 
-	virtual const type_t			getType() const { return ASSET_DIRECTORY; }
+	virtual type_t		        	getType() const { return ASSET_DIRECTORY; }
 	LinkedList<String>&				getList() { return list; }
 	const LinkedList<String>&		getList() const { return list; }
 

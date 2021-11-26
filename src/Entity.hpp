@@ -94,12 +94,12 @@ public:
 	const Rotation&						getRot() const { return rot; }
 	const glm::mat4&					getMat() const { return mat; }
 	const char*							getScriptStr() const { return scriptStr.get(); }
-	const bool							isToBeDeleted() const { return toBeDeleted; }
+	bool							    isToBeDeleted() const { return toBeDeleted; }
 	const Vector&						getScale() const { return scale; }
 	const Uint32&						getFlags() const { return flags; }
 	const Map<String, String>&			getKeyValues() const { return keyvalues; }
-	const bool							isFlag(const flag_t flag) const { return ((flags&static_cast<Uint32>(flag)) != 0); }
-	const bool							isShouldSave() const { return shouldSave; }
+	bool							    isFlag(const flag_t flag) const { return ((flags&static_cast<Uint32>(flag)) != 0); }
+	bool							    isShouldSave() const { return shouldSave; }
 	World*								getWorld() { return world; }
 	const World*						getWorld() const { return world; }
 	Player*								getPlayer() { return player; }

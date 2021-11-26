@@ -70,10 +70,10 @@ public:
 	const char*					getFont() const { return font.get(); }
 	const WideVector&			getColor() const { return color; }
 	const Rect<int>				getSize() const { return size; }
-	const int					getHJustify() const { return static_cast<int>(hjustify); }
-	const int					getVJustify() const { return static_cast<int>(vjustify); }
-	const bool					isEditable() const { return editable; }
-	const bool					isNumbersOnly() const { return numbersOnly; }
+	int					        getHJustify() const { return static_cast<int>(hjustify); }
+	int					        getVJustify() const { return static_cast<int>(vjustify); }
+	bool					    isEditable() const { return editable; }
+	bool				    	isNumbersOnly() const { return numbersOnly; }
 	Script::Args&				getParams() { return params; }
 	const Script::Function*		getCallback() const { return callback; }
 

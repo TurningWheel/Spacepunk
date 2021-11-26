@@ -51,11 +51,11 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file);
 
-	virtual const type_t	getType() const { return ASSET_INVALID; }
-	virtual const bool		isStreamable() const { return false; }
+	virtual type_t	        getType() const { return ASSET_INVALID; }
+	virtual bool		    isStreamable() const { return false; }
 	const char*				getName() const { return name.get(); }
 	const char*				getPath() const { return path.get(); }
-	const bool				isLoaded() const { return loaded; }
+	bool				    isLoaded() const { return loaded; }
 
 protected:
 	String name;

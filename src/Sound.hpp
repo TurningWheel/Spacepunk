@@ -21,8 +21,8 @@ public:
 	//! @return the SDL_mixer channel that the sound is playing on, or -1 if there were errors
 	int play(const bool loop);
 
-	virtual const type_t	getType() const { return ASSET_SOUND; }
-	const ALuint			getBuffer() const { return buffer; }
+	virtual type_t	        getType() const { return ASSET_SOUND; }
+	ALuint		        	getBuffer() const { return buffer; }
 
 private:
 	ALuint buffer = 0;

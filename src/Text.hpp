@@ -31,11 +31,11 @@ public:
 	//! @return the Text or nullptr if it could not be retrieved
 	static Text* get(const char* str, const char* font);
 
-	virtual const type_t	getType() const { return ASSET_TEXT; }
-	const GLuint			getTexID() const { return texid; }
+	virtual type_t	        getType() const { return ASSET_TEXT; }
+	GLuint			        getTexID() const { return texid; }
 	const SDL_Surface*		getSurf() const { return surf; }
-	const unsigned int		getWidth() const { return width; }
-	const unsigned int		getHeight()	const { return height; }
+	unsigned int		    getWidth() const { return width; }
+	unsigned int		    getHeight()	const { return height; }
 
 	//! renders the text using its pre-specified parameters. this should usually not be called by the user.
 	void render();

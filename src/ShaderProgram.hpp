@@ -19,7 +19,7 @@ public:
 	ShaderProgram(ShaderProgram&&) = delete;
 	virtual ~ShaderProgram();
 
-	virtual const type_t			getType() const { return ASSET_SHADERPROGRAM; }
+	virtual type_t			        getType() const { return ASSET_SHADERPROGRAM; }
 	static const ShaderProgram*		getCurrentShader() { return currentShader; }
 
 	ShaderProgram& operator=(const ShaderProgram&) = delete;

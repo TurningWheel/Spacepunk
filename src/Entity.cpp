@@ -1258,7 +1258,7 @@ void Entity::deleteRigidBody() {
 			dynamicsWorld->removeRigidBody(rigidBody);
 		}
 		if (rigidBody->getUserPointer()) {
-			delete rigidBody->getUserPointer();
+			delete (World::physics_manifest_t*)rigidBody->getUserPointer();
 			rigidBody->setUserPointer(nullptr);
 		}
 		delete rigidBody;

@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <bullet3/LinearMath/btQuaternion.h>
+#include <bullet/LinearMath/btQuaternion.h>
 
 #include "File.hpp"
 #include "WideVector.hpp"
@@ -149,8 +149,8 @@ public:
 	Vector toVector() const {
 		Vector v(1.f, 0.f, 0.f);
 		const Vector q(-x, -z, y);
-		const Vector t = 2.f * q.cross(v);
-		const Vector result = v + (-w * t) + q.cross(t);
+		const Vector t = q.cross(v) * 2.f;
+		const Vector result = v + (t * -w) + q.cross(t);
 		return result;
 	}
 

@@ -246,17 +246,17 @@ public:
 	//! @param renderer the renderer to draw with
 	void draw(Renderer& renderer);
 
-	const bool				isInitialized() const { return initialized; }
-	const bool				isCeilingMode() const { return ceilingMode; }
+	bool				    isInitialized() const { return initialized; }
+	bool				    isCeilingMode() const { return ceilingMode; }
 	Sint32					getEditingMode() const { return static_cast<Sint32>(editingMode); }
-	const Uint32			getHighlightedObj() const { return highlightedObj; }
+	Uint32			        getHighlightedObj() const { return highlightedObj; }
 	Sint32					getWidgetMode() const { return static_cast<Sint32>(widgetMode); }
 	const int				getTextureSide() const { return textureSide; }
 	const Camera*			getEditingCamera() const { return editingCamera; }
 	const Camera*			getMinimapCamera() const { return minimap; }
 	const char*				getTextureUnderMouse() const { return textureUnderMouse; }
-	const bool				isTextureSelectorActive() const { return textureSelectorActive; }
-	const bool				isFullscreen() const { return fullscreen; }
+	bool			    	isTextureSelectorActive() const { return textureSelectorActive; }
+	bool			    	isFullscreen() const { return fullscreen; }
 
 	void	setHighlightedObj(const Uint32 obj) { highlightedObj = obj; highlightedObjManuallySet = true; }
 	void	setWidgetMode(const Uint32 _widgetMode) { widgetMode = static_cast<widgetmode_t>(_widgetMode); }
@@ -324,7 +324,6 @@ private:
 
 	//! clipboard
 	LinkedList<Entity*> copiedEntities;
-	TileWorld* copiedTiles = nullptr;
 
 	//! 3 orientations for the minimap
 	static const Rotation minimapRot[3];

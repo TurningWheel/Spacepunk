@@ -186,9 +186,9 @@ public:
 		unsigned int findRotation(float animationTime, const aiNodeAnim* nodeAnim) const;
 		unsigned int findScaling(float animationTime, const aiNodeAnim* nodeAnim) const;
 
-		const unsigned int					getNumVertices() const { return numVertices; }
-		const unsigned int					getNumIndices() const { return elementCount; }
-		const unsigned int					getNumBones() const { return numBones; }
+		unsigned int				    	getNumVertices() const { return numVertices; }
+		unsigned int			    		getNumIndices() const { return elementCount; }
+		unsigned int			    		getNumBones() const { return numBones; }
 		const float*						getVertices() const { return vertices; }
 		const float*						getTexCoords() const { return texCoords; }
 		const float*						getNormals() const { return normals; }
@@ -197,8 +197,8 @@ public:
 		const GLuint*						getIndices() const { return indices; }
 		const ArrayList<boneinfo_t>&		getBones() const { return bones; }
 		const aiNode*						getRootNode() const { return scene ? scene->mRootNode : nullptr; }
-		const unsigned int					getLastVertex() const { return lastVertex; }
-		const unsigned int					getLastIndex() const { return lastIndex; }
+		unsigned int				    	getLastVertex() const { return lastVertex; }
+		unsigned int				    	getLastIndex() const { return lastIndex; }
 
 	private:
 		Map<String, unsigned int> boneMapping; //!< maps a bone name to its index
@@ -224,8 +224,8 @@ public:
 		unsigned int lastIndex = 0;		//!< last index modified
 	};
 
-	virtual const Asset::type_t				getType() const override { return Asset::ASSET_MESH; }
-	virtual const bool						isStreamable() const override { return name.get()[0] != '#'; }
+	virtual Asset::type_t			    	getType() const override { return Asset::ASSET_MESH; }
+	virtual bool					    	isStreamable() const override { return name.get()[0] != '#'; }
 	const LinkedList<Mesh::SubMesh*>&		getSubMeshes() const { return subMeshes; }
 	const Vector&							getMinBox() const { return minBox; }
 	const Vector&							getMaxBox() const { return maxBox; }

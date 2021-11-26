@@ -159,7 +159,7 @@ void Client::handleNetMessages() {
 
 						// read name
 						Uint8 nameLen;
-						StringBuf<64> nameStr = "";
+						StringBuf<64> nameStr("");
 						if (packet.read8(nameLen)) {
 							char* name = new char[nameLen + 1];
 							if (name) {
@@ -714,11 +714,7 @@ void Client::runConsole() {
 		logStart = nullptr;
 	}
 
-#ifdef PLATFORM_LINUX
-	if (mainEngine->pressKey(SDL_SCANCODE_F1)) {
-#else
 	if (mainEngine->pressKey(SDL_SCANCODE_GRAVE)) { // doesn't work on linux for some reason?
-#endif
 		consoleActive = (consoleActive == false);
 		if (consoleActive) {
 			for (int i = 0; i < consoleLen; ++i) {

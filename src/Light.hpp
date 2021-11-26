@@ -50,9 +50,9 @@ public:
 	const float&		getRadius() const { return radius; }
 	ArrayList<Chunk*>&	getChunksLit() { return chunksLit; }
 	const shape_t&		getShape() const { return shape; }
-	const bool			isChosen() const { return chosen; }
-	const float			getArc() const { return arc; }
-	const bool			isShadow() const { return shadow; }
+	bool		    	isChosen() const { return chosen; }
+	float		    	getArc() const { return arc; }
+	bool		    	isShadow() const { return shadow; }
 	Uint32				getShadowTicks() const { return shadowTicks; }
 	Shadow&				getShadowMap() { return shadowMap; }
 

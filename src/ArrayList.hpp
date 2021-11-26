@@ -4,7 +4,7 @@
 
 #include "Main.hpp"
 
-#include <luajit-2.0/lua.hpp>
+#include <luajit-2.1/lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 
 //! templated ArrayList (similar to std::vector)
@@ -13,7 +13,7 @@
 template <typename T>
 class ArrayList {
 public:
-	ArrayList() = default;
+	ArrayList<T>() = default;
 
 	ArrayList(const ArrayList& src) {
 		copy(src);
@@ -182,7 +182,7 @@ public:
 	//! quickly swap the internal array of this list with that of another list
 	//! @param src the list to swap with
 	//! @return *this;
-	virtual ArrayList& swap(ArrayList<T>&& src) {
+	virtual ArrayList<T>& swap(ArrayList<T>&& src) {
 		auto tarr = src.arr;
 		auto tsize = src.size;
 		auto tmaxSize = src.maxSize;
@@ -285,21 +285,21 @@ public:
 	//! replace list contents with those of another list
 	//! @param src the list to copy into our list
 	//! @return *this;
-	ArrayList& operator=(const ArrayList& src) {
+	ArrayList<T>& operator=(const ArrayList& src) {
 		return copy(src);
 	}
 
 	//! exchange contents with another list
 	//! @param src the list to copy into our list
 	//! @return *this;
-	ArrayList& operator=(ArrayList&& src) {
+	ArrayList<T>& operator=(ArrayList&& src) {
 		return swap(std::move(src));
 	}
 
 	//! replace list contents with those of an array
 	//! @param src the array to copy into our list
 	//! @return *this;
-	ArrayList& operator=(const std::initializer_list<T>& src) {
+	ArrayList<T>& operator=(const std::initializer_list<T>& src) {
 		return copy(src);
 	}
 
@@ -383,27 +383,27 @@ public:
 		GetConstFn getConst = static_cast<GetConstFn>(&ArrayList<T>::get);
 
 		luabridge::getGlobalNamespace(lua)
-			.beginClass<ArrayList<T>>(name)
-			.addConstructor<void(*)()>()
-			.addFunction("getArray", getArray)
-			.addFunction("getArrayConst", getArrayConst)
-			.addFunction("getSize", &ArrayList<T>::getSize)
-			.addFunction("getMaxSize", &ArrayList<T>::getMaxSize)
-			.addFunction("empty", &ArrayList<T>::empty)
-			.addFunction("alloc", &ArrayList<T>::alloc)
-			.addFunction("resize", &ArrayList<T>::resize)
-			.addFunction("clear", &ArrayList<T>::clear)
-			.addFunction("copy", copy)
-			.addFunction("push", &ArrayList<T>::push)
-			.addFunction("insert", &ArrayList<T>::insert)
-			.addFunction("pop", &ArrayList<T>::pop)
-			.addFunction("peek", peek)
-			.addFunction("peekConst", peekConst)
-			.addFunction("remove", &ArrayList<T>::remove)
-			.addFunction("removeAndRearrange", &ArrayList<T>::removeAndRearrange)
-			.addFunction("get", get)
-			.addFunction("getConst", getConst)
-			.endClass()
+			.template beginClass<ArrayList<T>>(name)
+			.template addConstructor<void (*)()>()
+			.template addFunction("getArray", getArray)
+			.template addFunction("getArrayConst", getArrayConst)
+			.template addFunction("getSize", &ArrayList<T>::getSize)
+			.template addFunction("getMaxSize", &ArrayList<T>::getMaxSize)
+			.template addFunction("empty", &ArrayList<T>::empty)
+			.template addFunction("alloc", &ArrayList<T>::alloc)
+			.template addFunction("resize", &ArrayList<T>::resize)
+			.template addFunction("clear", &ArrayList<T>::clear)
+			.template addFunction("copy", copy)
+			.template addFunction("push", &ArrayList<T>::push)
+			.template addFunction("insert", &ArrayList<T>::insert)
+			.template addFunction("pop", &ArrayList<T>::pop)
+			.template addFunction("peek", peek)
+			.template addFunction("peekConst", peekConst)
+			.template addFunction("remove", &ArrayList<T>::remove)
+			.template addFunction("removeAndRearrange", &ArrayList<T>::removeAndRearrange)
+			.template addFunction("get", get)
+			.template addFunction("getConst", getConst)
+			.template endClass()
 			;
 	}
 
@@ -504,39 +504,22 @@ public:
 		}
 	}
 
-	StaticArrayList& operator=(const StaticArrayList& rhs) {
-		return copy(src);
+	StaticArrayList<T, defaultSize>& operator=(const StaticArrayList<T, defaultSize>& rhs) {
+		return copy(rhs);
 	}
 
-	StaticArrayList& operator=(StaticArrayList&&) = delete;
+	StaticArrayList<T, defaultSize>& operator=(StaticArrayList<T, defaultSize>&&) = delete;
 
-	virtual ArrayList& swap(ArrayList&& src) override {
+	virtual ArrayList<T>& swap(ArrayList<T>&& src) override {
 		assert(0 && "StaticArrayList::swap not supported");
+		return *this;
 	}
 
 	//! resize the internal list
 	//! @param len number of elements to size the list for
 	//! @return *this
-	virtual ArrayList& alloc(Uint32 len) override {
-		maxSize = len;
-		Uint32 newSize = std::min(maxSize, size);
-		T* newArr = nullptr;
-		if (len) {
-			newArr = new T[len];
-			assert(newArr);
-			Uint32 copyLen = min(size, len);
-			for (Uint32 c = 0; c < copyLen; ++c) {
-				newArr[c] = std::move(this->arr[c]);
-			}
-		}
-		if (this->arr) {
-			if (this->arr != defaultArr) {
-				delete[] this->arr;
-			}
-			this->arr = nullptr;
-		}
-		size = newSize;
-		this->arr = newArr;
+	virtual ArrayList<T>& alloc(Uint32 len) override {
+		assert(0 && "StaticArrayList::alloc not supported");
 		return *this;
 	}
 

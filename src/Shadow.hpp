@@ -43,7 +43,7 @@ public:
 	//! @param attachment The texture we wish to sample (GL_COLOR_ATTACHMENT0 or GL_DEPTH_ATTACHMENT or GL_STENCIL_ATTACHMENT)
 	void bindForReading(GLenum textureUnit, GLenum attachment) const;
 
-	const GLuint	getFBO() const { return fbo; }
+	GLuint	        getFBO() const { return fbo; }
 	bool			isInitialized() const { return fbo != 0; }
 	float			getResolution() const { return resolution; }
 

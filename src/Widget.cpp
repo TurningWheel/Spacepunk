@@ -81,7 +81,7 @@ Widget* Widget::handleInput() {
 		};
 		for (int c = 0; c < sizeof(moves) / sizeof(moves[0]); ++c) {
 			if (input.binaryToggle(moves[c][0])) {
-				if (moves[c][1] && moves[c][1] != '\0') {
+				if (moves[c][1] && moves[c][1][0] != '\0') {
 					root = root ? root : findSearchRoot();
 					result = root->findWidget(moves[c][1], true);
 					if (result) {

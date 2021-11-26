@@ -29,14 +29,14 @@ public:
 	Rotation& operator=(Rotation&&) = default;
 
 	//! converts the angle attributes to radians (default)
-	const float		radiansYaw() const { return yaw; }
-	const float		radiansPitch() const { return pitch; }
-	const float		radiansRoll() const { return roll; }
+	float		radiansYaw() const { return yaw; }
+	float		radiansPitch() const { return pitch; }
+	float		radiansRoll() const { return roll; }
 
 	//! converts the angle attributes to degrees
-	const float		degreesYaw() const { return (yaw * radiansToDegrees); }
-	const float		degreesPitch() const { return (pitch * radiansToDegrees); }
-	const float		degreesRoll() const { return (roll * radiansToDegrees); }
+	float		degreesYaw() const { return (yaw * radiansToDegrees); }
+	float		degreesPitch() const { return (pitch * radiansToDegrees); }
+	float		degreesRoll() const { return (roll * radiansToDegrees); }
 
 	//! add one angle to another
 	Rotation operator+(const Rotation& src) const {

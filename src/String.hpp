@@ -430,21 +430,21 @@ public:
 		}
 	}
 
-	StringBuf& operator=(const char* src) {
+	StringBuf<defaultSize>& operator=(const char* src) {
 		assign(src);
 		return *this;
 	}
-	StringBuf& operator=(const String& src) {
+	StringBuf<defaultSize>& operator=(const String& src) {
 		assign(src.get());
 		return *this;
 	}
-	StringBuf& operator=(const StringBuf& src) {
+	StringBuf<defaultSize>& operator=(const StringBuf& src) {
 		assign(src.get());
 		return *this;
 	}
 
-	StringBuf& operator=(StringBuf&&) = delete;
-	StringBuf& operator=(String&&) = delete;
+	StringBuf<defaultSize>& operator=(StringBuf<defaultSize>&&) = delete;
+	StringBuf<defaultSize>& operator=(String&&) = delete;
 
 	//! allocs / reallocs the string (erases data!)
 	//! @param newSize the size (in chars) of the string to alloc

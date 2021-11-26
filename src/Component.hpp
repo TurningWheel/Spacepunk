@@ -505,7 +505,7 @@ public:
 	T* addComponent() {
 		T* component = new T(*entity, this);
 		components.push(component);
-		entity->updateBounds();
+		updateEntityBounds();
 		return component;
 	}
 
@@ -627,6 +627,9 @@ protected:
 	//! save/load this object to a file
 	//! @param file interface to serialize with
 	void serializeComponents(FileInterface* file);
+
+	//! update parent entity bounds
+	void updateEntityBounds();
 
 	ArrayList<Component*> components;	//! sub-component list
 

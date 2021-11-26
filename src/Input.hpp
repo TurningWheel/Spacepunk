@@ -96,7 +96,7 @@ public:
 	//! updates the state of all current bindings from the physical devices
 	void update();
 
-	const bool					isInverted() const { return inverted; }
+	bool					    isInverted() const { return inverted; }
 	void						setInverted(bool b) { inverted = b; }
 
 private:

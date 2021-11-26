@@ -87,9 +87,9 @@ public:
 	void updateGUI();
 
 	const char*				getName() const { return name.get(); }
-	const Uint32			getServerID() const { return serverID; }
-	const Uint32			getLocalID() const { return localID; }
-	const Uint32			getClientID() const { return clientID; }
+	Uint32		        	getServerID() const { return serverID; }
+	Uint32		        	getLocalID() const { return localID; }
+	Uint32		        	getClientID() const { return clientID; }
 	Entity*					getEntity() { return entity; }
 	const colors_t&			getColors() const { return colors; }
 	Camera*					getCamera() const { return camera; }
@@ -106,7 +106,7 @@ public:
 	void	setJumped(bool b) { jumped = b; }
 
 private:
-	StringBuf<64> name = defaultName;	//! the player's name
+	StringBuf<64> name;             	//! the player's name
 	Uint32 serverID = invalidID;		//! canonical player number. this is 0 for player 1, 1 for player 2, etc.
 	Uint32 localID = invalidID;			//! local player number. for the first player on a client, this is 0, regardless of serverID
 	Uint32 clientID = invalidID;		//! id number of the client associated with this player

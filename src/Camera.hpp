@@ -80,7 +80,7 @@ public:
 	const glm::mat4&	getProjViewMatrix() const { return projViewMatrix; }
 	const drawmode_t	getDrawMode() const { return drawMode; }
 	const bool&			isOrtho() const { return ortho; }
-	const Uint32		getFramesDrawn() const { return framesDrawn; }
+	unsigned int		getFramesDrawn() const { return (unsigned int)framesDrawn; }
 	const bool&			isEnabled() const { return enabled; }
 	Uint64				getOcclusionIndex() const { return occlusionIndex; }
 

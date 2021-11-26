@@ -58,15 +58,14 @@ struct Rect {
 	//! @param name The type name in lua
 	static void exposeToScript(lua_State* lua, const char* name) {
 		luabridge::getGlobalNamespace(lua)
-			.beginClass<Rect<T>>(name)
-			//.addConstructor<void (*)(T, T, T, T)>()
-			.addConstructor<void(*)()>()
-			.addData("x", &Rect<T>::x, true)
-			.addData("y", &Rect<T>::y, true)
-			.addData("w", &Rect<T>::w, true)
-			.addData("h", &Rect<T>::h, true)
-			.addFunction("containsPoint", &Rect<T>::containsPoint)
-			.endClass()
+			.template beginClass<Rect<T>>(name)
+			.template addConstructor<void (*)(T, T, T, T)>()
+			.template addProperty("x", &Rect<T>::x, true)
+			.template addProperty("y", &Rect<T>::y, true)
+			.template addProperty("w", &Rect<T>::w, true)
+			.template addProperty("h", &Rect<T>::h, true)
+			.template addFunction("containsPoint", &Rect<T>::containsPoint)
+			.template endClass()
 			;
 	}
 };

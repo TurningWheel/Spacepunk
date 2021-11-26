@@ -44,12 +44,7 @@ Cvar cvar_snapRotate("editor.snap.rotate", "Rotate snap", "15.0");
 Cvar cvar_snapScale("editor.snap.scale", "Scale snap", "25.0");
 Cvar cvar_editorSounds("editor.sounds", "Enable editor sound effects", "1");
 
-Editor::~Editor() {
-	if (copiedTiles) {
-		delete copiedTiles;
-		copiedTiles = 0;
-	}
-}
+Editor::~Editor() {}
 
 void Editor::init(Client& _client) {
 	client = &_client;

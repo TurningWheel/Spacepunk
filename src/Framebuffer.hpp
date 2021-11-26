@@ -47,7 +47,7 @@ public:
 	//! clear buffers
 	void clear();
 
-	virtual const type_t	getType() const { return ASSET_FRAMEBUFFER; }
+	virtual type_t      	getType() const { return ASSET_FRAMEBUFFER; }
 	GLuint					getFBO() const { return fbo; }
 	GLuint					getColor(int c) const { return color[c]; }
 	GLuint					getDepth() const { return depth; }

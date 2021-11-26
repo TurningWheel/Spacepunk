@@ -543,7 +543,7 @@ void World::process() {
 	entitiesToInsert.clear();
 
 	// delete entities marked for removal and transfer entities marked for level change
-	for (auto& it = entities.begin(); it != entities.end(); ++it) {
+	for (auto it = entities.begin(); it != entities.end(); ++it) {
 		Entity* entity = (*it).b;
 
 		if (entity->isToBeDeleted()) {

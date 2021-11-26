@@ -30,7 +30,7 @@ public:
 
 	World*						getWorld(const int index) { return worlds[index]->getData(); }
 	Uint32						getNumWorlds() const { return worlds.getSize(); }
-	const Uint32				getTicks() const { return ticks; }
+	Uint32				        getTicks() const { return ticks; }
 	Net*						getNet() const { return net; }
 	bool						isSuicide() const { return suicide; }
 	const LinkedList<Player>	getPlayers() const { return players; }

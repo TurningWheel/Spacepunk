@@ -68,6 +68,8 @@ Player::Player() {
 	colors.feetRChannel = { suitR, suitG, suitB, 1.f };
 	colors.feetGChannel = { .5f, .5f, .5f, 1.f };
 	colors.feetBChannel = { .2f, .2f, .2f, 1.f };
+
+	name = defaultName;
 }
 
 Player::Player(const char* _name) : Player() {

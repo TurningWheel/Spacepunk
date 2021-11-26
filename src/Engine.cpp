@@ -11,6 +11,9 @@
 #include "Editor.hpp"
 #include "Mixer.hpp"
 
+#include <thread>
+#include <chrono>
+
 #ifdef PLATFORM_WINDOWS
 #include <DbgHelp.h>
 #endif
@@ -102,7 +105,7 @@ static int console_vsync(int argc, const char** argv) {
 	if (!client || !client->getRenderer()) {
 		return 1;
 	}
-	if (argc != 1) {
+	if (argc != 2) {
 		return 2;
 	}
 
@@ -512,7 +515,7 @@ int Engine::saveConfig(const char* filename, const ArrayList<String>& cvars, con
 	}
 	FILE *fp;
 
-	StringBuf<64> _filename = filename;
+	StringBuf<64> _filename(filename);
 	if (_filename.find(".cfg") == UINT32_MAX) {
 		_filename.append(".cfg");
 	}
@@ -752,7 +755,7 @@ void Engine::init() {
 	}
 
 	// instantiate a timer
-	lastTick = std::chrono::steady_clock::now();
+	lastTick = clock();
 	SDL_SetThreadPriority(SDL_THREAD_PRIORITY_HIGH);
 
 	// initialize renderer
@@ -1294,34 +1297,36 @@ void Engine::preProcess() {
 	}
 
 	// do timer
+	constexpr int maxFramesBeforeDrop = 16;
 	ticksPerSecond = cvar_tickrate.toInt();
-	std::chrono::duration<double> msInterval(1.0 / ticksPerSecond);
-	auto now = std::chrono::high_resolution_clock::now();
-	int framesToDo = (now - lastTick) / msInterval;
-	if (framesToDo) {
-		lastTick = now;
-		if (!paused) {
-			for (int c = 0; c < framesToDo; ++c) {
-				SDL_Event event;
-				SDL_UserEvent userevent;
+	double interval = (double)CLOCKS_PER_SEC / (double)ticksPerSecond;
+	double now = clock();
+	int framesCounted = 0;
+	frameDiff += now - lastTick;
+	while (frameDiff >= interval) {
+	    frameDiff -= interval;
+		if (!paused && framesCounted < maxFramesBeforeDrop) {
+			SDL_Event event;
+			SDL_UserEvent userevent;
 
-				userevent.type = SDL_USEREVENT;
-				userevent.code = 0;
-				userevent.data1 = nullptr;
-				userevent.data2 = nullptr;
+			userevent.type = SDL_USEREVENT;
+			userevent.code = 0;
+			userevent.data1 = nullptr;
+			userevent.data2 = nullptr;
 
-				event.type = SDL_USEREVENT;
-				event.user = userevent;
+			event.type = SDL_USEREVENT;
+			event.user = userevent;
 
-				SDL_PushEvent(&event);
-			}
+			SDL_PushEvent(&event);
+			++framesCounted;
 		}
 	}
+	lastTick = clock();
 
 	SDL_GameController* pad = nullptr;
 	SDL_Joystick* joystick = nullptr;
 
-	if (framesToDo) {
+	if (framesCounted) {
 		lastInputOfAnyKind = "";
 	}
 	while (SDL_PollEvent(&event)) {
@@ -1709,13 +1714,7 @@ void Engine::postProcess() {
 	++cycles;
 
 	// sleep thread for a bit
-	std::chrono::duration<double> msInterval(1.0 / ticksPerSecond);
-	auto sleepTime = (msInterval - (std::chrono::high_resolution_clock::now() - lastTick)) / 2;
-	if (sleepTime > std::chrono::milliseconds(1)) {
-		std::this_thread::sleep_for(sleepTime);
-	} else {
-		std::this_thread::yield();
-	}
+	std::this_thread::yield();
 }
 
 ArrayList<String> Engine::getDisplayModes() const {

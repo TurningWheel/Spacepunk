@@ -35,12 +35,12 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	virtual const type_t		getType() const { return ASSET_MATERIAL; }
+	virtual type_t		        getType() const { return ASSET_MATERIAL; }
 	const ShaderProgram&		getShader() const { return shader; }
 	ShaderProgram&				getShader() { return shader; }
-	const bool					isGlowing() const { return glowTextureStrs.getSize() > 0; }
-	const bool					isTransparent() { return transparent; }
-	const bool					isShadowing() { return shadow; }
+	bool				    	isGlowing() const { return glowTextureStrs.getSize() > 0; }
+	bool					    isTransparent() { return transparent; }
+	bool				    	isShadowing() { return shadow; }
 
 	void	setTransparent(bool _transparent) { transparent = _transparent; }
 	void	setShadowing(bool _shadow) { shadow = _shadow; }

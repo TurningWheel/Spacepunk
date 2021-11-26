@@ -1015,3 +1015,9 @@ void Component::bindToBone(Model* model, const char* bone, const Vector& transla
 void Component::unbindFromBone() {
 	boundToBone = false;
 }
+
+void Component::updateEntityBounds() {
+    if (entity) {
+        entity->updateBounds();
+    }
+}

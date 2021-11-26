@@ -37,12 +37,12 @@ public:
 	//! delete static geometry data for rendering images
 	static void deleteStaticData();
 
-	virtual const type_t	getType() const { return ASSET_IMAGE; }
-	virtual const bool		isStreamable() const { return true; }
-	const GLuint			getTexID() const { return texid; }
+	virtual type_t      	getType() const { return ASSET_IMAGE; }
+	virtual bool	    	isStreamable() const { return true; }
+	GLuint			        getTexID() const { return texid; }
 	const SDL_Surface*		getSurf() const { return surf; }
-	const unsigned int		getWidth() const { return surf ? surf->w : 0U; }
-	const unsigned int		getHeight()	const { return surf ? surf->h : 0U; }
+	unsigned int		    getWidth() const { return surf ? surf->w : 0U; }
+	unsigned int		    getHeight()	const { return surf ? surf->h : 0U; }
 
 private:
 	GLuint texid = 0;

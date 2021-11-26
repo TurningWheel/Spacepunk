@@ -21,7 +21,7 @@ public:
 	//! @param file interface to serialize with
 	virtual void serialize(FileInterface * file) override;
 
-	virtual const type_t	getType() const { return ASSET_CUBEMAP; }
+	virtual type_t	        getType() const { return ASSET_CUBEMAP; }
 	const GLuint			getTexID() const { return texid; }
 
 private:
